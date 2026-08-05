@@ -76,6 +76,23 @@ def list_pipelines(defs_dir: Optional[Path] = None) -> list[str]:
     return [p.stem for p in defs_dir.glob("*.yaml")]
 
 
+def list_selectable_pipelines(defs_dir: Optional[Path] = None) -> list[str]:
+    """List manifests the OpenMontage Agent may select for user video work.
+
+    Selection remains an Agent decision under AGENT_GUIDE Rule Zero. This
+    helper only removes framework/test manifests that declare
+    ``selection_scope: framework_only``; it does not rank, recommend, or select
+    a production route.
+    """
+    defs_dir = defs_dir or PIPELINE_DEFS_DIR
+    selectable: list[str] = []
+    for name in sorted(list_pipelines(defs_dir)):
+        manifest = load_pipeline(name, defs_dir)
+        if manifest.get("selection_scope", "user_video") == "user_video":
+            selectable.append(name)
+    return selectable
+
+
 def _condition_is_active(condition: Optional[str], context: Optional[dict[str, Any]]) -> bool:
     """Evaluate a simple manifest condition against runtime context."""
     if not condition:

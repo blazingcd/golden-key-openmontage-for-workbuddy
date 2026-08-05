@@ -1,0 +1,271 @@
+name: golden-key-lead-conversion
+version: "0.2.4"
+description: >
+  Qualified lead-conversion pipeline for consultation, booking, application,
+  franchise, recruitment, channel, or collaboration offers. It turns a verified
+  audience problem, offer mechanism, qualification boundary, evidence, objections,
+  and one measurable next action into a truthful conversion narrative. Attention
+  hooks, presenters, graphics, testimonials, and generated support never substitute
+  for real offer terms, suitability, proof, or compliance.
+category: custom
+stability: beta
+default_checkpoint_policy: guided
+
+reference_input:
+  supported: true
+  analysis_depth: deep
+  analysis_tools:
+    - video_analyzer
+    - transcript_fetcher
+    - video_downloader
+    - scene_detect
+    - frame_sampler
+
+orchestration:
+  mode: executive-producer
+  skill: pipelines/golden-key-lead-conversion/executive-producer
+  budget_default_usd: 2.00
+  max_revisions_per_stage: 3
+  max_send_backs: 3
+  max_wall_time_minutes: 15
+
+extensions:
+  custom_scripts: true
+  custom_playbooks: true
+  custom_skills: true
+  custom_tools: false
+
+required_skills:
+  - pipelines/golden-key-lead-conversion/executive-producer
+  - pipelines/golden-key-lead-conversion/director-decision-policy
+  - pipelines/golden-key-lead-conversion/reviewer-rubric
+  - pipelines/golden-key-lead-conversion/idea-director
+  - pipelines/golden-key-lead-conversion/proposal-director
+  - pipelines/golden-key-lead-conversion/script-director
+  - pipelines/golden-key-lead-conversion/scene-director
+  - pipelines/golden-key-lead-conversion/asset-director
+  - pipelines/golden-key-lead-conversion/edit-director
+  - pipelines/golden-key-lead-conversion/compose-director
+  - pipelines/golden-key-lead-conversion/publish-director
+  - meta/text-layer-direction
+  - meta/taste-direction
+  - meta/voice-performance-director
+  - meta/animation-runtime-selector
+  - meta/bespoke-composition
+  - meta/reviewer
+  - meta/checkpoint-protocol
+  - meta/video-reference-analyst
+  - meta/material-retrieval-boundary
+
+compatible_playbooks:
+  recommended:
+    - clean-professional
+    - premium-minimalist
+  also_works:
+    - flat-motion-graphics
+  custom_allowed: true
+
+metadata:
+  primary_goal: qualified_lead_action
+  supported_offer_types:
+    - consultation
+    - appointment_or_booking
+    - application
+    - franchise_or_investment_inquiry
+    - channel_partnership
+    - recruitment
+    - ip_or_business_collaboration
+  canonical_artifact_policy: openmontage_only
+  platform_profile_transport: agent_input_reference
+  project_content_context_transport: agent_input_reference
+  project_content_context_policy: frozen_selected_sources_only
+  required_decision_fields:
+    - target_lead
+    - verified_offer
+    - audience_problem_or_aspiration
+    - offer_mechanism
+    - qualification_conditions
+    - claim_evidence_map
+    - objection_strategy
+    - primary_cta
+    - narrative_driver
+    - presenter_mode
+    - visual_sources
+    - layout_strategy
+    - text_layer_direction
+    - audio_treatment
+    - source_support_policy
+    - image_to_video_plan
+    - platform_profile_ref
+    - project_content_context_ref
+    - context_evidence_map
+    - execution_requirements
+    - review_obligations
+  approval_actor_mapping:
+    idea_direction: customer
+    proposal_direction: customer
+    proposal_technical: internal_operator
+    script: internal_operator
+    scene_plan: internal_operator
+    assets: internal_operator
+    edit: system_validator
+    compose: system_validator
+    publish: customer
+
+stages:
+  - name: idea
+    skill: pipelines/golden-key-lead-conversion/idea-director
+    optional_artifacts_in: [source_media_review, video_analysis_brief]
+    produces: [brief, decision_log]
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Primary outcome is one qualified lead action around a verified offer rather than product consideration, brand recall, or subject affinity
+      - Fact-only CustomerFactSet inputs make target lead, verified offer, mechanism, qualification, evidence, CTA path, rights, compliance, and unknowns explicit without pre-authoring the conversion narrative
+      - PlatformProfile shapes relevance hook, trust sequence, pacing, audio, text, CTA treatment, and review
+      - Material-library intake is task-independent; full snapshot plus unranked initial coverage expose evidence without preselecting a concept or shot
+      - ProjectContentContext offer documents, CTA facts, images, permissions, expiry, conflicts, prohibited expressions, and gaps are resolved with exact anchors; an empty context triggers no library retrieval
+    success_criteria:
+      - Schema-valid brief and decision_log
+      - Brief metadata contains CustomerFactSet, PlatformProfile, material-query, qualification, compliance, truth-boundary, and pending proposal capability-audit references; conversion treatment is OpenMontage-owned
+
+  - name: proposal
+    skill: pipelines/golden-key-lead-conversion/proposal-director
+    required_artifacts_in: [brief]
+    optional_artifacts_in: [source_media_review, video_analysis_brief]
+    produces: [proposal_packet, decision_log]
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - At least three concepts differ in hook, mechanism explanation, proof order, objection handling, qualification, or CTA path
+      - The creative winner is selected before OpenMontage authors any concept-specific material query
+      - Every concept's offer-evidence-qualification chain cites eligible ProjectContentContext anchors and excludes expired, conflicting, prohibited, private-for-public-use, or cross-project evidence
+      - Every concept proves relevance and credibility before asking for the action
+      - Offer terms, audio, text roles, presenter/support layers, runtime, composition mode, capability status, cost, and fallbacks are resolved
+      - Attention footage, atmosphere, generated content, or a generic testimonial never substitutes for conversion proof
+    success_criteria:
+      - Schema-valid proposal_packet and decision_log
+      - Selected concept, offer-evidence-qualification chain, one CTA, production path, cost, and approvals are explicit
+    sub_stages:
+      - name: sample
+        description: "10-15 second sample for reference-driven, paid, identity-sensitive, or claim-sensitive work"
+        condition: "video_analysis_brief_exists"
+        human_approval_default: true
+        tools_available: [talking_head, lip_sync, tts_selector, image_selector, video_selector, subtitle_gen, video_compose, audio_mixer]
+        review_focus:
+          - "Sample proves the relevance and trust treatment without copying the reference"
+          - "Offer, qualification, people, evidence, text, logo, and CTA remain accurate"
+          - "Pacing, captions, music, voice, and action clarity fit the approved PlatformProfile"
+
+  - name: script
+    skill: pipelines/golden-key-lead-conversion/script-director
+    required_artifacts_in: [brief, proposal_packet]
+    optional_artifacts_in: [source_media_review]
+    produces: [script]
+    optional_tools: [transcriber, scene_detect]
+    tools_available: [transcriber, scene_detect]
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Hook identifies the intended lead and relevant problem or aspiration immediately
+      - One primary viewer payoff and at most one secondary payoff connect the opening relevance, verified proof, qualification, and one CTA
+      - Script explains the verified offer mechanism, evidence, fit boundary, objection response, and one CTA without fake urgency
+      - Every material-backed offer term, qualification, quotation, contact action, visible text, or visual obligation cites the exact ProjectContentContext evidence and source anchor
+      - Presenter/narration, captions, natural sound, music, and CTA form a finished conversion story
+    success_criteria:
+      - Schema-valid complete script
+      - Every section records conversion function, claim/evidence basis, qualification role, audio carrier, and intended response
+
+  - name: scene_plan
+    skill: pipelines/golden-key-lead-conversion/scene-director
+    required_artifacts_in: [script, brief, proposal_packet]
+    optional_artifacts_in: [source_media_review]
+    produces: [scene_plan]
+    optional_tools: [frame_sampler, scene_detect, face_tracker]
+    tools_available: [frame_sampler, scene_detect, face_tracker]
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Relevance, offer mechanism, proof, qualification, and CTA each have visible support at the right moment
+      - Every source shot records source_path, source kind, exact multimodal anchor, conversion role, and fallback; temporal shots also record source_in/source_out/speed
+      - Temporal shots use exact ranges; still images and documents use exact region/page/table anchors, display duration, public-use permission, and legibility/redaction checks
+      - Generated or graphic support solves a named explanation gap and is never used as a real result or customer case
+      - First frame, safe zones, information hierarchy, CTA clearance, and landing frame follow the PlatformProfile
+    success_criteria:
+      - Schema-valid scene_plan
+      - metadata shot plan covers the full duration with exact source lineage or explicit generated/support designation
+      - Every source row passes temporal range/speed arithmetic or still/document display-duration arithmetic
+
+  - name: assets
+    skill: pipelines/golden-key-lead-conversion/asset-director
+    required_artifacts_in: [scene_plan, proposal_packet]
+    optional_artifacts_in: [script, brief, source_media_review]
+    produces: [asset_manifest]
+    optional_tools: [subtitle_gen, talking_head, lip_sync, tts_selector, image_selector, video_selector, pixabay_music, freesound_music, music_gen, audio_enhance]
+    tools_available: [subtitle_gen, talking_head, lip_sync, tts_selector, image_selector, video_selector, pixabay_music, freesound_music, music_gen, audio_enhance]
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Every asset has provenance, rights, conversion role, claim boundary, and relation to a planned scene
+      - Offer, proof, testimonial, qualification, contact, and CTA assets are verified and current
+      - Generated assets include prompt, negative prompt, protected elements, disclosure, sample gate, acceptance, and fallback
+      - Narration/source speech, captions, BGM, natural sound, and CTA assets match the approved treatment
+    success_criteria:
+      - Schema-valid asset_manifest
+      - Existing assets resolve to exact source ranges and synthetic support remains separate from offer, customer, and result evidence
+
+  - name: edit
+    skill: pipelines/golden-key-lead-conversion/edit-director
+    required_artifacts_in: [scene_plan, asset_manifest, proposal_packet]
+    optional_artifacts_in: [script, brief]
+    produces: [edit_decisions]
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - Source-led anchor cut communicates relevance, mechanism, evidence, fit boundary, and one action before decorative support is added
+      - Pacing, proof adjacency, objection handling, audio hierarchy, text roles, and CTA intensity remain coherent
+      - Overlays and transitions do not obscure qualification or turn attention footage into proof
+      - metadata.text_layer_direction is semantically valid
+      - The ending preserves CTA readability, action certainty, visual release, and audio tail without fake urgency
+    success_criteria:
+      - Schema-valid edit_decisions
+      - Every cut has exact in/out points and reason, and the runtime matches the approved proposal
+      - metadata.text_layer_direction passes the native semantic validator
+
+  - name: compose
+    skill: pipelines/golden-key-lead-conversion/compose-director
+    required_artifacts_in: [edit_decisions, asset_manifest, proposal_packet]
+    optional_artifacts_in: [scene_plan, script, brief]
+    produces: [render_report, final_review]
+    required_tools: [video_compose, audio_mixer]
+    optional_tools: [remotion_caption_burn, video_stitch, video_trimmer, color_grade, audio_enhance, visual_qa]
+    tools_available: [video_compose, remotion_caption_burn, hyperframes_compose, audio_mixer, video_stitch, video_trimmer, color_grade, audio_enhance, visual_qa]
+    checkpoint_required: true
+    human_approval_default: false
+    review_focus:
+      - Runtime, providers, presenter, voice, music, proof, qualification, and CTA match approved artifacts without silent substitution
+      - Offer terms, people, logos, evidence, testimonials, qualification text, and contact action remain accurate
+      - Finished audio, text hierarchy, platform fit, technical QA, claim safety, and disclosure pass
+      - Dedicated last-second evidence proves the CTA ending is readable and intentional rather than truncated
+    success_criteria:
+      - Schema-valid render_report and final_review
+      - Output passes ffprobe/decode and records offer, proof, qualification, CTA, audio, text, ending, and disclosure QA
+
+  - name: publish
+    skill: pipelines/golden-key-lead-conversion/publish-director
+    required_artifacts_in: [render_report, final_review]
+    optional_artifacts_in: [brief, proposal_packet, script]
+    produces: [publish_log]
+    tools_available: []
+    checkpoint_required: true
+    human_approval_default: true
+    review_focus:
+      - Title, cover, copy, tags, qualification, one CTA, contact path, and disclosure match the selected PlatformProfile and actual video
+      - Packaging adds no unsupported price, earnings, scarcity, guarantee, demand, customer result, credential, eligibility, or compliance claim
+      - Title pain/value, one-focus cover, evidence-bounded copy, relevant tags, and exactly one approved conversion action match the actual video
+    success_criteria:
+      - Schema-valid publish_log
+      - Export package contains approved video, cover guidance, platform copy, verified CTA/contact details, provenance, and disclosure notes

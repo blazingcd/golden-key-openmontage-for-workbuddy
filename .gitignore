@@ -54,6 +54,7 @@ pexels_video_*.mp4
 
 # Scratch/debug scripts
 scratch/
+.test-runs/
 
 # Internal docs (strategy, handoffs, playbooks — not shipped)
 internal/

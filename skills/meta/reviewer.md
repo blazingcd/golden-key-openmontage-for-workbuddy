@@ -121,7 +121,7 @@ Structure your review as:
 
 2. **Critical means critical.** Don't inflate severity. A missing schema field is critical. A slightly wordy paragraph is a suggestion. A comma splice is a nitpick.
 
-3. **Two rounds max.** The goal is shipping, not perfection. After two revision rounds, pass with warnings and move on. Perfectionism kills pipelines.
+3. **Two rounds max for quality tuning, never for truth or safety.** After two revision rounds, unresolved non-blocking quality issues may pass with warnings. Hard blockers involving fabricated facts, rights, identity, policy, missing source evidence, impossible execution, schema validity, or required approval can never be waived by the round limit.
 
 4. **Review the artifact, not the process.** You're checking the output, not how it was produced. If the brief is compelling, it doesn't matter if the agent used an unusual approach.
 

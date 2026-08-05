@@ -1,0 +1,136 @@
+version: "1.0"
+scope: golden-key-four-custom-pipeline-route-robustness
+cases:
+  - id: project-lead-join-project-conversion-goal
+    input:
+      request: "以示例负责人为人物做IP视频，让人觉得他靠谱、愿意找他合作项目"
+      completed_qa_primary_outcome: "吸引目标观众加入他手里的项目"
+      dominant_object: "示例负责人作为项目领头人，吸引合适人加入项目"
+      verified_project_exists: true
+      project_details_public: false
+      qualification: "在找项目想赚钱、自己不能独立赚钱、希望有人带领的人"
+      conversion_destination: comment_keyword
+      response_owner: account_operations_staff
+      response_available: true
+    expected:
+      route: golden-key-lead-conversion
+      clarification_needed: false
+      reject: [ip_word_as_automatic_subject_route, behavior_as_credential, invented_project_details, technical_pipeline_question]
+
+  - id: service-with-store-visit-distractor
+    input:
+      request: "做舒缓体验门店营销种草视频，目标到店"
+      dominant_object: "门店服务体验"
+      verified_offer: false
+      direct_booking_path: false
+      qualification: false
+    expected:
+      route: golden-key-product-marketing
+      clarification_needed: false
+      reject: [store_visit_goal_as_automatic_lead_route, invented_booking_path]
+
+  - id: service-with-complete-booking-mechanism
+    input:
+      request: "说明已核实套餐、适用条件和预约入口，引导同城合适用户提交预约"
+      verified_offer: true
+      verified_mechanism: true
+      qualification: true
+      primary_cta: true
+    expected:
+      route: golden-key-lead-conversion
+      clarification_needed: false
+
+  - id: wellness-studio-comment-or-dm-acquisition-command
+    input:
+      request: "帮我做一一条营销视频来获客，吸引用户评论区或者私信咨询"
+      customer_case: "示例舒缓门店"
+      dominant_object: "直接咨询获客"
+      requested_contact_modes: [comment, private_message]
+      verified_human_response: true
+      response_identity_public: false
+      response_time_public: false
+      booking_outcome_public: false
+    expected:
+      route: golden-key-lead-conversion
+      clarification_needed: false
+      reject: [marketing_word_as_automatic_product_route, customer_case_as_fixed_pipeline, technical_pipeline_question]
+
+  - id: founder-trust-without-offer
+    input:
+      request: "讲创始人的真实经历，让大家认识并信任她"
+      dominant_object: "创始人本人"
+      verified_offer: false
+    expected:
+      route: golden-key-subject-ip
+      clarification_needed: false
+      reject: [company_route_from_job_title_only, lead_route_without_offer]
+
+  - id: company-thesis-with-product-cameo
+    input:
+      request: "用真实团队和服务过程表达公司为什么坚持透明服务，产品只作例子"
+      dominant_object: "公司身份与价值主张"
+      verified_company_facts: true
+      purchase_cta: false
+    expected:
+      route: golden-key-brand-company
+      clarification_needed: false
+      reject: [product_cameo_as_product_route, invented_company_scale]
+
+  - id: brand-name-but-product-purchase-dominates
+    input:
+      request: "以品牌名义讲清楚这款产品三个已核实卖点并引导购买"
+      dominant_object: "具体产品"
+      verified_product_evidence: true
+      purchase_cta: true
+    expected:
+      route: golden-key-product-marketing
+      clarification_needed: false
+      reject: [brand_name_as_company_route]
+
+  - id: ambiguous-brand-growth-command
+    input:
+      request: "帮这个品牌做条能带来客户的视频"
+      brand_thesis: null
+      verified_offer: false
+      qualification: false
+      conversion_destination: null
+    expected:
+      route: pending
+      clarification_needed: true
+      business_question: "这次更重要的是先让人理解并记住品牌，还是已经有明确服务方案和提交入口、要筛选合适客户？"
+      reject: [guessing_brand_company, guessing_lead_conversion, technical_pipeline_question]
+
+  - id: lead-route-missing-qualification
+    input:
+      request: "介绍已核实的合作方案并引导提交申请"
+      verified_offer: true
+      verified_mechanism: true
+      qualification: null
+      primary_cta: true
+    expected:
+      route: golden-key-lead-conversion
+      clarification_needed: true
+      business_question: "哪些人或企业适合提交，至少要满足哪些条件？"
+      blocker_until_answered: qualification
+
+  - id: person-versus-product-conflict
+    input:
+      request: "让创始人出镜讲产品，既要大家记住她，也要马上买产品"
+      dominant_object: null
+      verified_offer: false
+    expected:
+      route: pending
+      clarification_needed: true
+      business_question: "这条片最优先要让观众记住并信任创始人，还是先判断产品是否值得购买？"
+      reject: [silent_multi_route, technical_pipeline_question]
+
+  - id: controlled-fixture-is-not-customer-proof
+    input:
+      request: "固定测试Brand Company的导演能力"
+      test_mode: specialized_benchmark
+      customer_fact_status: benchmark_only
+    expected:
+      route: golden-key-brand-company
+      clarification_needed: false
+      real_customer_acceptance_claimed: false
+      publish_allowed: false

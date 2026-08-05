@@ -1,0 +1,42 @@
+{
+  "schema_version": "2",
+  "official_upstream_url": "https://github.com/calesthio/OpenMontage.git",
+  "golden_key_core_url": "https://github.com/blazingcd/golden-key-openmontage.git",
+  "workbuddy_repository_url": "https://github.com/blazingcd/golden-key-openmontage-for-workbuddy.git",
+  "upstream_base_commit": "4eab34c5cfcccaa4f1970554928feccce73ee930",
+  "golden_key_core_tag": "golden-key-v0.3.21",
+  "golden_key_core_commit": "757ea3822e5f2eef7f341389983119021e827c8d",
+  "golden_key_core_source_commit": "757ea3822e5f2eef7f341389983119021e827c8d",
+  "golden_key_core_release_url": "https://github.com/blazingcd/golden-key-openmontage/releases/tag/golden-key-v0.3.21",
+  "golden_key_core_zip_asset": "golden-key-v0.3.21-workbuddy-core.zip",
+  "golden_key_core_zip_sha256": "dc21792b6f9d773b1559b1687dee0cc78fcbfc442400d71a735f7ee375426599",
+  "golden_key_core_sha256_asset": "golden-key-v0.3.21-workbuddy-core.zip.sha256",
+  "golden_key_core_lock_asset": "GOLDEN_KEY_WORKBUDDY_CORE.lock.json",
+  "golden_key_core_lock_sha256": "7a4261b6a00eaab5edd80d618accd415f5392c36007624845d30d5683cd9fecc",
+  "golden_key_core_contract_id": "golden-key-workbuddy-callable-core-v1",
+  "golden_key_core_bundle_sha256": "ff0da1a11cd67605a79fc5b48bc627325d03a7d405ef3d60caf3a5b537372d64",
+  "authority": {
+    "invocation_model": "direct_agent",
+    "nested_agent_host_allowed": false,
+    "consumer_direct_official_sync_allowed": false,
+    "official_openmontage_role": "reviewed_upstream_baseline_only"
+  },
+  "sync_source": "golden-key-core-release-assets",
+  "sync_strategy": "lock-managed-scope-mirror",
+  "official_direct_sync_allowed": false,
+  "private_git_ancestry_merge_allowed": false,
+  "golden_key_core_main_merge_allowed": false,
+  "consumer_owned_package_paths": [
+    "requirements.txt",
+    "setup.py"
+  ],
+  "superseded_sync_tags": [
+    "golden-key-v0.3.18",
+    "golden-key-v0.3.19",
+    "golden-key-v0.3.20"
+  ],
+  "adapter_release_commit": null,
+  "adapter_release_tag": null,
+  "publication_audit_status": "pass_awaiting_explicit_push_authorization",
+  "last_verified_at": "2026-08-05T22:36:00+08:00"
+}

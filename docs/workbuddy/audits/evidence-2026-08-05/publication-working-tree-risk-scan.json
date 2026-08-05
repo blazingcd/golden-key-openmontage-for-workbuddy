@@ -1,0 +1,1307 @@
+{
+  "base": "origin/main",
+  "working_tree_file_count": 134,
+  "pattern_hit_counts": {
+    "real_customer_claim": 16,
+    "private_fork_note": 6,
+    "named_case_a": 24,
+    "named_case_b": 39,
+    "customer_signal": 116,
+    "named_case_c": 12,
+    "openai_style_key": 1,
+    "credential_assignment": 1
+  },
+  "pattern_hits_redacted": [
+    {
+      "category": "real_customer_claim",
+      "path": "NEXT-CONVERSATION-PROMPT-2026-08-05.md",
+      "line": 108,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "private_fork_note",
+      "path": "PROJECT-STATE.md",
+      "line": 43,
+      "fingerprint": "aa8d0d5d10982a47"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "PROJECT-STATE.md",
+      "line": 43,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "private_fork_note",
+      "path": "PROJECT-STATE.md",
+      "line": 48,
+      "fingerprint": "aa8d0d5d10982a47"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "PROJECT-STATE.md",
+      "line": 48,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "WORK-LOG.md",
+      "line": 151,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "WORK-LOG.md",
+      "line": 156,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "private_fork_note",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 7,
+      "fingerprint": "aa8d0d5d10982a47"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 9,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 11,
+      "fingerprint": "a711555c59ca8804"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 15,
+      "fingerprint": "13e76d5f91d9a9f1"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 17,
+      "fingerprint": "a711555c59ca8804"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 23,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 24,
+      "fingerprint": "03e39269b41aa3c8"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 24,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 25,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 26,
+      "fingerprint": "03e39269b41aa3c8"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 26,
+      "fingerprint": "ed364344f6e3d86c"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 27,
+      "fingerprint": "ed364344f6e3d86c"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 28,
+      "fingerprint": "901a74dc2cf4dfd9"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 29,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 31,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 31,
+      "fingerprint": "6a1be5e2ff6842d9"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 33,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 50,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 54,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 68,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 71,
+      "fingerprint": "87f1464c5a0045ea"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 93,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 93,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/DIRECTOR-ONLY-ROUND-1-EVIDENCE-2026-07-29.md",
+      "line": 131,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "private_fork_note",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 15,
+      "fingerprint": "aa8d0d5d10982a47"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 15,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "private_fork_note",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 104,
+      "fingerprint": "aa8d0d5d10982a47"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 104,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 105,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 105,
+      "fingerprint": "c6cfb83c623eac22"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 105,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 105,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_c",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 105,
+      "fingerprint": "c007552c5a613be1"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 105,
+      "fingerprint": "87f1464c5a0045ea"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 119,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 119,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_c",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 119,
+      "fingerprint": "c007552c5a613be1"
+    },
+    {
+      "category": "private_fork_note",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 156,
+      "fingerprint": "aa8d0d5d10982a47"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+      "line": 156,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "named_case_b",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/golden-key-commit-history.tsv",
+      "line": 31,
+      "fingerprint": "6a1be5e2ff6842d9"
+    },
+    {
+      "category": "named_case_a",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/golden-key-commit-history.tsv",
+      "line": 33,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 16,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 179,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 197,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 353,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 359,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 389,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 395,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 401,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 407,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 413,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 443,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 479,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 835,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1024,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1045,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1227,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1234,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1269,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1276,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1283,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1290,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1297,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1332,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+      "line": 1374,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 9,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 160,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 178,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 256,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 304,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 310,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 316,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 322,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 328,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 334,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 340,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 346,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 352,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 358,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 364,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 370,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 376,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 382,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 388,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 394,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 400,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 406,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 412,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 418,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 424,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 430,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 436,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 442,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 448,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 454,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 460,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 466,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 472,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 478,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 484,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 490,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 496,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 502,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 508,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 514,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 520,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 526,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 532,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 538,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 544,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 550,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 556,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 562,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 568,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 574,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 580,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 586,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 592,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 598,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 604,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 610,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 616,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 622,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 628,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 634,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 640,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 646,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 652,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 658,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 664,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 670,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 676,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 706,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 712,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 844,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 850,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 880,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 886,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 892,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 898,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 904,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 934,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+      "line": 970,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "pipeline_defs/golden-key-product-marketing.yaml",
+      "line": 6,
+      "fingerprint": "03e39269b41aa3c8"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "scripts/workbuddy/w0_audit.py",
+      "line": 330,
+      "fingerprint": "f66e81aa39f367c7"
+    },
+    {
+      "category": "named_case_a",
+      "path": "scripts/workbuddy/w0_audit.py",
+      "line": 331,
+      "fingerprint": "c6cfb83c623eac22"
+    },
+    {
+      "category": "named_case_b",
+      "path": "scripts/workbuddy/w0_audit.py",
+      "line": 332,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "customer_signal",
+      "path": "scripts/workbuddy/w0_audit.py",
+      "line": 334,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "scripts/workbuddy/w0_audit.py",
+      "line": 334,
+      "fingerprint": "9eea86ace9ae169b"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "skills/pipelines/golden-key-brand-company/reviewer-rubric.md",
+      "line": 39,
+      "fingerprint": "901a74dc2cf4dfd9"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "skills/pipelines/golden-key-lead-conversion/reviewer-rubric.md",
+      "line": 39,
+      "fingerprint": "901a74dc2cf4dfd9"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 48,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 55,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 58,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 59,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 61,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 62,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 261,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "line": 267,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "line": 57,
+      "fingerprint": "6f9d8993cf8925c3"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "line": 61,
+      "fingerprint": "6f9d8993cf8925c3"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "line": 67,
+      "fingerprint": "d95d5d9a4237845e"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "line": 72,
+      "fingerprint": "d95d5d9a4237845e"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "line": 75,
+      "fingerprint": "6f9d8993cf8925c3"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "line": 426,
+      "fingerprint": "d95d5d9a4237845e"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "line": 429,
+      "fingerprint": "6f9d8993cf8925c3"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/contracts/test_model_driven_agent_host.py",
+      "line": 110,
+      "fingerprint": "6f9d8993cf8925c3"
+    },
+    {
+      "category": "openai_style_key",
+      "path": "tests/contracts/test_openai_compatible_transport.py",
+      "line": 14,
+      "fingerprint": "96ad4cc42109c038"
+    },
+    {
+      "category": "credential_assignment",
+      "path": "tests/contracts/test_openai_compatible_transport.py",
+      "line": 14,
+      "fingerprint": "f5963c673a846234"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/fixtures/golden_key_brand_company_cases.yaml",
+      "line": 3,
+      "fingerprint": "d95d5d9a4237845e"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 11,
+      "fingerprint": "568d404090f9ec20"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 11,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 13,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 16,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 18,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 18,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 27,
+      "fingerprint": "568d404090f9ec20"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 27,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 30,
+      "fingerprint": "568d404090f9ec20"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_cases.yaml",
+      "line": 30,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_results.yaml",
+      "line": 13,
+      "fingerprint": "87f1464c5a0045ea"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_robustness_matrix_results.yaml",
+      "line": 20,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_a",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_cases.yaml",
+      "line": 4,
+      "fingerprint": "a711555c59ca8804"
+    },
+    {
+      "category": "named_case_a",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_cases.yaml",
+      "line": 6,
+      "fingerprint": "c6cfb83c623eac22"
+    },
+    {
+      "category": "named_case_a",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_cases.yaml",
+      "line": 8,
+      "fingerprint": "c6cfb83c623eac22"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_cases.yaml",
+      "line": 12,
+      "fingerprint": "3760cc33f39189f4"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_cases.yaml",
+      "line": 22,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_cases.yaml",
+      "line": 43,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_cases.yaml",
+      "line": 46,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_a",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_results.yaml",
+      "line": 8,
+      "fingerprint": "a711555c59ca8804"
+    },
+    {
+      "category": "named_case_a",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_results.yaml",
+      "line": 12,
+      "fingerprint": "b315c8ca8d2ef09f"
+    },
+    {
+      "category": "customer_signal",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_results.yaml",
+      "line": 12,
+      "fingerprint": "87f1464c5a0045ea"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_results.yaml",
+      "line": 28,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_four_pipeline_route_robustness_results.yaml",
+      "line": 32,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_lead_conversion_cases.yaml",
+      "line": 3,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_c",
+      "path": "tests/fixtures/golden_key_lead_conversion_cases.yaml",
+      "line": 16,
+      "fingerprint": "d95d5d9a4237845e"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_cases.yaml",
+      "line": 6,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_cases.yaml",
+      "line": 11,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_cases.yaml",
+      "line": 30,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_cases.yaml",
+      "line": 33,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_cases.yaml",
+      "line": 41,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_cases.yaml",
+      "line": 87,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_cases.yaml",
+      "line": 92,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "real_customer_claim",
+      "path": "tests/fixtures/golden_key_multimodal_project_context_results.yaml",
+      "line": 44,
+      "fingerprint": "901a74dc2cf4dfd9"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_product_marketing_cases.yaml",
+      "line": 3,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_product_marketing_cases.yaml",
+      "line": 8,
+      "fingerprint": "0361eab03fea3a25"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_product_marketing_cases.yaml",
+      "line": 20,
+      "fingerprint": "a7b0d24ea02237a2"
+    },
+    {
+      "category": "named_case_b",
+      "path": "tests/fixtures/golden_key_product_marketing_cases.yaml",
+      "line": 41,
+      "fingerprint": "0361eab03fea3a25"
+    }
+  ],
+  "binary_or_non_utf8_paths": []
+}

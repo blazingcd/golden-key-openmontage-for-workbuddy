@@ -1,0 +1,71 @@
+# Project State
+
+更新时间：2026-08-05 22:36 +08:00
+
+## 当前里程碑
+
+`W0 DONE / v0.3.21 PUBLICATION GATE PASS / AWAITING EXPLICIT PUSH AUTHORIZATION`
+
+新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
+`origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过，但公开 `origin` 尚未改变；必须先
+向用户报告最终目标提交并等待明确授权。
+
+## 当前权威基线
+
+| 项目 | 当前值 |
+|---|---|
+| Release | `golden-key-v0.3.21` |
+| Source commit（仅provenance） | `757ea3822e5f2eef7f341389983119021e827c8d` |
+| ZIP SHA-256 | `DC21792B6F9D773B1559B1687DEE0CC78FCBFC442400D71A735F7EE375426599` |
+| Contract ID | `golden-key-workbuddy-callable-core-v1` |
+| Authority | `direct_agent` / nested Agent Host forbidden |
+| Managed files | `1566`，目标清单和每文件hash/mode完全匹配 |
+| Public base | `origin/main` / `4eab34c5cfcccaa4f1970554928feccce73ee930` |
+| Private ancestry | 不属于发布候选；source commit不是当前`main`祖先 |
+| Public push | 未授权、未执行 |
+
+## DONE
+
+- Release ZIP、GitHub asset digest、外部 SHA sidecar、外部/内嵌 lock 完整核验。
+- managed scope 精确镜像；公开基线首次导入改写 96 个文件，第二次同步 0 改动。
+- 六个 `consumer_remove_paths` 均不存在；`requirements.txt`、`setup.py`、README、配置、同步脚本和文档均保留。
+- 同步器对 forbidden path、hash/mode、缺失、额外、scope 漂移、六路径漂移和幂等风险建立负测。
+- 四个 Golden Key Pipeline、44 个 Pipeline Skill、Reviewer/Checkpoint、Schema、Tool Registry 和 10 个变更合同测试通过完整性核验。
+- 回归：contracts `716 passed, 7 skipped`；tools `284 passed, 1 subtest passed`；WorkBuddy `15 passed`。
+- 公开性扫描、direct-agent静态隔离和公开Git lineage Gate通过；未扫描或引入Golden Key私有历史。
+- 旧`v0.3.18`整仓发布W0报告保留并脱敏，明确标记为历史且已被取代。
+
+## 历史记录（不再是当前Gate）
+
+- `golden-key-v0.3.18`整仓/private ancestry方案的W0裁决为`FAIL`。
+- 该结论只约束已废弃旧方案，不否定或阻断v0.3.21 Release导出候选。
+- 旧本地分支保留为`legacy/core-sync-v0.3.18`和`legacy/private-ancestry-v0.3.18`，不得推送。
+
+## 下一步
+
+1. 完成本地候选提交并报告Gate、风险、文件清单、测试证据和目标commit。
+2. 等待用户再次明确授权；没有授权不得推送。
+3. 获得授权后建立首个`Pre-Alpha`完整公开基线。
+4. 进入W1剩余工作：包骨架、D盘环境doctor和常规同步Gate集成。
+5. W2实现WorkBuddy Skill和最小确定性MCP；W3完成动态隔离；W4完成安装与真实WorkBuddy验收。
+
+## 当前允许声明
+
+- v0.3.21 WorkBuddy Callable Core已同步并通过本地W0和回归。
+- 当前候选为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
+
+当前不允许声明：
+
+- 已公开发布；
+- 已经可以安装；
+- WorkBuddy Skill/MCP已可用或真实WorkBuddy验收通过；
+- `OFFLINE ADAPTER READY`；
+- 真实Provider成片通过。
+
+## 权威文件
+
+- `docs/workbuddy/ARCHITECTURE.md`
+- `docs/workbuddy/CORE-SYNC-POLICY.md`
+- `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`
+- `docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-v0.3.21-2026-08-05.md`
+- `NEXT-CONVERSATION-PROMPT-2026-08-05-W1.md`

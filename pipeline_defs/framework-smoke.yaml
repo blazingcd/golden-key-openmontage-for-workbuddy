@@ -3,6 +3,7 @@ version: "1.0"
 description: Minimal pipeline manifest used to exercise the Phase 0 framework contracts.
 category: custom
 stability: beta
+selection_scope: framework_only
 default_checkpoint_policy: guided
 stages:
   - name: research

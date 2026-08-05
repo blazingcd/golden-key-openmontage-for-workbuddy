@@ -20,8 +20,12 @@ from tools.video.video_compose import VideoCompose  # noqa: E402
 
 
 @pytest.fixture
-def tool(monkeypatch):
+def tool(monkeypatch, tmp_path):
     monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/npx")
+    composer = tmp_path / "remotion-composer"
+    (composer / "node_modules").mkdir(parents=True)
+    (composer / "package.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("OPENMONTAGE_REMOTION_ROOT", str(composer))
     return VideoCompose()
 
 

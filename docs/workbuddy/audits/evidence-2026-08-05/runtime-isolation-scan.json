@@ -1,0 +1,23 @@
+{
+  "adapter_runtime_roots": [
+    "golden_key_openmontage_workbuddy",
+    "workbuddy-skill",
+    "scripts/workbuddy",
+    "tests/workbuddy",
+    ".workbuddy"
+  ],
+  "runtime_file_count": 2,
+  "runtime_files": [
+    "scripts/workbuddy/w0_audit.py",
+    "tests/workbuddy/test_w0_audit.py"
+  ],
+  "adapter_entrypoint_file_count": 0,
+  "adapter_entrypoint_files": [],
+  "forbidden_reference_hits": [],
+  "static_result": "not_yet_applicable",
+  "core_files_preserved": {
+    "lib/model_driven_agent_host.py": true,
+    "lib/openai_compatible_transport.py": true
+  },
+  "dynamic_network_block_test": "planned_not_executable_until_adapter_entrypoint_exists"
+}

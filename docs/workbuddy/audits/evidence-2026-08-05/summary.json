@@ -1,0 +1,7 @@
+{
+  "baseline_pass": true,
+  "pipeline_count": 4,
+  "pipeline_skill_count": 44,
+  "added_contract_test_count": 11,
+  "output_dir": "docs/workbuddy/audits/evidence-2026-08-05"
+}

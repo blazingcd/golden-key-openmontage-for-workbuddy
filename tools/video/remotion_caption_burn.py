@@ -47,6 +47,7 @@ from tools.base_tool import (
     ToolStability,
     ToolTier,
 )
+from tools.video.browser_runtime import resolve_browser_executable, resolve_remotion_root
 
 
 class RemotionCaptionBurn(BaseTool):
@@ -112,6 +113,21 @@ class RemotionCaptionBurn(BaseTool):
                 "default": "#22D3EE",
                 "description": "Highlight color for the active word (hex).",
             },
+            "caption_color": {
+                "type": "string",
+                "default": "#FFFFFF",
+                "description": "Base caption text color from edit_decisions.subtitles.",
+            },
+            "caption_background_color": {
+                "type": "string",
+                "default": "rgba(0, 0, 0, 0.65)",
+                "description": "Caption band background color.",
+            },
+            "caption_font_family": {
+                "type": "string",
+                "default": "Microsoft YaHei, system-ui, sans-serif",
+                "description": "Caption font family from edit_decisions.subtitles.",
+            },
             "corrections": {
                 "type": "object",
                 "description": (
@@ -138,6 +154,21 @@ class RemotionCaptionBurn(BaseTool):
                 "default": False,
                 "description": "Force FFmpeg fallback even if Remotion is available.",
             },
+            "browser_executable": {
+                "type": "string",
+                "description": (
+                    "Existing Chrome/Chromium/Edge executable to reuse for Remotion. "
+                    "If omitted, REMOTION_BROWSER_EXECUTABLE, CHROME_PATH and local "
+                    "browser installations are checked. No browser is downloaded."
+                ),
+            },
+            "remotion_root": {
+                "type": "string",
+                "description": (
+                    "Prepared remotion-composer directory to reuse. If omitted, "
+                    "OPENMONTAGE_REMOTION_ROOT and local repository paths are checked."
+                ),
+            },
         },
     }
 
@@ -154,25 +185,26 @@ class RemotionCaptionBurn(BaseTool):
     #  Remotion detection
     # ------------------------------------------------------------------ #
 
-    def _find_remotion_root(self) -> Path | None:
+    def _find_remotion_root(self, explicit: str | None = None) -> Path | None:
         """Find the remotion-composer directory relative to the repo."""
-        candidates = [
-            Path.cwd() / "remotion-composer",
-            Path(__file__).resolve().parent.parent.parent / "remotion-composer",
-        ]
-        for p in candidates:
-            if (
-                p.is_dir()
-                and (p / "package.json").exists()
-                and (p / "node_modules").is_dir()
-            ):
-                return p
-        return None
+        return resolve_remotion_root(
+            explicit,
+            repo_root=Path(__file__).resolve().parent.parent.parent,
+        )
 
-    def _remotion_available(self) -> bool:
+    def _remotion_available(
+        self,
+        browser_executable: str | None = None,
+        remotion_root: str | None = None,
+    ) -> bool:
         return (
             shutil.which("npx") is not None
-            and self._find_remotion_root() is not None
+            and self._find_remotion_root(remotion_root) is not None
+            and resolve_browser_executable(
+                browser_executable,
+                env_keys=("REMOTION_BROWSER_EXECUTABLE", "CHROME_PATH"),
+            )
+            is not None
         )
 
     # ------------------------------------------------------------------ #
@@ -182,7 +214,7 @@ class RemotionCaptionBurn(BaseTool):
     def _segments_to_word_captions(
         self, segments: list[dict], corrections: dict[str, str] | None = None
     ) -> list[dict]:
-        """Convert transcriber segments to [{word, startMs, endMs}, ...]."""
+        """Convert segments to Remotion captions, preserving Director layout."""
         captions: list[dict] = []
         corr = {k.lower(): v for k, v in (corrections or {}).items()}
 
@@ -198,11 +230,16 @@ class RemotionCaptionBurn(BaseTool):
                         trailing = raw[-1]
                     if fixed != raw and not fixed.endswith(trailing):
                         fixed = fixed + trailing
-                    captions.append({
+                    caption = {
                         "word": fixed,
                         "startMs": int(w["start"] * 1000),
                         "endMs": int(w["end"] * 1000),
-                    })
+                    }
+                    if w.get("page_id") is not None:
+                        caption["pageId"] = str(w["page_id"])
+                    if w.get("line_break_after"):
+                        caption["lineBreakAfter"] = True
+                    captions.append(caption)
             elif "text" in seg:
                 text_words = seg["text"].strip().split()
                 dur = seg["end"] - seg["start"]
@@ -272,11 +309,30 @@ class RemotionCaptionBurn(BaseTool):
         words_per_page: int,
         font_size: int,
         highlight_color: str,
+        caption_color: str = "#FFFFFF",
+        caption_background_color: str = "rgba(0, 0, 0, 0.65)",
+        caption_font_family: str = "Microsoft YaHei, system-ui, sans-serif",
         overlays: list[dict] | None = None,
+        browser_executable: str | None = None,
+        remotion_root: str | None = None,
     ) -> ToolResult:
-        root = self._find_remotion_root()
+        root = self._find_remotion_root(remotion_root)
         if root is None:
             return ToolResult(success=False, error="Remotion root not found")
+
+        browser_path = resolve_browser_executable(
+            browser_executable,
+            env_keys=("REMOTION_BROWSER_EXECUTABLE", "CHROME_PATH"),
+        )
+        if browser_path is None:
+            return ToolResult(
+                success=False,
+                error=(
+                    "Remotion requires an existing Chrome/Chromium/Edge executable. "
+                    "Set browser_executable or REMOTION_BROWSER_EXECUTABLE. "
+                    "Automatic browser download is disabled for this tool path."
+                ),
+            )
 
         # Get video duration in frames
         dur_cmd = [
@@ -318,6 +374,9 @@ class RemotionCaptionBurn(BaseTool):
             "wordsPerPage": words_per_page,
             "fontSize": font_size,
             "highlightColor": highlight_color,
+            "captionColor": caption_color,
+            "captionBackgroundColor": caption_background_color,
+            "captionFontFamily": caption_font_family,
         }
         props_dir = root / "public" / "demo-props"
         props_dir.mkdir(parents=True, exist_ok=True)
@@ -334,6 +393,7 @@ class RemotionCaptionBurn(BaseTool):
             f"--width={width}", f"--height={height}", "--fps=30",
             f"--frames=0-{total_frames - 1}",
             "--codec=h264", "--crf=18",
+            f"--browser-executable={browser_path}",
             f"--output={str(Path(output_path).resolve())}",
         ]
         self.run_command(render_cmd, cwd=str(root))
@@ -351,6 +411,7 @@ class RemotionCaptionBurn(BaseTool):
                 "caption_count": len(captions),
                 "overlay_count": len(overlays or []),
                 "words_per_page": words_per_page,
+                "browser_executable": browser_path,
             },
             artifacts=[output_path],
         )
@@ -445,9 +506,18 @@ class RemotionCaptionBurn(BaseTool):
         output_path = inputs["output_path"]
         corrections = inputs.get("corrections")
         force_ffmpeg = inputs.get("force_ffmpeg", False)
+        browser_executable = inputs.get("browser_executable")
+        remotion_root = inputs.get("remotion_root")
         words_per_page = inputs.get("words_per_page", 4)
         font_size = inputs.get("font_size", 52)
         highlight_color = inputs.get("highlight_color", "#22D3EE")
+        caption_color = inputs.get("caption_color", "#FFFFFF")
+        caption_background_color = inputs.get(
+            "caption_background_color", "rgba(0, 0, 0, 0.65)"
+        )
+        caption_font_family = inputs.get(
+            "caption_font_family", "Microsoft YaHei, system-ui, sans-serif"
+        )
 
         if not Path(input_path).exists():
             return ToolResult(success=False, error=f"Input video not found: {input_path}")
@@ -474,15 +544,29 @@ class RemotionCaptionBurn(BaseTool):
 
         overlays = inputs.get("overlays")
 
-        # Choose render method
-        if not force_ffmpeg and self._remotion_available():
+        # Choose render method. Runtime swaps change the output character, so
+        # FFmpeg is only used when explicitly approved via force_ffmpeg.
+        if force_ffmpeg:
+            result = self._render_ffmpeg(input_path, output_path, captions)
+        elif self._remotion_available(browser_executable, remotion_root):
             result = self._render_remotion(
                 input_path, output_path, captions,
                 words_per_page, font_size, highlight_color,
+                caption_color, caption_background_color, caption_font_family,
                 overlays=overlays,
+                browser_executable=browser_executable,
+                remotion_root=remotion_root,
             )
         else:
-            result = self._render_ffmpeg(input_path, output_path, captions)
+            result = ToolResult(
+                success=False,
+                error=(
+                    "Remotion caption runtime is unavailable. This is a blocker: "
+                    "OpenMontage will not silently replace approved word-highlight "
+                    "captions with static FFmpeg subtitles. Set browser_executable/"
+                    "REMOTION_BROWSER_EXECUTABLE, or explicitly approve force_ffmpeg."
+                ),
+            )
 
         result.duration_seconds = round(time.time() - start, 2)
         return result

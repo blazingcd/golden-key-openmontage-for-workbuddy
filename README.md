@@ -1,3 +1,74 @@
+# Golden Key OpenMontage for WorkBuddy
+
+面向腾讯 WorkBuddy 的 Golden Key 版 OpenMontage 社区分支。
+
+**Golden Key OpenMontage for WorkBuddy** is a community-maintained edition of
+[OpenMontage](https://github.com/calesthio/OpenMontage), adapted for use with WorkBuddy.
+
+> **开发状态：预发布。** 当前仓库尚未提供可安装的 WorkBuddy Skill/MCP，也尚未完成真实
+> WorkBuddy 或 Provider 验收。请勿把当前源码视为可用成品；进度和发布 Gate 以
+> `PROJECT-STATE.md` 为准。
+>
+> 首次公开基线不等待 W1～W4，但只有最终拟公开版本的 W0 Gate 为 `PASS`，且用户在看到
+> 审计报告后再次明确授权，才允许推送。规则见 `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`。
+
+当前核心基线来自 `golden-key-v0.3.21` 的 WorkBuddy 专用 Release 导出包，合同 ID 为
+`golden-key-workbuddy-callable-core-v1`。本项目不合并 Golden Key 私有 Git 历史；WorkBuddy
+作为唯一 Agent 直接使用导出的 Pipeline、Skill、Schema、Checkpoint、Artifact 和 Tool Registry。
+
+## 项目介绍
+
+[OpenMontage](https://github.com/calesthio/OpenMontage) 是一个由 AI Agent 驱动的开源视频制作系统，
+覆盖创意构思、脚本、素材生成与检索、剪辑、审查和最终合成等制作环节。
+
+Golden Key OpenMontage for WorkBuddy 在 Golden Key WorkBuddy Callable Core 的基础上提供 WorkBuddy 适配，
+让用户可以在 WorkBuddy 中通过自然语言发起和推进视频制作，并继续使用 OpenMontage 原生的
+Pipeline、Skill、Schema、Review、Checkpoint 和 Artifact 体系。
+
+## 工作方式
+
+```text
+用户
+  -> WorkBuddy
+  -> Golden Key OpenMontage for WorkBuddy
+  -> OpenMontage原生视频制作流程
+  -> 视频与制作产物
+```
+
+WorkBuddy负责理解用户意图、规划任务并与用户交互；OpenMontage负责视频制作流程、工具调用、
+阶段审查、检查点和制作产物。本项目提供二者之间的适配与使用体验。
+
+## Golden Key Edition
+
+Golden Key Edition 延续 OpenMontage 的 Agent-first 制作方式，并面向中文产品营销、个人IP、品宣、招商等场景进行优化，
+强化稳定调用、结构化交互、制作过程可追踪以及中文环境下的使用体验。
+
+## 开源与致谢
+
+本项目基于 [OpenMontage](https://github.com/calesthio/OpenMontage) 开发，并保留其上游历史、版权
+和归属信息。感谢 OpenMontage 项目及其所有贡献者。
+
+OpenMontage 使用 [GNU Affero General Public License v3.0](https://github.com/calesthio/OpenMontage/blob/main/LICENSE)。
+本项目继承该许可证发布。
+
+本项目由独立社区维护，不是 OpenMontage 或 WorkBuddy 的官方发行版本。OpenMontage、Golden Key
+和 WorkBuddy 相关名称及标识归各自权利人所有。
+
+<!-- WORKBUDDY_PROJECT_README_END -->
+
+<br>
+
+---
+
+<div align="center">
+  <h2>Official OpenMontage README</h2>
+  <p>以下为本项目当前锁定核心版本所包含的官方 OpenMontage README 原文。</p>
+</div>
+
+---
+
+<!-- OFFICIAL_OPENMONTAGE_README_BEGIN -->
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/monty-dark.svg">

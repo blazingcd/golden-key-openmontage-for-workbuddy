@@ -1,0 +1,131 @@
+# W0-W4 任务路径与执行步骤
+
+状态：`ACTIVE PLAN`
+
+更新日期：2026-08-05
+
+## 总体路径
+
+```text
+W0 v0.3.21导出合同、公开性、架构和接口审计
+ -> W1 Callable Core同步门禁和安装骨架
+ -> W2 WorkBuddy Skill与最小确定性MCP
+ -> W3 离线可靠性、安全和回归
+ -> W4 安装交付、用户提示和真实WorkBuddy验收
+```
+
+每个阶段完成时必须同时更新 `PROJECT-STATE.md` 和追加 `WORK-LOG.md`，附提交、测试和证据路径。
+
+## W0：v0.3.21导出合同、公开性与产品接口审计
+
+### 任务
+
+- 核对v0.3.21 Release、ZIP外部SHA、内外lock、source commit和公开`origin/main`。
+- 验证1566个managed-scope文件、required/forbidden/consumer-remove合同和幂等同步。
+- 只审计“Release导出包+WorkBuddy自有增量”的公开候选，不扫描或发布Golden Key私有历史。
+- 检查密钥、客户数据、私有路径、素材/字体/品牌和第三方许可证。
+- 形成官方OpenMontage、参考MCP与本项目的实现对照。
+- 冻结 WorkBuddy用户旅程、提示状态和Skill/MCP职责。
+- 映射当前核心的Guide、Manifest、Skill、Schema、Checkpoint和Tool Registry接口。
+- 验证`direct_agent`运行时不包含或调用SaaS Agent Host/模型兼容传输。
+- 检查Python包名、MCP Server名和WorkBuddy Skill名冲突。
+
+### 完成证据
+
+- v0.3.21公开审计报告、Release合同证据和候选文件清单。
+- 架构边界和同步策略文档。
+- MCP候选工具合同。
+- 运行时隔离测试方案。
+- 明确结论：`PASS`、`CONDITIONAL PASS`或`FAIL`。
+
+### Gate
+
+新W0已在本地对v0.3.21导出候选得到`PASS`。这只解除技术Gate，不构成推送授权；必须报告最终
+目标提交并等待用户再次明确许可。旧v0.3.18整仓方案的`FAIL`保留为历史记录，但不再阻断当前候选。
+
+## W1：Callable Core同步门禁与安装骨架
+
+### 任务
+
+- 维护v0.3.21 Release资产和lock身份，不维护活动`core-sync`分支。
+- 维持`config/openmontage.sync.json`和`scripts/core_sync/sync_workbuddy_core.py`的fail-closed校验。
+- 将下载、外部SHA、lock、managed mirror、消费方所有权和幂等测试纳入常规门禁。
+- 保证公开`main`只继承公开`origin/main`，不继承private Core ancestry。
+- 建立 WorkBuddy Python包、Skill目录、测试目录和示例配置目录。
+- 规定D盘项目、缓存、模型和临时文件位置。
+- 建立环境 `doctor` 骨架，但不在本阶段冻结运行环境打包方案。
+
+### 完成证据
+
+- Core ZIP、lock、managed scope或目标文件漂移会fail-closed。
+- Release source commit、合同ID、authority和bundle digest一致。
+- 全新D盘目录可以建立开发环境。
+- 不复制SaaS/Agent Host/私有证据/导出维护代码。
+
+## W2：WorkBuddy体验和最小调用面
+
+### 任务
+
+- 编写可导入的 WorkBuddy Skill。
+- 复用原生 onboarding，提供中文、按真实能力生成的用户提示和示例Prompt。
+- 支持模糊需求、具体目标、参考视频、源素材和继续项目五类入口。
+- 实现环境/版本检查、权威上下文读取、项目创建/打开和状态查询。
+- 实现Schema校验和受限Stage提交。
+- 实现当前Manifest/Stage允许范围内的确定性工具执行。
+- 不包含、调用或重新实现`model_driven_agent_host.py`、`openai_compatible_transport.py`或`agent_host_authority.py`。
+
+### 完成证据
+
+- MCP握手、工具发现和参数Schema通过。
+- WorkBuddy能够按Rule Zero选择Pipeline，而MCP不预选。
+- 提示明确展示当前状态、选择、推荐、成本/风险和下一步。
+
+## W3：离线可靠性、安全和回归
+
+### 任务
+
+- 将长任务状态持久化到D盘工作区。
+- 验证MCP重启后的任务和项目恢复。
+- 实现并验证真实取消或明确不可取消语义。
+- 并发限制、幂等、重复执行保护和超时处理。
+- 路径规范化和根目录封闭。
+- 密钥、异常和日志脱敏。
+- 无凭证、缺Artifact、Gate违规和Schema错误负测。
+- 静态依赖检查和运行时网络拦截，证明没有第二个Agent模型调用。
+- 运行核心合同回归和Adapter专项回归。
+
+### 完成证据
+
+- 离线测试报告。
+- 失败路径均为结构化、可操作提示。
+- mock只作为测试夹具，不作为真实可用结论。
+
+## W4：打包、安装、文档和真实WorkBuddy验收
+
+### 任务
+
+- 决策并实现Python、Node、FFmpeg等运行环境交付方式。
+- Windows优先安装、升级和卸载。
+- 生成项目级`.workbuddy/mcp.json`。
+- 打包可导入Skill和完整Golden Key核心。
+- 中文快速开始、Prompt Gallery和故障排查。
+- 在未预装开发环境的普通Windows用户场景验证安装。
+- 在真实WorkBuddy中验证握手、工具发现、自然语言触发、审批暂停、长任务、取消和恢复。
+
+### 完成证据
+
+- 全新D盘目录按文档安装成功。
+- 用户不需要另外下载Golden Key核心。
+- 真实WorkBuddy验收通过后才声明`OFFLINE ADAPTER READY`。
+- Provider真实成片仍为单独授权阶段。
+
+## 发布节奏
+
+- 首次公开基线是 W0 后的独立 Gate，不是 W4 之后的集中发布阶段。
+- W0 明确 `PASS` 后，先报告 Gate、风险、待发布文件、测试证据和目标提交，并等待用户再次明确授权。
+- 获得授权后立即发布完整v0.3.21 WorkBuddy Callable Core导出、四个业务Pipeline及合同面、
+  安全可公开的WorkBuddy增量和治理文档；发布状态标记为`Pre-Alpha`或“WorkBuddy Adapter开发中”。
+- 首次基线发布后，W1～W4 持续开发、持续留痕、持续提交和持续推送，不积压到 W4。
+- W4 的真实安装和 WorkBuddy 验收仍是声明 `OFFLINE ADAPTER READY` 的必要条件。
+- 未经单次授权不调用真实或付费 Provider。
+- 权威细则见 `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`。

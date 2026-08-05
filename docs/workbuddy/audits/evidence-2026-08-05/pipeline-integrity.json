@@ -1,0 +1,1184 @@
+{
+  "pipeline_count": 4,
+  "pipeline_skill_count": 44,
+  "registered_tool_count": 102,
+  "referenced_tool_count": 22,
+  "pipelines": {
+    "golden-key-brand-company": {
+      "manifest_path": "pipeline_defs/golden-key-brand-company.yaml",
+      "manifest_version": "0.2.4",
+      "manifest_blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:97dfd868004ebdf7]",
+        "core_sync": "[private-commit-fingerprint:97dfd868004ebdf7]",
+        "local_main": "[private-commit-fingerprint:97dfd868004ebdf7]",
+        "public_origin": null
+      },
+      "manifest_remote_core_main_equal": true,
+      "manifest_absent_from_public_origin": true,
+      "schema_valid": true,
+      "schema_errors": [],
+      "default_checkpoint_policy": "guided",
+      "reviewer_skill_declared": true,
+      "checkpoint_skill_declared": true,
+      "pipeline_skill_count": 11,
+      "pipeline_skills": [
+        {
+          "skill": "pipelines/golden-key-brand-company/executive-producer",
+          "path": "skills/pipelines/golden-key-brand-company/executive-producer.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:cda4afc0a2a32531]",
+            "core_sync": "[private-commit-fingerprint:cda4afc0a2a32531]",
+            "local_main": "[private-commit-fingerprint:cda4afc0a2a32531]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/director-decision-policy",
+          "path": "skills/pipelines/golden-key-brand-company/director-decision-policy.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:af53d847bc92ae90]",
+            "core_sync": "[private-commit-fingerprint:af53d847bc92ae90]",
+            "local_main": "[private-commit-fingerprint:af53d847bc92ae90]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/reviewer-rubric",
+          "path": "skills/pipelines/golden-key-brand-company/reviewer-rubric.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:4c1817b14b67febf]",
+            "core_sync": "[private-commit-fingerprint:4c1817b14b67febf]",
+            "local_main": "[private-commit-fingerprint:4c1817b14b67febf]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/idea-director",
+          "path": "skills/pipelines/golden-key-brand-company/idea-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:e0e203fdca94d68a]",
+            "core_sync": "[private-commit-fingerprint:e0e203fdca94d68a]",
+            "local_main": "[private-commit-fingerprint:e0e203fdca94d68a]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/proposal-director",
+          "path": "skills/pipelines/golden-key-brand-company/proposal-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:5b96c4d35ac571b8]",
+            "core_sync": "[private-commit-fingerprint:5b96c4d35ac571b8]",
+            "local_main": "[private-commit-fingerprint:5b96c4d35ac571b8]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/script-director",
+          "path": "skills/pipelines/golden-key-brand-company/script-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:30e9cd27bde945e0]",
+            "core_sync": "[private-commit-fingerprint:30e9cd27bde945e0]",
+            "local_main": "[private-commit-fingerprint:30e9cd27bde945e0]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/scene-director",
+          "path": "skills/pipelines/golden-key-brand-company/scene-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:01336db57e3c22aa]",
+            "core_sync": "[private-commit-fingerprint:01336db57e3c22aa]",
+            "local_main": "[private-commit-fingerprint:01336db57e3c22aa]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/asset-director",
+          "path": "skills/pipelines/golden-key-brand-company/asset-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:a17af3c74dc915b4]",
+            "core_sync": "[private-commit-fingerprint:a17af3c74dc915b4]",
+            "local_main": "[private-commit-fingerprint:a17af3c74dc915b4]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/edit-director",
+          "path": "skills/pipelines/golden-key-brand-company/edit-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:b9a12ac76d7b574e]",
+            "core_sync": "[private-commit-fingerprint:b9a12ac76d7b574e]",
+            "local_main": "[private-commit-fingerprint:b9a12ac76d7b574e]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/compose-director",
+          "path": "skills/pipelines/golden-key-brand-company/compose-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:9e2debbeb9798e54]",
+            "core_sync": "[private-commit-fingerprint:9e2debbeb9798e54]",
+            "local_main": "[private-commit-fingerprint:9e2debbeb9798e54]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-brand-company/publish-director",
+          "path": "skills/pipelines/golden-key-brand-company/publish-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:1280bf150a46d786]",
+            "core_sync": "[private-commit-fingerprint:1280bf150a46d786]",
+            "local_main": "[private-commit-fingerprint:1280bf150a46d786]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        }
+      ],
+      "stage_checks": [
+        {
+          "stage": "idea",
+          "skill": "pipelines/golden-key-brand-company/idea-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "proposal",
+          "skill": "pipelines/golden-key-brand-company/proposal-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "script",
+          "skill": "pipelines/golden-key-brand-company/script-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "scene_plan",
+          "skill": "pipelines/golden-key-brand-company/scene-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "assets",
+          "skill": "pipelines/golden-key-brand-company/asset-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "edit",
+          "skill": "pipelines/golden-key-brand-company/edit-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "compose",
+          "skill": "pipelines/golden-key-brand-company/compose-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "publish",
+          "skill": "pipelines/golden-key-brand-company/publish-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        }
+      ],
+      "artifact_schema_checks": {
+        "asset_manifest": true,
+        "brief": true,
+        "decision_log": true,
+        "edit_decisions": true,
+        "final_review": true,
+        "proposal_packet": true,
+        "publish_log": true,
+        "render_report": true,
+        "scene_plan": true,
+        "script": true
+      },
+      "tool_refs": [
+        "audio_enhance",
+        "audio_mixer",
+        "color_grade",
+        "face_tracker",
+        "frame_sampler",
+        "freesound_music",
+        "hyperframes_compose",
+        "image_selector",
+        "lip_sync",
+        "music_gen",
+        "pixabay_music",
+        "remotion_caption_burn",
+        "scene_detect",
+        "subtitle_gen",
+        "talking_head",
+        "transcriber",
+        "tts_selector",
+        "video_compose",
+        "video_selector",
+        "video_stitch",
+        "video_trimmer",
+        "visual_qa"
+      ],
+      "missing_tool_registry_refs": []
+    },
+    "golden-key-lead-conversion": {
+      "manifest_path": "pipeline_defs/golden-key-lead-conversion.yaml",
+      "manifest_version": "0.2.4",
+      "manifest_blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:343e02820143e5e9]",
+        "core_sync": "[private-commit-fingerprint:343e02820143e5e9]",
+        "local_main": "[private-commit-fingerprint:343e02820143e5e9]",
+        "public_origin": null
+      },
+      "manifest_remote_core_main_equal": true,
+      "manifest_absent_from_public_origin": true,
+      "schema_valid": true,
+      "schema_errors": [],
+      "default_checkpoint_policy": "guided",
+      "reviewer_skill_declared": true,
+      "checkpoint_skill_declared": true,
+      "pipeline_skill_count": 11,
+      "pipeline_skills": [
+        {
+          "skill": "pipelines/golden-key-lead-conversion/executive-producer",
+          "path": "skills/pipelines/golden-key-lead-conversion/executive-producer.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:f3c7e62db08d1b40]",
+            "core_sync": "[private-commit-fingerprint:f3c7e62db08d1b40]",
+            "local_main": "[private-commit-fingerprint:f3c7e62db08d1b40]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/director-decision-policy",
+          "path": "skills/pipelines/golden-key-lead-conversion/director-decision-policy.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:9e3752957c9f2e70]",
+            "core_sync": "[private-commit-fingerprint:9e3752957c9f2e70]",
+            "local_main": "[private-commit-fingerprint:9e3752957c9f2e70]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/reviewer-rubric",
+          "path": "skills/pipelines/golden-key-lead-conversion/reviewer-rubric.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:454e71eeb596ae9b]",
+            "core_sync": "[private-commit-fingerprint:454e71eeb596ae9b]",
+            "local_main": "[private-commit-fingerprint:454e71eeb596ae9b]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/idea-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/idea-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:549a50ce4d489bb4]",
+            "core_sync": "[private-commit-fingerprint:549a50ce4d489bb4]",
+            "local_main": "[private-commit-fingerprint:549a50ce4d489bb4]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/proposal-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/proposal-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:40067b9d727c1d2d]",
+            "core_sync": "[private-commit-fingerprint:40067b9d727c1d2d]",
+            "local_main": "[private-commit-fingerprint:40067b9d727c1d2d]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/script-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/script-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:126ca5e04f79ba09]",
+            "core_sync": "[private-commit-fingerprint:126ca5e04f79ba09]",
+            "local_main": "[private-commit-fingerprint:126ca5e04f79ba09]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/scene-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/scene-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:fe77ed7d58842f36]",
+            "core_sync": "[private-commit-fingerprint:fe77ed7d58842f36]",
+            "local_main": "[private-commit-fingerprint:fe77ed7d58842f36]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/asset-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/asset-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:34dc5435b4c8047b]",
+            "core_sync": "[private-commit-fingerprint:34dc5435b4c8047b]",
+            "local_main": "[private-commit-fingerprint:34dc5435b4c8047b]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/edit-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/edit-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:ed555e96219dc7c1]",
+            "core_sync": "[private-commit-fingerprint:ed555e96219dc7c1]",
+            "local_main": "[private-commit-fingerprint:ed555e96219dc7c1]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/compose-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/compose-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:e2dab473ac477bd9]",
+            "core_sync": "[private-commit-fingerprint:e2dab473ac477bd9]",
+            "local_main": "[private-commit-fingerprint:e2dab473ac477bd9]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-lead-conversion/publish-director",
+          "path": "skills/pipelines/golden-key-lead-conversion/publish-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:4dcea4cfb8aab967]",
+            "core_sync": "[private-commit-fingerprint:4dcea4cfb8aab967]",
+            "local_main": "[private-commit-fingerprint:4dcea4cfb8aab967]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        }
+      ],
+      "stage_checks": [
+        {
+          "stage": "idea",
+          "skill": "pipelines/golden-key-lead-conversion/idea-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "proposal",
+          "skill": "pipelines/golden-key-lead-conversion/proposal-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "script",
+          "skill": "pipelines/golden-key-lead-conversion/script-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "scene_plan",
+          "skill": "pipelines/golden-key-lead-conversion/scene-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "assets",
+          "skill": "pipelines/golden-key-lead-conversion/asset-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "edit",
+          "skill": "pipelines/golden-key-lead-conversion/edit-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "compose",
+          "skill": "pipelines/golden-key-lead-conversion/compose-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "publish",
+          "skill": "pipelines/golden-key-lead-conversion/publish-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        }
+      ],
+      "artifact_schema_checks": {
+        "asset_manifest": true,
+        "brief": true,
+        "decision_log": true,
+        "edit_decisions": true,
+        "final_review": true,
+        "proposal_packet": true,
+        "publish_log": true,
+        "render_report": true,
+        "scene_plan": true,
+        "script": true
+      },
+      "tool_refs": [
+        "audio_enhance",
+        "audio_mixer",
+        "color_grade",
+        "face_tracker",
+        "frame_sampler",
+        "freesound_music",
+        "hyperframes_compose",
+        "image_selector",
+        "lip_sync",
+        "music_gen",
+        "pixabay_music",
+        "remotion_caption_burn",
+        "scene_detect",
+        "subtitle_gen",
+        "talking_head",
+        "transcriber",
+        "tts_selector",
+        "video_compose",
+        "video_selector",
+        "video_stitch",
+        "video_trimmer",
+        "visual_qa"
+      ],
+      "missing_tool_registry_refs": []
+    },
+    "golden-key-product-marketing": {
+      "manifest_path": "pipeline_defs/golden-key-product-marketing.yaml",
+      "manifest_version": "0.4.4",
+      "manifest_blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:c7d3f747e6a24a00]",
+        "core_sync": "[private-commit-fingerprint:c7d3f747e6a24a00]",
+        "local_main": "[private-commit-fingerprint:c7d3f747e6a24a00]",
+        "public_origin": null
+      },
+      "manifest_remote_core_main_equal": true,
+      "manifest_absent_from_public_origin": true,
+      "schema_valid": true,
+      "schema_errors": [],
+      "default_checkpoint_policy": "guided",
+      "reviewer_skill_declared": true,
+      "checkpoint_skill_declared": true,
+      "pipeline_skill_count": 11,
+      "pipeline_skills": [
+        {
+          "skill": "pipelines/golden-key-product-marketing/executive-producer",
+          "path": "skills/pipelines/golden-key-product-marketing/executive-producer.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:57fcb48b133ab031]",
+            "core_sync": "[private-commit-fingerprint:57fcb48b133ab031]",
+            "local_main": "[private-commit-fingerprint:57fcb48b133ab031]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/director-decision-policy",
+          "path": "skills/pipelines/golden-key-product-marketing/director-decision-policy.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:da7379f0fa19b9af]",
+            "core_sync": "[private-commit-fingerprint:da7379f0fa19b9af]",
+            "local_main": "[private-commit-fingerprint:da7379f0fa19b9af]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/reviewer-rubric",
+          "path": "skills/pipelines/golden-key-product-marketing/reviewer-rubric.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:d3d0072907e88ae0]",
+            "core_sync": "[private-commit-fingerprint:d3d0072907e88ae0]",
+            "local_main": "[private-commit-fingerprint:d3d0072907e88ae0]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/idea-director",
+          "path": "skills/pipelines/golden-key-product-marketing/idea-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:33bc51b88ce44696]",
+            "core_sync": "[private-commit-fingerprint:33bc51b88ce44696]",
+            "local_main": "[private-commit-fingerprint:33bc51b88ce44696]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/proposal-director",
+          "path": "skills/pipelines/golden-key-product-marketing/proposal-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:69cfcfdd1e324de3]",
+            "core_sync": "[private-commit-fingerprint:69cfcfdd1e324de3]",
+            "local_main": "[private-commit-fingerprint:69cfcfdd1e324de3]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/script-director",
+          "path": "skills/pipelines/golden-key-product-marketing/script-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:58fda79d241bf3e7]",
+            "core_sync": "[private-commit-fingerprint:58fda79d241bf3e7]",
+            "local_main": "[private-commit-fingerprint:58fda79d241bf3e7]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/scene-director",
+          "path": "skills/pipelines/golden-key-product-marketing/scene-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:0f22abeafe061afb]",
+            "core_sync": "[private-commit-fingerprint:0f22abeafe061afb]",
+            "local_main": "[private-commit-fingerprint:0f22abeafe061afb]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/asset-director",
+          "path": "skills/pipelines/golden-key-product-marketing/asset-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:7df872b1888f7f32]",
+            "core_sync": "[private-commit-fingerprint:7df872b1888f7f32]",
+            "local_main": "[private-commit-fingerprint:7df872b1888f7f32]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/edit-director",
+          "path": "skills/pipelines/golden-key-product-marketing/edit-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:952f2869083a003b]",
+            "core_sync": "[private-commit-fingerprint:952f2869083a003b]",
+            "local_main": "[private-commit-fingerprint:952f2869083a003b]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/compose-director",
+          "path": "skills/pipelines/golden-key-product-marketing/compose-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:ffc0c4575adcefde]",
+            "core_sync": "[private-commit-fingerprint:ffc0c4575adcefde]",
+            "local_main": "[private-commit-fingerprint:ffc0c4575adcefde]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-product-marketing/publish-director",
+          "path": "skills/pipelines/golden-key-product-marketing/publish-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:f580ac5d17ee119f]",
+            "core_sync": "[private-commit-fingerprint:f580ac5d17ee119f]",
+            "local_main": "[private-commit-fingerprint:f580ac5d17ee119f]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        }
+      ],
+      "stage_checks": [
+        {
+          "stage": "idea",
+          "skill": "pipelines/golden-key-product-marketing/idea-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "proposal",
+          "skill": "pipelines/golden-key-product-marketing/proposal-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "script",
+          "skill": "pipelines/golden-key-product-marketing/script-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "scene_plan",
+          "skill": "pipelines/golden-key-product-marketing/scene-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "assets",
+          "skill": "pipelines/golden-key-product-marketing/asset-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "edit",
+          "skill": "pipelines/golden-key-product-marketing/edit-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "compose",
+          "skill": "pipelines/golden-key-product-marketing/compose-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "publish",
+          "skill": "pipelines/golden-key-product-marketing/publish-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        }
+      ],
+      "artifact_schema_checks": {
+        "asset_manifest": true,
+        "brief": true,
+        "decision_log": true,
+        "edit_decisions": true,
+        "final_review": true,
+        "proposal_packet": true,
+        "publish_log": true,
+        "render_report": true,
+        "scene_plan": true,
+        "script": true
+      },
+      "tool_refs": [
+        "audio_enhance",
+        "audio_mixer",
+        "color_grade",
+        "face_tracker",
+        "frame_sampler",
+        "freesound_music",
+        "hyperframes_compose",
+        "image_selector",
+        "lip_sync",
+        "music_gen",
+        "pixabay_music",
+        "remotion_caption_burn",
+        "scene_detect",
+        "subtitle_gen",
+        "talking_head",
+        "transcriber",
+        "tts_selector",
+        "video_compose",
+        "video_selector",
+        "video_stitch",
+        "video_trimmer",
+        "visual_qa"
+      ],
+      "missing_tool_registry_refs": []
+    },
+    "golden-key-subject-ip": {
+      "manifest_path": "pipeline_defs/golden-key-subject-ip.yaml",
+      "manifest_version": "0.6.4",
+      "manifest_blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:de04d8347befa25f]",
+        "core_sync": "[private-commit-fingerprint:de04d8347befa25f]",
+        "local_main": "[private-commit-fingerprint:de04d8347befa25f]",
+        "public_origin": null
+      },
+      "manifest_remote_core_main_equal": true,
+      "manifest_absent_from_public_origin": true,
+      "schema_valid": true,
+      "schema_errors": [],
+      "default_checkpoint_policy": "guided",
+      "reviewer_skill_declared": true,
+      "checkpoint_skill_declared": true,
+      "pipeline_skill_count": 11,
+      "pipeline_skills": [
+        {
+          "skill": "pipelines/golden-key-subject-ip/executive-producer",
+          "path": "skills/pipelines/golden-key-subject-ip/executive-producer.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:17720b7da417dcb3]",
+            "core_sync": "[private-commit-fingerprint:17720b7da417dcb3]",
+            "local_main": "[private-commit-fingerprint:17720b7da417dcb3]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/director-decision-policy",
+          "path": "skills/pipelines/golden-key-subject-ip/director-decision-policy.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:d7dd03c54c6277ba]",
+            "core_sync": "[private-commit-fingerprint:d7dd03c54c6277ba]",
+            "local_main": "[private-commit-fingerprint:d7dd03c54c6277ba]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/reviewer-rubric",
+          "path": "skills/pipelines/golden-key-subject-ip/reviewer-rubric.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:56d72d012312f243]",
+            "core_sync": "[private-commit-fingerprint:56d72d012312f243]",
+            "local_main": "[private-commit-fingerprint:56d72d012312f243]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/idea-director",
+          "path": "skills/pipelines/golden-key-subject-ip/idea-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:4c333c1d1e121b53]",
+            "core_sync": "[private-commit-fingerprint:4c333c1d1e121b53]",
+            "local_main": "[private-commit-fingerprint:4c333c1d1e121b53]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/proposal-director",
+          "path": "skills/pipelines/golden-key-subject-ip/proposal-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:d443c44beb0d4cf5]",
+            "core_sync": "[private-commit-fingerprint:d443c44beb0d4cf5]",
+            "local_main": "[private-commit-fingerprint:d443c44beb0d4cf5]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/script-director",
+          "path": "skills/pipelines/golden-key-subject-ip/script-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:590235cc0898f3d6]",
+            "core_sync": "[private-commit-fingerprint:590235cc0898f3d6]",
+            "local_main": "[private-commit-fingerprint:590235cc0898f3d6]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/scene-director",
+          "path": "skills/pipelines/golden-key-subject-ip/scene-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:82632b157daa74dd]",
+            "core_sync": "[private-commit-fingerprint:82632b157daa74dd]",
+            "local_main": "[private-commit-fingerprint:82632b157daa74dd]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/asset-director",
+          "path": "skills/pipelines/golden-key-subject-ip/asset-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:b6be7abe6066a46f]",
+            "core_sync": "[private-commit-fingerprint:b6be7abe6066a46f]",
+            "local_main": "[private-commit-fingerprint:b6be7abe6066a46f]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/edit-director",
+          "path": "skills/pipelines/golden-key-subject-ip/edit-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:8d4488d87a7f8b88]",
+            "core_sync": "[private-commit-fingerprint:8d4488d87a7f8b88]",
+            "local_main": "[private-commit-fingerprint:8d4488d87a7f8b88]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/compose-director",
+          "path": "skills/pipelines/golden-key-subject-ip/compose-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:97e3a899fd2b2e16]",
+            "core_sync": "[private-commit-fingerprint:97e3a899fd2b2e16]",
+            "local_main": "[private-commit-fingerprint:97e3a899fd2b2e16]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        },
+        {
+          "skill": "pipelines/golden-key-subject-ip/publish-director",
+          "path": "skills/pipelines/golden-key-subject-ip/publish-director.md",
+          "blobs": {
+            "golden_key_remote": "[private-commit-fingerprint:bb3d58969f363803]",
+            "core_sync": "[private-commit-fingerprint:bb3d58969f363803]",
+            "local_main": "[private-commit-fingerprint:bb3d58969f363803]",
+            "public_origin": null
+          },
+          "remote_core_main_equal": true,
+          "absent_from_public_origin": true
+        }
+      ],
+      "stage_checks": [
+        {
+          "stage": "idea",
+          "skill": "pipelines/golden-key-subject-ip/idea-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "proposal",
+          "skill": "pipelines/golden-key-subject-ip/proposal-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "script",
+          "skill": "pipelines/golden-key-subject-ip/script-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "scene_plan",
+          "skill": "pipelines/golden-key-subject-ip/scene-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "assets",
+          "skill": "pipelines/golden-key-subject-ip/asset-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "edit",
+          "skill": "pipelines/golden-key-subject-ip/edit-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "compose",
+          "skill": "pipelines/golden-key-subject-ip/compose-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": false,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        },
+        {
+          "stage": "publish",
+          "skill": "pipelines/golden-key-subject-ip/publish-director",
+          "skill_exists": true,
+          "checkpoint_required": true,
+          "human_approval_default": true,
+          "review_focus_present": true,
+          "success_criteria_present": true
+        }
+      ],
+      "artifact_schema_checks": {
+        "asset_manifest": true,
+        "brief": true,
+        "decision_log": true,
+        "edit_decisions": true,
+        "final_review": true,
+        "proposal_packet": true,
+        "publish_log": true,
+        "render_report": true,
+        "scene_plan": true,
+        "script": true
+      },
+      "tool_refs": [
+        "audio_enhance",
+        "audio_mixer",
+        "color_grade",
+        "face_tracker",
+        "frame_sampler",
+        "freesound_music",
+        "hyperframes_compose",
+        "image_selector",
+        "lip_sync",
+        "music_gen",
+        "pixabay_music",
+        "remotion_caption_burn",
+        "scene_detect",
+        "subtitle_gen",
+        "talking_head",
+        "transcriber",
+        "tts_selector",
+        "video_compose",
+        "video_selector",
+        "video_stitch",
+        "video_trimmer",
+        "visual_qa"
+      ],
+      "missing_tool_registry_refs": []
+    }
+  },
+  "added_contract_test_count": 11,
+  "added_contract_tests": [
+    {
+      "path": "tests/contracts/test_agent_host_authority.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:6305b77f8b6e858d]",
+        "core_sync": "[private-commit-fingerprint:6305b77f8b6e858d]",
+        "local_main": "[private-commit-fingerprint:6305b77f8b6e858d]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_golden_key_brand_and_lead_pipelines.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:c3a7ae1dd6b26f30]",
+        "core_sync": "[private-commit-fingerprint:c3a7ae1dd6b26f30]",
+        "local_main": "[private-commit-fingerprint:c3a7ae1dd6b26f30]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_golden_key_four_pipeline_robustness_matrix.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:18a02bda12d088b9]",
+        "core_sync": "[private-commit-fingerprint:18a02bda12d088b9]",
+        "local_main": "[private-commit-fingerprint:18a02bda12d088b9]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_golden_key_four_pipeline_route_robustness.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:746e4d63a6e78a4f]",
+        "core_sync": "[private-commit-fingerprint:746e4d63a6e78a4f]",
+        "local_main": "[private-commit-fingerprint:746e4d63a6e78a4f]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_golden_key_multimodal_project_context_robustness.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:03b6745d6029a889]",
+        "core_sync": "[private-commit-fingerprint:03b6745d6029a889]",
+        "local_main": "[private-commit-fingerprint:03b6745d6029a889]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_golden_key_product_marketing_pipeline.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:b01b6936577c8552]",
+        "core_sync": "[private-commit-fingerprint:b01b6936577c8552]",
+        "local_main": "[private-commit-fingerprint:b01b6936577c8552]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_golden_key_project_content_context_direction.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:2ba6accfc5a2e8b7]",
+        "core_sync": "[private-commit-fingerprint:2ba6accfc5a2e8b7]",
+        "local_main": "[private-commit-fingerprint:2ba6accfc5a2e8b7]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_golden_key_subject_ip_pipeline.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:79fb8a547ae0e239]",
+        "core_sync": "[private-commit-fingerprint:79fb8a547ae0e239]",
+        "local_main": "[private-commit-fingerprint:79fb8a547ae0e239]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_model_driven_agent_host.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:4890792bf85a1572]",
+        "core_sync": "[private-commit-fingerprint:4890792bf85a1572]",
+        "local_main": "[private-commit-fingerprint:4890792bf85a1572]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_openai_compatible_transport.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:31bbaef70c1aaa94]",
+        "core_sync": "[private-commit-fingerprint:31bbaef70c1aaa94]",
+        "local_main": "[private-commit-fingerprint:31bbaef70c1aaa94]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    },
+    {
+      "path": "tests/contracts/test_text_layer_direction.py",
+      "blobs": {
+        "golden_key_remote": "[private-commit-fingerprint:a755e97343b87bd5]",
+        "core_sync": "[private-commit-fingerprint:a755e97343b87bd5]",
+        "local_main": "[private-commit-fingerprint:a755e97343b87bd5]",
+        "public_origin": null
+      },
+      "remote_core_main_equal": true,
+      "absent_from_public_origin": true
+    }
+  ]
+}

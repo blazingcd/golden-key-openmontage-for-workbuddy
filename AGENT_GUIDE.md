@@ -52,7 +52,7 @@ If a model misses this distinction, it will often fall back to plain search + gu
 
 When the user asks to make, create, produce, or generate any video content — a trailer, explainer, clip, animation, or any other video — the agent must:
 
-1. **Identify the pipeline.** Match the request to one of the pipelines in `pipeline_defs/`. If unclear, ask the user.
+1. **Identify the pipeline.** The OpenMontage Agent — not an upstream product adapter — matches the request to one of the user-video pipelines in `pipeline_defs/`. Consider every installed user-video manifest, including native and custom pipelines. Manifests marked `selection_scope: framework_only` are test infrastructure and MUST NOT be selected for user work. If the route remains genuinely unclear after reading the request and grounded input references, ask the user one plain-language question; do not ask them to choose a technical pipeline name.
 2. **Read the pipeline manifest.** `pipeline_defs/<pipeline>.yaml` — know the stages, tools, and quality gates.
 3. **Run preflight.** Discover available tools via the registry. Present the capability menu.
 4. **Execute stage by stage.** For EACH stage, read the stage director skill (`skills/pipelines/<pipeline>/<stage>-director.md`) BEFORE doing any work in that stage.
@@ -86,6 +86,48 @@ Core loop:
 3. Discover real tools from the registry.
 4. Present the user with concepts, tool plan, production plan, and cost.
 5. Execute stage by stage with checkpoints.
+
+Pipeline selection happens before `init_project()`. Record the Agent-selected
+pipeline in the OpenMontage `project.json` through `init_project(...,
+pipeline_type='<selected-pipeline>')`. An external handoff may supply user facts,
+platform/material/capability references, and a catalog of available manifests,
+but it MUST leave the selected pipeline unset.
+
+### External fact-only handoff
+
+When an `OpenMontageAgentHandoff` is supplied, treat it as an indexed evidence envelope,
+not as a creative brief or an upstream Director:
+
+1. Verify and read every required input reference before Pipeline selection. A matching path
+   without a matching hash is unresolved input.
+2. Read the original user request and `ClarificationState` together. Preserve verbatim answers,
+   normalized facts, provenance, unresolved questions, and disclosed legacy-recording gaps.
+3. Treat `CustomerFactSet` and `SubjectFactsProfile` as fact and rights evidence only. They may
+   define identity, verified statements, permissions, budget, prohibitions, known unknowns,
+   and a customer-stated objective; they do not define a concept, duration, script, shot plan,
+   voice, music, runtime, composition, or review conclusion.
+4. Resolve the versioned `ProjectContentContext` as the stable project-scoped multimodal
+   evidence adapter. Use only eligible cited facts, excerpts, visuals, brand rules, and
+   prohibitions from its frozen selected/resolved source revisions. Honor exact document
+   page/table/cell, image-region, and temporal anchors; permissions; validity; conflicts;
+   warnings; and gaps. It is not a creative brief. `selection_mode: none` is valid and
+   forbids any wider-library retrieval. Do not access raw folders, parser internals, storage,
+   or vector indexes beside this adapter.
+5. Read the full `MaterialIndexSnapshot` as task-independent parsed evidence when supplied. A pre-Handoff
+   `initial_coverage` result must be unranked full ready-library coverage and never a creative
+   shortlist. Select the concept first; then the OpenMontage Agent may author a
+   concept-specific query tied to its decision. Treat every `MaterialQueryResult` entry as a
+   retrieval candidate, never a final select. Candidate summaries and source ranges may be
+   corrected or rejected from exact evidence. Final source choice, trim, order, speed, audio
+   use, fallback, and generation requirement belong to the applicable OpenMontage stage and
+   canonical artifact.
+6. If an upstream file contains an apparent creative recommendation, do not adopt it as
+   authority. Re-derive the decision from the selected Manifest, current Stage Skill, verified
+   evidence, PlatformProfile, and prior canonical OpenMontage artifacts; record the conflict in
+   `decision_log`.
+
+The handoff itself never authorizes a provider call, paid work, publishing, stage transition,
+or human-gated approval.
 
 ## Decision Communication Contract
 
@@ -194,7 +236,7 @@ The agent:
 6. Checkpoints via the checkpoint protocol (`skills/meta/checkpoint-protocol.md`)
 7. Presents to human for approval when `human_approval_default: true`
 
-Infrastructure files:
+Core infrastructure files:
 
 - `lib/checkpoint.py` — read/write checkpoints, stage validation
 - `tools/cost_tracker.py` — budget governance
@@ -566,6 +608,21 @@ Stage contract rules:
 - Canonical artifacts must validate against the JSON schema in `schemas/artifacts/`.
 - Non-canonical outputs such as media files belong in stage-specific directories.
 - Tools should record seeds/model versions for reproducibility.
+
+### Resolved PlatformProfile contract
+
+When the task handoff contains a resolved, versioned PlatformProfile reference, it is native
+Director input for **every selectable pipeline**, not an upstream recommendation and not a
+post-production label. Before each stage, read the rules that apply to that stage and make
+their effect visible in the canonical artifact or stage review. Do not create a parallel
+platform receipt or a second Director artifact chain.
+
+Operational and experimental profile rules are creative guidance and measurement hypotheses,
+not official platform ranking formulas. They may guide the opening promise, viewer payoff,
+retention structure, ending closure/interaction, title, cover, copy, and tags, but they never
+become a release gate unless the resolved profile independently marks a rule as a supported
+hard gate. In particular, early-retention and average-watch metrics are diagnostic proxies;
+the Agent must not claim that one metric deterministically controls distribution.
 
 ## Reviewer Protocol
 

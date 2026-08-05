@@ -34,6 +34,7 @@ from lib.pipeline_loader import (
     get_stage_sub_stages,
     get_stage_review_focus,
     list_pipelines,
+    list_selectable_pipelines,
     load_pipeline,
     pipeline_supports_reference_input,
 )
@@ -365,6 +366,12 @@ class TestPipelineManifests:
 
     def test_framework_smoke_manifest_listed(self):
         assert "framework-smoke" in list_pipelines()
+
+    def test_framework_smoke_is_not_user_selectable(self):
+        selectable = list_selectable_pipelines()
+        assert "framework-smoke" not in selectable
+        assert "hybrid" in selectable
+        assert "talking-head" in selectable
 
     def test_reference_sub_stage_helpers(self):
         manifest = load_pipeline("animated-explainer")

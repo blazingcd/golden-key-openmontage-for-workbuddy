@@ -118,6 +118,33 @@
             }
           }
         },
+        "ending_closure": {
+          "type": "object",
+          "description": "Optional pipeline-specific temporal review of the final picture, text, and audio release.",
+          "required": [
+            "status",
+            "strategy",
+            "last_text_clearance_passed",
+            "visual_release_passed",
+            "audio_release_passed",
+            "tail_evidence",
+            "review_note"
+          ],
+          "properties": {
+            "status": { "type": "string", "enum": ["pass", "revise", "fail"] },
+            "strategy": { "type": "string", "minLength": 1 },
+            "last_text_clearance_passed": { "type": "boolean" },
+            "visual_release_passed": { "type": "boolean" },
+            "audio_release_passed": { "type": "boolean" },
+            "tail_evidence": {
+              "type": "array",
+              "minItems": 3,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "review_note": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
         "transcript_comparison": {
           "type": "object",
           "description": "Optional: transcribe the output and compare to source script",

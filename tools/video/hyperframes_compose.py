@@ -37,6 +37,7 @@ from tools.base_tool import (
     ToolStatus,
     ToolTier,
 )
+from tools.video.browser_runtime import resolve_browser_executable
 
 
 log = logging.getLogger("hyperframes_compose")
@@ -58,11 +59,13 @@ class HyperFramesCompose(BaseTool):
     determinism = Determinism.DETERMINISTIC
     runtime = ToolRuntime.LOCAL
 
-    dependencies = ["cmd:npx", "cmd:ffmpeg"]
+    dependencies = ["cmd:node", "cmd:ffmpeg"]
     install_instructions = (
         "Requires Node.js >= 22 (https://nodejs.org/) and FFmpeg "
-        "(https://ffmpeg.org/download.html). The HyperFrames CLI is fetched "
-        "on first use via `npx hyperframes` (npm package: `hyperframes`). "
+        "(https://ffmpeg.org/download.html), an existing Chrome/Chromium/Edge "
+        "browser, and a locally installed or cached HyperFrames CLI. Prime it "
+        "once with `npx hyperframes doctor`, or set HYPERFRAMES_CLI_PATH. "
+        "The published npm package is `hyperframes`. "
         "Note: the upstream monorepo develops the package as `@hyperframes/cli`, "
         "but it publishes to npm as `hyperframes`. `npx @hyperframes/cli` "
         "returns 404 -- do NOT use that form. Verify setup with "
@@ -79,6 +82,7 @@ class HyperFramesCompose(BaseTool):
 
     capabilities = [
         "hyperframes_render",
+        "hyperframes_render_workspace",
         "hyperframes_lint",
         "hyperframes_validate",
         "hyperframes_doctor",
@@ -107,6 +111,7 @@ class HyperFramesCompose(BaseTool):
                 "type": "string",
                 "enum": [
                     "render",
+                    "render_workspace",
                     "lint",
                     "validate",
                     "doctor",
@@ -115,6 +120,8 @@ class HyperFramesCompose(BaseTool):
                 ],
                 "description": (
                     "render: materialize workspace + lint + validate + render to MP4. "
+                    "render_workspace: lint + validate + render an already-authored "
+                    "workspace without overwriting index.html. "
                     "lint: run `hyperframes lint` on an existing workspace. "
                     "validate: run `hyperframes validate` (browser-based). "
                     "doctor: run `hyperframes doctor` to check environment. "
@@ -220,13 +227,109 @@ class HyperFramesCompose(BaseTool):
 
     _NODE_FLOOR_MAJOR = 22
     _NPM_PACKAGE = "hyperframes"  # published npm name (NOT @hyperframes/cli — that's 404)
-    # Process-level cache for the npm resolve check. Shape:
-    #   {"version": "0.4.5"}   → package resolves
-    #   {"error": "<short>"}   → resolution failed (offline, unpublished, etc.)
-    # We cache per-process so the first call pays ~2-5s and subsequent calls
-    # (get_info spam from the registry) are free.
-    _npm_resolve_cache: Optional[dict[str, str]] = None
-    _cli_probe_cache: Optional[dict[str, str]] = None
+    _cli_resolve_cache: Optional[dict[str, Any]] = None
+    _doctor_probe_cache: Optional[dict[str, Any]] = None
+
+    @classmethod
+    def _resolve_cli(cls) -> dict[str, Any]:
+        """Resolve an already-present HyperFrames CLI without downloading it."""
+        if cls._cli_resolve_cache is not None:
+            return cls._cli_resolve_cache
+
+        node = shutil.which("node")
+        explicit = os.environ.get("HYPERFRAMES_CLI_PATH")
+        candidates: list[tuple[Path, str]] = []
+        if explicit:
+            candidates.append((Path(explicit).expanduser(), "env"))
+
+        direct = shutil.which("hyperframes")
+        if direct:
+            candidates.append((Path(direct), "path"))
+
+        repo_root = Path(__file__).resolve().parent.parent.parent
+        candidates.extend(
+            [
+                (
+                    repo_root / "node_modules" / "hyperframes" / "bin" / "hyperframes.mjs",
+                    "repo_node_modules",
+                ),
+                (
+                    repo_root
+                    / "remotion-composer"
+                    / "node_modules"
+                    / "hyperframes"
+                    / "bin"
+                    / "hyperframes.mjs",
+                    "composer_node_modules",
+                ),
+            ]
+        )
+
+        npm_cache = os.environ.get("NPM_CONFIG_CACHE") or os.environ.get("npm_config_cache")
+        if not npm_cache:
+            npm = shutil.which("npm")
+            if npm:
+                try:
+                    proc = subprocess.run(
+                        [npm, "config", "get", "cache"],
+                        capture_output=True,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                        timeout=5,
+                    )
+                    if proc.returncode == 0 and proc.stdout.strip():
+                        npm_cache = proc.stdout.strip()
+                except (OSError, subprocess.SubprocessError):
+                    pass
+        if npm_cache:
+            cache_root = Path(npm_cache).expanduser()
+            cached = list(
+                cache_root.glob("_npx/*/node_modules/hyperframes/bin/hyperframes.mjs")
+            )
+            cached.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+            candidates.extend((p, "npm_cache") for p in cached)
+
+        for candidate, source in candidates:
+            if not candidate.is_file():
+                continue
+            if candidate.suffix.lower() in {".js", ".mjs", ".cjs"}:
+                if not node:
+                    continue
+                command = [node, str(candidate.resolve())]
+            else:
+                command = [str(candidate.resolve())]
+
+            version = None
+            package_json = candidate.parent.parent / "package.json"
+            if package_json.is_file():
+                try:
+                    version = json.loads(package_json.read_text(encoding="utf-8")).get("version")
+                except (OSError, json.JSONDecodeError):
+                    pass
+            cls._cli_resolve_cache = {
+                "available": True,
+                "command": command,
+                "path": str(candidate.resolve()),
+                "source": source,
+                "version": version,
+            }
+            return cls._cli_resolve_cache
+
+        cls._cli_resolve_cache = {
+            "available": False,
+            "error": (
+                "no local HyperFrames CLI found; run `npx hyperframes doctor` once "
+                "or set HYPERFRAMES_CLI_PATH"
+            ),
+        }
+        return cls._cli_resolve_cache
+
+    @staticmethod
+    def _browser_path() -> Optional[str]:
+        return resolve_browser_executable(
+            env_keys=("HYPERFRAMES_BROWSER_PATH", "CHROME_PATH")
+        )
 
     @classmethod
     def _node_major_version(cls) -> Optional[int]:
@@ -247,111 +350,18 @@ class HyperFramesCompose(BaseTool):
         except (OSError, subprocess.SubprocessError):
             return None
 
-    @classmethod
-    def _resolve_npm_package(cls) -> dict[str, str]:
-        """Verify the `hyperframes` npm package actually resolves.
-
-        `_runtime_check` previously only verified that node/ffmpeg/npx existed
-        on PATH, which meant `runtime_available: True` on any machine with
-        Node + FFmpeg — even offline, even if npm was down, even if the
-        package was unpublished. This method performs a cheap
-        `npm view hyperframes version` (5s timeout) and caches the answer
-        for the rest of the process.
-
-        Returns {"version": "X.Y.Z"} on success, {"error": "<short>"} on any
-        failure (404, timeout, network error, npm missing). Never raises.
-        """
-        if cls._npm_resolve_cache is not None:
-            return cls._npm_resolve_cache
-
-        npm = shutil.which("npm")
-        if not npm:
-            cls._npm_resolve_cache = {"error": "npm not on PATH"}
-            return cls._npm_resolve_cache
-
-        try:
-            proc = subprocess.run(
-                [npm, "view", cls._NPM_PACKAGE, "version"],
-                capture_output=True,
-                text=True,
-                timeout=5,
-            )
-        except subprocess.TimeoutExpired:
-            cls._npm_resolve_cache = {"error": "timeout (5s) — offline or slow registry"}
-            return cls._npm_resolve_cache
-        except (OSError, subprocess.SubprocessError) as e:
-            cls._npm_resolve_cache = {"error": f"npm view failed: {type(e).__name__}"}
-            return cls._npm_resolve_cache
-
-        if proc.returncode != 0:
-            stderr = (proc.stderr or "").strip()
-            # Most common failure is 404 (package unpublished or name wrong).
-            if "404" in stderr or "E404" in stderr:
-                cls._npm_resolve_cache = {
-                    "error": f"npm package `{cls._NPM_PACKAGE}` not found (404)"
-                }
-            else:
-                tail = stderr.splitlines()[-1][:200] if stderr else f"exit {proc.returncode}"
-                cls._npm_resolve_cache = {"error": f"npm view failed: {tail}"}
-            return cls._npm_resolve_cache
-
-        version = (proc.stdout or "").strip()
-        if not version:
-            cls._npm_resolve_cache = {"error": "npm view returned empty version"}
-        else:
-            cls._npm_resolve_cache = {"version": version}
-        return cls._npm_resolve_cache
-
-    @classmethod
-    def _probe_cli(cls) -> dict[str, str]:
-        """Run the published CLI's doctor command once per process.
-
-        Package resolution alone does not prove that the executable can start:
-        an upstream packaging regression can publish successfully while every
-        CLI command crashes during bootstrap. Provider preflight must not call
-        that state available.
-        """
-        if cls._cli_probe_cache is not None:
-            return cls._cli_probe_cache
-
-        npx = shutil.which("npx")
-        if not npx:
-            cls._cli_probe_cache = {"error": "npx not on PATH"}
-            return cls._cli_probe_cache
-
-        try:
-            proc = subprocess.run(
-                [npx, "--yes", cls._NPM_PACKAGE, "doctor", "--json"],
-                capture_output=True,
-                text=True,
-                timeout=20,
-            )
-        except subprocess.TimeoutExpired:
-            cls._cli_probe_cache = {"error": "doctor timed out after 20s"}
-            return cls._cli_probe_cache
-        except (OSError, subprocess.SubprocessError) as exc:
-            cls._cli_probe_cache = {"error": f"doctor failed: {type(exc).__name__}"}
-            return cls._cli_probe_cache
-
-        if proc.returncode != 0:
-            output = "\n".join(filter(None, [proc.stderr, proc.stdout])).strip()
-            tail = output.splitlines()[-1][:200] if output else f"exit {proc.returncode}"
-            cls._cli_probe_cache = {"error": f"doctor failed: {tail}"}
-        else:
-            cls._cli_probe_cache = {"status": "ok"}
-        return cls._cli_probe_cache
-
-    def _runtime_check(self) -> dict[str, Any]:
+    def _runtime_check(self, *, include_doctor: bool = True) -> dict[str, Any]:
         """Return availability state for the HyperFrames runtime.
 
-        Checks BOTH local binaries (node >= 22, ffmpeg, npx) AND that the
-        `hyperframes` npm package actually resolves. A missing/404 package
-        counts as unavailable — `runtime_available: True` means the runtime
-        can genuinely run end-to-end, not just that the local tooling exists.
+        Checks local binaries, an already-present CLI, an existing browser,
+        and (by default) the CLI's own doctor command. No availability probe
+        is allowed to trigger an npm/browser download.
         """
         node_major = self._node_major_version()
         ffmpeg_ok = shutil.which("ffmpeg") is not None
         npx_ok = shutil.which("npx") is not None
+        cli = self._resolve_cli()
+        browser_path = self._browser_path()
 
         reasons: list[str] = []
         if node_major is None:
@@ -360,27 +370,23 @@ class HyperFramesCompose(BaseTool):
             reasons.append(
                 f"node major version {node_major} < required {self._NODE_FLOOR_MAJOR}"
             )
-        if not npx_ok:
-            reasons.append("npx not found on PATH")
         if not ffmpeg_ok:
             reasons.append("ffmpeg not found on PATH")
+        if not cli.get("available"):
+            reasons.append(str(cli.get("error") or "HyperFrames CLI unavailable"))
+        if not browser_path:
+            reasons.append(
+                "Chrome/Chromium/Edge not found; set HYPERFRAMES_BROWSER_PATH"
+            )
 
-        # Only probe npm if the local tooling is actually usable — otherwise
-        # a missing-node run would also show a confusing npm error.
-        npm_resolve: dict[str, str] = {}
-        if not reasons:
-            npm_resolve = self._resolve_npm_package()
-            if "error" in npm_resolve:
+        doctor: dict[str, Any] = {"ran": False, "passed": False}
+        if not reasons and include_doctor:
+            doctor = self._probe_doctor()
+            if not doctor.get("passed"):
                 reasons.append(
-                    f"npm package `{self._NPM_PACKAGE}` not resolvable: "
-                    f"{npm_resolve['error']}"
+                    "hyperframes doctor failed: "
+                    + str(doctor.get("error") or f"exit {doctor.get('exit_code')}")
                 )
-
-        cli_probe: dict[str, str] = {}
-        if not reasons:
-            cli_probe = self._probe_cli()
-            if "error" in cli_probe:
-                reasons.append(f"published CLI is not executable: {cli_probe['error']}")
 
         return {
             "runtime_available": not reasons,
@@ -388,12 +394,71 @@ class HyperFramesCompose(BaseTool):
             "ffmpeg_available": ffmpeg_ok,
             "npx_available": npx_ok,
             "npm_package": self._NPM_PACKAGE,
-            "npm_package_version": npm_resolve.get("version"),
-            "npm_resolve_error": npm_resolve.get("error"),
-            "cli_probe_status": cli_probe.get("status"),
-            "cli_probe_error": cli_probe.get("error"),
+            "npm_package_version": cli.get("version"),
+            "npm_resolve_error": None if cli.get("available") else cli.get("error"),
+            "cli_available": bool(cli.get("available")),
+            "cli_path": cli.get("path"),
+            "cli_source": cli.get("source"),
+            "browser_available": bool(browser_path),
+            "browser_path": browser_path,
+            "doctor": doctor,
             "reasons": reasons,
         }
+
+    def _probe_doctor(self) -> dict[str, Any]:
+        if type(self)._doctor_probe_cache is not None:
+            return type(self)._doctor_probe_cache
+        proc = self._run_hf(["doctor", "--json"], cwd=None, timeout=30, check=False)
+        payload = self._parse_json_output(proc.stdout)
+        required_checks = {
+            "Version",
+            "Node.js",
+            "CPU",
+            "Memory",
+            "Disk",
+            "Frames cache",
+            "Archive extractor",
+            "Environment",
+            "FFmpeg",
+            "FFprobe",
+            "Chrome",
+        }
+        checks = payload.get("checks", []) if isinstance(payload, dict) else []
+        blocking_failures = [
+            check
+            for check in checks
+            if check.get("name") in required_checks and check.get("ok") is not True
+        ]
+        optional_warnings = [
+            check
+            for check in checks
+            if check.get("name") not in required_checks and check.get("ok") is not True
+        ]
+        passed = bool(
+            proc.returncode == 0
+            and isinstance(payload, dict)
+            and checks
+            and not blocking_failures
+        )
+        result = {
+            "ran": True,
+            "passed": passed,
+            "exit_code": proc.returncode,
+            "report": payload,
+            "cli_ok": payload.get("ok") if isinstance(payload, dict) else None,
+            "blocking_failures": blocking_failures,
+            "optional_warnings": optional_warnings,
+            "stdout_tail": (proc.stdout or "")[-2000:],
+            "stderr_tail": (proc.stderr or "")[-2000:],
+        }
+        if not passed:
+            result["error"] = (
+                f"exit {proc.returncode}"
+                if proc.returncode != 0
+                else "doctor JSON has required render checks that failed or was unreadable"
+            )
+        type(self)._doctor_probe_cache = result
+        return result
 
     def get_status(self) -> ToolStatus:
         check = self._runtime_check()
@@ -449,6 +514,8 @@ class HyperFramesCompose(BaseTool):
                 result = self._validate(inputs)
             elif operation == "render":
                 result = self._render(inputs)
+            elif operation == "render_workspace":
+                result = self._render_workspace(inputs)
             elif operation == "add_block":
                 result = self._add_block(inputs)
             else:
@@ -465,7 +532,7 @@ class HyperFramesCompose(BaseTool):
     # ------------------------------------------------------------------
 
     def _doctor(self, inputs: dict[str, Any]) -> ToolResult:
-        """Probe the environment. Reports node/ffmpeg/npx plus CLI doctor output."""
+        """Probe the complete local runtime, including the CLI's own doctor."""
         check = self._runtime_check()
         out: dict[str, Any] = {"runtime_check": check}
 
@@ -479,28 +546,8 @@ class HyperFramesCompose(BaseTool):
                 data=out,
             )
 
-        # Ask the CLI itself for a deeper check. This also warms the npm
-        # cache so the first real render doesn't pay the download cost.
-        try:
-            proc = self._run_hf(["doctor"], cwd=None, timeout=180, check=False)
-            out["cli_doctor"] = {
-                "exit_code": proc.returncode,
-                "stdout_tail": (proc.stdout or "")[-4000:],
-                "stderr_tail": (proc.stderr or "")[-4000:],
-            }
-            ok = proc.returncode == 0
-            return ToolResult(
-                success=ok,
-                data=out,
-                error=None if ok else f"hyperframes doctor exit {proc.returncode}",
-            )
-        except Exception as e:
-            out["cli_doctor_error"] = str(e)
-            return ToolResult(
-                success=False,
-                error=f"hyperframes doctor failed: {e}",
-                data=out,
-            )
+        out["cli_doctor"] = check["doctor"]
+        return ToolResult(success=True, data=out)
 
     def _scaffold(self, inputs: dict[str, Any]) -> ToolResult:
         """Materialize the HyperFrames workspace from OpenMontage artifacts.
@@ -793,6 +840,101 @@ class HyperFramesCompose(BaseTool):
                 "height": height,
                 "fps": fps,
                 "quality": quality,
+                "steps": steps,
+            },
+            artifacts=[str(output_path)],
+        )
+
+    def _render_workspace(self, inputs: dict[str, Any]) -> ToolResult:
+        """Lint, validate, and render an existing canonical workspace.
+
+        This public path is for templated Registry components added after
+        scaffold. Unlike ``render``, it never rewrites ``index.html``.
+        """
+        runtime_ok = self._runtime_check()
+        if not runtime_ok["runtime_available"]:
+            return ToolResult(
+                success=False,
+                error=(
+                    "HyperFrames runtime not available: "
+                    + "; ".join(runtime_ok["reasons"])
+                ),
+                data={"runtime_check": runtime_ok},
+            )
+
+        workspace = self._require_workspace(inputs)
+        if not (workspace / "index.html").is_file():
+            return ToolResult(
+                success=False,
+                error=f"No index.html in {workspace}; cannot render existing workspace.",
+            )
+        output_path = Path(
+            inputs.get("output_path") or (workspace / "renders" / "final.mp4")
+        ).expanduser().resolve()
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        steps: dict[str, Any] = {}
+
+        lint = self._lint({"workspace_path": str(workspace)})
+        steps["lint"] = lint.data
+        if not lint.success and inputs.get("strict", False):
+            return ToolResult(
+                success=False,
+                error=f"Lint failed (strict mode): {lint.error}",
+                data={"steps": steps},
+            )
+
+        validate = self._validate(
+            {
+                "workspace_path": str(workspace),
+                "skip_contrast": inputs.get("skip_contrast", False),
+            }
+        )
+        steps["validate"] = validate.data
+        if not validate.success:
+            return ToolResult(
+                success=False,
+                error=f"Validate failed: {validate.error}",
+                data={"steps": steps},
+            )
+
+        args = [
+            "render",
+            "--output",
+            str(output_path),
+            "--fps",
+            str(inputs.get("fps", 30)),
+            "--quality",
+            inputs.get("quality", "standard"),
+        ]
+        if inputs.get("strict"):
+            args.append("--strict")
+        proc = self._run_hf(args, cwd=workspace, timeout=1800, check=False)
+        steps["render"] = {
+            "exit_code": proc.returncode,
+            "stdout_tail": (proc.stdout or "")[-4000:],
+            "stderr_tail": (proc.stderr or "")[-4000:],
+        }
+        if proc.returncode != 0:
+            return ToolResult(
+                success=False,
+                error=f"hyperframes render exit {proc.returncode}",
+                data={"steps": steps},
+            )
+        if not output_path.is_file():
+            return ToolResult(
+                success=False,
+                error=f"hyperframes render exited 0 but output file missing: {output_path}",
+                data={"steps": steps},
+            )
+
+        return ToolResult(
+            success=True,
+            data={
+                "operation": "render_workspace",
+                "output": str(output_path),
+                "workspace": str(workspace),
+                "fps": int(inputs.get("fps", 30)),
+                "quality": inputs.get("quality", "standard"),
                 "steps": steps,
             },
             artifacts=[str(output_path)],
@@ -1172,27 +1314,36 @@ class HyperFramesCompose(BaseTool):
         timeout: int,
         check: bool,
     ) -> subprocess.CompletedProcess:
-        """Invoke `npx hyperframes <args>` with the right Windows quirks.
+        """Invoke the already-resolved local HyperFrames CLI.
 
         We intentionally bypass `self.run_command` here because we do NOT
         want to raise CalledProcessError on non-zero exits — the caller
         parses lint/validate/render exit codes itself.
         """
-        cmd = ["npx", "--yes", "hyperframes", *args]
-        # On Windows, resolve the .cmd wrapper so subprocess can find it
-        # without shell=True.
-        if os.name == "nt":
-            resolved = shutil.which(cmd[0])
-            if resolved:
-                cmd[0] = resolved
+        resolved = self._resolve_cli()
+        if not resolved.get("available"):
+            return subprocess.CompletedProcess(
+                args=args,
+                returncode=127,
+                stdout="",
+                stderr=str(resolved.get("error") or "HyperFrames CLI unavailable"),
+            )
+        cmd = [*resolved["command"], *args]
+        env = os.environ.copy()
+        browser_path = self._browser_path()
+        if browser_path:
+            env["HYPERFRAMES_BROWSER_PATH"] = browser_path
         try:
             return subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=timeout,
                 cwd=str(cwd) if cwd else None,
                 check=False,
+                env=env,
             )
         except subprocess.TimeoutExpired as e:
             # Surface timeouts as a failed CompletedProcess so callers get a

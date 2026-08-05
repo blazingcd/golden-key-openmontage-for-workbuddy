@@ -242,6 +242,35 @@ class TestSubtitleGenUnit:
             assert len(cue["words"]) <= 4
         Path(result.artifacts[0]).unlink(missing_ok=True)
 
+    def test_explicit_chinese_pages_override_fixed_word_grouping(self):
+        segments = [
+            {
+                "text": "走两步，拐一下，再看看。回家的路线，也要自己决定。",
+                "start": 0.0,
+                "end": 4.0,
+                "words": [
+                    {"word": "走两步，", "start": 0.0, "end": 0.7, "page_id": "p1"},
+                    {"word": "拐一下，", "start": 0.7, "end": 1.4, "page_id": "p1"},
+                    {"word": "再看看。", "start": 1.4, "end": 2.0, "page_id": "p1"},
+                    {
+                        "word": "回家的路线，",
+                        "start": 2.0,
+                        "end": 3.0,
+                        "page_id": "p2",
+                        "line_break_after": True,
+                    },
+                    {"word": "也要自己决定。", "start": 3.0, "end": 4.0, "page_id": "p2"},
+                ],
+            }
+        ]
+
+        cues = SubtitleGen()._build_cues(segments, max_words=1, max_chars=3)
+
+        assert [cue["page_id"] for cue in cues] == ["p1", "p2"]
+        assert cues[0]["text"] == "走两步，拐一下，再看看。"
+        assert cues[1]["text"] == "回家的路线，\n也要自己决定。"
+        assert cues[1]["words"][0]["line_break_after"] is True
+
     def test_segment_fallback_without_words(self):
         """Segments without word-level timestamps use segment-level timing."""
         segments = [

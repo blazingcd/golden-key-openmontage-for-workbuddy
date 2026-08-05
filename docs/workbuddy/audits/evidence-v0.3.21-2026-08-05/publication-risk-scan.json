@@ -1,0 +1,17 @@
+{
+  "scope": "public origin/main to current WorkBuddy candidate tree only",
+  "private_core_history_scanned": false,
+  "candidate_file_count": 143,
+  "status_counts": {
+    "M": 26,
+    "A": 117
+  },
+  "pattern_hit_counts": {},
+  "pattern_hits_redacted": [],
+  "binary_or_non_utf8_paths": [],
+  "asset_or_font_paths": [],
+  "dependency_manifest_paths": [
+    "requirements.txt",
+    "setup.py"
+  ]
+}

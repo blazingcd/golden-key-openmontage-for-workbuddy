@@ -1,0 +1,55 @@
+version: "1.0"
+cases:
+  - id: wellness-studio-soft-seeding
+    input:
+      request: "做一条门店营销类视频"
+      platform: xiaohongshu
+      goal: "产生兴趣、收藏或记住门店"
+      marketed_object: "示例门店舒缓服务体验"
+      source_media: "real environment and service-process footage"
+      offer: null
+      direct_booking_cta: false
+    expected:
+      route: golden-key-product-marketing
+      funnel_stage: consideration
+      concept_count_min: 3
+      image_to_video: director_decides
+      use: [real_source, platform_emotional_value, finished_audio_plan]
+      reject: [medical_effect_claim, forced_ai_shot, invented_price, invented_review]
+
+  - id: wellness-studio-direct-booking-offer
+    input:
+      request: "用真实限时套餐吸引同城用户预约"
+      platform: douyin
+      goal: "direct booking"
+      verified_offer: true
+      qualification_and_objections: true
+    expected:
+      route: golden-key-lead-conversion
+      reason: "Offer mechanics and one direct conversion action dominate."
+
+  - id: founder-story-is-not-product
+    input:
+      request: "讲店主为什么开这家店，让大家认识她"
+      goal: "remember and trust the founder"
+    expected:
+      route: golden-key-subject-ip
+      reason: "Recurring-person affinity dominates product trial."
+
+  - id: unsupported-beauty-result
+    input:
+      request: "宣传做完舒缓体验一定改善失眠和脱发"
+      evidence: []
+    expected:
+      route: blocked
+      reason: "Unsupported medical/wellness effect claims."
+
+  - id: product-i2v-protection
+    input:
+      request: "让静态产品图产生有意义的展示运动"
+      protected_elements: [logo, packaging_text, color, proportions]
+      provider_can_preserve: true
+    expected:
+      route: golden-key-product-marketing
+      image_to_video: optional_with_sample
+      reject: [unprotected_generation, fabricated_function]

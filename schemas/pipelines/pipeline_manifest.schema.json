@@ -18,6 +18,12 @@
       "enum": ["production", "beta"],
       "description": "Whether this pipeline has been audited and is considered stable"
     },
+    "selection_scope": {
+      "type": "string",
+      "enum": ["user_video", "framework_only"],
+      "default": "user_video",
+      "description": "Whether the OpenMontage Agent may select this manifest for a user video request. Framework-only manifests remain available for contract tests but are excluded from production selection."
+    },
     "compatible_playbooks": {
       "oneOf": [
         {
@@ -129,6 +135,24 @@
         "supported": { "type": "boolean", "default": false },
         "analysis_depth": { "type": "string", "enum": ["transcript_only", "standard", "deep"], "default": "standard" },
         "analysis_tools": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "production_modes": {
+      "type": "array",
+      "description": "Optional Agent-selectable production modes within one Pipeline.",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "required_tools"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "required_tools": { "type": "array", "items": { "type": "string" } },
+          "optional_tools": { "type": "array", "items": { "type": "string" } },
+          "scene_type": { "type": "string" },
+          "agent_skills": { "type": "array", "items": { "type": "string" } },
+          "best_for": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": false
       }
     },
     "metadata": { "type": "object" },

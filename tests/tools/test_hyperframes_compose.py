@@ -31,6 +31,8 @@ def test_hyperframes_tool_identity():
     assert t.provider == "hyperframes"
     assert "hyperframes" in t.agent_skills
     assert "hyperframes-cli" in t.agent_skills
+    assert "render_workspace" in t.input_schema["properties"]["operation"]["enum"]
+    assert "hyperframes_render_workspace" in t.capabilities
 
 
 def test_hyperframes_get_info_reports_runtime():
@@ -214,79 +216,68 @@ def test_install_instructions_reference_correct_npm_package_name():
     )
 
 
-def test_runtime_check_fails_when_npm_package_unresolvable(monkeypatch):
-    """Regression: `_runtime_check()` previously returned runtime_available=True
-    based only on local binaries (node/ffmpeg/npx). That meant the tool lied
-    when the machine was offline, npm was down, or the package name was wrong.
-    The check must now include a real npm resolve."""
-    # Clear process cache and force _resolve_npm_package to return a 404.
-    monkeypatch.setattr(
-        HyperFramesCompose, "_npm_resolve_cache", None, raising=False
-    )
+def test_runtime_check_fails_when_local_cli_is_missing(monkeypatch):
+    monkeypatch.setattr(HyperFramesCompose, "_node_major_version", classmethod(lambda cls: 24))
+    monkeypatch.setattr("tools.video.hyperframes_compose.shutil.which", lambda _: "tool")
     monkeypatch.setattr(
         HyperFramesCompose,
-        "_resolve_npm_package",
-        classmethod(lambda cls: {"error": "npm package `hyperframes` not found (404)"}),
+        "_resolve_cli",
+        classmethod(lambda cls: {"available": False, "error": "no local CLI"}),
     )
+    monkeypatch.setattr(HyperFramesCompose, "_browser_path", staticmethod(lambda: "chrome"))
+
     rc = HyperFramesCompose()._runtime_check()
-    assert rc["runtime_available"] is False, (
-        "Runtime must report NOT available when the npm package can't be "
-        "resolved — even if node/ffmpeg/npx are all on PATH."
-    )
-    assert any("404" in r for r in rc["reasons"]), (
-        "reasons must include the actual npm-resolve failure, not just a "
-        "generic 'runtime unavailable' message."
-    )
-    assert rc["npm_resolve_error"] is not None
-    assert rc["npm_package"] == "hyperframes"
+    assert rc["runtime_available"] is False
+    assert any("no local CLI" in r for r in rc["reasons"])
+    assert rc["cli_available"] is False
 
 
-def test_runtime_check_succeeds_when_npm_resolves(monkeypatch):
-    monkeypatch.setattr(
-        HyperFramesCompose, "_npm_resolve_cache", None, raising=False
-    )
-    monkeypatch.setattr(
-        HyperFramesCompose,
-        "_resolve_npm_package",
-        classmethod(lambda cls: {"version": "0.4.5"}),
-    )
+def test_runtime_check_succeeds_only_after_cli_doctor(monkeypatch):
+    monkeypatch.setattr(HyperFramesCompose, "_node_major_version", classmethod(lambda cls: 24))
+    monkeypatch.setattr("tools.video.hyperframes_compose.shutil.which", lambda _: "tool")
     monkeypatch.setattr(
         HyperFramesCompose,
-        "_probe_cli",
-        classmethod(lambda cls: {"status": "ok"}),
-    )
-    rc = HyperFramesCompose()._runtime_check()
-    # Local binaries must still pass for this to go green.
-    if rc["node_major"] is None or not rc["ffmpeg_available"] or not rc["npx_available"]:
-        pytest.skip("Local runtime floor not met on this machine")
-    assert rc["runtime_available"] is True
-    assert rc["npm_package_version"] == "0.4.5"
-    assert rc["reasons"] == []
-
-
-def test_runtime_check_fails_when_published_cli_crashes(monkeypatch):
-    monkeypatch.setattr(
-        HyperFramesCompose,
-        "_resolve_npm_package",
-        classmethod(lambda cls: {"version": "0.7.89"}),
-    )
-    monkeypatch.setattr(
-        HyperFramesCompose,
-        "_probe_cli",
+        "_resolve_cli",
         classmethod(
             lambda cls: {
-                "error": 'doctor failed: The "file" argument must be of type string'
+                "available": True,
+                "path": "hyperframes.mjs",
+                "source": "npm_cache",
+                "version": "0.7.68",
             }
         ),
     )
+    monkeypatch.setattr(HyperFramesCompose, "_browser_path", staticmethod(lambda: "chrome"))
+    monkeypatch.setattr(
+        HyperFramesCompose,
+        "_probe_doctor",
+        lambda self: {"ran": True, "passed": True, "exit_code": 0},
+    )
+    rc = HyperFramesCompose()._runtime_check()
+    assert rc["runtime_available"] is True
+    assert rc["npm_package_version"] == "0.7.68"
+    assert rc["doctor"]["passed"] is True
+    assert rc["reasons"] == []
+
+
+def test_runtime_check_fails_when_cli_doctor_fails(monkeypatch):
+    monkeypatch.setattr(HyperFramesCompose, "_node_major_version", classmethod(lambda cls: 24))
+    monkeypatch.setattr("tools.video.hyperframes_compose.shutil.which", lambda _: "tool")
+    monkeypatch.setattr(
+        HyperFramesCompose,
+        "_resolve_cli",
+        classmethod(lambda cls: {"available": True, "path": "hf.mjs"}),
+    )
+    monkeypatch.setattr(HyperFramesCompose, "_browser_path", staticmethod(lambda: "chrome"))
+    monkeypatch.setattr(
+        HyperFramesCompose,
+        "_probe_doctor",
+        lambda self: {"ran": True, "passed": False, "exit_code": 1, "error": "browser launch"},
+    )
 
     rc = HyperFramesCompose()._runtime_check()
-
-    if rc["node_major"] is None or not rc["ffmpeg_available"] or not rc["npx_available"]:
-        pytest.skip("Local runtime floor not met on this machine")
     assert rc["runtime_available"] is False
-    assert rc["cli_probe_error"] is not None
-    assert any("not executable" in reason for reason in rc["reasons"])
+    assert any("doctor" in r and "browser launch" in r for r in rc["reasons"])
 
 
 def test_video_compose_render_engines_follow_hyperframes_runtime_check(monkeypatch):
@@ -295,12 +286,9 @@ def test_video_compose_render_engines_follow_hyperframes_runtime_check(monkeypat
     Without this, the 'Present Both Composition Runtimes' HARD RULE surfaces
     a runtime that cannot actually render."""
     monkeypatch.setattr(
-        HyperFramesCompose, "_npm_resolve_cache", None, raising=False
-    )
-    monkeypatch.setattr(
         HyperFramesCompose,
-        "_resolve_npm_package",
-        classmethod(lambda cls: {"error": "npm package not found (404)"}),
+        "_runtime_check",
+        lambda self: {"runtime_available": False},
     )
     info = VideoCompose().get_info()
     assert info["render_engines"]["hyperframes"] is False, (
@@ -381,6 +369,41 @@ def test_hyperframes_render_requires_workspace():
     # Depending on runtime availability, error mentions either workspace or runtime.
     err = (result.error or "").lower()
     assert ("workspace" in err) or ("runtime" in err) or ("hyperframes" in err)
+
+
+def test_render_workspace_preserves_authored_index(tmp_path, monkeypatch):
+    import subprocess
+
+    from tools.base_tool import ToolResult
+
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    index = workspace / "index.html"
+    authored = "<html data-composition-id='root'>registry caption</html>"
+    index.write_text(authored, encoding="utf-8")
+    output = tmp_path / "out.mp4"
+    tool = HyperFramesCompose()
+    monkeypatch.setattr(tool, "_runtime_check", lambda: {"runtime_available": True})
+    monkeypatch.setattr(tool, "_lint", lambda inputs: ToolResult(success=True, data={}))
+    monkeypatch.setattr(tool, "_validate", lambda inputs: ToolResult(success=True, data={}))
+
+    def run_render(args, *, cwd, timeout, check):
+        output.write_bytes(b"rendered")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(tool, "_run_hf", run_render)
+    result = tool.execute(
+        {
+            "operation": "render_workspace",
+            "workspace_path": str(workspace),
+            "output_path": str(output),
+            "quality": "draft",
+        }
+    )
+
+    assert result.success, result.error
+    assert result.data["operation"] == "render_workspace"
+    assert index.read_text(encoding="utf-8") == authored
 
 
 def test_hyperframes_render_resolves_relative_output_path_once(tmp_path, monkeypatch):

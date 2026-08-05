@@ -8,6 +8,7 @@ the standard library.
 from __future__ import annotations
 
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -186,6 +187,12 @@ class SubtitleGen(BaseTool):
         if not all_words:
             return []
 
+        # Director-authored semantic pages are authoritative. This lets
+        # language-aware upstream decisions (for example Chinese punctuation
+        # and sentence completeness) drive the generic subtitle renderer.
+        if all(w.get("page_id") is not None for w in all_words):
+            return self._build_explicit_cues(all_words)
+
         cues = []
         buf: list[dict] = []
         buf_text = ""
@@ -224,6 +231,61 @@ class SubtitleGen(BaseTool):
                 ],
             })
 
+        return cues
+
+    @staticmethod
+    def _caption_separator(current: str, following: str) -> str:
+        cjk = r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]"
+        punctuation = r"[，。！？、；：]"
+        current_tail = current.strip()[-1:]
+        following_head = following.strip()[:1]
+        if re.match(f"(?:{cjk}|{punctuation})", current_tail) and re.match(
+            f"(?:{cjk}|{punctuation})", following_head
+        ):
+            return ""
+        return " "
+
+    def _build_explicit_cues(self, words: list[dict]) -> list[dict]:
+        """Build cues from explicit page and line boundaries."""
+        page_groups: list[list[dict]] = []
+        for word in words:
+            if not page_groups or page_groups[-1][0]["page_id"] != word["page_id"]:
+                page_groups.append([word])
+            else:
+                page_groups[-1].append(word)
+
+        cues: list[dict] = []
+        for group in page_groups:
+            text = ""
+            rendered_words: list[dict] = []
+            for index, word in enumerate(group):
+                token = word["word"].strip()
+                text += token
+                rendered_word = {
+                    "word": token,
+                    "start": word["start"],
+                    "end": word["end"],
+                    "page_id": word["page_id"],
+                }
+                if word.get("line_break_after"):
+                    rendered_word["line_break_after"] = True
+                rendered_words.append(rendered_word)
+                if index < len(group) - 1:
+                    text += (
+                        "\n"
+                        if word.get("line_break_after")
+                        else self._caption_separator(token, group[index + 1]["word"])
+                    )
+            cues.append(
+                {
+                    "index": len(cues) + 1,
+                    "start": group[0]["start"],
+                    "end": group[-1]["end"],
+                    "text": text,
+                    "page_id": group[0]["page_id"],
+                    "words": rendered_words,
+                }
+            )
         return cues
 
     def _render_srt(self, cues: list[dict], highlight_style: str = "none") -> str:

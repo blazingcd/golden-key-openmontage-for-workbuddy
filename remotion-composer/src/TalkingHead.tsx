@@ -302,6 +302,9 @@ export interface TalkingHeadProps {
   wordsPerPage?: number;
   fontSize?: number;
   highlightColor?: string;
+  captionColor?: string;
+  captionBackgroundColor?: string;
+  captionFontFamily?: string;
 }
 
 export const TalkingHead: React.FC<TalkingHeadProps> = ({
@@ -311,6 +314,9 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
   wordsPerPage = 4,
   fontSize = 52,
   highlightColor = "#22D3EE",
+  captionColor = "#FFFFFF",
+  captionBackgroundColor = "rgba(0, 0, 0, 0.65)",
+  captionFontFamily = "Microsoft YaHei, system-ui, sans-serif",
 }) => {
   const { fps } = useVideoConfig();
 
@@ -345,8 +351,9 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
         wordsPerPage={wordsPerPage}
         fontSize={fontSize}
         highlightColor={highlightColor}
-        backgroundColor="rgba(0, 0, 0, 0.65)"
-        color="#FFFFFF"
+        backgroundColor={captionBackgroundColor}
+        color={captionColor}
+        fontFamily={captionFontFamily}
       />
     </AbsoluteFill>
   );

@@ -201,6 +201,20 @@ class VideoCompose(BaseTool):
                     "networks). The subprocess timeout is widened to match."
                 ),
             },
+            "browser_executable": {
+                "type": "string",
+                "description": (
+                    "Existing Chrome/Chromium/Edge executable reused by Remotion. "
+                    "No browser download is attempted by the OpenMontage wrapper."
+                ),
+            },
+            "remotion_root": {
+                "type": "string",
+                "description": (
+                    "Prepared remotion-composer directory to reuse. If omitted, "
+                    "OPENMONTAGE_REMOTION_ROOT and local repository paths are checked."
+                ),
+            },
         },
     }
 
@@ -229,20 +243,30 @@ class VideoCompose(BaseTool):
         "Play the composed output and verify cuts, subtitles, and overlays",
     ]
 
-    def _remotion_available(self) -> bool:
-        """Check if Remotion rendering is available (requires npx + composer project + node_modules)."""
+    def _remotion_available(
+        self,
+        browser_executable: str | None = None,
+        remotion_root: str | None = None,
+    ) -> bool:
+        """Check Remotion plus an existing local browser (no implicit download)."""
         import shutil as _shutil
+        from tools.video.browser_runtime import (
+            resolve_browser_executable,
+            resolve_remotion_root,
+        )
 
         if not _shutil.which("npx"):
             return False
-        composer_dir = Path(__file__).resolve().parent.parent.parent / "remotion-composer"
-        if not composer_dir.exists() or not (composer_dir / "package.json").exists():
+        composer_dir = resolve_remotion_root(
+            remotion_root,
+            repo_root=Path(__file__).resolve().parent.parent.parent,
+        )
+        if composer_dir is None:
             return False
-        # Check that node_modules are actually installed — without this,
-        # npx remotion render will fail even though the project exists.
-        if not (composer_dir / "node_modules").exists():
-            return False
-        return True
+        return resolve_browser_executable(
+            browser_executable,
+            env_keys=("REMOTION_BROWSER_EXECUTABLE", "CHROME_PATH"),
+        ) is not None
 
     def _ffmpeg_available(self) -> bool:
         """Check if the ffmpeg binary is actually resolvable on PATH."""
@@ -1591,6 +1615,10 @@ class VideoCompose(BaseTool):
             # would only take effect on a direct _remotion_render() call.
             if inputs.get("remotion_timeout_ms") is not None:
                 remotion_inputs["remotion_timeout_ms"] = inputs["remotion_timeout_ms"]
+            if inputs.get("browser_executable") is not None:
+                remotion_inputs["browser_executable"] = inputs["browser_executable"]
+            if inputs.get("remotion_root") is not None:
+                remotion_inputs["remotion_root"] = inputs["remotion_root"]
             if inputs.get("public_dir") is not None:
                 remotion_inputs["public_dir"] = inputs["public_dir"]
             render_result = self._remotion_render(remotion_inputs)
@@ -1896,12 +1924,21 @@ class VideoCompose(BaseTool):
             if theme_config:
                 props["themeConfig"] = theme_config
 
-        # remotion-composer lives at project root
-        composer_dir = Path(__file__).resolve().parent.parent.parent / "remotion-composer"
-        if not composer_dir.exists():
+        # Reuse a prepared composer; do not duplicate node_modules or install at render time.
+        from tools.video.browser_runtime import resolve_remotion_root
+
+        composer_dir = resolve_remotion_root(
+            inputs.get("remotion_root"),
+            repo_root=Path(__file__).resolve().parent.parent.parent,
+        )
+        if composer_dir is None:
             return ToolResult(
                 success=False,
-                error=f"Remotion composer project not found at {composer_dir}",
+                error=(
+                    "Prepared Remotion composer not found. Set remotion_root or "
+                    "OPENMONTAGE_REMOTION_ROOT; OpenMontage will not install a "
+                    "second node_modules tree during render."
+                ),
             )
 
         # Route to the correct Remotion composition based on renderer_family.
@@ -1956,6 +1993,26 @@ class VideoCompose(BaseTool):
         ]
         if public_dir is not None:
             cmd.append(f"--public-dir={public_dir}")
+
+        from tools.video.browser_runtime import resolve_browser_executable
+
+        browser_path = resolve_browser_executable(
+            inputs.get("browser_executable"),
+            env_keys=("REMOTION_BROWSER_EXECUTABLE", "CHROME_PATH"),
+        )
+        if browser_path is None:
+            if props_path.exists():
+                props_path.unlink()
+            return ToolResult(
+                success=False,
+                error=(
+                    "Remotion runtime blocker: no existing Chrome/Chromium/Edge "
+                    "executable was found. Set browser_executable or "
+                    "REMOTION_BROWSER_EXECUTABLE; OpenMontage will not silently "
+                    "download a browser during render."
+                ),
+            )
+        cmd.append(f"--browser-executable={browser_path}")
 
         # Apply media profile dimensions
         profile_name = inputs.get("profile")

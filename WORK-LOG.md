@@ -1,0 +1,238 @@
+# Work Log
+
+本文件只追加，不改写既有记录。每次可验证工作完成后记录：范围、动作、结果、证据、提交和下一步。
+
+## 2026-08-05：项目架构与本地基线建立
+
+### 范围
+
+- 固化独立WorkBuddy项目边界。
+- 固化Golden Key核心拉取式同步策略。
+- 记录运行环境打包待决策项。
+- 建立本地完整核心Git基线和持续留痕机制。
+
+### 动作
+
+- 读取项目交接文件、现有README、Golden Key核心Guide和相关仓库状态。
+- 核对SaaS `config/openmontage.lock.json`。
+- 核对Golden Key核心正式tag和远端提交。
+- 从private核心的正式tag fetch完整Git对象，没有复制核心工作目录。
+- 建立`core-sync`和`main`分支。
+- 将原项目README和交接文件作为WorkBuddy增量保留在`main`。
+- 编写架构、同步、路线、打包待决策和状态文档。
+
+### 结果
+
+- `DONE`：`core-sync`精确指向`golden-key-v0.3.18` / `381a08e8dbdea025367c4970174ae0cd29980337`。
+- `DONE`：SaaS lock当前指向同一tag/commit。
+- `DONE`：项目完整包含OpenMontage/Golden Key核心代码，不是Adapter空壳。
+- `DONE`：运行环境问题记录为`PKG-001`，未提前决定方案。
+- `TODO`：完成W0公开审计后才能推送Golden Key派生内容到公开fork。
+
+### 下一步
+
+1. 创建官方OpenMontage公开fork并记录URL。
+2. 不推送当前本地`main`，直到W0公开审计通过。
+3. 完成W0差异、秘密、素材和许可证审计。
+
+## 2026-08-05：GitHub公开fork建立
+
+### 范围
+
+- 建立项目正式GitHub入口。
+- 验证它是官方OpenMontage的公开fork。
+- 保持W0审计前的发布隔离。
+
+### 动作
+
+- 从`calesthio/OpenMontage`创建`blazingcd/golden-key-openmontage-for-workbuddy`。
+- 设置项目描述和`openmontage`、`workbuddy`、`mcp`、`video-production`主题。
+- 将公开fork配置为本地`origin`，将Golden Key核心配置为`golden-key-core`。
+- 比对公开远端`main`与本地`main`。
+
+### 结果
+
+- `DONE`：公开仓库已建立，GitHub确认`isFork=true`、`isPrivate=false`，parent为`calesthio/OpenMontage`。
+- `DONE`：公开远端`main`仍精确指向官方提交`4eab34c5cfcccaa4f1970554928feccce73ee930`。
+- `DONE`：本地完整核心、架构文档和WorkBuddy增量尚未推送；W0审计门禁有效。
+- `TODO`：完成W0公开性审计并形成明确裁决。
+- `TODO`：只有审计Gate允许后，才把审计通过的完整快照发布到公开fork。
+
+### 证据
+
+- GitHub：`https://github.com/blazingcd/golden-key-openmontage-for-workbuddy`
+- 本地架构文档提交：`f94f63e`
+- Golden Key核心基线：`golden-key-v0.3.18` / `381a08e8dbdea025367c4970174ae0cd29980337`
+
+### 下一步
+
+1. 对Golden Key核心相对官方OpenMontage的差异和Git历史做公开性审计。
+2. 审核秘密、内部地址、素材、许可证、测试样例和Provider示例。
+3. 将审计结果及证据追加到本日志，并同步更新`PROJECT-STATE.md`。
+
+## 2026-08-05：README合并与W0执行交接
+
+### 范围
+
+- 将WorkBuddy项目说明和官方OpenMontage README合并为一个根README。
+- 为下一对话建立可直接执行的W0启动Prompt。
+
+### 动作
+
+- 保留当前WorkBuddy README全部内容及其未提交的场景文案调整。
+- 在WorkBuddy说明后加入明确标题、分隔线和机器可识别标记。
+- 将`core-sync:README.md`完整追加为下半部分，并逐行核对官方区内容。
+- 新建`NEXT-CONVERSATION-PROMPT-2026-08-05-W0.md`，写明权威文件、冻结边界、执行任务、Gate和禁止事项。
+
+### 结果
+
+- `DONE`：根README上半部分为WorkBuddy项目说明，下半部分为当前锁定核心中的官方OpenMontage README。
+- `DONE`：官方README区与`core-sync:README.md`内容一致，仅在其前方增加区隔说明和同步标记。
+- `DONE`：下一对话Prompt要求直接执行W0，不把重新规划当成完成。
+- `DONE`：主要内容已形成本地提交`7666680`。
+- `TODO`：在新对话中完成W0公开性、架构和接口审计。
+- `TODO`：W0 Gate通过且用户明确授权前，继续禁止向公开`origin`推送Golden Key派生内容。
+
+### 下一步
+
+1. 新对话读取`NEXT-CONVERSATION-PROMPT-2026-08-05-W0.md`并执行W0。
+2. 形成公开审计报告、运行时隔离方案和明确Gate裁决。
+
+## 2026-08-05：纠正本地同步与公开发布状态混淆
+
+### 范围
+
+- 重新核对Golden Key核心是否真正同步到本地WorkBuddy仓库。
+- 修正W0交接Prompt，防止把公开空fork误判为本地核心缺失。
+
+### 证据与结果
+
+- `DONE`：实时fetch后，`golden-key-core/main`与本地`core-sync`均为`golden-key-v0.3.18` / `381a08e8dbdea025367c4970174ae0cd29980337`，全仓差异为空。
+- `DONE`：本地`main`完整包含四个Golden Key业务Pipeline，其manifest blob与Golden Key远端逐一相同。
+- `DONE`：本地`main`相对`core-sync`在Pipeline、Skill、Schema、Tool和核心合同测试等受保护路径上无漂移。
+- `DONE`：Golden Key相对官方新增4个业务Pipeline manifest、44个对应Pipeline Skill和11个合同测试；Pipeline复用通用Schema和Tool Registry。
+- `DONE`：公开`origin/main`仍为官方提交`4eab34c5cfcccaa4f1970554928feccce73ee930`，没有四个Golden Key Pipeline。
+- `DONE`：更新W0 Prompt，要求分别核验Golden Key远端、本地`core-sync`、本地`main`和公开`origin/main`。
+- `DONE`：Prompt及状态纠正已形成本地提交`c737521`。
+- `TODO`：W0审计通过并获得用户明确授权后，把完整Golden Key核心加WorkBuddy增量发布到公开fork。
+
+### 下一步
+
+1. 在新对话按更新后的Prompt执行W0。
+2. 形成首次公开发布文件清单和Gate裁决。
+
+## 2026-08-05：W0公开性、架构和接口审计
+
+### 范围
+
+- 分别核验Golden Key远端、本地`core-sync`、本地`main`和公开`origin/main`。
+- 核验四个Golden Key业务Pipeline、44个Pipeline Skill、Reviewer/Checkpoint、通用Schema、Tool Registry和合同测试。
+- 审计Golden Key相对官方的完整差异、提交历史、秘密/路径/客户数据、素材/字体/品牌/第三方代码和许可证风险。
+- 固化WorkBuddy运行时隔离验证方案并形成首次公开发布Gate。
+
+### 动作与命令证据
+
+- 实时fetch `golden-key-core`与`origin`，核对tag、commit、祖先关系、tree差异和受保护路径差异。
+- 只读核对SaaS `config/openmontage.lock.json`，与同步清单一致。
+- 新增并运行`scripts/workbuddy/w0_audit.py`，生成Git、Pipeline、发布清单、脱敏风险和隔离证据。
+- 在独立D盘venv运行`python -m pytest tests\contracts -q --disable-warnings --maxfail=1`。
+- 运行6个Golden Key差异相关工具测试文件。
+- 使用腾讯云官方文档核对测试中的TokenHub地址为公开接口地址。
+- 运行Codex Security标准扫描预检；工作台因worker能力未决和Windows仓库路径清单错误未形成sealed report，已明确记录覆盖缺口。
+
+### 结果
+
+- `DONE`：四位置Git身份重新验证；远端核心与`core-sync`差异0，`main`受保护路径漂移0，公开`origin/main`仍只有官方基线。
+- `DONE`：4 manifests、44 Pipeline Skills、Reviewer/Checkpoint、通用Schema和22个Tool Registry引用完整一致。
+- `DONE`：11个新增合同测试文件完整一致；合同测试`743 passed, 7 skipped`，相关工具测试`70 passed`。
+- `DONE`：完整差异/历史/首次发布清单与脱敏风险证据已保存到`docs/workbuddy/audits/evidence-2026-08-05/`。
+- `DONE`：当前WorkBuddy交接文件中的本机绝对路径已脱敏；README增加预发布状态警示。
+- `DONE`：运行时隔离测试方案已冻结；当前无Adapter入口，动态隔离为`NOT YET APPLICABLE`。
+- `FAIL`：首次公开发布Gate。核心包含private-fork/真实客户命名案例和具体业务信号；现行ancestry还会公开commit邮箱及历史路径。
+
+### 责任与下一步
+
+1. 用户/仓库所有者决定：明确授权现有历史公开，或批准净化公开导出历史方案。
+2. Golden Key核心责任方确认/匿名化private-fork、真实客户和命名fixture内容；WorkBuddy不直接修改核心拥有路径。
+3. 对最终拟公开commit/history重跑W0审计和测试；新Gate通过前继续禁止公开推送。
+4. 本轮审计内容先形成安全本地提交；提交hash在后续追加日志中记录。
+
+## 2026-08-05：W0审计提交记录
+
+- 审计报告、证据、脚本、测试、状态更新和安全修正提交：`dfe4c4d948786419b02a8d682f325523f2fa6c02`。
+- 提交前确认未暂存或修改Golden Key核心受保护路径。
+- 本轮未推送`origin`或`golden-key-core`，未调用真实/付费Provider，未修改Golden Key SaaS仓库。
+- 公开发布Gate保持`FAIL`；本条日志收尾提交仅记录证据，不改变Gate。
+
+## 2026-08-05：首次公开推送时机规则冻结
+
+### 范围
+
+- 消除“首次公开推送必须等待 W1～W4”与“W0 PASS 会自动触发推送”两种误解。
+- 固化首次完整公开基线、对外状态声明和后续持续发布节奏。
+
+### 动作
+
+- 新建`docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`作为权威政策。
+- 同步更新README、架构边界、核心同步策略、W0-W4路线和`PROJECT-STATE.md`。
+- 明确首次推送必须同时满足：目标版本W0明确`PASS`，以及用户看到报告后的再次明确授权。
+- 明确首次完整基线不等待W1～W4；首次基线后采用持续开发、留痕、提交和推送。
+
+### 结果
+
+- `DONE`：规则已固化到项目权威文档。
+- `DONE`：首次基线最低内容包括锁定完整核心`golden-key-v0.3.18` / `381a08e8dbdea025367c4970174ae0cd29980337`、四个业务Pipeline及合同面、安全可公开的WorkBuddy增量和治理文档。
+- `DONE`：首次基线只能声明`Pre-Alpha`或“WorkBuddy Adapter开发中”。
+- `BLOCKED`：当前W0仍为`FAIL`，所以不得推送；本次规则补充不是推送授权。
+- 本轮未推送任何远端，未调用真实/付费Provider，未修改Golden Key SaaS仓库或Golden Key核心拥有路径。
+
+### 下一步
+
+1. 完成当前W0报告列明的安全、可逆、范围内修正，并列出外部阻断项。
+2. 对最终拟公开commit/history重跑W0；只有明确`PASS`才能进入授权等待状态。
+3. 向用户报告Gate、风险、待发布文件清单、测试证据和目标提交；等待明确推送授权。
+
+### 提交证据
+
+- 首次公开推送政策及关联文档提交：`37124106fc91e4a9e5363fcbc97e3d67d0571a8f`。
+- 本条提交证据只记录本地Git边界，不改变W0=`FAIL`，也不构成公开推送授权。
+
+## 2026-08-05：v0.3.21两层导出基线纠偏、同步与W0重审
+
+### 范围
+
+- 废弃“整仓同步Golden Key private ancestry”方案。
+- 采用`golden-key-v0.3.21` WorkBuddy Callable Core Release导出合同。
+- 实现fail-closed同步器、同步干净公开lineage、回归四Pipeline合同并重做W0。
+
+### Release与同步证据
+
+- GitHub Release实时核验：tag=`golden-key-v0.3.21`，source commit=`757ea3822e5f2eef7f341389983119021e827c8d`。
+- ZIP固定SHA-256：`DC21792B6F9D773B1559B1687DEE0CC78FCBFC442400D71A735F7EE375426599`，与GitHub asset digest和sidecar一致。
+- 外部lock与ZIP内嵌lock一致；contract ID=`golden-key-workbuddy-callable-core-v1`；bundle digest验证通过。
+- 1566个managed文件逐项通过path、hash、size和Git mode验证。
+- 在旧本地工作树首次纠偏时，12个文件改写、214个受管旧/缓存文件清理，六个历史Agent Host代码/测试路径被移除；消费方文件哈希保持不变。
+- 在公开`origin/main`干净lineage建立候选时，Release导入改写96个文件、删除0个；六路径原本不存在且持续不存在。
+- 两次场景的第二次同步均为0改动，幂等成立。
+
+### 实现与测试
+
+- 新增`scripts/core_sync/sync_workbuddy_core.py`，验证外部ZIP SHA、内外lock、bundle digest、managed scope、required/forbidden、逐文件hash/mode和目标清单。
+- 新增同步专项负测：精确镜像、消费方文件保留、六路径固定集合、forbidden/hash/mode/缺失/额外拒绝、外部SHA拒绝、只读漂移核验和幂等。
+- 四Pipeline：4 manifests / 44 Pipeline Skills / 10个相对官方变更合同测试（8新增、2修改），Reviewer/Checkpoint、Schema和Tool Registry引用完整。
+- 回归结果：contracts=`716 passed, 7 skipped`；tools=`284 passed, 1 subtest passed`；WorkBuddy=`15 passed`。
+- 全程未调用真实/付费Provider，未修改Golden Key SaaS仓库。
+
+### Git与W0结果
+
+- 旧private ancestry本地保留为`legacy/private-ancestry-v0.3.18`；旧`core-sync`改名为`legacy/core-sync-v0.3.18`，两者均禁止发布。
+- 当前`main`重新从公开`origin/main`建立；Golden Key source commit只记录Release provenance，不是`main`祖先。
+- 旧v0.3.18 W0 `FAIL`报告保留、脱敏并标记为已取代的历史结论。
+- 新v0.3.21候选W0：Release合同、Pipeline合同、direct-agent边界、公开lineage、公开性扫描、回归全部`PASS`。
+- 公开`origin/main`仍为`4eab34c5cfcccaa4f1970554928feccce73ee930`；本交接不是推送授权。
+
+### 下一步
+
+1. 形成干净本地目标提交并完成提交后只读复核。
+2. 报告Gate、风险、待发布文件、测试证据和目标提交。
+3. 等待用户再次明确允许推送后，才建立首个`Pre-Alpha`公开基线。

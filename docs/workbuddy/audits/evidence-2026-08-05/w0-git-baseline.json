@@ -1,0 +1,61 @@
+{
+  "refs": {
+    "golden_key_remote": "golden-key-core/main",
+    "core_sync": "core-sync",
+    "local_main": "main",
+    "public_origin": "origin/main"
+  },
+  "commits": {
+    "golden_key_remote": "[private-commit-fingerprint:8dc4b3a945ddd6e3]",
+    "core_sync": "[private-commit-fingerprint:8dc4b3a945ddd6e3]",
+    "local_main": "[private-commit-fingerprint:24cf792cbc0ace26]",
+    "public_origin": "4eab34c5cfcccaa4f1970554928feccce73ee930"
+  },
+  "expected": {
+    "official": "4eab34c5cfcccaa4f1970554928feccce73ee930",
+    "core": "[private-commit-fingerprint:8dc4b3a945ddd6e3]",
+    "tag": "golden-key-v0.3.18"
+  },
+  "tag_commit": "[private-commit-fingerprint:8dc4b3a945ddd6e3]",
+  "remote_core_tree_diff_count": 0,
+  "official_is_core_ancestor": true,
+  "core_is_main_ancestor": true,
+  "protected_path_diff_count": 0,
+  "public_origin_has_golden_key_pipelines": {
+    "golden-key-brand-company": false,
+    "golden-key-lead-conversion": false,
+    "golden-key-product-marketing": false,
+    "golden-key-subject-ip": false
+  },
+  "working_tree_porcelain": [
+    "M  NEXT-CONVERSATION-PROMPT-2026-08-05-W0.md",
+    "M  NEXT-CONVERSATION-PROMPT-2026-08-05.md",
+    "M  PROJECT-STATE.md",
+    "M  README.md",
+    "M  WORK-LOG.md",
+    "M  config/openmontage.sync.json",
+    "A  docs/workbuddy/W0-RUNTIME-ISOLATION-TEST-PLAN.md",
+    "A  docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-2026-08-05.md",
+    "A  docs/workbuddy/audits/W0-THREAT-MODEL-2026-08-05.md",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/first-publication-files.tsv",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/first-publication-working-tree-files.tsv",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/golden-key-commit-history.tsv",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/golden-key-vs-official-files.tsv",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/pipeline-integrity.json",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/publication-risk-scan.json",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/publication-working-tree-risk-scan.json",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/runtime-isolation-scan.json",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/summary.json",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/w0-git-baseline.json",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/workbuddy-commit-history.tsv",
+    "A  docs/workbuddy/audits/evidence-2026-08-05/workbuddy-vs-core-files.tsv",
+    "AM scripts/workbuddy/w0_audit.py",
+    "A  tests/workbuddy/test_w0_audit.py"
+  ],
+  "saas_lock": {
+    "release_tag": "golden-key-v0.3.18",
+    "commit": "[private-commit-fingerprint:8dc4b3a945ddd6e3]",
+    "matches_sync_manifest": true,
+    "source_path_recorded": false
+  }
+}

@@ -1,0 +1,45 @@
+version: "1.0"
+cases:
+  - id: sample-pet-brand-character
+    input:
+      request: "用示例宠物讲一个关于回家与陪伴的品牌故事"
+      platform: xiaohongshu
+      goal: "建立品牌记忆和情感联想"
+      communication_object: "verified pet-friendly brand"
+      verified_brand_thesis: true
+      verified_company_evidence: true
+      mascot_authorization: true
+    expected:
+      route: golden-key-brand-company
+      sample_pet_role: brand_character_or_symbolic_anchor
+      require: [brand_thesis, company_evidence, identity_system, music_motif]
+      reject: [invented_company_history, mascot_as_capability_proof, generated_facility_as_real]
+
+  - id: company-people-process
+    input:
+      request: "用员工和真实服务过程介绍这家公司为什么值得信任"
+      goal: "company trust"
+      verified_people_process_facts: true
+      direct_offer_cta: false
+    expected:
+      route: golden-key-brand-company
+      narrative_driver: people_and_process
+      reject: [invented_scale, invented_customer_result]
+
+  - id: product-benefit-demo
+    input:
+      request: "讲清楚这个产品的三个卖点并引导购买"
+      goal: "purchase"
+      verified_product_evidence: true
+    expected:
+      route: golden-key-product-marketing
+
+  - id: franchise-qualified-inquiry
+    input:
+      request: "说明加盟机制和条件，引导符合条件的人提交咨询"
+      goal: "qualified franchise inquiry"
+      verified_offer: true
+      qualification: true
+      primary_cta: true
+    expected:
+      route: golden-key-lead-conversion

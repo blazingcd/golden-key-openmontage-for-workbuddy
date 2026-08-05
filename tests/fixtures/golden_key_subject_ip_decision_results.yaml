@@ -1,0 +1,98 @@
+version: "1.0"
+pipeline: golden-key-subject-ip
+pipeline_version: "0.6.0"
+pipeline_commit: 3af1e2a1bb7b2da32c297ec37570030bd4858d67
+run_actor: codex-session-agent-following-openmontage-skills
+review_actor: same-run-rubric-review
+independence_limit: reviewer_is_not_independent
+cases:
+  - id: animal-source-story
+    actual:
+      route: golden-key-subject-ip
+      episode_role: affinity
+      narrative_driver: observed_action
+      presenter_mode: none
+      visual_backbone: real_source
+      selected_use: [narration_or_expressive_captions, bgm, selected_natural_sound]
+      rejected: [avatar, unverified_animal_motive, product_cta, decorative_i2v]
+      blockers: [resolved_subject_profile, resolved_platform_rules, approved_voice_or_caption_path]
+      rationale: Real behavior supplies truth; narration/captions and music supply relationship and emotional completion without inventing motive.
+      review_status: pass
+
+  - id: human-authority-original-voice
+    actual:
+      route: golden-key-subject-ip
+      episode_role: authority
+      narrative_driver: original_voice
+      presenter_mode: real_original
+      visual_backbone: presenter_plus_broll
+      selected_use: [original_speech, captions, restrained_bgm]
+      rejected: [generic_tts_replacement, avatar_without_need, playful_voice]
+      blockers: [speech_lineage, likeness_consent]
+      rationale: Authorized original speech is the strongest authority evidence and should not be replaced by a synthetic presenter.
+      review_status: pass
+
+  - id: virtual-character-existing-assets
+    actual:
+      route: golden-key-subject-ip
+      episode_role: series_continuity
+      narrative_driver: character_performance
+      presenter_mode: none
+      visual_backbone: approved_character_assets
+      selected_use: [approved_character_voice_or_captions, animation, designed_music_and_sfx]
+      rejected: [real-footage-first-rule, inconsistent_character_voice, documentary_claim]
+      blockers: [design_profile_hash, rig_or_motion_assets]
+      rationale: Existing approved design and rig are the identity truth, so character performance can lead the episode.
+      review_status: pass
+
+  - id: virtual-character-needs-new-rig
+    actual:
+      route: character-animation
+      episode_role: series_continuity
+      narrative_driver: character_performance
+      presenter_mode: none
+      visual_backbone: approved_character_assets
+      selected_use: [character_design_prerequisite, rig_plan_prerequisite]
+      rejected: [invented_unapproved_design, subject_ip_episode_before_rig]
+      blockers: [approved_character_design]
+      rationale: Subject-IP episode production cannot invent the reusable identity system that character-animation must approve first.
+      review_status: pass
+
+  - id: product-sales-route-out
+    actual:
+      route: golden-key-product-marketing
+      episode_role: none
+      narrative_driver: none
+      presenter_mode: none
+      visual_backbone: none
+      selected_use: [verified_product_facts, product_evidence, purchase_cta]
+      rejected: [subject_affinity_as_false_route]
+      blockers: [product_facts, product_evidence]
+      rationale: Purchase proof and CTA dominate subject affinity, so this is not a subject-IP job.
+      review_status: pass
+
+  - id: voice-clone-without-consent
+    actual:
+      route: golden-key-subject-ip
+      episode_role: trust
+      narrative_driver: narration
+      presenter_mode: real_rerecord
+      visual_backbone: narrated_source_story
+      selected_use: [real_rerecord_or_bring_your_own_voice, captions]
+      rejected: [voice_clone, fabricated_direct_address]
+      blockers: [authorized_voice_path]
+      rationale: Likeness permission does not imply voice-clone permission; use a real recording or authorized supplied voice.
+      review_status: pass
+
+  - id: reference-driven-sample
+    actual:
+      route: golden-key-subject-ip
+      episode_role: recognition
+      narrative_driver: character_performance
+      presenter_mode: none
+      visual_backbone: approved_character_assets
+      selected_use: [reference_analysis, differentiated_concepts, sample_subcheckpoint]
+      rejected: [carbon_copy, batch_before_sample]
+      blockers: [approved_sample]
+      rationale: Reference structure can inform direction, but a differentiated 10-15 second sample must pass before batch production.
+      review_status: pass

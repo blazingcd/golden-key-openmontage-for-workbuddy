@@ -6,6 +6,15 @@ import pytest
 from tools.video.video_compose import VideoCompose
 
 
+def _prepared_runtime(tmp_path: Path) -> tuple[Path, Path]:
+    composer = tmp_path / "remotion-composer"
+    (composer / "node_modules").mkdir(parents=True)
+    (composer / "package.json").write_text("{}", encoding="utf-8")
+    browser = tmp_path / "chrome.exe"
+    browser.write_bytes(b"test-browser")
+    return composer, browser
+
+
 def test_cinematic_cut_adapter_builds_a_sequential_timeline() -> None:
     scenes = VideoCompose._cuts_to_cinematic_scenes([
         {
@@ -79,6 +88,7 @@ def test_remotion_render_adapts_cuts_and_stages_local_video(monkeypatch, tmp_pat
     source = tmp_path / "source.mp4"
     source.write_bytes(b"not-a-real-video")
     output = tmp_path / "render.mp4"
+    composer, browser = _prepared_runtime(tmp_path)
     captured = {}
 
     def fake_run_command(self, command, **kwargs):
@@ -108,6 +118,8 @@ def test_remotion_render_adapts_cuts_and_stages_local_video(monkeypatch, tmp_pat
             ],
         },
         "output_path": str(output),
+        "remotion_root": str(composer),
+        "browser_executable": str(browser),
     })
 
     assert result.success, result.error
@@ -119,6 +131,7 @@ def test_remotion_render_adapts_cuts_and_stages_local_video(monkeypatch, tmp_pat
 
 def test_remotion_timeout_scales_with_scene_count(monkeypatch, tmp_path) -> None:
     output = tmp_path / "render.mp4"
+    composer, browser = _prepared_runtime(tmp_path)
     captured = {}
 
     def fake_run_command(self, command, **kwargs):
@@ -141,6 +154,8 @@ def test_remotion_timeout_scales_with_scene_count(monkeypatch, tmp_path) -> None
     result = VideoCompose()._remotion_render({
         "edit_decisions": {"renderer_family": "cinematic-trailer", "cuts": cuts},
         "output_path": str(output),
+        "remotion_root": str(composer),
+        "browser_executable": str(browser),
     })
 
     assert result.success, result.error
@@ -149,6 +164,7 @@ def test_remotion_timeout_scales_with_scene_count(monkeypatch, tmp_path) -> None
 
 def test_remotion_render_preserves_direct_cinematic_scenes(monkeypatch, tmp_path) -> None:
     output = tmp_path / "render.mp4"
+    composer, browser = _prepared_runtime(tmp_path)
     captured = {}
 
     def fake_run_command(self, command, **kwargs):
@@ -171,6 +187,8 @@ def test_remotion_render_preserves_direct_cinematic_scenes(monkeypatch, tmp_path
             "scenes": [scene],
         },
         "output_path": str(output),
+        "remotion_root": str(composer),
+        "browser_executable": str(browser),
     })
 
     assert result.success, result.error

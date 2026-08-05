@@ -1,0 +1,14 @@
+{
+  "gate": "PASS",
+  "release_contract_pass": true,
+  "pipeline_contract_pass": true,
+  "runtime_boundary_pass": true,
+  "public_lineage_pass": true,
+  "publication_risk_scan_pass": true,
+  "regression_pass": true,
+  "verified_core_file_count": 1566,
+  "candidate_file_count": 143,
+  "candidate_snapshot_sha256": "c5a4ddb861274886ab290a5b2a3c0b0e529eaa1e4c0208c3c9272d168714641b",
+  "private_core_history_scanned": false,
+  "private_core_history_in_candidate": false
+}

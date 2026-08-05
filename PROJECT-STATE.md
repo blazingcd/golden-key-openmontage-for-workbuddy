@@ -1,14 +1,14 @@
 # Project State
 
-更新时间：2026-08-05 22:36 +08:00
+更新时间：2026-08-05 23:25 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PUBLICATION GATE PASS / AWAITING EXPLICIT PUSH AUTHORIZATION`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 ACTIVE`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
-`origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过，但公开 `origin` 尚未改变；必须先
-向用户报告最终目标提交并等待明确授权。
+`origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
+明确授权推送，首个 `Pre-Alpha` 公开基线已发布到 `origin/main`。
 
 ## 当前权威基线
 
@@ -22,7 +22,7 @@
 | Managed files | `1566`，目标清单和每文件hash/mode完全匹配 |
 | Public base | `origin/main` / `4eab34c5cfcccaa4f1970554928feccce73ee930` |
 | Private ancestry | 不属于发布候选；source commit不是当前`main`祖先 |
-| Public push | 未授权、未执行 |
+| Public baseline | `e4f7577bad99e93e0a35217940d8c17f7a6d81cb`，已推送到`origin/main` |
 
 ## DONE
 
@@ -34,6 +34,7 @@
 - 回归：contracts `716 passed, 7 skipped`；tools `284 passed, 1 subtest passed`；WorkBuddy `15 passed`。
 - 公开性扫描、direct-agent静态隔离和公开Git lineage Gate通过；未扫描或引入Golden Key私有历史。
 - 旧`v0.3.18`整仓发布W0报告保留并脱敏，明确标记为历史且已被取代。
+- 首个完整`Pre-Alpha`公开基线已发布；远端`origin/main`核验为`e4f7577bad99e93e0a35217940d8c17f7a6d81cb`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -43,20 +44,18 @@
 
 ## 下一步
 
-1. 完成本地候选提交并报告Gate、风险、文件清单、测试证据和目标commit。
-2. 等待用户再次明确授权；没有授权不得推送。
-3. 获得授权后建立首个`Pre-Alpha`完整公开基线。
-4. 进入W1剩余工作：包骨架、D盘环境doctor和常规同步Gate集成。
-5. W2实现WorkBuddy Skill和最小确定性MCP；W3完成动态隔离；W4完成安装与真实WorkBuddy验收。
+1. W1将Release下载、固定SHA、lock验证、managed mirror和幂等检查封装为维护者命令并接入常规Gate。
+2. 建立WorkBuddy包、Skill/测试/示例配置骨架和D盘环境`doctor`。
+3. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
+4. W2实现WorkBuddy Skill和最小确定性MCP；W3完成动态隔离；W4完成安装与真实WorkBuddy验收。
 
 ## 当前允许声明
 
 - v0.3.21 WorkBuddy Callable Core已同步并通过本地W0和回归。
-- 当前候选为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
+- 首个公开基线已发布，状态为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
 
 当前不允许声明：
 
-- 已公开发布；
 - 已经可以安装；
 - WorkBuddy Skill/MCP已可用或真实WorkBuddy验收通过；
 - `OFFLINE ADAPTER READY`；

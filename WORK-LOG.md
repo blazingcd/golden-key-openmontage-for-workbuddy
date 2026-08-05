@@ -236,3 +236,30 @@
 1. 形成干净本地目标提交并完成提交后只读复核。
 2. 报告Gate、风险、待发布文件、测试证据和目标提交。
 3. 等待用户再次明确允许推送后，才建立首个`Pre-Alpha`公开基线。
+
+## 2026-08-05：首个Pre-Alpha公开基线发布
+
+### 授权与范围
+
+- 用户在看到v0.3.21 W0 `PASS`报告、风险、文件清单、测试证据和目标提交后，明确要求该推送即推送并继续项目。
+- 发布范围严格限定为已审计的本地`main`目标提交`e4f7577bad99e93e0a35217940d8c17f7a6d81cb`。
+- 未推送`legacy/core-sync-v0.3.18`或`legacy/private-ancestry-v0.3.18`，未创建额外Release或标签。
+
+### 发布前门禁
+
+- 重新获取公开`origin/main`，仍为`4eab34c5cfcccaa4f1970554928feccce73ee930`。
+- 工作树干净；候选仍为143个路径；W0证据Gate仍为`PASS`。
+- 当前`main`以公开`origin/main`为祖先，Golden Key source commit不在发布历史中。
+
+### 结果
+
+- `DONE`：`main`已推送到公开`origin/main`。
+- 远端核验：`refs/heads/main`=`e4f7577bad99e93e0a35217940d8c17f7a6d81cb`。
+- 对外状态保持`Pre-Alpha`/“WorkBuddy Adapter开发中”；没有声明可安装、真实WorkBuddy验收通过或`OFFLINE ADAPTER READY`。
+- 未调用真实/付费Provider，未修改Golden Key SaaS仓库。
+
+### 下一步
+
+1. 进入W1，先完成可重复Release同步维护命令和常规Gate集成。
+2. 建立WorkBuddy包、Skill/测试/示例配置骨架及D盘环境`doctor`。
+3. W1～W4采用持续开发、持续留痕、持续提交和持续推送方式推进。

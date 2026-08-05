@@ -37,6 +37,6 @@
   ],
   "adapter_release_commit": null,
   "adapter_release_tag": null,
-  "publication_audit_status": "pass_awaiting_explicit_push_authorization",
+  "publication_audit_status": "published_pre_alpha",
   "last_verified_at": "2026-08-05T22:36:00+08:00"
 }

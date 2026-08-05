@@ -11,6 +11,7 @@
 >
 > 首次公开基线不等待 W1～W4，但只有最终拟公开版本的 W0 Gate 为 `PASS`，且用户在看到
 > 审计报告后再次明确授权，才允许推送。规则见 `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`。
+> 上述条件已于2026-08-05满足；首个`Pre-Alpha`公开基线为`e4f7577bad99e93e0a35217940d8c17f7a6d81cb`。
 
 当前核心基线来自 `golden-key-v0.3.21` 的 WorkBuddy 专用 Release 导出包，合同 ID 为
 `golden-key-workbuddy-callable-core-v1`。本项目不合并 Golden Key 私有 Git 历史；WorkBuddy

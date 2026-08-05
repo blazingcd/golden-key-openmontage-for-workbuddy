@@ -19,7 +19,7 @@
 - authority：`direct_agent`，nested Agent Host forbidden。
 - 当前`main`以公开`origin/main`为祖先，不包含Golden Key private Git ancestry。
 - 1566个受管文件已同步并通过lock校验；四Pipeline、44个Skill、合同和工具回归已通过。
-- 新W0 Gate=`PASS`，但公开推送仍未授权。
+- 新W0 Gate=`PASS`；首个`Pre-Alpha`公开基线已推送到`origin/main`，提交为`e4f7577bad99e93e0a35217940d8c17f7a6d81cb`。
 
 `golden-key-v0.3.18`、`v0.3.19`、`v0.3.20`和活动`core-sync`方案均已废弃。不得直接同步官方
 OpenMontage，不得merge/cherry-pick Golden Key private `main`或历史，不得复制Release包外文件。
@@ -31,12 +31,12 @@ OpenMontage，不得merge/cherry-pick Golden Key private `main`或历史，不�
 3. 建立D盘项目、缓存、模型和临时目录规则及`doctor`骨架。
 4. 保持`requirements.txt`、`setup.py`、README、config、同步脚本、Adapter/MCP、打包和文档为消费方所有。
 5. 保持六个consumer-remove路径不存在，并禁止重新实现Agent Host/transport。
-6. 每个安全可验证增量更新`PROJECT-STATE.md`和追加`WORK-LOG.md`，运行专项测试后本地提交。
+6. 每个安全可验证增量更新`PROJECT-STATE.md`和追加`WORK-LOG.md`，运行专项测试后提交并持续推送。
 
 ## 发布红线
 
-- 本Prompt不是公开推送授权。
-- 在用户针对报告中的最终目标提交明确回复允许推送前，不得推送`origin`。
+- 首次公开基线已经获得授权并完成；后续按持续开发、持续留痕、持续提交和持续推送方式推进。
+- 若公开性风险、Core漂移或测试失败，立即恢复fail-closed，不得推送失败增量。
 - 不修改`golden_key_short_video_agent`。
 - 不调用真实或付费Provider。
 - 不声明已安装、真实WorkBuddy验收通过或`OFFLINE ADAPTER READY`。

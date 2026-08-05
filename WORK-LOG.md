@@ -263,3 +263,32 @@
 1. 进入W1，先完成可重复Release同步维护命令和常规Gate集成。
 2. 建立WorkBuddy包、Skill/测试/示例配置骨架及D盘环境`doctor`。
 3. W1～W4采用持续开发、持续留痕、持续提交和持续推送方式推进。
+
+## 2026-08-05：W1 Release同步维护命令
+
+### 范围
+
+- 将手工准备ZIP/lock的同步流程升级为可重复执行的`sync-release`维护者命令。
+- 保持Release-only、direct-agent、消费方所有权和fail-closed边界不变。
+
+### TDD与实现
+
+- 红灯1：证明现有同步器未校验SHA sidecar；新增固定SHA和ZIP文件名双重校验。
+- 红灯2：证明现有CLI不支持一条命令执行Release同步；新增`sync-release --asset-dir ...`公共接口。
+- 红灯3：证明缓存缺失没有下载路径；新增GitHub CLI三资产限定下载、同盘隔离暂存、完整验证后原子发布。
+- 真实缓存检查发现`extracted/`子目录导致误拒绝；新增回归测试，允许不参与同步的子目录，但继续拒绝同级额外文件。
+- 缓存命中仍完整验证sidecar、ZIP、lock、bundle和逐文件合同；不会调用GitHub CLI。
+
+### 回归与发现
+
+- 同步专项：`15 passed`。
+- 完整WorkBuddy专项：`18 passed`。
+- 真实v0.3.21 D盘缓存执行`sync-release`：1566个文件通过，`changed_file_count=0`、`deleted_file_count=0`。
+- 首次公开推送后，动态`origin/main`导致W0合同变化数误报为0；已将Pipeline/合同比较基线固定为配置锁定的`upstream_base_commit`，保持4 Pipeline / 44 Skill / 10个合同变化证据稳定。
+- 测试依赖安装于D盘隔离临时环境；未调用真实/付费Provider。
+
+### 下一步
+
+1. 提交并持续推送本增量。
+2. 把`sync-release`接入常规Gate/CI入口。
+3. 建立WorkBuddy包、Skill/示例配置骨架和D盘环境`doctor`。

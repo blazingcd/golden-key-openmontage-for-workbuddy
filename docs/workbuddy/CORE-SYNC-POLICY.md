@@ -44,6 +44,22 @@ WorkBuddy 只消费以下不可变 Release 资产：
 
 实现：`scripts/core_sync/sync_workbuddy_core.py`。
 
+### 维护者一键同步命令
+
+```powershell
+python scripts/core_sync/sync_workbuddy_core.py sync-release `
+  --asset-dir D:\WorkBuddyData\Caches\golden-key-workbuddy-core\golden-key-v0.3.21 `
+  --config config\openmontage.sync.json `
+  --destination . `
+  --report D:\WorkBuddyData\Temp\workbuddy-core-sync-report.json
+```
+
+- 缓存命中时仍会完整验证SHA sidecar、ZIP、外部/内嵌lock、bundle和逐文件合同，然后直接复用；不会调用`gh`。
+- 缓存缺失时通过已认证的GitHub CLI只下载配置固定的ZIP、SHA sidecar和lock到同一D盘父目录的隔离临时目录。
+- 三个资产全部验证通过后才原子建立版本缓存；部分缓存、同级额外文件、下载失败或任何合同漂移均fail closed。
+- 缓存中的历史解压子目录不参与同步，可以保留；任何同级额外文件仍被拒绝。
+- 命令完成后立即执行managed mirror和目标复核；重复运行必须报告`changed_file_count=0`、`deleted_file_count=0`。
+
 ## 4. 六个消费方移除路径
 
 只能按 lock 合同移除以下六个历史泄漏路径：

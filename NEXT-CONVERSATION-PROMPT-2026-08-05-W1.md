@@ -26,7 +26,7 @@ OpenMontage，不得merge/cherry-pick Golden Key private `main`或历史，不�
 
 ## W1下一步
 
-1. 将Release下载、固定SHA、lock验证、managed mirror和幂等检查封装为维护者可重复执行的命令。
+1. 已完成：`sync-release`维护者命令封装Release下载、固定SHA/sidecar、lock验证、managed mirror、缓存复用和幂等检查；下一步接入常规Gate/CI入口。
 2. 建立WorkBuddy Python包、Skill目录、测试目录和示例配置骨架。
 3. 建立D盘项目、缓存、模型和临时目录规则及`doctor`骨架。
 4. 保持`requirements.txt`、`setup.py`、README、config、同步脚本、Adapter/MCP、打包和文档为消费方所有。

@@ -2,6 +2,7 @@
   "schema_version": "2",
   "official_upstream_url": "https://github.com/calesthio/OpenMontage.git",
   "golden_key_core_url": "https://github.com/blazingcd/golden-key-openmontage.git",
+  "golden_key_core_repository": "blazingcd/golden-key-openmontage",
   "workbuddy_repository_url": "https://github.com/blazingcd/golden-key-openmontage-for-workbuddy.git",
   "upstream_base_commit": "4eab34c5cfcccaa4f1970554928feccce73ee930",
   "golden_key_core_tag": "golden-key-v0.3.21",

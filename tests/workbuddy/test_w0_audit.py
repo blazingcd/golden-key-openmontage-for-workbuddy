@@ -6,13 +6,14 @@ def test_v0321_export_pipeline_contract_inventory_is_complete():
 
     assert result["pipeline_count"] == 4
     assert result["pipeline_skill_count"] == 44
+    assert result["comparison_base_commit"] == "4eab34c5cfcccaa4f1970554928feccce73ee930"
     assert result["changed_contract_test_count"] == 10
     assert result["added_contract_test_count"] == 8
     assert result["reviewer_skill_present"] is True
     assert result["checkpoint_skill_present"] is True
 
     for pipeline in result["pipelines"].values():
-        assert pipeline["manifest_absent_from_public_origin"] is True
+        assert pipeline["manifest_absent_from_locked_upstream"] is True
         assert pipeline["schema_valid"] is True
         assert pipeline["pipeline_skill_count"] == 11
         assert pipeline["reviewer_skill_declared"] is True

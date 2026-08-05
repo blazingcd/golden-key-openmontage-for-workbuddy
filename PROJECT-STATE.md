@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-05 23:25 +08:00
+更新时间：2026-08-05 23:37 +08:00
 
 ## 当前里程碑
 
@@ -35,6 +35,9 @@
 - 公开性扫描、direct-agent静态隔离和公开Git lineage Gate通过；未扫描或引入Golden Key私有历史。
 - 旧`v0.3.18`整仓发布W0报告保留并脱敏，明确标记为历史且已被取代。
 - 首个完整`Pre-Alpha`公开基线已发布；远端`origin/main`核验为`e4f7577bad99e93e0a35217940d8c17f7a6d81cb`。
+- W1新增`sync-release`维护者命令：缓存缺失时只下载三个固定Release资产，验证后原子发布缓存；缓存命中时完整复核并复用。
+- 真实v0.3.21 D盘缓存回归：1566个文件验证通过，0改动、0删除；当前WorkBuddy专项`18 passed`。
+- W0 Pipeline比较基线已固定为配置中的`upstream_base_commit`，不再因首次推送后`origin/main`前移而误报0个合同变化。
 
 ## 历史记录（不再是当前Gate）
 
@@ -44,7 +47,7 @@
 
 ## 下一步
 
-1. W1将Release下载、固定SHA、lock验证、managed mirror和幂等检查封装为维护者命令并接入常规Gate。
+1. 将已完成的`sync-release`命令接入后续常规Gate/CI入口。
 2. 建立WorkBuddy包、Skill/测试/示例配置骨架和D盘环境`doctor`。
 3. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
 4. W2实现WorkBuddy Skill和最小确定性MCP；W3完成动态隔离；W4完成安装与真实WorkBuddy验收。

@@ -160,6 +160,10 @@ def audit_lineage() -> dict[str, Any]:
 
 
 def audit_pipelines() -> dict[str, Any]:
+    config = json.loads(
+        (ROOT / "config/openmontage.sync.json").read_text(encoding="utf-8")
+    )
+    comparison_base = config["upstream_base_commit"]
     schema = json.loads(
         (ROOT / "schemas/pipelines/pipeline_manifest.schema.json").read_text(
             encoding="utf-8"
@@ -208,8 +212,8 @@ def audit_pipelines() -> dict[str, Any]:
         results[pipeline] = {
             "manifest_path": manifest_path,
             "manifest_version": manifest.get("version"),
-            "manifest_absent_from_public_origin": not ref_path_exists(
-                PUBLIC_BASE, manifest_path
+            "manifest_absent_from_locked_upstream": not ref_path_exists(
+                comparison_base, manifest_path
             ),
             "schema_valid": not schema_errors,
             "schema_errors": [error.message for error in schema_errors],
@@ -228,7 +232,7 @@ def audit_pipelines() -> dict[str, Any]:
 
     contract_rows = []
     for row in lines(
-        git("diff", "--name-status", PUBLIC_BASE, "--", "tests/contracts")
+        git("diff", "--name-status", comparison_base, "--", "tests/contracts")
     ):
         status, path = row.split("\t", 1)
         contract_rows.append({"status": status, "path": path})
@@ -238,6 +242,7 @@ def audit_pipelines() -> dict[str, Any]:
         contract_rows.append({"status": "A", "path": path})
 
     return {
+        "comparison_base_commit": comparison_base,
         "pipeline_count": len(results),
         "pipeline_skill_count": len(all_pipeline_skills),
         "registered_tool_count": len(registered_tools),
@@ -515,7 +520,7 @@ def run_regressions(output_root: Path) -> dict[str, Any]:
     results = []
     env = os.environ.copy()
     env["PYTHONDONTWRITEBYTECODE"] = "1"
-    d_temp = Path(os.environ.get("WORKBUDDY_AUDIT_TEMP_ROOT", "D:/BlazingCD/Temp"))
+    d_temp = Path(os.environ.get("WORKBUDDY_AUDIT_TEMP_ROOT", "D:/WorkBuddyData/Temp"))
     d_temp.mkdir(parents=True, exist_ok=True)
     runtime_root = Path(
         tempfile.mkdtemp(prefix="workbuddy-w0-v0321-regression-", dir=d_temp)

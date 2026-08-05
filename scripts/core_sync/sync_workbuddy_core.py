@@ -10,11 +10,15 @@ import argparse
 import hashlib
 import json
 import os
+import re
+import shutil
 import stat
+import subprocess
 import tempfile
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from subprocess import TimeoutExpired
 from typing import Any
 
 
@@ -263,6 +267,150 @@ def validate_configured_bundle(
     }
 
 
+def verify_release_asset_cache(
+    asset_dir: Path, config: dict[str, Any]
+) -> VerifiedBundle:
+    """Verify the three pinned Release assets already present in a cache."""
+    asset_dir = Path(asset_dir)
+    zip_path = asset_dir / config["golden_key_core_zip_asset"]
+    sidecar_path = asset_dir / config["golden_key_core_sha256_asset"]
+    lock_path = asset_dir / config["golden_key_core_lock_asset"]
+    for path in (zip_path, sidecar_path, lock_path):
+        if not path.is_file():
+            raise SyncContractError(f"release asset missing: {path.name}")
+
+    try:
+        sidecar_lines = [
+            line.strip()
+            for line in sidecar_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+    except (OSError, UnicodeDecodeError) as exc:
+        raise SyncContractError(f"cannot read SHA-256 sidecar: {exc}") from exc
+    match = (
+        re.fullmatch(r"([0-9A-Fa-f]{64})\s+\*?(.+)", sidecar_lines[0])
+        if len(sidecar_lines) == 1
+        else None
+    )
+    expected_sha256 = config["golden_key_core_zip_sha256"].lower()
+    if (
+        match is None
+        or match.group(1).lower() != expected_sha256
+        or match.group(2) != zip_path.name
+    ):
+        raise SyncContractError("SHA-256 sidecar mismatch")
+
+    bundle = verify_bundle(
+        zip_path=zip_path,
+        lock_path=lock_path,
+        expected_zip_sha256=expected_sha256,
+        expected_contract_id=config["golden_key_core_contract_id"],
+        expected_source_ref=config["golden_key_core_tag"],
+        expected_source_commit=config["golden_key_core_source_commit"],
+    )
+    validate_configured_bundle(bundle=bundle, lock_path=lock_path, config=config)
+    return bundle
+
+
+def prepare_release_asset_cache(
+    asset_dir: Path, config: dict[str, Any], *, gh_executable: str = "gh"
+) -> tuple[VerifiedBundle, dict[str, Any]]:
+    """Reuse a verified cache or download and atomically publish its three assets."""
+    asset_dir = Path(asset_dir)
+    expected_names = {
+        config["golden_key_core_zip_asset"],
+        config["golden_key_core_sha256_asset"],
+        config["golden_key_core_lock_asset"],
+    }
+    if asset_dir.exists():
+        if not asset_dir.is_dir() or asset_dir.is_symlink():
+            raise SyncContractError("release asset cache is not a regular directory")
+        cache_entries = list(asset_dir.iterdir())
+        actual_file_names = {
+            path.name for path in cache_entries if path.is_file() or path.is_symlink()
+        }
+        if actual_file_names:
+            if actual_file_names != expected_names:
+                raise SyncContractError(
+                    "release asset cache inventory mismatch; "
+                    f"extra={sorted(actual_file_names - expected_names)}, "
+                    f"missing={sorted(expected_names - actual_file_names)}"
+                )
+            bundle = verify_release_asset_cache(asset_dir, config)
+            return bundle, {
+                "assets_reused": True,
+                "assets_downloaded": False,
+                "asset_dir": str(asset_dir.resolve()),
+                "release_asset_files": sorted(expected_names),
+            }
+        if cache_entries:
+            raise SyncContractError(
+                "release asset cache contains directories but no pinned assets"
+            )
+
+    asset_dir.parent.mkdir(parents=True, exist_ok=True)
+    staging_dir = Path(
+        tempfile.mkdtemp(prefix=f".{asset_dir.name}.download-", dir=asset_dir.parent)
+    )
+    try:
+        command = [
+            gh_executable,
+            "release",
+            "download",
+            config["golden_key_core_tag"],
+            "--repo",
+            config["golden_key_core_repository"],
+            "--dir",
+            str(staging_dir),
+        ]
+        for name in (
+            config["golden_key_core_zip_asset"],
+            config["golden_key_core_sha256_asset"],
+            config["golden_key_core_lock_asset"],
+        ):
+            command.extend(("--pattern", name))
+        try:
+            completed = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=600,
+                check=False,
+            )
+        except (OSError, TimeoutExpired) as exc:
+            raise SyncContractError(f"Release asset download failed: {exc}") from exc
+        if completed.returncode != 0:
+            detail = completed.stderr.strip() or completed.stdout.strip()
+            raise SyncContractError(f"Release asset download failed: {detail}")
+
+        staged_names = {path.name for path in staging_dir.iterdir()}
+        if staged_names != expected_names:
+            raise SyncContractError(
+                "downloaded Release asset inventory mismatch; "
+                f"extra={sorted(staged_names - expected_names)}, "
+                f"missing={sorted(expected_names - staged_names)}"
+            )
+        staged_bundle = verify_release_asset_cache(staging_dir, config)
+        if asset_dir.exists():
+            asset_dir.rmdir()
+        os.replace(staging_dir, asset_dir)
+        bundle = VerifiedBundle(
+            zip_path=asset_dir / config["golden_key_core_zip_asset"],
+            lock=staged_bundle.lock,
+            entries=staged_bundle.entries,
+        )
+    finally:
+        if staging_dir.exists():
+            shutil.rmtree(staging_dir)
+
+    return bundle, {
+        "assets_reused": False,
+        "assets_downloaded": True,
+        "asset_dir": str(asset_dir.resolve()),
+        "release_asset_files": sorted(expected_names),
+    }
+
+
 def _destination_path(root: Path, relative: str) -> Path:
     target = root.joinpath(*PurePosixPath(relative).parts)
     resolved_root = root.resolve()
@@ -453,9 +601,13 @@ def synchronize(
 def _load_config(path: Path) -> dict[str, Any]:
     config = _read_json(path)
     required = {
+        "golden_key_core_repository",
         "golden_key_core_tag",
         "golden_key_core_source_commit",
+        "golden_key_core_zip_asset",
         "golden_key_core_zip_sha256",
+        "golden_key_core_sha256_asset",
+        "golden_key_core_lock_asset",
         "golden_key_core_lock_sha256",
         "golden_key_core_contract_id",
         "golden_key_core_bundle_sha256",
@@ -474,36 +626,48 @@ def _load_config(path: Path) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=("verify", "apply"))
-    parser.add_argument("--zip", required=True, type=Path)
-    parser.add_argument("--lock", required=True, type=Path)
+    parser.add_argument("command", choices=("verify", "apply", "sync-release"))
+    parser.add_argument("--zip", type=Path)
+    parser.add_argument("--lock", type=Path)
+    parser.add_argument("--asset-dir", type=Path)
+    parser.add_argument("--gh", default="gh")
     parser.add_argument("--config", type=Path, default=Path("config/openmontage.sync.json"))
     parser.add_argument("--destination", type=Path, default=Path.cwd())
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
     try:
         config = _load_config(args.config)
-        bundle = verify_bundle(
-            zip_path=args.zip,
-            lock_path=args.lock,
-            expected_zip_sha256=config["golden_key_core_zip_sha256"],
-            expected_contract_id=config["golden_key_core_contract_id"],
-            expected_source_ref=config["golden_key_core_tag"],
-            expected_source_commit=config["golden_key_core_source_commit"],
-        )
-        validate_configured_bundle(bundle=bundle, lock_path=args.lock, config=config)
-        report = (
-            apply_verified_bundle(bundle, args.destination)
-            if args.command == "apply"
-            else {
-                "contract_id": bundle.lock["contract_id"],
-                "source_ref": bundle.lock["source_ref"],
-                "source_commit": bundle.lock["source_commit"],
-                "authority": bundle.lock["authority"],
-                "verified_file_count": len(bundle.entries),
-                "bundle_sha256": bundle.lock["bundle_sha256"],
-            }
-        )
+        if args.command == "sync-release":
+            if args.asset_dir is None:
+                raise SyncContractError("--asset-dir is required for sync-release")
+            bundle, asset_report = prepare_release_asset_cache(
+                args.asset_dir, config, gh_executable=args.gh
+            )
+            report = {**asset_report, **apply_verified_bundle(bundle, args.destination)}
+        else:
+            if args.zip is None or args.lock is None:
+                raise SyncContractError("--zip and --lock are required")
+            bundle = verify_bundle(
+                zip_path=args.zip,
+                lock_path=args.lock,
+                expected_zip_sha256=config["golden_key_core_zip_sha256"],
+                expected_contract_id=config["golden_key_core_contract_id"],
+                expected_source_ref=config["golden_key_core_tag"],
+                expected_source_commit=config["golden_key_core_source_commit"],
+            )
+            validate_configured_bundle(bundle=bundle, lock_path=args.lock, config=config)
+            report = (
+                apply_verified_bundle(bundle, args.destination)
+                if args.command == "apply"
+                else {
+                    "contract_id": bundle.lock["contract_id"],
+                    "source_ref": bundle.lock["source_ref"],
+                    "source_commit": bundle.lock["source_commit"],
+                    "authority": bundle.lock["authority"],
+                    "verified_file_count": len(bundle.entries),
+                    "bundle_sha256": bundle.lock["bundle_sha256"],
+                }
+            )
     except (OSError, SyncContractError, zipfile.BadZipFile) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))
         return 2

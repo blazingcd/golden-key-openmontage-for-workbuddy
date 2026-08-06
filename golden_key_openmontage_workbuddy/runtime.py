@@ -24,6 +24,9 @@ class RuntimeContractError(ValueError):
     """The WorkBuddy request violates the deterministic adapter contract."""
 
 
+LOCAL_TOOL_RUNTIMES = {"local", "local_gpu"}
+
+
 def _validated_project_id(project_id: str) -> str:
     if not PROJECT_ID_PATTERN.fullmatch(project_id):
         raise RuntimeContractError(
@@ -43,6 +46,38 @@ def _contained_path(path: Path, root: Path) -> Path:
     except ValueError as exc:
         raise RuntimeContractError(f"path is outside the allowed project root: {path}") from exc
     return resolved
+
+
+def _is_path_parameter(name: str) -> bool:
+    return name in {"path", "paths", "output"} or name.endswith(
+        ("_path", "_paths", "_dir")
+    )
+
+
+def _contained_tool_inputs(
+    inputs: dict[str, Any], *, project_dir: Path, input_schema: dict[str, Any]
+) -> dict[str, Any]:
+    """Resolve schema-declared path parameters inside the project workspace."""
+
+    normalized = dict(inputs)
+    properties = input_schema.get("properties") or {}
+    for name in properties:
+        if name not in normalized or not _is_path_parameter(name):
+            continue
+        raw_value = normalized[name]
+        values = raw_value if isinstance(raw_value, list) else [raw_value]
+        if not all(isinstance(value, str) for value in values):
+            raise RuntimeContractError(f"tool path parameter {name!r} must be text")
+        resolved_values: list[str] = []
+        for value in values:
+            candidate = Path(value)
+            if not candidate.is_absolute():
+                candidate = project_dir / candidate
+            resolved_values.append(str(_contained_path(candidate, project_dir)))
+        normalized[name] = (
+            resolved_values if isinstance(raw_value, list) else resolved_values[0]
+        )
+    return normalized
 
 
 def build_context_report(repo_root: Path) -> dict[str, Any]:
@@ -368,4 +403,203 @@ def inspect_current_stage(
         "selection_performed": False,
         "provider_calls_attempted": 0,
         "errors": [],
+    }
+
+
+def build_stage_tool_catalog(
+    repo_root: Path, data_root: Path, *, project_id: str
+) -> dict[str, Any]:
+    """Discover only tools allowed by the project's current native Stage."""
+
+    stage = inspect_current_stage(repo_root, data_root, project_id=project_id)
+    if stage.get("pipeline_complete"):
+        return {
+            **stage,
+            "tools": [],
+        }
+
+    from tools.tool_registry import registry
+
+    registry.ensure_discovered()
+    tools: list[dict[str, Any]] = []
+    missing: list[str] = []
+    for name in stage["tools_available"]:
+        tool = registry.get(name)
+        if tool is None:
+            missing.append(name)
+            continue
+        runtime_value = getattr(tool.runtime, "value", tool.runtime)
+        runtime = str(runtime_value)
+        network_required = bool(tool.resource_profile.network_required)
+        if runtime not in LOCAL_TOOL_RUNTIMES or network_required:
+            status = "authorization_required"
+            execution_policy = "blocked_provider_authorization"
+        else:
+            status = tool.get_status().value
+        if status not in {"available", "authorization_required"}:
+            execution_policy = "blocked_unavailable"
+        elif status == "available":
+            execution_policy = "allowed_local"
+        tools.append(
+            {
+                "name": name,
+                "status": status,
+                "capability": tool.capability,
+                "provider": tool.provider,
+                "runtime": runtime,
+                "network_required": network_required,
+                "execution_policy": execution_policy,
+                "input_schema": tool.input_schema or {},
+                "side_effects": list(tool.side_effects or []),
+                "agent_skills": list(tool.agent_skills or []),
+                "install_instructions": tool.install_instructions or "",
+            }
+        )
+    if missing:
+        raise RuntimeContractError(
+            "manifest tools are missing from the Tool Registry: "
+            + ", ".join(missing)
+        )
+    return {
+        "status": "pass",
+        "project_id": project_id,
+        "pipeline": stage["pipeline"],
+        "stage": stage["stage"],
+        "pipeline_complete": False,
+        "tools": tools,
+        "selection_performed": False,
+        "provider_calls_attempted": 0,
+        "errors": [],
+    }
+
+
+def execute_stage_tool(
+    repo_root: Path,
+    data_root: Path,
+    *,
+    project_id: str,
+    tool_name: str,
+    inputs_file: Path,
+    acknowledged_agent_skills: list[str] | None = None,
+) -> dict[str, Any]:
+    """Execute a deterministic tool only inside its native Stage allowance."""
+
+    stage = inspect_current_stage(repo_root, data_root, project_id=project_id)
+    if stage.get("pipeline_complete"):
+        raise RuntimeContractError("pipeline is complete; no Stage tool can run")
+    if tool_name not in stage["tools_available"]:
+        raise RuntimeContractError(
+            f"tool {tool_name!r} is not allowed by current Stage {stage['stage']}"
+        )
+    from tools.tool_registry import registry
+
+    registry.ensure_discovered()
+    tool = registry.get(tool_name)
+    if tool is None:
+        raise RuntimeContractError(
+            f"manifest tool {tool_name!r} is missing from the Tool Registry"
+        )
+    runtime_value = getattr(tool.runtime, "value", tool.runtime)
+    runtime = str(runtime_value)
+    network_required = bool(tool.resource_profile.network_required)
+    if runtime not in LOCAL_TOOL_RUNTIMES or network_required:
+        raise RuntimeContractError(
+            f"tool {tool_name!r} runtime {runtime!r} requires explicit Provider "
+            "authorization; this offline entry refuses it before execution"
+        )
+    if tool.get_status().value != "available":
+        raise RuntimeContractError(
+            f"tool {tool_name!r} is unavailable: {tool.install_instructions}"
+        )
+    missing_skills = sorted(
+        set(tool.agent_skills or []) - set(acknowledged_agent_skills or [])
+    )
+    if missing_skills:
+        raise RuntimeContractError(
+            "required Layer 3 Skills were not acknowledged: "
+            + ", ".join(missing_skills)
+        )
+
+    project_dir = _projects_root(data_root) / _validated_project_id(project_id)
+    request_path = _contained_path(inputs_file, project_dir / "artifacts")
+    if not request_path.is_file():
+        raise RuntimeContractError(f"tool inputs file not found: {request_path}")
+    try:
+        inputs = json.loads(request_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError(f"invalid tool inputs JSON: {exc}") from exc
+    if not isinstance(inputs, dict):
+        raise RuntimeContractError("tool inputs file must contain a JSON object")
+
+    try:
+        import jsonschema
+
+        jsonschema.validate(inputs, tool.input_schema or {"type": "object"})
+    except Exception as exc:
+        raise RuntimeContractError(
+            f"tool {tool_name!r} inputs failed schema validation: {exc}"
+        ) from exc
+    normalized_inputs = _contained_tool_inputs(
+        inputs, project_dir=project_dir, input_schema=tool.input_schema or {}
+    )
+    estimated_cost = float(tool.estimate_cost(normalized_inputs) or 0.0)
+    if estimated_cost > 0:
+        raise RuntimeContractError(
+            f"tool {tool_name!r} estimates ${estimated_cost:.6f}; explicit Provider "
+            "authorization is required before execution"
+        )
+
+    try:
+        result = tool.execute(normalized_inputs)
+    except Exception as exc:
+        return {
+            "status": "fail",
+            "project_id": project_id,
+            "pipeline": stage["pipeline"],
+            "stage": stage["stage"],
+            "tool": tool_name,
+            "tool_calls_attempted": 1,
+            "provider_calls_attempted": 0,
+            "cost_usd": 0,
+            "errors": [f"local tool execution failed: {exc}"],
+        }
+
+    artifact_paths: list[str] = []
+    output_errors: list[str] = []
+    for path in result.artifacts:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = project_dir / candidate
+        try:
+            artifact_paths.append(str(_contained_path(candidate, project_dir)))
+        except RuntimeContractError as exc:
+            output_errors.append(f"tool returned an unsafe artifact path: {exc}")
+    actual_cost = float(result.cost_usd or 0.0)
+    result_payload = {
+        "success": bool(result.success),
+        "data": result.data,
+        "artifacts": artifact_paths,
+        "error": result.error,
+        "duration_seconds": result.duration_seconds,
+        "seed": result.seed,
+        "model": result.model,
+    }
+    errors: list[str] = list(output_errors)
+    if actual_cost > 0:
+        errors.append(
+            f"local-only contract violation: tool reported ${actual_cost:.6f} cost"
+        )
+    if not result.success:
+        errors.append(result.error or "tool returned an unsuccessful result")
+    return {
+        "status": "fail" if errors else "pass",
+        "project_id": project_id,
+        "pipeline": stage["pipeline"],
+        "stage": stage["stage"],
+        "tool": tool_name,
+        "tool_calls_attempted": 1,
+        "provider_calls_attempted": 0,
+        "cost_usd": actual_cost,
+        "result": result_payload,
+        "errors": errors,
     }

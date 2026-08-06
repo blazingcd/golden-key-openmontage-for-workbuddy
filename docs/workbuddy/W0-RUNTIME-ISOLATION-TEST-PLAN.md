@@ -1,22 +1,24 @@
 # WorkBuddy 运行时隔离验证方案
 
-状态：`v0.3.21 DIRECT-AGENT BASELINE`
+状态：`v0.3.21 DIRECT-AGENT BASELINE / W2 LOCAL TOOL PARTIAL PASS`
 
 日期：2026-08-06
 
 ## 1. 当前结论
 
-当前仓库已经建立W1 WorkBuddy Python入口、Skill骨架以及本地`doctor`/`gate`，但尚未形成W2生产调用
-闭环或真实WorkBuddy验收。v0.3.21导出合同和W1 Gate已经证明：
+当前仓库已经建立W1入口和W2直接调用/受限本地Tool入口，但尚未形成真实Provider生产闭环或
+真实WorkBuddy验收。v0.3.21导出合同、W1 Gate和W2离线专项已经证明：
 
 - authority为`direct_agent`且`nested_agent_host_allowed=false`；
 - 三个Agent Host/transport模块及三个对应合同测试不在导出包和当前工作树；
 - 当前WorkBuddy自有代码不存在对它们或Golden Key SaaS Worker的导入；W1 Gate会对新增Python入口执行AST导入扫描；
 - `doctor`/`gate`只执行本地确定性检查并显式报告Provider调用数为0；
-- 尚不能对生产工具执行入口进行完整网络拦截，也不能声明 `OFFLINE ADAPTER READY`。
+- 当前Stage allowlist、项目路径、Layer 3 Skill确认和API/Hybrid前置拒绝已启用；本地`scene_detect`在socket
+  封锁下执行成功，Tool调用1次、Provider调用0次、成本0；仍不能声明 `OFFLINE ADAPTER READY`。
 
-W0和W1入口的静态边界为`PASS`；生产调用的动态进程/网络隔离仍是`NOT YET APPLICABLE`。W2出现
-首个CLI或MCP生产执行入口后，下面的动态门禁必须启用；W3完成负测后才能形成离线隔离结论。
+W0/W1静态边界为`PASS`，W2首个纯本地Tool纵向切片为`PARTIAL PASS`。当前socket负测覆盖Python连接入口
+和Hybrid selector前置拒绝；DNS、requests/httpx/SDK、Node网络、长任务子进程和SaaS仓库不可访问等完整矩阵
+仍属于W3，完成前不能形成最终离线隔离结论。
 
 ## 2. 静态依赖门禁
 
@@ -44,7 +46,7 @@ scripts/core_sync/
 
 ## 3. 运行时网络拦截
 
-W2 首个生产执行入口完成后建立单进程离线测试夹具；若MCP决策为`omit`，同一门禁应用到CLI/Adapter：
+W2已为首个本地执行入口建立单进程socket封锁夹具；W3继续扩展。若MCP决策为`omit`，同一门禁应用到CLI/Adapter：
 
 1. 清空所有 Provider 凭据，并设置测试专用环境变量表。
 2. 在进程启动前拦截 `socket.create_connection`、DNS、`requests`、`httpx`、OpenAI SDK 和 Node `fetch/http/https`。
@@ -82,8 +84,8 @@ WorkBuddy Agent负责理解、Pipeline选择和Stage创作；CLI或MCP只能返�
 |---|---|---|
 | 静态禁止导入/禁入文件 | `PASS`，六个consumer-remove路径均不存在 | CI 对全部Adapter运行时文件持续通过 |
 | SaaS Worker 隔离 | 架构和路径规则已冻结 | SaaS 仓库不可访问时离线流程仍通过 |
-| 嵌套模型调用拦截 | authority已冻结；动态入口尚不存在 | spy/fail stub调用数为0 |
-| 外网/Provider 拦截 | 尚无可运行入口 | 离线流程外网调用数为 0 |
-| 本地确定性能力 | W1 `doctor`/`gate`已实现 | 生产入口读取、Schema、Checkpoint、状态/取消负测通过；保留MCP时另加握手 |
+| 嵌套模型调用拦截 | authority已冻结；W2入口无模型调用参数或导入 | W3 SDK/进程spy调用数为0 |
+| 外网/Provider 拦截 | `PARTIAL PASS`：socket封锁下本地Tool成功，Hybrid前置拒绝且0调用 | 扩展DNS、HTTP SDK和Node拦截后外网调用数仍为0 |
+| 本地确定性能力 | 项目、Schema、Checkpoint、Tool allowlist和本地执行已通过 | 增加长任务状态、幂等、恢复、状态/取消负测；保留MCP时另加握手 |
 
 任何一项失败都阻止 `OFFLINE ADAPTER READY`。真实 WorkBuddy 与真实 Provider 验收仍是后续、逐次授权的独立 Gate。

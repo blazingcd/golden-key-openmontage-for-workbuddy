@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-06 14:14 +08:00
+更新时间：2026-08-06 14:52 +08:00
 
 ## 当前里程碑
 
@@ -51,6 +51,17 @@
 - 项目目录限制在`<data-root>/Projects/<project-id>`；Artifact/Checkpoint输入限制在项目`artifacts/`内；
   项目ID穿越、Pipeline重绑定、缺少Manifest产物和未批准完成均fail-closed。
 - W2离线生命周期测试封锁socket后通过，Provider调用和嵌套Agent调用均为0。
+- W2受限Tool切片已建立：`tool list`只返回当前Stage Manifest allowlist、输入Schema和Layer 3 Skill；
+  `tool execute`要求项目内请求/路径和Skill确认，只允许本地、零网络、零估算成本工具。
+- API/Hybrid及声明需要网络的工具在状态探测和`execute()`前fail-closed；`video_selector`负测在socket封锁下
+  网络尝试、Tool调用和Provider调用均为0。
+- 原生`scene_detect`已在项目内真实执行：Tool调用1次、Provider调用0次、成本0，输出场景JSON通过路径复核。
+- 当前回归：WorkBuddy `47 passed`；contracts `716 passed, 7 skipped`；tools `284 passed, 1 subtest passed`；
+  完整套件`1107 passed, 10 skipped, 1 subtest passed`；W1 `python -S` Gate=`PASS`；Skill格式校验=`Skill is valid!`。
+- W2 Tool增量公开审计=`PASS`：1566个Core文件匹配，候选12个文件，公开性/lineage/运行时/回归全通过；
+  private Core历史未扫描且不在候选中；最终候选摘要保存在D盘审计证据目录并在发布报告中给出。
+- 用户提供的CI `31077036248`属于提交`facc548`的历史失败；顶层W2依赖问题已由`e227660`修复，
+  后续CI `31077374841`在同一`main`上完整通过。
 - W1～W4明确只修改消费方层；v0.3.21 managed Core快照保持只读，Core变更只能通过新Release合同迁移。
 
 ## 历史记录（不再是当前Gate）
@@ -61,8 +72,8 @@
 
 ## 下一步
 
-1. W2在当前Stage和Manifest允许范围内实现确定性Tool发现/执行，并在网络层之前拒绝未授权Provider。
-2. 分离WorkBuddy主对话模型与视频生产Provider配置，按真实支持面提供国内模型配置体验。
+1. 分离WorkBuddy主对话模型与视频生产Provider配置，按真实支持面提供国内模型配置体验。
+2. 为本地Tool执行补长任务状态、幂等、取消/不可取消和完整网络/嵌套模型拦截。
 3. 在真实WorkBuddy中比较Skill+CLI与Skill+stdio MCP，裁决MCP为默认、可选或省略。
 4. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
 
@@ -70,13 +81,13 @@
 
 - v0.3.21 WorkBuddy Callable Core已同步并通过本地W0和回归。
 - 首个公开基线已发布，状态为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
-- W2第一段Skill-first确定性项目/Artifact/Checkpoint本地调用基线已通过专项测试。
+- W2 Skill-first项目/Artifact/Checkpoint和受限本地Tool调用基线已通过专项测试。
 
 当前不允许声明：
 
 - 已经可以安装；
 - W1 Skill骨架已经是完整可用的WorkBuddy生产Skill；
-- W2生产Tool执行闭环已经完成；
+- 真实或付费Provider生产执行闭环已经完成；
 - MCP已被选为必选、已可用或真实WorkBuddy验收通过；
 - `OFFLINE ADAPTER READY`；
 - 真实Provider成片通过。

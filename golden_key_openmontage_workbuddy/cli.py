@@ -109,6 +109,33 @@ def _parser() -> argparse.ArgumentParser:
     )
     stage_inspect.add_argument("--project-id", required=True)
     stage_inspect.add_argument("--json", action="store_true", dest="as_json")
+
+    tool = subparsers.add_parser(
+        "tool", help="Discover or execute tools allowed by the current Stage."
+    )
+    tool_commands = tool.add_subparsers(dest="tool_command", required=True)
+    tool_list = tool_commands.add_parser("list")
+    tool_list.add_argument("--repo-root", type=Path, default=Path.cwd())
+    tool_list.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    tool_list.add_argument("--project-id", required=True)
+    tool_list.add_argument("--json", action="store_true", dest="as_json")
+    tool_execute = tool_commands.add_parser("execute")
+    tool_execute.add_argument("--repo-root", type=Path, default=Path.cwd())
+    tool_execute.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    tool_execute.add_argument("--project-id", required=True)
+    tool_execute.add_argument("--name", required=True)
+    tool_execute.add_argument("--inputs-file", type=Path, required=True)
+    tool_execute.add_argument(
+        "--ack-agent-skill",
+        action="append",
+        default=[],
+        help="A Layer 3 Skill WorkBuddy read before invoking the tool (repeatable).",
+    )
+    tool_execute.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -214,6 +241,36 @@ def main(argv: Sequence[str] | None = None) -> int:
         except RuntimeContractError as exc:
             report = {
                 "status": "fail",
+                "provider_calls_attempted": 0,
+                "errors": [str(exc)],
+            }
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["status"] == "pass" else 1
+    if args.command == "tool":
+        from .runtime import (
+            RuntimeContractError,
+            build_stage_tool_catalog,
+            execute_stage_tool,
+        )
+
+        try:
+            if args.tool_command == "list":
+                report = build_stage_tool_catalog(
+                    args.repo_root, args.data_root, project_id=args.project_id
+                )
+            else:
+                report = execute_stage_tool(
+                    args.repo_root,
+                    args.data_root,
+                    project_id=args.project_id,
+                    tool_name=args.name,
+                    inputs_file=args.inputs_file,
+                    acknowledged_agent_skills=args.ack_agent_skill,
+                )
+        except RuntimeContractError as exc:
+            report = {
+                "status": "fail",
+                "tool_calls_attempted": 0,
                 "provider_calls_attempted": 0,
                 "errors": [str(exc)],
             }

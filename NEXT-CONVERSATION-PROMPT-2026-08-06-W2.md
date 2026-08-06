@@ -21,6 +21,9 @@
 - D盘数据根目录=`D:\WorkBuddyData`。
 - W2第一段已完成`context`、`pipelines`、`project create/status`、`stage inspect`、
   `artifact validate`和`checkpoint submit`；对应路径封闭、Manifest完整产物、Human Gate和离线负测通过。
+- W2 Tool切片已完成`tool list/execute`：只读取当前Stage Manifest allowlist，返回Registry Schema和Layer 3 Skill；
+  请求及路径封闭在项目内，必须确认Layer 3 Skill，本地`scene_detect`在socket封锁下真实执行成功；
+  API/Hybrid在状态探测、执行和网络前拒绝，Provider调用为0。
 - v0.3.21 managed Core快照只读；W1～W4只改消费方层。Core接口变化必须通过新Release合同迁移。
 
 ## W2目标
@@ -28,11 +31,11 @@
 1. 先以Skill-first直接调用完成最小生产闭环，不预设MCP必选。
 2. 保持现有权威上下文、Pipeline清单、项目状态、Artifact Schema和Checkpoint接口稳定。
 3. WorkBuddy负责选择四Pipeline并读取当前Stage Skill；Adapter不得选择Pipeline、创作、Reviewer判断或启动第二个模型Agent。
-4. 下一增量实现当前Manifest/Stage允许范围内的确定性工具发现/调用入口和结构化错误，但不得调用真实/付费Provider。
-5. 分离WorkBuddy主对话模型配置与视频生产Provider配置；国内模型能力以WorkBuddy和Tool Registry实时支持面为准。
+4. 下一增量分离WorkBuddy主对话模型配置与视频生产Provider配置；国内模型能力以WorkBuddy和Tool Registry实时支持面为准。
+5. 为本地Tool入口补充W3需要的长任务状态、幂等、取消/不可取消和更完整网络/嵌套模型拦截，不调用真实/付费Provider。
 6. 在真实WorkBuddy中对比Skill+CLI与Skill+本地stdio MCP的安装、Schema发现、长任务、恢复、错误和权限，
    形成MCP=`default|optional|omit`裁决；裁决前不得创建活动`.workbuddy/mcp.json`。
-7. 为首个生产入口增加离线网络拦截、嵌套模型调用拦截、路径封闭和Gate负测。
+7. 保持v0.3.21 managed Core只读；若Core接口变化，停止消费方开发并切换到新Release迁移Gate。
 
 ## 发布红线
 

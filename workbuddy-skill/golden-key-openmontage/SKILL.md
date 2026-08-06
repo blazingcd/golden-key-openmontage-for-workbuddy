@@ -23,9 +23,11 @@ Treat this package as Pre-Alpha. WorkBuddy is the only Agent; never start or emu
    - `golden-key-subject-ip`
 2. Create the project with `golden-key-workbuddy project create`; pass the Pipeline WorkBuddy selected. Resume with `golden-key-workbuddy project status`.
 3. Run `golden-key-workbuddy stage inspect`, then read the returned manifest-declared Stage Skill before doing Stage work.
-4. Discover tools through the Tool Registry and stay within the current manifest/stage allowance.
-5. Write canonical Artifact JSON inside the project's `artifacts/` directory and run `golden-key-workbuddy artifact validate`.
-6. Run the native Reviewer, then use `golden-key-workbuddy checkpoint submit`. For a gated Stage, submit `awaiting_human`, present the result, and end the turn; submit `completed --human-approved` only after explicit approval.
+4. Run `golden-key-workbuddy tool list` for the project. Use only the returned current-Stage allowlist; do not rank or select a Pipeline in the CLI.
+5. Before execution, read every returned `agent_skills` entry at `.agents/skills/<name>/SKILL.md`. Write the tool input JSON inside the project's `artifacts/` directory, keep every tool path inside the project, then run `golden-key-workbuddy tool execute --ack-agent-skill <name>` (repeat the acknowledgement for every required Layer 3 Skill).
+6. Treat `API or Hybrid` execution as blocked unless a separately authorized Provider path exists. The W2 offline entry intentionally refuses it before status probing, execution, or network access; never retry it through an ad-hoc call.
+7. Write canonical Artifact JSON inside the project's `artifacts/` directory and run `golden-key-workbuddy artifact validate`.
+8. Run the native Reviewer, then use `golden-key-workbuddy checkpoint submit`. For a gated Stage, submit `awaiting_human`, present the result, and end the turn; submit `completed --human-approved` only after explicit approval.
 
 ## Safety boundaries
 

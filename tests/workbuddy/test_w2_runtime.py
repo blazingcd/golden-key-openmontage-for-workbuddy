@@ -12,6 +12,217 @@ from golden_key_openmontage_workbuddy.cli import main
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def _advance_project_to_script(
+    tmp_path: Path, capsys, *, project_id: str = "tool-project"
+) -> tuple[Path, Path]:
+    data_root = tmp_path / "WorkBuddyData"
+    assert main(
+        [
+            "project",
+            "create",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            project_id,
+            "--title",
+            "Tool Project",
+            "--pipeline",
+            "golden-key-product-marketing",
+            "--json",
+        ]
+    ) == 0
+    capsys.readouterr()
+    artifacts_dir = data_root / "Projects" / project_id / "artifacts"
+    decision_log = {
+        "version": "1.0",
+        "project_id": project_id,
+        "decisions": [],
+    }
+    idea_file = artifacts_dir / "idea-checkpoint.json"
+    idea_file.write_text(
+        json.dumps(
+            {
+                "brief": {
+                    "version": "1.0",
+                    "title": "Tool Project",
+                    "hook": "A grounded opening",
+                    "key_points": ["One verified point"],
+                    "tone": "clear",
+                    "style": "clean-professional",
+                    "target_platform": "generic",
+                    "target_duration_seconds": 30,
+                },
+                "decision_log": decision_log,
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert main(
+        [
+            "checkpoint",
+            "submit",
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            project_id,
+            "--stage",
+            "idea",
+            "--status",
+            "completed",
+            "--artifacts-file",
+            str(idea_file),
+            "--human-approved",
+            "--json",
+        ]
+    ) == 0
+    capsys.readouterr()
+    proposal_file = artifacts_dir / "proposal-checkpoint.json"
+    proposal_file.write_text(
+        json.dumps(
+            {
+                "proposal_packet": {
+                    "version": "1.0",
+                    "concept_options": [
+                        {
+                            "id": "c1",
+                            "title": "Proof First",
+                            "hook": "See the proof before the promise.",
+                            "narrative_structure": "problem_solution",
+                            "visual_approach": "source-led evidence",
+                            "target_duration_seconds": 30,
+                            "why_this_works": "It grounds the opening in evidence.",
+                        },
+                        {
+                            "id": "c2",
+                            "title": "One Clear Change",
+                            "hook": "One change makes the difference visible.",
+                            "narrative_structure": "comparison",
+                            "visual_approach": "before and after comparison",
+                            "target_duration_seconds": 30,
+                            "why_this_works": "It gives the viewer a concrete contrast.",
+                        },
+                        {
+                            "id": "c3",
+                            "title": "A Short Journey",
+                            "hook": "Follow the result from start to finish.",
+                            "narrative_structure": "journey",
+                            "visual_approach": "chronological source montage",
+                            "target_duration_seconds": 30,
+                            "why_this_works": "It keeps the process easy to follow.",
+                        },
+                    ],
+                    "selected_concept": {
+                        "concept_id": "c1",
+                        "rationale": "The evidence-led option is the safest baseline.",
+                    },
+                    "production_plan": {
+                        "pipeline": "golden-key-product-marketing",
+                        "render_runtime": "ffmpeg",
+                        "stages": [
+                            {
+                                "stage": "script",
+                                "tools": [],
+                                "approach": "Write from verified evidence.",
+                            }
+                        ],
+                    },
+                    "cost_estimate": {
+                        "total_estimated_usd": 0,
+                        "line_items": [],
+                        "budget_verdict": "within_budget",
+                    },
+                    "approval": {"status": "approved"},
+                },
+                "decision_log": decision_log,
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert main(
+        [
+            "checkpoint",
+            "submit",
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            project_id,
+            "--stage",
+            "proposal",
+            "--status",
+            "completed",
+            "--artifacts-file",
+            str(proposal_file),
+            "--human-approved",
+            "--json",
+        ]
+    ) == 0
+    capsys.readouterr()
+    return data_root, artifacts_dir
+
+
+def _advance_project_to_assets(
+    tmp_path: Path, capsys, *, project_id: str = "provider-project"
+) -> tuple[Path, Path]:
+    data_root, artifacts_dir = _advance_project_to_script(
+        tmp_path, capsys, project_id=project_id
+    )
+    stage_artifacts = {
+        "script": {
+            "version": "1.0",
+            "title": "Tool Project Script",
+            "total_duration_seconds": 10,
+            "sections": [
+                {
+                    "id": "s1",
+                    "text": "A short verified line.",
+                    "start_seconds": 0,
+                    "end_seconds": 10,
+                }
+            ],
+        },
+        "scene_plan": {
+            "version": "1.0",
+            "scenes": [
+                {
+                    "id": "scene-1",
+                    "type": "talking_head",
+                    "description": "A source-led opening shot",
+                    "start_seconds": 0,
+                    "end_seconds": 10,
+                }
+            ],
+        },
+    }
+    for stage_name in ("script", "scene_plan"):
+        checkpoint_file = artifacts_dir / f"{stage_name}-checkpoint.json"
+        checkpoint_file.write_text(
+            json.dumps({stage_name: stage_artifacts[stage_name]}),
+            encoding="utf-8",
+        )
+        assert main(
+            [
+                "checkpoint",
+                "submit",
+                "--data-root",
+                str(data_root),
+                "--project-id",
+                project_id,
+                "--stage",
+                stage_name,
+                "--status",
+                "completed",
+                "--artifacts-file",
+                str(checkpoint_file),
+                "--human-approved",
+                "--json",
+            ]
+        ) == 0
+        capsys.readouterr()
+    return data_root, artifacts_dir
+
+
 def test_w1_gate_stays_lightweight_when_w2_runtime_dependencies_are_unavailable(
     tmp_path: Path,
 ) -> None:
@@ -643,3 +854,297 @@ def test_checkpoint_submit_requires_every_manifest_produced_artifact(
     assert not (
         data_root / "Projects" / "complete-contract" / "checkpoint_idea.json"
     ).exists()
+
+
+def test_tool_list_exposes_only_the_current_stage_manifest_allowlist(
+    tmp_path: Path, capsys
+) -> None:
+    data_root, _ = _advance_project_to_script(tmp_path, capsys)
+
+    result = main(
+        [
+            "tool",
+            "list",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--json",
+        ]
+    )
+
+    assert result == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "pass"
+    assert payload["pipeline"] == "golden-key-product-marketing"
+    assert payload["stage"] == "script"
+    assert [tool["name"] for tool in payload["tools"]] == [
+        "transcriber",
+        "scene_detect",
+    ]
+    scene_detect = next(
+        tool for tool in payload["tools"] if tool["name"] == "scene_detect"
+    )
+    assert scene_detect["runtime"] == "local"
+    assert scene_detect["network_required"] is False
+    assert scene_detect["input_schema"]["required"] == ["input_path"]
+    assert scene_detect["agent_skills"] == ["ffmpeg"]
+    assert payload["selection_performed"] is False
+    assert payload["provider_calls_attempted"] == 0
+
+
+def test_tool_execute_rejects_a_tool_outside_the_current_stage_before_network(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    data_root, artifacts_dir = _advance_project_to_script(tmp_path, capsys)
+    inputs_file = artifacts_dir / "video-selector-inputs.json"
+    inputs_file.write_text(json.dumps({"prompt": "must not run"}), encoding="utf-8")
+    network_attempts: list[str] = []
+
+    def reject_network(*args, **kwargs):
+        network_attempts.append(repr(args))
+        raise AssertionError("network must not be reached")
+
+    monkeypatch.setattr(socket, "create_connection", reject_network)
+    monkeypatch.setattr(socket.socket, "connect", reject_network)
+
+    result = main(
+        [
+            "tool",
+            "execute",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--name",
+            "video_selector",
+            "--inputs-file",
+            str(inputs_file),
+            "--json",
+        ]
+    )
+
+    assert result == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "fail"
+    assert "not allowed by current Stage script" in payload["errors"][0]
+    assert payload["tool_calls_attempted"] == 0
+    assert payload["provider_calls_attempted"] == 0
+    assert network_attempts == []
+
+
+def test_tool_execute_blocks_an_allowed_hybrid_selector_before_network(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    data_root, artifacts_dir = _advance_project_to_assets(tmp_path, capsys)
+    inputs_file = artifacts_dir / "video-selector-inputs.json"
+    inputs_file.write_text(json.dumps({"prompt": "must not run"}), encoding="utf-8")
+    network_attempts: list[str] = []
+
+    def reject_network(*args, **kwargs):
+        network_attempts.append(repr(args))
+        raise AssertionError("network must not be reached")
+
+    monkeypatch.setattr(socket, "create_connection", reject_network)
+    monkeypatch.setattr(socket.socket, "connect", reject_network)
+
+    result = main(
+        [
+            "tool",
+            "execute",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "provider-project",
+            "--name",
+            "video_selector",
+            "--inputs-file",
+            str(inputs_file),
+            "--json",
+        ]
+    )
+
+    assert result == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "fail"
+    assert "runtime 'hybrid' requires explicit Provider authorization" in payload[
+        "errors"
+    ][0]
+    assert payload["tool_calls_attempted"] == 0
+    assert payload["provider_calls_attempted"] == 0
+    assert network_attempts == []
+
+
+def test_tool_execute_runs_an_allowed_local_tool_inside_the_project_offline(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    data_root, artifacts_dir = _advance_project_to_script(tmp_path, capsys)
+    project_dir = artifacts_dir.parent
+    source = project_dir / "assets" / "video" / "source.mp4"
+    source.parent.mkdir(parents=True, exist_ok=True)
+    completed = subprocess.run(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "color=c=black:s=64x64:r=10:d=1",
+            "-c:v",
+            "mpeg4",
+            "-y",
+            str(source),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    output = artifacts_dir / "source-scenes.json"
+    inputs_file = artifacts_dir / "scene-detect-inputs.json"
+    inputs_file.write_text(
+        json.dumps(
+            {
+                "input_path": str(source),
+                "method": "content",
+                "min_scene_length_seconds": 0.1,
+                "output_path": str(output),
+            }
+        ),
+        encoding="utf-8",
+    )
+    network_attempts: list[str] = []
+
+    def reject_network(*args, **kwargs):
+        network_attempts.append(repr(args))
+        raise AssertionError("network must not be reached")
+
+    monkeypatch.setattr(socket, "create_connection", reject_network)
+    monkeypatch.setattr(socket.socket, "connect", reject_network)
+
+    result = main(
+        [
+            "tool",
+            "execute",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--name",
+            "scene_detect",
+            "--inputs-file",
+            str(inputs_file),
+            "--ack-agent-skill",
+            "ffmpeg",
+            "--json",
+        ]
+    )
+
+    assert result == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "pass"
+    assert payload["pipeline"] == "golden-key-product-marketing"
+    assert payload["stage"] == "script"
+    assert payload["tool"] == "scene_detect"
+    assert payload["tool_calls_attempted"] == 1
+    assert payload["provider_calls_attempted"] == 0
+    assert payload["cost_usd"] == 0
+    assert payload["result"]["success"] is True
+    assert Path(payload["result"]["artifacts"][0]).resolve() == output.resolve()
+    assert output.is_file()
+    assert network_attempts == []
+
+
+def test_tool_execute_requires_layer3_skill_acknowledgement_before_execution(
+    tmp_path: Path, capsys
+) -> None:
+    data_root, artifacts_dir = _advance_project_to_script(tmp_path, capsys)
+    inputs_file = artifacts_dir / "scene-detect-inputs.json"
+    inputs_file.write_text(
+        json.dumps(
+            {
+                "input_path": str(artifacts_dir / "missing.mp4"),
+                "output_path": str(artifacts_dir / "must-not-exist.json"),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = main(
+        [
+            "tool",
+            "execute",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--name",
+            "scene_detect",
+            "--inputs-file",
+            str(inputs_file),
+            "--json",
+        ]
+    )
+
+    assert result == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert "required Layer 3 Skills were not acknowledged: ffmpeg" in payload[
+        "errors"
+    ][0]
+    assert payload["tool_calls_attempted"] == 0
+    assert not (artifacts_dir / "must-not-exist.json").exists()
+
+
+def test_tool_execute_rejects_tool_paths_outside_the_project_before_execution(
+    tmp_path: Path, capsys
+) -> None:
+    data_root, artifacts_dir = _advance_project_to_script(tmp_path, capsys)
+    outside = tmp_path / "escaped-scenes.json"
+    inputs_file = artifacts_dir / "scene-detect-escape.json"
+    inputs_file.write_text(
+        json.dumps(
+            {
+                "input_path": str(artifacts_dir / "missing.mp4"),
+                "output_path": str(outside),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = main(
+        [
+            "tool",
+            "execute",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--name",
+            "scene_detect",
+            "--inputs-file",
+            str(inputs_file),
+            "--ack-agent-skill",
+            "ffmpeg",
+            "--json",
+        ]
+    )
+
+    assert result == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert "outside the allowed project root" in payload["errors"][0]
+    assert payload["tool_calls_attempted"] == 0
+    assert not outside.exists()

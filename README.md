@@ -5,7 +5,7 @@
 **Golden Key OpenMontage for WorkBuddy** is a community-maintained edition of
 [OpenMontage](https://github.com/calesthio/OpenMontage), adapted for use with WorkBuddy.
 
-> **开发状态：Pre-Alpha。** 当前仓库已经提供W1基础门禁和W2第一段Skill-first本地调用闭环，
+> **开发状态：Pre-Alpha。** 当前仓库已经提供W1基础门禁和W2 Skill-first本地调用、受限Tool执行闭环，
 > 但尚未提供完整可安装发行版，也尚未完成真实WorkBuddy或Provider验收。请勿把当前源码视为可用成品；进度和发布Gate以
 > `PROJECT-STATE.md` 为准。
 >
@@ -53,10 +53,14 @@ python -m golden_key_openmontage_workbuddy pipelines --json
 python -m golden_key_openmontage_workbuddy project create --project-id demo --title "Demo" --pipeline golden-key-product-marketing --json
 python -m golden_key_openmontage_workbuddy project status --project-id demo --json
 python -m golden_key_openmontage_workbuddy stage inspect --project-id demo --json
+python -m golden_key_openmontage_workbuddy tool list --project-id demo --json
+# WorkBuddy读取tool list返回的Layer 3 Skill后，才可执行当前Stage允许的本地工具：
+python -m golden_key_openmontage_workbuddy tool execute --project-id demo --name scene_detect --inputs-file D:\WorkBuddyData\Projects\demo\artifacts\scene-detect-inputs.json --ack-agent-skill ffmpeg --json
 ```
 
-这些命令不调用Provider；W2第一段还提供项目内Artifact校验与受限Checkpoint提交。当前尚未开放生产Tool执行，
-也不代表完整安装、MCP裁决或真实WorkBuddy验收已经通过。
+W2当前只允许Manifest当前Stage列出的本地、零网络、零成本工具；API/Hybrid和声明需要网络的工具会在状态探测、
+执行和网络访问前拒绝。项目内Artifact校验与受限Checkpoint提交仍保持不变。这不代表完整Provider生产闭环、
+安装、MCP裁决或真实WorkBuddy验收已经通过。
 本地目录规则见[`docs/workbuddy/LOCAL-STORAGE-POLICY.md`](docs/workbuddy/LOCAL-STORAGE-POLICY.md)。
 
 ## Golden Key Edition

@@ -96,19 +96,27 @@ authority.invocation_model = direct_agent
 authority.nested_agent_host_allowed = false
 ```
 
-当前W1不发布活动`.workbuddy/mcp.json`。Skill与Callable Core是产品必选层；MCP不是远端服务，也不是
+当前W2不发布活动`.workbuddy/mcp.json`。Skill与Callable Core是产品必选层；MCP不是远端服务，也不是
 第二个Agent，只可能作为本地确定性执行适配层。W2必须在真实WorkBuddy中比较Skill+CLI与Skill+stdio
 MCP两条路径，再裁决MCP为默认、可选或不交付。
 
 无论裁决如何，任何Adapter/MCP都不得拥有第二套 Pipeline 选择器、Director、Reviewer、Checkpoint
 协议或模型规划循环。WorkBuddy始终是唯一Agent。
 
-W1已建立两个消费方公开命令：
+W1已建立环境命令，W2在同一消费方CLI上建立直接调用命令：
 
 ```text
 golden-key-workbuddy doctor
 golden-key-workbuddy gate
+golden-key-workbuddy context / pipelines
+golden-key-workbuddy project / stage / artifact / checkpoint
+golden-key-workbuddy tool list / execute
 ```
+
+`tool list`只解析项目已绑定Pipeline的当前Stage，并按Manifest原顺序返回允许工具、输入Schema和Layer 3 Skill；
+不选择Pipeline或Provider。`tool execute`要求请求JSON位于项目`artifacts/`内、所有Schema声明路径位于项目目录、
+所有Layer 3 Skill已显式确认，并且工具为本地、零网络、估算零成本。API、Hybrid、声明需网络或估算有成本的工具
+在状态探测和`execute()`前拒绝。首条真实本地纵向验证使用`scene_detect`，socket封锁下Provider调用为0。
 
 它们只做本地环境、锁定Core身份、四Pipeline、Skill和隔离边界检查，Provider调用数必须为0。
 默认D盘目录和缓存规则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`。

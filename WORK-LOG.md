@@ -362,3 +362,37 @@
 - 公开CI首次实跑发现W2/Core依赖被CLI顶层提前加载，破坏W1轻量Gate；改为命令级懒加载，并新增`python -S`
   回归，保证缺少W2运行依赖时`doctor/gate`仍可启动。
 - 当前尚未开放生产Tool执行，尚未进行真实WorkBuddy与stdio MCP对比，因此W2仍为`IN PROGRESS`。
+
+## 2026-08-06：W2受限Tool Registry发现与纯本地执行
+
+### CI纠偏
+
+- 用户提供的Actions run `31077036248`对应历史提交`facc548`，失败点为W2运行时在CLI顶层导入，
+  使W1 Gate在依赖安装差异下报`ModuleNotFoundError: jsonschema`。
+- 当前`main`的`e227660`已经采用命令级懒加载；后续run `31077374841`在同一主线通过W1 Gate、lint和完整测试。
+- 本轮再次以`python -S`执行W1 Gate，结果=`PASS`，确认W2 Tool入口没有重新引入该回归。
+
+### TDD与实现
+
+- 新增`golden-key-workbuddy tool list`：只读取项目已绑定Pipeline的当前Stage，按Manifest顺序返回允许工具、
+  Tool Registry输入Schema、运行时、网络声明、Layer 3 Skill和本地执行策略；不选择Pipeline或Provider。
+- 新增`golden-key-workbuddy tool execute`：请求JSON必须位于项目`artifacts/`内，Schema声明的所有路径必须
+  位于项目目录，必须用`--ack-agent-skill`确认已读取全部Layer 3 Skill。
+- 仅允许`runtime=local|local_gpu`、`network_required=false`、可用且估算成本为0的当前Stage工具；
+  API、Hybrid、需网络、未列入Stage、Skill未确认、Schema错误和路径穿越均在`execute()`前拒绝。
+- 发现Hybrid selector的状态探测本身可能访问本机`localhost:8188`；Adapter不再对被阻断的API/Hybrid执行
+  `get_status()/get_info()`，从而把授权门禁前移到任何状态探测和网络访问之前。
+- 原生`scene_detect`在测试项目内真实调用FFmpeg并写出场景JSON；没有修改v0.3.21 managed Core文件。
+- WorkBuddy Skill同步加入Tool发现、Layer 3 Skill读取确认、项目路径和API/Hybrid拒绝流程；MCP仍为`decision_pending`。
+
+### 验证与边界
+
+- WorkBuddy专项=`47 passed`；Skill格式=`Skill is valid!`。
+- Core contracts=`716 passed, 7 skipped`；Core tools=`284 passed, 1 subtest passed`。
+- 完整套件=`1107 passed, 10 skipped, 1 subtest passed`。
+- 本地Tool纵向验证：Tool调用1、Provider调用0、成本0；socket封锁下网络尝试0。
+- Hybrid selector负测：Tool调用0、Provider调用0、网络尝试0；未调用真实/付费Provider。
+- W2 Tool增量公开审计=`PASS`：1566个Core文件匹配，候选12个文件，公开性/lineage/运行时/回归全通过；
+  `private_core_history_scanned=false`且`private_core_history_in_candidate=false`；最终候选摘要保存在D盘审计证据目录。
+- W2仍为`IN PROGRESS`：真实Provider授权路径、主对话模型/视频Provider配置分层、长任务可靠性和
+  真实WorkBuddy的CLI/MCP对比尚未完成，不能声明安装可用或`OFFLINE ADAPTER READY`。

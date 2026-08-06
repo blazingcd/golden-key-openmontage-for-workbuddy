@@ -51,9 +51,13 @@ def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
         "golden-key-workbuddy project create",
         "golden-key-workbuddy project status",
         "golden-key-workbuddy stage inspect",
+        "golden-key-workbuddy tool list",
+        "golden-key-workbuddy tool execute",
         "golden-key-workbuddy artifact validate",
         "golden-key-workbuddy checkpoint submit",
     ):
         assert command in body
     assert "Only WorkBuddy selects the Pipeline" in body
     assert "inside the project's `artifacts/` directory" in body
+    assert "--ack-agent-skill" in body
+    assert "API or Hybrid" in body

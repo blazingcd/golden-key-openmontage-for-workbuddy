@@ -71,8 +71,9 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 
 ## W2：Skill-first体验、最小调用面和MCP决策Gate
 
-状态：`IN PROGRESS`。第一段直接调用基线已经完成权威上下文、Pipeline目录、项目生命周期、当前Stage
-合同、Artifact Schema校验、受限Checkpoint提交和离线路径负测；生产Tool执行与真实WorkBuddy/MCP对比仍待完成。
+状态：`IN PROGRESS`。直接调用基线已经完成权威上下文、Pipeline目录、项目生命周期、当前Stage合同、
+Artifact/Checkpoint，以及Manifest限定的Tool发现和首个纯本地Tool执行。API/Hybrid在网络前fail-closed；
+完整Provider生产入口、模型配置分层与真实WorkBuddy/MCP对比仍待完成。
 
 ### 任务
 
@@ -81,7 +82,7 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 - 支持模糊需求、具体目标、参考视频、源素材和继续项目五类入口。
 - 实现环境/版本检查、权威上下文读取、项目创建/打开和状态查询。
 - 实现Schema校验和受限Stage提交。
-- 实现当前Manifest/Stage允许范围内的确定性工具执行。
+- 实现当前Manifest/Stage允许范围内的确定性工具执行。首个本地纵向切片已完成；后续补长任务与授权Provider路径。
 - 不包含、调用或重新实现`model_driven_agent_host.py`、`openai_compatible_transport.py`或`agent_host_authority.py`。
 - 在真实WorkBuddy中比较`Skill+本地CLI`与`Skill+本地stdio MCP`的安装、Schema发现、长任务、恢复、
   错误提示和权限成本，形成`default`、`optional`或`omit`裁决。

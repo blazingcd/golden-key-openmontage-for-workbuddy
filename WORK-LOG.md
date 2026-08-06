@@ -355,9 +355,10 @@
 
 ### 当前验证与边界
 
-- W2新专项：`12 passed`；完整WorkBuddy专项：`40 passed`；Skill格式校验=`Skill is valid!`。
+- W2新专项：`13 passed`；完整WorkBuddy专项：`41 passed`；Skill格式校验=`Skill is valid!`。
 - Core回归：contracts=`716 passed, 7 skipped`；tools=`284 passed, 1 subtest passed`。
-- W2增量公开审计=`PASS`：1566个Core文件匹配，候选11个文件，公开性/lineage/运行时/回归全部通过，
-  candidate snapshot SHA-256=`a4e826eaff923d0409531012c0071beb011ff3980aa63ee7abeb396cdc2a2fd2`。
+- W2增量公开审计=`PASS`：1566个Core文件匹配，候选11个文件，公开性/lineage/运行时/回归全部通过。
 - 离线测试封锁socket后，context/Pipeline/项目生命周期仍通过；Provider调用数为0。
+- 公开CI首次实跑发现W2/Core依赖被CLI顶层提前加载，破坏W1轻量Gate；改为命令级懒加载，并新增`python -S`
+  回归，保证缺少W2运行依赖时`doctor/gate`仍可启动。
 - 当前尚未开放生产Tool执行，尚未进行真实WorkBuddy与stdio MCP对比，因此W2仍为`IN PROGRESS`。

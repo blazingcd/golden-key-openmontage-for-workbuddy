@@ -2,12 +2,42 @@ from __future__ import annotations
 
 import json
 import socket
+import subprocess
+import sys
 from pathlib import Path
 
 from golden_key_openmontage_workbuddy.cli import main
 
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def test_w1_gate_stays_lightweight_when_w2_runtime_dependencies_are_unavailable(
+    tmp_path: Path,
+) -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-S",
+            "-m",
+            "golden_key_openmontage_workbuddy",
+            "gate",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(tmp_path / "WorkBuddyData"),
+            "--json",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["status"] == "pass"
 
 
 def test_context_exposes_direct_agent_authority_without_selecting_a_pipeline(

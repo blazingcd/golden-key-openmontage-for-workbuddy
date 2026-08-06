@@ -1,49 +1,136 @@
 # Golden Key OpenMontage for WorkBuddy
 
-面向腾讯 WorkBuddy 的 Golden Key 版 OpenMontage 社区分支。
+**一个为腾讯 WorkBuddy 深度适配、面向中文商业短视频场景增强的 OpenMontage 社区 fork。**
 
 **Golden Key OpenMontage for WorkBuddy** is a community-maintained edition of
-[OpenMontage](https://github.com/calesthio/OpenMontage), adapted for use with WorkBuddy.
+[OpenMontage](https://github.com/calesthio/OpenMontage), with a WorkBuddy-native calling layer,
+four business-oriented video pipelines, Chinese conversational onboarding, and stronger local execution contracts.
 
-> **开发状态：Pre-Alpha。** 当前仓库已经提供W1基础门禁、W2 Skill-first本地调用和W3离线可靠性Gate，
-> 并完成了真实WorkBuddy中的CLI/MCP离线对照，但尚未提供完整可安装发行版，也尚未完成W4普通用户安装验收或Provider验收。请勿把当前源码视为可用成品；进度和发布Gate以
-> `PROJECT-STATE.md` 为准。
->
-> 首次公开基线不等待 W1～W4，但只有最终拟公开版本的 W0 Gate 为 `PASS`，且用户在看到
-> 审计报告后再次明确授权，才允许推送。规则见 `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`。
-> 上述条件已于2026-08-05满足；首个`Pre-Alpha`公开基线为`e4f7577bad99e93e0a35217940d8c17f7a6d81cb`。
+> **开发状态：Pre-Alpha / WorkBuddy Adapter 开发中。**
+> 当前版本已经建立首个轻量 ZIP、中文双击注册入口和真实 WorkBuddy 离线调用基线，但尚未完成普通用户安装、
+> 升级/卸载、全部依赖准备及真实生产 Provider 成片验收。请勿将它视为已完成的正式发行版；当前进度见
+> [`PROJECT-STATE.md`](PROJECT-STATE.md)。
 
-当前核心基线来自 `golden-key-v0.3.21` 的 WorkBuddy 专用 Release 导出包，合同 ID 为
-`golden-key-workbuddy-callable-core-v1`。本项目不合并 Golden Key 私有 Git 历史；WorkBuddy
-作为唯一 Agent 直接使用导出的 Pipeline、Skill、Schema、Checkpoint、Artifact 和 Tool Registry。
+## 这个 fork 解决什么问题
 
-## 项目介绍
+官方 OpenMontage 提供了完整的 Agent-first 视频制作框架。本项目保留它的 Pipeline、Stage Skill、Artifact、
+Reviewer、Checkpoint、Tool Registry 和多媒体工具体系，并进一步解决一个更具体的问题：
 
-[OpenMontage](https://github.com/calesthio/OpenMontage) 是一个由 AI Agent 驱动的开源视频制作系统，
-覆盖创意构思、脚本、素材生成与检索、剪辑、审查和最终合成等制作环节。
-
-Golden Key OpenMontage for WorkBuddy 在 Golden Key WorkBuddy Callable Core 的基础上提供 WorkBuddy 适配，
-让用户可以在 WorkBuddy 中通过自然语言发起和推进视频制作，并继续使用 OpenMontage 原生的
-Pipeline、Skill、Schema、Review、Checkpoint 和 Artifact 体系。
-
-## 工作方式
+> 让用户在 WorkBuddy 对话中直接提出中文视频需求，由 WorkBuddy 作为唯一 Agent，按照可审查、可暂停、
+> 可恢复的制作流程完成工作，而不是要求用户先理解仓库结构、命令行或技术 Pipeline 名称。
 
 ```text
-用户
-  -> WorkBuddy
-  -> Golden Key OpenMontage for WorkBuddy
-  -> OpenMontage原生视频制作流程
-  -> 视频与制作产物
+用户的自然语言需求
+  -> WorkBuddy（唯一 Agent）
+  -> 新手引导或业务目标识别
+  -> Golden Key 业务 Pipeline
+  -> Stage Skill / Artifact / Reviewer / Checkpoint
+  -> 本地工具或经用户批准的生产 Provider
+  -> 视频与完整制作记录
 ```
 
-WorkBuddy负责理解用户意图、规划任务并与用户交互；OpenMontage负责视频制作流程、工具调用、
-阶段审查、检查点和制作产物。本项目提供二者之间的适配与使用体验。
+## 与官方 OpenMontage 的主要差异
 
-当前架构采用`Skill-first`：WorkBuddy始终是唯一Agent。真实WorkBuddy 5.3.8对照后，MCP裁决为
-`optional`：直接CLI仍是权威回退；本地stdio MCP只提供结构化Schema发现、语义工具选择和免Shell命令拼接，
-不是远端依赖或第二个Agent。W4打包前不会发布活动`.workbuddy/mcp.json`。
+| 维度 | 官方 OpenMontage | Golden Key OpenMontage for WorkBuddy |
+|---|---|---|
+| 主要使用环境 | 面向多种 AI 编程助手和 Agent 环境 | 专门提供 WorkBuddy 调用、注册和恢复链路 |
+| Agent 架构 | 由所接入的 Agent 读取 OpenMontage 指令 | WorkBuddy 始终是唯一 Agent，不启动第二个模型 Agent Host |
+| 业务入口 | 按通用视频制作类型选择 Pipeline | 新增四条面向中文商业结果的 Golden Key Pipeline |
+| 新手体验 | 使用官方提示词和通用 onboarding | 提供独立的中文对话式引导，帮助用户明确目标并交接相关素材或参考内容 |
+| 本地交付 | 官方通用安装与运行方式 | 轻量 ZIP、中文双击注册入口、安装后环境诊断和稳定 Skill 定位 |
+| 模型与 Provider | 通过通用 Tool Registry 发现能力 | 在保留 Registry 的基础上，增加国内模型生态配置识别，并区分厂商直连与第三方网关 |
+| 长任务可靠性 | 遵循 OpenMontage 项目与 Checkpoint 体系 | 增加 WorkBuddy 侧持久任务、幂等提交、跨项目执行槽、中断恢复和结构化状态查询 |
+| MCP | 由接入环境自行决定 | MCP 是可选的本地结构化工具层；Skill + CLI 始终是权威回退，不依赖远端 MCP 服务 |
 
-当前开发者入口：
+这不是对官方 OpenMontage 的替代，而是面向 WorkBuddy 和中文商业短视频工作方式的一套专用发行与适配层。
+
+## 四条 Golden Key 业务 Pipeline
+
+用户不需要记住下面的技术名称。WorkBuddy 会根据目标、已有事实、素材和期望观众行动选择适合的流程。
+
+| 用户想解决的问题 | Pipeline | 重点 |
+|---|---|---|
+| 介绍产品或服务，解释价值并推动了解、试用或购买 | `golden-key-product-marketing` | 产品价值、使用场景、可信证据、异议处理和明确行动 |
+| 建立企业或品牌的认知、信任和记忆 | `golden-key-brand-company` | 品牌主张、真实企业证据、身份系统和长期认知 |
+| 获得咨询、预约、报名、招商、招聘或合作线索 | `golden-key-lead-conversion` | 目标人群、真实Offer、适用边界、资格条件、异议与单一转化动作 |
+| 打造人物、宠物、虚拟角色或品牌吉祥物的持续内容 | `golden-key-subject-ip` | 主体识别、性格与情感连接、身份一致性和系列化延续 |
+
+四条 Pipeline 都不是单一提示词模板。每条都包含完整的 Idea、Proposal、Script、Scene Plan、Assets、Edit、
+Compose 和 Publish 阶段，以及对应的 Director Skill、Reviewer Rubric、Artifact Schema 和人工审批点。
+当前四条业务 Pipeline 均处于 `beta`，仍在随 Golden Key Core 演进。
+
+## 面向新手的对话式引导
+
+用户不必从一开始就给出完整制作需求。安装后的 `golden-key-openmontage-onboarding` Skill 可以：
+
+- 用中文解释当前机器实际具备的制作能力，不向新手倾倒命令、Schema 或 Pipeline 名称；
+- 从“介绍产品”“展示企业”“获取线索”“打造人物或角色IP”等结果导向入口开始；
+- 在需要时引导用户附加与本条视频相关的产品资料、图片、Logo、源视频或品牌规则；
+- 接收参考视频、图片或链接，并询问用户想借鉴结构、节奏、信息密度还是视觉感觉；
+- 在暂时没有素材时，从真实对象和期望观众行动开始，不伪造事实，也不要求用户盘点整个素材库；
+- 一旦需求已经具体，立即交给生产 Skill 和对应业务 Pipeline，避免重复询问。
+
+例如，用户可以从这些自然语言开始：
+
+```text
+我不知道怎么开始做视频。
+帮我做一条30秒的产品营销视频。
+我有一条参考视频，想借鉴它的节奏，但不要照抄。
+我想用现有素材做一条招商短视频，需要准备什么？
+```
+
+## WorkBuddy 原生调用体验
+
+本项目采用 `Skill-first + direct-agent` 架构：
+
+- WorkBuddy 直接读取 Agent Guide、Pipeline Manifest 和当前 Stage Skill；
+- WorkBuddy 自己选择 Pipeline、与用户沟通并处理人工审批；
+- Adapter 只提供确定性的项目、Artifact、Checkpoint、Tool 和任务接口，不复制第二套创意决策逻辑；
+- CLI 与可选的本地 stdio MCP 调用同一组消费方函数，MCP 不是远端服务，也不是第二个 Agent；
+- 注册后的 Skill 使用稳定的运行时定位文件，不要求用户寻找仓库或猜测安装路径。
+
+## 更适合中文生产环境的能力配置
+
+WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视频、图片、语音等生产工具的配置引用，
+不会保存或代理 WorkBuddy 的主模型凭据。
+
+当前配置检查可以识别 Tool Registry 中已经实现的国内生态路径，包括 DashScope、豆包、火山即梦和可灵官方等
+厂商直连，以及当前经第三方网关接入的 Seedance、MiniMax 等能力。项目会明确标记接入类型，不把“模型品牌”
+误写成“厂商直连”，也不会因为生成配置模板而读取密钥值、联网探测或自动产生费用。
+
+具体 Provider 是否可用，仍取决于用户本机环境、账号权限、地区、额度和当前 Tool Registry 状态。
+
+## 可追踪、可暂停、可恢复
+
+本项目继承 OpenMontage 的生产治理，并在 WorkBuddy 调用层增加确定性边界：
+
+- 每个阶段生成符合 Schema 的标准 Artifact，作为下一阶段输入；
+- Reviewer 在阶段提交前检查事实、素材、创意和技术质量；
+- 需要人工审批的阶段会停在 Checkpoint，未批准不会越过；
+- 长任务先持久化再执行，重复提交和成功任务重放不会重复调用工具；
+- 排队任务可以取消；中断任务会标记失败并等待检查，不自动重试可能产生副作用的工作；
+- CLI、可选 MCP 和持久化任务输出统一脱敏常见凭据和敏感字段；
+- 离线入口只允许当前 Stage 声明的本地工具，并在 Provider 或网络调用前 fail closed。
+
+这些合同用于降低长视频任务、付费调用和中途恢复时的不可控风险，但不代表当前 Pre-Alpha 已完成所有生产验收。
+
+## 首个轻量包
+
+当前 W4 纵向切片采用轻量 `portable ZIP`，不是 Setup.exe、MSI 或独立桌面软件：
+
+1. 用户把 ZIP 解压到任意本地目录；
+2. 双击 `安装到WorkBuddy.cmd`；
+3. 脚本校验包完整性、注册生产 Skill 和新手引导 Skill，并执行一次只读环境诊断；
+4. 用户重启 WorkBuddy 后，由 Skill 通过稳定 launcher 调用本地运行时。
+
+当前锁定的 `golden-key-v0.3.21` 仅用于构建和验证第一个安装/调用包，不是最终 Core 版本。
+普通用户 ZIP 不包含或要求运行 `setup.py`。快速说明见
+[`docs/workbuddy/QUICK-START.md`](docs/workbuddy/QUICK-START.md)。
+
+## 开发者入口
+
+<details>
+<summary>展开查看当前本地命令</summary>
 
 ```powershell
 python -m golden_key_openmontage_workbuddy doctor --data-root D:\WorkBuddyData --create-dirs
@@ -51,52 +138,52 @@ python -m golden_key_openmontage_workbuddy gate --data-root D:\WorkBuddyData
 python -m golden_key_openmontage_workbuddy context --json
 python -m golden_key_openmontage_workbuddy pipelines --json
 python -m golden_key_openmontage_workbuddy config inspect --json
-# 只生成环境变量名称引用，不写入任何密钥值：
 python -m golden_key_openmontage_workbuddy config template --data-root D:\WorkBuddyData --json
 python -m golden_key_openmontage_workbuddy project create --project-id demo --title "Demo" --pipeline golden-key-product-marketing --json
 python -m golden_key_openmontage_workbuddy project status --project-id demo --json
 python -m golden_key_openmontage_workbuddy stage inspect --project-id demo --json
 python -m golden_key_openmontage_workbuddy tool list --project-id demo --json
-# WorkBuddy读取tool list返回的Layer 3 Skill后，才可执行当前Stage允许的本地工具：
-python -m golden_key_openmontage_workbuddy tool execute --project-id demo --name scene_detect --inputs-file D:\WorkBuddyData\Projects\demo\artifacts\scene-detect-inputs.json --ack-agent-skill ffmpeg --json
-# 长任务先持久化排队；submit不会执行Tool：
 python -m golden_key_openmontage_workbuddy task submit --project-id demo --name scene_detect --inputs-file D:\WorkBuddyData\Projects\demo\artifacts\scene-detect-inputs.json --ack-agent-skill ffmpeg --json
-# 使用返回的task_id运行、查询；每个D盘数据根一次只执行一个任务，默认运行时截止时间为3600秒：
 python -m golden_key_openmontage_workbuddy task run --project-id demo --task-id <task_id> --timeout-seconds 3600 --json
 python -m golden_key_openmontage_workbuddy task status --project-id demo --task-id <task_id> --json
 python -m golden_key_openmontage_workbuddy task cancel --project-id demo --task-id <task_id> --json
 python -m golden_key_openmontage_workbuddy task recover --project-id demo --task-id <task_id> --json
 ```
 
-离线入口只允许Manifest当前Stage列出的本地、零网络、零成本工具；API/Hybrid和声明需要网络的工具会在状态探测、
-执行和网络访问前拒绝。本地Tool执行期间封锁当前Python进程socket，并通过`PYTHONPATH/sitecustomize`和
-`NODE_OPTIONS`把同一离线门禁传给受信Core Tool启动的Python/Node子进程。长任务状态保存在D盘`Jobs`目录，重复提交和成功任务
-重复运行不会再次执行；同一数据根的跨项目任务并发上限为1，未获得执行槽的任务保持排队且不自动重试。
-当前Core没有通用运行中取消合同，因此运行时截止时间只做可观测报警，不强杀进程或伪称取消；只支持排队取消，
-中断恢复会标记失败、释放执行槽且不自动重试。CLI、MCP和任务持久化边界会脱敏环境密钥、常见Bearer/API key文本及敏感字段；
-SaaS/private Core仓库不存在时，direct-agent上下文和离线项目创建仍可独立运行。项目内Artifact校验与受限Checkpoint提交仍保持不变。这不代表完整Provider生产闭环、
-安装、W4普通用户验收或真实Provider闭环已经通过。
+开发机可以覆盖程序和数据目录；普通用户默认路径由安装脚本按当前 Windows 用户选择，不要求使用 D 盘。
+本地目录规则见 [`docs/workbuddy/LOCAL-STORAGE-POLICY.md`](docs/workbuddy/LOCAL-STORAGE-POLICY.md)。
 
-模型配置分成两层：WorkBuddy主对话模型由WorkBuddy自身设置，本Adapter不保存或代理其模型凭据；视频、图片、
-语音等生产Provider来自Golden Key Tool Registry。`config inspect`会核验当前Registry真实存在的国内生态工具，
-并明确区分厂商直连与第三方网关；它不会探测凭据状态、调用Provider或访问网络。
-本地目录规则见[`docs/workbuddy/LOCAL-STORAGE-POLICY.md`](docs/workbuddy/LOCAL-STORAGE-POLICY.md)。
+</details>
 
-## Golden Key Edition
+## 当前边界
 
-Golden Key Edition 延续 OpenMontage 的 Agent-first 制作方式，并面向中文产品营销、个人IP、品宣、招商等场景进行优化，
-强化稳定调用、结构化交互、制作过程可追踪以及中文环境下的使用体验。
+已经完成并可以公开说明：
 
-## 开源与致谢
+- WorkBuddy Skill-first 直接调用基线；
+- 四条 Golden Key 业务 Pipeline 及其 Stage Skill、Schema、Reviewer 和 Checkpoint 合同；
+- 中文新手引导和相关素材/参考内容交接；
+- 本地 CLI 与可选 stdio MCP 的真实 WorkBuddy 离线对照；
+- 持久任务、离线网络边界、脱敏和中断恢复合同；
+- 首个轻量 ZIP、中文双击入口和安装后环境诊断。
 
-本项目基于 [OpenMontage](https://github.com/calesthio/OpenMontage) 开发，并保留其上游历史、版权
-和归属信息。感谢 OpenMontage 项目及其所有贡献者。
+尚未完成，因此不能对外声称：
 
-OpenMontage 使用 [GNU Affero General Public License v3.0](https://github.com/calesthio/OpenMontage/blob/main/LICENSE)。
+- 已达到正式版或 `Offline Adapter Ready`；
+- 已完成普通用户全新 Windows 安装、升级、卸载和回滚验收；
+- 所有 Python、Node、FFmpeg 和可选模型依赖都能自动准备；
+- 已完成真实或付费 Provider 的端到端成片验收；
+- 本项目是 OpenMontage 或 WorkBuddy 的官方发行版。
+
+## 开源与上游
+
+本项目基于 [OpenMontage](https://github.com/calesthio/OpenMontage) 开发，并保留上游版权、许可证和归属信息。
+感谢 OpenMontage 项目及其所有贡献者。
+
+OpenMontage 使用 [GNU Affero General Public License v3.0](https://github.com/calesthio/OpenMontage/blob/main/LICENSE)，
 本项目继承该许可证发布。
 
-本项目由独立社区维护，不是 OpenMontage 或 WorkBuddy 的官方发行版本。OpenMontage、Golden Key
-和 WorkBuddy 相关名称及标识归各自权利人所有。
+本项目由独立社区维护，不是 OpenMontage 或 WorkBuddy 的官方发行版本。OpenMontage、Golden Key 和 WorkBuddy
+相关名称及标识归各自权利人所有。
 
 <!-- WORKBUDDY_PROJECT_README_END -->
 

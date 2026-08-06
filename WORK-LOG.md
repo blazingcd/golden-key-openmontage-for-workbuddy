@@ -629,3 +629,16 @@
 - TDD先验证缺入口及`setup.py`误入包的红灯，再实现；当前portable bundle专项=`3 passed`。
 - r4真实ZIP检查：共1593个归档条目、manifest记录1592个文件、Core为1566个；中文入口和内部启动器均存在，
   `setup.py`不存在。D盘隔离双击烟测退出码0，`doctor=pass`，两个Skill均注册，MCP保持关闭，网络/Provider调用0。
+
+## 2026-08-07：公开README差异化重写
+
+- 将根README的WorkBuddy项目介绍从内部阶段/审计叙事改为用户价值叙事，保留后半段官方OpenMontage README原文、
+  上游归属和AGPLv3许可证说明。
+- 新增与官方OpenMontage的对照表，重点说明WorkBuddy专用direct-agent调用层、四条Golden Key业务Pipeline、
+  中文对话式新手引导、轻量ZIP、国内模型生态配置识别、持久任务与可选本地MCP。
+- 分别解释产品营销、企业/品牌、线索转化和主体IP四种用户目标；说明每条Pipeline具有完整Stage Skill、Artifact、
+  Reviewer、Checkpoint和Publish合同，不将其包装成四个提示词模板。
+- 增加素材/参考内容交接示例和新手自然语言入口；说明无素材时从真实对象与观众行动开始，并在需求具体后交给生产Skill。
+- 用户介绍区移除首次公开推送规则、仓库同步历史和其他维护者内部信息；保留Pre-Alpha、四条Pipeline为beta、
+  未完成普通用户安装/升级卸载/依赖准备/真实Provider验收等边界，避免夸大当前可用性。
+- 本轮仅修改消费方公开文档与项目留痕，没有修改1566个managed Core文件，也没有调用任何真实/付费Provider。

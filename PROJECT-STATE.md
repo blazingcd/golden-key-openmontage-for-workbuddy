@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-06 23:40 +08:00
+更新时间：2026-08-06 23:31 +08:00
 
 ## 当前里程碑
 
@@ -123,14 +123,19 @@
   复制到稳定用户级目录、建立数据目录、注册生产/新手两个Skill，并写入`WORKBUDDY-RUNTIME.json`定位launcher。
 - 普通用户默认路径已纠正为`%LOCALAPPDATA%\GoldenKeyOpenMontageForWorkBuddy`，允许显式覆盖到D盘；
   `D:\WorkBuddyData`只保留为当前维护者开发、构建和烟测策略。
-- 首个完整候选包基于v0.3.21的1566个managed文件构建成功，最新ZIP大小`72,793,680`字节，SHA-256=
-  `52e953dc7bbf4ef85779f7b9144a719cd29972d97ba41815aa4967514292b18f`；包内明确声明
+- 首个完整候选包基于v0.3.21的1566个managed文件构建成功，最新ZIP大小`72,795,687`字节，SHA-256=
+  `45aec88d6ae339c5ef83cd7d46978663f95a14473ad1bc3e1c9dfecb374317f1`；包内明确声明
   `temporary_first_package_build_baseline_not_final_core`，不把v0.3.21误称最终Core。
 - D盘隔离安装烟测通过：两个Skill注册、MCP默认关闭、Core/authority/四Pipeline核验通过；系统Python扫描发现
   `dotenv/google.genai/jsonschema/openai`缺失并返回`degraded`；切换到已准备依赖的Python后
   `doctor/context/pipelines/config inspect`全部退出码0，网络/Provider调用均为0。
 - WorkBuddy调用桥已改为注册Skill读取runtime locator并通过稳定launcher先运行`doctor`；`doctor`新增九项Python
   模块只读发现，`config inspect`继续独立检查安全Provider引用。当前首包还未准备缺失依赖，不能声明完整可用。
+- 首包新增根目录中文双击入口`安装到WorkBuddy.cmd`；注册完成后立即运行一次离线`doctor`，结果与退出码写入
+  `WORKBUDDY-INSTALL.json`，WorkBuddy首次调用继续复核。安装链固定使用系统Windows PowerShell，并以.NET SHA-256
+  校验文件，降低PATH和PowerShell模块差异风险。
+- `setup.py`的官方历史来源已复核，但当前内容是WorkBuddy消费层自有包元数据，Core导出合同禁止覆盖；开发仓库继续
+  保留，普通用户ZIP明确排除，用户不需要执行它。
 
 ## 历史记录（不再是当前Gate）
 

@@ -607,9 +607,9 @@
 
 ### 首个完整候选与当前边界
 
-- 使用真实v0.3.21 lock逐文件校验并打包1566个managed文件，最新ZIP候选大小`72,793,680`字节，SHA-256=
-  `52e953dc7bbf4ef85779f7b9144a719cd29972d97ba41815aa4967514292b18f`；构建目录位于
-  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-first-bundle-20260806-r3`。
+- 使用真实v0.3.21 lock逐文件校验并打包1566个managed文件，最新ZIP候选大小`72,795,687`字节，SHA-256=
+  `45aec88d6ae339c5ef83cd7d46978663f95a14473ad1bc3e1c9dfecb374317f1`；构建目录位于
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-first-bundle-20260806-r4`。
 - 在隔离D盘烟测目录完成完整包注册：两个Skill写入独立WorkBuddy profile，MCP=`false`，Core合同、direct-agent
   authority和四Pipeline均通过。系统Python 3.14被发现，但缺`dotenv/google.genai/jsonschema/openai`，证明首包
   下一步仍需实现“用户确认后准备Python依赖”；系统环境`doctor=degraded`。切换到已准备依赖的D盘Python后，
@@ -618,3 +618,14 @@
   两个Skill格式均=`Skill is valid!`，`git diff --check`通过。
 - 未调用真实/付费Provider，未修改Golden Key SaaS/private Core仓库或1566个managed Core文件；真实WorkBuddy
   普通用户触发、升级/卸载、依赖准备和`OFFLINE ADAPTER READY`仍未通过。
+
+### 首包普通用户入口与`setup.py`边界
+
+- 新增根目录`安装到WorkBuddy.cmd`作为普通用户双击入口；内部固定调用系统Windows PowerShell，注册结束立即执行
+  离线`doctor`并把结果写入`WORKBUDDY-INSTALL.json`。检查仍不联网、不调用真实/付费Provider。
+- 将安装包SHA-256校验从`Get-FileHash`改为.NET自带实现，避免PATH或PowerShell模块差异导致双击失败。
+- `setup.py`最初具有官方OpenMontage历史，但当前已是WorkBuddy消费层自有Python包元数据；Core lock禁止携带或覆盖。
+  开发仓库保留它供测试/维护，普通用户ZIP明确排除，用户无需运行传统Python源码安装。
+- TDD先验证缺入口及`setup.py`误入包的红灯，再实现；当前portable bundle专项=`3 passed`。
+- r4真实ZIP检查：共1593个归档条目、manifest记录1592个文件、Core为1566个；中文入口和内部启动器均存在，
+  `setup.py`不存在。D盘隔离双击烟测退出码0，`doctor=pass`，两个Skill均注册，MCP保持关闭，网络/Provider调用0。

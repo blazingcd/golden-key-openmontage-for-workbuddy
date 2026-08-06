@@ -8,13 +8,16 @@
 ## 使用方式
 
 1. 把 ZIP 解压到任意本地目录。
-2. 运行解压目录中的 `install-workbuddy.ps1`。默认写入当前Windows用户的
+2. 双击解压目录中的 `安装到WorkBuddy.cmd`。它会校验包完整性、完成注册并自动运行一次离线环境检查。默认写入当前Windows用户的
    `%LOCALAPPDATA%\GoldenKeyOpenMontageForWorkBuddy`，可通过参数改到D盘或其他目录。
 3. 完全退出并重新打开 WorkBuddy，让它重新发现两个用户级 Skill。
 4. 可以先说“我不知道怎么开始做视频”，触发新手引导；也可以直接说一个明确的视频目标，进入生产 Skill。
 
-WorkBuddy 首次调用会先运行只读 `doctor`，检查 Core 合同、4条业务Pipeline、Python、Node和FFmpeg。
+安装结束和 WorkBuddy 首次调用都会运行只读 `doctor`，检查 Core 合同、4条业务Pipeline、Python、Node和FFmpeg。
 检查不会调用真实或付费 Provider，也不会自动下载缺失组件。MCP默认不启用，CLI仍是权威回退。
+
+面向维护者或需要自定义安装路径的高级用户，仍可直接运行 `install-workbuddy.ps1` 并传入参数。开发仓库中的
+`setup.py` 是 WorkBuddy 消费层自己的Python包元数据；普通用户ZIP不携带它，也不需要运行它。
 
 ## 路径说明
 

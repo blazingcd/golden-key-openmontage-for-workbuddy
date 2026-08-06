@@ -107,7 +107,10 @@ def test_portable_bundle_contains_core_consumer_skills_and_first_build_label(
         staging / "workbuddy-skill" / "golden-key-openmontage" / "SKILL.md"
     ).is_file()
     assert (staging / "install-workbuddy.ps1").is_file()
+    assert (staging / "安装到WorkBuddy.cmd").is_file()
     assert (staging / "golden-key-workbuddy.ps1").is_file()
+    assert not (staging / "setup.py").exists()
+    assert (ROOT / "setup.py").is_file()
     assert not (staging / ".git").exists()
     assert not (staging / "projects").exists()
 
@@ -147,14 +150,19 @@ def test_zip_bootstrap_registers_both_skills_and_launcher_runs_doctor(
     data_root = tmp_path / "user-data"
     skill_root = tmp_path / "workbuddy-profile" / "skills"
 
+    install_environment = os.environ.copy()
+    install_environment["OPENMONTAGE_WORKBUDDY_NO_PAUSE"] = "1"
+    install_environment["PATH"] = (
+        str(Path(sys.executable).parent)
+        + os.pathsep
+        + install_environment.get("PATH", "")
+    )
     installed = subprocess.run(
         [
-            powershell,
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(staging / "install-workbuddy.ps1"),
+            "cmd.exe",
+            "/d",
+            "/c",
+            str(staging / "bootstrap" / "install-to-workbuddy.cmd"),
             "-InstallRoot",
             str(install_root),
             "-DataRoot",
@@ -163,17 +171,24 @@ def test_zip_bootstrap_registers_both_skills_and_launcher_runs_doctor(
             str(skill_root),
         ],
         cwd=tmp_path,
+        env=install_environment,
         capture_output=True,
         text=True,
         encoding="utf-8",
         check=False,
     )
     assert installed.returncode == 0, installed.stderr
-    record = json.loads(installed.stdout)
+    record = json.loads(
+        (install_root / "WORKBUDDY-INSTALL.json").read_text(encoding="utf-8-sig")
+    )
     assert record["mcp_enabled"] is False
     assert record["core"]["usage"] == (
         "temporary_first_package_build_baseline_not_final_core"
     )
+    assert record["doctor_exit_code"] == 0
+    assert record["doctor"]["status"] == "pass"
+    assert record["doctor"]["provider_calls_attempted"] == 0
+    assert record["doctor"]["network_calls_attempted"] == 0
     for directory in ("Caches", "Config", "Jobs", "Logs", "Models", "Projects", "Temp"):
         assert (data_root / directory).is_dir()
 

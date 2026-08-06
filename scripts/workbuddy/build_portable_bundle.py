@@ -33,7 +33,6 @@ CONSUMER_FILES = (
     "config/openmontage.sync.json",
     "docs/workbuddy/QUICK-START.md",
     "requirements.txt",
-    "setup.py",
     "workbuddy-skill/golden-key-openmontage/SKILL.md",
     "workbuddy-skill/golden-key-openmontage-onboarding/SKILL.md",
 )
@@ -41,6 +40,9 @@ CONSUMER_SOURCE_PREFIX = "golden_key_openmontage_workbuddy"
 BOOTSTRAP_FILES = {
     "packaging/workbuddy/golden-key-workbuddy.ps1": "golden-key-workbuddy.ps1",
     "packaging/workbuddy/install-workbuddy.ps1": "install-workbuddy.ps1",
+    "packaging/workbuddy/install-to-workbuddy.ps1": "install-to-workbuddy.ps1",
+    "packaging/workbuddy/安装到WorkBuddy.cmd": "安装到WorkBuddy.cmd",
+    "packaging/workbuddy/bootstrap/install-to-workbuddy.cmd": "bootstrap/install-to-workbuddy.cmd",
 }
 
 

@@ -6,6 +6,28 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+function Get-FileSha256 {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    $stream = [IO.File]::Open(
+        $Path,
+        [IO.FileMode]::Open,
+        [IO.FileAccess]::Read,
+        [IO.FileShare]::Read
+    )
+    try {
+        $hasher = [Security.Cryptography.SHA256]::Create()
+        try {
+            return ([BitConverter]::ToString($hasher.ComputeHash($stream))).Replace('-', '').ToLowerInvariant()
+        } finally {
+            $hasher.Dispose()
+        }
+    } finally {
+        $stream.Dispose()
+    }
+}
+
 $sourceRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $manifestPath = Join-Path $sourceRoot 'BUNDLE-MANIFEST.json'
 if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
@@ -23,7 +45,7 @@ foreach ($entry in $manifest.files) {
     if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
         throw "Package file is missing: $($entry.path)"
     }
-    $actual = (Get-FileHash -LiteralPath $candidate -Algorithm SHA256).Hash.ToLowerInvariant()
+    $actual = Get-FileSha256 -Path $candidate
     if ($actual -ne ([string]$entry.sha256).ToLowerInvariant()) {
         throw "Package file hash mismatch: $($entry.path)"
     }
@@ -80,5 +102,22 @@ $installRecord = @{
     workbuddy_skills_root = $WorkBuddySkillsRoot
     mcp_enabled = $false
 }
-$installRecord | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $InstallRoot 'WORKBUDDY-INSTALL.json') -Encoding UTF8
+$installRecordPath = Join-Path $InstallRoot 'WORKBUDDY-INSTALL.json'
+$installRecord | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $installRecordPath -Encoding UTF8
+
+$doctorOutput = & $launcherPath doctor --json 2>&1
+$doctorExitCode = $LASTEXITCODE
+try {
+    $doctorReport = ($doctorOutput -join [Environment]::NewLine) | ConvertFrom-Json
+} catch {
+    $doctorReport = @{
+        status = 'fail'
+        provider_calls_attempted = 0
+        network_calls_attempted = 0
+        errors = @('The post-install doctor did not return valid JSON.')
+    }
+}
+$installRecord['doctor_exit_code'] = $doctorExitCode
+$installRecord['doctor'] = $doctorReport
+$installRecord | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $installRecordPath -Encoding UTF8
 $installRecord | ConvertTo-Json -Depth 8

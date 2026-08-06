@@ -151,6 +151,8 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - `DONE`：冻结首包为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI；ZIP可从任意目录启动注册。
 - `DONE`：普通用户默认使用`%LOCALAPPDATA%`，本机D盘只是覆盖；注册两个Skill并写入稳定runtime locator。
 - `DONE`：首包完整带入v0.3.21的1566文件并明确标记为“首次安装包构建验证基线，不是最终Core”。
+- `DONE`：增加中文双击入口；注册后立即执行离线`doctor`并写入安装记录。开发仓库保留消费方`setup.py`，
+  普通用户ZIP排除它，用户无需执行Python源码安装。
 - `DONE`：WorkBuddy首次触发通过launcher运行只读`doctor`，检查Python包/Node/FFmpeg/Core/Pipeline；
   `config inspect`独立检查安全Provider引用，二者网络和Provider调用为0。
 - `NEXT`：在用户确认后准备缺失Python依赖的轻量方式，并冻结Node、FFmpeg的必需/可选矩阵；不盲目打包全部运行时。

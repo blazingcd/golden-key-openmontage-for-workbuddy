@@ -13,5 +13,6 @@ def test_public_ci_runs_the_w1_gate_without_private_core_credentials() -> None:
 
     assert "Run WorkBuddy W1 gate" in workflow
     assert "python -m golden_key_openmontage_workbuddy gate" in workflow
+    assert "fetch-depth: 0" in workflow
     assert "sync_workbuddy_core.py sync-release" not in workflow
     assert "GH_TOKEN" not in workflow

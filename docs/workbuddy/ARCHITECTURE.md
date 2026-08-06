@@ -1,6 +1,6 @@
 # Golden Key OpenMontage for WorkBuddy：架构边界
 
-状态：`v0.3.21 BASELINE FROZEN / W1 ADAPTER BOUNDARY ACTIVE`
+状态：`v0.3.21 BASELINE FROZEN / W2 DIRECT-CALL BASELINE ACTIVE`
 
 更新日期：2026-08-06
 
@@ -46,6 +46,14 @@ WorkBuddy 本身就是唯一 Agent，直接：
 - Golden Key SaaS 或其他消费方自有集成文件。
 
 本项目不得调用、复制或重新实现上述运行时能力。
+
+### 2.3 W1～W4消费方修改边界
+
+W1～W4只修改WorkBuddy自有包、Skill、配置、测试、安装和文档。当前v0.3.21 managed Core快照只读：
+
+- 可以读取、调用、回归和打包其Pipeline、Skill、Schema、Checkpoint与Tool Registry；
+- 不在WorkBuddy仓库直接修补其业务逻辑或managed文件；
+- 若Core大改影响导出合同，先由私有Core形成新Release/ZIP/SHA/lock，再执行独立同步、回归和公开Gate。
 
 ## 3. 仓库与同步边界
 

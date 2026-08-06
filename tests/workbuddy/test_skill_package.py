@@ -40,3 +40,20 @@ def test_workbuddy_config_directory_does_not_enable_mcp_prematurely() -> None:
     assert not (ROOT / ".workbuddy" / "mcp.json").exists()
     assert "Skill-first" in readme
     assert "MCP decision Gate" in readme
+
+
+def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
+    _, body = _read_skill()
+
+    for command in (
+        "golden-key-workbuddy context",
+        "golden-key-workbuddy pipelines",
+        "golden-key-workbuddy project create",
+        "golden-key-workbuddy project status",
+        "golden-key-workbuddy stage inspect",
+        "golden-key-workbuddy artifact validate",
+        "golden-key-workbuddy checkpoint submit",
+    ):
+        assert command in body
+    assert "Only WorkBuddy selects the Pipeline" in body
+    assert "inside the project's `artifacts/` directory" in body

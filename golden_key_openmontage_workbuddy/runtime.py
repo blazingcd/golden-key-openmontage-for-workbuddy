@@ -1,0 +1,371 @@
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+from typing import Any
+
+from lib.checkpoint import (
+    get_latest_checkpoint,
+    get_next_stage,
+    init_project,
+    write_checkpoint,
+)
+from lib.pipeline_loader import load_pipeline
+from schemas.artifacts import ARTIFACT_NAMES, validate_artifact
+
+from .doctor import EXPECTED_PIPELINES
+
+
+PROJECT_ID_PATTERN = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$")
+
+
+class RuntimeContractError(ValueError):
+    """The WorkBuddy request violates the deterministic adapter contract."""
+
+
+def _validated_project_id(project_id: str) -> str:
+    if not PROJECT_ID_PATTERN.fullmatch(project_id):
+        raise RuntimeContractError(
+            "project_id must be 1-64 lowercase letters, digits, or hyphens"
+        )
+    return project_id
+
+
+def _projects_root(data_root: Path) -> Path:
+    return Path(data_root).resolve() / "Projects"
+
+
+def _contained_path(path: Path, root: Path) -> Path:
+    resolved = Path(path).resolve()
+    try:
+        resolved.relative_to(Path(root).resolve())
+    except ValueError as exc:
+        raise RuntimeContractError(f"path is outside the allowed project root: {path}") from exc
+    return resolved
+
+
+def build_context_report(repo_root: Path) -> dict[str, Any]:
+    """Expose the frozen direct-agent context without making Agent decisions."""
+
+    repo_root = Path(repo_root).resolve()
+    guide_path = repo_root / "AGENT_GUIDE.md"
+    pipelines = [
+        name
+        for name in EXPECTED_PIPELINES
+        if (repo_root / "pipeline_defs" / f"{name}.yaml").is_file()
+    ]
+    errors: list[str] = []
+    if not guide_path.is_file():
+        errors.append("AGENT_GUIDE.md is missing")
+    missing = sorted(set(EXPECTED_PIPELINES) - set(pipelines))
+    if missing:
+        errors.append(f"missing Golden Key pipelines: {', '.join(missing)}")
+
+    return {
+        "status": "fail" if errors else "pass",
+        "repo_root": str(repo_root),
+        "agent_guide": str(guide_path),
+        "authority": {
+            "invocation_model": "direct_agent",
+            "nested_agent_host_allowed": False,
+            "pipeline_selection_actor": "workbuddy_agent",
+        },
+        "selected_pipeline": None,
+        "pipelines": pipelines,
+        "provider_calls_attempted": 0,
+        "errors": errors,
+    }
+
+
+def build_pipeline_catalog(repo_root: Path) -> dict[str, Any]:
+    """Return declarative contracts for the four pipelines without selecting one."""
+
+    repo_root = Path(repo_root).resolve()
+    definitions = repo_root / "pipeline_defs"
+    pipelines: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for name in EXPECTED_PIPELINES:
+        try:
+            manifest = load_pipeline(name, definitions)
+        except Exception as exc:
+            errors.append(f"cannot load pipeline {name}: {exc}")
+            continue
+        pipelines.append(
+            {
+                "name": name,
+                "description": manifest.get("description", "").strip(),
+                "stability": manifest.get("stability"),
+                "stages": [
+                    {
+                        "name": stage["name"],
+                        "skill": stage.get("skill"),
+                        "produces": list(stage.get("produces", [])),
+                        "human_approval_default": bool(
+                            stage.get("human_approval_default", False)
+                        ),
+                    }
+                    for stage in manifest["stages"]
+                ],
+            }
+        )
+    return {
+        "status": "fail" if errors else "pass",
+        "selection_performed": False,
+        "selection_actor": "workbuddy_agent",
+        "pipelines": pipelines,
+        "provider_calls_attempted": 0,
+        "errors": errors,
+    }
+
+
+def create_project(
+    repo_root: Path,
+    data_root: Path,
+    *,
+    project_id: str,
+    title: str,
+    pipeline: str,
+) -> dict[str, Any]:
+    """Create a project only after WorkBuddy supplies its selected Pipeline."""
+
+    project_id = _validated_project_id(project_id)
+    if pipeline not in EXPECTED_PIPELINES:
+        raise RuntimeContractError(
+            "pipeline must be one of the four Golden Key WorkBuddy pipelines"
+        )
+    load_pipeline(pipeline, Path(repo_root).resolve() / "pipeline_defs")
+    projects_root = _projects_root(data_root)
+    marker_path = projects_root / project_id / "project.json"
+    existed = marker_path.exists()
+    if existed:
+        try:
+            marker = json.loads(marker_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeContractError(f"invalid existing project marker: {exc}") from exc
+        if marker.get("pipeline_type") != pipeline:
+            raise RuntimeContractError(
+                f"project {project_id} is already bound to "
+                f"{marker.get('pipeline_type')!r}"
+            )
+        project_dir = marker_path.parent
+    else:
+        project_dir = init_project(
+            project_id,
+            title=title,
+            pipeline_type=pipeline,
+            pipeline_dir=projects_root,
+        )
+    return {
+        "status": "pass",
+        "created": not existed,
+        "project_id": project_id,
+        "project_dir": str(project_dir.resolve()),
+        "pipeline": pipeline,
+        "pipeline_selected_by": "workbuddy_agent",
+        "provider_calls_attempted": 0,
+        "errors": [],
+    }
+
+
+def build_project_status(data_root: Path, *, project_id: str) -> dict[str, Any]:
+    project_id = _validated_project_id(project_id)
+    projects_root = _projects_root(data_root)
+    project_dir = projects_root / project_id
+    marker_path = project_dir / "project.json"
+    if not marker_path.is_file():
+        raise RuntimeContractError(f"project not found: {project_id}")
+    try:
+        marker = json.loads(marker_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError(f"invalid project marker: {exc}") from exc
+    pipeline = marker.get("pipeline_type")
+    if pipeline not in EXPECTED_PIPELINES:
+        raise RuntimeContractError("project is not bound to a Golden Key Pipeline")
+    latest = get_latest_checkpoint(projects_root, project_id)
+    return {
+        "status": "pass",
+        "project_id": project_id,
+        "project_dir": str(project_dir.resolve()),
+        "title": marker.get("title"),
+        "pipeline": pipeline,
+        "next_stage": get_next_stage(projects_root, project_id, pipeline),
+        "latest_checkpoint": latest,
+        "provider_calls_attempted": 0,
+        "errors": [],
+    }
+
+
+def validate_project_artifact(
+    data_root: Path,
+    *,
+    project_id: str,
+    artifact_name: str,
+    input_path: Path,
+) -> dict[str, Any]:
+    project_id = _validated_project_id(project_id)
+    if artifact_name not in ARTIFACT_NAMES:
+        raise RuntimeContractError(f"unknown artifact schema: {artifact_name}")
+    project_dir = _projects_root(data_root) / project_id
+    if not (project_dir / "project.json").is_file():
+        raise RuntimeContractError(f"project not found: {project_id}")
+    artifact_dir = project_dir / "artifacts"
+    path = _contained_path(input_path, artifact_dir)
+    if not path.is_file():
+        raise RuntimeContractError(f"artifact file not found: {path}")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError(f"invalid artifact JSON: {exc}") from exc
+    if not isinstance(data, dict):
+        raise RuntimeContractError("artifact JSON must be an object")
+    try:
+        validate_artifact(artifact_name, data)
+    except Exception as exc:
+        raise RuntimeContractError(
+            f"artifact {artifact_name} failed schema validation: {exc}"
+        ) from exc
+    return {
+        "status": "pass",
+        "project_id": project_id,
+        "artifact_name": artifact_name,
+        "artifact_path": str(path),
+        "schema_valid": True,
+        "provider_calls_attempted": 0,
+        "errors": [],
+    }
+
+
+def submit_checkpoint(
+    data_root: Path,
+    *,
+    project_id: str,
+    stage: str,
+    checkpoint_status: str,
+    artifacts_file: Path,
+    human_approved: bool = False,
+) -> dict[str, Any]:
+    """Submit a native Core checkpoint after bounded project-local validation."""
+
+    project_id = _validated_project_id(project_id)
+    projects_root = _projects_root(data_root)
+    project_dir = projects_root / project_id
+    marker_path = project_dir / "project.json"
+    if not marker_path.is_file():
+        raise RuntimeContractError(f"project not found: {project_id}")
+    try:
+        marker = json.loads(marker_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError(f"invalid project marker: {exc}") from exc
+    pipeline = marker.get("pipeline_type")
+    if pipeline not in EXPECTED_PIPELINES:
+        raise RuntimeContractError("project is not bound to a Golden Key Pipeline")
+
+    artifacts_path = _contained_path(artifacts_file, project_dir / "artifacts")
+    if not artifacts_path.is_file():
+        raise RuntimeContractError(f"artifacts file not found: {artifacts_path}")
+    try:
+        artifacts = json.loads(artifacts_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError(f"invalid artifacts JSON: {exc}") from exc
+    if not isinstance(artifacts, dict):
+        raise RuntimeContractError("artifacts file must contain a JSON object")
+
+    if checkpoint_status in {"awaiting_human", "completed"}:
+        manifest = load_pipeline(pipeline)
+        stage_contract = next(
+            (item for item in manifest["stages"] if item["name"] == stage), None
+        )
+        if stage_contract is None:
+            raise RuntimeContractError(
+                f"stage {stage!r} is not declared by Pipeline {pipeline!r}"
+            )
+        missing_artifacts = sorted(
+            set(stage_contract.get("produces", [])) - set(artifacts)
+        )
+        if missing_artifacts:
+            raise RuntimeContractError(
+                "missing manifest-produced artifacts: "
+                + ", ".join(missing_artifacts)
+            )
+
+    try:
+        checkpoint_path = write_checkpoint(
+            projects_root,
+            project_id,
+            stage,
+            checkpoint_status,
+            artifacts,
+            pipeline_type=pipeline,
+            human_approved=human_approved,
+        )
+    except Exception as exc:
+        raise RuntimeContractError(f"checkpoint rejected: {exc}") from exc
+    checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+    return {
+        "status": "pass",
+        "project_id": project_id,
+        "pipeline": pipeline,
+        "stage": stage,
+        "checkpoint_status": checkpoint_status,
+        "checkpoint_path": str(checkpoint_path.resolve()),
+        "human_approval_required": checkpoint["human_approval_required"],
+        "human_approved": checkpoint["human_approved"],
+        "provider_calls_attempted": 0,
+        "errors": [],
+    }
+
+
+def inspect_current_stage(
+    repo_root: Path, data_root: Path, *, project_id: str
+) -> dict[str, Any]:
+    """Resolve the next native Stage contract; never rank or select a Pipeline."""
+
+    status = build_project_status(data_root, project_id=project_id)
+    stage_name = status["next_stage"]
+    if stage_name is None:
+        return {
+            "status": "pass",
+            "project_id": project_id,
+            "pipeline": status["pipeline"],
+            "stage": None,
+            "pipeline_complete": True,
+            "selection_performed": False,
+            "provider_calls_attempted": 0,
+            "errors": [],
+        }
+    repo_root = Path(repo_root).resolve()
+    manifest = load_pipeline(status["pipeline"], repo_root / "pipeline_defs")
+    stage = next(
+        (item for item in manifest["stages"] if item["name"] == stage_name), None
+    )
+    if stage is None:
+        raise RuntimeContractError(
+            f"stage {stage_name!r} is missing from Pipeline {status['pipeline']!r}"
+        )
+    skill_ref = stage.get("skill")
+    if not skill_ref:
+        raise RuntimeContractError(f"stage {stage_name!r} has no director Skill")
+    skill_path = _contained_path(
+        repo_root / "skills" / f"{skill_ref}.md", repo_root / "skills"
+    )
+    if not skill_path.is_file():
+        raise RuntimeContractError(f"stage Skill not found: {skill_path}")
+    return {
+        "status": "pass",
+        "project_id": project_id,
+        "pipeline": status["pipeline"],
+        "stage": stage_name,
+        "pipeline_complete": False,
+        "skill": skill_path.as_posix(),
+        "produces": list(stage.get("produces", [])),
+        "tools_available": list(stage.get("tools_available", [])),
+        "human_approval_default": bool(
+            stage.get("human_approval_default", False)
+        ),
+        "review_focus": list(stage.get("review_focus", [])),
+        "success_criteria": list(stage.get("success_criteria", [])),
+        "selection_performed": False,
+        "provider_calls_attempted": 0,
+        "errors": [],
+    }

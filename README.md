@@ -5,7 +5,7 @@
 **Golden Key OpenMontage for WorkBuddy** is a community-maintained edition of
 [OpenMontage](https://github.com/calesthio/OpenMontage), adapted for use with WorkBuddy.
 
-> **开发状态：Pre-Alpha。** 当前仓库已经提供W1 Python包、Skill骨架和本地`doctor`/`gate`，
+> **开发状态：Pre-Alpha。** 当前仓库已经提供W1基础门禁和W2第一段Skill-first本地调用闭环，
 > 但尚未提供完整可安装发行版，也尚未完成真实WorkBuddy或Provider验收。请勿把当前源码视为可用成品；进度和发布Gate以
 > `PROJECT-STATE.md` 为准。
 >
@@ -40,17 +40,23 @@ WorkBuddy负责理解用户意图、规划任务并与用户交互；OpenMontage
 阶段审查、检查点和制作产物。本项目提供二者之间的适配与使用体验。
 
 当前架构采用`Skill-first`：WorkBuddy始终是唯一Agent。MCP不是远端依赖，也不是第二个Agent；
-W2会在真实WorkBuddy中比较直接本地调用与stdio MCP，再决定MCP为默认、可选或不交付。W1不会发布
+W2会在真实WorkBuddy中比较直接本地调用与stdio MCP，再决定MCP为默认、可选或不交付。裁决前不会发布
 活动`.workbuddy/mcp.json`。
 
-W1开发者可运行：
+当前开发者入口：
 
 ```powershell
 python -m golden_key_openmontage_workbuddy doctor --data-root D:\WorkBuddyData --create-dirs
 python -m golden_key_openmontage_workbuddy gate --data-root D:\WorkBuddyData
+python -m golden_key_openmontage_workbuddy context --json
+python -m golden_key_openmontage_workbuddy pipelines --json
+python -m golden_key_openmontage_workbuddy project create --project-id demo --title "Demo" --pipeline golden-key-product-marketing --json
+python -m golden_key_openmontage_workbuddy project status --project-id demo --json
+python -m golden_key_openmontage_workbuddy stage inspect --project-id demo --json
 ```
 
-这两个命令不调用Provider，也不代表完整安装或真实WorkBuddy验收已经通过。
+这些命令不调用Provider；W2第一段还提供项目内Artifact校验与受限Checkpoint提交。当前尚未开放生产Tool执行，
+也不代表完整安装、MCP裁决或真实WorkBuddy验收已经通过。
 本地目录规则见[`docs/workbuddy/LOCAL-STORAGE-POLICY.md`](docs/workbuddy/LOCAL-STORAGE-POLICY.md)。
 
 ## Golden Key Edition

@@ -71,6 +71,9 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 
 ## W2：Skill-first体验、最小调用面和MCP决策Gate
 
+状态：`IN PROGRESS`。第一段直接调用基线已经完成权威上下文、Pipeline目录、项目生命周期、当前Stage
+合同、Artifact Schema校验、受限Checkpoint提交和离线路径负测；生产Tool执行与真实WorkBuddy/MCP对比仍待完成。
+
 ### 任务
 
 - 编写可导入的 WorkBuddy Skill。

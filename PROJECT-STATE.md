@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-06 13:28 +08:00
+更新时间：2026-08-06 14:14 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 NEXT`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 IN PROGRESS`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -45,6 +45,13 @@
 - 维护者环境已完成固定Release `sync-release`幂等复核；公开CI不依赖私有Core凭据，执行W1 Gate和完整测试。
 - 本轮真实D盘验证：1566文件、0改动、0删除；Skill校验通过；contracts `716 passed, 7 skipped`；
   tools `284 passed, 1 subtest passed`；WorkBuddy `27 passed`；W1增量公开审计=`PASS`。
+- W2第一段直接调用基线已建立：`context`、`pipelines`、`project create/status`、`stage inspect`、
+  `artifact validate`和`checkpoint submit`。
+- WorkBuddy仍是唯一Pipeline选择者；CLI只读取已绑定Pipeline和当前Stage合同，不推荐、排序或重选。
+- 项目目录限制在`<data-root>/Projects/<project-id>`；Artifact/Checkpoint输入限制在项目`artifacts/`内；
+  项目ID穿越、Pipeline重绑定、缺少Manifest产物和未批准完成均fail-closed。
+- W2离线生命周期测试封锁socket后通过，Provider调用和嵌套Agent调用均为0。
+- W1～W4明确只修改消费方层；v0.3.21 managed Core快照保持只读，Core变更只能通过新Release合同迁移。
 
 ## 历史记录（不再是当前Gate）
 
@@ -54,7 +61,7 @@
 
 ## 下一步
 
-1. W2实现Skill-first直接调用闭环：权威上下文读取、项目创建/状态、Schema校验、受限Stage提交和确定性工具执行。
+1. W2在当前Stage和Manifest允许范围内实现确定性Tool发现/执行，并在网络层之前拒绝未授权Provider。
 2. 分离WorkBuddy主对话模型与视频生产Provider配置，按真实支持面提供国内模型配置体验。
 3. 在真实WorkBuddy中比较Skill+CLI与Skill+stdio MCP，裁决MCP为默认、可选或省略。
 4. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
@@ -63,11 +70,13 @@
 
 - v0.3.21 WorkBuddy Callable Core已同步并通过本地W0和回归。
 - 首个公开基线已发布，状态为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
+- W2第一段Skill-first确定性项目/Artifact/Checkpoint本地调用基线已通过专项测试。
 
 当前不允许声明：
 
 - 已经可以安装；
 - W1 Skill骨架已经是完整可用的WorkBuddy生产Skill；
+- W2生产Tool执行闭环已经完成；
 - MCP已被选为必选、已可用或真实WorkBuddy验收通过；
 - `OFFLINE ADAPTER READY`；
 - 真实Provider成片通过。

@@ -334,3 +334,30 @@
 - 当前仍为`Pre-Alpha`；Skill只是W1安全骨架，不得声明完整生产可用、真实WorkBuddy验收或
   `OFFLINE ADAPTER READY`。
 - 未调用真实/付费Provider，未修改Golden Key SaaS仓库，Core同步结果为0改动。
+
+## 2026-08-06：W2第一段Skill-first直接调用基线
+
+### 范围
+
+- 只开发WorkBuddy消费方调用层；锁定v0.3.21 managed Core快照只读。
+- 建立从权威上下文到项目、当前Stage、Artifact和Checkpoint的首段确定性闭环。
+- 不启用MCP，不执行生产Tool，不调用真实/付费Provider。
+
+### TDD与实现
+
+- 新增`context`和`pipelines`：读取Guide与四Pipeline合同，明确`selected_pipeline=null`且不排序/选择。
+- 新增`project create/status`：Pipeline必须由WorkBuddy显式传入；同一项目禁止重新绑定Pipeline。
+- 新增`stage inspect`：从原生Checkpoint顺序解析下一Stage，返回Stage Skill、产物、允许工具和Human Gate。
+- 新增`artifact validate`：只读取项目`artifacts/`内JSON并调用原生Artifact Schema。
+- 新增`checkpoint submit`：要求Manifest声明的完整产物集合，再调用原生`write_checkpoint`执行Schema、前置Stage和Human Gate。
+- 项目ID、Artifact/Checkpoint路径、Pipeline重绑定、缺产物和未批准完成均fail-closed。
+- WorkBuddy Skill更新为上述CLI生命周期；MCP仍为`decision_pending`。
+
+### 当前验证与边界
+
+- W2新专项：`12 passed`；完整WorkBuddy专项：`40 passed`；Skill格式校验=`Skill is valid!`。
+- Core回归：contracts=`716 passed, 7 skipped`；tools=`284 passed, 1 subtest passed`。
+- W2增量公开审计=`PASS`：1566个Core文件匹配，候选11个文件，公开性/lineage/运行时/回归全部通过，
+  candidate snapshot SHA-256=`a4e826eaff923d0409531012c0071beb011ff3980aa63ee7abeb396cdc2a2fd2`。
+- 离线测试封锁socket后，context/Pipeline/项目生命周期仍通过；Provider调用数为0。
+- 当前尚未开放生产Tool执行，尚未进行真实WorkBuddy与stdio MCP对比，因此W2仍为`IN PROGRESS`。

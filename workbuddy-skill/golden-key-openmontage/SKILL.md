@@ -42,7 +42,8 @@ The direct CLI is the canonical fallback. After the W2 real-client comparison, t
 
 - Do not call a real or paid Provider without explicit user approval.
 - Do not bypass Stage Skills, Artifact validation, Reviewer, or Checkpoint gates.
-- Keep local Tool execution inside the CLI's socket-denial boundary; do not replace it with an ad-hoc Python import or network call.
+- Keep local Tool execution inside the CLI's offline boundary; it denies socket access in the current Python process and inherited Python/Node subprocesses. Do not replace it with an ad-hoc import, subprocess environment, or network call.
+- Treat CLI/MCP/task output as redacted diagnostic data. Never copy credentials into Artifact content, filenames, prompts, or ad-hoc logs, and never attempt to recover a value replaced with `[REDACTED]`.
 - Do not import, launch, or recreate `agent_host_authority`, `model_driven_agent_host`, or `openai_compatible_transport`.
 - MCP is optional, local, and deterministic after the real WorkBuddy comparison Gate. Never treat it as a remote service, a second Agent, or a required replacement for the CLI fallback.
 - Do not claim installation readiness, real WorkBuddy acceptance, or `OFFLINE ADAPTER READY`.

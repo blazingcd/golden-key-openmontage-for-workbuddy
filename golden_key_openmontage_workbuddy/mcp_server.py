@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, TextIO
 
+from .security import redact_payload, redact_text
+
 
 SERVER_NAME = "golden-key-openmontage-workbuddy"
 SERVER_VERSION = "0.1.0a0"
@@ -294,7 +296,7 @@ class WorkBuddyMcpServer:
         if name not in TOOL_BY_NAME:
             raise McpRequestError(-32602, f"Unknown Golden Key tool: {name}")
         args = _validate_arguments(name, arguments)
-        report = self._dispatch(name, args)
+        report = redact_payload(self._dispatch(name, args))
         is_error = report.get("status") != "pass"
         return {
             "content": [
@@ -487,7 +489,7 @@ def _error_response(request_id: Any, error: Exception) -> dict[str, Any]:
     return {
         "jsonrpc": "2.0",
         "id": request_id,
-        "error": {"code": code, "message": str(error)},
+        "error": {"code": code, "message": redact_text(str(error))},
     }
 
 
@@ -512,7 +514,13 @@ def serve_stdio(
             payload = _response(request_id, result)
         except Exception as exc:
             payload = _error_response(request_id, exc)
-        output_stream.write(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+        output_stream.write(
+            json.dumps(
+                redact_payload(payload),
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+        )
         output_stream.write("\n")
         output_stream.flush()
     return 0

@@ -7,6 +7,11 @@ from typing import Sequence
 
 from .doctor import build_doctor_report, format_doctor_report
 from .gate import build_gate_report, format_gate_report
+from .security import redact_payload, redact_text
+
+
+def _print_json_report(report: dict) -> None:
+    print(json.dumps(redact_payload(report), ensure_ascii=False, indent=2))
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -207,28 +212,28 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.repo_root, args.data_root, create_dirs=args.create_dirs
         )
         if args.as_json:
-            print(json.dumps(report, ensure_ascii=False, indent=2))
+            _print_json_report(report)
         else:
-            print(format_doctor_report(report))
+            print(redact_text(format_doctor_report(report)))
         return 0 if report["status"] == "pass" else 1
     if args.command == "gate":
         report = build_gate_report(args.repo_root, args.data_root)
         if args.as_json:
-            print(json.dumps(report, ensure_ascii=False, indent=2))
+            _print_json_report(report)
         else:
-            print(format_gate_report(report))
+            print(redact_text(format_gate_report(report)))
         return 0 if report["status"] == "pass" else 1
     if args.command == "context":
         from .runtime import build_context_report
 
         report = build_context_report(args.repo_root)
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "pipelines":
         from .runtime import build_pipeline_catalog
 
         report = build_pipeline_catalog(args.repo_root)
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "project":
         from .runtime import RuntimeContractError, build_project_status, create_project
@@ -252,7 +257,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "provider_calls_attempted": 0,
                 "errors": [str(exc)],
             }
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "artifact":
         from .runtime import RuntimeContractError, validate_project_artifact
@@ -270,7 +275,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "provider_calls_attempted": 0,
                 "errors": [str(exc)],
             }
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "checkpoint":
         from .runtime import RuntimeContractError, submit_checkpoint
@@ -290,7 +295,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "provider_calls_attempted": 0,
                 "errors": [str(exc)],
             }
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "stage":
         from .runtime import RuntimeContractError, inspect_current_stage
@@ -305,7 +310,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "provider_calls_attempted": 0,
                 "errors": [str(exc)],
             }
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "tool":
         from .runtime import (
@@ -335,7 +340,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "provider_calls_attempted": 0,
                 "errors": [str(exc)],
             }
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "config":
         from .model_config import (
@@ -356,7 +361,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "network_calls_attempted": 0,
                 "errors": [str(exc)],
             }
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     if args.command == "task":
         from .runtime import RuntimeContractError
@@ -412,6 +417,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "network_calls_attempted": 0,
                 "errors": [str(exc)],
             }
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
     return 2

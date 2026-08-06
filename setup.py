@@ -5,6 +5,9 @@ setup(
     version="0.1.0a0",
     description="Golden Key OpenMontage callable core for WorkBuddy",
     packages=find_packages(),
+    package_data={
+        "golden_key_openmontage_workbuddy.subprocess_guard": ["*.cjs"],
+    },
     python_requires=">=3.10",
     install_requires=[
         "pyyaml>=6.0",

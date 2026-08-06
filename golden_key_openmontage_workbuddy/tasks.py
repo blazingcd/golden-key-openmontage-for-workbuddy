@@ -20,6 +20,7 @@ from .runtime import (
     inspect_current_stage,
     execute_stage_tool,
 )
+from .security import redact_payload, redact_text
 
 
 TASK_ID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
@@ -76,6 +77,7 @@ def _task_timeout_exceeded(task: dict[str, Any]) -> bool:
 
 def _write_new_json(path: Path, payload: dict[str, Any]) -> bool:
     path.parent.mkdir(parents=True, exist_ok=True)
+    payload = redact_payload(payload)
     try:
         with path.open("x", encoding="utf-8", newline="\n") as handle:
             json.dump(payload, handle, ensure_ascii=False, indent=2)
@@ -86,6 +88,7 @@ def _write_new_json(path: Path, payload: dict[str, Any]) -> bool:
 
 
 def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
+    payload = redact_payload(payload)
     temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
     try:
         temporary.write_text(
@@ -437,8 +440,12 @@ def run_tool_task(
                     "tool_calls_attempted": 0,
                     "provider_calls_attempted": 0,
                     "cost_usd": 0,
-                    "errors": [f"task execution contract failed: {exc}"],
+                    "errors": [
+                        redact_text(f"task execution contract failed: {exc}")
+                    ],
                 }
+
+            execution = redact_payload(execution)
 
             finished_at = datetime.now(timezone.utc)
             finished = finished_at.isoformat()

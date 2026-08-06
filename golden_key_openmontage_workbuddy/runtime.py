@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import socket
 from contextlib import contextmanager
@@ -17,6 +18,7 @@ from lib.pipeline_loader import load_pipeline
 from schemas.artifacts import ARTIFACT_NAMES, validate_artifact
 
 from .doctor import EXPECTED_PIPELINES
+from .security import redact_payload, redact_text
 
 
 PROJECT_ID_PATTERN = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$")
@@ -45,6 +47,24 @@ def _deny_local_tool_network():
         "connect_ex": socket.socket.connect_ex,
         "sendto": socket.socket.sendto,
     }
+    guard_dir = Path(__file__).resolve().with_name("subprocess_guard")
+    original_environment = {
+        "GOLDEN_KEY_WORKBUDDY_OFFLINE_GUARD": os.environ.get(
+            "GOLDEN_KEY_WORKBUDDY_OFFLINE_GUARD"
+        ),
+        "NODE_OPTIONS": os.environ.get("NODE_OPTIONS"),
+        "PYTHONPATH": os.environ.get("PYTHONPATH"),
+    }
+    python_paths = [str(guard_dir)]
+    if original_environment["PYTHONPATH"]:
+        python_paths.append(str(original_environment["PYTHONPATH"]))
+    os.environ["GOLDEN_KEY_WORKBUDDY_OFFLINE_GUARD"] = "1"
+    os.environ["PYTHONPATH"] = os.pathsep.join(python_paths)
+    node_guard = guard_dir / "offline_guard.cjs"
+    node_options = [f'--require="{node_guard.as_posix()}"']
+    if original_environment["NODE_OPTIONS"]:
+        node_options.append(str(original_environment["NODE_OPTIONS"]))
+    os.environ["NODE_OPTIONS"] = " ".join(node_options)
     socket.create_connection = blocked
     socket.getaddrinfo = blocked
     socket.socket.connect = blocked
@@ -58,6 +78,11 @@ def _deny_local_tool_network():
         socket.socket.connect = originals["connect"]
         socket.socket.connect_ex = originals["connect_ex"]
         socket.socket.sendto = originals["sendto"]
+        for name, value in original_environment.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
 
 
 def _validated_project_id(project_id: str) -> str:
@@ -595,7 +620,9 @@ def execute_stage_tool(
             "tool_calls_attempted": 1,
             "provider_calls_attempted": 0,
             "cost_usd": 0,
-            "errors": [f"local tool execution failed: {exc}"],
+            "errors": [
+                redact_text(f"local tool execution failed: {exc}")
+            ],
         }
 
     artifact_paths: list[str] = []
@@ -625,7 +652,7 @@ def execute_stage_tool(
         )
     if not result.success:
         errors.append(result.error or "tool returned an unsuccessful result")
-    return {
+    return redact_payload({
         "status": "fail" if errors else "pass",
         "project_id": project_id,
         "pipeline": stage["pipeline"],
@@ -636,4 +663,4 @@ def execute_stage_tool(
         "cost_usd": actual_cost,
         "result": result_payload,
         "errors": errors,
-    }
+    })

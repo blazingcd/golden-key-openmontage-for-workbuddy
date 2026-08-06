@@ -106,17 +106,18 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - 验证所选执行入口重启后的任务和项目恢复。（W2已完成中断识别与fail-closed恢复；真实WorkBuddy待W4）
 - 实现并验证真实取消或明确不可取消语义。（W2已完成queued取消/running明确不可取消）
 - 并发限制、幂等、重复执行保护和超时处理。（W2已完成数据根级并发1、稳定ID、终态重放、可观测超时和中断槽释放；硬终止因Core无安全取消合同而明确禁止）
-- 路径规范化和根目录封闭。
-- 密钥、异常和日志脱敏。
-- 无凭证、缺Artifact、Gate违规和Schema错误负测。
-- 静态依赖检查和运行时网络拦截，证明没有第二个Agent模型调用。（W2本地Tool socket拦截已完成）
-- 运行核心合同回归和Adapter专项回归。
+- 路径规范化和根目录封闭。（`DONE`：项目、Artifact、Tool输入/输出和Checkpoint路径负测持续通过）
+- 密钥、异常和日志脱敏。（`DONE`：CLI、MCP、ToolResult和任务JSON统一脱敏）
+- 无凭证、缺Artifact、Gate违规和Schema错误负测。（`DONE`）
+- 静态依赖检查和运行时网络拦截，证明没有第二个Agent模型调用。（`DONE`：当前Python进程及Python/Node子进程继承门禁，SaaS仓库不可用负测通过）
+- 运行核心合同回归和Adapter专项回归。（`DONE`）
 
 ### 完成证据
 
-- 离线测试报告。
-- 失败路径均为结构化、可操作提示。
-- mock只作为测试夹具，不作为真实可用结论。
+- 离线测试报告：`W3-OFFLINE-RELIABILITY-REPORT-2026-08-06.md`。
+- `76 passed` WorkBuddy专项和`1136 passed, 10 skipped, 1 subtest passed`完整回归。
+- 失败路径均为结构化、可操作且不泄漏凭据的提示；CLI与可选MCP语义一致。
+- mock只作为拒绝路径夹具，不作为真实Provider或普通用户可用结论；`OFFLINE ADAPTER READY`仍等待W4。
 
 ## W4：打包、安装、文档和真实WorkBuddy验收
 

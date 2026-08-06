@@ -1,6 +1,6 @@
 # Golden Key OpenMontage for WorkBuddy：架构边界
 
-状态：`v0.3.21 BASELINE FROZEN / W2 MCP=OPTIONAL`
+状态：`v0.3.21 BASELINE FROZEN / W2 MCP=OPTIONAL / W3 OFFLINE RELIABILITY GATE PASS`
 
 更新日期：2026-08-06
 
@@ -136,7 +136,11 @@ Skill、Schema、路径、成本与输入hash校验后只排队；稳定task ID�
 没有通用协作式取消，超过截止时间只由`task status`报告`timeout_exceeded`，不会强杀进程或伪称取消。当前Core
 Tool合同没有通用协作式取消，因此`task cancel`只允许queued任务；running任务明确返回不可安全取消，不能伪称
 已取消或粗暴杀进程。进程中断后`task status`要求`task recover`，后者只把任务标记为failed，不自动重试，
-释放该任务遗留的全局执行槽，避免未知的局部文件副作用被重复执行。声明为本地的Tool在执行期间受进程内socket-denial边界保护。
+释放该任务遗留的全局执行槽，避免未知的局部文件副作用被重复执行。声明为本地的Tool在执行期间受进程内
+socket-denial边界保护；同一上下文通过`PYTHONPATH/sitecustomize`和`NODE_OPTIONS --require`把拒绝网络的
+门禁传给受信Core Tool启动的Python/Node子进程。CLI、MCP和任务原子持久化在输出边界统一脱敏环境密钥、
+常见Bearer/API key文本和明确的敏感字段。测试从仓库外目录启动，并把SaaS/private Core路径指向不存在位置后，
+direct-agent上下文和离线项目创建仍通过，因此最终用户运行时不依赖Golden Key SaaS仓库。
 
 它们只做本地环境、锁定Core身份、四Pipeline、Skill和隔离边界检查，Provider调用数必须为0。
 默认D盘目录和缓存规则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`。

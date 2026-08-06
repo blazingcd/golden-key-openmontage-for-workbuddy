@@ -533,3 +533,29 @@
   `D:/WorkBuddyData/Temp/w2-concurrency-timeout-publication-audit-20260806-final`。
 - 真实/付费Provider、Golden Key SaaS和私有Core仓库均未调用或修改。W4安装/普通用户验收与
   `OFFLINE ADAPTER READY`仍未通过；下一步进入W3离线可靠性矩阵。
+
+## 2026-08-06：W3离线可靠性、安全与回归Gate
+
+### TDD与实现
+
+- 继续只修改WorkBuddy消费方运行时、测试、打包元数据、Skill和文档；v0.3.21的1566个managed Core文件保持只读。
+- 先用真实loopback监听器建立Python子进程联网红灯，再通过消费方`sitecustomize.py`和临时`PYTHONPATH`
+  把当前runtime的离线socket拒绝继承到Python子进程；连接在到达监听器前失败。
+- 再用Node `net.createConnection`建立独立红灯，通过`NODE_OPTIONS --require`加载消费方CommonJS guard，
+  拒绝`net/tls/http/https/dns/dgram/fetch`；执行上下文结束后恢复原环境变量。
+- 先建立Tool异常泄漏到CLI/任务JSON、Schema错误泄漏输入值和MCP嵌套ToolResult泄漏三组红灯；随后增加
+  统一脱敏模块，在runtime、CLI、MCP和任务原子写入边界替换环境密钥、常见Bearer/API key文本及明确敏感字段。
+- 增加SaaS隔离验证：从仓库外目录启动，把SaaS/private Core根指向不存在目录，direct-agent context和
+  `golden-key-product-marketing`离线项目创建仍成功，Provider调用0。
+- 更新README、架构、路线图、隔离矩阵、WorkBuddy Skill、项目状态和W4交接Prompt；新增W3 Gate报告。
+
+### 验证与边界
+
+- W3专项=`6 passed`；完整WorkBuddy专项=`76 passed`。
+- 完整套件=`1136 passed, 10 skipped, 1 subtest passed`；四Pipeline、44个Pipeline Skill、Schema、
+  Reviewer/Checkpoint、Tool Registry和既有Core合同保持通过。
+- W1 `python -S` Gate=`PASS`：六个禁入路径不存在、静态隔离违规0、活动MCP配置不存在、Provider调用0。
+- 消费方Python源码内存编译22个文件通过，`git diff --check`通过。
+- W3离线可靠性Gate=`PASS`，但这不是W4打包/全新Windows安装/普通用户WorkBuddy验收，仍不得声明
+  “已经可以安装”或`OFFLINE ADAPTER READY`。
+- 本轮未调用真实/付费Provider，未修改Golden Key SaaS/private Core仓库；MCP保持`optional`且未发布活动配置。

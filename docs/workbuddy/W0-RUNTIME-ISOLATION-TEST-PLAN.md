@@ -1,6 +1,6 @@
 # WorkBuddy 运行时隔离验证方案
 
-状态：`v0.3.21 DIRECT-AGENT BASELINE / W2 LOCAL TASK GATE PASS / W3 MATRIX PENDING`
+状态：`v0.3.21 DIRECT-AGENT BASELINE / W3 OFFLINE ISOLATION MATRIX PASS`
 
 日期：2026-08-06
 
@@ -16,10 +16,11 @@ W4完整安装验收。v0.3.21导出合同、W1 Gate和W2离线专项/真实Work
 - 当前Stage allowlist、项目路径、Layer 3 Skill确认和API/Hybrid前置拒绝已启用；本地`scene_detect`在socket
   封锁下执行成功，Tool调用1次、Provider调用0次、成本0；仍不能声明 `OFFLINE ADAPTER READY`。
 
-W0/W1静态边界为`PASS`，W2纯本地Tool与持久任务纵向切片为`PARTIAL PASS`。当前socket负测覆盖Python
-DNS/连接/数据报入口、误声明local Tool和Hybrid selector前置拒绝；任务状态、幂等、queued取消、running明确
-不可取消、中断恢复、跨任务并发1、可观测超时和遗留执行槽释放已经通过。Node网络、长任务子进程继承边界和SaaS仓库不可访问等完整矩阵仍属于W3，
-完成前不能形成最终离线隔离结论。
+W0/W1静态边界、W2纯本地Tool/持久任务纵向切片和W3离线隔离矩阵均为`PASS`。socket负测覆盖当前
+Python进程的DNS/连接/数据报入口，并通过`sitecustomize`和`NODE_OPTIONS`覆盖受信Core Tool启动的
+Python/Node子进程；真实loopback监听器确认连接从未建立。SaaS/private Core仓库路径指向不存在目录时，
+仓库外进程仍能读取direct-agent上下文和创建离线项目。CLI、MCP、ToolResult和任务JSON中的环境密钥、
+常见凭据文本及敏感字段均已脱敏。该结论是离线运行时Gate，不替代W4安装/普通用户验收或真实Provider授权Gate。
 
 ## 2. 静态依赖门禁
 
@@ -47,7 +48,7 @@ scripts/core_sync/
 
 ## 3. 运行时网络拦截
 
-W2已为首个本地执行入口建立单进程socket封锁夹具；W3继续扩展。MCP已裁决为`optional`，CLI与MCP必须应用同一门禁：
+W2建立单进程socket封锁，W3已把门禁继承到Python/Node子进程。MCP已裁决为`optional`，CLI与MCP应用同一门禁：
 
 1. 清空所有 Provider 凭据，并设置测试专用环境变量表。
 2. 在进程启动前拦截 `socket.create_connection`、DNS、`requests`、`httpx`、OpenAI SDK 和 Node `fetch/http/https`。
@@ -84,9 +85,10 @@ WorkBuddy Agent负责理解、Pipeline选择和Stage创作；CLI或MCP只能返�
 | 验证项 | W0 当前状态 | W2/W3 完成条件 |
 |---|---|---|
 | 静态禁止导入/禁入文件 | `PASS`，六个consumer-remove路径均不存在 | CI 对全部Adapter运行时文件持续通过 |
-| SaaS Worker 隔离 | 架构和路径规则已冻结 | SaaS 仓库不可访问时离线流程仍通过 |
-| 嵌套模型调用拦截 | authority已冻结；W2入口无模型调用参数或导入 | W3 SDK/进程spy调用数为0 |
-| 外网/Provider 拦截 | `PARTIAL PASS`：Python socket/DNS封锁，误声明local与Hybrid负测均在真实网络前拒绝 | 补Node/子进程继承拦截后外网调用数仍为0 |
-| 本地确定性能力 | 项目、Schema、Checkpoint、Tool allowlist、本地执行、持久任务、幂等、状态/取消/恢复、跨任务并发1和可观测超时已通过 | W3继续验证进程/子进程边界；MCP握手和同任务函数语义已通过 |
+| SaaS Worker 隔离 | `PASS` | SaaS/private Core路径不存在、从仓库外启动时上下文和项目创建仍通过 |
+| 嵌套模型调用拦截 | `PASS` | direct-agent authority、静态禁入/import Gate和Provider调用0持续通过 |
+| 外网/Provider 拦截 | `PASS` | Python当前进程与Python/Node子进程真实loopback负测均在连接前拒绝 |
+| 本地确定性能力 | `PASS` | 项目、Schema、Checkpoint、Tool、持久任务、并发/超时、CLI/MCP语义和脱敏回归通过 |
 
-任何一项失败都阻止 `OFFLINE ADAPTER READY`。真实 WorkBuddy 与真实 Provider 验收仍是后续、逐次授权的独立 Gate。
+W3离线隔离矩阵通过不等于`OFFLINE ADAPTER READY`。W4全新Windows安装、打包和普通用户WorkBuddy验收仍是
+该声明的必要条件；真实Provider验收继续是逐次授权的独立Gate。

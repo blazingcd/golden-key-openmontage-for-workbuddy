@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-06 21:20 +08:00
+更新时间：2026-08-06 21:03 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 OFFLINE TASK GATE PASS / W3 NEXT`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 OFFLINE RELIABILITY GATE PASS / W4 NEXT`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -99,6 +99,16 @@
 - 本轮最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，四Pipeline/44 Skill、运行时隔离、
   公开lineage、风险扫描和回归全部通过；private Core历史未扫描且不在候选中。证据位于
   `D:/WorkBuddyData/Temp/w2-concurrency-timeout-publication-audit-20260806-final`。
+- W3把本地Tool网络边界继承到其Python/Node子进程：真实loopback监听器负测确认连接未建立；
+  Python通过`sitecustomize`、Node通过`NODE_OPTIONS --require`加载消费方离线guard，执行结束后环境恢复。
+- W3统一脱敏runtime、CLI、MCP和任务原子JSON：Tool异常、Schema错误、Bearer文本、环境密钥和明确敏感字段
+  均替换为`[REDACTED]`，CLI/MCP语义负测和任务落盘负测通过。
+- SaaS/private Core仓库路径指向不存在目录、测试进程从仓库外启动时，direct-agent context和离线项目创建仍通过；
+  证明当前WorkBuddy运行时不依赖Golden Key SaaS仓库。
+- W3专项=`6 passed`；WorkBuddy专项=`76 passed`；完整回归=`1136 passed, 10 skipped, 1 subtest passed`；
+  W1 `python -S` Gate、22个消费方Python源码内存编译和`git diff --check`通过，Provider调用0。
+- W3离线可靠性Gate=`PASS`，证据见`docs/workbuddy/W3-OFFLINE-RELIABILITY-REPORT-2026-08-06.md`；
+  该裁决不等于W4安装/普通用户验收，也不允许声明`OFFLINE ADAPTER READY`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -108,10 +118,11 @@
 
 ## 下一步
 
-1. 提交并推送W2跨任务并发/可观测超时增量，复核公开CI。
-2. 进入W3完整离线可靠性Gate，优先补Node/子进程网络继承、SaaS不可访问和密钥/异常/日志脱敏矩阵。
-3. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W3离线Gate。
-4. W4实现可选MCP用户级配置、信任提示和可禁用/卸载路径，不在仓库提前发布活动配置。
+1. 进入W4，先冻结Windows运行时交付方式和普通用户安装/升级/卸载验收合同，再实现可回滚的安装纵向切片。
+2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
+3. 在全新D盘目录和真实WorkBuddy普通用户路径完成安装、自然语言触发、长任务/恢复验收后，才重新裁决
+   `OFFLINE ADAPTER READY`。
+4. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。
 
 ## 当前允许声明
 
@@ -120,6 +131,7 @@
 - W2 Skill-first项目/Artifact/Checkpoint、受限本地Tool和持久长任务基线已通过专项测试。
 - W2跨项目并发1、可观测超时和中断执行槽释放合同已通过专项测试。
 - 真实WorkBuddy 5.3.8中的离线Skill+CLI与Skill+stdio MCP对照已通过，MCP裁决为`optional`。
+- W3离线可靠性与安全Gate已通过；Python/Node子进程网络继承、SaaS不可用和统一脱敏矩阵已验证。
 
 当前不允许声明：
 
@@ -137,5 +149,6 @@
 - `docs/workbuddy/LOCAL-STORAGE-POLICY.md`
 - `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`
 - `docs/workbuddy/W2-MCP-DECISION-2026-08-06.md`
+- `docs/workbuddy/W3-OFFLINE-RELIABILITY-REPORT-2026-08-06.md`
 - `docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-v0.3.21-2026-08-05.md`
-- `NEXT-CONVERSATION-PROMPT-2026-08-06-W2.md`
+- `NEXT-CONVERSATION-PROMPT-2026-08-06-W4.md`

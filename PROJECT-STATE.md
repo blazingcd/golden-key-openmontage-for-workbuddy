@@ -42,7 +42,7 @@
 - `doctor`可验证v0.3.21合同、direct-agent authority、四Pipeline、Python/Node/FFmpeg并建立D盘目录。
 - `gate`持续拒绝六个禁入路径、嵌套Agent Host导入和W2裁决前的活动`.workbuddy/mcp.json`。
 - WorkBuddy Skill与`.workbuddy`骨架已建立；当前明确为Skill-first，MCP状态为`decision_pending`。
-- CI已接入固定Release `sync-release`幂等复核、W1 Gate和完整测试入口。
+- 维护者环境已完成固定Release `sync-release`幂等复核；公开CI不依赖私有Core凭据，执行W1 Gate和完整测试。
 - 本轮真实D盘验证：1566文件、0改动、0删除；Skill校验通过；contracts `716 passed, 7 skipped`；
   tools `284 passed, 1 subtest passed`；WorkBuddy `27 passed`；W1增量公开审计=`PASS`。
 

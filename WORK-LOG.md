@@ -310,7 +310,7 @@
 - 新建`workbuddy-skill/golden-key-openmontage/SKILL.md`，冻结WorkBuddy唯一Agent、Rule Zero、四Pipeline、
   Stage Skill/Schema/Reviewer/Checkpoint和Provider授权规则。
 - 新建`.workbuddy/README.md`，明确W1不发布活动`mcp.json`；W2进行CLI与stdio MCP真实对比。
-- CI新增固定Release`sync-release`下载/复用、1566文件目标复核、`git diff --exit-code`和W1 Gate。
+- CI新增W1 Gate和完整回归；固定Release`sync-release`与1566文件目标复核保留为已授权维护者环境Gate。
 - 新建`docs/workbuddy/LOCAL-STORAGE-POLICY.md`，将项目数据、缓存、模型、临时文件和开发venv固定到D盘策略。
 
 ### 验证
@@ -323,6 +323,8 @@
 - 回归：contracts=`716 passed, 7 skipped`；tools=`284 passed, 1 subtest passed`；WorkBuddy=`27 passed`。
 - W1最终候选：Release合同、Pipeline合同、运行时边界、公开lineage、公开性扫描和回归全部`PASS`；
   未扫描或引入Golden Key私有历史。
+- 公开CI首次实跑发现消费者仓库`GITHUB_TOKEN`不能读取私有Core Release；按最小权限原则移除该跨仓库依赖，
+  公开CI只验证已发布快照，且不得持有私有Core读取令牌。
 
 ### 结果与边界
 

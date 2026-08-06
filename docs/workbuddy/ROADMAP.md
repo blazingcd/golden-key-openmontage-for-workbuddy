@@ -46,7 +46,7 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 
 ## W1：Callable Core同步门禁与安装骨架
 
-状态：`DONE`。Release同步与CI幂等门禁、独立WorkBuddy Python发行身份、`doctor`/`gate`、Skill、
+状态：`DONE`。维护者Release同步幂等门禁、公开快照CI、独立WorkBuddy Python发行身份、`doctor`/`gate`、Skill、
 `.workbuddy`骨架和D盘存储策略已经建立。完整生产调用闭环和安装发行分别属于W2与W4。
 
 ### 任务
@@ -58,7 +58,7 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 - 建立 WorkBuddy Python包、Skill目录、测试目录和示例配置目录。
 - 规定D盘项目、缓存、模型和临时文件位置。
 - 建立环境 `doctor` 骨架，但不在本阶段冻结运行环境打包方案。
-- 通过CI执行`sync-release`幂等复核、W1 Gate和WorkBuddy专项测试。
+- 维护者环境执行`sync-release`幂等复核；公开CI不持有私有Core凭据，只执行W1 Gate和完整测试。
 - W1不发布活动MCP配置；将MCP默认/可选/省略的裁决留给W2真实WorkBuddy对比。
 
 ### 完成证据

@@ -60,6 +60,13 @@ python scripts/core_sync/sync_workbuddy_core.py sync-release `
 - 缓存中的历史解压子目录不参与同步，可以保留；任何同级额外文件仍被拒绝。
 - 命令完成后立即执行managed mirror和目标复核；重复运行必须报告`changed_file_count=0`、`deleted_file_count=0`。
 
+### 维护者同步与公开CI边界
+
+- `blazingcd/golden-key-openmontage`是私有Core源仓库；`sync-release`只在已获授权的维护者环境执行。
+- 公开WorkBuddy仓库的GitHub Actions不得保存、请求或依赖任何能够读取私有Core仓库的令牌。
+- 公开CI验证已经发布的快照：固定合同身份、四Pipeline、Skill/Schema/Tool引用、禁入路径、W1 Gate和完整测试。
+- 每次Core版本更新仍必须先在维护者环境完成Release资产、lock、1566文件和幂等Gate，再把验证后的快照作为普通公开提交发布。
+
 ## 4. 六个消费方移除路径
 
 只能按 lock 合同移除以下六个历史泄漏路径：

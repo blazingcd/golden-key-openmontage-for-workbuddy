@@ -30,16 +30,17 @@ def test_workbuddy_skill_exposes_the_direct_agent_contract() -> None:
     assert "WorkBuddy is the only Agent" in body
     assert "Read `AGENT_GUIDE.md` before production" in body
     assert "golden-key-workbuddy doctor" in body
-    assert "MCP decision is pending" in body
+    assert "MCP is optional, local, and deterministic" in body
+    assert "direct CLI is the canonical fallback" in body
     assert "Do not call a real or paid Provider without explicit user approval" in body
 
 
-def test_workbuddy_config_directory_does_not_enable_mcp_prematurely() -> None:
+def test_workbuddy_config_directory_defers_optional_mcp_to_w4_packaging() -> None:
     readme = (ROOT / ".workbuddy" / "README.md").read_text(encoding="utf-8")
 
     assert not (ROOT / ".workbuddy" / "mcp.json").exists()
     assert "Skill-first" in readme
-    assert "MCP decision Gate" in readme
+    assert "MCP" in readme
 
 
 def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:

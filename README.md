@@ -6,7 +6,7 @@
 [OpenMontage](https://github.com/calesthio/OpenMontage), adapted for use with WorkBuddy.
 
 > **开发状态：Pre-Alpha。** 当前仓库已经提供W1基础门禁和W2 Skill-first本地调用、受限Tool执行闭环，
-> 但尚未提供完整可安装发行版，也尚未完成真实WorkBuddy或Provider验收。请勿把当前源码视为可用成品；进度和发布Gate以
+> 并完成了真实WorkBuddy中的CLI/MCP离线对照，但尚未提供完整可安装发行版，也尚未完成W4普通用户安装验收或Provider验收。请勿把当前源码视为可用成品；进度和发布Gate以
 > `PROJECT-STATE.md` 为准。
 >
 > 首次公开基线不等待 W1～W4，但只有最终拟公开版本的 W0 Gate 为 `PASS`，且用户在看到
@@ -39,9 +39,9 @@ Pipeline、Skill、Schema、Review、Checkpoint 和 Artifact 体系。
 WorkBuddy负责理解用户意图、规划任务并与用户交互；OpenMontage负责视频制作流程、工具调用、
 阶段审查、检查点和制作产物。本项目提供二者之间的适配与使用体验。
 
-当前架构采用`Skill-first`：WorkBuddy始终是唯一Agent。MCP不是远端依赖，也不是第二个Agent；
-W2会在真实WorkBuddy中比较直接本地调用与stdio MCP，再决定MCP为默认、可选或不交付。裁决前不会发布
-活动`.workbuddy/mcp.json`。
+当前架构采用`Skill-first`：WorkBuddy始终是唯一Agent。真实WorkBuddy 5.3.8对照后，MCP裁决为
+`optional`：直接CLI仍是权威回退；本地stdio MCP只提供结构化Schema发现、语义工具选择和免Shell命令拼接，
+不是远端依赖或第二个Agent。W4打包前不会发布活动`.workbuddy/mcp.json`。
 
 当前开发者入口：
 
@@ -72,7 +72,7 @@ W2当前只允许Manifest当前Stage列出的本地、零网络、零成本工�
 执行和网络访问前拒绝；本地Tool执行期间还会封锁socket。长任务状态保存在D盘`Jobs`目录，重复提交和成功任务
 重复运行不会再次执行；当前Core没有通用运行中取消合同，因此只支持排队取消，运行中会明确拒绝，中断恢复会
 标记失败而不自动重试。项目内Artifact校验与受限Checkpoint提交仍保持不变。这不代表完整Provider生产闭环、
-安装、MCP裁决或真实WorkBuddy验收已经通过。
+安装、W4普通用户验收或真实Provider闭环已经通过。
 
 模型配置分成两层：WorkBuddy主对话模型由WorkBuddy自身设置，本Adapter不保存或代理其模型凭据；视频、图片、
 语音等生产Provider来自Golden Key Tool Registry。`config inspect`会核验当前Registry真实存在的国内生态工具，

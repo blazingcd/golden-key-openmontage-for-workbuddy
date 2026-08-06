@@ -7,7 +7,7 @@
 ## 1. 当前结论
 
 当前仓库已经建立W1入口和W2直接调用/受限本地Tool入口，但尚未形成真实Provider生产闭环或
-真实WorkBuddy验收。v0.3.21导出合同、W1 Gate和W2离线专项已经证明：
+W4完整安装验收。v0.3.21导出合同、W1 Gate和W2离线专项/真实WorkBuddy入口对照已经证明：
 
 - authority为`direct_agent`且`nested_agent_host_allowed=false`；
 - 三个Agent Host/transport模块及三个对应合同测试不在导出包和当前工作树；
@@ -47,7 +47,7 @@ scripts/core_sync/
 
 ## 3. 运行时网络拦截
 
-W2已为首个本地执行入口建立单进程socket封锁夹具；W3继续扩展。若MCP决策为`omit`，同一门禁应用到CLI/Adapter：
+W2已为首个本地执行入口建立单进程socket封锁夹具；W3继续扩展。MCP已裁决为`optional`，CLI与MCP必须应用同一门禁：
 
 1. 清空所有 Provider 凭据，并设置测试专用环境变量表。
 2. 在进程启动前拦截 `socket.create_connection`、DNS、`requests`、`httpx`、OpenAI SDK 和 Node `fetch/http/https`。

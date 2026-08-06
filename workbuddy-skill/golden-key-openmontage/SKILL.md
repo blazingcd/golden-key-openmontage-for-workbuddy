@@ -18,6 +18,8 @@ Treat this package as Pre-Alpha. WorkBuddy is the only Agent; never start or emu
 
 ## Production contract
 
+The direct CLI is the canonical fallback. After the W2 real-client comparison, the local stdio MCP is an optional structured-tool adapter. When `golden-key-openmontage` MCP is enabled and healthy, WorkBuddy may use its `golden_key_*` tools instead of spelling the equivalent CLI command. Both entries call the same consumer functions and must preserve the same Pipeline, Stage Skill, Artifact, Reviewer, Checkpoint, task, cost, and network gates. Do not mix CLI and MCP retries for the same operation.
+
 1. Run `golden-key-workbuddy context --json` and `golden-key-workbuddy pipelines --json` to read the callable contracts. Only WorkBuddy selects the Pipeline from the user's request and grounded evidence:
    - `golden-key-brand-company`
    - `golden-key-lead-conversion`
@@ -41,5 +43,5 @@ Treat this package as Pre-Alpha. WorkBuddy is the only Agent; never start or emu
 - Do not bypass Stage Skills, Artifact validation, Reviewer, or Checkpoint gates.
 - Keep local Tool execution inside the CLI's socket-denial boundary; do not replace it with an ad-hoc Python import or network call.
 - Do not import, launch, or recreate `agent_host_authority`, `model_driven_agent_host`, or `openai_compatible_transport`.
-- The MCP decision is pending a real WorkBuddy comparison Gate. Do not require or invent an MCP server during the W2 direct-call baseline.
+- MCP is optional, local, and deterministic after the real WorkBuddy comparison Gate. Never treat it as a remote service, a second Agent, or a required replacement for the CLI fallback.
 - Do not claim installation readiness, real WorkBuddy acceptance, or `OFFLINE ADAPTER READY`.

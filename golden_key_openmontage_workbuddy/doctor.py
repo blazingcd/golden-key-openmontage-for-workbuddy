@@ -140,8 +140,10 @@ def build_doctor_report(
             "directories": {name: str(path) for name, path in directories.items()},
         },
         "mcp": {
-            "status": "decision_pending",
-            "role": "optional deterministic local execution adapter",
+            "status": "optional",
+            "role": "optional deterministic local stdio execution adapter",
+            "canonical_fallback": "golden-key-workbuddy CLI",
+            "real_workbuddy_comparison": "pass",
         },
         "claims": {
             "install_ready": False,
@@ -163,7 +165,7 @@ def format_doctor_report(report: dict[str, Any]) -> str:
         f"Python: {report['runtime']['python']['version']}",
         f"Node: {'available' if report['runtime']['node']['available'] else 'missing'}",
         f"FFmpeg: {'available' if report['runtime']['ffmpeg']['available'] else 'missing'}",
-        "MCP: decision pending; WorkBuddy remains the only Agent.",
+        "MCP: optional local stdio adapter; CLI remains the canonical fallback.",
     ]
     lines.extend(f"ERROR: {message}" for message in report["errors"])
     return "\n".join(lines)

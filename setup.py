@@ -20,6 +20,7 @@ setup(
     entry_points={
         "console_scripts": [
             "golden-key-workbuddy=golden_key_openmontage_workbuddy.cli:main",
+            "golden-key-workbuddy-mcp=golden_key_openmontage_workbuddy.mcp_server:main",
         ],
     },
 )

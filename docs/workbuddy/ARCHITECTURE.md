@@ -1,6 +1,6 @@
 # Golden Key OpenMontage for WorkBuddy：架构边界
 
-状态：`v0.3.21 BASELINE FROZEN / W2 DIRECT-CALL BASELINE ACTIVE`
+状态：`v0.3.21 BASELINE FROZEN / W2 MCP=OPTIONAL`
 
 更新日期：2026-08-06
 
@@ -84,7 +84,8 @@ W1～W4只修改WorkBuddy自有包、Skill、配置、测试、安装和文档�
      -> Golden Key Pipeline Manifest
      -> Stage Skill / Reviewer / Checkpoint
      -> WorkBuddy Skill
-     -> 本地确定性CLI（MCP是否加入由W2真实对比决定）
+     -> 本地确定性CLI（权威回退）
+        -> 可选本地stdio MCP（同一消费方函数的结构化工具层）
      -> 本地 WorkBuddy Callable Core
         -> Schema / Artifact / Tool Registry / 媒体工具
 ```
@@ -96,11 +97,12 @@ authority.invocation_model = direct_agent
 authority.nested_agent_host_allowed = false
 ```
 
-当前W2不发布活动`.workbuddy/mcp.json`。Skill与Callable Core是产品必选层；MCP不是远端服务，也不是
-第二个Agent，只可能作为本地确定性执行适配层。W2必须在真实WorkBuddy中比较Skill+CLI与Skill+stdio
-MCP两条路径，再裁决MCP为默认、可选或不交付。
+真实WorkBuddy 5.3.8对照Gate已经通过并裁决`MCP=optional`。Skill、CLI与Callable Core是产品必选层；
+MCP不是远端服务或第二个Agent，只是调用同一消费方函数的本地结构化工具层。它带来17个Schema工具、
+语义发现和免Shell参数拼接，但增加用户级配置、stdio进程和首次信任成本。W4打包前不发布活动
+`.workbuddy/mcp.json`；CLI始终可独立工作。
 
-无论裁决如何，任何Adapter/MCP都不得拥有第二套 Pipeline 选择器、Director、Reviewer、Checkpoint
+无论使用哪个入口，任何Adapter/MCP都不得拥有第二套 Pipeline 选择器、Director、Reviewer、Checkpoint
 协议或模型规划循环。WorkBuddy始终是唯一Agent。
 
 W1已建立环境命令，W2在同一消费方CLI上建立直接调用命令：

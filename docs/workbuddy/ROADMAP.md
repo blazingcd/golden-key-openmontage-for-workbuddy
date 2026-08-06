@@ -74,7 +74,8 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 状态：`IN PROGRESS`。直接调用基线已经完成权威上下文、Pipeline目录、项目生命周期、当前Stage合同、
 Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。API/Hybrid在网络前fail-closed；
 主对话模型/生产Provider配置分层、安全引用模板，以及本地Tool持久任务、幂等、排队取消、明确运行中
-不可取消和中断恢复语义已经完成；完整Provider授权执行与真实WorkBuddy/MCP对比仍待完成。
+不可取消和中断恢复语义已经完成；真实WorkBuddy CLI/MCP对照已通过并裁决`MCP=optional`。跨任务并发/
+超时策略与完整Provider授权执行仍待完成。
 
 ### 任务
 
@@ -86,15 +87,15 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - 实现当前Manifest/Stage允许范围内的确定性工具执行。首个本地纵向切片和持久长任务协议已完成；
   后续仅在单独授权下补Provider路径。
 - 不包含、调用或重新实现`model_driven_agent_host.py`、`openai_compatible_transport.py`或`agent_host_authority.py`。
-- 在真实WorkBuddy中比较`Skill+本地CLI`与`Skill+本地stdio MCP`的安装、Schema发现、长任务、恢复、
-  错误提示和权限成本，形成`default`、`optional`或`omit`裁决。
+- `DONE`：已在真实WorkBuddy 5.3.8中比较`Skill+本地CLI`与`Skill+本地stdio MCP`的安装、Schema发现、
+  任务失败语义和权限成本，裁决`MCP=optional`；证据见`W2-MCP-DECISION-2026-08-06.md`。
 - 已将WorkBuddy主对话模型配置与视频生产Provider配置分层；国内生态生产模型只报告Registry已注册工具，
   并区分厂商直连和第三方网关。WorkBuddy主模型的具体兼容端点仍以WorkBuddy真实支持面为准，不由Adapter伪造。
 
 ### 完成证据
 
 - WorkBuddy能够按Rule Zero选择Pipeline，任何执行适配层都不预选。
-- 若MCP被保留，其握手、工具发现和参数Schema通过；若裁决为`omit`，必须记录直接调用的等价证据。
+- 可选MCP握手、16个工具发现、参数Schema、正常调用和一次失败不重试已通过；CLI等价基线保留。
 - 提示明确展示当前状态、选择、推荐、成本/风险和下一步。
 
 ## W3：离线可靠性、安全和回归
@@ -123,7 +124,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 
 - 决策并实现Python、Node、FFmpeg等运行环境交付方式。
 - Windows优先安装、升级和卸载。
-- 仅在W2裁决保留MCP时生成项目级`.workbuddy/mcp.json`。
+- 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。
 - 打包可导入Skill和完整Golden Key核心。
 - 中文快速开始、Prompt Gallery和故障排查。
 - 在未预装开发环境的普通Windows用户场景验证安装。

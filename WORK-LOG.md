@@ -456,3 +456,52 @@
 - 未调用真实/付费Provider，未修改Golden Key SaaS或Golden Key私有Core仓库。
 - 仍未完成真实WorkBuddy的Skill+CLI/Skill+stdio MCP对比；Node/子进程网络继承、跨任务并发和超时属于
   后续W2/W3 Gate，因此不能声明安装可用、MCP已裁决或`OFFLINE ADAPTER READY`。
+
+## 2026-08-06：真实WorkBuddy CLI/MCP对照与`MCP=optional`裁决
+
+### 实机CLI基线
+
+- 核验官方WorkBuddy `5.3.8`已安装、登录，任务使用项目仓库工作区和默认权限。
+- 生成只含`SKILL.md`的本地导入ZIP，SHA-256=
+  `4B40A3A614388E32F9FAA3525A1C94E3E7E72BE993F75FC39FC7BD665619EAA3`；Skill成功安装、启用。
+- WorkBuddy自身Skill安全检测超过界面预计时间未返回；在包内容和哈希已独立核验后手动继续安装，未开启
+  “非高风险自动安装”。
+- 真实任务加载`golden-key-openmontage` Skill、读取`AGENT_GUIDE.md`，运行本地`doctor/context`；
+  两条命令退出码均为0，authority=`direct_agent`、nested Host=`false`、四Pipeline完整，Provider调用0。
+- WorkBuddy Host为首次实质任务自动写入未跟踪`.workbuddy/memory`；该客户端副作用已清理，没有进入发布候选。
+
+### stdio MCP候选与真实对照
+
+- 新增无第三方MCP依赖的消费方stdio服务器与`golden-key-workbuddy-mcp`入口；首轮把现有16个确定性消费方
+  函数暴露为JSON Schema工具，不复制Pipeline选择、Reviewer、Checkpoint、任务状态或重试逻辑。
+- 协议专项覆盖握手、工具发现、结构化context、参数拒绝和任务失败不重试，首轮`5 passed`。
+- WorkBuddy用户级配置成功启动D盘虚拟环境中的stdio服务器；首次信任后界面绿色在线，显示`1启用`、
+  `16/16个工具已启用`。仓库没有创建活动`.workbuddy/mcp.json`。
+- 对照输出暴露Skill提及但首轮MCP遗漏的直接`tool_execute`包装；随后补齐同一消费方函数，最终MCP合同为
+  17个Schema工具，长任务仍优先使用持久`task`入口。
+- 第二个真实任务先读取Guide和Skill，不运行Shell，直接发现并调用`golden_key_context/pipelines`；两项均
+  `status=pass`，四Pipeline完整，authority合同正确，Provider调用0，且未写workspace memory。
+- 失败路径只调用一次`golden_key_task_status`；非法ID在校验阶段返回`status=fail`，Tool/Provider/网络调用0，
+  WorkBuddy未重试。服务器本地确认`isError=true`，但WorkBuddy 5.3.8模型侧未稳定暴露该传输层字段；
+  因此业务`status/errors`继续作为强制错误合同。
+
+### Gate裁决与边界
+
+- W2真实对照Gate=`PASS`，MCP裁决=`optional`。
+- CLI继续作为必选入口和权威回退；MCP只增加结构化Schema发现、语义工具选择和免Shell参数拼接。
+- MCP不是远端服务或第二个Agent；它与CLI共用相同Core、任务、网络、成本、Artifact和Checkpoint门禁。
+- W4打包前不发布活动仓库配置；安装器后续必须支持用户不启用、首次信任、禁用和卸载。
+- 本轮未调用真实/付费Provider，未修改v0.3.21 managed Core、Golden Key SaaS或私有Core仓库。
+- 这不是完整安装/普通用户验收或`OFFLINE ADAPTER READY`；下一步为跨任务并发/超时和W3离线矩阵。
+
+### 最终回归与公开Gate
+
+- WorkBuddy专项=`66 passed`；完整套件=`1126 passed, 10 skipped, 1 subtest passed`。
+- `python -S` Gate=`PASS`，Skill格式=`Skill is valid!`，Python编译与`git diff --check`通过。
+- W0第一次按fail-closed拒绝pytest/compileall生成在managed scope中的`__pycache__`额外文件；只清理精确列出的
+  可重建缓存后，以相同ZIP、lock和候选重跑。
+- 最终W0公开性审计=`PASS`：Release/Pipeline/运行时/公开lineage/风险扫描/回归全部通过，1566个Core文件
+  精确匹配、17个候选文件，snapshot SHA=
+  `5b1bd5dbb401dad6cf1e313a071c6f3dd481b85af449fd4217ce20fd1a9a4064`。
+- 审计证据目录：`D:/WorkBuddyData/Temp/w2-mcp-optional-publication-audit-20260806-retry`；
+  `private_core_history_scanned=false`且`private_core_history_in_candidate=false`。

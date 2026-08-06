@@ -49,7 +49,12 @@ def test_doctor_reports_locked_core_and_four_pipelines(tmp_path: Path) -> None:
         "golden-key-subject-ip",
     ]
     assert report["pipelines"]["expected_count"] == 4
-    assert report["mcp"]["status"] == "decision_pending"
+    assert report["mcp"] == {
+        "status": "optional",
+        "role": "optional deterministic local stdio execution adapter",
+        "canonical_fallback": "golden-key-workbuddy CLI",
+        "real_workbuddy_comparison": "pass",
+    }
     assert report["claims"]["offline_adapter_ready"] is False
 
 
@@ -137,7 +142,9 @@ def test_distribution_has_a_unique_workbuddy_identity_and_console_entrypoint() -
 
     assert name == "golden-key-openmontage-workbuddy"
     assert version == "0.1.0a0"
-    assert "golden-key-workbuddy" in (ROOT / "setup.py").read_text(encoding="utf-8")
+    setup_text = (ROOT / "setup.py").read_text(encoding="utf-8")
+    assert "golden-key-workbuddy" in setup_text
+    assert "golden-key-workbuddy-mcp" in setup_text
 
 
 def test_gate_checks_the_public_w1_runtime_boundary(tmp_path: Path) -> None:
@@ -167,6 +174,7 @@ def test_gate_checks_the_public_w1_runtime_boundary(tmp_path: Path) -> None:
     assert report["skill"]["status"] == "present"
     assert report["forbidden_paths"]["present"] == []
     assert report["mcp"]["active_config_present"] is False
+    assert report["mcp"]["decision_status"] == "optional"
     assert report["provider_calls_attempted"] == 0
 
 

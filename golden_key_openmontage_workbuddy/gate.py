@@ -71,7 +71,9 @@ def build_gate_report(repo_root: Path, data_root: Path) -> dict[str, Any]:
     if not skill_path.is_file():
         errors.append("WorkBuddy Skill package is missing")
     if active_mcp_path.exists():
-        errors.append("active MCP configuration is forbidden before the W2 decision Gate")
+        errors.append(
+            "repository-level active MCP configuration is reserved for W4 packaging"
+        )
     if isolation_violations:
         errors.append("WorkBuddy runtime violates the direct-agent isolation boundary")
 
@@ -88,7 +90,8 @@ def build_gate_report(repo_root: Path, data_root: Path) -> dict[str, Any]:
         },
         "mcp": {
             "active_config_present": active_mcp_path.exists(),
-            "decision_status": "pending",
+            "decision_status": "optional",
+            "canonical_fallback": "golden-key-workbuddy CLI",
         },
         "static_isolation": {"violations": isolation_violations},
         "provider_calls_attempted": 0,
@@ -102,7 +105,7 @@ def format_gate_report(report: dict[str, Any]) -> str:
         f"Doctor: {report['doctor_status']}",
         f"Skill: {report['skill']['status']}",
         f"Forbidden paths present: {len(report['forbidden_paths']['present'])}",
-        "MCP: decision pending; no active configuration.",
+        "MCP: optional; no repository-level active configuration before W4 packaging.",
     ]
     lines.extend(f"ERROR: {message}" for message in report["errors"])
     return "\n".join(lines)

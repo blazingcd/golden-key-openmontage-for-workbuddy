@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-06 16:25 +08:00
+更新时间：2026-08-06 19:30 +08:00
 
 ## 当前里程碑
 
@@ -41,7 +41,7 @@
 - W1建立独立Python发行`golden-key-openmontage-workbuddy==0.1.0a0`和`golden-key-workbuddy`命令。
 - `doctor`可验证v0.3.21合同、direct-agent authority、四Pipeline、Python/Node/FFmpeg并建立D盘目录。
 - `gate`持续拒绝六个禁入路径、嵌套Agent Host导入和W2裁决前的活动`.workbuddy/mcp.json`。
-- WorkBuddy Skill与`.workbuddy`骨架已建立；当前明确为Skill-first，MCP状态为`decision_pending`。
+- WorkBuddy Skill与`.workbuddy`骨架已建立；当前明确为Skill-first，MCP裁决为`optional`，CLI为权威回退。
 - 维护者环境已完成固定Release `sync-release`幂等复核；公开CI不依赖私有Core凭据，执行W1 Gate和完整测试。
 - 本轮真实D盘验证：1566文件、0改动、0删除；Skill校验通过；contracts `716 passed, 7 skipped`；
   tools `284 passed, 1 subtest passed`；WorkBuddy `27 passed`；W1增量公开审计=`PASS`。
@@ -80,6 +80,16 @@
   Hybrid/API仍在状态探测和任务落盘前拒绝。任务/Skill专项`13 passed`，完整WorkBuddy专项`61 passed`。
 - 本增量W0公开性审计=`PASS`：1566个Core文件精确匹配，15个候选文件与managed Core重叠为0；
   Release、四Pipeline/44 Skill、运行时隔离、公开lineage、风险扫描和回归全部通过，private Core历史未扫描且不在候选中。
+- 真实WorkBuddy 5.3.8离线对照已通过：本地Skill安装并启用；Skill+CLI读取Guide并运行`doctor/context`，
+  两条命令退出码0；Skill+stdio MCP首轮16/16工具绿色在线，`context/pipelines`均`pass`；最终等价面补齐
+  `golden_key_tool_execute`后固定为17个Schema工具。
+- MCP失败路径只调用一次非法task status，未重试，业务`status=fail`且Tool/Provider/网络调用均为0；
+  WorkBuddy模型侧未稳定呈现MCP传输层`isError`，因此业务`status/errors`继续作为强制错误合同。
+- W2 MCP Gate=`PASS / optional`：CLI是必选和权威回退；stdio MCP只作为本地结构化Schema/工具发现增强，
+  不复制业务逻辑，不是远端服务或第二个Agent。完整W4安装/普通用户验收仍未通过。
+- 本增量专项=`66 passed`，完整回归=`1126 passed, 10 skipped, 1 subtest passed`；最终W0公开性审计=`PASS`，
+  1566个Core文件精确匹配、17个候选文件、snapshot SHA=
+  `5b1bd5dbb401dad6cf1e313a071c6f3dd481b85af449fd4217ce20fd1a9a4064`，private Core历史未扫描且不在候选中。
 
 ## 历史记录（不再是当前Gate）
 
@@ -89,22 +99,23 @@
 
 ## 下一步
 
-1. 提交并推送本增量，复核公开CI。
-2. 在真实WorkBuddy中比较Skill+CLI与Skill+stdio MCP，裁决MCP为默认、可选或省略。
-3. MCP裁决后补剩余跨任务并发/超时策略，再进入W3完整离线可靠性Gate。
+1. 提交并推送MCP=`optional`增量，复核公开CI。
+2. 补剩余跨任务并发/超时策略，再进入W3完整离线可靠性Gate。
+3. W4实现可选MCP用户级配置、信任提示和可禁用/卸载路径，不在仓库提前发布活动配置。
 
 ## 当前允许声明
 
 - v0.3.21 WorkBuddy Callable Core已同步并通过本地W0和回归。
 - 首个公开基线已发布，状态为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
 - W2 Skill-first项目/Artifact/Checkpoint、受限本地Tool和持久长任务基线已通过专项测试。
+- 真实WorkBuddy 5.3.8中的离线Skill+CLI与Skill+stdio MCP对照已通过，MCP裁决为`optional`。
 
 当前不允许声明：
 
 - 已经可以安装；
 - W1 Skill骨架已经是完整可用的WorkBuddy生产Skill；
 - 真实或付费Provider生产执行闭环已经完成；
-- MCP已被选为必选、已可用或真实WorkBuddy验收通过；
+- 可选MCP或完整发行版已经达到普通用户安装可用；
 - `OFFLINE ADAPTER READY`；
 - 真实Provider成片通过。
 
@@ -114,5 +125,6 @@
 - `docs/workbuddy/CORE-SYNC-POLICY.md`
 - `docs/workbuddy/LOCAL-STORAGE-POLICY.md`
 - `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`
+- `docs/workbuddy/W2-MCP-DECISION-2026-08-06.md`
 - `docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-v0.3.21-2026-08-05.md`
 - `NEXT-CONVERSATION-PROMPT-2026-08-06-W2.md`

@@ -29,6 +29,9 @@
 - W2本地Tool持久任务已完成`task submit/status/run/cancel/recover`：状态位于D盘`Jobs`，输入hash与稳定ID
   防篡改/防重复执行；queued可取消，running因Core无通用取消合同而明确不可安全取消；中断恢复只标记failed、
   不自动重试。local Tool执行期间封锁socket，API/Hybrid在任务落盘和网络前拒绝。
+- 真实WorkBuddy 5.3.8中的Skill+CLI与Skill+stdio MCP离线对照已通过；MCP裁决为`optional`，CLI为权威回退。
+  MCP最终提供17个结构化Schema工具和免Shell调用，但增加用户级配置、stdio进程和首次信任；WorkBuddy模型侧未稳定
+  呈现传输层`isError`，业务`status/errors`仍是强制错误合同。
 - v0.3.21 managed Core快照只读；W1～W4只改消费方层。Core接口变化必须通过新Release合同迁移。
 
 ## W2目标
@@ -37,10 +40,10 @@
 2. 保持现有权威上下文、Pipeline清单、项目状态、Artifact Schema和Checkpoint接口稳定。
 3. WorkBuddy负责选择四Pipeline并读取当前Stage Skill；Adapter不得选择Pipeline、创作、Reviewer判断或启动第二个模型Agent。
 4. 保持已完成的主对话模型/生产Provider分层；不得把第三方网关误报为国内直连，也不得在Adapter中伪造WorkBuddy模型端点。
-5. 下一增量是在真实WorkBuddy中对比Skill+CLI与Skill+本地stdio MCP的安装、Schema发现、长任务、恢复、错误和权限，
-   形成MCP=`default|optional|omit`裁决；裁决前不得创建活动`.workbuddy/mcp.json`。
-6. 对比时必须使用现有任务语义作为共同基线，不允许MCP偷偷增加第二套Pipeline选择、任务重试或虚假取消。
-7. 裁决后完成跨任务并发/超时策略，并保持v0.3.21 managed Core只读；若Core接口变化，停止消费方开发并切换到新Release迁移Gate。
+5. 按`MCP=optional`保持CLI和MCP共用现有任务语义，不允许MCP增加第二套Pipeline选择、任务重试或虚假取消；
+   活动配置留到W4安装器，并必须支持不启用、禁用和卸载。
+6. 下一增量完成跨任务并发/超时策略，再进入W3离线可靠性矩阵。
+7. 保持v0.3.21 managed Core只读；若Core接口变化，停止消费方开发并切换到新Release迁移Gate。
 
 ## 发布红线
 

@@ -396,3 +396,30 @@
   `private_core_history_scanned=false`且`private_core_history_in_candidate=false`；最终候选摘要保存在D盘审计证据目录。
 - W2仍为`IN PROGRESS`：真实Provider授权路径、主对话模型/视频Provider配置分层、长任务可靠性和
   真实WorkBuddy的CLI/MCP对比尚未完成，不能声明安装可用或`OFFLINE ADAPTER READY`。
+
+## 2026-08-06：W2主对话模型与生产Provider配置分层
+
+### TDD与实现
+
+- 先新增CLI/Skill公共合同负测，确认`config inspect/template`原本不存在，再实现消费方模块；未修改v0.3.21 managed Core。
+- `config inspect`明确WorkBuddy conversation model由WorkBuddy Host配置，Adapter不定义或代理该模型、
+  不读取其凭据，也不允许nested Agent Host；Golden Key生产Provider继续由Tool Registry管理。
+- 国内生态生产能力只列出Registry实际存在且合同匹配的工具：DashScope、豆包、火山即梦、可灵官方标为
+  `direct_vendor_api`；Seedance和MiniMax当前Registry实现标为`third_party_gateway`。
+- Registry核验只读取工具类的provider/runtime/network/capability合同，不执行`get_status()`、`execute()`或Provider调用。
+- `config template`只在`D:/WorkBuddyData/Config/golden-key-production-providers.json`写环境变量名称引用；
+  不写密钥值，同内容重复执行幂等，已被用户修改的文件fail-closed且不覆盖。
+- WorkBuddy Skill、项目README、架构、Roadmap、状态和下一轮Prompt同步更新；MCP仍为`decision_pending`。
+
+### 当前验证与边界
+
+- 新模型/Provider配置与Skill专项=`7 passed`；完整WorkBuddy专项=`51 passed`。
+- socket封锁和伪密钥负测证明输出不泄漏密钥值，网络尝试0、Provider调用0。
+- 完整套件=`1111 passed, 10 skipped, 1 subtest passed`；W1 `python -S` Gate=`PASS`；
+  Skill Creator校验=`Skill is valid!`，Python编译检查通过。
+- W0增量公开性审计=`PASS`：1566个Core文件匹配，候选12个文件，Release/Pipeline/运行时/公开lineage/
+  秘密扫描/回归全部通过；snapshot SHA=`d4e9c91ae51035e453fc0f2141d749e8bc29f361a43beea6e32463dca3911204`。
+- 审计证据：`D:/WorkBuddyData/Temp/w2-model-provider-config-publication-audit`；
+  `private_core_history_scanned=false`且`private_core_history_in_candidate=false`。
+- 尚未配置或调用任何真实/付费Provider；尚未声称WorkBuddy支持某个具体主模型兼容端点。
+- W2仍为`IN PROGRESS`；下一增量是本地Tool长任务状态、幂等、取消语义和更完整网络/嵌套模型拦截。

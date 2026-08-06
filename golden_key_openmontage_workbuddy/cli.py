@@ -136,6 +136,20 @@ def _parser() -> argparse.ArgumentParser:
         help="A Layer 3 Skill WorkBuddy read before invoking the tool (repeatable).",
     )
     tool_execute.add_argument("--json", action="store_true", dest="as_json")
+
+    config = subparsers.add_parser(
+        "config", help="Inspect the model boundary or create a safe Provider template."
+    )
+    config_commands = config.add_subparsers(dest="config_command", required=True)
+    config_inspect = config_commands.add_parser("inspect")
+    config_inspect.add_argument("--repo-root", type=Path, default=Path.cwd())
+    config_inspect.add_argument("--json", action="store_true", dest="as_json")
+    config_template = config_commands.add_parser("template")
+    config_template.add_argument("--repo-root", type=Path, default=Path.cwd())
+    config_template.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    config_template.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -272,6 +286,27 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "status": "fail",
                 "tool_calls_attempted": 0,
                 "provider_calls_attempted": 0,
+                "errors": [str(exc)],
+            }
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["status"] == "pass" else 1
+    if args.command == "config":
+        from .model_config import (
+            ModelProviderConfigError,
+            build_model_provider_report,
+            write_safe_provider_template,
+        )
+
+        try:
+            if args.config_command == "inspect":
+                report = build_model_provider_report(args.repo_root)
+            else:
+                report = write_safe_provider_template(args.repo_root, args.data_root)
+        except ModelProviderConfigError as exc:
+            report = {
+                "status": "fail",
+                "provider_calls_attempted": 0,
+                "network_calls_attempted": 0,
                 "errors": [str(exc)],
             }
         print(json.dumps(report, ensure_ascii=False, indent=2))

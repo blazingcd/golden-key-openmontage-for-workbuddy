@@ -50,6 +50,9 @@ python -m golden_key_openmontage_workbuddy doctor --data-root D:\WorkBuddyData -
 python -m golden_key_openmontage_workbuddy gate --data-root D:\WorkBuddyData
 python -m golden_key_openmontage_workbuddy context --json
 python -m golden_key_openmontage_workbuddy pipelines --json
+python -m golden_key_openmontage_workbuddy config inspect --json
+# 只生成环境变量名称引用，不写入任何密钥值：
+python -m golden_key_openmontage_workbuddy config template --data-root D:\WorkBuddyData --json
 python -m golden_key_openmontage_workbuddy project create --project-id demo --title "Demo" --pipeline golden-key-product-marketing --json
 python -m golden_key_openmontage_workbuddy project status --project-id demo --json
 python -m golden_key_openmontage_workbuddy stage inspect --project-id demo --json
@@ -61,6 +64,10 @@ python -m golden_key_openmontage_workbuddy tool execute --project-id demo --name
 W2当前只允许Manifest当前Stage列出的本地、零网络、零成本工具；API/Hybrid和声明需要网络的工具会在状态探测、
 执行和网络访问前拒绝。项目内Artifact校验与受限Checkpoint提交仍保持不变。这不代表完整Provider生产闭环、
 安装、MCP裁决或真实WorkBuddy验收已经通过。
+
+模型配置分成两层：WorkBuddy主对话模型由WorkBuddy自身设置，本Adapter不保存或代理其模型凭据；视频、图片、
+语音等生产Provider来自Golden Key Tool Registry。`config inspect`会核验当前Registry真实存在的国内生态工具，
+并明确区分厂商直连与第三方网关；它不会探测凭据状态、调用Provider或访问网络。
 本地目录规则见[`docs/workbuddy/LOCAL-STORAGE-POLICY.md`](docs/workbuddy/LOCAL-STORAGE-POLICY.md)。
 
 ## Golden Key Edition

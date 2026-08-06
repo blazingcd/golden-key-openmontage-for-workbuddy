@@ -109,9 +109,16 @@ W1已建立环境命令，W2在同一消费方CLI上建立直接调用命令：
 golden-key-workbuddy doctor
 golden-key-workbuddy gate
 golden-key-workbuddy context / pipelines
+golden-key-workbuddy config inspect / template
 golden-key-workbuddy project / stage / artifact / checkpoint
 golden-key-workbuddy tool list / execute
 ```
+
+模型配置严格分层：WorkBuddy主对话模型属于WorkBuddy Host，本Adapter不定义兼容端点、不读取该模型的凭据，
+也不启动嵌套模型Agent；生产Provider属于Golden Key Tool Registry。`config inspect`只核验Registry类合同，
+不调用`get_status()`、Provider或网络，并把DashScope、豆包、火山即梦、可灵官方的厂商直连与当前通过
+fal.ai/Replicate接入的Seedance、MiniMax第三方网关明确分开。`config template`只在D盘消费方目录写入
+环境变量名称引用，不包含密钥值，且拒绝覆盖用户修改后的文件。
 
 `tool list`只解析项目已绑定Pipeline的当前Stage，并按Manifest原顺序返回允许工具、输入Schema和Layer 3 Skill；
 不选择Pipeline或Provider。`tool execute`要求请求JSON位于项目`artifacts/`内、所有Schema声明路径位于项目目录、

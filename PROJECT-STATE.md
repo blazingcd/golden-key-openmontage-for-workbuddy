@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-06 14:52 +08:00
+更新时间：2026-08-06 15:24 +08:00
 
 ## 当前里程碑
 
@@ -56,13 +56,22 @@
 - API/Hybrid及声明需要网络的工具在状态探测和`execute()`前fail-closed；`video_selector`负测在socket封锁下
   网络尝试、Tool调用和Provider调用均为0。
 - 原生`scene_detect`已在项目内真实执行：Tool调用1次、Provider调用0次、成本0，输出场景JSON通过路径复核。
-- 当前回归：WorkBuddy `47 passed`；contracts `716 passed, 7 skipped`；tools `284 passed, 1 subtest passed`；
-  完整套件`1107 passed, 10 skipped, 1 subtest passed`；W1 `python -S` Gate=`PASS`；Skill格式校验=`Skill is valid!`。
+- 当前回归：WorkBuddy `51 passed`；contracts `716 passed, 7 skipped`；tools `284 passed, 1 subtest passed`；
+  完整套件`1111 passed, 10 skipped, 1 subtest passed`；W1 `python -S` Gate=`PASS`；Skill格式校验=`Skill is valid!`。
 - W2 Tool增量公开审计=`PASS`：1566个Core文件匹配，候选12个文件，公开性/lineage/运行时/回归全通过；
   private Core历史未扫描且不在候选中；最终候选摘要保存在D盘审计证据目录并在发布报告中给出。
 - 用户提供的CI `31077036248`属于提交`facc548`的历史失败；顶层W2依赖问题已由`e227660`修复，
   后续CI `31077374841`在同一`main`上完整通过。
 - W1～W4明确只修改消费方层；v0.3.21 managed Core快照保持只读，Core变更只能通过新Release合同迁移。
+- W2模型配置分层已建立：`config inspect`明确WorkBuddy主对话模型由WorkBuddy Host管理，生产Provider由
+  Golden Key Tool Registry管理；Adapter不保存或代理主模型凭据，不允许嵌套Agent Host。
+- 国内生态生产能力只报告Registry已核验的6组Provider：DashScope、豆包、火山即梦、可灵官方为厂商直连；
+  Seedance、MiniMax当前实现明确标为第三方网关，不把模型品牌误报为国内直连。
+- `config template`在`D:/WorkBuddyData/Config`生成只含环境变量名称的消费方模板；密钥值不读取到输出、
+  不落盘，重复生成幂等，用户修改后的文件拒绝覆盖。专项`51 passed`，socket封锁下网络/Provider调用均为0。
+- 本增量W0公开性审计=`PASS`：Release/Pipeline/运行时/公开lineage/候选风险/回归全部通过，候选12个文件，
+  snapshot SHA=`d4e9c91ae51035e453fc0f2141d749e8bc29f361a43beea6e32463dca3911204`；证据位于
+  `D:/WorkBuddyData/Temp/w2-model-provider-config-publication-audit`，private Core历史未扫描且不在候选中。
 
 ## 历史记录（不再是当前Gate）
 
@@ -72,10 +81,9 @@
 
 ## 下一步
 
-1. 分离WorkBuddy主对话模型与视频生产Provider配置，按真实支持面提供国内模型配置体验。
-2. 为本地Tool执行补长任务状态、幂等、取消/不可取消和完整网络/嵌套模型拦截。
-3. 在真实WorkBuddy中比较Skill+CLI与Skill+stdio MCP，裁决MCP为默认、可选或省略。
-4. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
+1. 为本地Tool执行补长任务状态、幂等、取消/不可取消和完整网络/嵌套模型拦截。
+2. 在真实WorkBuddy中比较Skill+CLI与Skill+stdio MCP，裁决MCP为默认、可选或省略。
+3. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
 
 ## 当前允许声明
 

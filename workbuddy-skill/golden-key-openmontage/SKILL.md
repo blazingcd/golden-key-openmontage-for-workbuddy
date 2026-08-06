@@ -12,7 +12,9 @@ Treat this package as Pre-Alpha. WorkBuddy is the only Agent; never start or emu
 1. Locate the checked-out Golden Key OpenMontage for WorkBuddy repository.
 2. Run `golden-key-workbuddy doctor` from that repository. If the command is not installed yet, run `python -m golden_key_openmontage_workbuddy doctor`.
 3. Read `AGENT_GUIDE.md` before production and obey Rule Zero.
-4. Report missing local runtimes and Provider configuration without silently changing the requested production path.
+4. Run `golden-key-workbuddy config inspect --json`. Keep the WorkBuddy conversation model separate from every Golden Key production Provider: WorkBuddy owns its conversation-model configuration, while the adapter only reports Tool Registry-backed production paths.
+5. When a user wants a credential reference file, run `golden-key-workbuddy config template`. It writes a consumer-owned template under `D:/WorkBuddyData/Config`, records environment-variable names only, and never stores credential values.
+6. Report missing local runtimes and production Provider configuration without silently changing the requested production path. A China-ecosystem model reached through a third-party gateway is not a direct domestic Provider path.
 
 ## Production contract
 

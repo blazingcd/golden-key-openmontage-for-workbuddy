@@ -53,6 +53,8 @@ def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
         "golden-key-workbuddy stage inspect",
         "golden-key-workbuddy tool list",
         "golden-key-workbuddy tool execute",
+        "golden-key-workbuddy config inspect",
+        "golden-key-workbuddy config template",
         "golden-key-workbuddy artifact validate",
         "golden-key-workbuddy checkpoint submit",
     ):
@@ -61,3 +63,5 @@ def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
     assert "inside the project's `artifacts/` directory" in body
     assert "--ack-agent-skill" in body
     assert "API or Hybrid" in body
+    assert "WorkBuddy conversation model" in body
+    assert "production Provider" in body

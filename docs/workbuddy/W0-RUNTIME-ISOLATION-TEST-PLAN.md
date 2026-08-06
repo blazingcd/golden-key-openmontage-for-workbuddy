@@ -1,6 +1,6 @@
 # WorkBuddy 运行时隔离验证方案
 
-状态：`v0.3.21 DIRECT-AGENT BASELINE / W2 LOCAL TOOL PARTIAL PASS`
+状态：`v0.3.21 DIRECT-AGENT BASELINE / W2 LOCAL TASK GATE PASS / W3 MATRIX PENDING`
 
 日期：2026-08-06
 
@@ -18,7 +18,7 @@ W4完整安装验收。v0.3.21导出合同、W1 Gate和W2离线专项/真实Work
 
 W0/W1静态边界为`PASS`，W2纯本地Tool与持久任务纵向切片为`PARTIAL PASS`。当前socket负测覆盖Python
 DNS/连接/数据报入口、误声明local Tool和Hybrid selector前置拒绝；任务状态、幂等、queued取消、running明确
-不可取消和中断恢复已经通过。Node网络、长任务子进程继承边界和SaaS仓库不可访问等完整矩阵仍属于W3，
+不可取消、中断恢复、跨任务并发1、可观测超时和遗留执行槽释放已经通过。Node网络、长任务子进程继承边界和SaaS仓库不可访问等完整矩阵仍属于W3，
 完成前不能形成最终离线隔离结论。
 
 ## 2. 静态依赖门禁
@@ -87,6 +87,6 @@ WorkBuddy Agent负责理解、Pipeline选择和Stage创作；CLI或MCP只能返�
 | SaaS Worker 隔离 | 架构和路径规则已冻结 | SaaS 仓库不可访问时离线流程仍通过 |
 | 嵌套模型调用拦截 | authority已冻结；W2入口无模型调用参数或导入 | W3 SDK/进程spy调用数为0 |
 | 外网/Provider 拦截 | `PARTIAL PASS`：Python socket/DNS封锁，误声明local与Hybrid负测均在真实网络前拒绝 | 补Node/子进程继承拦截后外网调用数仍为0 |
-| 本地确定性能力 | 项目、Schema、Checkpoint、Tool allowlist、本地执行、持久任务、幂等、状态/取消/恢复已通过 | 补跨任务并发/超时；保留MCP时另加握手与同语义验证 |
+| 本地确定性能力 | 项目、Schema、Checkpoint、Tool allowlist、本地执行、持久任务、幂等、状态/取消/恢复、跨任务并发1和可观测超时已通过 | W3继续验证进程/子进程边界；MCP握手和同任务函数语义已通过 |
 
 任何一项失败都阻止 `OFFLINE ADAPTER READY`。真实 WorkBuddy 与真实 Provider 验收仍是后续、逐次授权的独立 Gate。

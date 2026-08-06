@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import re
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -23,10 +24,54 @@ from .runtime import (
 
 TASK_ID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 TERMINAL_TASK_STATES = {"succeeded", "failed", "cancelled"}
+EXECUTION_SLOT_FILE = ".execution.lock"
+DEFAULT_TASK_TIMEOUT_SECONDS = 3600.0
+MAX_TASK_TIMEOUT_SECONDS = 86400.0
+TIMEOUT_ENFORCEMENT = "observe_only_no_forced_termination"
 
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _validated_timeout_seconds(value: Any) -> float:
+    try:
+        timeout_seconds = float(value)
+    except (TypeError, ValueError) as exc:
+        raise RuntimeContractError("timeout_seconds must be a number") from exc
+    if not math.isfinite(timeout_seconds) or not (
+        0 < timeout_seconds <= MAX_TASK_TIMEOUT_SECONDS
+    ):
+        raise RuntimeContractError(
+            f"timeout_seconds must be greater than 0 and at most {MAX_TASK_TIMEOUT_SECONDS:g}"
+        )
+    return timeout_seconds
+
+
+def _task_timeout_exceeded(task: dict[str, Any]) -> bool:
+    deadline = task.get("deadline_at")
+    if deadline is None:
+        return False
+    if not isinstance(deadline, str):
+        raise RuntimeContractError("persisted task deadline_at must be an ISO timestamp")
+    try:
+        deadline_at = datetime.fromisoformat(deadline)
+    except ValueError as exc:
+        raise RuntimeContractError(
+            "persisted task deadline_at must be an ISO timestamp"
+        ) from exc
+    if deadline_at.tzinfo is None:
+        raise RuntimeContractError("persisted task deadline_at must include a timezone")
+    completed_at = task.get("completed_at")
+    observed_at = datetime.now(timezone.utc)
+    if isinstance(completed_at, str):
+        try:
+            observed_at = datetime.fromisoformat(completed_at)
+        except ValueError as exc:
+            raise RuntimeContractError(
+                "persisted task completed_at must be an ISO timestamp"
+            ) from exc
+    return observed_at > deadline_at
 
 
 def _write_new_json(path: Path, payload: dict[str, Any]) -> bool:
@@ -67,6 +112,44 @@ def _exclusive_task_operation(task_path: Path):
         yield
     finally:
         lock_path.unlink(missing_ok=True)
+
+
+@contextmanager
+def _exclusive_execution_slot(data_root: Path, task: dict[str, Any]):
+    """Allow at most one local Tool execution for a WorkBuddy data root."""
+
+    lock_path = Path(data_root).resolve() / "Jobs" / EXECUTION_SLOT_FILE
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    owner = {
+        "pid": os.getpid(),
+        "project_id": task["project_id"],
+        "task_id": task["task_id"],
+        "created_at": _utc_now(),
+    }
+    try:
+        with lock_path.open("x", encoding="utf-8", newline="\n") as handle:
+            json.dump(owner, handle, ensure_ascii=False)
+            handle.write("\n")
+    except FileExistsError as exc:
+        try:
+            active_owner = json.loads(lock_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            active_owner = {}
+        owner_task = active_owner.get("task_id") or "unknown"
+        owner_project = active_owner.get("project_id") or "unknown"
+        raise RuntimeContractError(
+            "cross-task concurrency limit of 1 reached; "
+            f"task {owner_task} in project {owner_project} owns the execution slot"
+        ) from exc
+    try:
+        yield
+    finally:
+        try:
+            persisted_owner = json.loads(lock_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            persisted_owner = None
+        if persisted_owner == owner:
+            lock_path.unlink(missing_ok=True)
 
 
 def _read_task(path: Path) -> dict[str, Any]:
@@ -155,6 +238,34 @@ def _task_activity(task_path: Path, task: dict[str, Any]) -> tuple[bool, bool]:
     return active, not active
 
 
+def _release_interrupted_execution_slot(
+    data_root: Path, task: dict[str, Any]
+) -> bool:
+    lock_path = Path(data_root).resolve() / "Jobs" / EXECUTION_SLOT_FILE
+    if not lock_path.is_file():
+        return False
+    try:
+        owner = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeContractError(
+            "persisted execution slot is invalid; refusing automatic deletion"
+        ) from exc
+    if not isinstance(owner, dict):
+        raise RuntimeContractError(
+            "persisted execution slot is invalid; refusing automatic deletion"
+        )
+    if owner.get("project_id") != task.get("project_id") or owner.get(
+        "task_id"
+    ) != task.get("task_id"):
+        return False
+    if _process_is_alive(owner.get("pid")):
+        raise RuntimeContractError(
+            "execution slot owner is still active; recovery is not allowed"
+        )
+    lock_path.unlink()
+    return True
+
+
 def get_tool_task_status(
     data_root: Path, *, project_id: str, task_id: str
 ) -> dict[str, Any]:
@@ -166,8 +277,11 @@ def get_tool_task_status(
         raise RuntimeContractError("persisted task identity does not match its path")
     execution_active, recovery_required = _task_activity(task_path, task)
     state = task.get("state")
+    timeout_exceeded = _task_timeout_exceeded(task)
     if recovery_required:
         recommended_action = "recover_interrupted_task"
+    elif execution_active and timeout_exceeded:
+        recommended_action = "wait_for_non_cancelable_execution"
     elif execution_active:
         recommended_action = "wait_or_query_status"
     elif state == "queued":
@@ -182,6 +296,8 @@ def get_tool_task_status(
         "execution_active": execution_active,
         "recovery_required": recovery_required,
         "cancel_available": state == "queued",
+        "timeout_exceeded": timeout_exceeded,
+        "timeout_enforcement": task.get("timeout_enforcement"),
         "recommended_action": recommended_action,
         "tool_calls_attempted": 0,
         "provider_calls_attempted": 0,
@@ -235,8 +351,14 @@ def cancel_tool_task(
 
 
 def run_tool_task(
-    repo_root: Path, data_root: Path, *, project_id: str, task_id: str
+    repo_root: Path,
+    data_root: Path,
+    *,
+    project_id: str,
+    task_id: str,
+    timeout_seconds: float = DEFAULT_TASK_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
+    timeout_seconds = _validated_timeout_seconds(timeout_seconds)
     task_path = _task_path(data_root, project_id, task_id)
     if not task_path.is_file():
         raise RuntimeContractError(f"task not found: {task_id}")
@@ -283,41 +405,52 @@ def run_tool_task(
                 "tool inputs changed after task submission; submit a new task"
             )
 
-        now = _utc_now()
-        task["state"] = "running"
-        task["attempt_count"] = int(task.get("attempt_count", 0)) + 1
-        task["started_at"] = now
-        task["updated_at"] = now
-        task["runner_pid"] = os.getpid()
-        _write_json_atomic(task_path, task)
+        with _exclusive_execution_slot(data_root, task):
+            started_at = datetime.now(timezone.utc)
+            deadline_at = started_at + timedelta(seconds=timeout_seconds)
+            now = started_at.isoformat()
+            task["state"] = "running"
+            task["attempt_count"] = int(task.get("attempt_count", 0)) + 1
+            task["started_at"] = now
+            task["updated_at"] = now
+            task["runner_pid"] = os.getpid()
+            task["timeout_seconds"] = timeout_seconds
+            task["deadline_at"] = deadline_at.isoformat()
+            task["timeout_enforcement"] = TIMEOUT_ENFORCEMENT
+            task["timeout_exceeded"] = False
+            _write_json_atomic(task_path, task)
 
-        try:
-            execution = execute_stage_tool(
-                repo_root,
-                data_root,
-                project_id=project_id,
-                tool_name=str(task["tool"]),
-                inputs_file=request_path,
-                acknowledged_agent_skills=list(
-                    task.get("acknowledged_agent_skills") or []
-                ),
+            try:
+                execution = execute_stage_tool(
+                    repo_root,
+                    data_root,
+                    project_id=project_id,
+                    tool_name=str(task["tool"]),
+                    inputs_file=request_path,
+                    acknowledged_agent_skills=list(
+                        task.get("acknowledged_agent_skills") or []
+                    ),
+                )
+            except Exception as exc:
+                execution = {
+                    "status": "fail",
+                    "tool_calls_attempted": 0,
+                    "provider_calls_attempted": 0,
+                    "cost_usd": 0,
+                    "errors": [f"task execution contract failed: {exc}"],
+                }
+
+            finished_at = datetime.now(timezone.utc)
+            finished = finished_at.isoformat()
+            task["state"] = (
+                "succeeded" if execution["status"] == "pass" else "failed"
             )
-        except Exception as exc:
-            execution = {
-                "status": "fail",
-                "tool_calls_attempted": 0,
-                "provider_calls_attempted": 0,
-                "cost_usd": 0,
-                "errors": [f"task execution contract failed: {exc}"],
-            }
-
-        finished = _utc_now()
-        task["state"] = "succeeded" if execution["status"] == "pass" else "failed"
-        task["updated_at"] = finished
-        task["completed_at"] = finished
-        task["result"] = execution
-        task["errors"] = list(execution.get("errors") or [])
-        _write_json_atomic(task_path, task)
+            task["updated_at"] = finished
+            task["completed_at"] = finished
+            task["timeout_exceeded"] = finished_at > deadline_at
+            task["result"] = execution
+            task["errors"] = list(execution.get("errors") or [])
+            _write_json_atomic(task_path, task)
 
     return {
         "status": execution["status"],
@@ -371,10 +504,12 @@ def recover_interrupted_tool_task(
                 "because local Tool side effects may be partial"
             ]
             _write_json_atomic(task_path, task)
+    execution_slot_released = _release_interrupted_execution_slot(data_root, task)
     return {
         "status": "pass",
         "recovered": True,
         "idempotent_replay": replay,
+        "execution_slot_released": execution_slot_released,
         "task": task,
         "task_path": str(task_path),
         "tool_calls_attempted": 0,
@@ -484,6 +619,10 @@ def submit_tool_task(
         "acknowledged_agent_skills": acknowledged,
         "state": "queued",
         "cancel_mode": "before_execution_only",
+        "concurrency_limit": 1,
+        "default_timeout_seconds": DEFAULT_TASK_TIMEOUT_SECONDS,
+        "timeout_enforcement": TIMEOUT_ENFORCEMENT,
+        "timeout_exceeded": False,
         "attempt_count": 0,
         "created_at": now,
         "updated_at": now,

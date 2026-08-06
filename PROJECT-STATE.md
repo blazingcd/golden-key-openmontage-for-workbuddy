@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-06 19:30 +08:00
+更新时间：2026-08-06 21:20 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 IN PROGRESS`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 OFFLINE TASK GATE PASS / W3 NEXT`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -90,6 +90,15 @@
 - 本增量专项=`66 passed`，完整回归=`1126 passed, 10 skipped, 1 subtest passed`；最终W0公开性审计=`PASS`，
   1566个Core文件精确匹配、17个候选文件、snapshot SHA=
   `5b1bd5dbb401dad6cf1e313a071c6f3dd481b85af449fd4217ce20fd1a9a4064`，private Core历史未扫描且不在候选中。
+- W2跨任务执行合同已建立：同一D盘数据根使用原子执行槽把跨项目并发固定为1；竞争任务保持queued、
+  attempt_count不增加、Tool调用为0且不自动重试。中断恢复只释放与该任务身份匹配且进程已死亡的遗留执行槽。
+- `task run`默认记录3600秒可观测截止时间并允许显式设置大于0且不超过86400秒；超过截止时间时
+  `task status`报告`timeout_exceeded=true`，但因Core无通用协作式取消而不会强杀、伪称取消或自动重试。
+- 本轮任务/MCP专项=`19 passed`；完整WorkBuddy专项=`70 passed`；完整回归=
+  `1130 passed, 10 skipped, 1 subtest passed`；W1 `python -S` Gate和Skill格式校验均通过。
+- 本轮最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，四Pipeline/44 Skill、运行时隔离、
+  公开lineage、风险扫描和回归全部通过；private Core历史未扫描且不在候选中。证据位于
+  `D:/WorkBuddyData/Temp/w2-concurrency-timeout-publication-audit-20260806-final`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -99,15 +108,17 @@
 
 ## 下一步
 
-1. 提交并推送MCP=`optional`增量，复核公开CI。
-2. 补剩余跨任务并发/超时策略，再进入W3完整离线可靠性Gate。
-3. W4实现可选MCP用户级配置、信任提示和可禁用/卸载路径，不在仓库提前发布活动配置。
+1. 提交并推送W2跨任务并发/可观测超时增量，复核公开CI。
+2. 进入W3完整离线可靠性Gate，优先补Node/子进程网络继承、SaaS不可访问和密钥/异常/日志脱敏矩阵。
+3. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W3离线Gate。
+4. W4实现可选MCP用户级配置、信任提示和可禁用/卸载路径，不在仓库提前发布活动配置。
 
 ## 当前允许声明
 
 - v0.3.21 WorkBuddy Callable Core已同步并通过本地W0和回归。
 - 首个公开基线已发布，状态为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
 - W2 Skill-first项目/Artifact/Checkpoint、受限本地Tool和持久长任务基线已通过专项测试。
+- W2跨项目并发1、可观测超时和中断执行槽释放合同已通过专项测试。
 - 真实WorkBuddy 5.3.8中的离线Skill+CLI与Skill+stdio MCP对照已通过，MCP裁决为`optional`。
 
 当前不允许声明：

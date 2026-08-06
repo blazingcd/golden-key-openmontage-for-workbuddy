@@ -61,8 +61,8 @@ python -m golden_key_openmontage_workbuddy tool list --project-id demo --json
 python -m golden_key_openmontage_workbuddy tool execute --project-id demo --name scene_detect --inputs-file D:\WorkBuddyData\Projects\demo\artifacts\scene-detect-inputs.json --ack-agent-skill ffmpeg --json
 # 长任务先持久化排队；submit不会执行Tool：
 python -m golden_key_openmontage_workbuddy task submit --project-id demo --name scene_detect --inputs-file D:\WorkBuddyData\Projects\demo\artifacts\scene-detect-inputs.json --ack-agent-skill ffmpeg --json
-# 使用返回的task_id运行、查询；仅queued状态可取消，中断后用recover标记失败且不会自动重试：
-python -m golden_key_openmontage_workbuddy task run --project-id demo --task-id <task_id> --json
+# 使用返回的task_id运行、查询；每个D盘数据根一次只执行一个任务，默认运行时截止时间为3600秒：
+python -m golden_key_openmontage_workbuddy task run --project-id demo --task-id <task_id> --timeout-seconds 3600 --json
 python -m golden_key_openmontage_workbuddy task status --project-id demo --task-id <task_id> --json
 python -m golden_key_openmontage_workbuddy task cancel --project-id demo --task-id <task_id> --json
 python -m golden_key_openmontage_workbuddy task recover --project-id demo --task-id <task_id> --json
@@ -70,8 +70,9 @@ python -m golden_key_openmontage_workbuddy task recover --project-id demo --task
 
 W2当前只允许Manifest当前Stage列出的本地、零网络、零成本工具；API/Hybrid和声明需要网络的工具会在状态探测、
 执行和网络访问前拒绝；本地Tool执行期间还会封锁socket。长任务状态保存在D盘`Jobs`目录，重复提交和成功任务
-重复运行不会再次执行；当前Core没有通用运行中取消合同，因此只支持排队取消，运行中会明确拒绝，中断恢复会
-标记失败而不自动重试。项目内Artifact校验与受限Checkpoint提交仍保持不变。这不代表完整Provider生产闭环、
+重复运行不会再次执行；同一数据根的跨项目任务并发上限为1，未获得执行槽的任务保持排队且不自动重试。
+当前Core没有通用运行中取消合同，因此运行时截止时间只做可观测报警，不强杀进程或伪称取消；只支持排队取消，
+中断恢复会标记失败、释放执行槽且不自动重试。项目内Artifact校验与受限Checkpoint提交仍保持不变。这不代表完整Provider生产闭环、
 安装、W4普通用户验收或真实Provider闭环已经通过。
 
 模型配置分成两层：WorkBuddy主对话模型由WorkBuddy自身设置，本Adapter不保存或代理其模型凭据；视频、图片、

@@ -505,3 +505,31 @@
   `5b1bd5dbb401dad6cf1e313a071c6f3dd481b85af449fd4217ce20fd1a9a4064`。
 - 审计证据目录：`D:/WorkBuddyData/Temp/w2-mcp-optional-publication-audit-20260806-retry`；
   `private_core_history_scanned=false`且`private_core_history_in_candidate=false`。
+
+## 2026-08-06：W2跨任务并发与可观测超时合同
+
+### TDD与实现
+
+- 继续只修改WorkBuddy消费方包、Skill、测试和文档；v0.3.21 managed Core保持只读，未调用真实/付费Provider。
+- 先以CLI公共边界新增跨项目并发负测，确认原实现会同时执行两个任务；随后新增数据根级原子执行槽，
+  把并发上限固定为1。竞争任务保持`queued`、`attempt_count=0`、Tool调用0，不自动重试。
+- 先新增运行时截止时间负测，再为CLI和可选MCP的同一`task run`函数加入`timeout_seconds`，默认3600秒，
+  允许大于0且不超过86400秒。截止时间只做可观测报警；running阻塞Tool不被强杀、不伪称取消。
+- 新增中断恢复负测：只有任务身份匹配且owner进程已死亡时，`task recover`才释放遗留全局执行槽；
+  仍只把任务标记failed，不重放未知局部副作用。
+- Skill、README、架构、路线图、D盘存储、隔离方案、项目状态和下一轮Prompt同步更新；MCP仍为可选，
+  工具总数保持17，没有发布活动`.workbuddy/mcp.json`。
+
+### 验证与当前边界
+
+- 任务/MCP专项=`19 passed`；完整WorkBuddy专项=`70 passed`。
+- 完整套件=`1130 passed, 10 skipped, 1 subtest passed`；四Pipeline、44个Pipeline Skill、Schema、
+  Reviewer/Checkpoint和Tool Registry合同保持通过。
+- W1 `python -S` Gate=`PASS`；Skill Creator校验=`Skill is valid!`；Python编译和`git diff --check`通过。
+- W0首轮按fail-closed拒绝测试生成在managed scope内的21个`__pycache__`目录；只删除精确核验的可重建缓存，
+  源文件未动，并设置`PYTHONDONTWRITEBYTECODE=1`重跑。
+- 更新状态和日志后的最终W0公开性审计=`PASS`：1566个Core文件精确匹配，四Pipeline/44 Skill、运行时、
+  公开lineage、风险扫描和回归全部通过；private Core历史未扫描且不在候选中。最终证据目录为
+  `D:/WorkBuddyData/Temp/w2-concurrency-timeout-publication-audit-20260806-final`。
+- 真实/付费Provider、Golden Key SaaS和私有Core仓库均未调用或修改。W4安装/普通用户验收与
+  `OFFLINE ADAPTER READY`仍未通过；下一步进入W3离线可靠性矩阵。

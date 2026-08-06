@@ -41,6 +41,7 @@ def _object_schema(
 
 STRING = {"type": "string", "minLength": 1}
 BOOLEAN = {"type": "boolean"}
+TIMEOUT_SECONDS = {"type": "number", "exclusiveMinimum": 0, "maximum": 86400}
 
 
 def _tool(
@@ -202,9 +203,13 @@ TOOLS = [
     ),
     _tool(
         "golden_key_task_run",
-        "Run one queued local, zero-network, zero-cost Tool task in the foreground. Terminal tasks are not executed twice.",
+        "Run one queued local, zero-network, zero-cost Tool task in the foreground. Only one task runs per data root. The timeout is observable and never claims forced termination of a blocking Core Tool.",
         _object_schema(
-            {"project_id": STRING, "task_id": STRING},
+            {
+                "project_id": STRING,
+                "task_id": STRING,
+                "timeout_seconds": TIMEOUT_SECONDS,
+            },
             required=("project_id", "task_id"),
         ),
         read_only=False,
@@ -412,6 +417,7 @@ class WorkBuddyMcpServer:
                     self.data_root,
                     project_id=args["project_id"],
                     task_id=args["task_id"],
+                    timeout_seconds=args.get("timeout_seconds", 3600.0),
                 )
             if name == "golden_key_task_cancel":
                 from .tasks import cancel_tool_task

@@ -4,6 +4,7 @@ import json
 import socket
 import subprocess
 import threading
+import time
 from pathlib import Path
 
 from golden_key_openmontage_workbuddy.cli import main
@@ -54,6 +55,12 @@ def test_task_submit_persists_one_idempotent_queued_local_tool_task(
     assert submitted["created"] is True
     assert submitted["task"]["state"] == "queued"
     assert submitted["task"]["cancel_mode"] == "before_execution_only"
+    assert submitted["task"]["concurrency_limit"] == 1
+    assert submitted["task"]["default_timeout_seconds"] == 3600.0
+    assert submitted["task"]["timeout_enforcement"] == (
+        "observe_only_no_forced_termination"
+    )
+    assert submitted["task"]["timeout_exceeded"] is False
     assert submitted["task"]["tool"] == "scene_detect"
     assert submitted["task"]["attempt_count"] == 0
     assert submitted["tool_calls_attempted"] == 0
@@ -766,3 +773,395 @@ def test_task_status_rejects_a_tampered_persisted_task_identity(
     refused = json.loads(capsys.readouterr().out)
     assert "task identity digest does not match" in refused["errors"][0]
     assert refused["tool_calls_attempted"] == 0
+
+
+def test_task_run_allows_only_one_cross_project_execution_per_data_root(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    from tools.base_tool import (
+        BaseTool,
+        ResourceProfile,
+        ToolResult,
+        ToolRuntime,
+        ToolStatus,
+    )
+    from tools.tool_registry import registry
+
+    started = threading.Event()
+    release = threading.Event()
+    call_lock = threading.Lock()
+    call_count = 0
+
+    class BlockingLocalTool(BaseTool):
+        name = "scene_detect"
+        capability = "analysis"
+        provider = "test-cross-task-limit"
+        runtime = ToolRuntime.LOCAL
+        input_schema = {"type": "object"}
+        resource_profile = ResourceProfile(network_required=False)
+
+        def get_status(self):
+            return ToolStatus.AVAILABLE
+
+        def execute(self, inputs):
+            nonlocal call_count
+            with call_lock:
+                call_count += 1
+                current_call = call_count
+            if current_call == 1:
+                started.set()
+                assert release.wait(timeout=5)
+            return ToolResult(success=True)
+
+    fake_tool = BlockingLocalTool()
+    original_get = registry.get
+    monkeypatch.setattr(
+        registry,
+        "get",
+        lambda name: fake_tool if name == "scene_detect" else original_get(name),
+    )
+
+    data_root, first_artifacts = _advance_project_to_script(
+        tmp_path, capsys, project_id="first-project"
+    )
+    second_root, second_artifacts = _advance_project_to_script(
+        tmp_path, capsys, project_id="second-project"
+    )
+    assert second_root == data_root
+
+    task_ids: list[str] = []
+    for project_id, artifacts_dir, marker in (
+        ("first-project", first_artifacts, "first"),
+        ("second-project", second_artifacts, "second"),
+    ):
+        inputs_file = artifacts_dir / f"{marker}-concurrency-inputs.json"
+        inputs_file.write_text(json.dumps({"marker": marker}), encoding="utf-8")
+        assert main(
+            [
+                "task",
+                "submit",
+                "--repo-root",
+                str(ROOT),
+                "--data-root",
+                str(data_root),
+                "--project-id",
+                project_id,
+                "--name",
+                "scene_detect",
+                "--inputs-file",
+                str(inputs_file),
+                "--json",
+            ]
+        ) == 0
+        task_ids.append(json.loads(capsys.readouterr().out)["task"]["task_id"])
+
+    first_run = [
+        "task",
+        "run",
+        "--repo-root",
+        str(ROOT),
+        "--data-root",
+        str(data_root),
+        "--project-id",
+        "first-project",
+        "--task-id",
+        task_ids[0],
+        "--json",
+    ]
+    worker = threading.Thread(target=lambda: main(first_run), daemon=True)
+    worker.start()
+    assert started.wait(timeout=5)
+
+    second_result = main(
+        [
+            "task",
+            "run",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "second-project",
+            "--task-id",
+            task_ids[1],
+            "--json",
+        ]
+    )
+    second_output = capsys.readouterr().out
+
+    release.set()
+    worker.join(timeout=5)
+    assert not worker.is_alive()
+    capsys.readouterr()
+
+    assert second_result == 1
+    refused = json.loads(second_output)
+    assert "cross-task concurrency limit of 1" in refused["errors"][0]
+    assert refused["tool_calls_attempted"] == 0
+
+    second_task = json.loads(
+        (
+            data_root / "Jobs" / "second-project" / f"{task_ids[1]}.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert second_task["state"] == "queued"
+    assert second_task["attempt_count"] == 0
+
+    assert call_count == 1
+
+
+def test_task_status_reports_runtime_timeout_without_claiming_forced_cancel(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    from tools.base_tool import (
+        BaseTool,
+        ResourceProfile,
+        ToolResult,
+        ToolRuntime,
+        ToolStatus,
+    )
+    from tools.tool_registry import registry
+
+    started = threading.Event()
+    release = threading.Event()
+
+    class BlockingLocalTool(BaseTool):
+        name = "scene_detect"
+        capability = "analysis"
+        provider = "test-timeout-observation"
+        runtime = ToolRuntime.LOCAL
+        input_schema = {"type": "object"}
+        resource_profile = ResourceProfile(network_required=False)
+
+        def get_status(self):
+            return ToolStatus.AVAILABLE
+
+        def execute(self, inputs):
+            started.set()
+            assert release.wait(timeout=5)
+            return ToolResult(success=True)
+
+    fake_tool = BlockingLocalTool()
+    original_get = registry.get
+    monkeypatch.setattr(
+        registry,
+        "get",
+        lambda name: fake_tool if name == "scene_detect" else original_get(name),
+    )
+    data_root, artifacts_dir = _advance_project_to_script(tmp_path, capsys)
+    inputs_file = artifacts_dir / "timeout-observation-inputs.json"
+    inputs_file.write_text("{}\n", encoding="utf-8")
+    assert main(
+        [
+            "task",
+            "submit",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--name",
+            "scene_detect",
+            "--inputs-file",
+            str(inputs_file),
+            "--json",
+        ]
+    ) == 0
+    task_id = json.loads(capsys.readouterr().out)["task"]["task_id"]
+    run_results: list[int] = []
+    worker = threading.Thread(
+        target=lambda: run_results.append(
+            main(
+                [
+                    "task",
+                    "run",
+                    "--repo-root",
+                    str(ROOT),
+                    "--data-root",
+                    str(data_root),
+                    "--project-id",
+                    "tool-project",
+                    "--task-id",
+                    task_id,
+                    "--timeout-seconds",
+                    "0.05",
+                    "--json",
+                ]
+            )
+        ),
+        daemon=True,
+    )
+    worker.start()
+    assert started.wait(timeout=5)
+    time.sleep(0.08)
+
+    assert main(
+        [
+            "task",
+            "status",
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--task-id",
+            task_id,
+            "--json",
+        ]
+    ) == 0
+    overdue = json.loads(capsys.readouterr().out)
+    assert overdue["task"]["state"] == "running"
+    assert overdue["timeout_exceeded"] is True
+    assert overdue["timeout_enforcement"] == "observe_only_no_forced_termination"
+    assert overdue["cancel_available"] is False
+    assert overdue["recommended_action"] == "wait_for_non_cancelable_execution"
+
+    release.set()
+    worker.join(timeout=5)
+    assert not worker.is_alive()
+    assert run_results == [0]
+    completed = json.loads(capsys.readouterr().out)
+    assert completed["task"]["state"] == "succeeded"
+    assert completed["task"]["timeout_exceeded"] is True
+    assert completed["task"]["timeout_enforcement"] == (
+        "observe_only_no_forced_termination"
+    )
+
+
+def test_task_recover_releases_the_interrupted_task_execution_slot(
+    tmp_path: Path, capsys
+) -> None:
+    data_root, artifacts_dir = _advance_project_to_script(tmp_path, capsys)
+    inputs_file = artifacts_dir / "stale-slot-inputs.json"
+    inputs_file.write_text(
+        json.dumps(
+            {
+                "input_path": str(artifacts_dir / "source.mp4"),
+                "output_path": str(artifacts_dir / "must-not-exist.json"),
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert main(
+        [
+            "task",
+            "submit",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--name",
+            "scene_detect",
+            "--inputs-file",
+            str(inputs_file),
+            "--ack-agent-skill",
+            "ffmpeg",
+            "--json",
+        ]
+    ) == 0
+    task_id = json.loads(capsys.readouterr().out)["task"]["task_id"]
+    task_path = data_root / "Jobs" / "tool-project" / f"{task_id}.json"
+    task_lock = task_path.with_suffix(".lock")
+    execution_lock = data_root / "Jobs" / ".execution.lock"
+    dead_pid = 2_000_000_000
+    task = json.loads(task_path.read_text(encoding="utf-8"))
+    task["state"] = "running"
+    task["attempt_count"] = 1
+    task["runner_pid"] = dead_pid
+    task_path.write_text(json.dumps(task), encoding="utf-8")
+    task_lock.write_text(json.dumps({"pid": dead_pid}), encoding="utf-8")
+    execution_lock.write_text(
+        json.dumps(
+            {
+                "pid": dead_pid,
+                "project_id": "tool-project",
+                "task_id": task_id,
+                "created_at": "2026-08-06T00:00:00+00:00",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert main(
+        [
+            "task",
+            "recover",
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--task-id",
+            task_id,
+            "--json",
+        ]
+    ) == 0
+    recovered = json.loads(capsys.readouterr().out)
+    assert recovered["task"]["state"] == "failed"
+    assert recovered["execution_slot_released"] is True
+    assert not task_lock.exists()
+    assert not execution_lock.exists()
+
+
+def test_task_run_rejects_an_invalid_timeout_before_execution(
+    tmp_path: Path, capsys
+) -> None:
+    data_root, artifacts_dir = _advance_project_to_script(tmp_path, capsys)
+    inputs_file = artifacts_dir / "invalid-timeout-inputs.json"
+    inputs_file.write_text(
+        json.dumps(
+            {
+                "input_path": str(artifacts_dir / "source.mp4"),
+                "output_path": str(artifacts_dir / "must-not-exist.json"),
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert main(
+        [
+            "task",
+            "submit",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--name",
+            "scene_detect",
+            "--inputs-file",
+            str(inputs_file),
+            "--ack-agent-skill",
+            "ffmpeg",
+            "--json",
+        ]
+    ) == 0
+    task_id = json.loads(capsys.readouterr().out)["task"]["task_id"]
+
+    assert main(
+        [
+            "task",
+            "run",
+            "--repo-root",
+            str(ROOT),
+            "--data-root",
+            str(data_root),
+            "--project-id",
+            "tool-project",
+            "--task-id",
+            task_id,
+            "--timeout-seconds",
+            "0",
+            "--json",
+        ]
+    ) == 1
+    refused = json.loads(capsys.readouterr().out)
+    assert "timeout_seconds must be greater than 0" in refused["errors"][0]
+    task = json.loads(
+        (
+            data_root / "Jobs" / "tool-project" / f"{task_id}.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert task["state"] == "queued"
+    assert task["attempt_count"] == 0

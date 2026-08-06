@@ -130,10 +130,13 @@ fal.ai/Replicate接入的Seedance、MiniMax第三方网关明确分开。`config
 
 长任务入口在同一确定性CLI中持久化到`D:/WorkBuddyData/Jobs/<project-id>`。`task submit`完成Stage、Registry、
 Skill、Schema、路径、成本与输入hash校验后只排队；稳定task ID使重复提交幂等。`task run`是可由WorkBuddy放入
-后台进程的前台执行命令，执行前再次校验输入hash，并把结果原子写回。成功或终态任务不会重复执行。当前Core
+后台进程的前台执行命令，执行前再次校验输入hash，并把结果原子写回。成功或终态任务不会重复执行。同一D盘
+数据根通过原子执行槽把跨项目并发上限固定为1；竞争失败的任务保持`queued`、尝试次数不增加、Tool调用为0，
+且不自动重试。`task run`默认记录3600秒可观测截止时间，也可显式设置大于0且不超过86400秒的值；由于当前Core
+没有通用协作式取消，超过截止时间只由`task status`报告`timeout_exceeded`，不会强杀进程或伪称取消。当前Core
 Tool合同没有通用协作式取消，因此`task cancel`只允许queued任务；running任务明确返回不可安全取消，不能伪称
 已取消或粗暴杀进程。进程中断后`task status`要求`task recover`，后者只把任务标记为failed，不自动重试，
-避免未知的局部文件副作用被重复执行。声明为本地的Tool在执行期间受进程内socket-denial边界保护。
+释放该任务遗留的全局执行槽，避免未知的局部文件副作用被重复执行。声明为本地的Tool在执行期间受进程内socket-denial边界保护。
 
 它们只做本地环境、锁定Core身份、四Pipeline、Skill和隔离边界检查，Provider调用数必须为0。
 默认D盘目录和缓存规则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`。

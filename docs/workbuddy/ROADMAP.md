@@ -74,8 +74,8 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 状态：`IN PROGRESS`。直接调用基线已经完成权威上下文、Pipeline目录、项目生命周期、当前Stage合同、
 Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。API/Hybrid在网络前fail-closed；
 主对话模型/生产Provider配置分层、安全引用模板，以及本地Tool持久任务、幂等、排队取消、明确运行中
-不可取消和中断恢复语义已经完成；真实WorkBuddy CLI/MCP对照已通过并裁决`MCP=optional`。跨任务并发/
-超时策略与完整Provider授权执行仍待完成。
+不可取消和中断恢复语义已经完成；真实WorkBuddy CLI/MCP对照已通过并裁决`MCP=optional`。跨任务单执行槽、
+可观测超时和中断后槽释放已经完成；完整Provider授权执行仍需用户单独授权，当前可转入W3离线矩阵。
 
 ### 任务
 
@@ -95,7 +95,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 ### 完成证据
 
 - WorkBuddy能够按Rule Zero选择Pipeline，任何执行适配层都不预选。
-- 可选MCP握手、16个工具发现、参数Schema、正常调用和一次失败不重试已通过；CLI等价基线保留。
+- 可选MCP握手、17个工具发现、参数Schema、正常调用和一次失败不重试已通过；CLI等价基线保留。
 - 提示明确展示当前状态、选择、推荐、成本/风险和下一步。
 
 ## W3：离线可靠性、安全和回归
@@ -105,7 +105,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - 将长任务状态持久化到D盘工作区。（W2直接CLI基线已完成）
 - 验证所选执行入口重启后的任务和项目恢复。（W2已完成中断识别与fail-closed恢复；真实WorkBuddy待W4）
 - 实现并验证真实取消或明确不可取消语义。（W2已完成queued取消/running明确不可取消）
-- 并发限制、幂等、重复执行保护和超时处理。（W2已完成单任务锁、稳定ID和终态重放；跨任务并发/超时仍待）
+- 并发限制、幂等、重复执行保护和超时处理。（W2已完成数据根级并发1、稳定ID、终态重放、可观测超时和中断槽释放；硬终止因Core无安全取消合同而明确禁止）
 - 路径规范化和根目录封闭。
 - 密钥、异常和日志脱敏。
 - 无凭证、缺Artifact、Gate违规和Schema错误负测。

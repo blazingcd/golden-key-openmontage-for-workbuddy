@@ -30,6 +30,14 @@ def test_mcp_tools_are_deterministic_wrappers_with_structured_schemas() -> None:
     assert "golden_key_task_run" in names
     assert "golden_key_task_cancel" in names
     assert "golden_key_task_recover" in names
+    task_run = next(tool for tool in TOOLS if tool["name"] == "golden_key_task_run")
+    timeout_schema = task_run["inputSchema"]["properties"]["timeout_seconds"]
+    assert timeout_schema == {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 86400,
+    }
+    assert "timeout_seconds" not in task_run["inputSchema"]["required"]
     for tool in TOOLS:
         assert tool["inputSchema"]["type"] == "object"
         assert tool["inputSchema"]["additionalProperties"] is False

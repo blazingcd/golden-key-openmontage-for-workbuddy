@@ -188,6 +188,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     task_run.add_argument("--project-id", required=True)
     task_run.add_argument("--task-id", required=True)
+    task_run.add_argument("--timeout-seconds", type=float, default=3600.0)
     task_run.add_argument("--json", action="store_true", dest="as_json")
     task_recover = task_commands.add_parser("recover")
     task_recover.add_argument(
@@ -395,6 +396,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     args.data_root,
                     project_id=args.project_id,
                     task_id=args.task_id,
+                    timeout_seconds=args.timeout_seconds,
                 )
             else:
                 report = recover_interrupted_tool_task(

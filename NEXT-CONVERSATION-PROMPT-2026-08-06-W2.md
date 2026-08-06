@@ -28,7 +28,8 @@
   国内生态工具以Registry实际注册为准，厂商直连与第三方网关分列，模板只写环境变量名称、不写密钥值。
 - W2本地Tool持久任务已完成`task submit/status/run/cancel/recover`：状态位于D盘`Jobs`，输入hash与稳定ID
   防篡改/防重复执行；queued可取消，running因Core无通用取消合同而明确不可安全取消；中断恢复只标记failed、
-  不自动重试。local Tool执行期间封锁socket，API/Hybrid在任务落盘和网络前拒绝。
+  不自动重试。跨项目任务通过数据根级执行槽固定并发1；运行时截止时间只做可观测报警、不强杀；中断恢复会释放
+  该任务遗留执行槽。local Tool执行期间封锁socket，API/Hybrid在任务落盘和网络前拒绝。
 - 真实WorkBuddy 5.3.8中的Skill+CLI与Skill+stdio MCP离线对照已通过；MCP裁决为`optional`，CLI为权威回退。
   MCP最终提供17个结构化Schema工具和免Shell调用，但增加用户级配置、stdio进程和首次信任；WorkBuddy模型侧未稳定
   呈现传输层`isError`，业务`status/errors`仍是强制错误合同。
@@ -42,7 +43,8 @@
 4. 保持已完成的主对话模型/生产Provider分层；不得把第三方网关误报为国内直连，也不得在Adapter中伪造WorkBuddy模型端点。
 5. 按`MCP=optional`保持CLI和MCP共用现有任务语义，不允许MCP增加第二套Pipeline选择、任务重试或虚假取消；
    活动配置留到W4安装器，并必须支持不启用、禁用和卸载。
-6. 下一增量完成跨任务并发/超时策略，再进入W3离线可靠性矩阵。
+6. 跨任务并发/超时策略已完成；下一增量直接进入W3离线可靠性矩阵，优先补Node/子进程网络继承、SaaS不可访问、
+   密钥/异常/日志脱敏和CLI/MCP同语义负测。
 7. 保持v0.3.21 managed Core只读；若Core接口变化，停止消费方开发并切换到新Release迁移Gate。
 
 ## 发布红线

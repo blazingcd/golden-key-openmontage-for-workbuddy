@@ -72,9 +72,9 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 ## W2：Skill-first体验、最小调用面和MCP决策Gate
 
 状态：`IN PROGRESS`。直接调用基线已经完成权威上下文、Pipeline目录、项目生命周期、当前Stage合同、
-Artifact/Checkpoint，以及Manifest限定的Tool发现和首个纯本地Tool执行。API/Hybrid在网络前fail-closed；
-主对话模型/生产Provider配置分层和安全引用模板已经完成；完整Provider授权执行、长任务可靠性与真实
-WorkBuddy/MCP对比仍待完成。
+Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。API/Hybrid在网络前fail-closed；
+主对话模型/生产Provider配置分层、安全引用模板，以及本地Tool持久任务、幂等、排队取消、明确运行中
+不可取消和中断恢复语义已经完成；完整Provider授权执行与真实WorkBuddy/MCP对比仍待完成。
 
 ### 任务
 
@@ -83,7 +83,8 @@ WorkBuddy/MCP对比仍待完成。
 - 支持模糊需求、具体目标、参考视频、源素材和继续项目五类入口。
 - 实现环境/版本检查、权威上下文读取、项目创建/打开和状态查询。
 - 实现Schema校验和受限Stage提交。
-- 实现当前Manifest/Stage允许范围内的确定性工具执行。首个本地纵向切片已完成；后续补长任务与授权Provider路径。
+- 实现当前Manifest/Stage允许范围内的确定性工具执行。首个本地纵向切片和持久长任务协议已完成；
+  后续仅在单独授权下补Provider路径。
 - 不包含、调用或重新实现`model_driven_agent_host.py`、`openai_compatible_transport.py`或`agent_host_authority.py`。
 - 在真实WorkBuddy中比较`Skill+本地CLI`与`Skill+本地stdio MCP`的安装、Schema发现、长任务、恢复、
   错误提示和权限成本，形成`default`、`optional`或`omit`裁决。
@@ -100,14 +101,14 @@ WorkBuddy/MCP对比仍待完成。
 
 ### 任务
 
-- 将长任务状态持久化到D盘工作区。
-- 验证所选执行入口重启后的任务和项目恢复。
-- 实现并验证真实取消或明确不可取消语义。
-- 并发限制、幂等、重复执行保护和超时处理。
+- 将长任务状态持久化到D盘工作区。（W2直接CLI基线已完成）
+- 验证所选执行入口重启后的任务和项目恢复。（W2已完成中断识别与fail-closed恢复；真实WorkBuddy待W4）
+- 实现并验证真实取消或明确不可取消语义。（W2已完成queued取消/running明确不可取消）
+- 并发限制、幂等、重复执行保护和超时处理。（W2已完成单任务锁、稳定ID和终态重放；跨任务并发/超时仍待）
 - 路径规范化和根目录封闭。
 - 密钥、异常和日志脱敏。
 - 无凭证、缺Artifact、Gate违规和Schema错误负测。
-- 静态依赖检查和运行时网络拦截，证明没有第二个Agent模型调用。
+- 静态依赖检查和运行时网络拦截，证明没有第二个Agent模型调用。（W2本地Tool socket拦截已完成）
 - 运行核心合同回归和Adapter专项回归。
 
 ### 完成证据

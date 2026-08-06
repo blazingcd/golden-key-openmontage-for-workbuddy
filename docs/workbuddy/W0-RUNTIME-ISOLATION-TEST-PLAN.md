@@ -16,9 +16,10 @@
 - 当前Stage allowlist、项目路径、Layer 3 Skill确认和API/Hybrid前置拒绝已启用；本地`scene_detect`在socket
   封锁下执行成功，Tool调用1次、Provider调用0次、成本0；仍不能声明 `OFFLINE ADAPTER READY`。
 
-W0/W1静态边界为`PASS`，W2首个纯本地Tool纵向切片为`PARTIAL PASS`。当前socket负测覆盖Python连接入口
-和Hybrid selector前置拒绝；DNS、requests/httpx/SDK、Node网络、长任务子进程和SaaS仓库不可访问等完整矩阵
-仍属于W3，完成前不能形成最终离线隔离结论。
+W0/W1静态边界为`PASS`，W2纯本地Tool与持久任务纵向切片为`PARTIAL PASS`。当前socket负测覆盖Python
+DNS/连接/数据报入口、误声明local Tool和Hybrid selector前置拒绝；任务状态、幂等、queued取消、running明确
+不可取消和中断恢复已经通过。Node网络、长任务子进程继承边界和SaaS仓库不可访问等完整矩阵仍属于W3，
+完成前不能形成最终离线隔离结论。
 
 ## 2. 静态依赖门禁
 
@@ -85,7 +86,7 @@ WorkBuddy Agent负责理解、Pipeline选择和Stage创作；CLI或MCP只能返�
 | 静态禁止导入/禁入文件 | `PASS`，六个consumer-remove路径均不存在 | CI 对全部Adapter运行时文件持续通过 |
 | SaaS Worker 隔离 | 架构和路径规则已冻结 | SaaS 仓库不可访问时离线流程仍通过 |
 | 嵌套模型调用拦截 | authority已冻结；W2入口无模型调用参数或导入 | W3 SDK/进程spy调用数为0 |
-| 外网/Provider 拦截 | `PARTIAL PASS`：socket封锁下本地Tool成功，Hybrid前置拒绝且0调用 | 扩展DNS、HTTP SDK和Node拦截后外网调用数仍为0 |
-| 本地确定性能力 | 项目、Schema、Checkpoint、Tool allowlist和本地执行已通过 | 增加长任务状态、幂等、恢复、状态/取消负测；保留MCP时另加握手 |
+| 外网/Provider 拦截 | `PARTIAL PASS`：Python socket/DNS封锁，误声明local与Hybrid负测均在真实网络前拒绝 | 补Node/子进程继承拦截后外网调用数仍为0 |
+| 本地确定性能力 | 项目、Schema、Checkpoint、Tool allowlist、本地执行、持久任务、幂等、状态/取消/恢复已通过 | 补跨任务并发/超时；保留MCP时另加握手与同语义验证 |
 
 任何一项失败都阻止 `OFFLINE ADAPTER READY`。真实 WorkBuddy 与真实 Provider 验收仍是后续、逐次授权的独立 Gate。

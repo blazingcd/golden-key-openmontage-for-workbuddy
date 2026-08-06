@@ -28,13 +28,18 @@ Treat this package as Pre-Alpha. WorkBuddy is the only Agent; never start or emu
 4. Run `golden-key-workbuddy tool list` for the project. Use only the returned current-Stage allowlist; do not rank or select a Pipeline in the CLI.
 5. Before execution, read every returned `agent_skills` entry at `.agents/skills/<name>/SKILL.md`. Write the tool input JSON inside the project's `artifacts/` directory, keep every tool path inside the project, then run `golden-key-workbuddy tool execute --ack-agent-skill <name>` (repeat the acknowledgement for every required Layer 3 Skill).
 6. Treat `API or Hybrid` execution as blocked unless a separately authorized Provider path exists. The W2 offline entry intentionally refuses it before status probing, execution, or network access; never retry it through an ad-hoc call.
-7. Write canonical Artifact JSON inside the project's `artifacts/` directory and run `golden-key-workbuddy artifact validate`.
-8. Run the native Reviewer, then use `golden-key-workbuddy checkpoint submit`. For a gated Stage, submit `awaiting_human`, present the result, and end the turn; submit `completed --human-approved` only after explicit approval.
+7. For a local Tool that may take time, run `golden-key-workbuddy task submit` instead of direct execution. Submit validates and queues the immutable request but does not run it. Keep the returned task ID.
+8. Start it with `golden-key-workbuddy task run`. This is a foreground command; WorkBuddy may place that process in the background, then use `golden-key-workbuddy task status` to read the durable record under `D:/WorkBuddyData/Jobs`.
+9. Use `golden-key-workbuddy task cancel` only while the task is queued. A running blocking Tool is not safely cancelable under the current Core contract; report that limitation and do not claim it was cancelled or kill it externally.
+10. If status reports an interrupted execution, use `golden-key-workbuddy task recover`. It marks the task failed without executing the Tool again. Because partial local side effects may exist, never retry automatically; inspect outputs and submit a new request only with user-aware judgment.
+11. Write canonical Artifact JSON inside the project's `artifacts/` directory and run `golden-key-workbuddy artifact validate`.
+12. Run the native Reviewer, then use `golden-key-workbuddy checkpoint submit`. For a gated Stage, submit `awaiting_human`, present the result, and end the turn; submit `completed --human-approved` only after explicit approval.
 
 ## Safety boundaries
 
 - Do not call a real or paid Provider without explicit user approval.
 - Do not bypass Stage Skills, Artifact validation, Reviewer, or Checkpoint gates.
+- Keep local Tool execution inside the CLI's socket-denial boundary; do not replace it with an ad-hoc Python import or network call.
 - Do not import, launch, or recreate `agent_host_authority`, `model_driven_agent_host`, or `openai_compatible_transport`.
 - The MCP decision is pending a real WorkBuddy comparison Gate. Do not require or invent an MCP server during the W2 direct-call baseline.
 - Do not claim installation readiness, real WorkBuddy acceptance, or `OFFLINE ADAPTER READY`.

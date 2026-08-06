@@ -38,6 +38,8 @@ golden-key-workbuddy doctor --data-root D:\WorkBuddyData --create-dirs
 - `.env`和Provider凭据不得进入Git、报告、测试夹具或普通日志。
 - `Projects`、`Models`、`Temp`、`Logs`和`Jobs`不属于Core同步范围。
 - 缓存和临时文件可重建；用户项目和最终输出不得被升级或卸载流程默认删除。
-- W1只建立目录和检查能力，不调用真实/付费Provider。
+- `Jobs`保存消费方任务JSON和同目录短期锁文件；任务记录不复制输入正文，只保存项目内输入路径、SHA-256、
+  状态和本地执行结果。成功终态可幂等读取，中断任务必须显式恢复为失败，不自动重试。
+- W1只建立目录和检查能力；W2任务入口仍不调用真实/付费Provider。
 
 W4安装器仍需验证全新Windows用户、升级、卸载和数据保留语义；本策略本身不代表安装验收通过。

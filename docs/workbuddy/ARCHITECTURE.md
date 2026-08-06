@@ -112,6 +112,7 @@ golden-key-workbuddy context / pipelines
 golden-key-workbuddy config inspect / template
 golden-key-workbuddy project / stage / artifact / checkpoint
 golden-key-workbuddy tool list / execute
+golden-key-workbuddy task submit / status / run / cancel / recover
 ```
 
 模型配置严格分层：WorkBuddy主对话模型属于WorkBuddy Host，本Adapter不定义兼容端点、不读取该模型的凭据，
@@ -124,6 +125,13 @@ fal.ai/Replicate接入的Seedance、MiniMax第三方网关明确分开。`config
 不选择Pipeline或Provider。`tool execute`要求请求JSON位于项目`artifacts/`内、所有Schema声明路径位于项目目录、
 所有Layer 3 Skill已显式确认，并且工具为本地、零网络、估算零成本。API、Hybrid、声明需网络或估算有成本的工具
 在状态探测和`execute()`前拒绝。首条真实本地纵向验证使用`scene_detect`，socket封锁下Provider调用为0。
+
+长任务入口在同一确定性CLI中持久化到`D:/WorkBuddyData/Jobs/<project-id>`。`task submit`完成Stage、Registry、
+Skill、Schema、路径、成本与输入hash校验后只排队；稳定task ID使重复提交幂等。`task run`是可由WorkBuddy放入
+后台进程的前台执行命令，执行前再次校验输入hash，并把结果原子写回。成功或终态任务不会重复执行。当前Core
+Tool合同没有通用协作式取消，因此`task cancel`只允许queued任务；running任务明确返回不可安全取消，不能伪称
+已取消或粗暴杀进程。进程中断后`task status`要求`task recover`，后者只把任务标记为failed，不自动重试，
+避免未知的局部文件副作用被重复执行。声明为本地的Tool在执行期间受进程内socket-denial边界保护。
 
 它们只做本地环境、锁定Core身份、四Pipeline、Skill和隔离边界检查，Provider调用数必须为0。
 默认D盘目录和缓存规则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`。

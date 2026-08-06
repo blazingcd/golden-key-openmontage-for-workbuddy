@@ -423,3 +423,36 @@
   `private_core_history_scanned=false`且`private_core_history_in_candidate=false`。
 - 尚未配置或调用任何真实/付费Provider；尚未声称WorkBuddy支持某个具体主模型兼容端点。
 - W2仍为`IN PROGRESS`；下一增量是本地Tool长任务状态、幂等、取消语义和更完整网络/嵌套模型拦截。
+
+## 2026-08-06：W2本地Tool持久任务与明确取消/恢复合同
+
+### TDD与实现
+
+- 只修改WorkBuddy消费方包、Skill、测试和文档；v0.3.21 managed Core保持只读。
+- 新增`task submit/status/run/cancel/recover`公共CLI。任务JSON持久化到
+  `D:/WorkBuddyData/Jobs/<project-id>`，输入正文仍留在项目`artifacts`，任务只记录路径和SHA-256。
+- `submit`在落盘前复用当前Stage、Tool Registry、本地运行时、网络声明、Layer 3 Skill、Schema、路径和
+  零成本门禁；稳定身份摘要使同一请求重复提交返回同一task ID，不执行Tool。
+- `run`使用单任务独占锁，运行前复核输入hash，终态结果原子写回；成功任务重复运行只返回持久结果，
+  不再次调用Tool。持久任务身份被改写或输入文件提交后变化均fail-closed。
+- 取消语义按当前Core能力冻结：queued任务可取消且幂等；blocking Tool开始后没有通用协作式取消合同，
+  因此running任务明确返回“not safely cancelable”，不伪称已取消、不粗暴终止进程。
+- 进程中断后`status`返回`recovery_required`；`recover`只把任务标记为failed并移除陈旧锁，禁止自动重试，
+  避免未知的局部文件副作用重复发生。
+- 本地Tool执行增加socket-denial运行时边界，覆盖DNS、连接和数据报入口；误声明local但尝试联网的Tool
+  在真实socket调用前失败。API/Hybrid仍在状态探测、任务落盘和网络前拒绝。
+- WorkBuddy Skill、项目README、架构、路线图、D盘存储、隔离测试计划、项目状态和下一轮Prompt同步更新；
+  MCP仍为`decision_pending`，没有创建活动`.workbuddy/mcp.json`。
+
+### 当前验证与边界
+
+- 任务与Skill专项=`13 passed`；完整WorkBuddy专项=`61 passed`。
+- 完整套件=`1121 passed, 10 skipped, 1 subtest passed`；四Pipeline、44个Pipeline Skill、Schema、
+  Reviewer/Checkpoint、Tool Registry合同均保持通过。
+- W1 `python -S` Gate=`PASS`；Skill Creator校验=`Skill is valid!`；Python编译和`git diff --check`通过。
+- W0增量公开性审计=`PASS`：1566个Core文件精确匹配，15个候选文件；Release/Pipeline/运行时隔离、
+  公开lineage、风险扫描和回归均通过，private Core历史未扫描且不在候选中。证据写入
+  `D:/WorkBuddyData/Temp/w2-durable-task-publication-audit-20260806-retry`。
+- 未调用真实/付费Provider，未修改Golden Key SaaS或Golden Key私有Core仓库。
+- 仍未完成真实WorkBuddy的Skill+CLI/Skill+stdio MCP对比；Node/子进程网络继承、跨任务并发和超时属于
+  后续W2/W3 Gate，因此不能声明安装可用、MCP已裁决或`OFFLINE ADAPTER READY`。

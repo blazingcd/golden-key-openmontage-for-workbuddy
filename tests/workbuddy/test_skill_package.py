@@ -53,6 +53,11 @@ def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
         "golden-key-workbuddy stage inspect",
         "golden-key-workbuddy tool list",
         "golden-key-workbuddy tool execute",
+        "golden-key-workbuddy task submit",
+        "golden-key-workbuddy task status",
+        "golden-key-workbuddy task run",
+        "golden-key-workbuddy task cancel",
+        "golden-key-workbuddy task recover",
         "golden-key-workbuddy config inspect",
         "golden-key-workbuddy config template",
         "golden-key-workbuddy artifact validate",
@@ -65,3 +70,6 @@ def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
     assert "API or Hybrid" in body
     assert "WorkBuddy conversation model" in body
     assert "production Provider" in body
+    assert "Submit validates and queues" in body
+    assert "not safely cancelable" in body
+    assert "never retry automatically" in body

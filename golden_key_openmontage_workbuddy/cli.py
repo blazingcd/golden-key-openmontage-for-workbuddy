@@ -150,6 +150,52 @@ def _parser() -> argparse.ArgumentParser:
         "--data-root", type=Path, default=Path("D:/WorkBuddyData")
     )
     config_template.add_argument("--json", action="store_true", dest="as_json")
+
+    task = subparsers.add_parser(
+        "task", help="Persist and operate bounded local Tool tasks."
+    )
+    task_commands = task.add_subparsers(dest="task_command", required=True)
+    task_submit = task_commands.add_parser("submit")
+    task_submit.add_argument("--repo-root", type=Path, default=Path.cwd())
+    task_submit.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    task_submit.add_argument("--project-id", required=True)
+    task_submit.add_argument("--name", required=True)
+    task_submit.add_argument("--inputs-file", type=Path, required=True)
+    task_submit.add_argument(
+        "--ack-agent-skill", action="append", default=[]
+    )
+    task_submit.add_argument("--json", action="store_true", dest="as_json")
+    task_status = task_commands.add_parser("status")
+    task_status.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    task_status.add_argument("--project-id", required=True)
+    task_status.add_argument("--task-id", required=True)
+    task_status.add_argument("--json", action="store_true", dest="as_json")
+    task_cancel = task_commands.add_parser("cancel")
+    task_cancel.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    task_cancel.add_argument("--project-id", required=True)
+    task_cancel.add_argument("--task-id", required=True)
+    task_cancel.add_argument("--json", action="store_true", dest="as_json")
+    task_run = task_commands.add_parser("run")
+    task_run.add_argument("--repo-root", type=Path, default=Path.cwd())
+    task_run.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    task_run.add_argument("--project-id", required=True)
+    task_run.add_argument("--task-id", required=True)
+    task_run.add_argument("--json", action="store_true", dest="as_json")
+    task_recover = task_commands.add_parser("recover")
+    task_recover.add_argument(
+        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+    )
+    task_recover.add_argument("--project-id", required=True)
+    task_recover.add_argument("--task-id", required=True)
+    task_recover.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -305,6 +351,61 @@ def main(argv: Sequence[str] | None = None) -> int:
         except ModelProviderConfigError as exc:
             report = {
                 "status": "fail",
+                "provider_calls_attempted": 0,
+                "network_calls_attempted": 0,
+                "errors": [str(exc)],
+            }
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report["status"] == "pass" else 1
+    if args.command == "task":
+        from .runtime import RuntimeContractError
+        from .tasks import (
+            cancel_tool_task,
+            get_tool_task_status,
+            recover_interrupted_tool_task,
+            run_tool_task,
+            submit_tool_task,
+        )
+
+        try:
+            if args.task_command == "submit":
+                report = submit_tool_task(
+                    args.repo_root,
+                    args.data_root,
+                    project_id=args.project_id,
+                    tool_name=args.name,
+                    inputs_file=args.inputs_file,
+                    acknowledged_agent_skills=args.ack_agent_skill,
+                )
+            elif args.task_command == "status":
+                report = get_tool_task_status(
+                    args.data_root,
+                    project_id=args.project_id,
+                    task_id=args.task_id,
+                )
+            elif args.task_command == "cancel":
+                report = cancel_tool_task(
+                    args.data_root,
+                    project_id=args.project_id,
+                    task_id=args.task_id,
+                )
+            elif args.task_command == "run":
+                report = run_tool_task(
+                    args.repo_root,
+                    args.data_root,
+                    project_id=args.project_id,
+                    task_id=args.task_id,
+                )
+            else:
+                report = recover_interrupted_tool_task(
+                    args.data_root,
+                    project_id=args.project_id,
+                    task_id=args.task_id,
+                )
+        except RuntimeContractError as exc:
+            report = {
+                "status": "fail",
+                "tool_calls_attempted": 0,
                 "provider_calls_attempted": 0,
                 "network_calls_attempted": 0,
                 "errors": [str(exc)],

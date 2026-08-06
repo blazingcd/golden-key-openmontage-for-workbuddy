@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-06 15:24 +08:00
+更新时间：2026-08-06 16:25 +08:00
 
 ## 当前里程碑
 
@@ -72,6 +72,14 @@
 - 本增量W0公开性审计=`PASS`：Release/Pipeline/运行时/公开lineage/候选风险/回归全部通过，候选12个文件，
   snapshot SHA=`d4e9c91ae51035e453fc0f2141d749e8bc29f361a43beea6e32463dca3911204`；证据位于
   `D:/WorkBuddyData/Temp/w2-model-provider-config-publication-audit`，private Core历史未扫描且不在候选中。
+- W2本地Tool持久任务入口已建立：`task submit/status/run/cancel/recover`将状态保存在D盘`Jobs`目录；
+  输入hash和任务身份防篡改，稳定task ID、重复提交和成功终态重放可防止重复执行。
+- 当前取消合同已如实冻结：queued任务可取消；Core blocking Tool开始运行后没有通用安全取消协议，CLI明确拒绝
+  运行中取消，不伪称成功、不杀进程；中断任务只恢复为failed且禁止自动重试，避免局部文件副作用重复发生。
+- 本地Tool执行新增socket-denial边界；误声明为local的Tool即使尝试联网也会在真实socket调用前失败。
+  Hybrid/API仍在状态探测和任务落盘前拒绝。任务/Skill专项`13 passed`，完整WorkBuddy专项`61 passed`。
+- 本增量W0公开性审计=`PASS`：1566个Core文件精确匹配，15个候选文件与managed Core重叠为0；
+  Release、四Pipeline/44 Skill、运行时隔离、公开lineage、风险扫描和回归全部通过，private Core历史未扫描且不在候选中。
 
 ## 历史记录（不再是当前Gate）
 
@@ -81,15 +89,15 @@
 
 ## 下一步
 
-1. 为本地Tool执行补长任务状态、幂等、取消/不可取消和完整网络/嵌套模型拦截。
+1. 提交并推送本增量，复核公开CI。
 2. 在真实WorkBuddy中比较Skill+CLI与Skill+stdio MCP，裁决MCP为默认、可选或省略。
-3. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
+3. MCP裁决后补剩余跨任务并发/超时策略，再进入W3完整离线可靠性Gate。
 
 ## 当前允许声明
 
 - v0.3.21 WorkBuddy Callable Core已同步并通过本地W0和回归。
 - 首个公开基线已发布，状态为`Pre-Alpha`/“WorkBuddy Adapter开发中”。
-- W2 Skill-first项目/Artifact/Checkpoint和受限本地Tool调用基线已通过专项测试。
+- W2 Skill-first项目/Artifact/Checkpoint、受限本地Tool和持久长任务基线已通过专项测试。
 
 当前不允许声明：
 

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import socket
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +27,37 @@ class RuntimeContractError(ValueError):
 
 
 LOCAL_TOOL_RUNTIMES = {"local", "local_gpu"}
+
+
+@contextmanager
+def _deny_local_tool_network():
+    """Fail closed if a declared local Tool attempts socket access."""
+
+    def blocked(*args, **kwargs):
+        raise RuntimeContractError(
+            "local-only Tool network access is blocked by the WorkBuddy runtime"
+        )
+
+    originals = {
+        "create_connection": socket.create_connection,
+        "getaddrinfo": socket.getaddrinfo,
+        "connect": socket.socket.connect,
+        "connect_ex": socket.socket.connect_ex,
+        "sendto": socket.socket.sendto,
+    }
+    socket.create_connection = blocked
+    socket.getaddrinfo = blocked
+    socket.socket.connect = blocked
+    socket.socket.connect_ex = blocked
+    socket.socket.sendto = blocked
+    try:
+        yield
+    finally:
+        socket.create_connection = originals["create_connection"]
+        socket.getaddrinfo = originals["getaddrinfo"]
+        socket.socket.connect = originals["connect"]
+        socket.socket.connect_ex = originals["connect_ex"]
+        socket.socket.sendto = originals["sendto"]
 
 
 def _validated_project_id(project_id: str) -> str:
@@ -550,7 +583,8 @@ def execute_stage_tool(
         )
 
     try:
-        result = tool.execute(normalized_inputs)
+        with _deny_local_tool_network():
+            result = tool.execute(normalized_inputs)
     except Exception as exc:
         return {
             "status": "fail",

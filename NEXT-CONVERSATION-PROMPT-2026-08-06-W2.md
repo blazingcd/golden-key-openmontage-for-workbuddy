@@ -26,6 +26,9 @@
   API/Hybrid在状态探测、执行和网络前拒绝，Provider调用为0。
 - W2模型配置分层已完成`config inspect/template`：WorkBuddy主对话模型归WorkBuddy Host，生产Provider归Registry；
   国内生态工具以Registry实际注册为准，厂商直连与第三方网关分列，模板只写环境变量名称、不写密钥值。
+- W2本地Tool持久任务已完成`task submit/status/run/cancel/recover`：状态位于D盘`Jobs`，输入hash与稳定ID
+  防篡改/防重复执行；queued可取消，running因Core无通用取消合同而明确不可安全取消；中断恢复只标记failed、
+  不自动重试。local Tool执行期间封锁socket，API/Hybrid在任务落盘和网络前拒绝。
 - v0.3.21 managed Core快照只读；W1～W4只改消费方层。Core接口变化必须通过新Release合同迁移。
 
 ## W2目标
@@ -34,10 +37,10 @@
 2. 保持现有权威上下文、Pipeline清单、项目状态、Artifact Schema和Checkpoint接口稳定。
 3. WorkBuddy负责选择四Pipeline并读取当前Stage Skill；Adapter不得选择Pipeline、创作、Reviewer判断或启动第二个模型Agent。
 4. 保持已完成的主对话模型/生产Provider分层；不得把第三方网关误报为国内直连，也不得在Adapter中伪造WorkBuddy模型端点。
-5. 下一增量为本地Tool入口补充W3需要的长任务状态、幂等、取消/不可取消和更完整网络/嵌套模型拦截，不调用真实/付费Provider。
-6. 在真实WorkBuddy中对比Skill+CLI与Skill+本地stdio MCP的安装、Schema发现、长任务、恢复、错误和权限，
+5. 下一增量是在真实WorkBuddy中对比Skill+CLI与Skill+本地stdio MCP的安装、Schema发现、长任务、恢复、错误和权限，
    形成MCP=`default|optional|omit`裁决；裁决前不得创建活动`.workbuddy/mcp.json`。
-7. 保持v0.3.21 managed Core只读；若Core接口变化，停止消费方开发并切换到新Release迁移Gate。
+6. 对比时必须使用现有任务语义作为共同基线，不允许MCP偷偷增加第二套Pipeline选择、任务重试或虚假取消。
+7. 裁决后完成跨任务并发/超时策略，并保持v0.3.21 managed Core只读；若Core接口变化，停止消费方开发并切换到新Release迁移Gate。
 
 ## 发布红线
 

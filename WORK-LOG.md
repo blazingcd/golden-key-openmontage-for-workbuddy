@@ -292,3 +292,41 @@
 1. 提交并持续推送本增量。
 2. 把`sync-release`接入常规Gate/CI入口。
 3. 建立WorkBuddy包、Skill/示例配置骨架和D盘环境`doctor`。
+
+## 2026-08-06：W1 WorkBuddy基础入口、Skill骨架与持续门禁
+
+### 范围
+
+- 完成W1剩余的消费方包、Skill/配置骨架、D盘`doctor`和常规CI门禁。
+- 将架构从“MCP预先必选”纠正为“Skill-first，真实WorkBuddy对比后裁决MCP”。
+- 保持v0.3.21 Release-only、direct-agent、无嵌套Agent Host和无真实Provider边界。
+
+### TDD与实现
+
+- 新增独立发行`golden-key-openmontage-workbuddy==0.1.0a0`和控制台命令`golden-key-workbuddy`。
+- `doctor`报告锁定Core身份、authority、四Pipeline、本地Python/Node/FFmpeg、D盘目录和禁止声明状态；
+  `--create-dirs`建立`Projects/Caches/Models/Temp/Logs/Jobs`。
+- `gate`复用doctor并fail-closed检查Skill、六个禁入路径、WorkBuddy运行时代码AST导入和活动MCP配置。
+- 新建`workbuddy-skill/golden-key-openmontage/SKILL.md`，冻结WorkBuddy唯一Agent、Rule Zero、四Pipeline、
+  Stage Skill/Schema/Reviewer/Checkpoint和Provider授权规则。
+- 新建`.workbuddy/README.md`，明确W1不发布活动`mcp.json`；W2进行CLI与stdio MCP真实对比。
+- CI新增固定Release`sync-release`下载/复用、1566文件目标复核、`git diff --exit-code`和W1 Gate。
+- 新建`docs/workbuddy/LOCAL-STORAGE-POLICY.md`，将项目数据、缓存、模型、临时文件和开发venv固定到D盘策略。
+
+### 验证
+
+- D盘开发环境：`D:\WorkBuddyData\Dev\venvs\golden-key-workbuddy-w1`，包可编辑安装成功。
+- 真实`doctor --create-dirs`=`PASS`：Python 3.11.9、Node v24.16.0、FFmpeg 8.1.1，Provider调用0。
+- 真实W1 `gate`=`PASS`：四Pipeline齐全、六路径不存在、AST隔离0命中、活动MCP配置不存在。
+- Skill Creator `quick_validate.py`：`Skill is valid!`。
+- 真实v0.3.21 `sync-release`：1566文件通过，改写0、删除0，Release资产下载到D盘缓存。
+- 回归：contracts=`716 passed, 7 skipped`；tools=`284 passed, 1 subtest passed`；WorkBuddy=`27 passed`。
+- W1最终候选：Release合同、Pipeline合同、运行时边界、公开lineage、公开性扫描和回归全部`PASS`；
+  未扫描或引入Golden Key私有历史。
+
+### 结果与边界
+
+- `DONE`：W1完成；下一阶段为W2 Skill-first生产调用闭环和MCP决策Gate。
+- 当前仍为`Pre-Alpha`；Skill只是W1安全骨架，不得声明完整生产可用、真实WorkBuddy验收或
+  `OFFLINE ADAPTER READY`。
+- 未调用真实/付费Provider，未修改Golden Key SaaS仓库，Core同步结果为0改动。

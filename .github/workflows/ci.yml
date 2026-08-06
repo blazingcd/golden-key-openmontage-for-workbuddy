@@ -39,6 +39,24 @@ jobs:
       - name: Install dependencies
         run: make install-dev
 
+      - name: Verify locked WorkBuddy Core release and idempotency
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/core_sync/sync_workbuddy_core.py sync-release \
+            --asset-dir "$RUNNER_TEMP/golden-key-workbuddy-core/golden-key-v0.3.21" \
+            --config config/openmontage.sync.json \
+            --destination . \
+            --report "$RUNNER_TEMP/workbuddy-core-sync-report.json"
+          git diff --exit-code
+
+      - name: Run WorkBuddy W1 gate
+        run: |
+          python -m golden_key_openmontage_workbuddy gate \
+            --repo-root . \
+            --data-root "$RUNNER_TEMP/WorkBuddyData" \
+            --json
+
       - name: Run lint smoke checks
         run: make lint
 

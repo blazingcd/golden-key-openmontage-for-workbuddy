@@ -2,14 +2,14 @@
 
 状态：`ACTIVE PLAN`
 
-更新日期：2026-08-05
+更新日期：2026-08-06
 
 ## 总体路径
 
 ```text
 W0 v0.3.21导出合同、公开性、架构和接口审计
  -> W1 Callable Core同步门禁和安装骨架
- -> W2 WorkBuddy Skill与最小确定性MCP
+ -> W2 Skill-first直接调用闭环与MCP决策Gate
  -> W3 离线可靠性、安全和回归
  -> W4 安装交付、用户提示和真实WorkBuddy验收
 ```
@@ -46,8 +46,8 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 
 ## W1：Callable Core同步门禁与安装骨架
 
-状态：`IN PROGRESS`。Release下载、固定SHA/sidecar、lock验证、managed mirror、缓存复用和幂等检查
-已封装为`sync-release`维护者命令；包/Skill/示例配置和D盘`doctor`仍待完成。
+状态：`DONE`。Release同步与CI幂等门禁、独立WorkBuddy Python发行身份、`doctor`/`gate`、Skill、
+`.workbuddy`骨架和D盘存储策略已经建立。完整生产调用闭环和安装发行分别属于W2与W4。
 
 ### 任务
 
@@ -58,6 +58,8 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 - 建立 WorkBuddy Python包、Skill目录、测试目录和示例配置目录。
 - 规定D盘项目、缓存、模型和临时文件位置。
 - 建立环境 `doctor` 骨架，但不在本阶段冻结运行环境打包方案。
+- 通过CI执行`sync-release`幂等复核、W1 Gate和WorkBuddy专项测试。
+- W1不发布活动MCP配置；将MCP默认/可选/省略的裁决留给W2真实WorkBuddy对比。
 
 ### 完成证据
 
@@ -65,8 +67,9 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 - Release source commit、合同ID、authority和bundle digest一致。
 - 全新D盘目录可以建立开发环境。
 - 不复制SaaS/Agent Host/私有证据/导出维护代码。
+- `doctor`报告Core身份、四Pipeline、运行时和D盘目录；`gate`拒绝禁入文件/导入和提前启用MCP。
 
-## W2：WorkBuddy体验和最小调用面
+## W2：Skill-first体验、最小调用面和MCP决策Gate
 
 ### 任务
 
@@ -77,11 +80,15 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 - 实现Schema校验和受限Stage提交。
 - 实现当前Manifest/Stage允许范围内的确定性工具执行。
 - 不包含、调用或重新实现`model_driven_agent_host.py`、`openai_compatible_transport.py`或`agent_host_authority.py`。
+- 在真实WorkBuddy中比较`Skill+本地CLI`与`Skill+本地stdio MCP`的安装、Schema发现、长任务、恢复、
+  错误提示和权限成本，形成`default`、`optional`或`omit`裁决。
+- 将WorkBuddy主对话模型配置与视频生产Provider配置分层；国内模型与兼容端点以WorkBuddy和Registry
+  真实支持面为准，不在Adapter中硬编码虚假能力。
 
 ### 完成证据
 
-- MCP握手、工具发现和参数Schema通过。
-- WorkBuddy能够按Rule Zero选择Pipeline，而MCP不预选。
+- WorkBuddy能够按Rule Zero选择Pipeline，任何执行适配层都不预选。
+- 若MCP被保留，其握手、工具发现和参数Schema通过；若裁决为`omit`，必须记录直接调用的等价证据。
 - 提示明确展示当前状态、选择、推荐、成本/风险和下一步。
 
 ## W3：离线可靠性、安全和回归
@@ -89,7 +96,7 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 ### 任务
 
 - 将长任务状态持久化到D盘工作区。
-- 验证MCP重启后的任务和项目恢复。
+- 验证所选执行入口重启后的任务和项目恢复。
 - 实现并验证真实取消或明确不可取消语义。
 - 并发限制、幂等、重复执行保护和超时处理。
 - 路径规范化和根目录封闭。
@@ -110,11 +117,11 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
 
 - 决策并实现Python、Node、FFmpeg等运行环境交付方式。
 - Windows优先安装、升级和卸载。
-- 生成项目级`.workbuddy/mcp.json`。
+- 仅在W2裁决保留MCP时生成项目级`.workbuddy/mcp.json`。
 - 打包可导入Skill和完整Golden Key核心。
 - 中文快速开始、Prompt Gallery和故障排查。
 - 在未预装开发环境的普通Windows用户场景验证安装。
-- 在真实WorkBuddy中验证握手、工具发现、自然语言触发、审批暂停、长任务、取消和恢复。
+- 在真实WorkBuddy中验证所选执行入口、能力发现、自然语言触发、审批暂停、长任务、取消和恢复。
 
 ### 完成证据
 

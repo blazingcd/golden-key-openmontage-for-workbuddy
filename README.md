@@ -5,8 +5,8 @@
 **Golden Key OpenMontage for WorkBuddy** is a community-maintained edition of
 [OpenMontage](https://github.com/calesthio/OpenMontage), adapted for use with WorkBuddy.
 
-> **开发状态：预发布。** 当前仓库尚未提供可安装的 WorkBuddy Skill/MCP，也尚未完成真实
-> WorkBuddy 或 Provider 验收。请勿把当前源码视为可用成品；进度和发布 Gate 以
+> **开发状态：Pre-Alpha。** 当前仓库已经提供W1 Python包、Skill骨架和本地`doctor`/`gate`，
+> 但尚未提供完整可安装发行版，也尚未完成真实WorkBuddy或Provider验收。请勿把当前源码视为可用成品；进度和发布Gate以
 > `PROJECT-STATE.md` 为准。
 >
 > 首次公开基线不等待 W1～W4，但只有最终拟公开版本的 W0 Gate 为 `PASS`，且用户在看到
@@ -38,6 +38,20 @@ Pipeline、Skill、Schema、Review、Checkpoint 和 Artifact 体系。
 
 WorkBuddy负责理解用户意图、规划任务并与用户交互；OpenMontage负责视频制作流程、工具调用、
 阶段审查、检查点和制作产物。本项目提供二者之间的适配与使用体验。
+
+当前架构采用`Skill-first`：WorkBuddy始终是唯一Agent。MCP不是远端依赖，也不是第二个Agent；
+W2会在真实WorkBuddy中比较直接本地调用与stdio MCP，再决定MCP为默认、可选或不交付。W1不会发布
+活动`.workbuddy/mcp.json`。
+
+W1开发者可运行：
+
+```powershell
+python -m golden_key_openmontage_workbuddy doctor --data-root D:\WorkBuddyData --create-dirs
+python -m golden_key_openmontage_workbuddy gate --data-root D:\WorkBuddyData
+```
+
+这两个命令不调用Provider，也不代表完整安装或真实WorkBuddy验收已经通过。
+本地目录规则见[`docs/workbuddy/LOCAL-STORAGE-POLICY.md`](docs/workbuddy/LOCAL-STORAGE-POLICY.md)。
 
 ## Golden Key Edition
 

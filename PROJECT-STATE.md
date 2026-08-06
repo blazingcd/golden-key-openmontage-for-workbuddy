@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-05 23:37 +08:00
+更新时间：2026-08-06 13:28 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 ACTIVE`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 NEXT`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -38,6 +38,13 @@
 - W1新增`sync-release`维护者命令：缓存缺失时只下载三个固定Release资产，验证后原子发布缓存；缓存命中时完整复核并复用。
 - 真实v0.3.21 D盘缓存回归：1566个文件验证通过，0改动、0删除；当前WorkBuddy专项`18 passed`。
 - W0 Pipeline比较基线已固定为配置中的`upstream_base_commit`，不再因首次推送后`origin/main`前移而误报0个合同变化。
+- W1建立独立Python发行`golden-key-openmontage-workbuddy==0.1.0a0`和`golden-key-workbuddy`命令。
+- `doctor`可验证v0.3.21合同、direct-agent authority、四Pipeline、Python/Node/FFmpeg并建立D盘目录。
+- `gate`持续拒绝六个禁入路径、嵌套Agent Host导入和W2裁决前的活动`.workbuddy/mcp.json`。
+- WorkBuddy Skill与`.workbuddy`骨架已建立；当前明确为Skill-first，MCP状态为`decision_pending`。
+- CI已接入固定Release `sync-release`幂等复核、W1 Gate和完整测试入口。
+- 本轮真实D盘验证：1566文件、0改动、0删除；Skill校验通过；contracts `716 passed, 7 skipped`；
+  tools `284 passed, 1 subtest passed`；WorkBuddy `27 passed`；W1增量公开审计=`PASS`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -47,10 +54,10 @@
 
 ## 下一步
 
-1. 将已完成的`sync-release`命令接入后续常规Gate/CI入口。
-2. 建立WorkBuddy包、Skill/测试/示例配置骨架和D盘环境`doctor`。
-3. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
-4. W2实现WorkBuddy Skill和最小确定性MCP；W3完成动态隔离；W4完成安装与真实WorkBuddy验收。
+1. W2实现Skill-first直接调用闭环：权威上下文读取、项目创建/状态、Schema校验、受限Stage提交和确定性工具执行。
+2. 分离WorkBuddy主对话模型与视频生产Provider配置，按真实支持面提供国内模型配置体验。
+3. 在真实WorkBuddy中比较Skill+CLI与Skill+stdio MCP，裁决MCP为默认、可选或省略。
+4. 每个安全、可验证增量持续更新状态、提交并推送；发现公开性风险或测试失败时恢复fail-closed。
 
 ## 当前允许声明
 
@@ -60,7 +67,8 @@
 当前不允许声明：
 
 - 已经可以安装；
-- WorkBuddy Skill/MCP已可用或真实WorkBuddy验收通过；
+- W1 Skill骨架已经是完整可用的WorkBuddy生产Skill；
+- MCP已被选为必选、已可用或真实WorkBuddy验收通过；
 - `OFFLINE ADAPTER READY`；
 - 真实Provider成片通过。
 
@@ -68,6 +76,7 @@
 
 - `docs/workbuddy/ARCHITECTURE.md`
 - `docs/workbuddy/CORE-SYNC-POLICY.md`
+- `docs/workbuddy/LOCAL-STORAGE-POLICY.md`
 - `docs/workbuddy/FIRST-PUBLIC-PUSH-POLICY.md`
 - `docs/workbuddy/audits/W0-PUBLICATION-AUDIT-REPORT-v0.3.21-2026-08-05.md`
-- `NEXT-CONVERSATION-PROMPT-2026-08-05-W1.md`
+- `NEXT-CONVERSATION-PROMPT-2026-08-06-W2.md`

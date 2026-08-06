@@ -1,8 +1,8 @@
 # Golden Key OpenMontage for WorkBuddy：架构边界
 
-状态：`FROZEN FOR v0.3.21 EXPORT BASELINE`
+状态：`v0.3.21 BASELINE FROZEN / W1 ADAPTER BOUNDARY ACTIVE`
 
-更新日期：2026-08-05
+更新日期：2026-08-06
 
 ## 1. 产品目标
 
@@ -11,7 +11,8 @@
 ```text
 Golden Key WorkBuddy Callable Core
 + WorkBuddy Skill
-+ WorkBuddy stdio MCP
++ 本地确定性执行入口
++ 通过真实WorkBuddy决策Gate后可选的stdio MCP
 + Windows 安装、配置、用户提示和故障恢复
 ```
 
@@ -74,7 +75,8 @@ WorkBuddy 本身就是唯一 Agent，直接：
      -> AGENT_GUIDE / Rule Zero
      -> Golden Key Pipeline Manifest
      -> Stage Skill / Reviewer / Checkpoint
-     -> WorkBuddy Skill / MCP 确定性能力
+     -> WorkBuddy Skill
+     -> 本地确定性CLI（MCP是否加入由W2真实对比决定）
      -> 本地 WorkBuddy Callable Core
         -> Schema / Artifact / Tool Registry / 媒体工具
 ```
@@ -86,7 +88,22 @@ authority.invocation_model = direct_agent
 authority.nested_agent_host_allowed = false
 ```
 
-WorkBuddy MCP 不得拥有第二套 Pipeline 选择器、Director、Reviewer、Checkpoint 协议或模型规划循环。
+当前W1不发布活动`.workbuddy/mcp.json`。Skill与Callable Core是产品必选层；MCP不是远端服务，也不是
+第二个Agent，只可能作为本地确定性执行适配层。W2必须在真实WorkBuddy中比较Skill+CLI与Skill+stdio
+MCP两条路径，再裁决MCP为默认、可选或不交付。
+
+无论裁决如何，任何Adapter/MCP都不得拥有第二套 Pipeline 选择器、Director、Reviewer、Checkpoint
+协议或模型规划循环。WorkBuddy始终是唯一Agent。
+
+W1已建立两个消费方公开命令：
+
+```text
+golden-key-workbuddy doctor
+golden-key-workbuddy gate
+```
+
+它们只做本地环境、锁定Core身份、四Pipeline、Skill和隔离边界检查，Provider调用数必须为0。
+默认D盘目录和缓存规则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`。
 
 ## 5. 发布与 Git lineage
 
@@ -109,6 +126,7 @@ public origin/main
 - 不直接同步官方 OpenMontage。
 - 不 merge/cherry-pick Golden Key private `main` 或历史。
 - 不把非 WorkBuddy 调用层重新带回公开候选。
+- 不在真实WorkBuddy对比前把MCP写成必选依赖或发布活动MCP配置。
 - 不开发新的 Web UI；Backlot 仅作为原生、可选观察界面。
 - 不在离线阶段调用真实或付费 Provider。
 - 不用 mock 结果声明 WorkBuddy 或真实成片已通过。

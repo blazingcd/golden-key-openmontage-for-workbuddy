@@ -559,3 +559,62 @@
 - W3离线可靠性Gate=`PASS`，但这不是W4打包/全新Windows安装/普通用户WorkBuddy验收，仍不得声明
   “已经可以安装”或`OFFLINE ADAPTER READY`。
 - 本轮未调用真实/付费Provider，未修改Golden Key SaaS/private Core仓库；MCP保持`optional`且未发布活动配置。
+
+## 2026-08-06：WB-UX1 WorkBuddy新手引导独立任务
+
+### 边界纠偏与实现
+
+- 将新手引导从W2生产调用和W4安装包中拆出，建立独立任务`WB-UX1`；v0.3.21 managed Core保持只读。
+- 新增独立消费方Skill `workbuddy-skill/golden-key-openmontage-onboarding`。它只在用户询问能力、如何开始或
+  仅表达模糊视频意愿时触发，读取本机`doctor/context/pipelines/config inspect`后用中文业务结果引导。
+- 引导只呈现产品/服务、品牌/公司、获客转化、主体/IP四类结果和少量真实可用示例；用户形成具体请求后
+  立即交接给`golden-key-openmontage`生产Skill，不重复已知信息。
+- 职责明确冻结：新手引导不属于Core，不盘点或管理Golden Key SaaS素材库，不复制Core的生产需求澄清，
+  不属于安装器流程，不创建生产项目，也不调用真实/付费Provider。
+
+### 验证与边界
+
+- 新增WorkBuddy合同测试，覆盖独立触发、真实能力读取、生产Skill交接以及素材库/Core/安装职责隔离。
+- Skill Creator格式校验=`Skill is valid!`；专项Skill合同=`5 passed`；完整WorkBuddy专项=`78 passed`。
+- 消费方Gate=`PASS`：六个禁入路径不存在、静态隔离违规0、活动MCP配置不存在、Provider调用0；
+  `git diff --check`通过。
+- 更新`.workbuddy`说明、ROADMAP任务列表和`PROJECT-STATE.md`；真实WorkBuddy首次对话体验验收保留为
+  独立客户端验收项，不与W4安装包实现捆绑。
+- 已确认本机WorkBuddy进程和窗口存在；Windows应用控制仅返回空壳控件树，无法可靠识别Skill导入或聊天区域，
+  因而停止盲点操作并保留客户端验收为`PENDING`，没有伪称触发和交接已经通过。
+- 根据用户复核补齐素材引导边界：WorkBuddy消费端可以按需说明如何附加相关本地源素材、提供参考内容，
+  或在暂时无素材时先从真实对象和观众行动开始；每轮最多问一个素材交接问题，不要求盘点整个SaaS素材库。
+- 素材引导不硬编码C盘/D盘，不移动原文件，不伪称文件已导入、索引或理解；素材事实充分度和后续生产判断
+  仍由Core Pipeline合同负责。
+- 本轮没有修改Golden Key SaaS/private Core仓库或1566个managed Core文件，没有调用真实/付费Provider。
+
+## 2026-08-06：W4首个轻量ZIP与WorkBuddy调用桥纵向切片
+
+### 产品决策与TDD
+
+- 根据用户纠偏，将首个交付物冻结为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI或独立桌面软件。
+  ZIP可解压到任意目录，但WorkBuddy稳定调用必须先注册：复制到用户级安装目录、注册两个Skill并写入runtime locator。
+- 明确v0.3.21只用于构建和验证第一个安装/调用包。Golden Key Core正在大调整，本包不把v0.3.21声明为最终Core；
+  后续Core更新只能通过新不可变Release/ZIP/SHA/lock和独立W0进入。
+- 按TDD先建立三个公共接口红灯再实现：注册根目录外运行`doctor`、包内完整Core/消费方/两个Skill、PowerShell
+  注册后launcher从任意cwd定位Core和数据目录。另补Core hash篡改拒绝、MCP默认关闭和数据目录建立合同。
+- 普通用户默认路径从开发期D盘纠正为`%LOCALAPPDATA%\GoldenKeyOpenMontageForWorkBuddy`；当前维护者机器仍以
+  `D:\WorkBuddyData`保存虚拟环境、缓存、构建和烟测。CLI/MCP默认值统一支持显式环境覆盖。
+- `doctor`在既有Core、authority、四Pipeline、Python/Node/FFmpeg扫描上新增九项Python模块只读发现；
+  `config inspect`继续只读取Tool Registry配置引用。扫描不下载组件、不读取密钥值，网络/Provider调用均为0。
+- 两个WorkBuddy Skill改为先读取注册时生成的`WORKBUDDY-RUNTIME.json`并调用稳定launcher；不再要求普通用户
+  自己寻找仓库或扫描磁盘猜路径。MCP保持可选且默认不启用。
+
+### 首个完整候选与当前边界
+
+- 使用真实v0.3.21 lock逐文件校验并打包1566个managed文件，最新ZIP候选大小`72,793,680`字节，SHA-256=
+  `52e953dc7bbf4ef85779f7b9144a719cd29972d97ba41815aa4967514292b18f`；构建目录位于
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-first-bundle-20260806-r3`。
+- 在隔离D盘烟测目录完成完整包注册：两个Skill写入独立WorkBuddy profile，MCP=`false`，Core合同、direct-agent
+  authority和四Pipeline均通过。系统Python 3.14被发现，但缺`dotenv/google.genai/jsonschema/openai`，证明首包
+  下一步仍需实现“用户确认后准备Python依赖”；系统环境`doctor=degraded`。切换到已准备依赖的D盘Python后，
+  `doctor/context/pipelines/config inspect`全部退出码0，四Pipeline完整且网络/Provider调用0。
+- 当前切片专项：WorkBuddy=`83 passed`（其中portable bundle=`3 passed`、Skill合同=`6 passed`）；
+  两个Skill格式均=`Skill is valid!`，`git diff --check`通过。
+- 未调用真实/付费Provider，未修改Golden Key SaaS/private Core仓库或1566个managed Core文件；真实WorkBuddy
+  普通用户触发、升级/卸载、依赖准备和`OFFLINE ADAPTER READY`仍未通过。

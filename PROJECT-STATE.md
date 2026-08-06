@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-06 21:03 +08:00
+更新时间：2026-08-06 23:40 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 OFFLINE RELIABILITY GATE PASS / W4 NEXT`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 PASS / WB-UX1 IMPLEMENTED / W4 LIGHT-ZIP SLICE IN PROGRESS`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -109,6 +109,28 @@
   W1 `python -S` Gate、22个消费方Python源码内存编译和`git diff --check`通过，Provider调用0。
 - W3离线可靠性Gate=`PASS`，证据见`docs/workbuddy/W3-OFFLINE-RELIABILITY-REPORT-2026-08-06.md`；
   该裁决不等于W4安装/普通用户验收，也不允许声明`OFFLINE ADAPTER READY`。
+- `WB-UX1`已作为独立消费方任务从W2/W4拆出：新增`golden-key-openmontage-onboarding` Skill，
+  只处理不知道如何开始、询问能力或模糊视频意愿；读取本机真实能力后用中文业务结果和少量示例引导。
+- 新手引导在用户形成具体请求后立即交给`golden-key-openmontage`生产Skill；不盘点SaaS素材库、不复制Core
+  生产需求澄清、不创建生产项目、不调用真实/付费Provider，也不修改1566个managed Core文件。
+- `WB-UX1`已补齐消费端素材交接对话：根据用户情况引导附加相关现有素材、提供参考内容，或在无素材时
+  先说明真实对象和观众行动；每轮最多问一个相关问题，不要求盘点整个素材库，不硬编码盘符或伪报已导入。
+- `WB-UX1`验证：Skill Creator格式=`Skill is valid!`；WorkBuddy专项=`78 passed`；消费方Gate=`PASS`，
+  静态隔离违规0、活动MCP配置不存在、Provider调用0。
+- `WB-UX1`真实客户端验收尚未完成：当前Windows应用控制只能读取到WorkBuddy空壳控件树，无法可靠识别
+  Skill导入和聊天区域，因此没有盲点或伪报成功；该验收仍属于`WB-UX1`，不并入W4安装包。
+- W4已冻结首包为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI。ZIP可解压到任意目录；注册脚本
+  复制到稳定用户级目录、建立数据目录、注册生产/新手两个Skill，并写入`WORKBUDDY-RUNTIME.json`定位launcher。
+- 普通用户默认路径已纠正为`%LOCALAPPDATA%\GoldenKeyOpenMontageForWorkBuddy`，允许显式覆盖到D盘；
+  `D:\WorkBuddyData`只保留为当前维护者开发、构建和烟测策略。
+- 首个完整候选包基于v0.3.21的1566个managed文件构建成功，最新ZIP大小`72,793,680`字节，SHA-256=
+  `52e953dc7bbf4ef85779f7b9144a719cd29972d97ba41815aa4967514292b18f`；包内明确声明
+  `temporary_first_package_build_baseline_not_final_core`，不把v0.3.21误称最终Core。
+- D盘隔离安装烟测通过：两个Skill注册、MCP默认关闭、Core/authority/四Pipeline核验通过；系统Python扫描发现
+  `dotenv/google.genai/jsonschema/openai`缺失并返回`degraded`；切换到已准备依赖的Python后
+  `doctor/context/pipelines/config inspect`全部退出码0，网络/Provider调用均为0。
+- WorkBuddy调用桥已改为注册Skill读取runtime locator并通过稳定launcher先运行`doctor`；`doctor`新增九项Python
+  模块只读发现，`config inspect`继续独立检查安全Provider引用。当前首包还未准备缺失依赖，不能声明完整可用。
 
 ## 历史记录（不再是当前Gate）
 
@@ -118,11 +140,14 @@
 
 ## 下一步
 
-1. 进入W4，先冻结Windows运行时交付方式和普通用户安装/升级/卸载验收合同，再实现可回滚的安装纵向切片。
-2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
-3. 在全新D盘目录和真实WorkBuddy普通用户路径完成安装、自然语言触发、长任务/恢复验收后，才重新裁决
+1. W4下一片先决定并实现“扫描后、经用户确认准备缺失Python依赖”的轻量方式；Node/FFmpeg按Pipeline能力
+   区分必需和可选，不把全部运行时盲目塞入ZIP。
+2. 实现不覆盖用户既有Skill/配置的升级、卸载和回滚；用户项目、Artifact、配置、模型和输出默认保留。
+3. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
+4. 在普通用户默认路径、D盘覆盖路径和真实WorkBuddy中完成自然语言触发、长任务/恢复验收后，才重新裁决
    `OFFLINE ADAPTER READY`。
-4. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。
+5. 在真实WorkBuddy中对`WB-UX1`做首次对话体验验收；它独立留痕但可复用W4注册后的Skill。
+6. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。
 
 ## 当前允许声明
 

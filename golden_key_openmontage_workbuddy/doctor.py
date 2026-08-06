@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import importlib.util
 import shutil
 import subprocess
 import sys
@@ -17,6 +18,29 @@ EXPECTED_PIPELINES = (
 EXPECTED_CONTRACT_ID = "golden-key-workbuddy-callable-core-v1"
 EXPECTED_TAG = "golden-key-v0.3.21"
 EXPECTED_SOURCE_COMMIT = "757ea3822e5f2eef7f341389983119021e827c8d"
+REQUIRED_PYTHON_PACKAGES = (
+    "dotenv",
+    "google.genai",
+    "httpx",
+    "jsonschema",
+    "openai",
+    "PIL",
+    "pydantic",
+    "requests",
+    "yaml",
+)
+
+
+def _missing_python_packages() -> list[str]:
+    missing: list[str] = []
+    for module in REQUIRED_PYTHON_PACKAGES:
+        try:
+            available = importlib.util.find_spec(module) is not None
+        except (ImportError, ModuleNotFoundError, ValueError):
+            available = False
+        if not available:
+            missing.append(module)
+    return missing
 
 
 def _command_runtime(command: str) -> dict[str, Any]:
@@ -111,6 +135,7 @@ def build_doctor_report(
     python_supported = sys.version_info >= (3, 10)
     if not python_supported:
         errors.append("Python 3.10 or newer is required")
+    missing_python_packages = _missing_python_packages()
     runtime = {
         "ffmpeg": _command_runtime("ffmpeg"),
         "node": _command_runtime("node"),
@@ -121,10 +146,23 @@ def build_doctor_report(
             "supported": python_supported,
             "version": ".".join(str(part) for part in sys.version_info[:3]),
         },
+        "python_packages": {
+            "ready": not missing_python_packages,
+            "required": list(REQUIRED_PYTHON_PACKAGES),
+            "missing": missing_python_packages,
+            "inspection": "local_module_discovery_only",
+        },
     }
 
+    warnings = []
+    if missing_python_packages:
+        warnings.append(
+            "Python runtime packages are incomplete: "
+            + ", ".join(missing_python_packages)
+        )
+
     return {
-        "status": "fail" if errors else "pass",
+        "status": "fail" if errors else ("degraded" if warnings else "pass"),
         "repo_root": str(repo_root),
         "core": core,
         "authority": authority,
@@ -135,7 +173,7 @@ def build_doctor_report(
         },
         "storage": {
             "data_root": str(data_root),
-            "policy": "prefer_d_drive_on_windows",
+            "policy": "standard_user_location_with_override",
             "created": create_dirs and all(path.is_dir() for path in directories.values()),
             "directories": {name: str(path) for name, path in directories.items()},
         },
@@ -151,7 +189,9 @@ def build_doctor_report(
             "real_workbuddy_accepted": False,
         },
         "runtime": runtime,
+        "network_calls_attempted": 0,
         "provider_calls_attempted": 0,
+        "warnings": warnings,
         "errors": errors,
     }
 
@@ -163,9 +203,16 @@ def format_doctor_report(report: dict[str, Any]) -> str:
         f"Pipelines: {len(report['pipelines']['available'])}/{report['pipelines']['expected_count']}",
         f"Data root: {report['storage']['data_root']}",
         f"Python: {report['runtime']['python']['version']}",
+        (
+            "Python packages: ready"
+            if report["runtime"]["python_packages"]["ready"]
+            else "Python packages missing: "
+            + ", ".join(report["runtime"]["python_packages"]["missing"])
+        ),
         f"Node: {'available' if report['runtime']['node']['available'] else 'missing'}",
         f"FFmpeg: {'available' if report['runtime']['ffmpeg']['available'] else 'missing'}",
         "MCP: optional local stdio adapter; CLI remains the canonical fallback.",
     ]
+    lines.extend(f"WARNING: {message}" for message in report.get("warnings", []))
     lines.extend(f"ERROR: {message}" for message in report["errors"])
     return "\n".join(lines)

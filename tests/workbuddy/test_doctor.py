@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -8,6 +9,41 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def test_doctor_defaults_to_registered_home_and_standard_user_data_location(
+    tmp_path: Path,
+) -> None:
+    local_app_data = tmp_path / "LocalAppData"
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = str(ROOT)
+    environment["OPENMONTAGE_WORKBUDDY_ROOT"] = str(ROOT)
+    environment["LOCALAPPDATA"] = str(local_app_data)
+    environment.pop("OPENMONTAGE_WORKBUDDY_DATA_ROOT", None)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "golden_key_openmontage_workbuddy",
+            "doctor",
+            "--json",
+        ],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    report = json.loads(result.stdout)
+    assert Path(report["repo_root"]) == ROOT
+    assert Path(report["storage"]["data_root"]) == (
+        local_app_data / "GoldenKeyOpenMontageForWorkBuddy" / "Data"
+    )
+    assert report["storage"]["policy"] == "standard_user_location_with_override"
 
 
 def test_doctor_reports_locked_core_and_four_pipelines(tmp_path: Path) -> None:
@@ -118,7 +154,25 @@ def test_doctor_reports_local_runtime_without_contacting_providers(tmp_path: Pat
     report = json.loads(result.stdout)
     assert report["runtime"]["python"]["supported"] is True
     assert report["runtime"]["python"]["minimum"] == "3.10"
-    assert set(report["runtime"]) == {"ffmpeg", "node", "python"}
+    assert set(report["runtime"]) == {
+        "ffmpeg",
+        "node",
+        "python",
+        "python_packages",
+    }
+    assert report["runtime"]["python_packages"]["required"] == [
+        "dotenv",
+        "google.genai",
+        "httpx",
+        "jsonschema",
+        "openai",
+        "PIL",
+        "pydantic",
+        "requests",
+        "yaml",
+    ]
+    assert report["runtime"]["python_packages"]["missing"] == []
+    assert report["network_calls_attempted"] == 0
     assert report["provider_calls_attempted"] == 0
 
 

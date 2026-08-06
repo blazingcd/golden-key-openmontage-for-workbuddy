@@ -11,6 +11,7 @@ W0 v0.3.21导出合同、公开性、架构和接口审计
  -> W1 Callable Core同步门禁和安装骨架
  -> W2 Skill-first直接调用闭环与MCP决策Gate
  -> W3 离线可靠性、安全和回归
+ -> WB-UX1 WorkBuddy新手引导（独立消费方任务）
  -> W4 安装交付、用户提示和真实WorkBuddy验收
 ```
 
@@ -80,8 +81,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 ### 任务
 
 - 编写可导入的 WorkBuddy Skill。
-- 复用原生 onboarding，提供中文、按真实能力生成的用户提示和示例Prompt。
-- 支持模糊需求、具体目标、参考视频、源素材和继续项目五类入口。
+- 生产Skill支持具体目标、参考视频、源素材和继续项目等入口；模糊需求的新手引导已拆为独立`WB-UX1`，不再计入W2或W4安装任务。
 - 实现环境/版本检查、权威上下文读取、项目创建/打开和状态查询。
 - 实现Schema校验和受限Stage提交。
 - 实现当前Manifest/Stage允许范围内的确定性工具执行。首个本地纵向切片和持久长任务协议已完成；
@@ -119,21 +119,50 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - 失败路径均为结构化、可操作且不泄漏凭据的提示；CLI与可选MCP语义一致。
 - mock只作为拒绝路径夹具，不作为真实Provider或普通用户可用结论；`OFFLINE ADAPTER READY`仍等待W4。
 
-## W4：打包、安装、文档和真实WorkBuddy验收
+## WB-UX1：WorkBuddy新手引导
+
+状态：`IMPLEMENTED / REAL-CLIENT ACCEPTANCE PENDING`。这是独立的WorkBuddy消费方体验任务，
+不属于W4安装包，也不修改Golden Key Core。
 
 ### 任务
 
-- 决策并实现Python、Node、FFmpeg等运行环境交付方式。
-- Windows优先安装、升级和卸载。
+- 提供独立的`golden-key-openmontage-onboarding` Skill，只在用户不知道如何开始、询问能力或仅表达模糊视频意愿时触发。
+- 读取本机真实`doctor/context/pipelines/config inspect`结果，用中文和业务结果表达能力，不向新手倾倒CLI、Schema、MCP或Provider术语。
+- 以产品/服务、品牌/公司、获客转化、主体/IP四类用户结果提供少量示例，并用一个简单问题推动用户形成具体请求。
+- 按需提供三种消费端素材交接引导：附加现有素材、提供参考内容、暂时无素材先从真实对象与目标开始；
+  每次最多提出一个相关问题，不要求用户盘点整个素材库。
+- 用户给出具体生产请求后立即停止引导，交接给`golden-key-openmontage`生产Skill；不重复用户已经提供的信息。
+- 不盘点SaaS素材库、不硬编码C盘或D盘、不伪称文件已经导入或理解；不复制Core的生产需求澄清逻辑，
+  不调用真实/付费Provider，不创建生产项目。
+
+### 完成证据
+
+- 独立Skill通过Skill Creator格式校验。
+- WorkBuddy合同测试覆盖触发边界、真实能力读取、生产Skill交接、素材库/Core/安装职责隔离。
+- 源码实现和自动合同已经完成；真实WorkBuddy中的Skill导入、模糊请求触发、具体请求交接仍作为
+  `WB-UX1`自身的客户端验收项，不与W4安装包实现捆绑，未通过前不把`WB-UX1`标为最终`DONE`。
+
+## W4：打包、安装、文档和真实WorkBuddy验收
+
+状态：`IN PROGRESS / FIRST LIGHT-ZIP SLICE BUILT`。
+
+### 任务
+
+- `DONE`：冻结首包为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI；ZIP可从任意目录启动注册。
+- `DONE`：普通用户默认使用`%LOCALAPPDATA%`，本机D盘只是覆盖；注册两个Skill并写入稳定runtime locator。
+- `DONE`：首包完整带入v0.3.21的1566文件并明确标记为“首次安装包构建验证基线，不是最终Core”。
+- `DONE`：WorkBuddy首次触发通过launcher运行只读`doctor`，检查Python包/Node/FFmpeg/Core/Pipeline；
+  `config inspect`独立检查安全Provider引用，二者网络和Provider调用为0。
+- `NEXT`：在用户确认后准备缺失Python依赖的轻量方式，并冻结Node、FFmpeg的必需/可选矩阵；不盲目打包全部运行时。
+- `NEXT`：实现可回滚升级和卸载，保护用户项目、Artifact、配置、模型和已有WorkBuddy Skill/MCP配置。
 - 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。
-- 打包可导入Skill和完整Golden Key核心。
-- 中文快速开始、Prompt Gallery和故障排查。
+- 扩充中文快速开始、Prompt Gallery和故障排查。
 - 在未预装开发环境的普通Windows用户场景验证安装。
 - 在真实WorkBuddy中验证所选执行入口、能力发现、自然语言触发、审批暂停、长任务、取消和恢复。
 
 ### 完成证据
 
-- 全新D盘目录按文档安装成功。
+- 全新任意解压目录和普通用户默认目录按文档注册成功；D盘覆盖路径独立通过。
 - 用户不需要另外下载Golden Key核心。
 - 真实WorkBuddy验收通过后才声明`OFFLINE ADAPTER READY`。
 - Provider真实成片仍为单独授权阶段。

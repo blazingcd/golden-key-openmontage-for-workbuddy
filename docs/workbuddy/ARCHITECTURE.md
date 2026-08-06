@@ -1,6 +1,6 @@
 # Golden Key OpenMontage for WorkBuddy：架构边界
 
-状态：`v0.3.21 BASELINE FROZEN / W2 MCP=OPTIONAL / W3 OFFLINE RELIABILITY GATE PASS`
+状态：`v0.3.21 FIRST-PACKAGE BASELINE / W2 MCP=OPTIONAL / W4 LIGHT ZIP ACTIVE`
 
 更新日期：2026-08-06
 
@@ -33,6 +33,9 @@ WorkBuddy 本身就是唯一 Agent，直接：
 
 该层由不可变 Release `golden-key-v0.3.21` 的 WorkBuddy 专用导出包提供，合同 ID 为
 `golden-key-workbuddy-callable-core-v1`。
+
+该版本目前只作为第一个轻量ZIP安装/注册/调用纵向切片的构建基线。Golden Key Core正在进行较大调整，
+因此v0.3.21不是最终Core版本；后续只能通过新的不可变Release合同替换。
 
 ### 2.2 非 WorkBuddy 调用层
 
@@ -128,7 +131,7 @@ fal.ai/Replicate接入的Seedance、MiniMax第三方网关明确分开。`config
 所有Layer 3 Skill已显式确认，并且工具为本地、零网络、估算零成本。API、Hybrid、声明需网络或估算有成本的工具
 在状态探测和`execute()`前拒绝。首条真实本地纵向验证使用`scene_detect`，socket封锁下Provider调用为0。
 
-长任务入口在同一确定性CLI中持久化到`D:/WorkBuddyData/Jobs/<project-id>`。`task submit`完成Stage、Registry、
+长任务入口在同一确定性CLI中持久化到已注册的`<data_root>/Jobs/<project-id>`。`task submit`完成Stage、Registry、
 Skill、Schema、路径、成本与输入hash校验后只排队；稳定task ID使重复提交幂等。`task run`是可由WorkBuddy放入
 后台进程的前台执行命令，执行前再次校验输入hash，并把结果原子写回。成功或终态任务不会重复执行。同一D盘
 数据根通过原子执行槽把跨项目并发上限固定为1；竞争失败的任务保持`queued`、尝试次数不增加、Tool调用为0，
@@ -142,8 +145,10 @@ socket-denial边界保护；同一上下文通过`PYTHONPATH/sitecustomize`和`N
 常见Bearer/API key文本和明确的敏感字段。测试从仓库外目录启动，并把SaaS/private Core路径指向不存在位置后，
 direct-agent上下文和离线项目创建仍通过，因此最终用户运行时不依赖Golden Key SaaS仓库。
 
-它们只做本地环境、锁定Core身份、四Pipeline、Skill和隔离边界检查，Provider调用数必须为0。
-默认D盘目录和缓存规则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`。
+W4轻量调用链为：任意目录解压ZIP -> PowerShell注册到稳定用户级目录 -> 两个WorkBuddy Skill读取
+`WORKBUDDY-RUNTIME.json` -> launcher运行只读`doctor`和`config inspect` -> WorkBuddy再进入Pipeline合同。
+普通用户默认使用`%LOCALAPPDATA%`，维护者可覆盖到D盘。环境扫描不自动下载组件、不读取密钥值，
+Provider调用数必须为0。细则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`和`PACKAGING-DECISION.md`。
 
 ## 5. 发布与 Git lineage
 

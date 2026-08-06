@@ -7,6 +7,7 @@ from typing import Sequence
 
 from .doctor import build_doctor_report, format_doctor_report
 from .gate import build_gate_report, format_gate_report
+from .paths import default_data_root, default_repo_root
 from .security import redact_payload, redact_text
 
 
@@ -21,8 +22,8 @@ def _parser() -> argparse.ArgumentParser:
     doctor = subparsers.add_parser(
         "doctor", help="Check the local WorkBuddy callable-core environment."
     )
-    doctor.add_argument("--repo-root", type=Path, default=Path.cwd())
-    doctor.add_argument("--data-root", type=Path, default=Path("D:/WorkBuddyData"))
+    doctor.add_argument("--repo-root", type=Path, default=default_repo_root())
+    doctor.add_argument("--data-root", type=Path, default=default_data_root())
     doctor.add_argument(
         "--create-dirs",
         action="store_true",
@@ -33,20 +34,20 @@ def _parser() -> argparse.ArgumentParser:
     gate = subparsers.add_parser(
         "gate", help="Run the fail-closed W1 callable-core and adapter boundary Gate."
     )
-    gate.add_argument("--repo-root", type=Path, default=Path.cwd())
-    gate.add_argument("--data-root", type=Path, default=Path("D:/WorkBuddyData"))
+    gate.add_argument("--repo-root", type=Path, default=default_repo_root())
+    gate.add_argument("--data-root", type=Path, default=default_data_root())
     gate.add_argument("--json", action="store_true", dest="as_json")
 
     context = subparsers.add_parser(
         "context", help="Read the authoritative direct-agent WorkBuddy context."
     )
-    context.add_argument("--repo-root", type=Path, default=Path.cwd())
+    context.add_argument("--repo-root", type=Path, default=default_repo_root())
     context.add_argument("--json", action="store_true", dest="as_json")
 
     pipelines = subparsers.add_parser(
         "pipelines", help="List callable Pipeline contracts without selecting one."
     )
-    pipelines.add_argument("--repo-root", type=Path, default=Path.cwd())
+    pipelines.add_argument("--repo-root", type=Path, default=default_repo_root())
     pipelines.add_argument("--json", action="store_true", dest="as_json")
 
     project = subparsers.add_parser(
@@ -54,9 +55,9 @@ def _parser() -> argparse.ArgumentParser:
     )
     project_commands = project.add_subparsers(dest="project_command", required=True)
     project_create = project_commands.add_parser("create")
-    project_create.add_argument("--repo-root", type=Path, default=Path.cwd())
+    project_create.add_argument("--repo-root", type=Path, default=default_repo_root())
     project_create.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     project_create.add_argument("--project-id", required=True)
     project_create.add_argument("--title", required=True)
@@ -64,7 +65,7 @@ def _parser() -> argparse.ArgumentParser:
     project_create.add_argument("--json", action="store_true", dest="as_json")
     project_status = project_commands.add_parser("status")
     project_status.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     project_status.add_argument("--project-id", required=True)
     project_status.add_argument("--json", action="store_true", dest="as_json")
@@ -75,7 +76,7 @@ def _parser() -> argparse.ArgumentParser:
     artifact_commands = artifact.add_subparsers(dest="artifact_command", required=True)
     artifact_validate = artifact_commands.add_parser("validate")
     artifact_validate.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     artifact_validate.add_argument("--project-id", required=True)
     artifact_validate.add_argument("--name", required=True)
@@ -90,7 +91,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     checkpoint_submit = checkpoint_commands.add_parser("submit")
     checkpoint_submit.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     checkpoint_submit.add_argument("--project-id", required=True)
     checkpoint_submit.add_argument("--stage", required=True)
@@ -108,9 +109,9 @@ def _parser() -> argparse.ArgumentParser:
     )
     stage_commands = stage.add_subparsers(dest="stage_command", required=True)
     stage_inspect = stage_commands.add_parser("inspect")
-    stage_inspect.add_argument("--repo-root", type=Path, default=Path.cwd())
+    stage_inspect.add_argument("--repo-root", type=Path, default=default_repo_root())
     stage_inspect.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     stage_inspect.add_argument("--project-id", required=True)
     stage_inspect.add_argument("--json", action="store_true", dest="as_json")
@@ -120,16 +121,16 @@ def _parser() -> argparse.ArgumentParser:
     )
     tool_commands = tool.add_subparsers(dest="tool_command", required=True)
     tool_list = tool_commands.add_parser("list")
-    tool_list.add_argument("--repo-root", type=Path, default=Path.cwd())
+    tool_list.add_argument("--repo-root", type=Path, default=default_repo_root())
     tool_list.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     tool_list.add_argument("--project-id", required=True)
     tool_list.add_argument("--json", action="store_true", dest="as_json")
     tool_execute = tool_commands.add_parser("execute")
-    tool_execute.add_argument("--repo-root", type=Path, default=Path.cwd())
+    tool_execute.add_argument("--repo-root", type=Path, default=default_repo_root())
     tool_execute.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     tool_execute.add_argument("--project-id", required=True)
     tool_execute.add_argument("--name", required=True)
@@ -147,12 +148,12 @@ def _parser() -> argparse.ArgumentParser:
     )
     config_commands = config.add_subparsers(dest="config_command", required=True)
     config_inspect = config_commands.add_parser("inspect")
-    config_inspect.add_argument("--repo-root", type=Path, default=Path.cwd())
+    config_inspect.add_argument("--repo-root", type=Path, default=default_repo_root())
     config_inspect.add_argument("--json", action="store_true", dest="as_json")
     config_template = config_commands.add_parser("template")
-    config_template.add_argument("--repo-root", type=Path, default=Path.cwd())
+    config_template.add_argument("--repo-root", type=Path, default=default_repo_root())
     config_template.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     config_template.add_argument("--json", action="store_true", dest="as_json")
 
@@ -161,9 +162,9 @@ def _parser() -> argparse.ArgumentParser:
     )
     task_commands = task.add_subparsers(dest="task_command", required=True)
     task_submit = task_commands.add_parser("submit")
-    task_submit.add_argument("--repo-root", type=Path, default=Path.cwd())
+    task_submit.add_argument("--repo-root", type=Path, default=default_repo_root())
     task_submit.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     task_submit.add_argument("--project-id", required=True)
     task_submit.add_argument("--name", required=True)
@@ -174,22 +175,22 @@ def _parser() -> argparse.ArgumentParser:
     task_submit.add_argument("--json", action="store_true", dest="as_json")
     task_status = task_commands.add_parser("status")
     task_status.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     task_status.add_argument("--project-id", required=True)
     task_status.add_argument("--task-id", required=True)
     task_status.add_argument("--json", action="store_true", dest="as_json")
     task_cancel = task_commands.add_parser("cancel")
     task_cancel.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     task_cancel.add_argument("--project-id", required=True)
     task_cancel.add_argument("--task-id", required=True)
     task_cancel.add_argument("--json", action="store_true", dest="as_json")
     task_run = task_commands.add_parser("run")
-    task_run.add_argument("--repo-root", type=Path, default=Path.cwd())
+    task_run.add_argument("--repo-root", type=Path, default=default_repo_root())
     task_run.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     task_run.add_argument("--project-id", required=True)
     task_run.add_argument("--task-id", required=True)
@@ -197,7 +198,7 @@ def _parser() -> argparse.ArgumentParser:
     task_run.add_argument("--json", action="store_true", dest="as_json")
     task_recover = task_commands.add_parser("recover")
     task_recover.add_argument(
-        "--data-root", type=Path, default=Path("D:/WorkBuddyData")
+        "--data-root", type=Path, default=default_data_root()
     )
     task_recover.add_argument("--project-id", required=True)
     task_recover.add_argument("--task-id", required=True)

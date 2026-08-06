@@ -7,10 +7,13 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILL = ROOT / "workbuddy-skill" / "golden-key-openmontage" / "SKILL.md"
+ONBOARDING_SKILL = (
+    ROOT / "workbuddy-skill" / "golden-key-openmontage-onboarding" / "SKILL.md"
+)
 
 
-def _read_skill() -> tuple[dict, str]:
-    text = SKILL.read_text(encoding="utf-8")
+def _read_skill(path: Path = SKILL) -> tuple[dict, str]:
+    text = path.read_text(encoding="utf-8")
     assert text.startswith("---\n")
     _, frontmatter, body = text.split("---", 2)
     return yaml.safe_load(frontmatter), body
@@ -41,6 +44,18 @@ def test_workbuddy_config_directory_defers_optional_mcp_to_w4_packaging() -> Non
     assert not (ROOT / ".workbuddy" / "mcp.json").exists()
     assert "Skill-first" in readme
     assert "MCP" in readme
+
+
+def test_registered_skills_use_the_portable_runtime_locator_before_doctor() -> None:
+    for skill_path in (SKILL, ONBOARDING_SKILL):
+        _, body = _read_skill(skill_path)
+        assert "WORKBUDDY-RUNTIME.json" in body
+        assert "launcher" in body
+        assert "doctor --json" in body
+        assert "Do not guess or search the user's drives" in body
+
+    _, production = _read_skill(SKILL)
+    assert "Locate the checked-out" not in production
 
 
 def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
@@ -74,3 +89,44 @@ def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
     assert "Submit validates and queues" in body
     assert "not safely cancelable" in body
     assert "never retry automatically" in body
+
+
+def test_workbuddy_onboarding_is_a_separate_consumer_skill() -> None:
+    metadata, body = _read_skill(ONBOARDING_SKILL)
+
+    assert metadata["name"] == "golden-key-openmontage-onboarding"
+    description = metadata["description"]
+    assert "new or uncertain WorkBuddy users" in description
+    assert "Do not use once" in description
+
+    for command in (
+        "golden-key-workbuddy doctor",
+        "golden-key-workbuddy context",
+        "golden-key-workbuddy pipelines",
+        "golden-key-workbuddy config inspect",
+    ):
+        assert command in body
+
+    assert "WorkBuddy consumer experience" in body
+    assert "not a Golden Key Core stage" in body
+    assert "stop onboarding" in body
+    assert "`golden-key-openmontage` production Skill" in body
+    assert "must not invent a parallel business-questionnaire contract" in body
+
+
+def test_workbuddy_onboarding_does_not_own_material_inventory_or_setup() -> None:
+    _, body = _read_skill(ONBOARDING_SKILL)
+
+    assert "Guide material handoff" in body
+    assert "Existing source materials" in body
+    assert "Reference material" in body
+    assert "No material yet" in body
+    assert "Ask at most one material-handoff question" in body
+    assert "attach or drag in only the files relevant to this video" in body
+    assert "Do not ask the user to inventory or list all available materials" in body
+    assert "Do not hardcode a C-drive or D-drive location" in body
+    assert "claim that WorkBuddy has imported, indexed, or understood a file" in body
+    assert "Do not manage a Golden Key SaaS material library" in body
+    assert "Do not put onboarding behavior into the managed Golden Key Core" in body
+    assert "Do not call a real or paid Provider" in body
+    assert "Do not present MCP, Python, CLI" in body

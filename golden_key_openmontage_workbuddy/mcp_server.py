@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, TextIO
 
+from .paths import default_data_root, default_repo_root
 from .security import redact_payload, redact_text
 
 
@@ -272,8 +273,12 @@ class WorkBuddyMcpServer:
 
     @classmethod
     def from_environment(cls) -> "WorkBuddyMcpServer":
-        repo_root = Path(os.environ.get("GOLDEN_KEY_REPO_ROOT", Path.cwd()))
-        data_root = Path(os.environ.get("GOLDEN_KEY_DATA_ROOT", "D:/WorkBuddyData"))
+        repo_root = Path(
+            os.environ.get("OPENMONTAGE_WORKBUDDY_ROOT", default_repo_root())
+        )
+        data_root = Path(
+            os.environ.get("OPENMONTAGE_WORKBUDDY_DATA_ROOT", default_data_root())
+        )
         return cls(repo_root=repo_root.resolve(), data_root=data_root.resolve())
 
     def initialize(self, params: dict[str, Any]) -> dict[str, Any]:

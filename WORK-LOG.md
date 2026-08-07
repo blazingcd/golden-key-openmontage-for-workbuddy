@@ -642,3 +642,12 @@
 - 用户介绍区移除首次公开推送规则、仓库同步历史和其他维护者内部信息；保留Pre-Alpha、四条Pipeline为beta、
   未完成普通用户安装/升级卸载/依赖准备/真实Provider验收等边界，避免夸大当前可用性。
 - 本轮仅修改消费方公开文档与项目留痕，没有修改1566个managed Core文件，也没有调用任何真实/付费Provider。
+
+## 2026-08-07：GitHub Actions恢复后的跨平台安装测试修正
+
+- GitHub官方状态已将Actions事故标记为Resolved，最新工作流可以正常完成checkout、依赖安装、W1 Gate和lint；
+  完整测试暴露的唯一失败是Linux runner尝试启动Windows专用`cmd.exe`。
+- 保留Windows对真实双击入口`install-to-workbuddy.cmd`的验证；非Windows runner改为直接调用同一包内的
+  `install-to-workbuddy.ps1`公共注册合同，继续验证两个Skill、launcher、离线doctor和零Provider/网络调用。
+- 安装后doctor允许诚实返回`pass`或`degraded`：缺少Python运行依赖属于首包已知待准备状态，但`errors`必须为空，
+  安装和注册不能因此被误判为损坏。专项=`3 passed`，完整WorkBuddy专项=`83 passed`。

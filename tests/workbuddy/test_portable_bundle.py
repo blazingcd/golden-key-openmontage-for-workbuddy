@@ -157,12 +157,23 @@ def test_zip_bootstrap_registers_both_skills_and_launcher_runs_doctor(
         + os.pathsep
         + install_environment.get("PATH", "")
     )
-    installed = subprocess.run(
-        [
+    if os.name == "nt":
+        install_command = [
             "cmd.exe",
             "/d",
             "/c",
             str(staging / "bootstrap" / "install-to-workbuddy.cmd"),
+        ]
+    else:
+        install_command = [
+            powershell,
+            "-NoProfile",
+            "-File",
+            str(staging / "install-to-workbuddy.ps1"),
+        ]
+    installed = subprocess.run(
+        install_command
+        + [
             "-InstallRoot",
             str(install_root),
             "-DataRoot",
@@ -185,8 +196,9 @@ def test_zip_bootstrap_registers_both_skills_and_launcher_runs_doctor(
     assert record["core"]["usage"] == (
         "temporary_first_package_build_baseline_not_final_core"
     )
-    assert record["doctor_exit_code"] == 0
-    assert record["doctor"]["status"] == "pass"
+    assert record["doctor_exit_code"] in (0, 1)
+    assert record["doctor"]["status"] in ("pass", "degraded")
+    assert record["doctor"]["errors"] == []
     assert record["doctor"]["provider_calls_attempted"] == 0
     assert record["doctor"]["network_calls_attempted"] == 0
     for directory in ("Caches", "Config", "Jobs", "Logs", "Models", "Projects", "Temp"):
@@ -231,8 +243,10 @@ def test_zip_bootstrap_registers_both_skills_and_launcher_runs_doctor(
         encoding="utf-8",
         check=False,
     )
-    assert doctor.returncode == 0, doctor.stderr
+    assert doctor.returncode in (0, 1), doctor.stderr
     report = json.loads(doctor.stdout)
+    assert report["status"] in ("pass", "degraded")
+    assert report["errors"] == []
     assert Path(report["repo_root"]) == install_root
     assert Path(report["storage"]["data_root"]) == data_root
     assert report["provider_calls_attempted"] == 0

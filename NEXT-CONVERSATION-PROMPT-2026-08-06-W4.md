@@ -40,6 +40,11 @@
   `D:/WorkBuddyData/Temp/w4-clean-client-final-publication-audit-20260807-r17`。
 - r11真实客户端自然语言路由没有通过：`我不知道怎么开始做视频`进入WorkBuddy通用视频流程，没有进入
   `golden-key-openmontage-onboarding`。该项是当前明确阻断，不能因为Skill已发现而标记完成。
+- WorkBuddy消费层已增加生产工具API Key引导和本地配置入口：用户不在聊天中发送Key；
+  `配置API密钥.cmd`隐藏录入并用Windows当前用户DPAPI保存到DataRoot，launcher只向当前进程解密注入。
+  `config guide`只报告`present_unverified/partial/not_configured`和Key名称，不返回Key值、不联网。
+- Key录入不等于账号、余额、网络或模型可用性已验证，也不授权真实/付费Provider调用。r18不包含该增量，已过期；
+  必须以最新源码重建候选并重新给出ZIP SHA和W0证据。
 - 本次验收已卸载并清理到纯新起点：默认程序根、两个Golden Key Skill和MCP注册均不存在，WorkBuddy进程为0；
   本项目验收会话已从客户端可见状态删除。没有清空用户账号、其他项目或全局WorkBuddy数据。
 
@@ -54,6 +59,7 @@
 4. 按`MCP=optional`提供明确选择：默认CLI可用；启用MCP时只生成用户级stdio配置和首次信任指引，
    不覆盖已有配置，并提供禁用/卸载路径。
 5. 编写中文快速开始、自然语言示例和故障排查；所有状态继续明确`Pre-Alpha`，不声称Provider生产验收。
+   API Key配置必须使用本地隐藏输入和当前用户加密存储，不得要求用户把Key发送到WorkBuddy聊天。
 6. 默认目录首装与自卸载已通过；下一步继续验证真实跨版本升级、自然语言触发、Pipeline选择、Stage Skill、本地Tool、
    长任务状态/恢复和Human Checkpoint。真实Provider成片保持独立授权Gate。
 7. 每个安全可验证增量更新`PROJECT-STATE.md`、追加`WORK-LOG.md`、重跑W0并持续提交推送。

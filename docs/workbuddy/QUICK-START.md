@@ -23,6 +23,20 @@
 Python是运行必需项；FFmpeg在合成和本地媒体处理时必需；Node只在选择Remotion或HyperFrames时需要。
 首包不会因为检测到Node缺失就自动安装它，也不会把三套运行时整体塞进ZIP。
 
+## 配置图像、视频和配音API密钥
+
+真正调用文生图、图生视频、文生视频、TTS或数字人等在线能力前，还需要配置相应Provider的API Key。
+不要把Key粘贴进WorkBuddy聊天或普通命令参数。
+
+1. 双击已安装目录中的`配置API密钥.cmd`。
+2. 在本地窗口选择需要的Provider，并在隐藏输入框中录入Key。
+3. Key使用Windows当前用户DPAPI加密，保存到`<DataRoot>/Config/golden-key-provider-credentials.json`；
+   不写入ZIP解压目录、项目Artifact、WorkBuddy聊天或安装日志。
+4. 回到WorkBuddy后让它重新检查配置。`已录入但未验证`只表示Key存在，不代表账号权限、余额或网络连通性已通过。
+
+新手引导应根据当前视频目标只推荐需要的能力，不要求一次配齐所有Provider。配置Key本身不会触发联网、付费生成或
+Provider连通性测试；这些动作仍需单独说明并获得用户明确同意。
+
 面向维护者或需要自定义安装路径的高级用户，仍可直接运行 `install-workbuddy.ps1` 并传入参数。开发仓库中的
 `setup.py` 是 WorkBuddy 消费层自己的Python包元数据；普通用户ZIP不携带它，也不需要运行它。
 

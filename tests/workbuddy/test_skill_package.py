@@ -115,6 +115,7 @@ def test_workbuddy_onboarding_is_a_separate_consumer_skill() -> None:
         "golden-key-workbuddy context",
         "golden-key-workbuddy pipelines",
         "golden-key-workbuddy config inspect",
+        "golden-key-workbuddy config guide",
     ):
         assert command in body
 
@@ -123,6 +124,9 @@ def test_workbuddy_onboarding_is_a_separate_consumer_skill() -> None:
     assert "stop onboarding" in body
     assert "`golden-key-openmontage` production Skill" in body
     assert "must not invent a parallel business-questionnaire contract" in body
+    assert "配置API密钥.cmd" in body
+    assert "Do not ask the user to paste" in body
+    assert "present_unverified" in body
 
 
 def test_workbuddy_onboarding_does_not_own_material_inventory_or_setup() -> None:
@@ -141,3 +145,13 @@ def test_workbuddy_onboarding_does_not_own_material_inventory_or_setup() -> None
     assert "Do not put onboarding behavior into the managed Golden Key Core" in body
     assert "Do not call a real or paid Provider" in body
     assert "Do not present MCP, Python, CLI" in body
+
+
+def test_production_skill_guides_missing_provider_keys_without_chat_secrets() -> None:
+    _, body = _read_skill(SKILL)
+
+    assert "config guide --json" in body
+    assert "配置API密钥.cmd" in body
+    assert "Do not ask the user to paste" in body
+    assert "present_unverified" in body
+    assert "does not authorize a Provider call" in body

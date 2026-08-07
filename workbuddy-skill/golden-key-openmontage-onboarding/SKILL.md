@@ -11,9 +11,24 @@ Keep this interaction short and conversational. This is a WorkBuddy consumer exp
 
 1. Read `WORKBUDDY-RUNTIME.json` beside this Skill. Validate `launcher`, `install_root`, and `data_root`. Do not guess or search the user's drives if it is absent or invalid; recommend running `install-workbuddy.ps1` from the complete ZIP.
 2. Invoke the registered `launcher` with `doctor --json`. This is the stable installed form of `golden-key-workbuddy doctor --json` and must run before capability guidance.
-3. Invoke the same launcher for `golden-key-workbuddy context --json`, `golden-key-workbuddy pipelines --json`, and `golden-key-workbuddy config inspect --json`.
+3. Invoke the same launcher for `golden-key-workbuddy context --json`, `golden-key-workbuddy pipelines --json`, `golden-key-workbuddy config inspect --json`, and `golden-key-workbuddy config guide --json`.
 4. Translate the useful result into plain language. Do not dump command output, internal Pipeline names, Schema names, provider keys, or setup jargon on a new user.
 5. Do not call a real or paid Provider, create a production project, or claim installation readiness during onboarding.
+
+## Guide API Key setup
+
+Use `config guide` to explain whether image generation, video generation, TTS, avatar, or related production capabilities have an API Key present. Say `已录入但未验证` for `present_unverified`; never describe key presence as a working connection.
+
+Offer setup when the user asks how to make the package actually run, wants generated media, or the requested outcome needs an unconfigured capability. Recommend only one or two relevant Provider choices, explain what each unlocks, and distinguish direct vendor APIs from third-party gateways.
+
+Do not ask the user to paste an API Key into WorkBuddy chat. If the user wants to configure now:
+
+1. Tell them to open the installed program directory and double-click `配置API密钥.cmd`.
+2. Explain that the local window uses hidden input and stores the Key with Windows current-user DPAPI protection under the registered data directory.
+3. Wait for the user to say the local wizard finished, then rerun `golden-key-workbuddy config guide --json`.
+4. Report only capability and Provider state. Never display, transcribe, log, or request the credential value.
+
+Recording a Key does not authorize a Provider call, connectivity check, or paid generation. Ask separately before any network verification or production call.
 
 ## Start the conversation
 

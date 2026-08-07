@@ -94,9 +94,16 @@ Compose 和 Publish 阶段，以及对应的 Director Skill、Reviewer Rubric、
 WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视频、图片、语音等生产工具的配置引用，
 不会保存或代理 WorkBuddy 的主模型凭据。
 
-当前配置检查可以识别 Tool Registry 中已经实现的国内生态路径，包括 DashScope、豆包、火山即梦和可灵官方等
-厂商直连，以及当前经第三方网关接入的 Seedance、MiniMax 等能力。项目会明确标记接入类型，不把“模型品牌”
-误写成“厂商直连”，也不会因为生成配置模板而读取密钥值、联网探测或自动产生费用。
+当前配置引导可以识别 Tool Registry 中已经实现的国内生态路径，包括 DashScope、豆包、火山即梦和可灵官方等
+厂商直连，以及当前经第三方网关接入的 Seedance、MiniMax 等能力。WorkBuddy会先根据用户实际要做的文生图、
+图生视频、文生视频、中文配音或数字人任务，只推荐相关的一到两个接入选择，不要求新手一次配齐所有服务。
+
+用户不需要把API Key发送到WorkBuddy聊天。安装后双击`配置API密钥.cmd`，即可在本地窗口中隐藏录入；Key使用
+Windows当前用户DPAPI加密后保存在已登记的数据目录，启动器只在当前调用进程中解密注入。`已录入但未验证`
+只说明Key存在，不代表账号权限、余额、地区、网络或具体模型可用，也不构成一次真实或付费Provider调用授权。
+
+项目会明确标记接入类型，不把“模型品牌”误写成“厂商直连”。配置向导和状态检查本身不会联网测试、不显示
+密钥值，也不会自动产生费用。
 
 具体 Provider 是否可用，仍取决于用户本机环境、账号权限、地区、额度和当前 Tool Registry 状态。
 
@@ -123,7 +130,8 @@ WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视�
 3. 脚本校验包完整性、注册生产 Skill 和新手引导 Skill，并执行一次只读环境诊断；
 4. 用户重启 WorkBuddy 后，由 Skill 通过稳定 launcher 调用本地运行时；
 5. 如果只缺Python依赖，WorkBuddy先说明下载范围和保存位置，得到明确同意后再把依赖准备到用户数据目录，
-   不修改系统Python。FFmpeg按合成需要提示，Node只在选择Remotion或HyperFrames时需要。
+   不修改系统Python。FFmpeg按合成需要提示，Node只在选择Remotion或HyperFrames时需要；
+6. 需要在线图像、视频、TTS或数字人能力时，通过本地`配置API密钥.cmd`按需录入相应Provider Key。
 
 常见的“直接覆盖解压”也属于支持路径。安装器只复制当前包 Manifest 明确列出的文件，覆盖解压目录中残留的旧文件会被
 记录并忽略，不会混进正式程序目录。重复双击安装入口会修复本项目自己的程序和两个 Skill；即使用户手动删除了正式程序

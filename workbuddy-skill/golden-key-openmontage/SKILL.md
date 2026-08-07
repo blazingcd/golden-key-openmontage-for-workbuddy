@@ -17,6 +17,9 @@ Treat this package as Pre-Alpha. WorkBuddy is the only Agent; never start or emu
 6. Invoke the same launcher with `config inspect --json` (the registered form of `golden-key-workbuddy config inspect --json`). Keep the WorkBuddy conversation model separate from every Golden Key production Provider: WorkBuddy owns its conversation-model configuration, while the adapter only reports Tool Registry-backed production paths.
 7. When a user wants a credential reference file, invoke the launcher with `config template` (the registered form of `golden-key-workbuddy config template`). It writes a consumer-owned template under the registered `data_root`, records environment-variable names only, and never stores credential values.
 8. Report missing local runtimes and production Provider configuration without silently changing the requested production path. A China-ecosystem model reached through a third-party gateway is not a direct domestic Provider path.
+9. Invoke `config guide --json` before proposing a generated-image, generated-video, TTS, avatar, or other API-backed production path. Use its capability/provider state to recommend only the keys needed by the approved plan.
+10. Do not ask the user to paste an API Key into WorkBuddy chat. Direct them to the installed `配置API密钥.cmd`, wait for the local hidden-input wizard to finish, then rerun `config guide --json`. Treat `present_unverified` as “已录入但未验证”, not as a successful connection.
+11. Saving a Key does not authorize a Provider call, connectivity test, or paid generation. Obtain separate explicit approval before any network or Provider validation.
 
 ## Production contract
 

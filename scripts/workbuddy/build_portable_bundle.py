@@ -42,8 +42,10 @@ BOOTSTRAP_FILES = {
     "packaging/workbuddy/install-workbuddy.ps1": "install-workbuddy.ps1",
     "packaging/workbuddy/install-to-workbuddy.ps1": "install-to-workbuddy.ps1",
     "packaging/workbuddy/uninstall-workbuddy.ps1": "uninstall-workbuddy.ps1",
+    "packaging/workbuddy/configure-provider-keys.ps1": "configure-provider-keys.ps1",
     "packaging/workbuddy/安装到WorkBuddy.cmd": "安装到WorkBuddy.cmd",
     "packaging/workbuddy/从WorkBuddy卸载.cmd": "从WorkBuddy卸载.cmd",
+    "packaging/workbuddy/配置API密钥.cmd": "配置API密钥.cmd",
     "packaging/workbuddy/bootstrap/install-to-workbuddy.cmd": "bootstrap/install-to-workbuddy.cmd",
 }
 

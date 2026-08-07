@@ -238,6 +238,8 @@ def test_portable_bundle_contains_core_consumer_skills_and_first_build_label(
     assert (staging / "安装到WorkBuddy.cmd").is_file()
     assert (staging / "uninstall-workbuddy.ps1").is_file()
     assert (staging / "从WorkBuddy卸载.cmd").is_file()
+    assert (staging / "configure-provider-keys.ps1").is_file()
+    assert (staging / "配置API密钥.cmd").is_file()
     assert (staging / "golden-key-workbuddy.ps1").is_file()
     assert not (staging / "setup.py").exists()
     assert (ROOT / "setup.py").is_file()
@@ -680,6 +682,151 @@ def test_installed_launcher_ignores_shadow_package_in_callers_working_directory(
     assert "CALLER SHADOW PACKAGE WAS IMPORTED" not in result.stderr
     report = json.loads(result.stdout)
     assert Path(report["repo_root"]) == install_root
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows DPAPI contract")
+def test_installed_launcher_decrypts_dpapi_provider_key_without_returning_it(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "package",
+    )
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    installed = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert installed.returncode == 0, installed.stderr
+
+    dummy_secret = "dpapi-test-secret-must-not-leak"
+    powershell = shutil.which("pwsh") or shutil.which("powershell")
+    assert powershell is not None
+    encryption_environment = os.environ.copy()
+    encryption_environment["GOLDEN_KEY_DPAPI_TEST_SECRET"] = dummy_secret
+    encrypted = subprocess.run(
+        [
+            powershell,
+            "-NoProfile",
+            "-Command",
+            (
+                "$value=ConvertTo-SecureString $env:GOLDEN_KEY_DPAPI_TEST_SECRET -AsPlainText -Force; "
+                "ConvertFrom-SecureString $value"
+            ),
+        ],
+        env=encryption_environment,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=True,
+    ).stdout.strip()
+    store = data_root / "Config" / "golden-key-provider-credentials.json"
+    store.parent.mkdir(parents=True, exist_ok=True)
+    store.write_text(
+        json.dumps(
+            {
+                "schema_version": "golden-key-provider-credentials-v1",
+                "protection": "windows_dpapi_current_user",
+                "credentials": {"DASHSCOPE_API_KEY": encrypted},
+            }
+        ),
+        encoding="utf-8",
+    )
+    environment = os.environ.copy()
+    environment.pop("DASHSCOPE_API_KEY", None)
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    (fake_bin / "python.cmd").write_text(
+        "@echo off\r\n"
+        f'if "%DASHSCOPE_API_KEY%"=="{dummy_secret}" (\r\n'
+        '  echo {"status":"pass","credential_injected":true}\r\n'
+        "  exit /b 0\r\n"
+        ")\r\n"
+        'echo {"status":"fail","credential_injected":false}\r\n'
+        "exit /b 7\r\n",
+        encoding="ascii",
+    )
+    environment["PATH"] = str(fake_bin) + os.pathsep + environment.get("PATH", "")
+    guided = subprocess.run(
+        [
+            powershell,
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(install_root / "golden-key-workbuddy.ps1"),
+            "credential-injection-test",
+        ],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+    assert guided.returncode == 0, guided.stdout + guided.stderr
+    assert dummy_secret not in guided.stdout
+    report = json.loads(guided.stdout)
+    assert report == {"status": "pass", "credential_injected": True}
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows API-key wizard contract")
+def test_api_key_wizard_survives_launcher_exit_and_allows_cancel(tmp_path: Path) -> None:
+    package_root = tmp_path / "package"
+    package_root.mkdir()
+    data_root = tmp_path / "user-data"
+    shutil.copy2(
+        ROOT / "packaging" / "workbuddy" / "configure-provider-keys.ps1",
+        package_root / "configure-provider-keys.ps1",
+    )
+    (package_root / "WORKBUDDY-INSTALL.json").write_text(
+        json.dumps({"data_root": str(data_root)}), encoding="utf-8"
+    )
+    (package_root / "golden-key-workbuddy.ps1").write_text(
+        "@{\n"
+        "  status = 'pass'\n"
+        "  credential_store = @{ path = '"
+        + str(data_root / "Config" / "golden-key-provider-credentials.json").replace(
+            "'", "''"
+        )
+        + "' }\n"
+        "  providers = @(@{ provider = 'dashscope'; service = 'DashScope'; "
+        "access_path = 'direct_vendor_api'; capabilities = @('text_to_speech'); "
+        "credential_state = 'not_configured'; credential_options = @(@('DASHSCOPE_API_KEY')); "
+        "present_env_vars = @() })\n"
+        "} | ConvertTo-Json -Depth 6\n"
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    powershell = shutil.which("pwsh") or shutil.which("powershell")
+    assert powershell is not None
+    result = subprocess.run(
+        [
+            powershell,
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(package_root / "configure-provider-keys.ps1"),
+        ],
+        input="\n",
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Golden Key OpenMontage API" in result.stdout
+    assert not (data_root / "Config").exists()
 
 
 def test_uninstall_preserves_skill_without_matching_ownership_marker(

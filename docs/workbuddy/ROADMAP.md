@@ -131,6 +131,9 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - 以产品/服务、品牌/公司、获客转化、主体/IP四类用户结果提供少量示例，并用一个简单问题推动用户形成具体请求。
 - 按需提供三种消费端素材交接引导：附加现有素材、提供参考内容、暂时无素材先从真实对象与目标开始；
   每次最多提出一个相关问题，不要求用户盘点整个素材库。
+- `DONE`：增加生产工具API Key引导。按目标只推荐相关Provider，不要求用户在聊天中粘贴Key；本地向导隐藏录入，
+  使用Windows当前用户DPAPI保护，并把`present_unverified`明确翻译为“已录入但未验证”。
+- 配置Key不等于Provider联网、余额或付费调用授权；任何真实验证和生产调用继续使用独立授权Gate。
 - 用户给出具体生产请求后立即停止引导，交接给`golden-key-openmontage`生产Skill；不重复用户已经提供的信息。
 - 不盘点SaaS素材库、不硬编码C盘或D盘、不伪称文件已经导入或理解；不复制Core的生产需求澄清逻辑，
   不调用真实/付费Provider，不创建生产项目。
@@ -158,6 +161,8 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
   普通用户ZIP排除它，用户无需执行Python源码安装。
 - `DONE`：WorkBuddy首次触发通过launcher运行只读`doctor`，检查Python包/Node/FFmpeg/Core/Pipeline；
   `config inspect`独立检查安全Provider引用，二者网络和Provider调用为0。
+- `DONE`：包内增加`配置API密钥.cmd`和本地隐藏输入向导；凭据以Windows当前用户DPAPI写入独立DataRoot，
+  launcher仅向当前进程注入，状态接口不返回Key值、不联网验证，也不把保存Key视为Provider调用授权。
 - `DONE`：新增只读`runtime plan`和显式`runtime prepare --confirm-download`；依赖只写入所选
   `<data_root>/Runtime/Python`，pip缓存留在数据目录，不修改系统Python，hash一致时幂等复用，漂移目标拒绝覆盖。
 - `DONE`：冻结运行时矩阵：Python必需；FFmpeg为合成和本地媒体工具必需但不随包携带；Node只在选择

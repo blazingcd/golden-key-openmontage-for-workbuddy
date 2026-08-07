@@ -115,6 +115,10 @@
   生产需求澄清、不创建生产项目、不调用真实/付费Provider，也不修改1566个managed Core文件。
 - `WB-UX1`已补齐消费端素材交接对话：根据用户情况引导附加相关现有素材、提供参考内容，或在无素材时
   先说明真实对象和观众行动；每轮最多问一个相关问题，不要求盘点整个素材库，不硬编码盘符或伪报已导入。
+- `WB-UX1`与生产Skill已补齐API Key配置引导：`config guide`只报告能力、Provider和Key名称/存在状态；
+  不返回Key值、不联网。用户通过包内`配置API密钥.cmd`隐藏录入，凭据使用Windows当前用户DPAPI保存到
+  独立DataRoot，launcher仅向当前进程解密注入；`present_unverified`只表示“已录入但未验证”。
+- 保存Key不授权联网、连通性测试、余额检查或真实/付费生成；这些动作仍需单次独立授权。
 - `WB-UX1`验证：Skill Creator格式=`Skill is valid!`；WorkBuddy专项=`78 passed`；消费方Gate=`PASS`，
   静态隔离违规0、活动MCP配置不存在、Provider调用0。
 - `WB-UX1`真实客户端验收尚未完成：当前Windows应用控制只能读取到WorkBuddy空壳控件树，无法可靠识别
@@ -201,6 +205,16 @@
 - 已按用户要求清理本次真实客户端验收：默认程序根、两个Golden Key Skill和MCP注册均不存在，WorkBuddy后台进程为0；
   三条Golden Key验收会话已标记删除，相关会话/trace文件移出WorkBuddy用户目录到D盘隔离区。清理后重启一次
   WorkBuddy，未出现新的Golden Key MCP连接记录，删除状态未被恢复。该清理不等于清空用户账号或其他项目。
+- API Key引导候选r23位于
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-api-key-guide-20260807-r23`；ZIP大小`72,812,987`字节，
+  SHA-256=`ca71961edfd76c87cb91fb7b8f8857e599c748cea0b486ecc38baa1beeb8eb38`。隔离安装后即使缺少
+  `jsonschema`，`config guide=pass`并以`deferred_missing_python_dependency`诚实标记Registry核验待依赖准备，
+  仍可显示6类Provider选择；Key值返回0，网络/Provider调用0，本地配置向导可打开并取消且不创建凭据文件。
+- DPAPI合同测试验证加密凭据只能由当前Windows用户解密，并由已安装launcher仅注入当前子进程；测试输出不含
+  假Key。WorkBuddy专项=`108 passed`，两个Skill格式校验通过；r23隔离安装已卸载，程序与两个Skill均不存在。
+- 本增量最终W0=`PASS`：Release合同、1566个Core文件、四Pipeline/44个阶段Skill、Schema/Tool/Checkpoint合同、
+  direct-agent边界、公开lineage、公开风险扫描和回归全部通过；private Core历史不在候选中。证据目录为
+  `D:/WorkBuddyData/Temp/w4-api-key-guide-publication-audit-20260807-r23-final`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -215,7 +229,7 @@
 3. 在获得明确下载同意后，用真实首包requirements完成一次默认数据目录托管Python准备和launcher复核。
 4. 在真实WorkBuddy中继续完成跨版本升级、自然语言生产Skill触发、长任务/恢复和Human Checkpoint验收后，才重新裁决
    `OFFLINE ADAPTER READY`。
-5. 保留r18 ZIP供用户稍后以纯新状态人工验收；任何新候选都必须重新给出hash和清理后的安装起点。
+5. r18已因新增API Key配置能力而过期；构建并记录新候选后，继续保持默认安装根和两个Skill不存在的纯新人工验收起点。
 6. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。
 
 ## 当前允许声明

@@ -19,6 +19,55 @@ if ([string]::IsNullOrWhiteSpace($dataRoot)) {
 
 $env:OPENMONTAGE_WORKBUDDY_ROOT = $runtimeRoot
 $env:OPENMONTAGE_WORKBUDDY_DATA_ROOT = $dataRoot
+
+$credentialStore = Join-Path $dataRoot 'Config\golden-key-provider-credentials.json'
+if (Test-Path -LiteralPath $credentialStore -PathType Leaf) {
+    if (-not $IsWindows -and $PSVersionTable.PSEdition -eq 'Core') {
+        # The current portable package writes Windows DPAPI credentials only.
+    } else {
+        try {
+            $credentialRecord = Get-Content -Raw -LiteralPath $credentialStore -Encoding UTF8 | ConvertFrom-Json
+            if ([string]$credentialRecord.schema_version -ne 'golden-key-provider-credentials-v1' -or
+                [string]$credentialRecord.protection -ne 'windows_dpapi_current_user') {
+                throw 'The local API-key store has an unsupported format.'
+            }
+            $allowedProviderEnvVars = @(
+                'DASHSCOPE_API_KEY', 'DOUBAO_SPEECH_API_KEY', 'VOLC_ACCESSKEY',
+                'VOLC_SECRETKEY', 'KLING_API_KEY', 'FAL_KEY', 'FAL_AI_API_KEY',
+                'REPLICATE_API_TOKEN'
+            )
+            foreach ($property in $credentialRecord.credentials.PSObject.Properties) {
+                $name = [string]$property.Name
+                if ($name -notin $allowedProviderEnvVars) {
+                    throw "The local API-key store contains an unsupported variable: $name"
+                }
+                if (-not [string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($name, 'Process'))) {
+                    continue
+                }
+                $secureValue = ConvertTo-SecureString ([string]$property.Value)
+                $secretPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureValue)
+                try {
+                    $plainValue = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($secretPointer)
+                    [Environment]::SetEnvironmentVariable($name, $plainValue, 'Process')
+                } finally {
+                    if ($secretPointer -ne [IntPtr]::Zero) {
+                        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($secretPointer)
+                    }
+                    $plainValue = $null
+                }
+            }
+        } catch {
+            @{
+                status = 'fail'
+                provider_calls_attempted = 0
+                network_calls_attempted = 0
+                errors = @('The local API-key store could not be opened by the current Windows user. Run 配置API密钥.cmd again.')
+            } | ConvertTo-Json -Depth 4
+            exit 1
+        }
+    }
+}
+
 $existingPythonPath = [Environment]::GetEnvironmentVariable('PYTHONPATH', 'Process')
 if ([string]::IsNullOrWhiteSpace($existingPythonPath)) {
     $env:PYTHONPATH = $runtimeRoot

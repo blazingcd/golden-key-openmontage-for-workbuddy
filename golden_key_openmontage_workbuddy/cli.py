@@ -156,6 +156,12 @@ def _parser() -> argparse.ArgumentParser:
         "--data-root", type=Path, default=default_data_root()
     )
     config_template.add_argument("--json", action="store_true", dest="as_json")
+    config_guide = config_commands.add_parser(
+        "guide", help="Report API-key setup options and presence without returning values."
+    )
+    config_guide.add_argument("--repo-root", type=Path, default=default_repo_root())
+    config_guide.add_argument("--data-root", type=Path, default=default_data_root())
+    config_guide.add_argument("--json", action="store_true", dest="as_json")
 
     runtime = subparsers.add_parser(
         "runtime",
@@ -372,12 +378,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         from .model_config import (
             ModelProviderConfigError,
             build_model_provider_report,
+            build_provider_setup_guide,
             write_safe_provider_template,
         )
 
         try:
             if args.config_command == "inspect":
                 report = build_model_provider_report(args.repo_root)
+            elif args.config_command == "guide":
+                report = build_provider_setup_guide(args.repo_root, args.data_root)
             else:
                 report = write_safe_provider_template(args.repo_root, args.data_root)
         except ModelProviderConfigError as exc:

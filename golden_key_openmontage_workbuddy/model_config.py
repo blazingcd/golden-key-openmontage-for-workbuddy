@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import json
+import os
 import pkgutil
 from pathlib import Path
 from typing import Any
@@ -21,30 +22,37 @@ CHINA_ECOSYSTEM_PROVIDER_SPECS: tuple[dict[str, Any], ...] = (
         "service": "Alibaba Cloud Bailian / DashScope",
         "access_path": "direct_vendor_api",
         "credential_env_vars": ["DASHSCOPE_API_KEY"],
+        "credential_groups": [["DASHSCOPE_API_KEY"]],
         "configuration_env_vars": [],
         "tools": ["dashscope_asr", "dashscope_image", "dashscope_tts"],
+        "guide_capabilities": ["analysis", "image_generation", "tts"],
     },
     {
         "provider": "doubao",
         "service": "Volcengine Doubao Speech",
         "access_path": "direct_vendor_api",
         "credential_env_vars": ["DOUBAO_SPEECH_API_KEY"],
+        "credential_groups": [["DOUBAO_SPEECH_API_KEY"]],
         "configuration_env_vars": ["DOUBAO_SPEECH_VOICE_TYPE"],
         "tools": ["doubao_tts"],
+        "guide_capabilities": ["tts"],
     },
     {
         "provider": "volcengine",
         "service": "Volcengine Jimeng",
         "access_path": "direct_vendor_api",
         "credential_env_vars": ["VOLC_ACCESSKEY", "VOLC_SECRETKEY"],
+        "credential_groups": [["VOLC_ACCESSKEY", "VOLC_SECRETKEY"]],
         "configuration_env_vars": [],
         "tools": ["jimeng_video"],
+        "guide_capabilities": ["video_generation"],
     },
     {
         "provider": "kling_official",
         "service": "Kling official API",
         "access_path": "direct_vendor_api",
         "credential_env_vars": ["KLING_API_KEY"],
+        "credential_groups": [["KLING_API_KEY"]],
         "configuration_env_vars": ["KLING_API_BASE_URL"],
         "tools": [
             "kling_avatar",
@@ -52,6 +60,12 @@ CHINA_ECOSYSTEM_PROVIDER_SPECS: tuple[dict[str, Any], ...] = (
             "kling_official_image",
             "kling_official_video",
             "kling_tts",
+        ],
+        "guide_capabilities": [
+            "avatar",
+            "image_generation",
+            "tts",
+            "video_generation",
         ],
     },
     {
@@ -63,18 +77,38 @@ CHINA_ECOSYSTEM_PROVIDER_SPECS: tuple[dict[str, Any], ...] = (
             "FAL_AI_API_KEY",
             "REPLICATE_API_TOKEN",
         ],
+        "credential_groups": [
+            ["FAL_KEY"],
+            ["FAL_AI_API_KEY"],
+            ["REPLICATE_API_TOKEN"],
+        ],
         "configuration_env_vars": [],
         "tools": ["seedance_replicate", "seedance_video"],
+        "guide_capabilities": ["video_generation"],
     },
     {
         "provider": "minimax",
         "service": "MiniMax / Hailuo through fal.ai",
         "access_path": "third_party_gateway",
         "credential_env_vars": ["FAL_KEY", "FAL_AI_API_KEY"],
+        "credential_groups": [["FAL_KEY"], ["FAL_AI_API_KEY"]],
         "configuration_env_vars": [],
         "tools": ["minimax_video"],
+        "guide_capabilities": ["video_generation"],
     },
 )
+
+GUIDE_FALLBACK_DEPENDENCIES = {
+    "dotenv",
+    "google",
+    "httpx",
+    "jsonschema",
+    "openai",
+    "PIL",
+    "pydantic",
+    "requests",
+    "yaml",
+}
 
 
 def _conversation_model_contract() -> dict[str, Any]:
@@ -147,6 +181,14 @@ def build_model_provider_report(repo_root: Path) -> dict[str, Any]:
                 f"Provider {spec['provider']!r} no longer has a uniform network boundary"
             )
 
+        capabilities = sorted({tool.capability for tool in verified_tools})
+        if verified_tools and capabilities != sorted(spec["guide_capabilities"]):
+            errors.append(
+                f"Provider {spec['provider']!r} guide capability index drifted from "
+                f"Tool Registry: expected {sorted(spec['guide_capabilities'])!r}, "
+                f"found {capabilities!r}"
+            )
+
         providers.append(
             {
                 **spec,
@@ -154,7 +196,14 @@ def build_model_provider_report(repo_root: Path) -> dict[str, Any]:
                 "registry_verified": len(verified_tools) == len(spec["tools"]),
                 "runtime": "api" if runtimes == {"api"} else "mixed_or_drifted",
                 "network_required": network_flags == {True},
-                "capabilities": sorted({tool.capability for tool in verified_tools}),
+                "capabilities": capabilities,
+                "install_instructions": sorted(
+                    {
+                        str(tool.install_instructions).strip()
+                        for tool in verified_tools
+                        if str(tool.install_instructions).strip()
+                    }
+                ),
                 "configured_status_checked": False,
             }
         )
@@ -172,6 +221,106 @@ def build_model_provider_report(repo_root: Path) -> dict[str, Any]:
         "provider_calls_attempted": 0,
         "network_calls_attempted": 0,
         "errors": errors,
+    }
+
+
+def build_provider_setup_guide(repo_root: Path, data_root: Path) -> dict[str, Any]:
+    """Report API-key presence for guided setup without returning values or networking."""
+
+    missing_python_dependency: str | None = None
+    try:
+        report = build_model_provider_report(repo_root)
+    except ModuleNotFoundError as exc:
+        missing_python_dependency = exc.name or "unknown"
+        if missing_python_dependency.split(".", 1)[0] not in GUIDE_FALLBACK_DEPENDENCIES:
+            raise
+        report = {
+            "status": "pass",
+            "production_providers": [
+                {
+                    **spec,
+                    "capabilities": list(spec["guide_capabilities"]),
+                    "install_instructions": [],
+                }
+                for spec in CHINA_ECOSYSTEM_PROVIDER_SPECS
+            ],
+        }
+    if report["status"] != "pass":
+        raise ModelProviderConfigError("Tool Registry verification failed")
+
+    providers: list[dict[str, Any]] = []
+    for provider in report["production_providers"]:
+        names = list(provider["credential_env_vars"])
+        present = sorted(name for name in names if bool(os.environ.get(name)))
+        present_set = set(present)
+        groups = [list(group) for group in provider["credential_groups"]]
+        complete = any(set(group).issubset(present_set) for group in groups)
+        if complete:
+            state = "present_unverified"
+        elif present:
+            state = "partial"
+        else:
+            state = "not_configured"
+        providers.append(
+            {
+                "provider": provider["provider"],
+                "service": provider["service"],
+                "access_path": provider["access_path"],
+                "capabilities": provider["capabilities"],
+                "credential_options": groups,
+                "present_env_vars": present,
+                "missing_env_vars": sorted(set(names) - present_set),
+                "credential_state": state,
+                "install_instructions": provider["install_instructions"],
+            }
+        )
+
+    capabilities: dict[str, dict[str, Any]] = {}
+    for provider in providers:
+        for capability in provider["capabilities"]:
+            bucket = capabilities.setdefault(
+                capability,
+                {"capability": capability, "configured": 0, "total": 0, "providers": []},
+            )
+            bucket["total"] += 1
+            if provider["credential_state"] == "present_unverified":
+                bucket["configured"] += 1
+            bucket["providers"].append(provider["provider"])
+
+    return {
+        "status": "pass",
+        "tool_registry_verification": (
+            "verified"
+            if missing_python_dependency is None
+            else "deferred_missing_python_dependency"
+        ),
+        "missing_python_dependency": missing_python_dependency,
+        "credential_store": {
+            "path": str(
+                (Path(data_root).resolve() / "Config" / "golden-key-provider-credentials.json")
+            ),
+            "protection": "windows_dpapi_current_user",
+            "values_returned": False,
+        },
+        "capabilities": sorted(capabilities.values(), key=lambda item: item["capability"]),
+        "providers": providers,
+        "security_rules": {
+            "never_paste_api_keys_in_chat": True,
+            "use_local_hidden_input": True,
+            "presence_is_not_connectivity": True,
+            "configuration_is_not_provider_authorization": True,
+        },
+        "provider_calls_attempted": 0,
+        "network_calls_attempted": 0,
+        "warnings": (
+            []
+            if missing_python_dependency is None
+            else [
+                "Provider choices are available from the locked consumer index; "
+                "prepare Python dependencies before production Tool Registry use."
+            ]
+        ),
+        "errors": [],
     }
 
 

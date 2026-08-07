@@ -762,3 +762,32 @@
 - 首次推送提交`df89724`后，公开CI `31177430424`的Linux runner暴露测试助手跨平台cwd错误：Windows真实自卸载
   需要从安装目录启动中文CMD，Linux却直接运行PowerShell脚本；错误地共用安装目录cwd导致Linux认为目录正在使用。
   测试助手现只在Windows使用安装目录cwd，非Windows回到父目录。该修复不改变产品卸载合同或managed Core。
+
+## 2026-08-07：生产工具API Key本地配置与新手引导
+
+- 根据用户纠偏，本切片解决的是文生图、图生视频、文生视频、TTS和数字人等生产工具Provider的API Key配置，
+  不是WorkBuddy对话模型扫描，也不修改Golden Key Core。
+- 先补红灯合同，再实现`config guide`：按能力报告DashScope、豆包、火山即梦、可灵官方、Seedance网关和
+  MiniMax网关的Key名称与`present_unverified/partial/not_configured`状态；输出不含Key值，静态检查不联网。
+- 新增包内`配置API密钥.cmd`和`configure-provider-keys.ps1`。用户在本地窗口隐藏输入，凭据用Windows当前用户
+  DPAPI保存到`<DataRoot>/Config/golden-key-provider-credentials.json`；launcher仅在当前进程解密注入且不覆盖
+  已存在的进程环境变量。文件只接受8个白名单变量并限制为当前用户访问。
+- 新手引导和生产Skill均禁止要求用户把Key粘贴到WorkBuddy聊天；只按当前目标推荐一到两个相关Provider。
+  `present_unverified`统一解释为“已录入但未验证”，保存Key不授权网络、连通性测试、余额检查或真实/付费生成。
+- 真实r21隔离安装发现普通用户缺`jsonschema`时`config guide`无法启动；该包随即作废。新增回归并实现依赖前
+  fallback：仍按锁定消费方索引显示配置选择，同时明确`tool_registry_verification=deferred_missing_python_dependency`；
+  依赖准备完成后继续使用实际Tool Registry做严格核验，不把fallback包装成Registry已通过。
+- 最终r23 ZIP大小`72,812,987`字节，SHA-256=
+  `ca71961edfd76c87cb91fb7b8f8857e599c748cea0b486ecc38baa1beeb8eb38`，位置为
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-api-key-guide-20260807-r23`。
+- r23隔离安装=`PASS`：Core 1566文件、direct-agent authority和四Pipeline正常；在系统Python依赖不完整时
+  `config guide=pass`、6个Provider、Key值返回0、网络/Provider调用0；向导可打开并取消且不落凭据文件。
+  验收后自卸载成功，隔离程序目录和两个Skill均不存在。
+- DPAPI已安装launcher端到端合同通过；API Key专项、Skill和portable bundle合计`33 passed`，完整WorkBuddy专项
+  `108 passed`；两个Skill均通过Skill Creator格式校验。前向测试证明无安装登记时Skill会诚实阻断、不搜索磁盘，
+  并引导用户在本地隐藏输入而不是聊天发送Key。
+- 最终W0=`PASS`：Release、1566个managed Core文件、四Pipeline/44个阶段Skill、Schema/Tool/Checkpoint合同、
+  direct-agent边界、公开lineage、风险扫描和回归全部通过；contracts=`716 passed, 7 skipped`，tools=
+  `284 passed, 1 subtest passed`，WorkBuddy=`108 passed`。证据目录为
+  `D:/WorkBuddyData/Temp/w4-api-key-guide-publication-audit-20260807-r23-final`。
+- 本轮未修改v0.3.21 managed Core、Golden Key SaaS/private Core仓库，未调用真实或付费Provider。

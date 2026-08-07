@@ -144,7 +144,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 
 ## W4：打包、安装、文档和真实WorkBuddy验收
 
-状态：`IN PROGRESS / FIRST LIGHT-ZIP SLICE BUILT`。
+状态：`IN PROGRESS / REINSTALL-REPAIR SLICE BUILT`。
 
 ### 任务
 
@@ -159,7 +159,11 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
   `<data_root>/Runtime/Python`，pip缓存留在数据目录，不修改系统Python，hash一致时幂等复用，漂移目标拒绝覆盖。
 - `DONE`：冻结运行时矩阵：Python必需；FFmpeg为合成和本地媒体工具必需但不随包携带；Node只在选择
   Remotion或HyperFrames时需要，不因扫描缺失自动安装。
-- `NEXT`：实现可回滚升级和卸载，保护用户项目、Artifact、配置、模型和已有WorkBuddy Skill/MCP配置。
+- `DONE`：支持覆盖解压和不同解压目录重复注册；正式目录只接收Manifest白名单，额外旧文件被记录并忽略。
+- `DONE`：支持同版本幂等修复、正式程序目录被手动删除后重建、项目自有Skill被删除后补回；独立数据目录保留。
+  同名外来Skill或无效所有权记录fail closed，不覆盖用户内容。
+- `NEXT`：在上述可重建边界上继续实现跨版本升级/降级、完整卸载和事务回滚，保护用户项目、Artifact、配置、模型和
+  已有WorkBuddy Skill/MCP配置。
 - 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。
 - 扩充中文快速开始、Prompt Gallery和故障排查。
 - 在未预装开发环境的普通Windows用户场景验证安装。
@@ -167,7 +171,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 
 ### 完成证据
 
-- 全新任意解压目录和普通用户默认目录按文档注册成功；D盘覆盖路径独立通过。
+- 全新、覆盖解压、不同解压目录、程序/Skill误删恢复均按文档注册成功；普通用户默认目录与D盘覆盖路径独立通过。
 - 用户不需要另外下载Golden Key核心。
 - 真实WorkBuddy验收通过后才声明`OFFLINE ADAPTER READY`。
 - Provider真实成片仍为单独授权阶段。

@@ -671,3 +671,30 @@
 - 最终W0=`PASS`：1566个managed Core文件精确匹配，Release/Pipeline/运行时隔离/公开lineage/风险扫描/回归
   全部通过；候选17个文件，private Core历史未扫描且不在候选中。测试生成的31个未跟踪`__pycache__`目录先移至
   `D:/WorkBuddyData/Temp/w0-pycache-quarantine-20260807`，没有删除或修改lock管理的Core文件。
+
+## 2026-08-07：W4覆盖解压与手动删除后的重复注册修复
+
+- 根据普通用户最常见行为纠偏安装模型：不要求先卸载或清空解压目录；解压目录是不受控临时来源，正式程序目录是
+  可重建的干净副本，用户数据目录独立保存。
+- TDD先证明原安装器会把覆盖解压残留文件复制进正式目录；改为逐项验证Manifest、拒绝路径越界，只复制Manifest
+  白名单和Manifest本身。额外文件按相对路径写入`source_package.extra_files_ignored`，不复制、不执行。
+- TDD再证明原安装器会拒绝重复运行；新增所有权预检和`fresh_install/repair`记录。已有程序只有有效
+  `WORKBUDDY-INSTALL.json`时可替换，已有Skill只有有效`WORKBUDDY-RUNTIME.json`时可替换。
+- 现可覆盖解压、从不同解压目录重复运行、补回被删除的项目自有Skill，并在正式程序目录被整体删除后重建；
+  `Projects`数据哨兵在全部修复过程中保持不变。
+- 同名外来Skill会fail closed并原样保留，且在任何程序安装变更前终止；现有安装版本与当前包不一致也拒绝替换，
+  防止旧包静默降级或绕过未来升级合同。若程序目录已删除但遗留Skill属于另一版本，同样在任何写入前拒绝。
+  缺文件和声明文件篡改也在写入前拒绝。portable bundle专项=`10 passed`。
+- 真实v0.3.21候选r7：ZIP=`72,800,975`字节，SHA-256=
+  `ebf95cd067dce94bdf25f979740484e453df9dcd91b0a3dadde5c08eb6e1589a`，位置为
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-tolerant-install-20260807-r7`。
+- D盘隔离烟测模拟覆盖残留、重复运行、移动一个Skill代表手动删除、移动正式程序目录代表手动删除、从第二个解压目录
+  恢复和外来同名Skill冲突；最终两个Skill完整、用户数据哨兵不变、额外文件未进入正式目录、网络/Provider调用0。
+- WorkBuddy专项=`95 passed`；完整回归=`1155 passed, 10 skipped, 1 subtest passed`；四Pipeline、44个阶段Skill、
+  Schema/Tool Registry、Reviewer/Checkpoint和既有Core合同保持通过。
+- W1消费方Gate=`PASS`：六个禁入路径不存在、静态隔离违规0、活动MCP配置不存在、Provider调用0。
+- 最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline合同、direct-agent运行时、
+  公开lineage、风险扫描和回归均通过；private Core历史未扫描且不在候选中。最终证据目录为
+  `D:/WorkBuddyData/Temp/w4-tolerant-install-publication-audit-20260807-r7-final`。
+- 当前切片不是跨版本降级、完整卸载或事务级版本回滚；这些仍属于W4下一片。未修改v0.3.21 managed Core，
+  未调用真实/付费Provider，也未修改Golden Key SaaS/private Core仓库。

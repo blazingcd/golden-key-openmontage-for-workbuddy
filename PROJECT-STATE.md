@@ -156,6 +156,19 @@
 - 本增量最终W0=`PASS`：Release、四Pipeline合同、direct-agent运行时边界、公开lineage、风险扫描和回归均通过；
   1566个managed Core文件精确匹配，候选17个文件。private Core历史未扫描且不在候选中；
   证据位于`D:/WorkBuddyData/Temp/w4-runtime-prepare-publication-audit-20260807-final-r2`。
+- W4重复注册修复切片已实现：覆盖解压目录中的额外旧文件只记入安装记录，不进入正式程序目录；同版本重复运行
+  可替换具有有效所有权记录的程序和两个Skill，程序目录或其中一个Skill被手动删除后可从同一或不同解压目录恢复。
+- 数据目录保持独立，修复不删除用户项目、Artifact、配置、模型、缓存或输出；同名外来Skill、无效安装记录或
+  无效Skill所有权记录均fail closed并保留原内容；跨版本替换在正式升级合同完成前同样拒绝。
+- 新真实候选r7位于`D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-tolerant-install-20260807-r7`；ZIP大小
+  `72,800,975`字节，SHA-256=`ebf95cd067dce94bdf25f979740484e453df9dcd91b0a3dadde5c08eb6e1589a`。
+  D盘隔离矩阵验证覆盖残留忽略、同版本重复、换解压目录、程序/Skill误删修复、数据保留和外来Skill冲突；
+  network/Provider调用均为0。即使程序目录已删除，遗留Skill版本与当前包不一致也拒绝静默降级。
+  portable bundle专项=`10 passed`，WorkBuddy专项=`95 passed`，完整回归=
+  `1155 passed, 10 skipped, 1 subtest passed`。
+- 本切片W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline合同、direct-agent运行时边界、
+  公开lineage、风险扫描和回归全部通过；private Core历史未扫描且不在候选中。证据目录为
+  `D:/WorkBuddyData/Temp/w4-tolerant-install-publication-audit-20260807-r7-final`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -165,7 +178,8 @@
 
 ## 下一步
 
-1. W4下一片实现不覆盖用户既有Skill/配置的升级、卸载和回滚；用户项目、Artifact、配置、模型和输出默认保留。
+1. W4下一片在已完成的同版本重复注册修复之上实现跨版本升级/降级、完整卸载和事务回滚；用户项目、Artifact、
+   配置、模型和输出默认保留。
 2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
 3. 在获得明确同意后，用真实首包requirements完成一次数据目录托管Python下载/准备和launcher复核。
 4. 在普通用户默认路径、D盘覆盖路径和真实WorkBuddy中完成自然语言触发、长任务/恢复验收后，才重新裁决

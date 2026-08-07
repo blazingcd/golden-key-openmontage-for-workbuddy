@@ -69,6 +69,43 @@ def _minimal_lock(tmp_path: Path, *, include_pipelines: bool = False) -> Path:
     return lock_path
 
 
+def _run_portable_installer(
+    staging: Path,
+    *,
+    install_root: Path,
+    data_root: Path,
+    skill_root: Path,
+) -> subprocess.CompletedProcess[str]:
+    powershell = shutil.which("pwsh") or shutil.which("powershell")
+    assert powershell is not None
+    environment = os.environ.copy()
+    environment["PATH"] = (
+        str(Path(sys.executable).parent)
+        + os.pathsep
+        + environment.get("PATH", "")
+    )
+    return subprocess.run(
+        [
+            powershell,
+            "-NoProfile",
+            "-File",
+            str(staging / "install-workbuddy.ps1"),
+            "-InstallRoot",
+            str(install_root),
+            "-DataRoot",
+            str(data_root),
+            "-WorkBuddySkillsRoot",
+            str(skill_root),
+        ],
+        cwd=staging.parent,
+        env=environment,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+
 def test_portable_bundle_contains_core_consumer_skills_and_first_build_label(
     tmp_path: Path,
 ) -> None:
@@ -142,6 +179,263 @@ def test_portable_bundle_rejects_a_managed_core_hash_mismatch(tmp_path: Path) ->
             lock_path=lock_path,
             output_root=tmp_path / "output",
         )
+
+
+def test_cover_extract_ignores_old_files_and_installs_only_manifest_entries(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "covered-extract",
+    )
+    stale_file = staging / "removed-in-new-version.txt"
+    stale_nested = staging / "old-version-only" / "stale.py"
+    stale_file.write_text("old", encoding="utf-8")
+    stale_nested.parent.mkdir()
+    stale_nested.write_text("old", encoding="utf-8")
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+
+    result = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not (install_root / stale_file.name).exists()
+    assert not (install_root / "old-version-only").exists()
+    record = json.loads(
+        (install_root / "WORKBUDDY-INSTALL.json").read_text(encoding="utf-8-sig")
+    )
+    assert record["source_package"] == {
+        "copy_mode": "manifest_allowlist",
+        "extra_files_ignored": [
+            "old-version-only/stale.py",
+            "removed-in-new-version.txt",
+        ],
+    }
+
+
+def test_repeat_install_repairs_deleted_app_or_skill_and_preserves_user_data(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    first_extract = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "first-extract",
+    )
+    second_extract = tmp_path / "second-extract" / first_extract.name
+    shutil.copytree(first_extract, second_extract)
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+
+    first = _run_portable_installer(
+        first_extract,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert first.returncode == 0, first.stderr
+    sentinel = data_root / "Projects" / "keep-me.txt"
+    sentinel.write_text("user-owned", encoding="utf-8")
+
+    deleted_skill = skill_root / "golden-key-openmontage-onboarding"
+    shutil.rmtree(deleted_skill)
+    repeated = _run_portable_installer(
+        first_extract,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert repeated.returncode == 0, repeated.stderr
+    assert (deleted_skill / "SKILL.md").is_file()
+    assert sentinel.read_text(encoding="utf-8") == "user-owned"
+
+    shutil.rmtree(install_root)
+    repaired = _run_portable_installer(
+        second_extract,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert repaired.returncode == 0, repaired.stderr
+    assert (install_root / "golden-key-workbuddy.ps1").is_file()
+    assert sentinel.read_text(encoding="utf-8") == "user-owned"
+    record = json.loads(
+        (install_root / "WORKBUDDY-INSTALL.json").read_text(encoding="utf-8-sig")
+    )
+    assert record["operation"] == "repair"
+    for skill_name in (
+        "golden-key-openmontage",
+        "golden-key-openmontage-onboarding",
+    ):
+        runtime = json.loads(
+            (skill_root / skill_name / "WORKBUDDY-RUNTIME.json").read_text(
+                encoding="utf-8-sig"
+            )
+        )
+        assert Path(runtime["install_root"]) == install_root
+
+
+def test_foreign_skill_name_conflict_is_preserved_and_install_fails_closed(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "extract",
+    )
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    foreign_skill = skill_root / "golden-key-openmontage"
+    foreign_skill.mkdir(parents=True)
+    foreign_file = foreign_skill / "FOREIGN.txt"
+    foreign_file.write_text("do not replace", encoding="utf-8")
+
+    result = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert result.returncode != 0
+    assert "foreign WorkBuddy Skill" in result.stderr
+    assert foreign_file.read_text(encoding="utf-8") == "do not replace"
+    assert not install_root.exists()
+
+
+def test_cross_version_replacement_is_refused_until_upgrade_contract_exists(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "extract",
+    )
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    first = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert first.returncode == 0, first.stderr
+    record_path = install_root / "WORKBUDDY-INSTALL.json"
+    record = json.loads(record_path.read_text(encoding="utf-8-sig"))
+    record["package_version"] = "0.2.0-prealpha.1"
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    protected = install_root / "keep-existing-version.txt"
+    protected.write_text("newer-install", encoding="utf-8")
+
+    result = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert result.returncode != 0
+    assert "Cross-version replacement is not enabled" in result.stderr
+    assert protected.read_text(encoding="utf-8") == "newer-install"
+
+
+def test_deleted_app_does_not_allow_cross_version_skill_downgrade(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "extract",
+    )
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    first = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert first.returncode == 0, first.stderr
+    runtime_path = (
+        skill_root / "golden-key-openmontage" / "WORKBUDDY-RUNTIME.json"
+    )
+    runtime = json.loads(runtime_path.read_text(encoding="utf-8-sig"))
+    runtime["package_version"] = "0.2.0-prealpha.1"
+    runtime_path.write_text(json.dumps(runtime), encoding="utf-8")
+    protected = skill_root / "golden-key-openmontage" / "keep-newer-skill.txt"
+    protected.write_text("newer-skill", encoding="utf-8")
+    shutil.rmtree(install_root)
+
+    result = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert result.returncode != 0
+    assert "Cross-version Skill replacement is not enabled" in result.stderr
+    assert protected.read_text(encoding="utf-8") == "newer-skill"
+    assert not install_root.exists()
+
+
+@pytest.mark.parametrize(
+    ("mutation", "expected_error"),
+    (("missing", "Package file is missing"), ("tampered", "hash mismatch")),
+)
+def test_installer_rejects_missing_or_tampered_declared_files_before_writes(
+    tmp_path: Path,
+    mutation: str,
+    expected_error: str,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "extract",
+    )
+    declared = staging / "AGENT_GUIDE.md"
+    if mutation == "missing":
+        declared.unlink()
+    else:
+        declared.write_text("tampered", encoding="utf-8")
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+
+    result = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert result.returncode != 0
+    assert expected_error in result.stderr
+    assert not install_root.exists()
+    assert not data_root.exists()
+    assert not skill_root.exists()
 
 
 def test_zip_bootstrap_registers_both_skills_and_launcher_runs_doctor(

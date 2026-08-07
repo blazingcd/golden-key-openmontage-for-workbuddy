@@ -19,6 +19,8 @@ if ([string]::IsNullOrWhiteSpace($dataRoot)) {
 
 $env:OPENMONTAGE_WORKBUDDY_ROOT = $runtimeRoot
 $env:OPENMONTAGE_WORKBUDDY_DATA_ROOT = $dataRoot
+$env:PYTHONUTF8 = '1'
+$env:PYTHONIOENCODING = 'utf-8'
 
 $credentialStore = Join-Path $dataRoot 'Config\golden-key-provider-credentials.json'
 if (Test-Path -LiteralPath $credentialStore -PathType Leaf) {

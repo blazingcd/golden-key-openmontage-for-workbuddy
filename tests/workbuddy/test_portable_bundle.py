@@ -745,8 +745,12 @@ def test_installed_launcher_decrypts_dpapi_provider_key_without_returning_it(
     fake_bin.mkdir()
     (fake_bin / "python.cmd").write_text(
         "@echo off\r\n"
+        'if not "%PYTHONUTF8%"=="1" (\r\n'
+        '  echo {"status":"fail","utf8_mode":false}\r\n'
+        "  exit /b 8\r\n"
+        ")\r\n"
         f'if "%DASHSCOPE_API_KEY%"=="{dummy_secret}" (\r\n'
-        '  echo {"status":"pass","credential_injected":true}\r\n'
+        '  echo {"status":"pass","credential_injected":true,"utf8_mode":true}\r\n'
         "  exit /b 0\r\n"
         ")\r\n"
         'echo {"status":"fail","credential_injected":false}\r\n'
@@ -775,7 +779,11 @@ def test_installed_launcher_decrypts_dpapi_provider_key_without_returning_it(
     assert guided.returncode == 0, guided.stdout + guided.stderr
     assert dummy_secret not in guided.stdout
     report = json.loads(guided.stdout)
-    assert report == {"status": "pass", "credential_injected": True}
+    assert report == {
+        "status": "pass",
+        "credential_injected": True,
+        "utf8_mode": True,
+    }
 
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows API-key wizard contract")
@@ -798,9 +806,16 @@ def test_api_key_wizard_survives_launcher_exit_and_allows_cancel(tmp_path: Path)
             "'", "''"
         )
         + "' }\n"
+        "  capability_choices = @(@{ capability = 'tts'; label_zh = '中文配音'; "
+        "description_zh = '把脚本合成为中文旁白'; recommended_providers = @('dashscope') })\n"
         "  providers = @(@{ provider = 'dashscope'; service = 'DashScope'; "
-        "access_path = 'direct_vendor_api'; capabilities = @('text_to_speech'); "
+        "display_name_zh = '阿里云百炼'; summary_zh = '中文配音'; "
+        "availability_notice_zh = '需要已开通服务'; access_path = 'direct_vendor_api'; "
+        "capabilities = @('tts'); capability_labels_zh = @('中文配音'); "
         "credential_state = 'not_configured'; credential_options = @(@('DASHSCOPE_API_KEY')); "
+        "credential_option_guidance = @(@{ access_name_zh = '阿里云百炼官方'; "
+        "obtain_url = 'https://example.invalid/key'; documentation_url = 'https://example.invalid/docs'; "
+        "billing_notice_zh = '可能产生费用'; fields = @(@{ env_var = 'DASHSCOPE_API_KEY'; label_zh = 'API Key' }) }); "
         "present_env_vars = @() })\n"
         "} | ConvertTo-Json -Depth 6\n"
         "exit 0\n",
@@ -826,7 +841,23 @@ def test_api_key_wizard_survives_launcher_exit_and_allows_cancel(tmp_path: Path)
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Golden Key OpenMontage API" in result.stdout
+    assert "这次需要哪类能力" in result.stdout
+    assert "中文配音" in result.stdout
     assert not (data_root / "Config").exists()
+
+
+def test_api_key_wizard_is_goal_first_and_explains_provider_setup() -> None:
+    body = (
+        ROOT / "packaging" / "workbuddy" / "configure-provider-keys.ps1"
+    ).read_text(encoding="utf-8")
+
+    assert "这次需要哪类能力" in body
+    assert "推荐" in body
+    assert "官方申请或管理入口" in body
+    assert "费用提醒" in body
+    assert "账户可用性" in body
+    assert "credential_option_guidance" in body
+    assert "capability_choices" in body
 
 
 def test_uninstall_preserves_skill_without_matching_ownership_marker(

@@ -127,6 +127,13 @@ def test_workbuddy_onboarding_is_a_separate_consumer_skill() -> None:
     assert "配置API密钥.cmd" in body
     assert "Do not ask the user to paste" in body
     assert "present_unverified" in body
+    assert "official account or key-management link" in body
+    assert "Start-Process" in body
+    assert "visible interactive window" in body
+    assert "one or two recommended Providers" in body
+    assert "runtime plan --json" in body
+    assert "runtime prepare --confirm-download --json" in body
+    assert "Do not recommend reinstalling the ZIP" in body
 
 
 def test_workbuddy_onboarding_does_not_own_material_inventory_or_setup() -> None:
@@ -155,3 +162,5 @@ def test_production_skill_guides_missing_provider_keys_without_chat_secrets() ->
     assert "Do not ask the user to paste" in body
     assert "present_unverified" in body
     assert "does not authorize a Provider call" in body
+    assert "official account or key-management link" in body
+    assert "Start-Process" in body

@@ -119,6 +119,21 @@
   不返回Key值、不联网。用户通过包内`配置API密钥.cmd`隐藏录入，凭据使用Windows当前用户DPAPI保存到
   独立DataRoot，launcher仅向当前进程解密注入；`present_unverified`只表示“已录入但未验证”。
 - 保存Key不授权联网、连通性测试、余额检查或真实/付费生成；这些动作仍需单次独立授权。
+- API Key引导已进一步改为目标优先：用户先选择生成图片、生成视频、中文配音、数字人或内容分析；报告和本地
+  向导用中文显示推荐Provider、直连/网关属性、官方申请入口、友好凭据名称、账户权限与费用提醒。只有用户明确
+  选择现在配置后，WorkBuddy才可用`Start-Process`打开可见本地窗口；Key仍不进入进程参数或聊天。
+- launcher固定启用Python UTF-8输出，避免中文Provider/能力信息经过PowerShell和WorkBuddy时乱码。
+- 目标优先API引导候选r25位于
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-goal-first-api-guide-20260808-r25`；ZIP大小`72,817,257`字节，
+  SHA-256=`d572aaff91e4863886e694a08af3f8148000e083d18978578d23fb9677cea725`。隔离安装中选择“生成视频”后，
+  仅火山即梦和可灵官方标为推荐，普通Provider列表不显示环境变量名；取消不创建凭据，网络/Provider调用0。
+- 独立前向测试首次发现依赖缺失时误导用户重装ZIP；Skill已改为先给出`runtime plan`并等待明确下载同意，依赖
+  准备前仍可提供API配置建议。第二次安装态复测正确推荐可灵官方+豆包语音，并区分运行时下载和API配置两次授权。
+- 当前WorkBuddy专项=`109 passed`，两个Skill格式校验和PowerShell解析通过；r25隔离安装已卸载，程序与两个Skill
+  均不存在，默认WorkBuddy安装根仍不存在，WorkBuddy进程为0。
+- 本增量最终W0=`PASS`：Release合同、1566个Core文件、四Pipeline/44个阶段Skill、Schema/Tool/Checkpoint合同、
+  direct-agent边界、公开lineage、风险扫描和回归全部通过；private Core历史不在候选中。证据目录为
+  `D:/WorkBuddyData/Temp/w4-goal-first-api-guide-publication-audit-20260808-r25-final`。
 - `WB-UX1`验证：Skill Creator格式=`Skill is valid!`；WorkBuddy专项=`78 passed`；消费方Gate=`PASS`，
   静态隔离违规0、活动MCP配置不存在、Provider调用0。
 - `WB-UX1`真实客户端验收尚未完成：当前Windows应用控制只能读取到WorkBuddy空壳控件树，无法可靠识别

@@ -11,22 +11,27 @@ Keep this interaction short and conversational. This is a WorkBuddy consumer exp
 
 1. Read `WORKBUDDY-RUNTIME.json` beside this Skill. Validate `launcher`, `install_root`, and `data_root`. Do not guess or search the user's drives if it is absent or invalid; recommend running `install-workbuddy.ps1` from the complete ZIP.
 2. Invoke the registered `launcher` with `doctor --json`. This is the stable installed form of `golden-key-workbuddy doctor --json` and must run before capability guidance.
-3. Invoke the same launcher for `golden-key-workbuddy context --json`, `golden-key-workbuddy pipelines --json`, `golden-key-workbuddy config inspect --json`, and `golden-key-workbuddy config guide --json`.
-4. Translate the useful result into plain language. Do not dump command output, internal Pipeline names, Schema names, provider keys, or setup jargon on a new user.
-5. Do not call a real or paid Provider, create a production project, or claim installation readiness during onboarding.
+3. Invoke `golden-key-workbuddy config guide --json`; this goal-first guide remains available when optional Python packages have not yet been prepared.
+4. If `doctor` reports missing Python packages, invoke `runtime plan --json`. Explain the download, registered DataRoot target, and isolation from system Python, then ask for explicit permission. Run `runtime prepare --confirm-download --json` only after consent and rerun `doctor`. Do not recommend reinstalling the ZIP for this dependency-only state. Defer `context`, `pipelines`, and strict `config inspect` until dependencies are ready.
+5. Otherwise, invoke the same launcher for `golden-key-workbuddy context --json`, `golden-key-workbuddy pipelines --json`, and `golden-key-workbuddy config inspect --json`.
+6. Translate the useful result into plain language. Do not dump command output, internal Pipeline names, Schema names, provider keys, or setup jargon on a new user.
+7. Do not call a real or paid Provider, create a production project, or claim installation readiness during onboarding.
 
 ## Guide API Key setup
 
 Use `config guide` to explain whether image generation, video generation, TTS, avatar, or related production capabilities have an API Key present. Say `已录入但未验证` for `present_unverified`; never describe key presence as a working connection.
 
-Offer setup when the user asks how to make the package actually run, wants generated media, or the requested outcome needs an unconfigured capability. Recommend only one or two relevant Provider choices, explain what each unlocks, and distinguish direct vendor APIs from third-party gateways.
+Offer setup when the user asks how to make the package actually run, wants generated media, or the requested outcome needs an unconfigured capability. Start from the plain-language entries in `capability_choices`—生成图片、生成视频、中文配音、数字人或口型驱动、语音识别与内容分析—not from environment-variable names. Recommend only the `one or two recommended Providers` relevant to the current goal, explain what each unlocks, and distinguish direct vendor APIs from third-party gateways.
+
+For each recommendation, present the Chinese Provider name, direct-vendor or gateway status, current credential state, required friendly field names, the `official account or key-management link`, account/region/permission caveat, and the billing notice reported by `config guide`. Do not invent a direct-vendor relationship or claim that every account has API access. Keep alternative Providers behind a short “查看其他接入” choice unless the user asks for them.
 
 Do not ask the user to paste an API Key into WorkBuddy chat. If the user wants to configure now:
 
-1. Tell them to open the installed program directory and double-click `配置API密钥.cmd`.
-2. Explain that the local window uses hidden input and stores the Key with Windows current-user DPAPI protection under the registered data directory.
-3. Wait for the user to say the local wizard finished, then rerun `golden-key-workbuddy config guide --json`.
-4. Report only capability and Provider state. Never display, transcribe, log, or request the credential value.
+1. Ask whether they want to configure now; do not open a window merely because they mentioned a video goal.
+2. After explicit opt-in, if local command execution is available, use `Start-Process` to open `<install_root>/配置API密钥.cmd` in a `visible interactive window`. Do not pass credential values or ordinary command-line arguments. If WorkBuddy cannot start it, tell the user to open the registered install directory and double-click the same file.
+3. Explain that the local window uses hidden input and stores the Key with Windows current-user DPAPI protection under the registered data directory.
+4. Wait for the user to say the local wizard finished, then rerun `golden-key-workbuddy config guide --json`.
+5. Report only capability and Provider state. Never display, transcribe, log, or request the credential value.
 
 Recording a Key does not authorize a Provider call, connectivity check, or paid generation. Ask separately before any network verification or production call.
 

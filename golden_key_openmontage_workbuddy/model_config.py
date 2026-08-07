@@ -110,6 +110,135 @@ GUIDE_FALLBACK_DEPENDENCIES = {
     "yaml",
 }
 
+CAPABILITY_GUIDANCE: tuple[dict[str, Any], ...] = (
+    {
+        "capability": "image_generation",
+        "label_zh": "生成图片",
+        "description_zh": "生成封面、商品图、场景图或视频所需的静态画面",
+        "recommended_providers": ["dashscope", "kling_official"],
+    },
+    {
+        "capability": "video_generation",
+        "label_zh": "生成视频",
+        "description_zh": "文生视频、图生视频或补充动态镜头",
+        "recommended_providers": ["volcengine", "kling_official"],
+    },
+    {
+        "capability": "tts",
+        "label_zh": "中文配音",
+        "description_zh": "把脚本合成为中文或多语言旁白",
+        "recommended_providers": ["doubao", "dashscope"],
+    },
+    {
+        "capability": "avatar",
+        "label_zh": "数字人或口型驱动",
+        "description_zh": "生成数字人讲解、口型同步或头像驱动视频",
+        "recommended_providers": ["kling_official"],
+    },
+    {
+        "capability": "analysis",
+        "label_zh": "语音识别与内容分析",
+        "description_zh": "识别已有音视频语音或辅助理解素材内容",
+        "recommended_providers": ["dashscope"],
+    },
+)
+
+CAPABILITY_LABELS_ZH = {
+    item["capability"]: item["label_zh"] for item in CAPABILITY_GUIDANCE
+}
+
+PROVIDER_GUIDANCE: dict[str, dict[str, str]] = {
+    "dashscope": {
+        "display_name_zh": "阿里云百炼（DashScope）",
+        "summary_zh": "适合中文语音识别、图片生成和中文配音的厂商直连接入。",
+        "availability_notice_zh": "需要阿里云百炼账号、已开通相应模型，并选择与Key一致的地域。",
+    },
+    "doubao": {
+        "display_name_zh": "火山引擎豆包语音",
+        "summary_zh": "面向中文旁白和语音合成的厂商直连接入。",
+        "availability_notice_zh": "需要在豆包语音新版控制台开通相应语音服务；旧版App ID/Access Token不能冒充新版API Key。",
+    },
+    "volcengine": {
+        "display_name_zh": "火山引擎即梦",
+        "summary_zh": "使用火山引擎IAM的AK/SK调用即梦视频生成。",
+        "availability_notice_zh": "需要同时具备Access Key ID和Secret Access Key，并为IAM身份开通即梦相关权限。",
+    },
+    "kling_official": {
+        "display_name_zh": "可灵官方API",
+        "summary_zh": "覆盖图片、视频、配音和数字人能力的可灵官方直连接入。",
+        "availability_notice_zh": "开发者账户必须实际拥有API入口和相应产品权限；部分账户或地区可能暂未开放。",
+    },
+    "seedance": {
+        "display_name_zh": "Seedance（第三方网关）",
+        "summary_zh": "通过fal.ai或Replicate等当前已实现网关调用Seedance视频能力。",
+        "availability_notice_zh": "这是第三方网关接入，不是字节跳动或火山引擎官方直连。",
+    },
+    "minimax": {
+        "display_name_zh": "MiniMax / Hailuo（fal.ai网关）",
+        "summary_zh": "通过fal.ai网关调用MiniMax/Hailuo视频能力。",
+        "availability_notice_zh": "这是第三方网关接入，不是MiniMax官方直连。",
+    },
+}
+
+CREDENTIAL_GUIDANCE: dict[str, dict[str, str]] = {
+    "DASHSCOPE_API_KEY": {
+        "label_zh": "百炼API Key",
+        "access_name_zh": "阿里云百炼官方",
+        "obtain_url": "https://bailian.console.aliyun.com/?apiKey=1#/api-key",
+        "documentation_url": "https://help.aliyun.com/zh/model-studio/get-api-key",
+        "billing_notice_zh": "模型调用可能按量计费；地域、模型权限和余额以百炼控制台为准。",
+    },
+    "DOUBAO_SPEECH_API_KEY": {
+        "label_zh": "豆包语音新版API Key",
+        "access_name_zh": "火山引擎豆包语音官方",
+        "obtain_url": "https://www.volcengine.com/docs/6561/1167802",
+        "documentation_url": "https://www.volcengine.com/docs/6561/1167802",
+        "billing_notice_zh": "需要先开通所选语音服务；赠送额度和实际收费以控制台当前规则为准。",
+    },
+    "VOLC_ACCESSKEY": {
+        "label_zh": "Access Key ID",
+        "access_name_zh": "火山引擎IAM官方",
+        "obtain_url": "https://console.volcengine.com/iam/keymanage/",
+        "documentation_url": "https://www.volcengine.com/docs/6257/64959",
+        "billing_notice_zh": "创建AK/SK本身不代表即梦服务免费；生成费用和权限以火山引擎控制台为准。",
+    },
+    "VOLC_SECRETKEY": {
+        "label_zh": "Secret Access Key",
+        "access_name_zh": "火山引擎IAM官方",
+        "obtain_url": "https://console.volcengine.com/iam/keymanage/",
+        "documentation_url": "https://www.volcengine.com/docs/6257/64959",
+        "billing_notice_zh": "创建AK/SK本身不代表即梦服务免费；生成费用和权限以火山引擎控制台为准。",
+    },
+    "KLING_API_KEY": {
+        "label_zh": "可灵官方API Key",
+        "access_name_zh": "可灵官方开发者平台",
+        "obtain_url": "https://app.klingai.com/global/dev",
+        "documentation_url": "https://app.klingai.com/global/dev/document-api/quickStart/productIntroduction/overview",
+        "billing_notice_zh": "API权限、套餐、余额和各模型价格以可灵开发者账户当前页面为准。",
+    },
+    "FAL_KEY": {
+        "label_zh": "fal.ai API Key",
+        "access_name_zh": "fal.ai网关",
+        "obtain_url": "https://fal.ai/dashboard/keys",
+        "documentation_url": "https://fal.ai/docs/documentation/setting-up/authentication",
+        "billing_notice_zh": "fal.ai是第三方计费网关；建议只创建API权限Key，模型调用可能产生费用。",
+    },
+    "FAL_AI_API_KEY": {
+        "label_zh": "fal.ai API Key（兼容变量）",
+        "access_name_zh": "fal.ai网关",
+        "obtain_url": "https://fal.ai/dashboard/keys",
+        "documentation_url": "https://fal.ai/docs/documentation/setting-up/authentication",
+        "billing_notice_zh": "fal.ai是第三方计费网关；建议只创建API权限Key，模型调用可能产生费用。",
+    },
+    "REPLICATE_API_TOKEN": {
+        "label_zh": "Replicate API Token",
+        "access_name_zh": "Replicate网关",
+        "obtain_url": "https://replicate.com/account/api-tokens",
+        "documentation_url": "https://replicate.com/docs/topics/security/api-tokens/",
+        "billing_notice_zh": "Replicate是第三方计费网关；Token需要像密码一样保管，模型调用可能产生费用。",
+    },
+}
+
 
 def _conversation_model_contract() -> dict[str, Any]:
     return {
@@ -224,6 +353,24 @@ def build_model_provider_report(repo_root: Path) -> dict[str, Any]:
     }
 
 
+def _credential_option_guidance(group: list[str]) -> dict[str, Any]:
+    primary = CREDENTIAL_GUIDANCE[group[0]]
+    return {
+        "env_vars": list(group),
+        "access_name_zh": primary["access_name_zh"],
+        "fields": [
+            {
+                "env_var": name,
+                "label_zh": CREDENTIAL_GUIDANCE[name]["label_zh"],
+            }
+            for name in group
+        ],
+        "obtain_url": primary["obtain_url"],
+        "documentation_url": primary["documentation_url"],
+        "billing_notice_zh": primary["billing_notice_zh"],
+    }
+
+
 def build_provider_setup_guide(repo_root: Path, data_root: Path) -> dict[str, Any]:
     """Report API-key presence for guided setup without returning values or networking."""
 
@@ -265,9 +412,17 @@ def build_provider_setup_guide(repo_root: Path, data_root: Path) -> dict[str, An
             {
                 "provider": provider["provider"],
                 "service": provider["service"],
+                **PROVIDER_GUIDANCE[provider["provider"]],
                 "access_path": provider["access_path"],
                 "capabilities": provider["capabilities"],
+                "capability_labels_zh": [
+                    CAPABILITY_LABELS_ZH[capability]
+                    for capability in provider["capabilities"]
+                ],
                 "credential_options": groups,
+                "credential_option_guidance": [
+                    _credential_option_guidance(group) for group in groups
+                ],
                 "present_env_vars": present,
                 "missing_env_vars": sorted(set(names) - present_set),
                 "credential_state": state,
@@ -302,6 +457,7 @@ def build_provider_setup_guide(repo_root: Path, data_root: Path) -> dict[str, An
             "protection": "windows_dpapi_current_user",
             "values_returned": False,
         },
+        "capability_choices": [dict(item) for item in CAPABILITY_GUIDANCE],
         "capabilities": sorted(capabilities.values(), key=lambda item: item["capability"]),
         "providers": providers,
         "security_rules": {

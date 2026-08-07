@@ -144,6 +144,44 @@ def test_config_guide_reports_api_key_presence_without_values_or_network(
     assert providers["kling_official"]["credential_state"] == "not_configured"
     assert payload["security_rules"]["never_paste_api_keys_in_chat"] is True
     assert payload["security_rules"]["presence_is_not_connectivity"] is True
+    capability_choices = {
+        item["capability"]: item for item in payload["capability_choices"]
+    }
+    assert capability_choices["image_generation"]["label_zh"] == "生成图片"
+    assert capability_choices["video_generation"]["label_zh"] == "生成视频"
+    assert capability_choices["tts"]["label_zh"] == "中文配音"
+    assert capability_choices["avatar"]["label_zh"] == "数字人或口型驱动"
+    assert len(capability_choices["video_generation"]["recommended_providers"]) == 2
+
+    assert providers["dashscope"]["display_name_zh"] == "阿里云百炼（DashScope）"
+    assert providers["dashscope"]["capability_labels_zh"] == [
+        "语音识别与内容分析",
+        "生成图片",
+        "中文配音",
+    ]
+    assert providers["dashscope"]["credential_option_guidance"][0][
+        "obtain_url"
+    ].startswith("https://bailian.console.aliyun.com/")
+    assert providers["doubao"]["credential_option_guidance"][0][
+        "documentation_url"
+    ].startswith("https://www.volcengine.com/docs/6561/")
+    assert providers["volcengine"]["credential_option_guidance"][0]["fields"] == [
+        {"env_var": "VOLC_ACCESSKEY", "label_zh": "Access Key ID"},
+        {"env_var": "VOLC_SECRETKEY", "label_zh": "Secret Access Key"},
+    ]
+    assert providers["kling_official"]["availability_notice_zh"]
+    assert "API" in providers["kling_official"]["availability_notice_zh"]
+    assert providers["seedance"]["credential_option_guidance"][0][
+        "access_name_zh"
+    ] == "fal.ai网关"
+    assert providers["seedance"]["credential_option_guidance"][2][
+        "access_name_zh"
+    ] == "Replicate网关"
+    assert all(
+        option["billing_notice_zh"]
+        for provider in providers.values()
+        for option in provider["credential_option_guidance"]
+    )
     assert payload["provider_calls_attempted"] == 0
     assert payload["network_calls_attempted"] == 0
     assert network_attempts == []
@@ -178,6 +216,8 @@ def test_config_guide_remains_available_before_python_dependencies_are_prepared(
     assert next(
         item for item in report["providers"] if item["provider"] == "doubao"
     )["capabilities"] == ["tts"]
+    assert report["capability_choices"]
+    assert all(item["display_name_zh"] for item in report["providers"])
 
 
 def test_config_guide_does_not_mask_missing_internal_modules(

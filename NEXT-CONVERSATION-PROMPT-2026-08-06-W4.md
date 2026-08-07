@@ -45,6 +45,9 @@
   `config guide`只报告`present_unverified/partial/not_configured`和Key名称，不返回Key值、不联网。
 - Key录入不等于账号、余额、网络或模型可用性已验证，也不授权真实/付费Provider调用。r18不包含该增量，已过期；
   必须以最新源码重建候选并重新给出ZIP SHA和W0证据。
+- API Key体验已改为目标优先：先按生成图片、生成视频、中文配音、数字人或内容分析过滤，再展示一到两个推荐
+  Provider、高级备选、官方申请入口、友好字段名、账户/权限/地区限制和费用提醒；只有用户明确同意现在配置后，
+  WorkBuddy才启动可见本地窗口。launcher强制Python UTF-8，避免中文引导乱码。
 - 本次验收已卸载并清理到纯新起点：默认程序根、两个Golden Key Skill和MCP注册均不存在，WorkBuddy进程为0；
   本项目验收会话已从客户端可见状态删除。没有清空用户账号、其他项目或全局WorkBuddy数据。
 

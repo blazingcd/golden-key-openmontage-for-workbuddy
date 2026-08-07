@@ -28,11 +28,14 @@ Python是运行必需项；FFmpeg在合成和本地媒体处理时必需；Node�
 真正调用文生图、图生视频、文生视频、TTS或数字人等在线能力前，还需要配置相应Provider的API Key。
 不要把Key粘贴进WorkBuddy聊天或普通命令参数。
 
-1. 双击已安装目录中的`配置API密钥.cmd`。
-2. 在本地窗口选择需要的Provider，并在隐藏输入框中录入Key。
-3. Key使用Windows当前用户DPAPI加密，保存到`<DataRoot>/Config/golden-key-provider-credentials.json`；
+1. 在WorkBuddy中说明本次需要“生成图片、生成视频、中文配音、数字人”中的哪些能力；它会显示一到两个推荐
+   Provider、厂商直连或第三方网关、官方Key入口、账户权限和费用提醒。
+2. 用户明确同意现在配置后，由WorkBuddy打开可见的本地向导；如果无法自动打开，再双击已安装目录中的
+   `配置API密钥.cmd`。
+3. 在本地窗口先选择目标能力，再选择推荐Provider；Key通过隐藏输入框录入，不在聊天中发送。
+4. Key使用Windows当前用户DPAPI加密，保存到`<DataRoot>/Config/golden-key-provider-credentials.json`；
    不写入ZIP解压目录、项目Artifact、WorkBuddy聊天或安装日志。
-4. 回到WorkBuddy后让它重新检查配置。`已录入但未验证`只表示Key存在，不代表账号权限、余额或网络连通性已通过。
+5. 回到WorkBuddy后让它重新检查配置。`已录入但未验证`只表示Key存在，不代表账号权限、余额或网络连通性已通过。
 
 新手引导应根据当前视频目标只推荐需要的能力，不要求一次配齐所有Provider。配置Key本身不会触发联网、付费生成或
 Provider连通性测试；这些动作仍需单独说明并获得用户明确同意。

@@ -791,3 +791,31 @@
   `284 passed, 1 subtest passed`，WorkBuddy=`108 passed`。证据目录为
   `D:/WorkBuddyData/Temp/w4-api-key-guide-publication-audit-20260807-r23-final`。
 - 本轮未修改v0.3.21 managed Core、Golden Key SaaS/private Core仓库，未调用真实或付费Provider。
+
+## 2026-08-08：API Key目标优先新手引导
+
+- 根据用户确认，将API配置体验从“先列Provider和环境变量”改为“先选生产目标”：生成图片、生成视频、中文配音、
+  数字人/口型驱动、语音识别与内容分析。每个目标只标记一到两个推荐Provider，其他接入保留为高级选择。
+- 核验阿里云百炼、火山引擎IAM/豆包语音、可灵开发者平台、fal.ai和Replicate官方入口；配置报告新增中文Provider
+  名称、友好凭据字段、厂商直连/第三方网关、官方申请与说明链接、账户/地区/权限限制和费用提醒。
+- 本地向导先问目标，再列推荐Provider。普通列表不展示`VOLC_ACCESSKEY`、`KLING_API_KEY`等环境变量；只有用户
+  选定Provider并进入隐藏录入时，才在友好字段名后标明内部变量。Key仍使用当前Windows用户DPAPI保护。
+- WorkBuddy只有在用户明确选择“现在配置”后，才可用`Start-Process`打开可见本地窗口；宿主无法启动时回退到
+  用户双击`配置API密钥.cmd`。Key不进入聊天、普通参数、Artifact或日志。
+- 新增中文数据后发现Windows PowerShell/Python输出编码风险；launcher现固定`PYTHONUTF8=1`和
+  `PYTHONIOENCODING=utf-8`，真实隔离安装确认中文Provider和能力标签无乱码。
+- TDD初始6项红灯全部转绿。API配置、Skill和portable bundle专项=`35 passed`；完整WorkBuddy专项=`109 passed`；
+  两个Skill通过Skill Creator格式校验，PowerShell脚本解析0错误。
+- 首次安装态前向测试发现依赖不完整时错误建议重装ZIP；随后修正新手Skill：先运行`runtime plan`，解释下载到
+  独立DataRoot并等待明确同意，不在依赖准备前运行严格`context/pipelines/config inspect`。第二次前向测试通过，
+  正确区分“允许下载运行环境”和“现在配置API”两次授权。
+- 最终r25 ZIP大小`72,817,257`字节，SHA-256=
+  `d572aaff91e4863886e694a08af3f8148000e083d18978578d23fb9677cea725`，位置为
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-goal-first-api-guide-20260808-r25`。
+- r25隔离安装=`PASS`：5类目标、6个Provider、中文输出、推荐过滤、取消不落凭据均通过；Key值返回0，
+  网络/Provider调用0。未修改v0.3.21 managed Core或Golden Key SaaS/private Core仓库。
+- 最终W0=`PASS`：Release、1566个managed Core文件、四Pipeline/44个阶段Skill、Schema/Tool/Checkpoint合同、
+  direct-agent边界、公开lineage、风险扫描和回归全部通过；contracts=`716 passed, 7 skipped`，tools=
+  `284 passed, 1 subtest passed`，WorkBuddy=`109 passed`。证据目录为
+  `D:/WorkBuddyData/Temp/w4-goal-first-api-guide-publication-audit-20260808-r25-final`。
+- 验收后r25隔离程序目录和两个Skill均已卸载；默认WorkBuddy安装根不存在，WorkBuddy进程为0，继续保留纯新人工验收起点。

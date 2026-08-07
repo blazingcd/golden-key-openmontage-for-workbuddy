@@ -698,3 +698,30 @@
   `D:/WorkBuddyData/Temp/w4-tolerant-install-publication-audit-20260807-r7-final`。
 - 当前切片不是跨版本降级、完整卸载或事务级版本回滚；这些仍属于W4下一片。未修改v0.3.21 managed Core，
   未调用真实/付费Provider，也未修改Golden Key SaaS/private Core仓库。
+
+## 2026-08-07：W4跨版本升级、失败回滚与默认保留数据的卸载
+
+- 纠正上一片只完成“重复注册前置”但尚未实现真正升级/卸载的边界；本片继续只修改WorkBuddy消费方安装脚本、
+  打包清单、合同测试和公开文档，v0.3.21 managed Core保持只读。
+- TDD先证明更高版本会被旧安装器一律拒绝；新增Pre-Release版本比较，严格更高版本进入`upgrade`，相同版本仍为
+  `repair`，较旧包继续fail closed。默认程序目录从Manifest动态读取版本，不再硬编码当前版本。
+- TDD用缺失业务Pipeline的新包触发doctor失败，证明旧实现会错误提交失败升级并删除旧程序；新增事务边界，
+  新程序/Skill只有doctor=`pass/degraded`才提交，任一步失败都撤销新版本并恢复旧程序和两个旧Skill。
+- 新增`uninstall-workbuddy.ps1`和中文`从WorkBuddy卸载.cmd`；卸载前验证安装记录和Skill runtime marker，
+  只移除所有权匹配的可重建内容，DataRoot固定保留，并写入`Logs/WORKBUDDY-LAST-UNINSTALL.json`。
+- Windows自卸载先注销Skill并让CMD正常退出，再由隐藏延迟清理进程删除程序目录；外来或所有权标记不匹配的Skill
+  原样保留并列入`protected_skills`。当前不提供默认删除用户数据或主动降级。
+- portable bundle专项=`16 passed`，覆盖升级成功、失败回滚、动态默认目录、DataRoot漂移拒绝、真实中文CMD自卸载、数据哨兵、
+  外来Skill保护、覆盖解压和既有修复合同。
+- 最终真实候选r10：ZIP=`72,805,580`字节，SHA-256=
+  `e0fd2ea1ee6831ee5652b32e13c42d92afca77773babdb341bc606e61bac46e4`，位置为
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-upgrade-uninstall-20260807-r10`。
+- r10 D盘矩阵先证明错误DataRoot在写入前退出1且不建立空数据目录；再从真实ZIP安装v1，使用同一包合同模拟v2
+  向前升级，并以缺一个业务Pipeline的v3触发doctor失败；
+  v2程序和Skill被恢复，坏v3目录撤销。随后从已安装v2双击中文卸载入口，程序和两个自有Skill移除，DataRoot哨兵保留。
+- WorkBuddy专项=`101 passed`；完整回归=`1161 passed, 10 skipped, 1 subtest passed`；四Pipeline、44个阶段Skill、
+  Schema/Tool Registry、Reviewer/Checkpoint和既有Core合同保持通过，网络/Provider调用0。
+- W1消费方Gate=`PASS`：六个禁入路径不存在、静态隔离违规0、活动MCP配置不存在、Provider调用0。
+- 最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline合同、direct-agent运行时、
+  公开lineage、风险扫描和回归均通过；private Core历史未扫描且不在候选中。最终证据目录为
+  `D:/WorkBuddyData/Temp/w4-upgrade-uninstall-publication-audit-20260807-r10-final`。

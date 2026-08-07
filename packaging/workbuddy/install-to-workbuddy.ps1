@@ -1,12 +1,21 @@
 [CmdletBinding()]
 param(
-    [string]$InstallRoot = (Join-Path $env:LOCALAPPDATA 'GoldenKeyOpenMontageForWorkBuddy\App\0.1.0-prealpha.1'),
+    [string]$InstallRoot,
     [string]$DataRoot = (Join-Path $env:LOCALAPPDATA 'GoldenKeyOpenMontageForWorkBuddy\Data'),
     [string]$WorkBuddySkillsRoot = (Join-Path $env:USERPROFILE '.workbuddy\skills')
 )
 
 $ErrorActionPreference = 'Stop'
 $installer = Join-Path $PSScriptRoot 'install-workbuddy.ps1'
+$manifestPath = Join-Path $PSScriptRoot 'BUNDLE-MANIFEST.json'
+if ([string]::IsNullOrWhiteSpace($InstallRoot)) {
+    if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        throw 'BUNDLE-MANIFEST.json is missing. Extract the complete ZIP before registration.'
+    }
+    $manifest = Get-Content -Raw -LiteralPath $manifestPath -Encoding UTF8 | ConvertFrom-Json
+    $packageVersion = [string]$manifest.distribution.package_version
+    $InstallRoot = Join-Path $env:LOCALAPPDATA "GoldenKeyOpenMontageForWorkBuddy\App\$packageVersion"
+}
 
 function ConvertFrom-Utf8Base64([string]$Value) {
     return [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($Value))

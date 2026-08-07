@@ -144,7 +144,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 
 ## W4：打包、安装、文档和真实WorkBuddy验收
 
-状态：`IN PROGRESS / REINSTALL-REPAIR SLICE BUILT`。
+状态：`IN PROGRESS / UPGRADE-ROLLBACK-UNINSTALL SLICE BUILT`。
 
 ### 任务
 
@@ -162,8 +162,10 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - `DONE`：支持覆盖解压和不同解压目录重复注册；正式目录只接收Manifest白名单，额外旧文件被记录并忽略。
 - `DONE`：支持同版本幂等修复、正式程序目录被手动删除后重建、项目自有Skill被删除后补回；独立数据目录保留。
   同名外来Skill或无效所有权记录fail closed，不覆盖用户内容。
-- `NEXT`：在上述可重建边界上继续实现跨版本升级/降级、完整卸载和事务回滚，保护用户项目、Artifact、配置、模型和
-  已有WorkBuddy Skill/MCP配置。
+- `DONE`：实现版本号严格向前的跨版本升级；默认路径跟随Manifest版本，新程序通过doctor后才提交并清理旧程序。
+- `DONE`：实现升级失败自动回滚，恢复旧程序和两个旧Skill；DataRoot始终保留。
+- `DONE`：增加`从WorkBuddy卸载.cmd`和所有权校验卸载器；只移除自有程序/Skill，默认保留用户数据和外来同名Skill。
+- `NEXT`：在普通用户Windows默认路径和真实WorkBuddy中完成升级、回滚、自卸载验收；主动降级和彻底删除数据不进入默认流程。
 - 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。
 - 扩充中文快速开始、Prompt Gallery和故障排查。
 - 在未预装开发环境的普通Windows用户场景验证安装。
@@ -171,7 +173,8 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 
 ### 完成证据
 
-- 全新、覆盖解压、不同解压目录、程序/Skill误删恢复均按文档注册成功；普通用户默认目录与D盘覆盖路径独立通过。
+- 全新、覆盖解压、不同解压目录、程序/Skill误删恢复、升级、失败回滚和默认保留数据的卸载均按文档通过；
+  普通用户默认目录与D盘覆盖路径独立通过。
 - 用户不需要另外下载Golden Key核心。
 - 真实WorkBuddy验收通过后才声明`OFFLINE ADAPTER READY`。
 - Provider真实成片仍为单独授权阶段。

@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import os
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -72,7 +73,7 @@ def _minimal_lock(tmp_path: Path, *, include_pipelines: bool = False) -> Path:
 def _run_portable_installer(
     staging: Path,
     *,
-    install_root: Path,
+    install_root: Path | None,
     data_root: Path,
     skill_root: Path,
 ) -> subprocess.CompletedProcess[str]:
@@ -84,12 +85,61 @@ def _run_portable_installer(
         + os.pathsep
         + environment.get("PATH", "")
     )
-    return subprocess.run(
+    command = [
+        powershell,
+        "-NoProfile",
+        "-File",
+        str(staging / "install-workbuddy.ps1"),
+    ]
+    if install_root is not None:
+        command.extend(["-InstallRoot", str(install_root)])
+    command.extend(
         [
+            "-DataRoot",
+            str(data_root),
+            "-WorkBuddySkillsRoot",
+            str(skill_root),
+        ]
+    )
+    return subprocess.run(
+        command,
+        cwd=staging.parent,
+        env=environment,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+
+def _run_portable_uninstaller(
+    staging: Path,
+    *,
+    install_root: Path,
+    data_root: Path,
+    skill_root: Path,
+) -> subprocess.CompletedProcess[str]:
+    powershell = shutil.which("pwsh") or shutil.which("powershell")
+    assert powershell is not None
+    environment = os.environ.copy()
+    environment["OPENMONTAGE_WORKBUDDY_NO_PAUSE"] = "1"
+    if os.name == "nt":
+        command = [
+            "cmd.exe",
+            "/d",
+            "/c",
+            str(staging / "从WorkBuddy卸载.cmd"),
+        ]
+    else:
+        command = [
             powershell,
             "-NoProfile",
             "-File",
-            str(staging / "install-workbuddy.ps1"),
+            str(staging / "uninstall-workbuddy.ps1"),
+        ]
+    result = subprocess.run(
+        command
+        + [
             "-InstallRoot",
             str(install_root),
             "-DataRoot",
@@ -104,6 +154,26 @@ def _run_portable_installer(
         encoding="utf-8",
         check=False,
     )
+    if os.name == "nt" and staging.resolve() == install_root.resolve():
+        for _ in range(50):
+            if not install_root.exists():
+                break
+            time.sleep(0.1)
+    return result
+
+
+def _copy_package_with_version(
+    source: Path,
+    destination: Path,
+    *,
+    package_version: str,
+) -> Path:
+    shutil.copytree(source, destination)
+    manifest_path = destination / "BUNDLE-MANIFEST.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["distribution"]["package_version"] = package_version
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    return destination
 
 
 def test_portable_bundle_contains_core_consumer_skills_and_first_build_label(
@@ -155,6 +225,8 @@ def test_portable_bundle_contains_core_consumer_skills_and_first_build_label(
     ).is_file()
     assert (staging / "install-workbuddy.ps1").is_file()
     assert (staging / "安装到WorkBuddy.cmd").is_file()
+    assert (staging / "uninstall-workbuddy.ps1").is_file()
+    assert (staging / "从WorkBuddy卸载.cmd").is_file()
     assert (staging / "golden-key-workbuddy.ps1").is_file()
     assert not (staging / "setup.py").exists()
     assert (ROOT / "setup.py").is_file()
@@ -286,6 +358,310 @@ def test_repeat_install_repairs_deleted_app_or_skill_and_preserves_user_data(
         assert Path(runtime["install_root"]) == install_root
 
 
+def test_newer_package_upgrades_owned_install_and_preserves_user_data(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    first_package = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "first-package",
+    )
+    newer_package = _copy_package_with_version(
+        first_package,
+        tmp_path / "newer-package",
+        package_version="0.2.0-prealpha.1",
+    )
+    first_install = tmp_path / "installed" / "0.1.0-prealpha.1"
+    newer_install = tmp_path / "installed" / "0.2.0-prealpha.1"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    first = _run_portable_installer(
+        first_package,
+        install_root=first_install,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert first.returncode == 0, first.stderr
+    sentinel = data_root / "Projects" / "keep-on-upgrade.txt"
+    sentinel.write_text("user-owned", encoding="utf-8")
+
+    upgraded = _run_portable_installer(
+        newer_package,
+        install_root=newer_install,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert upgraded.returncode == 0, upgraded.stderr
+    assert not first_install.exists()
+    assert (newer_install / "golden-key-workbuddy.ps1").is_file()
+    assert sentinel.read_text(encoding="utf-8") == "user-owned"
+    record = json.loads(
+        (newer_install / "WORKBUDDY-INSTALL.json").read_text(encoding="utf-8-sig")
+    )
+    assert record["operation"] == "upgrade"
+    assert record["previous_install"] == {
+        "install_root": str(first_install),
+        "package_version": "0.1.0-prealpha.1",
+    }
+    for skill_name in (
+        "golden-key-openmontage",
+        "golden-key-openmontage-onboarding",
+    ):
+        runtime = json.loads(
+            (skill_root / skill_name / "WORKBUDDY-RUNTIME.json").read_text(
+                encoding="utf-8-sig"
+            )
+        )
+        assert runtime["package_version"] == "0.2.0-prealpha.1"
+        assert Path(runtime["install_root"]) == newer_install
+
+
+def test_default_install_root_follows_manifest_package_version(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    first_package = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "first-package",
+    )
+    newer_package = _copy_package_with_version(
+        first_package,
+        tmp_path / "newer-package",
+        package_version="0.2.0-prealpha.1",
+    )
+    local_app_data = tmp_path / "local-app-data"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    expected_install = (
+        local_app_data
+        / "GoldenKeyOpenMontageForWorkBuddy"
+        / "App"
+        / "0.2.0-prealpha.1"
+    )
+    environment_value = os.environ.get("LOCALAPPDATA")
+    os.environ["LOCALAPPDATA"] = str(local_app_data)
+    try:
+        installed = _run_portable_installer(
+            newer_package,
+            install_root=None,
+            data_root=data_root,
+            skill_root=skill_root,
+        )
+    finally:
+        if environment_value is None:
+            os.environ.pop("LOCALAPPDATA", None)
+        else:
+            os.environ["LOCALAPPDATA"] = environment_value
+
+    assert installed.returncode == 0, installed.stderr
+    assert (expected_install / "WORKBUDDY-INSTALL.json").is_file()
+
+
+def test_failed_upgrade_restores_previous_program_and_skills(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    first_package = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "first-package",
+    )
+    broken_package = _copy_package_with_version(
+        first_package,
+        tmp_path / "broken-newer-package",
+        package_version="0.2.0-prealpha.1",
+    )
+    missing_pipeline = "pipeline_defs/golden-key-product-marketing.yaml"
+    manifest_path = broken_package / "BUNDLE-MANIFEST.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"] = [
+        entry for entry in manifest["files"] if entry["path"] != missing_pipeline
+    ]
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    (broken_package / missing_pipeline).unlink()
+    first_install = tmp_path / "installed" / "0.1.0-prealpha.1"
+    broken_install = tmp_path / "installed" / "0.2.0-prealpha.1"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    first = _run_portable_installer(
+        first_package,
+        install_root=first_install,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert first.returncode == 0, first.stderr
+    sentinel = data_root / "Projects" / "keep-on-rollback.txt"
+    sentinel.write_text("user-owned", encoding="utf-8")
+
+    failed = _run_portable_installer(
+        broken_package,
+        install_root=broken_install,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert failed.returncode != 0
+    assert "previous installation was restored" in failed.stderr
+    assert first_install.is_dir()
+    assert not broken_install.exists()
+    assert sentinel.read_text(encoding="utf-8") == "user-owned"
+    for skill_name in (
+        "golden-key-openmontage",
+        "golden-key-openmontage-onboarding",
+    ):
+        runtime = json.loads(
+            (skill_root / skill_name / "WORKBUDDY-RUNTIME.json").read_text(
+                encoding="utf-8-sig"
+            )
+        )
+        assert runtime["package_version"] == "0.1.0-prealpha.1"
+        assert Path(runtime["install_root"]) == first_install
+
+
+def test_upgrade_refuses_data_root_change_and_preserves_existing_install(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    first_package = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "first-package",
+    )
+    newer_package = _copy_package_with_version(
+        first_package,
+        tmp_path / "newer-package",
+        package_version="0.2.0-prealpha.1",
+    )
+    first_install = tmp_path / "installed" / "0.1.0-prealpha.1"
+    newer_install = tmp_path / "installed" / "0.2.0-prealpha.1"
+    existing_data = tmp_path / "existing-user-data"
+    wrong_data = tmp_path / "wrong-user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    first = _run_portable_installer(
+        first_package,
+        install_root=first_install,
+        data_root=existing_data,
+        skill_root=skill_root,
+    )
+    assert first.returncode == 0, first.stderr
+    sentinel = existing_data / "Projects" / "keep-me.txt"
+    sentinel.write_text("user-owned", encoding="utf-8")
+
+    refused = _run_portable_installer(
+        newer_package,
+        install_root=newer_install,
+        data_root=wrong_data,
+        skill_root=skill_root,
+    )
+
+    assert refused.returncode != 0
+    assert "DataRoot does not match" in refused.stderr
+    assert first_install.is_dir()
+    assert not newer_install.exists()
+    assert not wrong_data.exists()
+    assert sentinel.read_text(encoding="utf-8") == "user-owned"
+
+
+def test_uninstall_removes_owned_program_and_skills_but_preserves_user_data(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "package",
+    )
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    installed = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert installed.returncode == 0, installed.stderr
+    sentinel = data_root / "Projects" / "keep-after-uninstall.txt"
+    sentinel.write_text("user-owned", encoding="utf-8")
+
+    uninstalled = _run_portable_uninstaller(
+        install_root,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert uninstalled.returncode == 0, uninstalled.stderr
+    report = json.loads(uninstalled.stdout)
+    assert report["status"] == "uninstalled"
+    assert report["user_data_preserved"] is True
+    assert report["removed_skills"] == [
+        "golden-key-openmontage",
+        "golden-key-openmontage-onboarding",
+    ]
+    for _ in range(50):
+        if not install_root.exists():
+            break
+        time.sleep(0.1)
+    assert not install_root.exists()
+    assert not (skill_root / "golden-key-openmontage").exists()
+    assert not (skill_root / "golden-key-openmontage-onboarding").exists()
+    assert sentinel.read_text(encoding="utf-8") == "user-owned"
+
+
+def test_uninstall_preserves_skill_without_matching_ownership_marker(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "package",
+    )
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    installed = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert installed.returncode == 0, installed.stderr
+    protected_skill = skill_root / "golden-key-openmontage-onboarding"
+    runtime_path = protected_skill / "WORKBUDDY-RUNTIME.json"
+    runtime = json.loads(runtime_path.read_text(encoding="utf-8-sig"))
+    runtime["schema_version"] = "foreign-skill-v1"
+    runtime_path.write_text(json.dumps(runtime), encoding="utf-8")
+    protected_file = protected_skill / "KEEP.txt"
+    protected_file.write_text("preserve", encoding="utf-8")
+
+    uninstalled = _run_portable_uninstaller(
+        install_root,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+
+    assert uninstalled.returncode == 0, uninstalled.stderr
+    report = json.loads(uninstalled.stdout)
+    assert report["removed_skills"] == ["golden-key-openmontage"]
+    assert report["protected_skills"] == [
+        "golden-key-openmontage-onboarding"
+    ]
+    assert protected_file.read_text(encoding="utf-8") == "preserve"
+    assert not install_root.exists()
+
+
 def test_foreign_skill_name_conflict_is_preserved_and_install_fails_closed(
     tmp_path: Path,
 ) -> None:
@@ -317,7 +693,7 @@ def test_foreign_skill_name_conflict_is_preserved_and_install_fails_closed(
     assert not install_root.exists()
 
 
-def test_cross_version_replacement_is_refused_until_upgrade_contract_exists(
+def test_older_package_cannot_downgrade_owned_install(
     tmp_path: Path,
 ) -> None:
     from scripts.workbuddy.build_portable_bundle import build_portable_staging
@@ -352,7 +728,7 @@ def test_cross_version_replacement_is_refused_until_upgrade_contract_exists(
     )
 
     assert result.returncode != 0
-    assert "Cross-version replacement is not enabled" in result.stderr
+    assert "Package downgrade is not allowed" in result.stderr
     assert protected.read_text(encoding="utf-8") == "newer-install"
 
 
@@ -394,7 +770,7 @@ def test_deleted_app_does_not_allow_cross_version_skill_downgrade(
     )
 
     assert result.returncode != 0
-    assert "Cross-version Skill replacement is not enabled" in result.stderr
+    assert "Package downgrade is not allowed" in result.stderr
     assert protected.read_text(encoding="utf-8") == "newer-skill"
     assert not install_root.exists()
 

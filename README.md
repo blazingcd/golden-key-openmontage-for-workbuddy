@@ -7,8 +7,8 @@
 four business-oriented video pipelines, Chinese conversational onboarding, and stronger local execution contracts.
 
 > **开发状态：Pre-Alpha / WorkBuddy Adapter 开发中。**
-> 当前版本已经建立首个轻量 ZIP、中文双击注册入口和真实 WorkBuddy 离线调用基线，但尚未完成普通用户安装、
-> 升级/卸载、全部依赖准备及真实生产 Provider 成片验收。请勿将它视为已完成的正式发行版；当前进度见
+> 当前版本已经建立首个轻量 ZIP、中文安装/卸载入口、向前升级与失败回滚合同和真实 WorkBuddy 离线调用基线，
+> 但尚未完成普通用户最终安装验收、全部依赖准备及真实生产 Provider 成片验收。请勿将它视为已完成的正式发行版；当前进度见
 > [`PROJECT-STATE.md`](PROJECT-STATE.md)。
 
 ## 这个 fork 解决什么问题
@@ -130,6 +130,10 @@ WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视�
 目录或其中一个 Skill，也可以从同一份或另一处完整解压包重新注册。用户数据目录保持独立，不因修复而删除。若同名 Skill
 不是本项目安装器创建的，安装会停止并原样保留，避免误覆盖用户内容。
 
+更新版本时仍运行新 ZIP 中的同一个安装入口。安装器只允许版本号严格向前升级，先保留旧程序和旧 Skill，再注册新版本并
+运行离线 `doctor`；检查成功后才提交升级，失败则撤销新版本并恢复旧程序与旧 Skill。旧包不能静默覆盖新版本。需要卸载时，
+双击`从WorkBuddy卸载.cmd`；默认只删除可重建程序和具有匹配所有权记录的两个 Skill，用户项目、配置、模型、缓存和输出保留。
+
 当前锁定的 `golden-key-v0.3.21` 仅用于构建和验证第一个安装/调用包，不是最终 Core 版本。
 普通用户 ZIP 不包含或要求运行 `setup.py`。快速说明见
 [`docs/workbuddy/QUICK-START.md`](docs/workbuddy/QUICK-START.md)。
@@ -175,12 +179,14 @@ python -m golden_key_openmontage_workbuddy task recover --project-id demo --task
 - 持久任务、离线网络边界、脱敏和中断恢复合同；
 - 首个轻量 ZIP、中文双击入口和安装后环境诊断。
 - 覆盖解压白名单安装，以及程序目录或项目自有 Skill 被手动删除后的重复注册修复；
+- 严格向前的跨版本升级、失败自动回滚，以及默认保留数据的中文卸载入口；
 - 经用户确认后在所选数据目录准备隔离Python依赖，不污染系统Python。
 
 尚未完成，因此不能对外声称：
 
 - 已达到正式版或 `Offline Adapter Ready`；
-- 已完成普通用户全新 Windows 安装、跨版本升级、卸载和回滚验收；
+- 已完成未预装开发环境的普通用户全新 Windows 安装和真实 WorkBuddy 全链验收（升级、回滚和卸载合同已实现，
+  但仍需最终普通用户环境验收）；
 - Python本体、Node、FFmpeg和可选模型运行时都能自动准备（当前只完成已有Python下的受控依赖准备）；
 - 已完成真实或付费 Provider 的端到端成片验收；
 - 本项目是 OpenMontage 或 WorkBuddy 的官方发行版。

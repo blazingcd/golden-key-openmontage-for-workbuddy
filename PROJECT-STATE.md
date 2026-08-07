@@ -159,7 +159,7 @@
 - W4重复注册修复切片已实现：覆盖解压目录中的额外旧文件只记入安装记录，不进入正式程序目录；同版本重复运行
   可替换具有有效所有权记录的程序和两个Skill，程序目录或其中一个Skill被手动删除后可从同一或不同解压目录恢复。
 - 数据目录保持独立，修复不删除用户项目、Artifact、配置、模型、缓存或输出；同名外来Skill、无效安装记录或
-  无效Skill所有权记录均fail closed并保留原内容；跨版本替换在正式升级合同完成前同样拒绝。
+  无效Skill所有权记录均fail closed并保留原内容；当时跨版本替换先拒绝，随后已由下述正式向前升级合同取代。
 - 新真实候选r7位于`D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-tolerant-install-20260807-r7`；ZIP大小
   `72,800,975`字节，SHA-256=`ebf95cd067dce94bdf25f979740484e453df9dcd91b0a3dadde5c08eb6e1589a`。
   D盘隔离矩阵验证覆盖残留忽略、同版本重复、换解压目录、程序/Skill误删修复、数据保留和外来Skill冲突；
@@ -169,6 +169,18 @@
 - 本切片W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline合同、direct-agent运行时边界、
   公开lineage、风险扫描和回归全部通过；private Core历史未扫描且不在候选中。证据目录为
   `D:/WorkBuddyData/Temp/w4-tolerant-install-publication-audit-20260807-r7-final`。
+- W4跨版本切片已实现：Manifest版本动态决定默认程序目录；严格更高版本可以升级，相同版本继续修复，旧包降级拒绝。
+  新版本先替换到活动位置并运行离线doctor，只有pass/degraded才提交；失败会删除新版本并恢复旧程序和两个旧Skill。
+- 新增包内`从WorkBuddy卸载.cmd`和`uninstall-workbuddy.ps1`。卸载只移除所有权匹配的程序与Skill，默认保留
+  DataRoot、项目、Artifact、配置、模型、缓存、托管Python和输出；外来或标记不匹配的Skill列为protected并保留。
+- 最终真实候选r10位于`D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-upgrade-uninstall-20260807-r10`；ZIP大小
+  `72,805,580`字节，SHA-256=`e0fd2ea1ee6831ee5652b32e13c42d92afca77773babdb341bc606e61bac46e4`。
+- r10 D盘完整矩阵=`PASS`：错误DataRoot在写入前拒绝、v1向前升级v2、坏v3 doctor失败并恢复v2、已安装目录
+  中文CMD自卸载、两个自有Skill移除、原DataRoot数据哨兵保留；network/Provider调用均为0。
+  portable bundle=`16 passed`，WorkBuddy专项=`101 passed`，完整回归=`1161 passed, 10 skipped, 1 subtest passed`。
+- 本切片W1消费方Gate=`PASS`；最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline、
+  direct-agent运行时、公开lineage、风险扫描和回归全部通过，private Core历史未扫描且不在候选中。最终证据目录为
+  `D:/WorkBuddyData/Temp/w4-upgrade-uninstall-publication-audit-20260807-r10-final`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -178,11 +190,10 @@
 
 ## 下一步
 
-1. W4下一片在已完成的同版本重复注册修复之上实现跨版本升级/降级、完整卸载和事务回滚；用户项目、Artifact、
-   配置、模型和输出默认保留。
+1. 提交并推送r10升级/回滚/卸载切片，核验一次公开CI。
 2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
 3. 在获得明确同意后，用真实首包requirements完成一次数据目录托管Python下载/准备和launcher复核。
-4. 在普通用户默认路径、D盘覆盖路径和真实WorkBuddy中完成自然语言触发、长任务/恢复验收后，才重新裁决
+4. 在普通用户默认路径和真实WorkBuddy中完成安装、升级、卸载、自然语言触发、长任务/恢复验收后，才重新裁决
    `OFFLINE ADAPTER READY`。
 5. 在真实WorkBuddy中对`WB-UX1`做首次对话体验验收；它独立留痕但可复用W4注册后的Skill。
 6. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。

@@ -101,7 +101,7 @@ def _run_portable_installer(
             str(skill_root),
         ]
     )
-    return subprocess.run(
+    result = subprocess.run(
         command,
         cwd=staging.parent,
         env=environment,
@@ -110,6 +110,13 @@ def _run_portable_installer(
         encoding="utf-8",
         check=False,
     )
+    # Windows PowerShell can occasionally close one redirected stream without
+    # returning an empty string after long, multi-suite runs.  Keep failure
+    # assertions deterministic and preserve whichever captured stream carries
+    # the actionable installer message.
+    if result.stderr is None:
+        result.stderr = result.stdout or ""
+    return result
 
 
 def _run_portable_uninstaller(
@@ -147,7 +154,7 @@ def _run_portable_uninstaller(
             "-WorkBuddySkillsRoot",
             str(skill_root),
         ],
-        cwd=staging.parent,
+        cwd=staging,
         env=environment,
         capture_output=True,
         text=True,
@@ -615,6 +622,60 @@ def test_uninstall_removes_owned_program_and_skills_but_preserves_user_data(
     assert not (skill_root / "golden-key-openmontage").exists()
     assert not (skill_root / "golden-key-openmontage-onboarding").exists()
     assert sentinel.read_text(encoding="utf-8") == "user-owned"
+
+
+def test_installed_launcher_ignores_shadow_package_in_callers_working_directory(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path, include_pipelines=True),
+        output_root=tmp_path / "package",
+    )
+    install_root = tmp_path / "installed" / "app"
+    data_root = tmp_path / "user-data"
+    skill_root = tmp_path / "workbuddy-profile" / "skills"
+    installed = _run_portable_installer(
+        staging,
+        install_root=install_root,
+        data_root=data_root,
+        skill_root=skill_root,
+    )
+    assert installed.returncode == 0, installed.stderr
+
+    caller_root = tmp_path / "caller"
+    shadow_package = caller_root / "golden_key_openmontage_workbuddy"
+    shadow_package.mkdir(parents=True)
+    (shadow_package / "__main__.py").write_text(
+        "raise SystemExit('CALLER SHADOW PACKAGE WAS IMPORTED')\n",
+        encoding="utf-8",
+    )
+    powershell = shutil.which("pwsh") or shutil.which("powershell")
+    assert powershell is not None
+    result = subprocess.run(
+        [
+            powershell,
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(install_root / "golden-key-workbuddy.ps1"),
+            "doctor",
+            "--json",
+        ],
+        cwd=caller_root,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+    assert result.returncode in (0, 1), result.stderr
+    assert "CALLER SHADOW PACKAGE WAS IMPORTED" not in result.stderr
+    report = json.loads(result.stdout)
+    assert Path(report["repo_root"]) == install_root
 
 
 def test_uninstall_preserves_skill_without_matching_ownership_marker(

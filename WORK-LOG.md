@@ -725,3 +725,37 @@
 - 最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline合同、direct-agent运行时、
   公开lineage、风险扫描和回归均通过；private Core历史未扫描且不在候选中。最终证据目录为
   `D:/WorkBuddyData/Temp/w4-upgrade-uninstall-publication-audit-20260807-r10-final`。
+
+## 2026-08-07：W4真实默认路径安装、自卸载修复与客户端清理
+
+- 从r10继续执行真实Windows默认路径验收，发现已安装launcher从开发仓库cwd调用时会被仓库内同名Python包遮蔽。
+  launcher现先切换到已安装runtime根再执行Python，真实输出的Core根已确认来自`%LOCALAPPDATA%`安装目录。
+- 真实双击中文卸载入口暴露第二个缺陷：CMD自身仍占用已安装目录时，延迟清理可能提前放弃并留下程序根。
+  CMD现先切换到`%TEMP%`再启动卸载器；延迟清理由10次增至60次、每次500ms，真实自卸载退出0且程序根最终消失。
+- 新增安装launcher抵御调用者cwd同名包遮蔽的合同测试，并让Windows测试助手从真实staging cwd启动自卸载。
+  portable bundle=`17 passed`，WorkBuddy专项=`102 passed`；contracts/backlot=`753 passed, 8 skipped`，
+  lib/qa/tools=`307 passed, 2 skipped, 1 subtest passed`，合计=`1162 passed, 10 skipped, 1 subtest passed`。
+- r11真实候选ZIP大小`72,805,854`字节，SHA-256=
+  `C81516E6225BCFF43204F5FE17A5DD44F21D82285F913E8EBCB8704316297DE8`，位置为
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-clean-uninstall-20260807-r11`。
+- 默认路径安装与WorkBuddy Skill发现通过；本轮没有下载完整Python requirements，`doctor=degraded`只报告缺失依赖，
+  Core/authority/四Pipeline合同无错误，网络/Provider调用0。自然语言`我不知道怎么开始做视频`被WorkBuddy通用
+  视频流程接管，没有进入本项目新手引导，因此`WB-UX1`真实路由明确为`FAIL/PENDING`。
+- r11代码候选当时W0=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline合同、direct-agent边界、公开lineage、
+  风险扫描和回归均通过；候选4个文件，snapshot SHA=
+  `a43143076b42a6ee9ba7c4e0a6ae6292e7b94d0bba78fbff09bb66577b01ccba`，证据目录为
+  `D:/WorkBuddyData/Temp/w4-clean-uninstall-publication-audit-20260807-r11-final`。
+- 按用户要求完成验收后清理：默认安装根、两个Golden Key Skill、MCP注册和后台进程均不存在；三条本项目
+  验收会话标记删除，关联会话/trace文件移出WorkBuddy用户目录到
+  `D:/WorkBuddyData/Temp/workbuddy-acceptance-trace-quarantine-20260807`。清理后重新启动并退出WorkBuddy，
+  删除状态未被同步恢复，也未出现新的Golden Key MCP连接。未清空用户账号、其他项目或全局WorkBuddy数据。
+- 本轮未修改v0.3.21 managed Core、Golden Key SaaS/private Core仓库，也未调用真实/付费Provider。
+- 提交前在W0顺序执行Core大套件和PowerShell安装测试时，发现Windows未处理错误记录在重定向宿主中可能只返回退出码1、
+  丢失错误文字。安装器现以顶层`trap`和原生stderr统一返回拒绝原因；测试助手也归一化异常空流。17项安装包专项通过。
+- 最终r18 ZIP大小`72,806,177`字节，SHA-256=
+  `310050115DA8EAD14B1131C9AC51C95B9A67CC478CA2B829C13C15E366429BF3`，位置为
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-final-clean-baseline-20260807-r18`。
+- 最终W0=`PASS`：contracts `716 passed, 7 skipped`、tools `284 passed, 1 subtest passed`、WorkBuddy
+  `102 passed`；1566个Core文件及全部四Pipeline合同通过，候选9个文件，snapshot SHA=
+  `bb47187cad702320da29dc7c3aa21bbde92bb3f2d9c0b269ede45477d849ad2c`。证据目录为
+  `D:/WorkBuddyData/Temp/w4-clean-client-final-publication-audit-20260807-r17`。

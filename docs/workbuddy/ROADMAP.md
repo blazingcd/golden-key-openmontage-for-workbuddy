@@ -2,7 +2,7 @@
 
 状态：`ACTIVE PLAN`
 
-更新日期：2026-08-06
+更新日期：2026-08-07
 
 ## 总体路径
 
@@ -121,7 +121,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 
 ## WB-UX1：WorkBuddy新手引导
 
-状态：`IMPLEMENTED / REAL-CLIENT ACCEPTANCE PENDING`。这是独立的WorkBuddy消费方体验任务，
+状态：`IMPLEMENTED / REAL-CLIENT NATURAL ROUTING FAILED-PENDING`。这是独立的WorkBuddy消费方体验任务，
 不属于W4安装包，也不修改Golden Key Core。
 
 ### 任务
@@ -141,10 +141,13 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - WorkBuddy合同测试覆盖触发边界、真实能力读取、生产Skill交接、素材库/Core/安装职责隔离。
 - 源码实现和自动合同已经完成；真实WorkBuddy中的Skill导入、模糊请求触发、具体请求交接仍作为
   `WB-UX1`自身的客户端验收项，不与W4安装包实现捆绑，未通过前不把`WB-UX1`标为最终`DONE`。
+- r11真实客户端已证明两个Skill可被WorkBuddy发现；但输入`我不知道怎么开始做视频`后，WorkBuddy选择了自身通用
+  视频问答，没有进入本项目新手引导的四类结果/本机能力检查。真实自然路由当前为`FAIL/PENDING`，下一步必须先
+  查清宿主Skill触发/优先级机制，再修复并复测，不能把“已安装”误报成“已路由”。
 
 ## W4：打包、安装、文档和真实WorkBuddy验收
 
-状态：`IN PROGRESS / UPGRADE-ROLLBACK-UNINSTALL SLICE BUILT`。
+状态：`IN PROGRESS / DEFAULT-PATH INSTALL-SELF-UNINSTALL PASS / REAL FLOW PENDING`。
 
 ### 任务
 
@@ -165,7 +168,10 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - `DONE`：实现版本号严格向前的跨版本升级；默认路径跟随Manifest版本，新程序通过doctor后才提交并清理旧程序。
 - `DONE`：实现升级失败自动回滚，恢复旧程序和两个旧Skill；DataRoot始终保留。
 - `DONE`：增加`从WorkBuddy卸载.cmd`和所有权校验卸载器；只移除自有程序/Skill，默认保留用户数据和外来同名Skill。
-- `NEXT`：在普通用户Windows默认路径和真实WorkBuddy中完成升级、回滚、自卸载验收；主动降级和彻底删除数据不进入默认流程。
+- `DONE`：在真实Windows默认`%LOCALAPPDATA%`路径完成首包装入、Skill发现和中文CMD自卸载；修复调用cwd包遮蔽与
+  自卸载程序目录残留，卸载后程序根、两个Golden Key Skill和MCP注册均不存在。
+- `NEXT`：修复真实WorkBuddy自然语言Skill路由，并继续完成真实跨版本升级、长任务/恢复和Human Checkpoint验收；
+  主动降级和默认彻底删除用户数据不进入流程。
 - 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。
 - 扩充中文快速开始、Prompt Gallery和故障排查。
 - 在未预装开发环境的普通Windows用户场景验证安装。
@@ -178,6 +184,7 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - 用户不需要另外下载Golden Key核心。
 - 真实WorkBuddy验收通过后才声明`OFFLINE ADAPTER READY`。
 - Provider真实成片仍为单独授权阶段。
+- r11真实默认路径验收不是最终产品Gate：本轮未获完整Python依赖下载授权，`doctor=degraded`；新手引导自然路由失败。
 
 ## 发布节奏
 

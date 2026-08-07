@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-07 12:10 +08:00
+更新时间：2026-08-07 19:15 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 PASS / WB-UX1 IMPLEMENTED / W4 LIGHT-ZIP SLICE IN PROGRESS`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 PASS / WB-UX1 ROUTING PENDING / W4 DEFAULT-PATH INSTALL-UNINSTALL PASS`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -181,6 +181,26 @@
 - 本切片W1消费方Gate=`PASS`；最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline、
   direct-agent运行时、公开lineage、风险扫描和回归全部通过，private Core历史未扫描且不在候选中。最终证据目录为
   `D:/WorkBuddyData/Temp/w4-upgrade-uninstall-publication-audit-20260807-r10-final`。
+- r11在真实Windows默认路径完成安装、WorkBuddy Skill发现和中文CMD自卸载。安装launcher即使从开发仓库cwd启动，
+  也固定以已安装runtime为导入根，不再被调用者目录中的同名Python包遮蔽；自卸载CMD先切换到`%TEMP%`，延迟清理
+  最多重试30秒，真实程序目录和两个项目Skill均最终消失。
+- r11默认路径`doctor=degraded`只因为本轮没有获得完整Python依赖下载授权；安装合同、Core、authority和四Pipeline
+  没有错误，网络/Provider调用均为0。WorkBuddy“我的技能”能发现两个Golden Key Skill，但自然语言
+  `我不知道怎么开始做视频`被WorkBuddy通用视频流程接管，未命中新手引导Skill；因此`WB-UX1`真实路由验收=`FAIL/PENDING`。
+- r11用于上述真实默认路径验收；提交前的最终交付候选为r18，另补统一原生stderr错误出口，确保WorkBuddy/CI重定向
+  启动时所有安装拒绝原因仍可见。r18 ZIP位于
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-final-clean-baseline-20260807-r18`，大小`72,806,177`字节，
+  SHA-256=`310050115DA8EAD14B1131C9AC51C95B9A67CC478CA2B829C13C15E366429BF3`。
+- portable bundle=`17 passed`，WorkBuddy专项=`102 passed`；此前扩展完整回归=
+  `1162 passed, 10 skipped, 1 subtest passed`。最终W0自带回归为contracts `716 passed, 7 skipped`、tools
+  `284 passed, 1 subtest passed`、WorkBuddy `102 passed`。
+- 最终W0公开性审计=`PASS`：1566个managed Core文件精确匹配，Release、四Pipeline合同、direct-agent运行时、
+  公开lineage、风险扫描和回归全部通过；候选9个文件，snapshot SHA=
+  `bb47187cad702320da29dc7c3aa21bbde92bb3f2d9c0b269ede45477d849ad2c`，证据目录为
+  `D:/WorkBuddyData/Temp/w4-clean-client-final-publication-audit-20260807-r17`。
+- 已按用户要求清理本次真实客户端验收：默认程序根、两个Golden Key Skill和MCP注册均不存在，WorkBuddy后台进程为0；
+  三条Golden Key验收会话已标记删除，相关会话/trace文件移出WorkBuddy用户目录到D盘隔离区。清理后重启一次
+  WorkBuddy，未出现新的Golden Key MCP连接记录，删除状态未被恢复。该清理不等于清空用户账号或其他项目。
 
 ## 历史记录（不再是当前Gate）
 
@@ -190,12 +210,12 @@
 
 ## 下一步
 
-1. 提交并推送r10升级/回滚/卸载切片，核验一次公开CI。
+1. 查明并修复WorkBuddy真实客户端没有把模糊视频请求路由到`golden-key-openmontage-onboarding`的原因；不得用文档宣称代替真实触发。
 2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
-3. 在获得明确同意后，用真实首包requirements完成一次数据目录托管Python下载/准备和launcher复核。
-4. 在普通用户默认路径和真实WorkBuddy中完成安装、升级、卸载、自然语言触发、长任务/恢复验收后，才重新裁决
+3. 在获得明确下载同意后，用真实首包requirements完成一次默认数据目录托管Python准备和launcher复核。
+4. 在真实WorkBuddy中继续完成跨版本升级、自然语言生产Skill触发、长任务/恢复和Human Checkpoint验收后，才重新裁决
    `OFFLINE ADAPTER READY`。
-5. 在真实WorkBuddy中对`WB-UX1`做首次对话体验验收；它独立留痕但可复用W4注册后的Skill。
+5. 保留r18 ZIP供用户稍后以纯新状态人工验收；任何新候选都必须重新给出hash和清理后的安装起点。
 6. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。
 
 ## 当前允许声明

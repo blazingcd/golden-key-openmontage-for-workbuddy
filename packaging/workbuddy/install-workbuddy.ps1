@@ -7,6 +7,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# WorkBuddy and CI both launch this script with redirected streams.  Convert
+# every otherwise-unhandled terminating error into a native stderr message so
+# callers receive the reason together with a deterministic non-zero exit.
+trap {
+    [Console]::Error.WriteLine($_.Exception.Message)
+    exit 1
+}
+
 function Get-FileSha256 {
     param([Parameter(Mandatory = $true)][string]$Path)
 
@@ -361,7 +369,12 @@ try {
     if ($installRootExists -and (Test-Path -LiteralPath $installBackup)) {
         Move-Item -LiteralPath $installBackup -Destination $InstallRoot
     }
-    throw $failure
+    # Emit the rollback result through the native stderr stream.  An unhandled
+    # PowerShell error record can lose its text when the installer is launched
+    # through a long-running redirected test or Agent host, even though the
+    # process correctly exits non-zero and the rollback succeeds.
+    [Console]::Error.WriteLine($failure.Exception.Message)
+    exit 1
 }
 
 if (Test-Path -LiteralPath $installBackup) {

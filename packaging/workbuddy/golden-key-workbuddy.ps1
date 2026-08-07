@@ -35,20 +35,38 @@ if (
     (Test-Path -LiteralPath $managedRecord -PathType Leaf) -and
     (Test-Path -LiteralPath $managedPython -PathType Leaf)
 ) {
-    & $managedPython -m golden_key_openmontage_workbuddy @CommandArgs
-    exit $LASTEXITCODE
+    Push-Location $runtimeRoot
+    try {
+        & $managedPython -m golden_key_openmontage_workbuddy @CommandArgs
+        $commandExitCode = $LASTEXITCODE
+    } finally {
+        Pop-Location
+    }
+    exit $commandExitCode
 }
 
 $python = Get-Command python -ErrorAction SilentlyContinue
 if ($null -ne $python) {
-    & $python.Source -m golden_key_openmontage_workbuddy @CommandArgs
-    exit $LASTEXITCODE
+    Push-Location $runtimeRoot
+    try {
+        & $python.Source -m golden_key_openmontage_workbuddy @CommandArgs
+        $commandExitCode = $LASTEXITCODE
+    } finally {
+        Pop-Location
+    }
+    exit $commandExitCode
 }
 
 $launcher = Get-Command py -ErrorAction SilentlyContinue
 if ($null -ne $launcher) {
-    & $launcher.Source -3 -m golden_key_openmontage_workbuddy @CommandArgs
-    exit $LASTEXITCODE
+    Push-Location $runtimeRoot
+    try {
+        & $launcher.Source -3 -m golden_key_openmontage_workbuddy @CommandArgs
+        $commandExitCode = $LASTEXITCODE
+    } finally {
+        Pop-Location
+    }
+    exit $commandExitCode
 }
 
 @{

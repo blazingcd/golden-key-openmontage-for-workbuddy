@@ -131,8 +131,21 @@ if ($deferredSelfCleanup) {
     $cleanupScript = Join-Path $cleanupScriptRoot ('finish-uninstall-' + [Guid]::NewGuid().ToString('N') + '.ps1')
     $escapedBackup = $appBackup.Replace("'", "''")
     $cleanupSource = @"
-Start-Sleep -Seconds 2
-Remove-Item -LiteralPath '$escapedBackup' -Recurse -Force
+`$removed = `$false
+for (`$attempt = 0; `$attempt -lt 60; `$attempt++) {
+    try {
+        if (Test-Path -LiteralPath '$escapedBackup') {
+            Remove-Item -LiteralPath '$escapedBackup' -Recurse -Force -ErrorAction Stop
+        }
+        `$removed = -not (Test-Path -LiteralPath '$escapedBackup')
+        if (`$removed) {
+            break
+        }
+    } catch {
+        # The launcher CMD or antivirus may briefly hold the install directory.
+    }
+    Start-Sleep -Milliseconds 500
+}
 Remove-Item -LiteralPath `$MyInvocation.MyCommand.Path -Force
 "@
     Set-Content -LiteralPath $cleanupScript -Value $cleanupSource -Encoding UTF8

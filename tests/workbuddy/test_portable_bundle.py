@@ -154,7 +154,11 @@ def _run_portable_uninstaller(
             "-WorkBuddySkillsRoot",
             str(skill_root),
         ],
-        cwd=staging,
+        # Windows executes the installed CMD from inside the program directory,
+        # which is the self-uninstall case this helper must reproduce.  Other
+        # platforms invoke the PowerShell contract directly and must keep the
+        # caller outside InstallRoot so the directory can be moved normally.
+        cwd=staging if os.name == "nt" else staging.parent,
         env=environment,
         capture_output=True,
         text=True,

@@ -759,3 +759,6 @@
   `102 passed`；1566个Core文件及全部四Pipeline合同通过，候选9个文件，snapshot SHA=
   `bb47187cad702320da29dc7c3aa21bbde92bb3f2d9c0b269ede45477d849ad2c`。证据目录为
   `D:/WorkBuddyData/Temp/w4-clean-client-final-publication-audit-20260807-r17`。
+- 首次推送提交`df89724`后，公开CI `31177430424`的Linux runner暴露测试助手跨平台cwd错误：Windows真实自卸载
+  需要从安装目录启动中文CMD，Linux却直接运行PowerShell脚本；错误地共用安装目录cwd导致Linux认为目录正在使用。
+  测试助手现只在Windows使用安装目录cwd，非Windows回到父目录。该修复不改变产品卸载合同或managed Core。

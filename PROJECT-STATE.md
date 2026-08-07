@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-07 00:16 +08:00
+更新时间：2026-08-07 12:10 +08:00
 
 ## 当前里程碑
 
@@ -130,7 +130,8 @@
   `dotenv/google.genai/jsonschema/openai`缺失并返回`degraded`；切换到已准备依赖的Python后
   `doctor/context/pipelines/config inspect`全部退出码0，网络/Provider调用均为0。
 - WorkBuddy调用桥已改为注册Skill读取runtime locator并通过稳定launcher先运行`doctor`；`doctor`新增九项Python
-  模块只读发现，`config inspect`继续独立检查安全Provider引用。当前首包还未准备缺失依赖，不能声明完整可用。
+  模块只读发现，`config inspect`继续独立检查安全Provider引用。首包现已具备经同意后的依赖准备能力，但尚未完成
+  普通用户完整requirements下载和全新Windows验收，不能声明完整可用。
 - 首包新增根目录中文双击入口`安装到WorkBuddy.cmd`；注册完成后立即运行一次离线`doctor`，结果与退出码写入
   `WORKBUDDY-INSTALL.json`，WorkBuddy首次调用继续复核。安装链固定使用系统Windows PowerShell，并以.NET SHA-256
   校验文件，降低PATH和PowerShell模块差异风险。
@@ -139,6 +140,22 @@
 - 根README已改为面向公开用户的差异化介绍：突出WorkBuddy专用direct-agent适配、四条中文商业短视频业务
   Pipeline、中文新手引导与素材/参考内容交接、国内模型生态配置识别、持久任务与轻量ZIP；用户介绍区不再展示
   仓库同步历史、首次推送流程或其他维护者内部信息，并继续明确Pre-Alpha与未验收边界。
+- W4缺失Python依赖准备切片已实现：`runtime plan`只读给出目标和下载提示；只有显式
+  `runtime prepare --confirm-download`才在所选`<data_root>/Runtime/Python`创建隔离环境并使用
+  `<data_root>/Caches/pip`，不修改系统Python。hash一致重复执行直接复用，目标漂移拒绝覆盖。
+- 注册launcher会在有效托管环境记录存在时优先使用它；WorkBuddy生产Skill必须先展示计划并获得用户明确同意，
+  不得把原始视频请求当作下载授权。Python为必需，FFmpeg为合成/本地媒体必需，Node仅在选择Remotion或
+  HyperFrames时需要。
+- 最新真实包候选位于`D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-first-bundle-20260807-r5`，ZIP大小
+  `72,799,449`字节，SHA-256=`ff7af11546b3e4e0e72fb9f9822375825d7d8dc84476b38528195126d5c0bfb3`。
+  D盘真实注册后`runtime plan=needs_confirmation`；未确认prepare退出码1且没有创建Runtime目录。
+- 当前WorkBuddy专项=`88 passed`，完整回归=`1148 passed, 10 skipped, 1 subtest passed`；托管环境夹具覆盖
+  计划、拒绝、创建、launcher切换和幂等。真实完整依赖下载
+  仍需一次明确授权后的普通用户路径验收，本轮没有调用Provider。
+- GitHub Actions已恢复；跨平台安装测试修正提交`b33a512`的公开CI `31147633115`=`success`。
+- 本增量最终W0=`PASS`：Release、四Pipeline合同、direct-agent运行时边界、公开lineage、风险扫描和回归均通过；
+  1566个managed Core文件精确匹配，候选17个文件。private Core历史未扫描且不在候选中；
+  证据位于`D:/WorkBuddyData/Temp/w4-runtime-prepare-publication-audit-20260807-final-r2`。
 
 ## 历史记录（不再是当前Gate）
 
@@ -148,10 +165,9 @@
 
 ## 下一步
 
-1. W4下一片先决定并实现“扫描后、经用户确认准备缺失Python依赖”的轻量方式；Node/FFmpeg按Pipeline能力
-   区分必需和可选，不把全部运行时盲目塞入ZIP。
-2. 实现不覆盖用户既有Skill/配置的升级、卸载和回滚；用户项目、Artifact、配置、模型和输出默认保留。
-3. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
+1. W4下一片实现不覆盖用户既有Skill/配置的升级、卸载和回滚；用户项目、Artifact、配置、模型和输出默认保留。
+2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
+3. 在获得明确同意后，用真实首包requirements完成一次数据目录托管Python下载/准备和launcher复核。
 4. 在普通用户默认路径、D盘覆盖路径和真实WorkBuddy中完成自然语言触发、长任务/恢复验收后，才重新裁决
    `OFFLINE ADAPTER READY`。
 5. 在真实WorkBuddy中对`WB-UX1`做首次对话体验验收；它独立留痕但可复用W4注册后的Skill。

@@ -651,3 +651,23 @@
   `install-to-workbuddy.ps1`公共注册合同，继续验证两个Skill、launcher、离线doctor和零Provider/网络调用。
 - 安装后doctor允许诚实返回`pass`或`degraded`：缺少Python运行依赖属于首包已知待准备状态，但`errors`必须为空，
   安装和注册不能因此被误判为损坏。专项=`3 passed`，完整WorkBuddy专项=`83 passed`。
+
+## 2026-08-07：W4经用户确认的轻量Python依赖准备
+
+- 新增`runtime plan`公共接口：只读返回下载需求、目标解释器、requirements位置和确认参数；不创建数据目录，
+  网络/Provider调用均为0。未带`--confirm-download`执行prepare必须失败且保持零写入。
+- 用户明确同意后，`runtime prepare --confirm-download`使用已有Python创建
+  `<data_root>/Runtime/Python`隔离环境，pip缓存固定在`<data_root>/Caches/pip`，不修改系统Python；
+  requirements hash一致时幂等复用，既有目标漂移时拒绝覆盖。
+- 注册launcher在有效托管环境记录和解释器同时存在时自动优先使用它；生产Skill必须先向用户解释下载和位置，
+  不得把视频制作请求当作安装授权。冻结矩阵：Python必需；FFmpeg为合成/本地媒体必需；Node只在
+  Remotion或HyperFrames路径需要。
+- 新候选r5真实v0.3.21 Core仍为1566个managed文件；ZIP=`72,799,449`字节，SHA-256=
+  `ff7af11546b3e4e0e72fb9f9822375825d7d8dc84476b38528195126d5c0bfb3`。D盘隔离注册通过；
+  真实`runtime plan=needs_confirmation`，未确认prepare退出码1且Runtime目录不存在。
+- WorkBuddy专项=`88 passed`，完整回归=`1148 passed, 10 skipped, 1 subtest passed`；依赖夹具真实创建venv并验证launcher切换和重复复用。没有修改managed Core，
+  没有调用真实/付费Provider；真实完整requirements下载保留为明确同意后的普通用户验收项。
+- GitHub Actions事故已Resolved；跨平台安装测试提交`b33a512`的CI `31147633115`完整通过。
+- 最终W0=`PASS`：1566个managed Core文件精确匹配，Release/Pipeline/运行时隔离/公开lineage/风险扫描/回归
+  全部通过；候选17个文件，private Core历史未扫描且不在候选中。测试生成的31个未跟踪`__pycache__`目录先移至
+  `D:/WorkBuddyData/Temp/w0-pycache-quarantine-20260807`，没有删除或修改lock管理的Core文件。

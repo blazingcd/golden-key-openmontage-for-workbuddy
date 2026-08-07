@@ -121,7 +121,9 @@ WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视�
 1. 用户把 ZIP 解压到任意本地目录；
 2. 双击 `安装到WorkBuddy.cmd`；
 3. 脚本校验包完整性、注册生产 Skill 和新手引导 Skill，并执行一次只读环境诊断；
-4. 用户重启 WorkBuddy 后，由 Skill 通过稳定 launcher 调用本地运行时。
+4. 用户重启 WorkBuddy 后，由 Skill 通过稳定 launcher 调用本地运行时；
+5. 如果只缺Python依赖，WorkBuddy先说明下载范围和保存位置，得到明确同意后再把依赖准备到用户数据目录，
+   不修改系统Python。FFmpeg按合成需要提示，Node只在选择Remotion或HyperFrames时需要。
 
 当前锁定的 `golden-key-v0.3.21` 仅用于构建和验证第一个安装/调用包，不是最终 Core 版本。
 普通用户 ZIP 不包含或要求运行 `setup.py`。快速说明见
@@ -139,6 +141,8 @@ python -m golden_key_openmontage_workbuddy context --json
 python -m golden_key_openmontage_workbuddy pipelines --json
 python -m golden_key_openmontage_workbuddy config inspect --json
 python -m golden_key_openmontage_workbuddy config template --data-root D:\WorkBuddyData --json
+python -m golden_key_openmontage_workbuddy runtime plan --data-root D:\WorkBuddyData --json
+python -m golden_key_openmontage_workbuddy runtime prepare --data-root D:\WorkBuddyData --confirm-download --json
 python -m golden_key_openmontage_workbuddy project create --project-id demo --title "Demo" --pipeline golden-key-product-marketing --json
 python -m golden_key_openmontage_workbuddy project status --project-id demo --json
 python -m golden_key_openmontage_workbuddy stage inspect --project-id demo --json
@@ -165,12 +169,13 @@ python -m golden_key_openmontage_workbuddy task recover --project-id demo --task
 - 本地 CLI 与可选 stdio MCP 的真实 WorkBuddy 离线对照；
 - 持久任务、离线网络边界、脱敏和中断恢复合同；
 - 首个轻量 ZIP、中文双击入口和安装后环境诊断。
+- 经用户确认后在所选数据目录准备隔离Python依赖，不污染系统Python。
 
 尚未完成，因此不能对外声称：
 
 - 已达到正式版或 `Offline Adapter Ready`；
 - 已完成普通用户全新 Windows 安装、升级、卸载和回滚验收；
-- 所有 Python、Node、FFmpeg 和可选模型依赖都能自动准备；
+- Python本体、Node、FFmpeg和可选模型运行时都能自动准备（当前只完成已有Python下的受控依赖准备）；
 - 已完成真实或付费 Provider 的端到端成片验收；
 - 本项目是 OpenMontage 或 WorkBuddy 的官方发行版。
 

@@ -24,13 +24,16 @@
 - CLI是权威回退；MCP仅是本地stdio结构化工具增强，活动配置尚未进入仓库发行面。
 - 当前仍为`Pre-Alpha`，尚未通过W4全新Windows安装和普通用户WorkBuddy验收，不得声明
   “已经可以安装”或`OFFLINE ADAPTER READY`。
+- W4已经完成经用户确认的Python依赖准备纵向切片：`runtime plan`零写入，
+  `runtime prepare --confirm-download`只写入所选数据目录并由launcher优先使用；Python必需、FFmpeg在合成/媒体
+  处理时必需、Node仅在Remotion/HyperFrames路径需要。完整真实requirements下载仍需单次明确同意后验收。
 
 ## W4目标
 
-1. 当前`PKG-001`已冻结首包为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI。继续冻结Python、Node、
-   FFmpeg的必需/可选和经用户确认的准备方式，不盲目携带全部运行时。
-2. 以TDD继续建立最小、可回滚的Windows用户级纵向切片：任意目录解压、注册、doctor/gate、版本/合同核验、
-   升级和卸载；普通用户默认`%LOCALAPPDATA%`，本机开发/构建继续放D盘。
+1. 当前`PKG-001`已冻结首包为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI。保持已完成的
+   Python托管依赖合同和Python/Node/FFmpeg矩阵，不盲目携带全部运行时。
+2. 以TDD继续建立最小、可回滚的Windows用户级纵向切片：下一步优先升级、卸载和回滚；普通用户默认
+   `%LOCALAPPDATA%`，本机开发/构建继续放D盘。
    不删除用户项目、Artifact、配置或模型数据。
 3. 打包两个可导入WorkBuddy Skill和完整v0.3.21 Callable Core；清楚标记它只是首包验证基线，普通用户不得
    另外下载Golden Key私有Core。Core后续只能通过新不可变Release合同更新。

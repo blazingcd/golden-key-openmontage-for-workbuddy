@@ -155,7 +155,10 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
   普通用户ZIP排除它，用户无需执行Python源码安装。
 - `DONE`：WorkBuddy首次触发通过launcher运行只读`doctor`，检查Python包/Node/FFmpeg/Core/Pipeline；
   `config inspect`独立检查安全Provider引用，二者网络和Provider调用为0。
-- `NEXT`：在用户确认后准备缺失Python依赖的轻量方式，并冻结Node、FFmpeg的必需/可选矩阵；不盲目打包全部运行时。
+- `DONE`：新增只读`runtime plan`和显式`runtime prepare --confirm-download`；依赖只写入所选
+  `<data_root>/Runtime/Python`，pip缓存留在数据目录，不修改系统Python，hash一致时幂等复用，漂移目标拒绝覆盖。
+- `DONE`：冻结运行时矩阵：Python必需；FFmpeg为合成和本地媒体工具必需但不随包携带；Node只在选择
+  Remotion或HyperFrames时需要，不因扫描缺失自动安装。
 - `NEXT`：实现可回滚升级和卸载，保护用户项目、Artifact、配置、模型和已有WorkBuddy Skill/MCP配置。
 - 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。
 - 扩充中文快速开始、Prompt Gallery和故障排查。

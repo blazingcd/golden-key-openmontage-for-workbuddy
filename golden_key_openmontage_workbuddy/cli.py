@@ -157,6 +157,31 @@ def _parser() -> argparse.ArgumentParser:
     )
     config_template.add_argument("--json", action="store_true", dest="as_json")
 
+    runtime = subparsers.add_parser(
+        "runtime",
+        help="Plan or prepare the data-scoped Python dependencies after consent.",
+    )
+    runtime_commands = runtime.add_subparsers(
+        dest="runtime_command", required=True
+    )
+    runtime_plan = runtime_commands.add_parser("plan")
+    runtime_plan.add_argument("--repo-root", type=Path, default=default_repo_root())
+    runtime_plan.add_argument("--data-root", type=Path, default=default_data_root())
+    runtime_plan.add_argument("--json", action="store_true", dest="as_json")
+    runtime_prepare = runtime_commands.add_parser("prepare")
+    runtime_prepare.add_argument(
+        "--repo-root", type=Path, default=default_repo_root()
+    )
+    runtime_prepare.add_argument(
+        "--data-root", type=Path, default=default_data_root()
+    )
+    runtime_prepare.add_argument(
+        "--confirm-download",
+        action="store_true",
+        help="Confirm that Python packages may be downloaded into the data root.",
+    )
+    runtime_prepare.add_argument("--json", action="store_true", dest="as_json")
+
     task = subparsers.add_parser(
         "task", help="Persist and operate bounded local Tool tasks."
     )
@@ -364,6 +389,21 @@ def main(argv: Sequence[str] | None = None) -> int:
             }
         _print_json_report(report)
         return 0 if report["status"] == "pass" else 1
+    if args.command == "runtime":
+        from .runtime_prepare import build_runtime_plan, prepare_managed_runtime
+
+        if args.runtime_command == "plan":
+            report = build_runtime_plan(args.repo_root, args.data_root)
+            success = report["status"] in {"ready", "needs_confirmation"}
+        else:
+            report = prepare_managed_runtime(
+                args.repo_root,
+                args.data_root,
+                confirm_download=args.confirm_download,
+            )
+            success = report["status"] == "pass"
+        _print_json_report(report)
+        return 0 if success else 1
     if args.command == "task":
         from .runtime import RuntimeContractError
         from .tasks import (

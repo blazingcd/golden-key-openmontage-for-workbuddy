@@ -11,10 +11,12 @@ Treat this package as Pre-Alpha. WorkBuddy is the only Agent; never start or emu
 
 1. Read `WORKBUDDY-RUNTIME.json` beside this Skill. Validate that it provides `launcher`, `install_root`, and `data_root`. Do not guess or search the user's drives when the locator is absent or invalid; tell the user to run `install-workbuddy.ps1` from the complete ZIP.
 2. Invoke the registered `launcher` with `doctor --json`. This is the stable installed form of `golden-key-workbuddy doctor`; do not require the user to find a repository or construct the command manually.
-3. Read `AGENT_GUIDE.md` before production from the reported `install_root` and obey Rule Zero.
-4. Invoke the same launcher with `config inspect --json` (the registered form of `golden-key-workbuddy config inspect --json`). Keep the WorkBuddy conversation model separate from every Golden Key production Provider: WorkBuddy owns its conversation-model configuration, while the adapter only reports Tool Registry-backed production paths.
-5. When a user wants a credential reference file, invoke the launcher with `config template` (the registered form of `golden-key-workbuddy config template`). It writes a consumer-owned template under the registered `data_root`, records environment-variable names only, and never stores credential values.
-6. Report missing local runtimes and production Provider configuration without silently changing the requested production path. A China-ecosystem model reached through a third-party gateway is not a direct domestic Provider path.
+3. If `doctor` reports missing Python packages, invoke the launcher with `runtime plan --json`. Explain that preparation downloads packages into `<data_root>/Runtime/Python`, can use the selected D-drive data root, and does not modify the system Python. Run `runtime prepare --confirm-download --json` only after the user explicitly agrees, then rerun `doctor --json`. Never infer consent from the original video request.
+4. Treat the runtime roles accurately: Python is required; FFmpeg is required for compose and local media tools; Node is optional unless the approved plan selects Remotion or HyperFrames. Do not install Node merely because it is missing.
+5. Read `AGENT_GUIDE.md` before production from the reported `install_root` and obey Rule Zero.
+6. Invoke the same launcher with `config inspect --json` (the registered form of `golden-key-workbuddy config inspect --json`). Keep the WorkBuddy conversation model separate from every Golden Key production Provider: WorkBuddy owns its conversation-model configuration, while the adapter only reports Tool Registry-backed production paths.
+7. When a user wants a credential reference file, invoke the launcher with `config template` (the registered form of `golden-key-workbuddy config template`). It writes a consumer-owned template under the registered `data_root`, records environment-variable names only, and never stores credential values.
+8. Report missing local runtimes and production Provider configuration without silently changing the requested production path. A China-ecosystem model reached through a third-party gateway is not a direct domestic Provider path.
 
 ## Production contract
 

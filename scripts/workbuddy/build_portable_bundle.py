@@ -227,6 +227,16 @@ def build_portable_staging(
                 "archive_may_be_extracted_anywhere": True,
                 "registration_required_for_workbuddy": True,
                 "mcp": "optional_not_enabled_by_default",
+                "python_dependencies": {
+                    "mode": "managed_after_user_confirmation",
+                    "target": "<data_root>/Runtime/Python",
+                    "system_python_modified": False,
+                },
+                "runtime_roles": {
+                    "python": "required",
+                    "ffmpeg": "required_for_compose_and_media_tools",
+                    "node": "optional_for_remotion_or_hyperframes",
+                },
             },
             "files": sorted(inventory, key=lambda item: item["path"]),
         }

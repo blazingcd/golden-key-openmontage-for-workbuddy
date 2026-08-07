@@ -137,6 +137,21 @@ def build_doctor_report(
         errors.append("Python 3.10 or newer is required")
     missing_python_packages = _missing_python_packages()
     runtime = {
+        "capability_requirements": {
+            "python": {
+                "requirement": "required",
+                "preparation": "managed_dependencies_after_user_confirmation",
+            },
+            "ffmpeg": {
+                "requirement": "required_for_compose_and_media_tools",
+                "preparation": "external_install_not_bundled",
+            },
+            "node": {
+                "requirement": "optional",
+                "unlocks": ["remotion", "hyperframes"],
+                "preparation": "external_install_only_when_selected",
+            },
+        },
         "ffmpeg": _command_runtime("ffmpeg"),
         "node": _command_runtime("node"),
         "python": {
@@ -159,6 +174,10 @@ def build_doctor_report(
         warnings.append(
             "Python runtime packages are incomplete: "
             + ", ".join(missing_python_packages)
+        )
+    if not runtime["ffmpeg"]["available"]:
+        warnings.append(
+            "FFmpeg is required for compose and local media tools but is not available"
         )
 
     return {
@@ -211,6 +230,8 @@ def format_doctor_report(report: dict[str, Any]) -> str:
         ),
         f"Node: {'available' if report['runtime']['node']['available'] else 'missing'}",
         f"FFmpeg: {'available' if report['runtime']['ffmpeg']['available'] else 'missing'}",
+        "Runtime roles: Python required; FFmpeg required for compose/media; "
+        "Node optional unless Remotion or HyperFrames is selected.",
         "MCP: optional local stdio adapter; CLI remains the canonical fallback.",
     ]
     lines.extend(f"WARNING: {message}" for message in report.get("warnings", []))

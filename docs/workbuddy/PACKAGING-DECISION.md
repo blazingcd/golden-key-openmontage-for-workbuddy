@@ -35,7 +35,11 @@ Core更新必须等待新的不可变Release/ZIP/SHA/lock，再执行独立同�
 1. 先运行只读`doctor`，检查Core身份、四Pipeline、Python版本和必需Python包、Node、FFmpeg；
 2. 再运行只读`config inspect`，只报告Tool Registry支持的生产Provider配置引用；
 3. 不自动下载、不读取或输出密钥值、不调用真实/付费Provider；
-4. 缺项时标记为degraded并给出下一步。后续W4再决定经用户确认创建受控Python环境或下载可选组件的方式。
+4. 缺少Python包时先运行只读`runtime plan`；只有用户明确同意联网下载后，才允许执行
+   `runtime prepare --confirm-download`，在`<data_root>/Runtime/Python`创建隔离环境并把pip缓存保存在
+   `<data_root>/Caches/pip`。不得修改系统Python；重复执行应复用hash一致的既有环境；目标漂移时拒绝覆盖。
+5. Python为必需；FFmpeg为合成和本地媒体工具所必需但不随首包携带；Node仅在选择Remotion或HyperFrames时
+   需要，不因扫描缺失而自动安装。
 
 ## 默认路径与覆盖
 

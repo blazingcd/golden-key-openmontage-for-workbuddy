@@ -155,10 +155,26 @@ def test_doctor_reports_local_runtime_without_contacting_providers(tmp_path: Pat
     assert report["runtime"]["python"]["supported"] is True
     assert report["runtime"]["python"]["minimum"] == "3.10"
     assert set(report["runtime"]) == {
+        "capability_requirements",
         "ffmpeg",
         "node",
         "python",
         "python_packages",
+    }
+    assert report["runtime"]["capability_requirements"] == {
+        "python": {
+            "requirement": "required",
+            "preparation": "managed_dependencies_after_user_confirmation",
+        },
+        "ffmpeg": {
+            "requirement": "required_for_compose_and_media_tools",
+            "preparation": "external_install_not_bundled",
+        },
+        "node": {
+            "requirement": "optional",
+            "unlocks": ["remotion", "hyperframes"],
+            "preparation": "external_install_only_when_selected",
+        },
     }
     assert report["runtime"]["python_packages"]["required"] == [
         "dotenv",

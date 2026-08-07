@@ -58,6 +58,17 @@ def test_registered_skills_use_the_portable_runtime_locator_before_doctor() -> N
     assert "Locate the checked-out" not in production
 
 
+def test_production_skill_requires_user_consent_before_dependency_downloads() -> None:
+    _, body = _read_skill(SKILL)
+
+    assert "runtime plan --json" in body
+    assert "runtime prepare --confirm-download --json" in body
+    assert "explicitly agrees" in body
+    assert "does not modify the system Python" in body
+    assert "Node is optional" in body
+    assert "FFmpeg is required for compose" in body
+
+
 def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
     _, body = _read_skill()
 

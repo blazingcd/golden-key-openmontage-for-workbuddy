@@ -96,6 +96,16 @@ def test_portable_bundle_contains_core_consumer_skills_and_first_build_label(
         "tag": "golden-key-v0.3.21",
         "usage": "temporary_first_package_build_baseline_not_final_core",
     }
+    assert manifest["installation"]["python_dependencies"] == {
+        "mode": "managed_after_user_confirmation",
+        "target": "<data_root>/Runtime/Python",
+        "system_python_modified": False,
+    }
+    assert manifest["installation"]["runtime_roles"] == {
+        "python": "required",
+        "ffmpeg": "required_for_compose_and_media_tools",
+        "node": "optional_for_remotion_or_hyperframes",
+    }
     assert (staging / "AGENT_GUIDE.md").is_file()
     assert (
         staging

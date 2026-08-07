@@ -26,6 +26,19 @@ if ([string]::IsNullOrWhiteSpace($existingPythonPath)) {
     $env:PYTHONPATH = "$runtimeRoot$([IO.Path]::PathSeparator)$existingPythonPath"
 }
 
+$managedRecord = Join-Path $dataRoot 'Runtime\Python\WORKBUDDY-MANAGED-PYTHON.json'
+$managedPython = Join-Path $dataRoot 'Runtime\Python\Scripts\python.exe'
+if (-not (Test-Path -LiteralPath $managedPython -PathType Leaf)) {
+    $managedPython = Join-Path $dataRoot 'Runtime/Python/bin/python'
+}
+if (
+    (Test-Path -LiteralPath $managedRecord -PathType Leaf) -and
+    (Test-Path -LiteralPath $managedPython -PathType Leaf)
+) {
+    & $managedPython -m golden_key_openmontage_workbuddy @CommandArgs
+    exit $LASTEXITCODE
+}
+
 $python = Get-Command python -ErrorAction SilentlyContinue
 if ($null -ne $python) {
     & $python.Source -m golden_key_openmontage_workbuddy @CommandArgs

@@ -30,16 +30,19 @@ Core更新必须等待新的不可变Release/ZIP/SHA/lock，再执行独立同�
 
 ## 环境策略
 
-首包不把Python、Node、FFmpeg、GPU模型或Provider SDK二进制整体塞进ZIP。WorkBuddy首次触发Skill时：
+首包不把Python、Node、FFmpeg、浏览器、GPU模型或Provider SDK二进制整体塞进ZIP。WorkBuddy首次触发Skill时：
 
 1. 先运行只读`doctor`，检查Core身份、四Pipeline、Python版本和必需Python包、Node、FFmpeg；
 2. 再运行只读`config inspect`，只报告Tool Registry支持的生产Provider配置引用；
 3. 不自动下载、不读取或输出密钥值、不调用真实/付费Provider；
-4. 缺少Python包时先运行只读`runtime plan`；只有用户明确同意联网下载后，才允许执行
-   `runtime prepare --confirm-download`，在`<data_root>/Runtime/Python`创建隔离环境并把pip缓存保存在
-   `<data_root>/Caches/pip`。不得修改系统Python；重复执行应复用hash一致的既有环境；目标漂移时拒绝覆盖。
-5. Python为必需；FFmpeg为合成和本地媒体工具所必需但不随首包携带；Node仅在选择Remotion或HyperFrames时
-   需要，不因扫描缺失而自动安装。
+4. 完整视频制作环境未就绪时先运行只读`runtime plan`；向用户说明下载、`<data_root>/Runtime`存储位置、FFmpeg
+   GPLv3和Remotion许可条件后，只询问一次。只有用户明确同意，才执行`runtime prepare --confirm-download`。
+5. 标准环境同时准备Python依赖、固定hash的FFmpeg与Node、锁定依赖的Remotion与HyperFrames，以及固定版本的
+   托管浏览器。缓存只写入`<data_root>/Caches`，不修改系统Python或系统PATH，不要求管理员权限。
+6. 安装阶段不要求普通用户理解或选择合成引擎；两者准备完成后，由WorkBuddy在具体视频方案中用普通语言说明并推荐，
+   再遵守Core的提案批准合同。大型本地生成模型和在线Provider继续按目标单独配置、按需准备。
+7. 组件目录必须带本项目所有权记录；下载资产、包锁和浏览器可执行文件必须通过固定hash或本地记录校验。重复执行
+   幂等复用；未知目录或所有权漂移一律拒绝覆盖。
 
 ## 默认路径与覆盖
 
@@ -78,7 +81,7 @@ Core更新必须等待新的不可变Release/ZIP/SHA/lock，再执行独立同�
 
 ## 尚未通过
 
-- 全新普通Windows环境的完整Python依赖准备和升级/卸载最终验收；
+- D盘隔离真实环境准备、幂等和本地引擎发现已通过；全新普通Windows默认路径与真实WorkBuddy自然语言全链仍待验收；
 - 主动降级、彻底删除DataRoot和未知手工遗留目录清理；
 - 真实WorkBuddy普通用户自然语言触发与Human Checkpoint全链验收；
 - 真实/付费Provider成片；

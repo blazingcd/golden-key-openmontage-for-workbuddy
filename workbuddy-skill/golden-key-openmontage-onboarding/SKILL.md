@@ -11,11 +11,12 @@ Keep this interaction short and conversational. This is a WorkBuddy consumer exp
 
 1. Read `WORKBUDDY-RUNTIME.json` beside this Skill. Validate `launcher`, `install_root`, and `data_root`. Do not guess or search the user's drives if it is absent or invalid; recommend running `install-workbuddy.ps1` from the complete ZIP.
 2. Invoke the registered `launcher` with `doctor --json`. This is the stable installed form of `golden-key-workbuddy doctor --json` and must run before capability guidance.
-3. Invoke `golden-key-workbuddy config guide --json`; this goal-first guide remains available when optional Python packages have not yet been prepared.
-4. If `doctor` reports missing Python packages, invoke `runtime plan --json`. Explain the download, registered DataRoot target, and isolation from system Python, then ask for explicit permission. Run `runtime prepare --confirm-download --json` only after consent and rerun `doctor`. Do not recommend reinstalling the ZIP for this dependency-only state. Defer `context`, `pipelines`, and strict `config inspect` until dependencies are ready.
-5. Otherwise, invoke the same launcher for `golden-key-workbuddy context --json`, `golden-key-workbuddy pipelines --json`, and `golden-key-workbuddy config inspect --json`.
-6. Translate the useful result into plain language. Do not dump command output, internal Pipeline names, Schema names, provider keys, or setup jargon on a new user.
-7. Do not call a real or paid Provider, create a production project, or claim installation readiness during onboarding.
+3. Invoke `golden-key-workbuddy config guide --json`; this goal-first guide remains available before the local production runtime has been prepared.
+4. If `doctor.complete_production_environment.status` is not `ready`, invoke `runtime plan --json`. Describe this as preparing the complete video production environment, not as choosing technical components. Explain the registered DataRoot target, expected download, local-only scope, absence of system Python/PATH changes, and the plan's FFmpeg and Remotion licence notices. Ask for one confirmation, then run `runtime prepare --confirm-download --json` only after consent and rerun `doctor`.
+5. Do not ask the user to choose between Remotion and HyperFrames for installation; the standard profile prepares both and WorkBuddy later explains and recommends the suitable production path under the Core proposal rules. If the user declines, planning and API-key guidance can continue, but local processing and final rendering remain unavailable. Do not recommend reinstalling the ZIP for this runtime-only state. Defer `context`, `pipelines`, and strict `config inspect` until dependencies are ready.
+6. Otherwise, invoke the same launcher for `golden-key-workbuddy context --json`, `golden-key-workbuddy pipelines --json`, and `golden-key-workbuddy config inspect --json`.
+7. Translate the useful result into plain language. Do not dump command output, internal Pipeline names, Schema names, provider keys, or setup jargon on a new user.
+8. Do not call a real or paid Provider, create a production project, or claim installation readiness during onboarding.
 
 ## Guide API Key setup
 

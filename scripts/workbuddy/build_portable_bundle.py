@@ -30,9 +30,12 @@ EXPECTED_CONSUMER_REMOVE_PATHS = {
 
 CONSUMER_FILES = (
     ".workbuddy/README.md",
+    "WORKBUDDY-PRODUCTION-RUNTIME.lock.json",
     "config/openmontage.sync.json",
     "docs/workbuddy/QUICK-START.md",
     "requirements.txt",
+    "workbuddy-runtime/hyperframes/package.json",
+    "workbuddy-runtime/hyperframes/package-lock.json",
     "workbuddy-skill/golden-key-openmontage/SKILL.md",
     "workbuddy-skill/golden-key-openmontage-onboarding/SKILL.md",
 )
@@ -231,15 +234,20 @@ def build_portable_staging(
                 "archive_may_be_extracted_anywhere": True,
                 "registration_required_for_workbuddy": True,
                 "mcp": "optional_not_enabled_by_default",
-                "python_dependencies": {
-                    "mode": "managed_after_user_confirmation",
-                    "target": "<data_root>/Runtime/Python",
+                "production_environment": {
+                    "profile_id": "complete_video_production",
+                    "display_name_zh": "完整视频制作环境",
+                    "mode": "managed_after_single_user_confirmation",
+                    "target": "<data_root>/Runtime",
                     "system_python_modified": False,
+                    "system_path_modified": False,
                 },
                 "runtime_roles": {
                     "python": "required",
-                    "ffmpeg": "required_for_compose_and_media_tools",
-                    "node": "optional_for_remotion_or_hyperframes",
+                    "ffmpeg": "required",
+                    "node": "required",
+                    "remotion": "standard_agent_selected_composition_engine",
+                    "hyperframes": "standard_agent_selected_composition_engine",
                 },
             },
             "files": sorted(inventory, key=lambda item: item["path"]),

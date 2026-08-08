@@ -134,8 +134,9 @@ WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视�
 2. 双击 `安装到WorkBuddy.cmd`；
 3. 脚本校验包完整性、注册生产 Skill 和新手引导 Skill，并执行一次只读环境诊断；
 4. 用户重启 WorkBuddy 后，由 Skill 通过稳定 launcher 调用本地运行时；
-5. 如果只缺Python依赖，WorkBuddy先说明下载范围和保存位置，得到明确同意后再把依赖准备到用户数据目录，
-   不修改系统Python。FFmpeg按合成需要提示，Node只在选择Remotion或HyperFrames时需要；
+5. 如果完整视频制作环境尚未就绪，WorkBuddy先用普通语言说明下载量、保存位置和第三方许可提示；得到一次明确同意后，
+   再把Python依赖、FFmpeg、Node、Remotion、HyperFrames及其托管浏览器准备到用户数据目录；不修改系统Python或
+   系统PATH，也不要求用户先理解或选择合成引擎；
 6. 需要在线图像、视频、TTS或数字人能力时，通过本地`配置API密钥.cmd`按需录入相应Provider Key。
 
 常见的“直接覆盖解压”也属于支持路径。安装器只复制当前包 Manifest 明确列出的文件，覆盖解压目录中残留的旧文件会被
@@ -150,6 +151,10 @@ WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视�
 当前锁定的 `golden-key-v0.3.21` 仅用于构建和验证第一个安装/调用包，不是最终 Core 版本。
 普通用户 ZIP 不包含或要求运行 `setup.py`。快速说明见
 [`docs/workbuddy/QUICK-START.md`](docs/workbuddy/QUICK-START.md)。
+
+轻量指的是ZIP不内嵌这些大型运行时。准备命令会按锁文件校验下载内容并统一放到`<DataRoot>/Runtime`；FFmpeg采用
+GPLv3构建，Remotion是否免费取决于其团队规模和自动化使用条件，用户确认前会看到许可提醒。图像、视频、配音和数字人
+Provider仍按视频目标单独配置，运行时准备不等于API调用授权。
 
 ## 开发者入口
 

@@ -166,10 +166,10 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
   `config inspect`独立检查安全Provider引用，二者网络和Provider调用为0。
 - `DONE`：包内增加`配置API密钥.cmd`和本地隐藏输入向导；凭据以Windows当前用户DPAPI写入独立DataRoot，
   launcher仅向当前进程注入，状态接口不返回Key值、不联网验证，也不把保存Key视为Provider调用授权。
-- `DONE`：新增只读`runtime plan`和显式`runtime prepare --confirm-download`；依赖只写入所选
-  `<data_root>/Runtime/Python`，pip缓存留在数据目录，不修改系统Python，hash一致时幂等复用，漂移目标拒绝覆盖。
-- `DONE`：冻结运行时矩阵：Python必需；FFmpeg为合成和本地媒体工具必需但不随包携带；Node只在选择
-  Remotion或HyperFrames时需要，不因扫描缺失自动安装。
+- `DONE`：把`runtime plan/prepare`扩展为一次确认后的完整视频制作环境：Python、FFmpeg、Node、Remotion、
+  HyperFrames和托管浏览器统一写入`<data_root>/Runtime`，缓存写入`<data_root>/Caches`，不修改系统Python/PATH。
+- `DONE`：增加固定Release hash、npm lock、组件所有权、浏览器hash校验和许可提示；安装阶段不要求用户选择合成
+  引擎，具体生产时再由WorkBuddy解释、推荐并遵守Core提案审批。
 - `DONE`：支持覆盖解压和不同解压目录重复注册；正式目录只接收Manifest白名单，额外旧文件被记录并忽略。
 - `DONE`：支持同版本幂等修复、正式程序目录被手动删除后重建、项目自有Skill被删除后补回；独立数据目录保留。
   同名外来Skill或无效所有权记录fail closed，不覆盖用户内容。
@@ -178,7 +178,11 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - `DONE`：增加`从WorkBuddy卸载.cmd`和所有权校验卸载器；只移除自有程序/Skill，默认保留用户数据和外来同名Skill。
 - `DONE`：在真实Windows默认`%LOCALAPPDATA%`路径完成首包装入、Skill发现和中文CMD自卸载；修复调用cwd包遮蔽与
   自卸载程序目录残留，卸载后程序根、两个Golden Key Skill和MCP注册均不存在。
-- `NEXT`：修复真实WorkBuddy自然语言Skill路由，并继续完成真实跨版本升级、长任务/恢复和Human Checkpoint验收；
+- `DONE`：r27在D盘隔离候选完成完整环境真实准备；首次浏览器下载暴露Puppeteer `ECONNRESET`后，改为外部
+  URL+SHA-256校验和原子解压。二次准备网络调用0、幂等复用；r28 `doctor=pass`，Core报告FFmpeg、Remotion和
+  HyperFrames三条本地合成路径可用，托管Chrome进程版本核验通过。
+- `NEXT`：完成r29最终候选回归、W0和隔离安装清理；随后修复真实WorkBuddy自然语言Skill路由，并继续完成
+  真实跨版本升级、长任务/恢复和Human Checkpoint验收；
   主动降级和默认彻底删除用户数据不进入流程。
 - 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。
 - 扩充中文快速开始、Prompt Gallery和故障排查。

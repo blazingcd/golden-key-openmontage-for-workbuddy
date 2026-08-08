@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Sequence
 
@@ -12,6 +13,8 @@ from .security import redact_payload, redact_text
 
 
 def _print_json_report(report: dict) -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     print(json.dumps(redact_payload(report), ensure_ascii=False, indent=2))
 
 
@@ -165,7 +168,10 @@ def _parser() -> argparse.ArgumentParser:
 
     runtime = subparsers.add_parser(
         "runtime",
-        help="Plan or prepare the data-scoped Python dependencies after consent.",
+        help=(
+            "Plan or prepare the complete data-scoped video production environment "
+            "after one user confirmation."
+        ),
     )
     runtime_commands = runtime.add_subparsers(
         dest="runtime_command", required=True
@@ -184,7 +190,10 @@ def _parser() -> argparse.ArgumentParser:
     runtime_prepare.add_argument(
         "--confirm-download",
         action="store_true",
-        help="Confirm that Python packages may be downloaded into the data root.",
+        help=(
+            "Confirm the reported Python, FFmpeg, Node, composition-engine, browser, "
+            "storage, and licence plan may be downloaded into the data root."
+        ),
     )
     runtime_prepare.add_argument("--json", action="store_true", dest="as_json")
 

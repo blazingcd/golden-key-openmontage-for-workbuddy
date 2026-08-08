@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import json
 import importlib.util
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
+from .runtime_prepare import build_runtime_plan
 
 
 EXPECTED_PIPELINES = (
@@ -66,6 +69,69 @@ def _command_runtime(command: str) -> dict[str, Any]:
             "error": str(exc),
         }
     return {"available": True, "executable": executable, "version": version}
+
+
+def _local_cli_runtime(
+    path: Path, *, inspection: str, runtime_name: str
+) -> dict[str, Any]:
+    if not path.is_file():
+        return {
+            "available": False,
+            "executable": str(path),
+            "version": None,
+            "inspection": inspection,
+        }
+    root = path.parents[2]
+    node = shutil.which("node")
+    if runtime_name == "remotion":
+        script = root / "node_modules" / "@remotion" / "cli" / "remotion-cli.js"
+        command = [node or "node", str(script), "versions"]
+    elif runtime_name == "hyperframes":
+        script = root / "node_modules" / "hyperframes" / "bin" / "hyperframes.mjs"
+        command = [node or "node", str(script), "--version"]
+    else:
+        script = path
+        command = [str(path), "--version"]
+    if node is None or not script.is_file():
+        return {
+            "available": False,
+            "executable": str(path),
+            "version": None,
+            "inspection": inspection,
+            "error": "managed Node or runtime entrypoint is missing",
+        }
+    try:
+        result = subprocess.run(
+            command,
+            cwd=root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=20,
+            check=False,
+        )
+        output = result.stdout or result.stderr
+        if runtime_name == "remotion":
+            match = re.search(r"^On version:\s*(\S+)", output, re.MULTILINE)
+            version = match.group(1) if match else None
+        else:
+            version = output.splitlines()[0].strip() if output.splitlines() else None
+        available = result.returncode == 0
+    except (OSError, subprocess.SubprocessError) as exc:
+        return {
+            "available": False,
+            "executable": str(path),
+            "version": None,
+            "inspection": inspection,
+            "error": str(exc),
+        }
+    return {
+        "available": available,
+        "executable": str(path),
+        "version": version or None,
+        "inspection": inspection,
+    }
 
 
 def build_doctor_report(
@@ -136,24 +202,84 @@ def build_doctor_report(
     if not python_supported:
         errors.append("Python 3.10 or newer is required")
     missing_python_packages = _missing_python_packages()
+    production_plan = build_runtime_plan(repo_root, data_root)
+    production_components = {
+        name: bool(component["ready"])
+        for name, component in production_plan["components"].items()
+    }
+    targets = production_plan["targets"]
+    command_suffix = ".cmd" if sys.platform == "win32" else ""
+    remotion_cli = (
+        Path(targets["remotion"])
+        / "node_modules"
+        / ".bin"
+        / f"remotion{command_suffix}"
+    )
+    hyperframes_cli = (
+        Path(targets["hyperframes"])
+        / "node_modules"
+        / ".bin"
+        / f"hyperframes{command_suffix}"
+    )
+    remotion_runtime = _local_cli_runtime(
+        remotion_cli,
+        inspection="local_cli_only",
+        runtime_name="remotion",
+    )
+    hyperframes_runtime = _local_cli_runtime(
+        hyperframes_cli,
+        inspection="local_cli_and_managed_browser_only",
+        runtime_name="hyperframes",
+    )
+    hyperframes_runtime["managed_browser_ready"] = production_components[
+        "hyperframes"
+    ]
+    ffmpeg_runtime = _command_runtime("ffmpeg")
+    node_runtime = _command_runtime("node")
+    complete_environment_ready = (
+        production_plan["status"] == "ready"
+        and not missing_python_packages
+        and ffmpeg_runtime["available"]
+        and node_runtime["available"]
+        and remotion_runtime["available"]
+        and hyperframes_runtime["available"]
+    )
     runtime = {
         "capability_requirements": {
             "python": {
                 "requirement": "required",
-                "preparation": "managed_dependencies_after_user_confirmation",
+                "preparation": "managed_complete_environment_after_user_confirmation",
             },
             "ffmpeg": {
-                "requirement": "required_for_compose_and_media_tools",
-                "preparation": "external_install_not_bundled",
+                "requirement": "required_for_complete_environment",
+                "preparation": "managed_complete_environment_after_user_confirmation",
             },
             "node": {
-                "requirement": "optional",
+                "requirement": "required_for_complete_environment",
                 "unlocks": ["remotion", "hyperframes"],
-                "preparation": "external_install_only_when_selected",
+                "preparation": "managed_complete_environment_after_user_confirmation",
+            },
+            "remotion": {
+                "requirement": "required_for_complete_environment",
+                "selection": "agent_selected_after_capability_discovery",
+            },
+            "hyperframes": {
+                "requirement": "required_for_complete_environment",
+                "selection": "agent_selected_after_capability_discovery",
             },
         },
-        "ffmpeg": _command_runtime("ffmpeg"),
-        "node": _command_runtime("node"),
+        "complete_production_environment": {
+            "profile_id": production_plan["profile"]["id"],
+            "display_name_zh": production_plan["profile"]["display_name_zh"],
+            "status": "ready" if complete_environment_ready else "not_ready",
+            "components": production_components,
+            "single_user_confirmation": True,
+            "repair_command": "golden-key-workbuddy runtime prepare --confirm-download --json",
+            "errors": production_plan["errors"],
+        },
+        "ffmpeg": ffmpeg_runtime,
+        "hyperframes": hyperframes_runtime,
+        "node": node_runtime,
         "python": {
             "available": True,
             "executable": sys.executable,
@@ -167,6 +293,7 @@ def build_doctor_report(
             "missing": missing_python_packages,
             "inspection": "local_module_discovery_only",
         },
+        "remotion": remotion_runtime,
     }
 
     warnings = []
@@ -178,6 +305,29 @@ def build_doctor_report(
     if not runtime["ffmpeg"]["available"]:
         warnings.append(
             "FFmpeg is required for compose and local media tools but is not available"
+        )
+    if production_plan["status"] != "ready":
+        missing_components = [
+            name for name, ready in production_components.items() if not ready
+        ]
+        warnings.append(
+            "Complete video production environment is not ready: "
+            + ", ".join(missing_components)
+        )
+    elif not complete_environment_ready:
+        failed_probes = [
+            name
+            for name, report in (
+                ("ffmpeg", ffmpeg_runtime),
+                ("node", node_runtime),
+                ("remotion", remotion_runtime),
+                ("hyperframes", hyperframes_runtime),
+            )
+            if not report["available"]
+        ]
+        warnings.append(
+            "Complete video production environment failed executable probes: "
+            + ", ".join(failed_probes)
         )
 
     return {
@@ -230,8 +380,10 @@ def format_doctor_report(report: dict[str, Any]) -> str:
         ),
         f"Node: {'available' if report['runtime']['node']['available'] else 'missing'}",
         f"FFmpeg: {'available' if report['runtime']['ffmpeg']['available'] else 'missing'}",
-        "Runtime roles: Python required; FFmpeg required for compose/media; "
-        "Node optional unless Remotion or HyperFrames is selected.",
+        "Complete production environment: "
+        + report["runtime"]["complete_production_environment"]["status"],
+        "Runtime roles: Python, FFmpeg, Node, Remotion, and HyperFrames are prepared "
+        "together after one user confirmation; the Agent selects the composition engine.",
         "MCP: optional local stdio adapter; CLI remains the canonical fallback.",
     ]
     lines.extend(f"WARNING: {message}" for message in report.get("warnings", []))

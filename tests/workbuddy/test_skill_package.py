@@ -64,9 +64,13 @@ def test_production_skill_requires_user_consent_before_dependency_downloads() ->
     assert "runtime plan --json" in body
     assert "runtime prepare --confirm-download --json" in body
     assert "explicitly agrees" in body
-    assert "does not modify the system Python" in body
-    assert "Node is optional" in body
-    assert "FFmpeg is required for compose" in body
+    assert "complete video production environment" in body
+    assert "Python, FFmpeg, Node, Remotion, and HyperFrames" in body
+    assert "one confirmation" in body
+    assert "does not modify system Python or the system PATH" in body
+    assert "Do not ask the user to choose between Remotion and HyperFrames for installation" in body
+    assert "Remotion licensing" in body
+    assert "FFmpeg GPLv3" in body
 
 
 def test_workbuddy_skill_uses_the_w2_deterministic_lifecycle() -> None:
@@ -134,6 +138,10 @@ def test_workbuddy_onboarding_is_a_separate_consumer_skill() -> None:
     assert "runtime plan --json" in body
     assert "runtime prepare --confirm-download --json" in body
     assert "Do not recommend reinstalling the ZIP" in body
+    assert "complete video production environment" in body
+    assert "one confirmation" in body
+    assert "Do not ask the user to choose between Remotion and HyperFrames for installation" in body
+    assert "planning and API-key guidance can continue" in body
 
 
 def test_workbuddy_onboarding_does_not_own_material_inventory_or_setup() -> None:

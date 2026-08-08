@@ -159,12 +159,29 @@
 - 根README已改为面向公开用户的差异化介绍：突出WorkBuddy专用direct-agent适配、四条中文商业短视频业务
   Pipeline、中文新手引导与素材/参考内容交接、国内模型生态配置识别、持久任务与轻量ZIP；用户介绍区不再展示
   仓库同步历史、首次推送流程或其他维护者内部信息，并继续明确Pre-Alpha与未验收边界。
-- W4缺失Python依赖准备切片已实现：`runtime plan`只读给出目标和下载提示；只有显式
-  `runtime prepare --confirm-download`才在所选`<data_root>/Runtime/Python`创建隔离环境并使用
-  `<data_root>/Caches/pip`，不修改系统Python。hash一致重复执行直接复用，目标漂移拒绝覆盖。
-- 注册launcher会在有效托管环境记录存在时优先使用它；WorkBuddy生产Skill必须先展示计划并获得用户明确同意，
-  不得把原始视频请求当作下载授权。Python为必需，FFmpeg为合成/本地媒体必需，Node仅在选择Remotion或
-  HyperFrames时需要。
+- W4运行时准备已扩展为`complete_video_production`标准环境：`runtime plan`只读列出Python、FFmpeg、Node、
+  Remotion、HyperFrames和托管浏览器；只有用户接受下载、存储和许可提示后，`runtime prepare --confirm-download`
+  才写入所选`<data_root>/Runtime`与`<data_root>/Caches`。不修改系统Python/PATH，不调用Provider。
+- 新增`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`，固定Node/FFmpeg发行资产和SHA、Remotion/HyperFrames npm lock
+  hash、HyperFrames版本与浏览器版本；组件按所有权记录幂等复用，浏览器可执行文件按记录hash复核。
+- 注册launcher只在当前进程优先使用托管Python/FFmpeg/Node/浏览器。生产Skill必须先展示计划并获得一次明确同意；
+  安装阶段不要求用户选择Remotion或HyperFrames，具体方案仍按Core规则说明可选路径并等待批准。
+- r27已完成真实D盘隔离准备：Runtime=`1,504,426,322`字节（1.401GiB），Caches=`500,145,944`字节
+  （0.466GiB）；二次prepare=`created=false/reused=true/network_calls=0`。r28安装复用该DataRoot后
+  `doctor=pass`，托管Python/FFmpeg 8.1.2/Node 22.23.2/Remotion 4.0.484/HyperFrames 0.7.101均通过可执行探测。
+- 首次浏览器准备真实发现Puppeteer下载器`ECONNRESET`；浏览器现与FFmpeg/Node同样锁定外部URL、大小和
+  SHA-256=`ec7d7cfbc9d97093c9269d6a26de78a3244a49f3112ff9616e2ccb5ac3afeb24`，先校验缓存再在staging解压。
+  托管Chrome实际运行返回`Google Chrome for Testing 152.0.7928.2`。
+- Core `VideoCompose.get_info()`在隔离已安装包报告`ffmpeg=true/remotion=true/hyperframes=true`；这证明本地
+  合成能力已被发现，但不等于真实WorkBuddy自然语言路由、Human Checkpoint或Provider成片验收完成。
+- r29最终轻量ZIP大小=`72,849,518`字节，SHA-256=
+  `abb350f5c004e19f390e56e0fe4b02ab8abe4f4a1581838f55de1c518485b2a2`，位于
+  `D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-complete-runtime-20260808-r29`。r29安装器在复用ready DataRoot时
+  无网络修复Remotion junction，安装后`doctor=pass`。
+- 本增量W0初次最终审计=`PASS`：1566个managed Core文件、四Pipeline合同、direct-agent边界、公开lineage、
+  风险扫描与回归全部通过；contracts=`716 passed, 7 skipped`、tools=`284 passed, 1 subtest passed`、
+  WorkBuddy=`111 passed`。证据目录为
+  `D:/WorkBuddyData/Temp/w4-complete-runtime-publication-audit-20260808-r29-final-r3`。
 - 最新真实包候选位于`D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-first-bundle-20260807-r5`，ZIP大小
   `72,799,449`字节，SHA-256=`ff7af11546b3e4e0e72fb9f9822375825d7d8dc84476b38528195126d5c0bfb3`。
   D盘真实注册后`runtime plan=needs_confirmation`；未确认prepare退出码1且没有创建Runtime目录。
@@ -241,10 +258,10 @@
 
 1. 查明并修复WorkBuddy真实客户端没有把模糊视频请求路由到`golden-key-openmontage-onboarding`的原因；不得用文档宣称代替真实触发。
 2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
-3. 在获得明确下载同意后，用真实首包requirements完成一次默认数据目录托管Python准备和launcher复核。
-4. 在真实WorkBuddy中继续完成跨版本升级、自然语言生产Skill触发、长任务/恢复和Human Checkpoint验收后，才重新裁决
+3. 完成r29最终候选W0、提交/推送和本轮D盘隔离程序/Skill/Runtime清理，继续保留默认WorkBuddy纯新人工验收起点。
+4. 在真实WorkBuddy中继续完成自然语言新手/生产Skill触发、长任务/恢复和Human Checkpoint验收后，才重新裁决
    `OFFLINE ADAPTER READY`。
-5. r18已因新增API Key配置能力而过期；构建并记录新候选后，继续保持默认安装根和两个Skill不存在的纯新人工验收起点。
+5. r28仍是运行时验收中间候选；以包含安装后Remotion链接修复的r29及其W0证据为准。
 6. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。
 
 ## 当前允许声明

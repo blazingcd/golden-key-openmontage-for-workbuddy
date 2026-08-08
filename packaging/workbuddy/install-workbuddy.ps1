@@ -331,6 +331,26 @@ try {
     $installRecordPath = Join-Path $InstallRoot 'WORKBUDDY-INSTALL.json'
     $installRecord | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $installRecordPath -Encoding UTF8
 
+    # A previously prepared DataRoot can be reused by a repaired or upgraded App
+    # directory. Recreate the App-local Remotion junction only when the read-only
+    # plan proves that every locked runtime component is already ready. Calling
+    # prepare without --confirm-download is then network-free and idempotent.
+    $runtimePlanOutput = & $launcherPath runtime plan --json 2>&1
+    $runtimePlanExitCode = $LASTEXITCODE
+    if ($runtimePlanExitCode -eq 0) {
+        try {
+            $runtimePlan = ($runtimePlanOutput -join [Environment]::NewLine) | ConvertFrom-Json
+        } catch {
+            $runtimePlan = $null
+        }
+        if ($runtimePlan -and $runtimePlan.status -eq 'ready') {
+            $runtimeRepairOutput = & $launcherPath runtime prepare --json 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                throw 'Prepared runtime could not be linked into the installed App.'
+            }
+        }
+    }
+
     $doctorOutput = & $launcherPath doctor --json 2>&1
     $doctorExitCode = $LASTEXITCODE
     try {

@@ -37,7 +37,7 @@ def test_doctor_defaults_to_registered_home_and_standard_user_data_location(
         check=False,
     )
 
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 1, result.stderr
     report = json.loads(result.stdout)
     assert Path(report["repo_root"]) == ROOT
     assert Path(report["storage"]["data_root"]) == (
@@ -66,9 +66,9 @@ def test_doctor_reports_locked_core_and_four_pipelines(tmp_path: Path) -> None:
         check=False,
     )
 
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 1, result.stderr
     report = json.loads(result.stdout)
-    assert report["status"] == "pass"
+    assert report["status"] == "degraded"
     assert report["core"] == {
         "contract_id": "golden-key-workbuddy-callable-core-v1",
         "source_commit": "757ea3822e5f2eef7f341389983119021e827c8d",
@@ -116,7 +116,7 @@ def test_doctor_can_create_the_declared_data_directories(tmp_path: Path) -> None
         check=False,
     )
 
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 1, result.stderr
     report = json.loads(result.stdout)
     assert report["storage"]["created"] is True
     assert report["storage"]["directories"] == {
@@ -150,32 +150,60 @@ def test_doctor_reports_local_runtime_without_contacting_providers(tmp_path: Pat
         check=False,
     )
 
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 1, result.stderr
     report = json.loads(result.stdout)
     assert report["runtime"]["python"]["supported"] is True
     assert report["runtime"]["python"]["minimum"] == "3.10"
     assert set(report["runtime"]) == {
         "capability_requirements",
+        "complete_production_environment",
         "ffmpeg",
+        "hyperframes",
         "node",
         "python",
         "python_packages",
+        "remotion",
     }
     assert report["runtime"]["capability_requirements"] == {
         "python": {
             "requirement": "required",
-            "preparation": "managed_dependencies_after_user_confirmation",
+            "preparation": "managed_complete_environment_after_user_confirmation",
         },
         "ffmpeg": {
-            "requirement": "required_for_compose_and_media_tools",
-            "preparation": "external_install_not_bundled",
+            "requirement": "required_for_complete_environment",
+            "preparation": "managed_complete_environment_after_user_confirmation",
         },
         "node": {
-            "requirement": "optional",
+            "requirement": "required_for_complete_environment",
             "unlocks": ["remotion", "hyperframes"],
-            "preparation": "external_install_only_when_selected",
+            "preparation": "managed_complete_environment_after_user_confirmation",
+        },
+        "remotion": {
+            "requirement": "required_for_complete_environment",
+            "selection": "agent_selected_after_capability_discovery",
+        },
+        "hyperframes": {
+            "requirement": "required_for_complete_environment",
+            "selection": "agent_selected_after_capability_discovery",
         },
     }
+    complete = report["runtime"]["complete_production_environment"]
+    assert complete["profile_id"] == "complete_video_production"
+    assert complete["status"] in {"ready", "not_ready"}
+    assert list(complete["components"]) == [
+        "python",
+        "ffmpeg",
+        "node",
+        "remotion",
+        "hyperframes",
+    ]
+    assert complete["repair_command"] == (
+        "golden-key-workbuddy runtime prepare --confirm-download --json"
+    )
+    assert report["runtime"]["remotion"]["inspection"] == "local_cli_only"
+    assert report["runtime"]["hyperframes"]["inspection"] == (
+        "local_cli_and_managed_browser_only"
+    )
     assert report["runtime"]["python_packages"]["required"] == [
         "dotenv",
         "google.genai",
@@ -240,7 +268,7 @@ def test_gate_checks_the_public_w1_runtime_boundary(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     report = json.loads(result.stdout)
     assert report["status"] == "pass"
-    assert report["doctor_status"] == "pass"
+    assert report["doctor_status"] == "degraded"
     assert report["skill"]["status"] == "present"
     assert report["forbidden_paths"]["present"] == []
     assert report["mcp"]["active_config_present"] is False

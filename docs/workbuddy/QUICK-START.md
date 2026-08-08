@@ -13,15 +13,23 @@
 3. 完全退出并重新打开 WorkBuddy，让它重新发现两个用户级 Skill。
 4. 可以先说“我不知道怎么开始做视频”，触发新手引导；也可以直接说一个明确的视频目标，进入生产 Skill。
 
-安装结束和 WorkBuddy 首次调用都会运行只读 `doctor`，检查 Core 合同、4条业务Pipeline、Python、Node和FFmpeg。
+安装结束和 WorkBuddy 首次调用都会运行只读 `doctor`，检查 Core 合同、4条业务Pipeline和完整视频制作环境。
 检查不会调用真实或付费 Provider，也不会自动下载缺失组件。MCP默认不启用，CLI仍是权威回退。
 
-如果只缺Python包，WorkBuddy会先说明下载内容和保存位置并询问一次。只有用户明确同意后，它才会调用
-`runtime prepare --confirm-download`，在所选数据目录的`Runtime/Python`下建立项目自用环境；不会把依赖装进
-系统Python。默认数据目录在`%LOCALAPPDATA%`，若安装时把`DataRoot`改到D盘，托管环境也会落在D盘。
+如果完整环境未就绪，WorkBuddy会把它解释为“准备完整视频制作环境”，先说明下载、磁盘位置以及FFmpeg和Remotion
+许可提示，再询问一次。只有用户明确同意后，它才会调用`runtime prepare --confirm-download`，把Python依赖、
+FFmpeg、Node、Remotion、HyperFrames和托管浏览器统一准备到所选`<DataRoot>/Runtime`。它不会修改系统Python、
+系统PATH或要求管理员权限。默认数据目录在`%LOCALAPPDATA%`；若安装时把`DataRoot`改到D盘，运行时与缓存也在D盘。
+当前锁定计划给出的预估下载量为约0.5–1.2GB，安装后占用约1.2–3GB；这是规划区间，npm镜像、Python依赖版本和
+压缩率会让实际数值变化，WorkBuddy应以`runtime plan`返回的当前区间为准。
 
-Python是运行必需项；FFmpeg在合成和本地媒体处理时必需；Node只在选择Remotion或HyperFrames时需要。
-首包不会因为检测到Node缺失就自动安装它，也不会把三套运行时整体塞进ZIP。
+普通用户不需要先理解Remotion或HyperFrames，也不在安装阶段二选一；两条本地合成能力都会准备好。真正制作视频时，
+WorkBuddy再根据方案用普通语言解释可用路径、给出推荐，并按Core提案规则等待批准。用户若暂不准备环境，仍可继续
+新手引导、方案讨论和API Key配置，但本地媒体处理与最终合成会保持阻断。
+
+ZIP本身仍然轻量，不直接携带上述大型运行时。下载内容由`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`固定并校验。
+当前Windows FFmpeg包为GPLv3构建；Remotion是否免费取决于其官方团队规模和自动化使用条件，较大团队或特定自动化
+场景可能需要商业许可。
 
 ## 配置图像、视频和配音API密钥
 
@@ -82,4 +90,5 @@ Provider连通性测试；这些动作仍需单独说明并获得用户明确同
 .\golden-key-workbuddy.ps1 doctor --json
 ```
 
-第二条命令会访问Python包源下载依赖，因此必须在用户明确同意后运行；它不会调用视频、图像、语音或其他付费Provider。
+第二条命令会访问Python包源、Node/FFmpeg发行源、npm和浏览器发行源，因此必须在用户确认下载、存储和许可提示后
+运行；它不会调用视频、图像、语音或其他付费Provider。

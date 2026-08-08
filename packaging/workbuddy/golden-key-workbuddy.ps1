@@ -22,6 +22,48 @@ $env:OPENMONTAGE_WORKBUDDY_DATA_ROOT = $dataRoot
 $env:PYTHONUTF8 = '1'
 $env:PYTHONIOENCODING = 'utf-8'
 
+# The portable ZIP stays small.  After one explicit user confirmation, the
+# complete production environment lives under DataRoot and is exposed only to
+# this launcher process.  No machine/user PATH entry is created.
+$managedFfmpegBin = Join-Path $dataRoot 'Runtime\FFmpeg\bin'
+$managedNodeRoot = Join-Path $dataRoot 'Runtime\Node'
+$managedHyperFramesBin = Join-Path $dataRoot 'Runtime\Composition\HyperFrames\node_modules\.bin'
+$managedPathEntries = @(
+    $managedFfmpegBin,
+    $managedNodeRoot,
+    $managedHyperFramesBin
+) | Where-Object { Test-Path -LiteralPath $_ -PathType Container }
+if ($managedPathEntries.Count -gt 0) {
+    $existingProcessPath = [Environment]::GetEnvironmentVariable('PATH', 'Process')
+    $env:PATH = (($managedPathEntries + @($existingProcessPath)) -join [IO.Path]::PathSeparator)
+}
+$env:NPM_CONFIG_CACHE = Join-Path $dataRoot 'Caches\npm'
+$env:HYPERFRAMES_EXTRACT_CACHE_DIR = Join-Path $dataRoot 'Caches\HyperFrames\ExtractedFrames'
+$env:HYPERFRAMES_FONT_CACHE_DIR = Join-Path $dataRoot 'Caches\HyperFrames\Fonts'
+
+$productionRecordPath = Join-Path $dataRoot 'Runtime\WORKBUDDY-PRODUCTION-RUNTIME.json'
+if (Test-Path -LiteralPath $productionRecordPath -PathType Leaf) {
+    try {
+        $productionRecord = Get-Content -Raw -LiteralPath $productionRecordPath -Encoding UTF8 | ConvertFrom-Json
+        if ([string]$productionRecord.schema_version -eq 'golden-key-workbuddy-production-runtime-v1') {
+            $browserPath = [string]$productionRecord.components.browser.executable
+            $browserRoot = [IO.Path]::GetFullPath((Join-Path $dataRoot 'Runtime\Browsers\HyperFrames'))
+            $browserCandidate = [IO.Path]::GetFullPath($browserPath)
+            $browserPrefix = $browserRoot.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+            if (
+                $browserCandidate.StartsWith($browserPrefix, [StringComparison]::OrdinalIgnoreCase) -and
+                (Test-Path -LiteralPath $browserCandidate -PathType Leaf)
+            ) {
+                $env:HYPERFRAMES_BROWSER_PATH = $browserCandidate
+                $env:REMOTION_BROWSER_EXECUTABLE = $browserCandidate
+            }
+        }
+    } catch {
+        # `doctor` reports a corrupt or incomplete managed production record.
+        # The launcher never searches other folders or trusts an outside path.
+    }
+}
+
 $credentialStore = Join-Path $dataRoot 'Config\golden-key-provider-credentials.json'
 if (Test-Path -LiteralPath $credentialStore -PathType Leaf) {
     if (-not $IsWindows -and $PSVersionTable.PSEdition -eq 'Core') {

@@ -1,0 +1,88 @@
+{
+  "schema_version": "golden-key-workbuddy-production-runtime-lock-v1",
+  "profile": {
+    "id": "complete_video_production",
+    "display_name_zh": "完整视频制作环境",
+    "single_user_confirmation": true,
+    "estimated_download_bytes": {
+      "minimum": 500000000,
+      "maximum": 1200000000,
+      "kind": "planning_estimate"
+    },
+    "estimated_installed_bytes": {
+      "minimum": 1200000000,
+      "maximum": 3000000000,
+      "kind": "planning_estimate"
+    }
+  },
+  "supported_platforms": [
+    "windows-x64"
+  ],
+  "installation": {
+    "root": "<data_root>/Runtime",
+    "cache_root": "<data_root>/Caches",
+    "system_path_modified": false,
+    "administrator_required": false,
+    "provider_calls_allowed": false
+  },
+  "components": {
+    "python": {
+      "requirements_path": "requirements.txt",
+      "target": "Runtime/Python"
+    },
+    "ffmpeg": {
+      "version": "8.1.2",
+      "distribution": "gyan.dev release essentials GPLv3 build",
+      "license": "GPL-3.0",
+      "license_url": "https://www.gyan.dev/ffmpeg/builds/",
+      "windows-x64": {
+        "url": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-8.1.2-essentials_build.zip",
+        "sha256": "db580001caa24ac104c8cb856cd113a87b0a443f7bdf47d8c12b1d740584a2ec",
+        "archive_root": "ffmpeg-8.1.2-essentials_build",
+        "target": "Runtime/FFmpeg"
+      }
+    },
+    "node": {
+      "version": "22.23.2",
+      "license": "Node.js license",
+      "license_url": "https://github.com/nodejs/node/blob/v22.23.2/LICENSE",
+      "windows-x64": {
+        "url": "https://nodejs.org/download/release/v22.23.2/node-v22.23.2-win-x64.zip",
+        "sha256": "1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97",
+        "archive_root": "node-v22.23.2-win-x64",
+        "target": "Runtime/Node"
+      }
+    },
+    "remotion": {
+      "version": "locked by remotion-composer/package-lock.json",
+      "package_json": "remotion-composer/package.json",
+      "package_lock": "remotion-composer/package-lock.json",
+      "package_json_sha256": "836db3434dea05db3642dbdcbfdd79e6567b3ed555b60aa3e0b997efb29bb66b",
+      "package_lock_sha256": "714d6f818a918b8f80dba44d0cf5c67d850a5ef091d652918b6091f74bdf597f",
+      "target": "Runtime/Composition/Remotion",
+      "license": "Remotion License",
+      "license_notice_required": true,
+      "license_url": "https://www.remotion.dev/license"
+    },
+    "hyperframes": {
+      "version": "0.7.101",
+      "package_json": "workbuddy-runtime/hyperframes/package.json",
+      "package_lock": "workbuddy-runtime/hyperframes/package-lock.json",
+      "package_json_sha256": "595a32da29127c71f745d5b25cf33e7cebde0334e470783130207a04c57b9802",
+      "package_lock_sha256": "67d372902aaabdd5e9e706ef9688d430f7d695f2a31b9a4524b2cb50d69c9eb4",
+      "target": "Runtime/Composition/HyperFrames",
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/heygen-com/hyperframes/blob/main/LICENSE"
+    },
+    "browser": {
+      "owner": "hyperframes",
+      "name": "chrome-headless-shell",
+      "version": "152.0.7928.2",
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7928.2/win64/chrome-headless-shell-win64.zip",
+      "sha256": "ec7d7cfbc9d97093c9269d6a26de78a3244a49f3112ff9616e2ccb5ac3afeb24",
+      "size_bytes": 120932410,
+      "target": "Runtime/Browsers/HyperFrames",
+      "verification": "external_archive_sha256_exact_build_id_and_recorded_executable_sha256"
+    }
+  }
+}

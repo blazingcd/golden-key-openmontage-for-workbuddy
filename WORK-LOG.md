@@ -819,3 +819,39 @@
   `284 passed, 1 subtest passed`，WorkBuddy=`109 passed`。证据目录为
   `D:/WorkBuddyData/Temp/w4-goal-first-api-guide-publication-audit-20260808-r25-final`。
 - 验收后r25隔离程序目录和两个Skill均已卸载；默认WorkBuddy安装根不存在，WorkBuddy进程为0，继续保留纯新人工验收起点。
+
+## 2026-08-08：一次确认后的完整本地视频制作环境
+
+- 根据用户对FFmpeg、Remotion和HyperFrames“发现缺失会被Core跳过”的纠偏，把W4从仅准备Python扩展为标准
+  `complete_video_production`环境。轻量ZIP不内嵌大型运行时；用户接受一次下载、存储与许可提示后，统一准备
+  Python、FFmpeg、Node、Remotion、HyperFrames和托管浏览器。大型生成模型与在线Provider继续按目标单独授权。
+- 新增`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`：固定Node 22.23.2和FFmpeg 8.1.2发行URL/SHA，锁定
+  Remotion package-lock、HyperFrames 0.7.101 package-lock和Chrome for Testing 152.0.7928.2。计划预估下载
+  0.5–1.2GB、Runtime落盘1.2–3GB，并在确认前披露FFmpeg GPLv3与Remotion许可条件。
+- TDD按`runtime plan/prepare`、`doctor`、launcher和两个WorkBuddy Skill公开边界推进；用户不在安装阶段选择
+  Remotion/HyperFrames，具体生产方案仍遵守Core要求的普通语言说明、推荐与批准合同。API Key配置与本地环境下载
+  继续是两个独立Gate，未调用真实或付费Provider。
+- r26首次真实准备完成Python、FFmpeg、Node和两个npm引擎后，Puppeteer浏览器下载在约18分钟后以
+  `ECONNRESET`失败。没有换镜像或静默跳过；改为我们的固定SHA下载器先校验官方Google Storage资产，再把缓存
+  交给Puppeteer原子解压，并给下载和外部命令增加总超时。浏览器资产大小`120,932,410`字节，SHA-256=
+  `ec7d7cfbc9d97093c9269d6a26de78a3244a49f3112ff9616e2ccb5ac3afeb24`。
+- r27真实D盘隔离准备=`PASS`：6个组件均创建；Runtime=`1,504,426,322`字节（1.401GiB），Caches=
+  `500,145,944`字节（0.466GiB）。第二次prepare在2.1秒内`created=false/reused=true/network_calls=0`。
+- 真实`doctor`又发现Remotion `.cmd --version`探测超时但总状态误报pass；改为托管Node直接运行Remotion
+  `versions`与HyperFrames入口，并让总ready同时要求文件合同和可执行探测通过。r28安装复用DataRoot后
+  `doctor=pass`，Remotion 4.0.484与HyperFrames 0.7.101均可执行。
+- Core只读探测报告`render_engines={ffmpeg:true, remotion:true, hyperframes:true}`；托管Chrome进程返回
+  `Google Chrome for Testing 152.0.7928.2`。HyperFrames doctor确认Node/FFmpeg/FFprobe/Chrome，另列出的
+  Whisper/Kokoro/MusicGen/Docker为非标准可选能力，不纳入本次完整本地合成环境Gate。
+- 复用既有DataRoot安装新App时发现Remotion junction不会自动出现在新程序目录；`runtime prepare`的ready路径
+  现也执行幂等链接修复，安装器仅在只读plan已经是ready时无下载调用prepare，确保修复/升级后Core composer
+  能解析托管依赖。该操作不修改系统PATH/Python，未知node_modules目录仍fail closed。
+- 本轮所有改动均为WorkBuddy消费层；v0.3.21的1566个managed Core文件未修改，Golden Key SaaS/private Core
+  仓库未触碰。真实WorkBuddy自然语言路由和Human Checkpoint仍未完成，不声明`OFFLINE ADAPTER READY`。
+- r29轻量ZIP大小`72,849,518`字节，SHA-256=
+  `abb350f5c004e19f390e56e0fe4b02ab8abe4f4a1581838f55de1c518485b2a2`。复用ready DataRoot安装后，安装器以
+  `network_calls=0`修复新App的Remotion junction，`doctor=pass`，两个本地引擎版本与浏览器状态均可见。
+- W0运行前清理了212个由实机导入生成的`.pyc`缓存文件；它们是可重建产物，不是Core清单文件。随后以
+  `PYTHONDONTWRITEBYTECODE=1`执行权威审计，Gate=`PASS`：verified Core=`1566`，候选=`24`；contracts=
+  `716 passed, 7 skipped`、tools=`284 passed, 1 subtest passed`、WorkBuddy=`111 passed`。证据目录为
+  `D:/WorkBuddyData/Temp/w4-complete-runtime-publication-audit-20260808-r29-final-r3`。

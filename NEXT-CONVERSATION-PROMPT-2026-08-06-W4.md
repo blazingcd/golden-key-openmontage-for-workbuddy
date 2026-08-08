@@ -24,9 +24,9 @@
 - CLI是权威回退；MCP仅是本地stdio结构化工具增强，活动配置尚未进入仓库发行面。
 - 当前仍为`Pre-Alpha`，尚未通过W4全新Windows安装和普通用户WorkBuddy验收，不得声明
   “已经可以安装”或`OFFLINE ADAPTER READY`。
-- W4已经完成经用户确认的Python依赖准备纵向切片：`runtime plan`零写入，
-  `runtime prepare --confirm-download`只写入所选数据目录并由launcher优先使用；Python必需、FFmpeg在合成/媒体
-  处理时必需、Node仅在Remotion/HyperFrames路径需要。完整真实requirements下载仍需单次明确同意后验收。
+- W4已把运行时准备扩展为一次确认后的完整视频制作环境：`runtime plan`零写入，`runtime prepare
+  --confirm-download`把Python、FFmpeg、Node、Remotion、HyperFrames和托管浏览器写入所选DataRoot；launcher
+  只修改当前进程环境。固定资产/包锁/hash与许可提醒已经实现，真实D盘隔离下载和引擎发现仍需完成。
 - W4已经完成同版本重复注册修复切片：覆盖解压目录只按Manifest白名单进入正式安装；程序目录或项目自有Skill
   被手动删除后可从同一或不同解压目录修复；用户数据独立保留；同名外来Skill和无效所有权记录fail closed。
 - W4已经实现严格向前的跨版本升级、doctor失败自动恢复旧程序/Skill，以及默认保留DataRoot的中文卸载入口；
@@ -53,8 +53,8 @@
 
 ## W4目标
 
-1. 当前`PKG-001`已冻结首包为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI。保持已完成的
-   Python托管依赖合同和Python/Node/FFmpeg矩阵，不盲目携带全部运行时。
+1. 当前`PKG-001`已冻结首包为`portable ZIP + PowerShell注册脚本`，不是Setup.exe/MSI。ZIP继续保持轻量；
+   用户一次确认后在DataRoot准备完整本地制作环境。大型生成模型和在线Provider仍按目标单独配置，不塞进首包。
 2. 以TDD查明并修复真实WorkBuddy的Skill自然路由/优先级问题；必须在真实客户端证明模糊请求进入新手引导、具体请求
    交给生产Skill。不得通过改写提示词文档伪装真实触发成功。
 3. 打包两个可导入WorkBuddy Skill和完整v0.3.21 Callable Core；清楚标记它只是首包验证基线，普通用户不得

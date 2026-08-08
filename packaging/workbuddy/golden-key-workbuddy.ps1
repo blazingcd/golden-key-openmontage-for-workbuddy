@@ -138,6 +138,18 @@ if (
     exit $commandExitCode
 }
 
+$bundledPython = Join-Path $runtimeRoot 'bootstrap\python\python.exe'
+if (Test-Path -LiteralPath $bundledPython -PathType Leaf) {
+    Push-Location $runtimeRoot
+    try {
+        & $bundledPython -m golden_key_openmontage_workbuddy @CommandArgs
+        $commandExitCode = $LASTEXITCODE
+    } finally {
+        Pop-Location
+    }
+    exit $commandExitCode
+}
+
 $python = Get-Command python -ErrorAction SilentlyContinue
 if ($null -ne $python) {
     Push-Location $runtimeRoot

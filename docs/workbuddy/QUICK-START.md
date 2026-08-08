@@ -13,6 +13,9 @@
 3. 完全退出并重新打开 WorkBuddy，让它重新发现两个用户级 Skill。
 4. 可以先说“我不知道怎么开始做视频”，触发新手引导；也可以直接说一个明确的视频目标，进入生产 Skill。
 
+普通Windows用户不需要预先安装Python。ZIP带有只供本项目使用的便携Python 3.13.15和pip引导wheel；它不会注册成
+系统Python，也不会修改PATH。Node、FFmpeg、Remotion、HyperFrames和浏览器仍在用户确认后准备到DataRoot。
+
 安装结束和 WorkBuddy 首次调用都会运行只读 `doctor`，检查 Core 合同、4条业务Pipeline和完整视频制作环境。
 检查不会调用真实或付费 Provider，也不会自动下载缺失组件。MCP默认不启用，CLI仍是权威回退。
 
@@ -27,7 +30,8 @@ FFmpeg、Node、Remotion、HyperFrames和托管浏览器统一准备到所选`<D
 WorkBuddy再根据方案用普通语言解释可用路径、给出推荐，并按Core提案规则等待批准。用户若暂不准备环境，仍可继续
 新手引导、方案讨论和API Key配置，但本地媒体处理与最终合成会保持阻断。
 
-ZIP本身仍然轻量，不直接携带上述大型运行时。下载内容由`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`固定并校验。
+ZIP本身仍然是轻量调用包：只携带便携Python引导，不直接携带上述大型视频运行时。Python引导资产由
+`WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json`固定并校验；后续下载内容由`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`固定并校验。
 当前Windows FFmpeg包为GPLv3构建；Remotion是否免费取决于其官方团队规模和自动化使用条件，较大团队或特定自动化
 场景可能需要商业许可。
 

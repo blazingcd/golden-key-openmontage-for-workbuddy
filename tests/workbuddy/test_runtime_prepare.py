@@ -3,9 +3,13 @@ from __future__ import annotations
 import json
 import hashlib
 import os
+import socket
 import shutil
 import subprocess
 import sys
+import threading
+import zipfile
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
@@ -103,6 +107,28 @@ def _runtime_environment(repo_root: Path, data_root: Path) -> dict[str, str]:
     return environment
 
 
+def _seed_managed_python(repo_root: Path, data_root: Path) -> None:
+    target = data_root / "Runtime" / "Python"
+    interpreter = target / "Scripts" / "python.exe"
+    interpreter.parent.mkdir(parents=True)
+    shutil.copy2(sys.executable, interpreter)
+    requirements = repo_root / "requirements.txt"
+    (target / "WORKBUDDY-MANAGED-PYTHON.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "golden-key-workbuddy-managed-python-v1",
+                "requirements_sha256": hashlib.sha256(
+                    requirements.read_bytes()
+                ).hexdigest(),
+                "interpreter_relative": "Scripts/python.exe",
+                "source_python": "package-private-fixture",
+                "system_python_modified": False,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
 def _run_runtime_command(
     repo_root: Path, data_root: Path, *arguments: str
 ) -> subprocess.CompletedProcess[str]:
@@ -169,6 +195,18 @@ def test_runtime_plan_requires_confirmation_without_changing_the_machine(
         for component in report["components"].values()
     )
     assert report["components"]["remotion"]["license_notice_required"] is True
+    assert report["components"]["ffmpeg"]["version"] == "9.0"
+    runtime_lock = json.loads(
+        (repo_root / "WORKBUDDY-PRODUCTION-RUNTIME.lock.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert runtime_lock["components"]["ffmpeg"]["windows-x64"]["url"] == (
+        "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0-essentials_build.zip"
+    )
+    assert runtime_lock["components"]["ffmpeg"]["windows-x64"]["sha256"] == (
+        "e6b54767a6065919048f1a098eb27211ca4e12b4348a05d88777a5855d0b6e71"
+    )
     assert report["components"]["hyperframes"]["license"] == "Apache-2.0"
     assert report["components"]["hyperframes"]["managed_browser"] == {
         "name": "chrome-headless-shell",
@@ -189,6 +227,24 @@ def test_runtime_plan_requires_confirmation_without_changing_the_machine(
     }
     assert report["system_python_modified"] is False
     assert report["system_path_modified"] is False
+    assert report["download_sources"] == {
+        "ffmpeg": [
+            "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0-essentials_build.zip"
+        ],
+        "node": [
+            "https://npmmirror.com/mirrors/node/v22.23.2/node-v22.23.2-win-x64.zip",
+            "https://nodejs.org/download/release/v22.23.2/node-v22.23.2-win-x64.zip",
+        ],
+        "browser": [
+            "https://registry.npmmirror.com/-/binary/chrome-for-testing/152.0.7928.2/win64/chrome-headless-shell-win64.zip",
+            "https://storage.googleapis.com/chrome-for-testing-public/152.0.7928.2/win64/chrome-headless-shell-win64.zip",
+        ],
+        "npm_registry": "https://registry.npmmirror.com",
+        "python_index": {
+            "primary": "https://mirrors.aliyun.com/pypi/simple/",
+            "fallback": "https://pypi.tuna.tsinghua.edu.cn/simple/",
+        },
+    }
     assert report["provider_calls_attempted"] == 0
     assert report["network_calls_attempted"] == 0
     assert not data_root.exists()
@@ -212,6 +268,92 @@ def test_runtime_prepare_refuses_download_without_explicit_confirmation(
     assert report["provider_calls_attempted"] == 0
     assert report["network_calls_attempted"] == 0
     assert not data_root.exists()
+
+
+@pytest.mark.skipif(os.name != "nt", reason="managed production profile is Windows-only")
+def test_runtime_prepare_resumes_a_dropped_locked_download_and_verifies_hash(
+    tmp_path: Path,
+) -> None:
+    from golden_key_openmontage_workbuddy.runtime_prepare import (
+        prepare_managed_runtime,
+    )
+
+    repo_root = tmp_path / "app"
+    repo_root.mkdir()
+    (repo_root / "requirements.txt").write_text("\n", encoding="utf-8")
+    _copy_runtime_contract(repo_root)
+
+    archive = tmp_path / "ffmpeg-test.zip"
+    with zipfile.ZipFile(archive, "w") as bundle:
+        bundle.writestr("ffmpeg-test/bin/ffmpeg.exe", b"ffmpeg-9-fixture")
+        bundle.writestr("ffmpeg-test/bin/ffprobe.exe", b"ffprobe-9-fixture")
+    payload = archive.read_bytes()
+    requests: list[str | None] = []
+
+    class InterruptedRangeHandler(BaseHTTPRequestHandler):
+        def do_GET(self) -> None:  # noqa: N802 - HTTP protocol method name
+            range_header = self.headers.get("Range")
+            requests.append(range_header)
+            if len(requests) == 1:
+                cutoff = len(payload) // 2
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload[:cutoff])
+                self.wfile.flush()
+                self.connection.shutdown(socket.SHUT_RDWR)
+                self.connection.close()
+                return
+            assert range_header is not None and range_header.startswith("bytes=")
+            start = int(range_header.removeprefix("bytes=").removesuffix("-"))
+            self.send_response(206)
+            self.send_header("Content-Length", str(len(payload) - start))
+            self.send_header(
+                "Content-Range", f"bytes {start}-{len(payload) - 1}/{len(payload)}"
+            )
+            self.end_headers()
+            self.wfile.write(payload[start:])
+
+        def log_message(self, format: str, *args: object) -> None:
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), InterruptedRangeHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        lock_path = repo_root / "WORKBUDDY-PRODUCTION-RUNTIME.lock.json"
+        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        locked_ffmpeg = lock["components"]["ffmpeg"]["windows-x64"]
+        locked_ffmpeg.update(
+            {
+                "url": "http://127.0.0.1:1/legacy-single-source-must-not-win.zip",
+                "urls": [
+                    f"http://127.0.0.1:{server.server_port}/ffmpeg-test.zip"
+                ],
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "archive_root": "ffmpeg-test",
+            }
+        )
+        lock_path.write_text(json.dumps(lock), encoding="utf-8")
+        data_root = tmp_path / "data"
+        _seed_managed_non_python_components(repo_root, data_root)
+        shutil.rmtree(data_root / "Runtime" / "FFmpeg")
+        _seed_managed_python(repo_root, data_root)
+
+        report = prepare_managed_runtime(
+            repo_root, data_root, confirm_download=True
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+
+    assert report["status"] == "pass", report
+    assert requests[0] is None
+    assert requests[1] is not None and requests[1].startswith("bytes=")
+    assert (
+        data_root / "Runtime" / "FFmpeg" / "bin" / "ffmpeg.exe"
+    ).read_bytes() == b"ffmpeg-9-fixture"
 
 
 @pytest.mark.skipif(os.name != "nt", reason="managed browser profile is Windows-only")
@@ -279,6 +421,33 @@ def test_runtime_prepare_creates_an_idempotent_data_scoped_python(
     assert remotion_link.resolve() == (
         data_root / "Runtime" / "Composition" / "Remotion" / "node_modules"
     ).resolve()
+
+
+@pytest.mark.skipif(os.name != "nt", reason="package-private Python is Windows-only")
+def test_runtime_prepare_uses_bundled_python_and_data_only_site_packages(
+    tmp_path: Path,
+) -> None:
+    repo_root = tmp_path / "app"
+    repo_root.mkdir()
+    (repo_root / "requirements.txt").write_text("\n", encoding="utf-8")
+    bundled_python = repo_root / "bootstrap" / "python" / "python.exe"
+    bundled_python.parent.mkdir(parents=True)
+    shutil.copy2(sys.executable, bundled_python)
+    data_root = tmp_path / "data"
+    _copy_runtime_contract(repo_root)
+    _seed_managed_non_python_components(repo_root, data_root)
+
+    prepared = _run_runtime_command(
+        repo_root, data_root, "prepare", "--confirm-download"
+    )
+
+    assert prepared.returncode == 0, prepared.stdout + prepared.stderr
+    report = json.loads(prepared.stdout)
+    assert Path(report["interpreter"]) == bundled_python
+    assert (data_root / "Runtime" / "Python" / "site-packages").is_dir()
+    assert not (
+        data_root / "Runtime" / "Python" / "Scripts" / "python.exe"
+    ).exists()
 
 
 @pytest.mark.skipif(os.name != "nt", reason="managed production profile is Windows-only")

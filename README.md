@@ -139,6 +139,9 @@ WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视�
    系统PATH，也不要求用户先理解或选择合成引擎；
 6. 需要在线图像、视频、TTS或数字人能力时，通过本地`配置API密钥.cmd`按需录入相应Provider Key。
 
+普通Windows用户不需要预装Python。ZIP带有按固定SHA校验的项目专用便携Python 3.13.15和pip引导wheel；它只由
+WorkBuddy launcher使用，不注册成系统Python，也不修改PATH。
+
 常见的“直接覆盖解压”也属于支持路径。安装器只复制当前包 Manifest 明确列出的文件，覆盖解压目录中残留的旧文件会被
 记录并忽略，不会混进正式程序目录。重复双击安装入口会修复本项目自己的程序和两个 Skill；即使用户手动删除了正式程序
 目录或其中一个 Skill，也可以从同一份或另一处完整解压包重新注册。用户数据目录保持独立，不因修复而删除。若同名 Skill
@@ -152,7 +155,8 @@ WorkBuddy 的对话模型由 WorkBuddy 自身管理。本项目管理的是视�
 普通用户 ZIP 不包含或要求运行 `setup.py`。快速说明见
 [`docs/workbuddy/QUICK-START.md`](docs/workbuddy/QUICK-START.md)。
 
-轻量指的是ZIP不内嵌这些大型运行时。准备命令会按锁文件校验下载内容并统一放到`<DataRoot>/Runtime`；FFmpeg采用
+轻量指的是ZIP只内嵌Python引导，不内嵌大型视频运行时。准备命令会按锁文件校验下载内容并统一放到
+`<DataRoot>/Runtime`；FFmpeg采用
 GPLv3构建，Remotion是否免费取决于其团队规模和自动化使用条件，用户确认前会看到许可提醒。图像、视频、配音和数字人
 Provider仍按视频目标单独配置，运行时准备不等于API调用授权。
 
@@ -198,14 +202,15 @@ python -m golden_key_openmontage_workbuddy task recover --project-id demo --task
 - 首个轻量 ZIP、中文双击入口和安装后环境诊断。
 - 覆盖解压白名单安装，以及程序目录或项目自有 Skill 被手动删除后的重复注册修复；
 - 严格向前的跨版本升级、失败自动回滚，以及默认保留数据的中文卸载入口；
-- 经用户确认后在所选数据目录准备隔离Python依赖，不污染系统Python。
+- 包内项目专用Python可直接启动WorkBuddy调用；经用户确认后在所选数据目录准备隔离Python依赖，不污染系统Python。
+- 固定版本的Node、FFmpeg、Remotion、HyperFrames和托管浏览器可在DataRoot自动准备，并通过本地可执行探针。
 
 尚未完成，因此不能对外声称：
 
 - 已达到正式版或 `Offline Adapter Ready`；
 - 已完成未预装开发环境的普通用户全新 Windows 安装和真实 WorkBuddy 全链验收（升级、回滚和卸载合同已实现，
   但仍需最终普通用户环境验收）；
-- Python本体、Node、FFmpeg和可选模型运行时都能自动准备（当前只完成已有Python下的受控依赖准备）；
+- 已完成新手Windows用户在真实WorkBuddy里的自然语言全链、Human Checkpoint和最终成片验收；
 - 已完成真实或付费 Provider 的端到端成片验收；
 - 本项目是 OpenMontage 或 WorkBuddy 的官方发行版。
 
@@ -411,6 +416,9 @@ And when a run is done, hit **▶ REPLAY RUN** — the whole production replays 
 ## Quick Start
 
 ### Prerequisites
+
+> 以下是源码开发/上游OpenMontage工作流的依赖。Golden Key WorkBuddy轻量ZIP在Windows上自带项目专用Python，
+> 普通用户不需要先安装Python。
 
 - **Python 3.10+** — [python.org](https://www.python.org/downloads/)
 - **FFmpeg** — `brew install ffmpeg` / `sudo apt install ffmpeg` / [ffmpeg.org](https://ffmpeg.org/download.html)

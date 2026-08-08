@@ -101,6 +101,7 @@ def _local_cli_runtime(
             "error": "managed Node or runtime entrypoint is missing",
         }
     try:
+        probe_timeout_seconds = 60 if runtime_name == "remotion" else 20
         result = subprocess.run(
             command,
             cwd=root,
@@ -108,7 +109,7 @@ def _local_cli_runtime(
             text=True,
             encoding="utf-8",
             errors="replace",
-            timeout=20,
+            timeout=probe_timeout_seconds,
             check=False,
         )
         output = result.stdout or result.stderr

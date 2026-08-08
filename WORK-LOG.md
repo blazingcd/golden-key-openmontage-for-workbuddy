@@ -855,3 +855,32 @@
   `PYTHONDONTWRITEBYTECODE=1`执行权威审计，Gate=`PASS`：verified Core=`1566`，候选=`24`；contracts=
   `716 passed, 7 skipped`、tools=`284 passed, 1 subtest passed`、WorkBuddy=`111 passed`。证据目录为
   `D:/WorkBuddyData/Temp/w4-complete-runtime-publication-audit-20260808-r29-final-r3`。
+
+## 2026-08-08：W4.1项目专用便携Python与完整首装闭环
+
+- 本轮只继续WorkBuddy消费层W4.1；v0.3.23 Core集成按用户决定留到后续新对话。没有修改v0.3.21的1566个
+  managed Core文件，没有同步Core main、调用Provider、读取凭据或制作正式Release。
+- 新增`WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json`：固定python.org Windows embeddable Python 3.13.15和
+  PyPI官方pip 26.1.2 wheel的资产名与SHA-256。普通用户包由launcher优先使用该解释器，不要求系统Python，
+  Python第三方依赖仍安装到`<DataRoot>/Runtime/Python/site-packages`，不修改系统Python/PATH。
+- TDD真实资产探针发现pip wheel虽已复制进包，却没有进入嵌入式Python的`._pth`，因此`python -m pip`失败；
+  构建器现把wheel名称写入唯一`._pth`，同时重算BUNDLE-MANIFEST中的文件大小和SHA，避免完整性清单失真。
+- 下载器支持同一锁定资产的镜像URL列表、断点续传和最终SHA校验。生产锁更新为FFmpeg 9.0 gyan.dev构建；
+  Node 22.23.2与Chrome 152优先使用已声明的大陆镜像，失败时只退到同一版本的官方URL，不自动换版本。
+- 真实Windows隔离fresh install使用包内Python成功发现四条Pipeline；无系统PATH的`doctor`与`runtime plan`
+  均可运行，确认前网络/Provider调用0。完整`runtime prepare`用时约631.6秒，网络调用6次、Provider调用0，
+  Python依赖、FFmpeg 9.0、Node 22.23.2、Remotion 4.0.484、HyperFrames 0.7.101与Chrome 152全部ready。
+- 首次安装后doctor发现Remotion冷启动`versions`超过旧20秒超时；直接命令随后在2.145秒完成，证明是冷启动容忍
+  不足而非安装损坏。新增红测并把Remotion探针窗口提高到60秒；重建后同版本repair复用DataRoot、网络调用0，
+  最终`doctor=pass`且无warnings/errors。
+- HyperFrames真实doctor确认受管Node、FFmpeg、FFprobe和Chrome路径通过；Whisper/Kokoro/MusicGen与Docker daemon
+  为可选能力，未纳入四Pipeline基础合成环境Gate。
+- validation-only ZIP大小`85,860,139`字节，SHA-256=
+  `2b54a4f5cbf8f8c53716a9d1a89684aae759149a3ffedceda56f58c0b3bfa423`，包含1637个Manifest文件项；状态仍为
+  `first_installer_build_validation_only`，Core usage仍为`temporary_first_package_build_baseline_not_final_core`。
+- 真实用户同款中文自卸载退出0，移除程序和`golden-key-openmontage`、`golden-key-openmontage-onboarding`两个Skill，
+  无protected Skill或cleanup warning；随后删除整个隔离DataRoot与构建探针，只保留validation-only ZIP证据。
+- 定向运行时/打包专项=`33 passed, 1 skipped`，WorkBuddy全量=`119 passed, 1 skipped`。最终W0=`PASS`：
+  Release合同、四Pipeline/Skill/Schema/Tool/Checkpoint合同、direct-agent边界、公开lineage、风险扫描和回归均通过；
+  contracts=`716 passed, 7 skipped`、tools=`284 passed, 1 subtest passed`、WorkBuddy=`119 passed, 1 skipped`。
+  证据目录为`D:/WorkBuddyData/Temp/w41-publication-audit-20260808-final`。

@@ -220,6 +220,53 @@ def test_doctor_reports_local_runtime_without_contacting_providers(tmp_path: Pat
     assert report["provider_calls_attempted"] == 0
 
 
+def test_remotion_probe_allows_a_slow_first_start(
+    tmp_path: Path, monkeypatch
+) -> None:
+    from golden_key_openmontage_workbuddy import doctor
+
+    runtime_root = tmp_path / "remotion"
+    cli = runtime_root / "node_modules" / ".bin" / "remotion.cmd"
+    script = (
+        runtime_root
+        / "node_modules"
+        / "@remotion"
+        / "cli"
+        / "remotion-cli.js"
+    )
+    cli.parent.mkdir(parents=True)
+    cli.write_text("fixture", encoding="utf-8")
+    script.parent.mkdir(parents=True)
+    script.write_text("fixture", encoding="utf-8")
+    monkeypatch.setattr(doctor.shutil, "which", lambda command: "node.exe")
+
+    observed_timeout: list[int] = []
+
+    def cold_start(command, **kwargs):
+        timeout = int(kwargs["timeout"])
+        observed_timeout.append(timeout)
+        if timeout < 60:
+            raise subprocess.TimeoutExpired(command, timeout)
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="On version: 4.0.484\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(doctor.subprocess, "run", cold_start)
+
+    report = doctor._local_cli_runtime(
+        cli,
+        inspection="local_cli_only",
+        runtime_name="remotion",
+    )
+
+    assert report["available"] is True
+    assert report["version"] == "4.0.484"
+    assert observed_timeout == [60]
+
+
 def test_distribution_has_a_unique_workbuddy_identity_and_console_entrypoint() -> None:
     name = subprocess.run(
         [sys.executable, "setup.py", "--name"],

@@ -146,9 +146,10 @@ socket-denial边界保护；同一上下文通过`PYTHONPATH/sitecustomize`和`N
 direct-agent上下文和离线项目创建仍通过，因此最终用户运行时不依赖Golden Key SaaS仓库。
 
 W4轻量调用链为：任意目录解压ZIP -> PowerShell注册到稳定用户级目录 -> 两个WorkBuddy Skill读取
-`WORKBUDDY-RUNTIME.json` -> launcher运行只读`doctor`、`runtime plan`和`config guide` -> 用户一次确认后，
-`runtime prepare`把锁定的Python、FFmpeg、Node、Remotion、HyperFrames和浏览器放入`<DataRoot>/Runtime` ->
-WorkBuddy再进入Pipeline合同。ZIP不内嵌大型运行时，launcher只对当前进程注入托管PATH和浏览器位置，不修改系统环境。
+`WORKBUDDY-RUNTIME.json` -> launcher优先使用包内便携Python运行只读`doctor`、`runtime plan`和`config guide` ->
+用户一次确认后，`runtime prepare`把Python依赖写入DataRoot，并把锁定的FFmpeg、Node、Remotion、HyperFrames和浏览器
+放入`<DataRoot>/Runtime` -> WorkBuddy再进入Pipeline合同。ZIP只内嵌项目专用Python引导，不内嵌大型视频运行时；
+launcher只对当前进程注入DataRoot包路径、托管PATH和浏览器位置，不注册系统Python，也不修改系统环境。
 普通用户默认使用`%LOCALAPPDATA%`，维护者可覆盖到D盘。只读扫描不自动下载组件、不读取密钥值，Provider调用数必须
 为0；环境准备的联网下载与真实/付费Provider授权是两个独立Gate。细则见`docs/workbuddy/LOCAL-STORAGE-POLICY.md`
 和`PACKAGING-DECISION.md`。

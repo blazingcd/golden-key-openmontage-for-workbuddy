@@ -16,7 +16,7 @@ Windows产品默认使用当前用户的标准目录，不要求D盘：
     ├── Caches\
     ├── Config\
     ├── Models\
-    ├── Runtime\              # 经一次确认准备的Python/FFmpeg/Node/合成引擎/浏览器
+    ├── Runtime\              # 经一次确认准备的Python依赖/FFmpeg/Node/合成引擎/浏览器
     ├── Temp\
     ├── Logs\
     └── Jobs\
@@ -43,5 +43,7 @@ Windows产品默认使用当前用户的标准目录，不要求D盘：
 - `Jobs`继续保存消费方任务状态；跨项目并发1、运行超时只观察不强杀、失败不自动重试。
 - 首包注册脚本不自动下载运行时或Provider组件；Skill在`runtime plan`后，经用户一次明确同意才把标准本地制作环境
   写入`Runtime`和`Caches`。该操作不修改系统Python/PATH。大型本地生成模型和Provider仍保持独立的按需授权。
+- 项目专用便携Python位于稳定程序目录`App/<package-version>/bootstrap/python`，不进入系统Python；普通用户无需
+  另装Python。第三方Python依赖仍放在`Data/Runtime/Python/site-packages`，便于升级程序时复用、卸载时默认保留。
 
 本策略不代表W4普通用户安装验收或`OFFLINE ADAPTER READY`已经通过。

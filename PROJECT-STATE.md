@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-07 19:15 +08:00
+更新时间：2026-08-08 20:13 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 PASS / WB-UX1 ROUTING PENDING / W4 DEFAULT-PATH INSTALL-UNINSTALL PASS`
+`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 PASS / WB-UX1 ROUTING PENDING / W4.1 PORTABLE-PYTHON VALIDATION PASS`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -182,6 +182,20 @@
   风险扫描与回归全部通过；contracts=`716 passed, 7 skipped`、tools=`284 passed, 1 subtest passed`、
   WorkBuddy=`111 passed`。证据目录为
   `D:/WorkBuddyData/Temp/w4-complete-runtime-publication-audit-20260808-r29-final-r3`。
+- W4.1新增`WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json`，固定官方Windows便携Python 3.13.15和pip 26.1.2 wheel；
+  launcher优先使用包内Python，普通用户不再需要预装Python，依赖安装到DataRoot私有`site-packages`。
+- 真实包探针先发现pip wheel未进入嵌入式`._pth`，修复后`python -m pip`、包导入、无系统PATH启动、四Pipeline发现
+  和Manifest更新后hash全部通过。完整运行时准备耗时约10分32秒，网络调用6次、Provider调用0次。
+- W4.1真实fresh install -> runtime prepare -> repair矩阵最终`doctor=pass`；Python 3.13.15、FFmpeg 9.0、
+  Node 22.23.2、Remotion 4.0.484、HyperFrames 0.7.101和Chrome 152均来自隔离安装/DataRoot。
+- Remotion首次冷启动真实超过20秒，doctor探针超时已提高到60秒并补回归；HyperFrames doctor确认受管
+  Node/FFmpeg/FFprobe/Chrome，Whisper/Kokoro/MusicGen/Docker daemon仅为可选能力。
+- validation-only ZIP为`85,860,139`字节，SHA-256=
+  `2b54a4f5cbf8f8c53716a9d1a89684aae759149a3ffedceda56f58c0b3bfa423`，继续明确v0.3.21只是首包临时Core。
+  真实自卸载已移除程序和两个Skill；随后整个隔离DataRoot和构建探针均已删除，不影响纯新人工验收起点。
+- 当前WorkBuddy全量专项=`119 passed, 1 skipped`；W4.1最终W0=`PASS`：contracts=`716 passed, 7 skipped`、
+  tools=`284 passed, 1 subtest passed`、WorkBuddy=`119 passed, 1 skipped`，证据目录为
+  `D:/WorkBuddyData/Temp/w41-publication-audit-20260808-final`。
 - 最新真实包候选位于`D:/WorkBuddyData/Temp/golden-key-workbuddy-w4-first-bundle-20260807-r5`，ZIP大小
   `72,799,449`字节，SHA-256=`ff7af11546b3e4e0e72fb9f9822375825d7d8dc84476b38528195126d5c0bfb3`。
   D盘真实注册后`runtime plan=needs_confirmation`；未确认prepare退出码1且没有创建Runtime目录。
@@ -258,10 +272,10 @@
 
 1. 查明并修复WorkBuddy真实客户端没有把模糊视频请求路由到`golden-key-openmontage-onboarding`的原因；不得用文档宣称代替真实触发。
 2. 按`MCP=optional`生成用户可选择、可禁用、可卸载的配置；不得覆盖用户已有WorkBuddy MCP配置。
-3. 完成r29最终候选W0、提交/推送和本轮D盘隔离程序/Skill/Runtime清理，继续保留默认WorkBuddy纯新人工验收起点。
+3. 创建W4.1本地提交；本轮不制作正式安装包、不推送，也不把validation-only ZIP发布为Release。
 4. 在真实WorkBuddy中继续完成自然语言新手/生产Skill触发、长任务/恢复和Human Checkpoint验收后，才重新裁决
    `OFFLINE ADAPTER READY`。
-5. r28仍是运行时验收中间候选；以包含安装后Remotion链接修复的r29及其W0证据为准。
+5. 等v0.3.23准备好后，在用户新开的对话中按新的不可变Release/ZIP/SHA/lock完成Core集成，不从Core main同步。
 6. 真实/付费Provider执行仍需单独明确授权；未授权不阻止先推进W4离线打包与安装Gate。
 
 ## 当前允许声明
@@ -275,7 +289,7 @@
 
 当前不允许声明：
 
-- 已经可以安装；
+- 已形成可供普通用户下载的正式安装发布；
 - W1 Skill骨架已经是完整可用的WorkBuddy生产Skill；
 - 真实或付费Provider生产执行闭环已经完成；
 - 可选MCP或完整发行版已经达到普通用户安装可用；

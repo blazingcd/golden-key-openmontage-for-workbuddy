@@ -1,0 +1,33 @@
+{
+  "schema_version": "golden-key-workbuddy-bootstrap-runtime-v1",
+  "components": {
+    "python": {
+      "version": "3.13.15",
+      "distribution": "python.org_windows_embeddable_x64",
+      "archive": "python-3.13.15-embed-amd64.zip",
+      "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-embed-amd64.zip",
+      "size": 11009825,
+      "sha256": "d1f04d990aee1253d8569e8e5104e30fa9f5fa830899f14843448872d936a2cf",
+      "required_paths": [
+        "LICENSE.txt",
+        "python.exe",
+        "python313._pth"
+      ],
+      "installation": {
+        "scope": "package_private",
+        "system_path_modified": false,
+        "system_registry_modified": false,
+        "administrator_required": false
+      }
+    },
+    "pip": {
+      "version": "26.1.2",
+      "distribution": "pypi_official_universal_wheel",
+      "archive": "pip-26.1.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5d/95/6b5cb3461ea5673ba0995989746db58eb18b91b54dbf331e72f569540946/pip-26.1.2-py3-none-any.whl",
+      "size": 1813144,
+      "sha256": "382ff9f685ee3bc25864f820aa50505825f10f5458ffff07e30a6d96e5715cab",
+      "usage": "package_private_bootstrap_only"
+    }
+  }
+}

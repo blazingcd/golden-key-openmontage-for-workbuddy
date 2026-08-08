@@ -2,7 +2,7 @@
 
 决策编号：`PKG-001`
 
-状态：`W4 UPGRADE / ROLLBACK / UNINSTALL SLICE ACTIVE`
+状态：`W4.1 PORTABLE PYTHON / COMPLETE RUNTIME VALIDATION PASS`
 
 记录日期：2026-08-06
 
@@ -30,15 +30,18 @@ Core更新必须等待新的不可变Release/ZIP/SHA/lock，再执行独立同�
 
 ## 环境策略
 
-首包不把Python、Node、FFmpeg、浏览器、GPU模型或Provider SDK二进制整体塞进ZIP。WorkBuddy首次触发Skill时：
+首包内嵌一份项目专用的Windows便携Python和pip引导wheel，但不内嵌Node、FFmpeg、浏览器、GPU模型或大型
+Provider运行时。便携Python只服务本项目，不注册系统Python、不修改PATH；其官方资产名称、版本和SHA-256由
+`WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json`固定。WorkBuddy首次触发Skill时：
 
-1. 先运行只读`doctor`，检查Core身份、四Pipeline、Python版本和必需Python包、Node、FFmpeg；
+1. 先用包内Python运行只读`doctor`，检查Core身份、四Pipeline、Python版本和必需Python包、Node、FFmpeg；
 2. 再运行只读`config inspect`，只报告Tool Registry支持的生产Provider配置引用；
 3. 不自动下载、不读取或输出密钥值、不调用真实/付费Provider；
 4. 完整视频制作环境未就绪时先运行只读`runtime plan`；向用户说明下载、`<data_root>/Runtime`存储位置、FFmpeg
    GPLv3和Remotion许可条件后，只询问一次。只有用户明确同意，才执行`runtime prepare --confirm-download`。
-5. 标准环境同时准备Python依赖、固定hash的FFmpeg与Node、锁定依赖的Remotion与HyperFrames，以及固定版本的
-   托管浏览器。缓存只写入`<data_root>/Caches`，不修改系统Python或系统PATH，不要求管理员权限。
+5. 标准环境把Python依赖安装到`<data_root>/Runtime/Python/site-packages`，并准备固定hash的FFmpeg与Node、
+   锁定依赖的Remotion与HyperFrames，以及固定版本的托管浏览器。缓存只写入`<data_root>/Caches`，不修改
+   系统Python或系统PATH，不要求管理员权限。
 6. 安装阶段不要求普通用户理解或选择合成引擎；两者准备完成后，由WorkBuddy在具体视频方案中用普通语言说明并推荐，
    再遵守Core的提案批准合同。大型本地生成模型和在线Provider继续按目标单独配置、按需准备。
 7. 组件目录必须带本项目所有权记录；下载资产、包锁和浏览器可执行文件必须通过固定hash或本地记录校验。重复执行

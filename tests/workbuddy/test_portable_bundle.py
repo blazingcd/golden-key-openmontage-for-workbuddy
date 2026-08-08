@@ -7,6 +7,7 @@ import subprocess
 import os
 import sys
 import time
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -68,6 +69,216 @@ def _minimal_lock(tmp_path: Path, *, include_pipelines: bool = False) -> Path:
     lock_path = tmp_path / "GOLDEN_KEY_WORKBUDDY_CORE.lock.json"
     lock_path.write_text(json.dumps(lock), encoding="utf-8")
     return lock_path
+
+
+def _bootstrap_python_fixture(
+    tmp_path: Path, *, python_payload: bytes = b"fixture-portable-python"
+) -> tuple[Path, Path, Path]:
+    archive = tmp_path / "python-3.13.15-embed-amd64.zip"
+    with zipfile.ZipFile(archive, "w") as bundle:
+        bundle.writestr("python.exe", python_payload)
+        bundle.writestr("python313._pth", "python313.zip\n.\n")
+        bundle.writestr("LICENSE.txt", "Python fixture licence\n")
+    pip_wheel = tmp_path / "pip-26.1.2-py3-none-any.whl"
+    pip_wheel.write_bytes(b"fixture-pip-wheel")
+    runtime_lock = tmp_path / "WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json"
+    runtime_lock.write_text(
+        json.dumps(
+            {
+                "schema_version": "golden-key-workbuddy-bootstrap-runtime-v1",
+                "components": {
+                    "python": {
+                        "version": "3.13.15",
+                        "archive": archive.name,
+                        "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-embed-amd64.zip",
+                        "sha256": _sha256(archive),
+                        "required_paths": [
+                            "python.exe",
+                            "python313._pth",
+                            "LICENSE.txt",
+                        ],
+                    },
+                    "pip": {
+                        "version": "26.1.2",
+                        "archive": pip_wheel.name,
+                        "url": "https://files.pythonhosted.org/packages/fixture/pip-26.1.2-py3-none-any.whl",
+                        "sha256": _sha256(pip_wheel),
+                    },
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return archive, pip_wheel, runtime_lock
+
+
+def test_portable_bundle_contains_hash_verified_private_python_runtime(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    archive, _, runtime_lock = _bootstrap_python_fixture(tmp_path)
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path),
+        output_root=tmp_path / "output",
+        bootstrap_python_archive=archive,
+        bootstrap_runtime_lock_path=runtime_lock,
+    )
+
+    manifest = json.loads(
+        (staging / "BUNDLE-MANIFEST.json").read_text(encoding="utf-8")
+    )
+    assert (staging / "bootstrap" / "python" / "python.exe").read_bytes() == (
+        b"fixture-portable-python"
+    )
+    assert manifest["installation"]["runtime_roles"]["python"] == (
+        "bundled_private_interpreter"
+    )
+    assert manifest["bootstrap_runtime"]["python"] == {
+        "version": "3.13.15",
+        "source": "python.org_windows_embeddable_x64",
+        "archive_sha256": _sha256(archive),
+        "system_python_required": False,
+    }
+
+
+def test_bundled_python_is_scoped_to_package_and_managed_site_packages(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    archive, _, runtime_lock = _bootstrap_python_fixture(tmp_path)
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path),
+        output_root=tmp_path / "output",
+        bootstrap_python_archive=archive,
+        bootstrap_runtime_lock_path=runtime_lock,
+    )
+
+    path_config = (
+        staging / "bootstrap" / "python" / "python313._pth"
+    ).read_text(encoding="utf-8")
+    sitecustomize = staging / "bootstrap" / "python" / "sitecustomize.py"
+    assert path_config.splitlines() == [
+        "python313.zip",
+        ".",
+        "../../..",
+        "import site",
+    ]
+    assert sitecustomize.is_file()
+    assert "OPENMONTAGE_WORKBUDDY_DATA_ROOT" in sitecustomize.read_text(
+        encoding="utf-8"
+    )
+
+
+def test_portable_bundle_contains_hash_verified_pip_bootstrap(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    archive, pip_wheel, runtime_lock = _bootstrap_python_fixture(tmp_path)
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path),
+        output_root=tmp_path / "output",
+        bootstrap_python_archive=archive,
+        bootstrap_pip_wheel=pip_wheel,
+        bootstrap_runtime_lock_path=runtime_lock,
+    )
+
+    bundled_wheel = staging / "bootstrap" / "python" / pip_wheel.name
+    manifest = json.loads(
+        (staging / "BUNDLE-MANIFEST.json").read_text(encoding="utf-8")
+    )
+    assert bundled_wheel.read_bytes() == b"fixture-pip-wheel"
+    path_config = (
+        staging / "bootstrap" / "python" / "python313._pth"
+    ).read_text(encoding="utf-8")
+    assert pip_wheel.name in path_config.splitlines()
+    path_config_entry = next(
+        entry
+        for entry in manifest["files"]
+        if entry["path"] == "bootstrap/python/python313._pth"
+    )
+    assert path_config_entry["sha256"] == _sha256(
+        staging / "bootstrap" / "python" / "python313._pth"
+    )
+    assert manifest["bootstrap_runtime"]["pip"] == {
+        "version": "26.1.2",
+        "archive_sha256": _sha256(pip_wheel),
+        "source": "pypi_official_wheel",
+    }
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows portable package contract")
+def test_launcher_attempts_bundled_python_when_system_python_is_absent(
+    tmp_path: Path,
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import build_portable_staging
+
+    powershell = shutil.which("pwsh") or shutil.which("powershell")
+    assert powershell is not None
+    command_processor = Path(os.environ["SystemRoot"]) / "System32" / "cmd.exe"
+    archive, _, runtime_lock = _bootstrap_python_fixture(
+        tmp_path, python_payload=command_processor.read_bytes()
+    )
+    staging = build_portable_staging(
+        repo_root=ROOT,
+        lock_path=_minimal_lock(tmp_path),
+        output_root=tmp_path / "output",
+        bootstrap_python_archive=archive,
+        bootstrap_runtime_lock_path=runtime_lock,
+    )
+    empty_path = tmp_path / "empty-path"
+    empty_path.mkdir()
+    environment = os.environ.copy()
+    environment["PATH"] = str(empty_path)
+    environment["LOCALAPPDATA"] = str(tmp_path / "local-app-data")
+
+    launched = subprocess.run(
+        [
+            powershell,
+            "-NoProfile",
+            "-File",
+            str(staging / "golden-key-workbuddy.ps1"),
+            "doctor",
+            "--json",
+        ],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+    assert "Python 3.10 or newer was not found" not in launched.stdout
+
+
+def test_portable_builder_cli_fails_closed_without_bootstrap_python_asset(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from scripts.workbuddy.build_portable_bundle import main
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "build_portable_bundle.py",
+            "--repo-root",
+            str(ROOT),
+            "--lock",
+            str(_minimal_lock(tmp_path)),
+            "--output-root",
+            str(tmp_path / "output"),
+        ],
+    )
+
+    assert main() == 1
+    report = json.loads(capsys.readouterr().out)
+    assert "bootstrap Python archive is required" in report["error"]
 
 
 def _run_portable_installer(

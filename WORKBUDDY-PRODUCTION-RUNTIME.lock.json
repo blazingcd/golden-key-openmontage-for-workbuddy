@@ -25,20 +25,30 @@
     "administrator_required": false,
     "provider_calls_allowed": false
   },
+  "registries": {
+    "npm": "https://registry.npmmirror.com",
+    "python": {
+      "primary": "https://mirrors.aliyun.com/pypi/simple/",
+      "fallback": "https://pypi.tuna.tsinghua.edu.cn/simple/"
+    }
+  },
   "components": {
     "python": {
       "requirements_path": "requirements.txt",
       "target": "Runtime/Python"
     },
     "ffmpeg": {
-      "version": "8.1.2",
+      "version": "9.0",
       "distribution": "gyan.dev release essentials GPLv3 build",
       "license": "GPL-3.0",
       "license_url": "https://www.gyan.dev/ffmpeg/builds/",
       "windows-x64": {
-        "url": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-8.1.2-essentials_build.zip",
-        "sha256": "db580001caa24ac104c8cb856cd113a87b0a443f7bdf47d8c12b1d740584a2ec",
-        "archive_root": "ffmpeg-8.1.2-essentials_build",
+        "url": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0-essentials_build.zip",
+        "urls": [
+          "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0-essentials_build.zip"
+        ],
+        "sha256": "e6b54767a6065919048f1a098eb27211ca4e12b4348a05d88777a5855d0b6e71",
+        "archive_root": "ffmpeg-9.0-essentials_build",
         "target": "Runtime/FFmpeg"
       }
     },
@@ -48,6 +58,10 @@
       "license_url": "https://github.com/nodejs/node/blob/v22.23.2/LICENSE",
       "windows-x64": {
         "url": "https://nodejs.org/download/release/v22.23.2/node-v22.23.2-win-x64.zip",
+        "urls": [
+          "https://npmmirror.com/mirrors/node/v22.23.2/node-v22.23.2-win-x64.zip",
+          "https://nodejs.org/download/release/v22.23.2/node-v22.23.2-win-x64.zip"
+        ],
         "sha256": "1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97",
         "archive_root": "node-v22.23.2-win-x64",
         "target": "Runtime/Node"
@@ -79,6 +93,10 @@
       "name": "chrome-headless-shell",
       "version": "152.0.7928.2",
       "url": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7928.2/win64/chrome-headless-shell-win64.zip",
+      "urls": [
+        "https://registry.npmmirror.com/-/binary/chrome-for-testing/152.0.7928.2/win64/chrome-headless-shell-win64.zip",
+        "https://storage.googleapis.com/chrome-for-testing-public/152.0.7928.2/win64/chrome-headless-shell-win64.zip"
+      ],
       "sha256": "ec7d7cfbc9d97093c9269d6a26de78a3244a49f3112ff9616e2ccb5ac3afeb24",
       "size_bytes": 120932410,
       "target": "Runtime/Browsers/HyperFrames",

@@ -30,6 +30,7 @@ EXPECTED_CONSUMER_REMOVE_PATHS = {
 
 CONSUMER_FILES = (
     ".workbuddy/README.md",
+    "WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json",
     "WORKBUDDY-PRODUCTION-RUNTIME.lock.json",
     "config/openmontage.sync.json",
     "docs/workbuddy/QUICK-START.md",
@@ -50,6 +51,7 @@ BOOTSTRAP_FILES = {
     "packaging/workbuddy/从WorkBuddy卸载.cmd": "从WorkBuddy卸载.cmd",
     "packaging/workbuddy/配置API密钥.cmd": "配置API密钥.cmd",
     "packaging/workbuddy/bootstrap/install-to-workbuddy.cmd": "bootstrap/install-to-workbuddy.cmd",
+    "packaging/workbuddy/bootstrap/sitecustomize.py": "bootstrap/python/sitecustomize.py",
 }
 
 
@@ -157,12 +159,165 @@ def _consumer_python_files(repo_root: Path) -> Iterable[Path]:
             yield path
 
 
+def _stage_bootstrap_python(
+    *,
+    archive_path: Path,
+    runtime_lock_path: Path,
+    staging: Path,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    try:
+        runtime_lock = json.loads(runtime_lock_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise PortableBundleContractError(
+            f"cannot read bootstrap runtime lock: {exc}"
+        ) from exc
+    if (
+        runtime_lock.get("schema_version")
+        != "golden-key-workbuddy-bootstrap-runtime-v1"
+    ):
+        raise PortableBundleContractError("bootstrap runtime lock schema drifted")
+    python = (runtime_lock.get("components") or {}).get("python") or {}
+    expected_hash = str(python.get("sha256", "")).lower()
+    actual_hash = _sha256(archive_path)
+    if len(expected_hash) != 64 or actual_hash != expected_hash:
+        raise PortableBundleContractError("bootstrap Python archive hash mismatch")
+    if archive_path.name != python.get("archive"):
+        raise PortableBundleContractError("bootstrap Python archive name drifted")
+
+    target_root = staging / "bootstrap" / "python"
+    inventory: list[dict[str, Any]] = []
+    extracted: set[str] = set()
+    try:
+        with zipfile.ZipFile(archive_path) as archive:
+            for info in sorted(archive.infolist(), key=lambda item: item.filename):
+                if info.is_dir():
+                    continue
+                relative = _safe_relative(info.filename)
+                if stat.S_ISLNK((info.external_attr >> 16) & 0xFFFF):
+                    raise PortableBundleContractError(
+                        f"bootstrap Python symlink is forbidden: {relative}"
+                    )
+                destination = target_root / Path(*PurePosixPath(relative).parts)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                if relative.endswith("._pth"):
+                    zip_name = f"{Path(relative).stem}.zip"
+                    destination.write_text(
+                        f"{zip_name}\n.\n../../..\nimport site\n",
+                        encoding="utf-8",
+                    )
+                else:
+                    with archive.open(info) as source, destination.open("wb") as output:
+                        shutil.copyfileobj(source, output)
+                extracted.add(relative)
+                inventory.append(
+                    {
+                        "path": destination.relative_to(staging).as_posix(),
+                        "sha256": _sha256(destination),
+                        "size": destination.stat().st_size,
+                        "owner": "workbuddy_bootstrap_runtime",
+                    }
+                )
+    except (OSError, zipfile.BadZipFile) as exc:
+        raise PortableBundleContractError(
+            f"cannot extract bootstrap Python archive: {exc}"
+        ) from exc
+
+    required = {_safe_relative(str(value)) for value in python.get("required_paths", [])}
+    missing = sorted(required - extracted)
+    if missing:
+        raise PortableBundleContractError(
+            f"bootstrap Python required paths missing: {missing}"
+        )
+    metadata = {
+        "version": str(python.get("version", "")),
+        "source": "python.org_windows_embeddable_x64",
+        "archive_sha256": actual_hash,
+        "system_python_required": False,
+    }
+    return inventory, metadata
+
+
+def _stage_bootstrap_pip(
+    *, wheel_path: Path, runtime_lock_path: Path, staging: Path
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    try:
+        runtime_lock = json.loads(runtime_lock_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise PortableBundleContractError(
+            f"cannot read bootstrap runtime lock: {exc}"
+        ) from exc
+    pip = (runtime_lock.get("components") or {}).get("pip") or {}
+    if wheel_path.name != pip.get("archive"):
+        raise PortableBundleContractError("bootstrap pip wheel name drifted")
+    expected_hash = str(pip.get("sha256", "")).lower()
+    if len(expected_hash) != 64 or _sha256(wheel_path) != expected_hash:
+        raise PortableBundleContractError("bootstrap pip wheel hash mismatch")
+    destination = staging / "bootstrap" / "python" / wheel_path.name
+    copied = _copy_verified(
+        wheel_path, destination, expected_sha256=expected_hash
+    )
+    copied["path"] = destination.relative_to(staging).as_posix()
+    copied["owner"] = "workbuddy_bootstrap_runtime"
+
+    path_configs = sorted((staging / "bootstrap" / "python").glob("*._pth"))
+    if len(path_configs) != 1:
+        raise PortableBundleContractError(
+            "bundled Python must contain exactly one embedded path config"
+        )
+    path_config = path_configs[0]
+    path_lines = path_config.read_text(encoding="utf-8").splitlines()
+    if wheel_path.name in path_lines:
+        raise PortableBundleContractError("bootstrap pip wheel path is duplicated")
+    try:
+        site_index = path_lines.index("import site")
+    except ValueError as exc:
+        raise PortableBundleContractError(
+            "bundled Python path config does not enable site"
+        ) from exc
+    path_lines.insert(site_index, wheel_path.name)
+    path_config.write_text(
+        "\n".join(path_lines) + "\n",
+        encoding="utf-8",
+    )
+    path_config_inventory = {
+        "path": path_config.relative_to(staging).as_posix(),
+        "sha256": _sha256(path_config),
+        "size": path_config.stat().st_size,
+        "owner": "workbuddy_bootstrap_runtime",
+    }
+    metadata = {
+        "version": str(pip.get("version", "")),
+        "archive_sha256": expected_hash,
+        "source": "pypi_official_wheel",
+    }
+    return copied, metadata, path_config_inventory
+
+
 def build_portable_staging(
-    *, repo_root: Path, lock_path: Path, output_root: Path
+    *,
+    repo_root: Path,
+    lock_path: Path,
+    output_root: Path,
+    bootstrap_python_archive: Path | None = None,
+    bootstrap_pip_wheel: Path | None = None,
+    bootstrap_runtime_lock_path: Path | None = None,
 ) -> Path:
     repo_root = Path(repo_root).resolve()
     lock_path = Path(lock_path).resolve()
     output_root = Path(output_root).resolve()
+    if (bootstrap_python_archive is None) != (bootstrap_runtime_lock_path is None):
+        raise PortableBundleContractError(
+            "bootstrap Python archive and runtime lock must be supplied together"
+        )
+    if bootstrap_python_archive is not None:
+        bootstrap_python_archive = Path(bootstrap_python_archive).resolve()
+        bootstrap_runtime_lock_path = Path(bootstrap_runtime_lock_path).resolve()
+    if bootstrap_pip_wheel is not None:
+        if bootstrap_python_archive is None:
+            raise PortableBundleContractError(
+                "bootstrap pip wheel requires the bundled Python runtime"
+            )
+        bootstrap_pip_wheel = Path(bootstrap_pip_wheel).resolve()
     staging = output_root / PACKAGE_DIRECTORY
     if staging.exists():
         raise PortableBundleContractError(f"output already exists: {staging}")
@@ -214,6 +369,33 @@ def build_portable_staging(
         copied_lock["owner"] = "core_contract"
         inventory.append(copied_lock)
 
+        bootstrap_runtime: dict[str, Any] | None = None
+        if bootstrap_python_archive is not None:
+            bootstrap_inventory, bootstrap_python = _stage_bootstrap_python(
+                archive_path=bootstrap_python_archive,
+                runtime_lock_path=bootstrap_runtime_lock_path,
+                staging=staging,
+            )
+            inventory.extend(bootstrap_inventory)
+            bootstrap_runtime = {"python": bootstrap_python}
+            if bootstrap_pip_wheel is not None:
+                (
+                    pip_inventory,
+                    bootstrap_pip,
+                    path_config_inventory,
+                ) = _stage_bootstrap_pip(
+                    wheel_path=bootstrap_pip_wheel,
+                    runtime_lock_path=bootstrap_runtime_lock_path,
+                    staging=staging,
+                )
+                inventory = [
+                    item
+                    for item in inventory
+                    if item["path"] != path_config_inventory["path"]
+                ]
+                inventory.extend([path_config_inventory, pip_inventory])
+                bootstrap_runtime["pip"] = bootstrap_pip
+
         manifest = {
             "schema_version": "golden-key-workbuddy-portable-bundle-v1",
             "distribution": {
@@ -243,7 +425,11 @@ def build_portable_staging(
                     "system_path_modified": False,
                 },
                 "runtime_roles": {
-                    "python": "required",
+                    "python": (
+                        "bundled_private_interpreter"
+                        if bootstrap_runtime is not None
+                        else "required"
+                    ),
                     "ffmpeg": "required",
                     "node": "required",
                     "remotion": "standard_agent_selected_composition_engine",
@@ -252,6 +438,8 @@ def build_portable_staging(
             },
             "files": sorted(inventory, key=lambda item: item["path"]),
         }
+        if bootstrap_runtime is not None:
+            manifest["bootstrap_runtime"] = bootstrap_runtime
         (staging / "BUNDLE-MANIFEST.json").write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
@@ -289,12 +477,30 @@ def main() -> int:
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--lock", type=Path, required=True)
     parser.add_argument("--output-root", type=Path, required=True)
+    parser.add_argument("--bootstrap-python-archive", type=Path)
+    parser.add_argument("--bootstrap-pip-wheel", type=Path)
+    parser.add_argument("--bootstrap-runtime-lock", type=Path)
     args = parser.parse_args()
     try:
+        if args.bootstrap_python_archive is None:
+            raise PortableBundleContractError(
+                "bootstrap Python archive is required for a distributable package"
+            )
+        if args.bootstrap_pip_wheel is None:
+            raise PortableBundleContractError(
+                "bootstrap pip wheel is required for a distributable package"
+            )
+        bootstrap_runtime_lock = (
+            args.bootstrap_runtime_lock
+            or args.repo_root / "WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json"
+        )
         staging = build_portable_staging(
             repo_root=args.repo_root,
             lock_path=args.lock,
             output_root=args.output_root,
+            bootstrap_python_archive=args.bootstrap_python_archive,
+            bootstrap_pip_wheel=args.bootstrap_pip_wheel,
+            bootstrap_runtime_lock_path=bootstrap_runtime_lock,
         )
         report = build_portable_zip(
             staging, args.output_root / f"{PACKAGE_DIRECTORY}.zip"

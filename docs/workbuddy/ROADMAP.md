@@ -168,6 +168,8 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
   launcher仅向当前进程注入，状态接口不返回Key值、不联网验证，也不把保存Key视为Provider调用授权。
 - `DONE`：把`runtime plan/prepare`扩展为一次确认后的完整视频制作环境：Python、FFmpeg、Node、Remotion、
   HyperFrames和托管浏览器统一写入`<data_root>/Runtime`，缓存写入`<data_root>/Caches`，不修改系统Python/PATH。
+- `DONE`：W4.1把官方Windows便携Python 3.13.15和pip 26.1.2引导wheel按固定SHA装入轻量ZIP；普通用户无需预装
+  Python，第三方依赖仍写入DataRoot，包内解释器和DataRoot依赖共同通过真实安装、准备、修复和doctor验收。
 - `DONE`：增加固定Release hash、npm lock、组件所有权、浏览器hash校验和许可提示；安装阶段不要求用户选择合成
   引擎，具体生产时再由WorkBuddy解释、推荐并遵守Core提案审批。
 - `DONE`：支持覆盖解压和不同解压目录重复注册；正式目录只接收Manifest白名单，额外旧文件被记录并忽略。
@@ -181,7 +183,9 @@ Artifact/Checkpoint、Manifest限定的Tool发现和首个纯本地Tool执行。
 - `DONE`：r27在D盘隔离候选完成完整环境真实准备；首次浏览器下载暴露Puppeteer `ECONNRESET`后，改为外部
   URL+SHA-256校验和原子解压。二次准备网络调用0、幂等复用；r28 `doctor=pass`，Core报告FFmpeg、Remotion和
   HyperFrames三条本地合成路径可用，托管Chrome进程版本核验通过。
-- `NEXT`：完成r29最终候选回归、W0和隔离安装清理；随后修复真实WorkBuddy自然语言Skill路由，并继续完成
+- `DONE`：W4.1真实D盘生命周期完成，包含完整运行时下载、Remotion冷启动探针修复、HyperFrames doctor、同版本
+  修复安装、自卸载和隔离DataRoot清理；验证ZIP仍明确为`validation-only`，不是正式发行包。
+- `NEXT`：在新对话按新的不可变Release合同集成v0.3.23；随后修复真实WorkBuddy自然语言Skill路由，并继续完成
   真实跨版本升级、长任务/恢复和Human Checkpoint验收；
   主动降级和默认彻底删除用户数据不进入流程。
 - 按`MCP=optional`裁决生成可选的WorkBuddy用户级配置、信任提示和禁用/卸载路径；不覆盖用户已有MCP配置。

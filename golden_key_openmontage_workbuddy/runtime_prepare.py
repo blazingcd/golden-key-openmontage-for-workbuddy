@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import http.client
 import json
 import os
 import platform
@@ -21,6 +22,7 @@ COMPONENT_MARKER_SCHEMA = "golden-key-workbuddy-runtime-component-v1"
 PRODUCTION_RUNTIME_LOCK_SCHEMA = "golden-key-workbuddy-production-runtime-lock-v1"
 PRODUCTION_PROFILE_ID = "complete_video_production"
 RUNTIME_LOCK_NAME = "WORKBUDDY-PRODUCTION-RUNTIME.lock.json"
+BOOTSTRAP_RUNTIME_LOCK_NAME = "WORKBUDDY-BOOTSTRAP-RUNTIME.lock.json"
 
 
 class ProductionRuntimeError(RuntimeError):
@@ -51,7 +53,11 @@ def _locations(repo_root: Path, data_root: Path) -> tuple[Path, Path, Path, Path
     requirements = repo_root / "requirements.txt"
     target = data_root / "Runtime" / "Python"
     record = target / "WORKBUDDY-MANAGED-PYTHON.json"
-    return requirements, target, record, target / _relative_interpreter()
+    bundled = repo_root / "bootstrap" / "python" / (
+        "python.exe" if os.name == "nt" else "python"
+    )
+    interpreter = bundled if bundled.is_file() else target / _relative_interpreter()
+    return requirements, target, record, interpreter
 
 
 def _runtime_paths(data_root: Path) -> dict[str, Path]:
@@ -149,18 +155,23 @@ def _write_component_marker(
 
 
 def _python_ready(repo_root: Path, data_root: Path) -> bool:
-    requirements, _, record_path, interpreter = _locations(repo_root, data_root)
+    requirements, target, record_path, interpreter = _locations(repo_root, data_root)
     if not (record_path.is_file() and interpreter.is_file() and requirements.is_file()):
         return False
     try:
         record = json.loads(record_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return False
-    return (
-        record.get("schema_version") == MANAGED_RUNTIME_SCHEMA
-        and record.get("requirements_sha256") == _requirements_sha256(requirements)
-        and record.get("interpreter_relative") == _relative_interpreter().as_posix()
-    )
+    if record.get("schema_version") != MANAGED_RUNTIME_SCHEMA:
+        return False
+    if record.get("requirements_sha256") != _requirements_sha256(requirements):
+        return False
+    if record.get("runtime_model") == "package_private_bootstrap":
+        return (
+            record.get("interpreter") == str(interpreter.resolve())
+            and (target / "site-packages").is_dir()
+        )
+    return record.get("interpreter_relative") == _relative_interpreter().as_posix()
 
 
 def _production_record(data_root: Path) -> Path:
@@ -300,6 +311,18 @@ def build_runtime_plan(repo_root: Path, data_root: Path) -> dict[str, Any]:
     }
     complete = all(component["ready"] for component in components.values())
     status = "fail" if errors else ("ready" if complete else "needs_confirmation")
+    platform_key = _platform_id()
+    ffmpeg_asset = (component_lock.get("ffmpeg") or {}).get(platform_key) or {}
+    node_asset = (component_lock.get("node") or {}).get(platform_key) or {}
+    browser_asset = component_lock.get("browser") or {}
+    registries = lock.get("registries") or {}
+
+    def source_urls(asset: dict[str, Any]) -> list[str]:
+        values = asset.get("urls")
+        if isinstance(values, list) and values:
+            return [str(value) for value in values]
+        return [str(asset["url"])] if asset.get("url") else []
+
     return {
         "status": status,
         "profile": {
@@ -328,6 +351,13 @@ def build_runtime_plan(repo_root: Path, data_root: Path) -> dict[str, Any]:
         "system_python_modified": False,
         "system_path_modified": False,
         "storage_policy": "managed_under_selected_data_root",
+        "download_sources": {
+            "ffmpeg": source_urls(ffmpeg_asset),
+            "node": source_urls(node_asset),
+            "browser": source_urls(browser_asset),
+            "npm_registry": registries.get("npm"),
+            "python_index": registries.get("python"),
+        },
         "provider_calls_attempted": 0,
         "network_calls_attempted": 0,
         "license_notices": [
@@ -355,34 +385,105 @@ def _download_verified(
     cache_path: Path,
     *,
     total_timeout_seconds: int = 900,
+    max_attempts: int = 3,
 ) -> Path:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     if cache_path.is_file() and _sha256(cache_path) == expected_sha256.lower():
         return cache_path
-    temporary = cache_path.with_name(f".{cache_path.name}.{uuid.uuid4().hex}.download")
-    try:
-        request = urllib.request.Request(url, headers={"User-Agent": "GoldenKeyWorkBuddy/0.1"})
-        started = time.monotonic()
-        with urllib.request.urlopen(request, timeout=120) as response, temporary.open("wb") as output:
-            while True:
-                if time.monotonic() - started > total_timeout_seconds:
-                    raise ProductionRuntimeError(
-                        f"download exceeded {total_timeout_seconds} seconds: {url}"
-                    )
-                block = response.read(1024 * 1024)
-                if not block:
-                    break
-                output.write(block)
-        actual = _sha256(temporary)
-        if actual != expected_sha256.lower():
+    partial = cache_path.with_name(f".{cache_path.name}.part")
+    started = time.monotonic()
+    last_error = "download did not start"
+    for attempt in range(1, max_attempts + 1):
+        if time.monotonic() - started > total_timeout_seconds:
             raise ProductionRuntimeError(
-                f"download hash mismatch for {url}: expected {expected_sha256}, got {actual}"
+                f"download exceeded {total_timeout_seconds} seconds: {url}"
             )
-        os.replace(temporary, cache_path)
-        return cache_path
-    finally:
-        if temporary.exists():
-            temporary.unlink()
+        offset = partial.stat().st_size if partial.is_file() else 0
+        headers = {"User-Agent": "GoldenKeyWorkBuddy/0.1"}
+        if offset:
+            headers["Range"] = f"bytes={offset}-"
+        request = urllib.request.Request(url, headers=headers)
+        expected_total: int | None = None
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                status = int(getattr(response, "status", response.getcode()))
+                if offset and status != 206:
+                    offset = 0
+                    partial.unlink(missing_ok=True)
+                if status == 206:
+                    content_range = response.headers.get("Content-Range", "")
+                    prefix = f"bytes {offset}-"
+                    if not content_range.startswith(prefix) or "/" not in content_range:
+                        raise ProductionRuntimeError(
+                            f"download resume response was invalid for {url}"
+                        )
+                    expected_total = int(content_range.rsplit("/", 1)[1])
+                    mode = "ab"
+                else:
+                    length = response.headers.get("Content-Length")
+                    expected_total = int(length) if length else None
+                    mode = "wb"
+                with partial.open(mode) as output:
+                    while True:
+                        if time.monotonic() - started > total_timeout_seconds:
+                            raise ProductionRuntimeError(
+                                f"download exceeded {total_timeout_seconds} seconds: {url}"
+                            )
+                        block = response.read(1024 * 1024)
+                        if not block:
+                            break
+                        output.write(block)
+            if expected_total is not None and partial.stat().st_size < expected_total:
+                raise OSError(
+                    f"connection ended after {partial.stat().st_size} of "
+                    f"{expected_total} bytes"
+                )
+            actual = _sha256(partial)
+            if actual == expected_sha256.lower():
+                os.replace(partial, cache_path)
+                return cache_path
+            last_error = (
+                f"download hash mismatch for {url}: expected {expected_sha256}, "
+                f"got {actual}"
+            )
+            partial.unlink(missing_ok=True)
+        except ProductionRuntimeError:
+            raise
+        except (OSError, http.client.HTTPException, ValueError) as exc:
+            last_error = f"download attempt {attempt} failed for {url}: {exc}"
+        if attempt < max_attempts:
+            time.sleep(min(0.25 * attempt, 1.0))
+    raise ProductionRuntimeError(last_error)
+
+
+def _locked_source_urls(locked: dict[str, Any]) -> list[str]:
+    values = locked.get("urls")
+    if isinstance(values, list) and values:
+        urls = [str(value) for value in values if str(value).strip()]
+    else:
+        urls = [str(locked.get("url", ""))]
+    if not urls or any(not value for value in urls):
+        raise ProductionRuntimeError("locked runtime asset has no download source")
+    return urls
+
+
+def _download_locked_asset(
+    locked: dict[str, Any], cache_root: Path
+) -> tuple[Path, str]:
+    expected = str(locked["sha256"]).lower()
+    urls = _locked_source_urls(locked)
+    archive_name = urls[0].rsplit("/", 1)[-1]
+    errors: list[str] = []
+    for url in urls:
+        try:
+            return _download_verified(
+                url, expected, cache_root / archive_name
+            ), url
+        except ProductionRuntimeError as exc:
+            errors.append(str(exc))
+    raise ProductionRuntimeError(
+        "all locked download sources failed: " + " | ".join(errors)
+    )
 
 
 def _safe_extract_zip(archive_path: Path, destination: Path) -> None:
@@ -405,10 +506,8 @@ def _prepare_archive_component(
     if _read_component_marker(target, name, lock_sha256) is not None:
         return False
     _owned_target_or_absent(target, name, lock_sha256)
-    url = str(locked["url"])
     expected = str(locked["sha256"]).lower()
-    archive_name = url.rsplit("/", 1)[-1]
-    archive = _download_verified(url, expected, cache_root / archive_name)
+    archive, url = _download_locked_asset(locked, cache_root)
     staging_root = target.parent / f".{target.name}-staging-{uuid.uuid4().hex}"
     try:
         staging_root.mkdir(parents=True)
@@ -573,13 +672,11 @@ def _prepare_browser(
     if not (node_exe.is_file() and browser_cli.is_file()):
         raise ProductionRuntimeError("HyperFrames browser installer is missing")
     version = str(component["version"])
-    url = str(component["url"])
-    archive_name = url.rsplit("/", 1)[-1]
-    cached_archive = _download_verified(
-        url,
-        str(component["sha256"]).lower(),
-        Path(data_root).resolve() / "Caches" / "Downloads" / archive_name,
+    cached_archive, url = _download_locked_asset(
+        component,
+        Path(data_root).resolve() / "Caches" / "Downloads",
     )
+    archive_name = cached_archive.name
     staging = target.parent / f".{target.name}-staging-{uuid.uuid4().hex}"
     try:
         archive_root = staging / "chrome-headless-shell"
@@ -635,7 +732,7 @@ def _prepare_browser(
 def _prepare_python(repo_root: Path, data_root: Path) -> bool:
     if _python_ready(repo_root, data_root):
         return False
-    requirements, target, _, _ = _locations(repo_root, data_root)
+    requirements, target, _, interpreter = _locations(repo_root, data_root)
     if target.exists():
         try:
             record = json.loads((target / "WORKBUDDY-MANAGED-PYTHON.json").read_text(encoding="utf-8"))
@@ -653,36 +750,83 @@ def _prepare_python(repo_root: Path, data_root: Path) -> bool:
     cache_root.mkdir(parents=True, exist_ok=True)
     environment = os.environ.copy()
     environment["PIP_CACHE_DIR"] = str(cache_root)
+    bundled_python = Path(repo_root).resolve() / "bootstrap" / "python" / (
+        "python.exe" if os.name == "nt" else "python"
+    )
     try:
-        _run_checked(
-            [sys.executable, "-m", "venv", str(staging)],
-            cwd=runtime_root,
-            env=environment,
-            label="managed Python environment creation",
-        )
-        staging_interpreter = staging / _relative_interpreter()
-        _run_checked(
-            [
-                str(staging_interpreter),
-                "-m",
-                "pip",
-                "install",
-                "--disable-pip-version-check",
-                "--no-input",
-                "-r",
-                str(requirements),
-            ],
-            cwd=runtime_root,
-            env=environment,
-            label="managed Python dependency installation",
-        )
-        record = {
-            "schema_version": MANAGED_RUNTIME_SCHEMA,
-            "requirements_sha256": _requirements_sha256(requirements),
-            "interpreter_relative": _relative_interpreter().as_posix(),
-            "source_python": sys.executable,
-            "system_python_modified": False,
-        }
+        if bundled_python.is_file():
+            site_packages = staging / "site-packages"
+            site_packages.mkdir(parents=True)
+            requirement_lines = [
+                line.strip()
+                for line in requirements.read_text(encoding="utf-8").splitlines()
+                if line.strip() and not line.lstrip().startswith("#")
+            ]
+            if requirement_lines:
+                lock, _ = _read_runtime_lock(repo_root)
+                registries = lock.get("registries") or {}
+                python_indexes = registries.get("python") or {}
+                command = [
+                    str(bundled_python),
+                    "-m",
+                    "pip",
+                    "install",
+                    "--disable-pip-version-check",
+                    "--no-input",
+                    "--only-binary=:all:",
+                    "--target",
+                    str(site_packages),
+                    "--index-url",
+                    str(python_indexes["primary"]),
+                    "--extra-index-url",
+                    str(python_indexes["fallback"]),
+                    "-r",
+                    str(requirements),
+                ]
+                _run_checked(
+                    command,
+                    cwd=runtime_root,
+                    env=environment,
+                    label="managed Python dependency installation",
+                )
+            record = {
+                "schema_version": MANAGED_RUNTIME_SCHEMA,
+                "runtime_model": "package_private_bootstrap",
+                "requirements_sha256": _requirements_sha256(requirements),
+                "interpreter": str(bundled_python.resolve()),
+                "site_packages_relative": "site-packages",
+                "system_python_modified": False,
+            }
+        else:
+            _run_checked(
+                [sys.executable, "-m", "venv", str(staging)],
+                cwd=runtime_root,
+                env=environment,
+                label="managed Python environment creation",
+            )
+            staging_interpreter = staging / _relative_interpreter()
+            _run_checked(
+                [
+                    str(staging_interpreter),
+                    "-m",
+                    "pip",
+                    "install",
+                    "--disable-pip-version-check",
+                    "--no-input",
+                    "-r",
+                    str(requirements),
+                ],
+                cwd=runtime_root,
+                env=environment,
+                label="managed Python dependency installation",
+            )
+            record = {
+                "schema_version": MANAGED_RUNTIME_SCHEMA,
+                "requirements_sha256": _requirements_sha256(requirements),
+                "interpreter_relative": _relative_interpreter().as_posix(),
+                "source_python": sys.executable,
+                "system_python_modified": False,
+            }
         (staging / "WORKBUDDY-MANAGED-PYTHON.json").write_text(
             json.dumps(record, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",

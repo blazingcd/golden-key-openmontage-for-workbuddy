@@ -1,14 +1,58 @@
 # Project State
 
-更新时间：2026-08-08 20:13 +08:00
+更新时间：2026-08-14 16:00 +08:00
 
 ## 当前里程碑
 
-`W0 DONE / v0.3.21 PRE-ALPHA BASELINE PUBLISHED / W1 DONE / W2 DONE / W3 PASS / WB-UX1 ROUTING PENDING / W4.1 PORTABLE-PYTHON VALIDATION PASS`
+`WB-OFFICIAL-SUCCESS-CLOSEOUT1 PARTIAL COMPLETE / OFFICIAL OPENMONTAGE RUNNABILITY PASS / STRICT MANIFEST CONFORMANCE PARTIAL / W0 DONE / W1 DONE / W2 DONE / W3 PASS / WB-UX1 ROUTING PENDING / W4.1 PORTABLE-PYTHON VALIDATION PASS`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
 明确授权推送，首个 `Pre-Alpha` 公开基线已发布到 `origin/main`。
+
+## 2026-08-14 官方 OpenMontage 成功证据收口
+
+### 当前权威结论
+
+- 官方 OpenMontage 固定提交 `4eab34c5cfcccaa4f1970554928feccce73ee930` 已在真实 WorkBuddy 中跑通并生成用户基本认可的本地成片：`PASS`。
+- `REAL_WORKBUDDY`、`CAPABILITY_REAL`、`LOCAL_RENDER_E2E`、`BUSINESS_EFFECTIVE`：`PASS`。
+- HY3 确实从原始门店素材重新选材、调色、剪辑、配字幕/BGM并完成本地成片；Kimi 首次展示复用旧片，`v2` 是同一 15 段方案重新编码，`fresh` 才是重新审阅 29 段原始素材、选择 14 段并重新剪辑的新版本。
+- `STRICT_MANIFEST_CONFORMANCE`：`PARTIAL`。checkpoint 缺失、canonical/fresh 并列、报告/发布指针不一致等属于稳定化、可恢复性和治理问题，不否定官方原包已经跑通。
+- 外部平台发布、Provider/cloud/SaaS E2E：本阶段 `OUT OF SCOPE`，不是失败或阻断项。
+- 一次受控 preflight 在 WorkBuddy 内置 Python 路径因缺少 `requests` 失败，只证明该次解释器/命令路径失败，不能推翻显式项目 `.venv` 和本地 FFmpeg 已完成的成功链路。
+- 下一 Gate 尚未执行，不得提前宣称通过；后续顺序由统筹另行裁决。
+
+### 成功证据与环境收口
+
+- D 盘证据归档：`D:\WorkBuddyData\Evidence\openmontage-official-success-closeout-20260814`。
+- 归档包含两条成功 WorkBuddy JSONL、公开链接和归因说明、关键项目 artifacts、三份成片哈希清单、两份源码区脚本原始副本及 quarantine、副本完整的用户级 FFmpeg Skill、画像当前版和可证明的任务前版本、运行路径差异与 `RESTORE-MANIFEST.md`。
+- 官方目录两份未跟踪脚本 `scripts\prepare_fresh_edit.py`、`scripts\render_portrait.py` 已在复制和逐文件 SHA-256 校验后移入归档 quarantine；官方 HEAD 仍精确为 `4eab34c5...`，tracked diff=0、staged=0、普通 `git status` 干净。
+- `projects\toutouxiang-store-intro` 和三份成片保持原位，收口前后哈希不变；未触碰 tracked 源码、`.venv`、`node_modules`、缓存或其他 ignored 文件。
+- 收口时 WorkBuddy 5.3.12 仍有活动主进程、daemon、sidecar 和 agent 子进程。为避免全局文件竞争，用户级 `openmontage-ffmpeg-portrait-render` Skill 只完成归档、没有移出 active skills；`IDENTITY.md`、`SOUL.md`、`USER.md` 只完成当前版和旧版归档、没有回写。两项均保留为人工窗口决策。
+- `.mcp.json` 与其他无法归因配置未修改；已恢复启用的 `golden-key-video-agent` 仅做只读状态记录，未触碰。
+
+### 运行路径差异
+
+- 失败基线的 agent shell 裸 `python/python3` 默认落到 WorkBuddy 内置 Python；该解释器缺 `requests`，`registry.discover()` 在导入 ComfyUI client 时失败。
+- HY3 对依赖重的 registry preflight 和 `init_project()` 显式使用官方项目 `.venv\Scripts\python.exe`；后续项目级 `render_full.py` 使用标准库、`subprocess` 和 FFmpeg，即使在内置 Python 上也完成成片。
+- Kimi fresh 的 `prepare_fresh_edit.py`、`render_portrait.py` 明确使用官方项目 `.venv\Scripts\python.exe`。
+- 因此 Host 解释器不是已证明的全局主阻断，而是与具体 Agent 命令路径和依赖集合相关的偶发可靠性风险；后续应按步骤锁定解释器。
+- HY3 原始成片早于 Kimi 两份源码脚本和用户级 Skill 创建，故不依赖它们；Kimi `v2/fresh` 直接依赖源码脚本，但成功命令没有把用户级 Skill 作为必经执行入口。
+
+### 中文 fork 身份
+
+- 正确中文 fork：`https://github.com/noah-1106/openmontage-zh-mcp`，不是 `OpenMontage-golden-key`。
+- 本专项采用的已确认只读值为远端 `main/HEAD=1aa30636325bb1dab60e81d1bf76d6df2dd662ca`；本任务没有下载或验证该 fork，后续实际使用前仍须按运行时重新锁定。
+
+### Git 集成状态
+
+- 本收口文档位于独立任务分支 `codex/wb-official-success-closeout1`。
+- 主协调工作区仍位于 `codex/w4.1-portable-python@347272cf11eb774be64f63746edec92ccbf7d79d`，其未跟踪 `.codex/config.toml` 保持原样，SHA-256 仍为 `E5D533440B4EF6587293B3596DDA46DD8525F9A39107108B75C67B6F2E49AAFC`。
+- 该任务分支需要后续选择性集成到主协调长期分支；不得声称主协调分支已经更新，不 merge/rebase advancing `main` 回长期分支。
+
+### 零边界
+
+本收口零 Provider 调用、零费用、零新 WorkBuddy 会话/运行、零 preflight/测试/W0/repair、零媒体生成、零中文 fork 下载、零 v0.3.23 验证。
 
 ## 当前权威基线
 

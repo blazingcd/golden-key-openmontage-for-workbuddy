@@ -884,3 +884,75 @@
   Release合同、四Pipeline/Skill/Schema/Tool/Checkpoint合同、direct-agent边界、公开lineage、风险扫描和回归均通过；
   contracts=`716 passed, 7 skipped`、tools=`284 passed, 1 subtest passed`、WorkBuddy=`119 passed, 1 skipped`。
   证据目录为`D:/WorkBuddyData/Temp/w41-publication-audit-20260808-final`。
+
+## 2026-08-14：WB-OFFICIAL-SUCCESS-CLOSEOUT1 官方成功证据收口与环境隔离
+
+### 范围和权威口径
+
+- 收口官方 OpenMontage 在真实 WorkBuddy 中已经跑通的成功证据，不重新测试、渲染、修复、安装、打包或调用 Provider。
+- 采用用户纠正后的权威结论：官方原包可被 WorkBuddy 跑通=`PASS`；`REAL_WORKBUDDY/CAPABILITY_REAL/LOCAL_RENDER_E2E/BUSINESS_EFFECTIVE=PASS`；`STRICT_MANIFEST_CONFORMANCE=PARTIAL`但不否决跑通。
+- 外部平台发布、Provider/cloud/SaaS E2E 均为本阶段`OUT OF SCOPE`；下一 Gate 尚未执行。
+
+### 收口前只读基线
+
+- 主协调工作区：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy`，分支 `codex/w4.1-portable-python`，HEAD=`347272cf11eb774be64f63746edec92ccbf7d79d`，工作树仅 `?? .codex/config.toml`。
+- `.codex/config.toml` 保持原样，36字节，SHA-256=`E5D533440B4EF6587293B3596DDA46DD8525F9A39107108B75C67B6F2E49AAFC`，未暂存。
+- 官方目录：`D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-audit-4eab34c5`，detached HEAD=`4eab34c5cfcccaa4f1970554928feccce73ee930`，2038个tracked文件，tracked diff=0、staged=0，只有两份源码区未跟踪脚本。
+- WorkBuddy 5.3.12 主进程和daemon/sidecar/agent子进程仍在运行；未关闭或操作客户端。
+
+### D盘证据归档
+
+- 建立固定目录：`D:\WorkBuddyData\Evidence\openmontage-official-success-closeout-20260814`，目标原先不存在，未覆盖任何文件。
+- 逐文件复制并校验28个证据文件，共25,366,607字节；归档含：
+  - 两份源码区未跟踪脚本原始副本；
+  - 用户级`openmontage-ffmpeg-portrait-render` Skill完整目录；
+  - `IDENTITY.md/SOUL.md/USER.md`当前版和WorkBuddy file-history可证明的任务前`@v1`字节版；
+  - HY3/Kimi两条成功会话JSONL、公开链接和归因说明；
+  - 项目关键artifacts、字幕、`events.jsonl`、`project.json`、项目级`render_full.py`；
+  - 三份成片的绝对路径、大小、时间、SHA-256清单；大媒体保留原位，没有重复复制；
+  - `RESTORE-MANIFEST.md`、运行路径差异和完整归档哈希清单。
+- 两条会话归档副本：
+  - HY3 JSONL 16,460,654字节，SHA-256=`05548CCD26AD29D14D74541FC0F8EA0D6740728D77C8A4CDCD6CBE0B5FC94BC9`；
+  - Kimi JSONL 8,792,064字节，SHA-256=`D58ECCD59CB97CD88F83F7F522F9155ACB2891789EC706786113672CC9AFD5B2`。
+
+### 官方目录清理
+
+- `scripts\prepare_fresh_edit.py`：10,711字节，SHA-256=`91B9B262DD021B6435E1674358E8CEF6A044D63E712C5E4AF781EB7875BDE52F`。
+- `scripts\render_portrait.py`：10,490字节，SHA-256=`D0E228FABD7249350DFA23D76D97CDEAE3C6374568EB46D21B738BE08E9E70AE`。
+- 两文件均先复制到`source-originals\scripts`并逐文件比对SHA，再验证源/目标解析路径边界，最后移动到`quarantine\source-scripts`；没有永久删除。
+- 收口后官方HEAD仍为`4eab34c5...`，tracked diff=0、staged=0、普通`git status`干净。
+- `projects\toutouxiang-store-intro`保持153文件、323,541,631字节；三份成片仍存在且哈希不变：
+  - 原始版=`5DC81BF08304430188AC01BE1A50C5D8AD846F59FE66CB4EDF80CFC506796F71`；
+  - v2=`2AEF76501CFF007213B044030593CBC80FB8AEB753480F684DD8104C616A5887`；
+  - fresh=`14E356A293FD9CB28CD43A54CC4182E79BC1D47FC27949A23AB09CA170764F22`。
+- 未触碰任何tracked源码、`projects/`内容、`.venv`、`node_modules`、缓存或其他ignored文件。
+
+### WorkBuddy持久干扰
+
+- 用户级FFmpeg Skill已完整归档并复核两个文件SHA，但因WorkBuddy仍在运行，没有从active skills目录移动；活动路径和字节保持不变。
+- Kimi会话首轮注入内容与file-history `@v1`共同证明三份任务前画像：
+  - `IDENTITY=EA88682EFDE077F73D6D7625B03915455C87FEC5B4D5ADD6CA7C5842D8BB92E0`；
+  - `SOUL=09E4782B1CE17312C22050947B3D5C699C3B51D391669A1BFB66A5CD36971EF4`；
+  - `USER=5ABB73720FABC14F3C602CD0C0FFE6AC8D798BEB29278B3C12910617522ED06E`。
+- 任务前版本和当前版本均已归档；因客户端活动占用，没有猜测性或竞争性回写，列为后续人工窗口决策。
+- `.mcp.json`及其他无法归因配置未修改；已恢复启用的`golden-key-video-agent`仅只读记录为存在、2文件、21,960字节，未触碰。
+
+### 成功/失败解释器路径差异
+
+- 既有失败基线的裸`python/python3`默认落到WorkBuddy内置Python目录；该解释器缺`requests`，`registry.discover()`在导入ComfyUI client时失败。对照证明官方项目`.venv`可导入`requests 2.34.2`。
+- HY3使用官方项目`.venv`执行registry preflight和`init_project()`；后续项目级`render_full.py`只依赖标准库、`subprocess`和FFmpeg，可在内置Python上完成成片。
+- Kimi fresh明确使用官方项目`.venv\Scripts\python.exe`直接执行`prepare_fresh_edit.py`和`render_portrait.py`。
+- Host解释器因此是与Agent命令路径和依赖集合相关的偶发可靠性风险，不是已证明的全局主阻断。
+- HY3原始成片写入时间早于用户级Skill和两份Kimi源码脚本，故成功不依赖它们；Kimi v2/fresh直接依赖源码脚本，但现有成功命令没有通过用户级Skill作为必经入口。
+
+### 中文fork和集成状态
+
+- 正确中文fork为`https://github.com/noah-1106/openmontage-zh-mcp`，不是`OpenMontage-golden-key`。
+- 本专项采用的已确认只读值为`main/HEAD=1aa30636325bb1dab60e81d1bf76d6df2dd662ca`；本轮没有下载或验证该fork，实际使用前仍需按运行时重新锁定。
+- 文档改动只位于独立任务分支`codex/wb-official-success-closeout1`，只修改`PROJECT-STATE.md`和`WORK-LOG.md`；`PROJECT_CONTEXT.md`无需改动。
+- 该任务分支需要后续选择性集成到主协调长期分支；主协调分支本轮没有更新，不建PR、不合并、不rebase、不从main同步。
+
+### 零边界
+
+- 零Provider调用、零费用、零新WorkBuddy运行/会话、零preflight/测试/W0/repair、零媒体生成。
+- 未下载中文fork，未验证v0.3.23，未修改官方tracked源码，未修改或删除`.codex/config.toml`。

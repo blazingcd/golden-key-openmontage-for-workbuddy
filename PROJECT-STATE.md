@@ -1,10 +1,10 @@
 # Project State
 
-更新时间：2026-08-14 16:00 +08:00
+更新时间：2026-08-14 16:20 +08:00
 
 ## 当前里程碑
 
-`WB-OFFICIAL-SUCCESS-CLOSEOUT1 PARTIAL COMPLETE / OFFICIAL OPENMONTAGE RUNNABILITY PASS / STRICT MANIFEST CONFORMANCE PARTIAL / W0 DONE / W1 DONE / W2 DONE / W3 PASS / WB-UX1 ROUTING PENDING / W4.1 PORTABLE-PYTHON VALIDATION PASS`
+`WB-OFFICIAL-SUCCESS-CLOSEOUT1 COMPLETE / OFFICIAL OPENMONTAGE RUNNABILITY PASS / STRICT MANIFEST CONFORMANCE PARTIAL / W0 DONE / W1 DONE / W2 DONE / W3 PASS / WB-UX1 ROUTING PENDING / W4.1 PORTABLE-PYTHON VALIDATION PASS`
 
 新的 W0 只审计 `golden-key-v0.3.21` WorkBuddy Callable Core Release 导出包、公开
 `origin/main` lineage 和 WorkBuddy 自有增量。技术 Gate 已通过；用户在看到完整报告和目标提交后
@@ -28,7 +28,9 @@
 - 归档包含两条成功 WorkBuddy JSONL、公开链接和归因说明、关键项目 artifacts、三份成片哈希清单、两份源码区脚本原始副本及 quarantine、副本完整的用户级 FFmpeg Skill、画像当前版和可证明的任务前版本、运行路径差异与 `RESTORE-MANIFEST.md`。
 - 官方目录两份未跟踪脚本 `scripts\prepare_fresh_edit.py`、`scripts\render_portrait.py` 已在复制和逐文件 SHA-256 校验后移入归档 quarantine；官方 HEAD 仍精确为 `4eab34c5...`，tracked diff=0、staged=0、普通 `git status` 干净。
 - `projects\toutouxiang-store-intro` 和三份成片保持原位，收口前后哈希不变；未触碰 tracked 源码、`.venv`、`node_modules`、缓存或其他 ignored 文件。
-- 收口时 WorkBuddy 5.3.12 仍有活动主进程、daemon、sidecar 和 agent 子进程。为避免全局文件竞争，用户级 `openmontage-ffmpeg-portrait-render` Skill 只完成归档、没有移出 active skills；`IDENTITY.md`、`SOUL.md`、`USER.md` 只完成当前版和旧版归档、没有回写。两项均保留为人工窗口决策。
+- 初次收口时因 WorkBuddy 仍有活动进程，没有竞争性移动全局 Skill 或回写画像。用户随后确认客户端完全退出；执行前、中、后相关进程均为 0，剩余环境隔离现已 `COMPLETE`。
+- 活动 `openmontage-ffmpeg-portrait-render` Skill 已在移动前再次复制并逐文件核验，随后可恢复地移动到归档 `quarantine\workbuddy-skill-openmontage-ffmpeg-portrait-render-20260814T161526+0800\`；活动路径不再存在，两个文件 SHA 与既有归档一致。
+- 覆盖前的 `IDENTITY.md`、`SOUL.md`、`USER.md` 已再次快照到 `profiles\pre-restore-current-20260814T161526+0800\`。活动画像已使用 `profiles\pre-store-tasks\` 的可证明完整版本恢复，SHA-256 分别为 `EA88682EFDE077F73D6D7625B03915455C87FEC5B4D5ADD6CA7C5842D8BB92E0`、`09E4782B1CE17312C22050947B3D5C699C3B51D391669A1BFB66A5CD36971EF4`、`5ABB73720FABC14F3C602CD0C0FFE6AC8D798BEB29278B3C12910617522ED06E`。
 - `.mcp.json` 与其他无法归因配置未修改；已恢复启用的 `golden-key-video-agent` 仅做只读状态记录，未触碰。
 
 ### 运行路径差异
@@ -46,9 +48,9 @@
 
 ### Git 集成状态
 
-- 本收口文档位于独立任务分支 `codex/wb-official-success-closeout1`。
-- 主协调工作区仍位于 `codex/w4.1-portable-python@347272cf11eb774be64f63746edec92ccbf7d79d`，其未跟踪 `.codex/config.toml` 保持原样，SHA-256 仍为 `E5D533440B4EF6587293B3596DDA46DD8525F9A39107108B75C67B6F2E49AAFC`。
-- 该任务分支需要后续选择性集成到主协调长期分支；不得声称主协调分支已经更新，不 merge/rebase advancing `main` 回长期分支。
+- 收口文档源提交形成于独立任务分支 `codex/wb-official-success-closeout1`。
+- 初始收口提交 `3ca7dfb` 与后续环境隔离完成提交按顺序选择性 cherry-pick 到主协调长期分支 `codex/w4.1-portable-python`；未 merge、未 rebase、未从 `main` 同步。
+- 主协调工作区未跟踪 `.codex/config.toml` 全程保持原样、未暂存，SHA-256 仍为 `E5D533440B4EF6587293B3596DDA46DD8525F9A39107108B75C67B6F2E49AAFC`。
 
 ### 零边界
 

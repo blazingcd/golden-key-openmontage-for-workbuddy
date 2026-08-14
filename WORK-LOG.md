@@ -956,3 +956,39 @@
 
 - 零Provider调用、零费用、零新WorkBuddy运行/会话、零preflight/测试/W0/repair、零媒体生成。
 - 未下载中文fork，未验证v0.3.23，未修改官方tracked源码，未修改或删除`.codex/config.toml`。
+
+## 2026-08-14：WB-OFFICIAL-SUCCESS-CLOSEOUT1 后续环境隔离完成
+
+### 执行前边界
+
+- 用户确认 WorkBuddy 已完全退出并明确不保留门店任务写入的画像设置。
+- 再次只读复核 `WORKBUDDY_RELATED_PROCESS_COUNT=0`；任务分支为 `codex/wb-official-success-closeout1@3ca7dfb` 且干净。
+- 主协调工作区仍为 `codex/w4.1-portable-python@347272cf11eb774be64f63746edec92ccbf7d79d`，仅有 `?? .codex/config.toml`；该文件36字节、SHA-256=`E5D533440B4EF6587293B3596DDA46DD8525F9A39107108B75C67B6F2E49AAFC`。
+
+### 临时 Skill 隔离
+
+- 精确对象：`C:\Users\blazi\.workbuddy\skills\openmontage-ffmpeg-portrait-render`。
+- 移动前再次复制到 `D:\WorkBuddyData\Evidence\openmontage-official-success-closeout-20260814\pre-isolation-copy\openmontage-ffmpeg-portrait-render-20260814T161526+0800`，不覆盖既有归档，并逐文件比对大小和SHA。
+- 在移动前立即再次确认相关进程为0，再将整个活动目录可恢复地移动到 `quarantine\workbuddy-skill-openmontage-ffmpeg-portrait-render-20260814T161526+0800\`；没有永久删除。
+- 移动后活动路径不存在；quarantine 中 `SKILL.md` SHA=`7D6664326DF1E7E304175EF7E9D1B2E03CBE5585E829912FDDC1B42D999BE017`，`scripts\render_portrait.py` SHA=`448CB22BF98E4D809BEF3B36648A25A40F62FF899094E3C08663B0243AEBED4C`。
+- 未触碰 `golden-key-video-agent` 或其他 Skill。
+
+### 画像恢复
+
+- 覆盖前把当时活动的三文件再次复制到 `profiles\pre-restore-current-20260814T161526+0800\`，逐文件核对为初次收口时的当前版字节。
+- 使用归档 `profiles\pre-store-tasks\` 中已证明的完整任务前版本恢复活动文件；恢复后SHA精确为：
+  - `IDENTITY.md=EA88682EFDE077F73D6D7625B03915455C87FEC5B4D5ADD6CA7C5842D8BB92E0`；
+  - `SOUL.md=09E4782B1CE17312C22050947B3D5C699C3B51D391669A1BFB66A5CD36971EF4`；
+  - `USER.md=5ABB73720FABC14F3C602CD0C0FFE6AC8D798BEB29278B3C12910617522ED06E`。
+- `.mcp.json`、`mcp.json`哈希前后不变，其他无法归因配置未修改。
+
+### 归档、结论与集成
+
+- `CLOSEOUT-SUMMARY.md`和`RESTORE-MANIFEST.md`已更新为环境隔离`COMPLETE`；归档现有44个文件，哈希清单覆盖除自身外的43项并重新验证43/43一致。
+- 官方原包真实WorkBuddy跑通仍为`PASS`；`STRICT_MANIFEST_CONFORMANCE=PARTIAL`仍是非否决治理项；Publish/Provider/cloud/SaaS仍为`OUT OF SCOPE`。
+- 正确中文fork仍为`https://github.com/noah-1106/openmontage-zh-mcp`；下一Gate未执行。
+- 初始收口提交`3ca7dfb`与本完成提交按顺序选择性cherry-pick到长期分支`codex/w4.1-portable-python`并推送；不merge、不rebase、不从main同步。
+
+### 零边界
+
+- 零WorkBuddy启动、零Provider调用、零费用、零测试/渲染/安装/repair/W0、零媒体生成。

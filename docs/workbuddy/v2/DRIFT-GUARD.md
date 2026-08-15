@@ -113,7 +113,7 @@ files_changed_before_stop:
 ## 7. 并发纪律
 
 - 同一时间最多一个真实WorkBuddy执行任务；
-- 当前治理修订不授权任何并行例外；后一步必须等待前一步精确`PASS_ACCEPTED`；
+- 后续阶段不得在前一阶段 `PASS_ACCEPTED` 前启动；阶段1 T1–T5 的内部串行依赖以 `TASK-REGISTER` 第4节为准；本规则不授权并行执行。
 - 同一Gate的Builder和Reviewer必须独立；
 - Reviewer不得修改代码来制造APPROVE；
 - 后续真实WorkBuddy Gate不得与尚未完成的安装、Core切换或全局Skill变更并行。

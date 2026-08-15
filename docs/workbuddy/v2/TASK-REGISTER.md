@@ -158,4 +158,4 @@ next_authorized_task:
 - 需要用户Gate：`REVIEW_PASS -> AWAITING_USER_GATE`。
 - 用户接受：`AWAITING_USER_GATE -> PASS_ACCEPTED`。
 - 任务或审阅开始后，没有最终退出、对象漂移、证据缺失或环境干扰必须进入`INCOMPLETE`，不得进入`BLOCKED`或`REVIEW_PASS`。
-- 后一步不得在前一步`PASS_ACCEPTED`前开始；本修订不授权任何并行例外。
+- 后续阶段不得在前一阶段 `PASS_ACCEPTED` 前启动；阶段1 T1–T5 的内部串行依赖以 `TASK-REGISTER` 第4节为准；本规则不授权并行执行。

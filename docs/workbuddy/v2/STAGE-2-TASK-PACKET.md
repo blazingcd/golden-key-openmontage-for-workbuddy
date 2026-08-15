@@ -19,7 +19,7 @@
 唯一常规写入口为`register_core(...)`和`activate_core(...)`，损坏指针的唯一修复入口为`recover_active_core(...)`；唯一只读入口为`locate_active_core(...)`。四者放在新文件`golden_key_openmontage_workbuddy/core_registration.py`，不得加入CLI、MCP或WorkBuddy入口。
 
 - `register_core(data_root, release_archive, release_sha256_sidecar, core_root, core_python)`：只读取显式路径，验证Release包、SHA sidecar、Manifest、Lock、安装后的Core文件、Python和Guide，写入一个不可变Registration对象；不自动激活。
-- `activate_core(data_root, registration_sha256)`：只把已存在且当前仍完全有效的Registration设为唯一活动对象。调用方必须显式给出对象SHA；不得按版本、时间或目录名选择。
+- `activate_core(data_root, expected_active_pointer_sha256_or_missing, registration_sha256)`：只把已存在且当前仍完全有效的Registration设为唯一活动对象。调用方必须同时锁定当前指针原始字节SHA（首次激活用精确字面量`MISSING`）和目标对象SHA；不得按版本、时间或目录名选择。
 - `recover_active_core(data_root, expected_broken_pointer_sha256, replacement_registration_sha256)`：只在现有`active.json`原始字节SHA与显式损坏对象锁完全一致时，以完整复核通过的显式Registration替换它；不得创建Registration或选择回退对象。
 - `locate_active_core(data_root)`：只读固定活动指针和其精确对象，重新验证身份、路径和hash，返回后续Launcher所需的不可变字段；零写入、零修复、零执行Core。
 
@@ -28,6 +28,7 @@
 ```text
 <DataRoot>/State/CoreRegistration/v1/objects/<registration_sha256>.json
 <DataRoot>/State/CoreRegistration/v1/active.json
+<DataRoot>/State/CoreRegistration/v1/active.lock
 ```
 
 `DataRoot`必须由调用方以已绑定的绝对路径传入；模块不得使用环境变量、用户目录、注册表、盘符搜索或“最新”目录作为回退。
@@ -102,7 +103,7 @@
 
 所有路径来自固定相对路径与显式绝对`CoreRoot`，存储为`str(Path.resolve(strict=True))`；不展开`~`。比较使用平台路径语义。规范JSON使用UTF-8无BOM、上述唯一shape、Unicode NFC、key排序、`separators=(",", ":")`和尾部一个LF；`registration_sha256`是完整规范字节SHA-256，也是对象文件名，不写入对象本身。
 
-Registration只接受精确`v1`，Manifest只接受上列v1，Lock只接受整数`2`；未知版本必须新建合同。错误类别固定为`INPUT_INVALID / PATH_VIOLATION / OBJECT_MISSING / DUPLICATE / IDENTITY_MISMATCH / HASH_MISMATCH / TAMPERED / ATOMIC_WRITE_FAILED`。
+Registration只接受精确`v1`，Manifest只接受上列v1，Lock只接受整数`2`；未知版本必须新建合同。错误类别固定为`INPUT_INVALID / PATH_VIOLATION / OBJECT_MISSING / DUPLICATE / IDENTITY_MISMATCH / HASH_MISMATCH / TAMPERED / ACTIVE_LOCK_BUSY / ACTIVE_CAS_MISMATCH / ATOMIC_WRITE_FAILED`。
 
 ### 2.3 相互验证链
 
@@ -122,9 +123,12 @@ Locator每次重做对象内容hash、唯一shape、规范路径、Manifest/Lock
 `active.json`必须且只能含`schema_version=golden-key-workbuddy-active-core-v1`、固定`owner`和小写64位`registration_sha256`，同样拒绝未知/缺失/重复字段。
 
 - Registration对象先同目录临时写入、flush、`fsync`、回读核验，再原子发布；同hash同字节幂等，不同字节或外来对象拒绝覆盖。
-- 常规激活前完整验证目标和现有有效指针；现有指针损坏时`activate_core`必须拒绝，不能静默覆盖。
-- 新指针同目录完整写入并核验后`os.replace`；替换前失败保留旧指针，临时文件永远不被Locator读取。
-- 损坏指针只允许调用`recover_active_core`：调用方显式给出当前损坏`active.json`原始字节SHA和目标Registration SHA；函数先完整验证目标，再在替换前重新读取当前原始字节并要求SHA仍精确相同，随后只原子替换`active.json`。损坏文件缺失、对象锁错误、期间字节变化、目标失效均零写入失败。
+- 所有active pointer writer共用固定锁`<DataRoot>/State/CoreRegistration/v1/active.lock`。锁文件内容必须精确为规范JSON `{"owner":"golden-key-workbuddy-shell-v2","schema_version":"golden-key-workbuddy-active-lock-v1"}\n`；只允许`register_core`在registry首次为空时用`O_CREAT|O_EXCL`建立，同字节已存在为幂等。已有Registration或pointer时锁文件缺失/改字节均为`TAMPERED`，不得重建。
+- 排他锁必须是该固定文件byte 0上的内核级进程间独占锁：Windows每次先`seek(0)`再用`msvcrt.locking(..., LK_NBLCK, 1)`，释放时`seek(0)`后`LK_UNLCK`；POSIX用`fcntl.flock(..., LOCK_EX|LOCK_NB)`并以`LOCK_UN`释放。取得锁后必须在临界区重新读取并验证锁文件完整字节。禁止仅凭PID、进程内mutex或“锁文件存在”判断。固定超时5.0秒、单调时钟每0.05秒重试；超时/占用返回`ACTIVE_LOCK_BUSY`并零写入，不等待无界、不删锁文件。
+- `activate_core`和`recover_active_core`必须从取得同一排他锁后才开始最终读取`active.json`；在临界区内比较调用方给出的当前原始指针SHA或`MISSING`、完整复核目标、写/flush/`fsync`/回读同目录临时文件并执行`os.replace`。比较到replace之间不得释放锁，也不得调用未持锁的替换 helper。
+- `activate_core`只接受有效现有指针或精确`MISSING`，且最终原始字节状态必须与expected一致；现有指针损坏时拒绝。`recover_active_core`只接受现有损坏指针的精确原始字节SHA；有效指针不得走恢复入口。两者CAS失败均不得覆盖当前writer结果。
+- 正常返回和任何异常都在`finally`释放内核锁并关闭句柄；进程崩溃由OS自动释放内核锁，持久`active.lock`身份文件不删除。后续writer重新获取成功后仍重做最终读取/CAS；锁文件缺失、损坏或平台锁API不可用时fail closed，不扫描、不猜测“陈旧锁”、不自动回退。
+- 新指针替换前失败保留旧指针；替换成功后回读必须有效。临时文件永远不被Locator读取。
 - 回滚只允许显式激活给定旧Registration SHA，且旧对象及其Core身份完整重验通过；不得扫描、猜测、按时间选择或自动回退。
 - Locator遇到无/坏指针、缺目标、对象hash不符或目标失效直接fail closed；objects中即使只有一个对象也不得采用。
 
@@ -182,10 +186,10 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 - 单一目标：实现第2.4节内容寻址对象存储、显式激活和对象锁定的损坏指针恢复，不实现安装或升级策略。
 - 精确前置Git对象：同一Builder中已完成T1且HEAD仍为`implementation_start_commit`，未产生中间commit；任何其他HEAD为`INCOMPLETE`。
 - 允许/禁止修改路径：第4节。
-- 输入合同：T1已验证的规范对象或显式`registration_sha256`；恢复还必须显式给出损坏指针原始字节SHA；`DataRoot`为调用方给出的绝对路径。
+- 输入合同：T1已验证的规范对象或显式`registration_sha256`；激活必须给出当前指针原始字节SHA或`MISSING`，恢复必须给出损坏指针原始字节SHA；`DataRoot`为调用方给出的绝对路径。
 - 输出合同：固定registry路径下的一个不可变对象和至多一个原子活动指针；返回精确对象SHA，不返回生产状态。
-- 实现步骤：冻结目录与owner；temp同目录写入、flush/fsync、回读；对象内容寻址发布和幂等；激活前验证旧/新对象；`os.replace`切换；实现损坏指针原始字节SHA二次比对后替换；显式旧对象重新激活作为唯一回滚入口。
-- 必须测试：首次写、同对象幂等、外来/冲突对象拒绝、旧指针保留、replace失败、stale temp忽略；损坏指针正确对象锁恢复、错误锁/缺文件/并发字节变化/失效目标均拒绝；显式回滚成功/失效旧对象拒绝；固定路径外零写入。
+- 实现步骤：冻结目录、owner和`active.lock`身份；temp同目录写入、flush/fsync、回读；对象内容寻址发布和幂等；实现两平台内核锁adapter及固定超时；让activate/recover在同一锁临界区完成最终读取、expected SHA/MISSING CAS、目标复核、temp落盘和`os.replace`；显式旧对象重新激活作为唯一回滚入口。
+- 必须测试：首次写、同对象幂等、外来/冲突对象拒绝、锁身份缺失/篡改/API不可用/占用超时、异常与模拟崩溃后内核锁释放、旧指针保留、replace失败、stale temp忽略；用barrier暂停writer A于“最终比较完成后、replace之前”，writer B必须因同锁阻塞/超时且不能replace，A完成释放后B以原expected重试必须`ACTIVE_CAS_MISMATCH`且零写入；activate与recover双向互斥；损坏指针正确对象锁恢复、错误锁/缺文件/并发字节变化/失效目标均拒绝；显式回滚成功/失效旧对象拒绝；固定路径外零写入。
 - `PASS/FAIL/INCOMPLETE`：与T1相同，并额外要求注入写入/替换失败时旧活动对象可读且无半成品被消费。
 - 提交推送：不单独提交；T5统一提交推送。
 - Reviewer只读范围：同T1，重点比较对象写入和指针函数，不审生命周期策略。
@@ -213,8 +217,8 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 - 禁止修改路径：第4节统一禁止路径。
 - 输入合同：由测试独立生成的本地小型ZIP、sidecar、Manifest、Lock、CoreRoot、Python与registry夹具；不得使用真实Release、网络或安装。
 - 输出合同：每个负例得到稳定错误类别、零活动指针前移、零对象猜测、零范围外写入。
-- 实现步骤：逐类单点破坏；记录预期错误；覆盖JSON重复key、两种authority shape、清单重复路径、archive重复条目、缺失、字节篡改、root/python/guide漂移、外部Python、path traversal和symlink/reparse逃逸；证明恢复只接受显式损坏指针对象锁和显式有效Registration SHA。
-- 必须测试：本节全部矩阵；损坏指针恢复的错误当前SHA、替换前竞态、无目标及坏目标；并证明“objects中仅一个候选”也不能替代缺失活动指针。
+- 实现步骤：逐类单点破坏；记录预期错误；覆盖JSON重复key、两种authority shape、清单重复路径、archive重复条目、缺失、字节篡改、root/python/guide漂移、外部Python、path traversal和symlink/reparse逃逸；覆盖active锁/CAS竞态并证明恢复只接受显式损坏指针对象锁和显式有效Registration SHA。
+- 必须测试：本节全部矩阵；锁占用/损坏/超时，activate与recover互斥，最终比较后到replace前的竞争writer，expected过期，损坏指针恢复的错误当前SHA、无目标及坏目标；并证明“objects中仅一个候选”也不能替代缺失活动指针。
 - `PASS`：所有负例明确拒绝且正例仍通过。`FAIL/INCOMPLETE`：与T1相同。
 - 提交推送：不单独提交；T5统一提交推送。
 - Reviewer只读范围：同T1；只检查负面合同覆盖，不要求真实安装或Core。

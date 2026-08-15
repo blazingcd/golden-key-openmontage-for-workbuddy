@@ -21,7 +21,7 @@ SUPERSEDED
 DONE
 ```
 
-状态缺失、证据不完整或对象不一致时使用`BLOCKED`或`INCOMPLETE`说明，不得猜测完成。
+`BLOCKED`只用于执行或审阅开始前已有依赖、精确输入或授权未满足。任务或审阅一旦开始，出现对象不一致、无最终退出、证据缺失或环境干扰，必须使用`INCOMPLETE`，不得退回`BLOCKED`、不得猜测完成。
 
 ## 2. 当前项目状态
 
@@ -30,8 +30,11 @@ governance_docs: DONE
 governance_docs_commit: def921a2e29b4858f289c44c3e9183619ba31ce6
 governance_docs_source_branch: codex/w4.1-portable-python
 v2_governance_import_commits: ee60947, 3b62728
-v2_branch: codex/workbuddy-shell-v2
+v2_source_branch: codex/workbuddy-shell-v2
+v2_governance_fix_branch: codex/v2-gov-fix1
 v2_worktree: D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
+immutable_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
+stage_1_builder_start_commit: PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK
 v2_bootstrap: DONE
 stage_1: READY_NOT_STARTED
 stage_1_start_authorized_after_document_review: NO
@@ -42,12 +45,18 @@ workbuddy_run: NO
 provider_call: NO
 media_generated: NO
 wrong_project_review: INCOMPLETE_WRONG_PROJECT_CONTEXT
-next_authorized_task: V2-GOV-REVIEW1
+v2_gov_review1: REQUEST_CHANGES
+v2_gov_review1_thread: 01a00433-bad9-71c1-8fa5-468f676bd054
+v2_gov_review1_findings: P0=0, P1=5, P2=1
+v2_gov_fix1: REVIEW_READY
+next_authorized_task: V2-GOV-REVIEW2
 ```
 
 为让独立审阅在本项目、本分支发生，统筹已从固定代码基线`2a2bf09832d558388dc2816c54b32a2dce4aa607`建立V2工作树，并只选择性迁移治理文档。该前置引导不等于阶段1启动，不得把长期分支后续HEAD整体作为V2代码起点。
 
-当前先执行 `V2-GOV-REVIEW1`。后续若审阅通过且用户明确授权启动阶段1，才把`V2-S1-T1`改为`IN_PROGRESS`。
+`immutable_code_baseline`固定且不可变，只约束生产代码谱系；它不是阶段1 Builder的checkout目标。`stage_1_builder_start_commit`当前必须保持`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`，只有`V2-GOV-REVIEW2`通过后才由统筹锁定为完整40位提交。未锁定前不得启动`V2-S1-T1`；执行者不得直接checkout固定代码基线而丢失治理文档，也不得使用任意`HEAD`。
+
+当前先执行 `V2-GOV-REVIEW2`。后续若审阅通过、统筹完成上述对象锁定且用户明确授权启动阶段1，才把`V2-S1-T1`改为`IN_PROGRESS`。
 
 ## 3. 八阶段总账
 
@@ -55,14 +64,16 @@ next_authorized_task: V2-GOV-REVIEW1
 |---|---|---|---|---|---|
 | 前置治理 | `V2-GOV-001` | 固化章程、防漂移、账本、阶段1计划和验收矩阵 | `DONE` | 用户要求 | 不等于阶段1开始 |
 | 前置引导 | `V2-GOV-BOOTSTRAP` | 从固定基线建立V2分支/worktree并只迁入治理文档 | `DONE` | 用户要求独立审阅须在本项目本分支 | 不等于阶段1开始或代码实现 |
-| 前置审阅 | `V2-GOV-REVIEW1` | 在V2项目/分支独立只读审阅治理文档 | `READY_NOT_STARTED` | `V2-GOV-BOOTSTRAP DONE` | 不等于阶段1批准 |
-| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `READY_NOT_STARTED` | 治理文档审阅与新授权 | 无生产实现 |
+| 前置审阅 | `V2-GOV-REVIEW1` | 在V2项目/分支独立只读审阅治理文档 | `REQUEST_CHANGES` | `V2-GOV-BOOTSTRAP DONE` | Reviewer任务`01a00433-bad9-71c1-8fa5-468f676bd054`；P0=0、P1=5、P2=1；不等于阶段1批准 |
+| 治理修订 | `V2-GOV-FIX1` | 有界关闭REVIEW1的六项finding | `REVIEW_READY` | `V2-GOV-REVIEW1 REQUEST_CHANGES` | 不等于APPROVE或阶段1批准 |
+| 修订复审 | `V2-GOV-REVIEW2` | 独立只读审阅FIX1精确提交 | `READY_NOT_STARTED` | `V2-GOV-FIX1 REVIEW_READY` | 由统筹另行创建；当前任务不得创建 |
+| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `READY_NOT_STARTED` | `V2-GOV-REVIEW2 APPROVE`、统筹锁定`stage_1_builder_start_commit`、用户明确授权 | 无生产实现 |
 | 2 | `V2-S2` | 建立Core Registration合同 | `PLANNED` | `V2-S1 PASS_ACCEPTED` | 无Schema、验证器、活动对象 |
 | 3 | `V2-S3` | 建立Launcher会话环境绑定 | `PLANNED` | `V2-S2 PASS_ACCEPTED` | 无V2 Launcher |
 | 4 | `V2-S4` | 重写生产Skill和Onboarding交接 | `PLANNED` | `V2-S3 PASS_ACCEPTED` | 无V2 Skill |
-| 5 | `V2-S5` | 建立渐进式Runtime | `PLANNED` | `V2-S4接口冻结` | 旧完整Runtime不等于V2 |
-| 6 | `V2-S6` | 缩减CLI/MCP和重复任务状态 | `PLANNED` | `V2-S3/S4/S5通过` | 旧CLI/MCP测试不等于V2 |
-| 7 | `V2-S7` | 重构安装、升级、回滚和迁移 | `PLANNED` | `V2-S2至S6通过` | 旧W4.1包不等于V2包 |
+| 5 | `V2-S5` | 建立渐进式Runtime | `PLANNED` | `V2-S4 PASS_ACCEPTED` | 旧完整Runtime不等于V2 |
+| 6 | `V2-S6` | 缩减CLI/MCP和重复任务状态 | `PLANNED` | `V2-S3 PASS_ACCEPTED`、`V2-S4 PASS_ACCEPTED`、`V2-S5 PASS_ACCEPTED` | 旧CLI/MCP测试不等于V2 |
+| 7 | `V2-S7` | 重构安装、升级、回滚和迁移 | `PLANNED` | `V2-S2 PASS_ACCEPTED`至`V2-S6 PASS_ACCEPTED`逐项成立 | 旧W4.1包不等于V2包 |
 | 8 | `V2-S8` | 执行Gate A至D及可选E | `PLANNED` | `V2-S7 PASS_ACCEPTED` | 历史真实运行不等于V2验收 |
 
 ## 4. 阶段1任务
@@ -70,11 +81,11 @@ next_authorized_task: V2-GOV-REVIEW1
 | Task ID | 内容 | 状态 | 允许路径 | 前置 |
 |---|---|---|---|---|
 | `V2-S1-T0` | 建立固定分支和独立worktree | `SUPERSEDED` | 无 | 已由前置 `V2-GOV-BOOTSTRAP` 完成，不计为阶段1启动 |
-| `V2-S1-T1` | 建立V2文档入口和权威关系 | `BLOCKED` | `docs/workbuddy/v2/**` | `V2-GOV-REVIEW1 APPROVE`且用户明确授权阶段1 |
-| `V2-S1-T2` | 冻结职责和目标架构 | `BLOCKED` | V2架构文档 | T1 |
+| `V2-S1-T1` | 建立V2文档入口和权威关系 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md` | `V2-GOV-REVIEW2 APPROVE`、统筹锁定`stage_1_builder_start_commit`且用户明确授权阶段1 |
+| `V2-S1-T2` | 冻结职责和目标架构 | `BLOCKED` | `docs/workbuddy/v2/PROJECT-CHARTER.md` | T1 `REVIEW_READY` |
 | `V2-S1-T3` | 逐模块处置矩阵 | `BLOCKED` | `MODULE-DISPOSITION.md` | T2 |
 | `V2-S1-T4` | 冻结验收矩阵和状态模型 | `BLOCKED` | `ACCEPTANCE-MATRIX.md` | T2 |
-| `V2-S1-T5` | 同步账本、状态和工作日志 | `BLOCKED` | V2文档、`PROJECT-STATE.md`、`WORK-LOG.md` | T3/T4 |
+| `V2-S1-T5` | 同步账本、状态和工作日志 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`PROJECT-STATE.md`；`WORK-LOG.md` | T3/T4 `REVIEW_READY` |
 | `V2-S1-T6` | 独立只读Reviewer | `BLOCKED` | 零写入 | Builder提交 |
 | `V2-S1-GATE` | 用户阶段1 Gate | `BLOCKED` | 零写入 | Reviewer APPROVE |
 
@@ -89,6 +100,14 @@ incorrect_review_effect: ZERO_CHANGE_ZERO_TEST_ZERO_ADJUDICATION
 required_review_project: Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
 required_review_branch: codex/workbuddy-shell-v2
 required_review_mode: independent_read_only
+review1_task_id: V2-GOV-REVIEW1
+review1_thread: 01a00433-bad9-71c1-8fa5-468f676bd054
+review1_verdict: REQUEST_CHANGES
+review1_findings: P0=0, P1=5, P2=1
+fix1_task_id: V2-GOV-FIX1
+fix1_status: REVIEW_READY
+review2_task_id: V2-GOV-REVIEW2
+review2_status: READY_NOT_STARTED
 ```
 
 ## 5. 阶段2至8任务包
@@ -112,7 +131,8 @@ required_review_mode: independent_read_only
 ```text
 task_id:
 objective:
-baseline_commit:
+immutable_code_baseline:
+stage_1_builder_start_commit:
 allowed_paths:
 forbidden_paths:
 dependencies:
@@ -137,5 +157,5 @@ next_authorized_task:
 - Reviewer通过：`REVIEW_READY -> REVIEW_PASS`。
 - 需要用户Gate：`REVIEW_PASS -> AWAITING_USER_GATE`。
 - 用户接受：`AWAITING_USER_GATE -> PASS_ACCEPTED`。
-- 没有最终退出、对象漂移或证据缺失不得进入`REVIEW_PASS`。
-- 后一步不得在前一步`PASS_ACCEPTED`前开始，除非章程明确允许的同阶段非重叠离线工作。
+- 任务或审阅开始后，没有最终退出、对象漂移、证据缺失或环境干扰必须进入`INCOMPLETE`，不得进入`BLOCKED`或`REVIEW_PASS`。
+- 后一步不得在前一步`PASS_ACCEPTED`前开始；本修订不授权任何并行例外。

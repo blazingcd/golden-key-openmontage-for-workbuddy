@@ -34,6 +34,8 @@ recommended_decision_or_new_task:
 files_changed_before_stop:
 ```
 
+状态语义固定如下：`BLOCKED`只用于执行或审阅开始前的依赖、精确输入或授权未满足；任务或审阅一旦开始，出现固定对象不一致、无最终退出、证据缺失或环境干扰必须记为`INCOMPLETE`。
+
 ## 2. 禁止实现模式
 
 以下实现无论测试是否通过都不得进入V2：
@@ -86,6 +88,7 @@ files_changed_before_stop:
 - 不删除、移动、暂存或覆盖`.codex/config.toml`；
 - 不删除、移动、暂存或覆盖当前未跟踪handoff，除非用户另行明确授权；
 - 不merge/rebase `main`或长期旧分支进入V2；
+- `immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`只冻结代码谱系；阶段1执行者必须使用统筹在`V2-GOV-REVIEW2`通过后锁定的完整`stage_1_builder_start_commit`。字段仍为`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`时不得启动T1；不得直接checkout代码基线或任意`HEAD`；
 - 不清理其他任务的tracked、untracked、ignored、stash或worktree现场；
 - 每项迁移必须列出来源commit、文件、消费者和目标测试；
 - 递归删除或移动前必须验证绝对目标路径和所有权；
@@ -110,7 +113,7 @@ files_changed_before_stop:
 ## 7. 并发纪律
 
 - 同一时间最多一个真实WorkBuddy执行任务；
-- 离线代码任务只有在文件集合不重叠、接口已冻结且不会跨阶段时才可并行；
+- 当前治理修订不授权任何并行例外；后一步必须等待前一步精确`PASS_ACCEPTED`；
 - 同一Gate的Builder和Reviewer必须独立；
 - Reviewer不得修改代码来制造APPROVE；
 - 后续真实WorkBuddy Gate不得与尚未完成的安装、Core切换或全局Skill变更并行。

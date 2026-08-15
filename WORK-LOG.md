@@ -1011,3 +1011,15 @@
 - 仅选择性迁移治理文档来源提交`def921a2...`和`e20eca7...`，形成V2提交`ee60947`和`3b62728`；未带入旧长期分支后续生产代码，未触碰旧工作区两个未跟踪文件。
 - 此动作记为前置`V2-GOV-BOOTSTRAP=DONE`，只建立治理与审阅载体，不等于阶段1启动。阶段1继续为`READY_NOT_STARTED`，启动授权继续为`NO`。
 - 下一唯一允许任务为`V2-GOV-REVIEW1`：由V2项目、`codex/workbuddy-shell-v2`分支承载的独立只读治理文档审阅。
+
+## 2026-08-15：V2-GOV-FIX1治理文档修订
+
+- 前置核验通过：V2来源工作树为`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`，起始对象为`codex/workbuddy-shell-v2@08bdecfd9542281b81f4b44c34b81c39bded1a41`，本地与origin一致；`immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`是其祖先。
+- 已通过`read_thread`读取独立审阅任务`01a00433-bad9-71c1-8fa5-468f676bd054`最终报告：`V2-GOV-REVIEW1=REQUEST_CHANGES`，统计`P0=0 / P1=5 / P2=1`。
+- 首次错误审阅`01a0042e-1a5a-7ce2-ac25-d85eb764c1ac`继续保持`INCOMPLETE_WRONG_PROJECT_CONTEXT`，零证明、零裁决。
+- 从精确起始对象建立有界分支`codex/v2-gov-fix1`；未merge/rebase `main`、旧长期分支或其他推进对象。
+- 六项finding已进行有界文档修订：统一`BLOCKED/INCOMPLETE`；分离`immutable_code_baseline`与待统筹锁定的`stage_1_builder_start_commit`；列明权威输入、两个Skill、消费实现、七个证据任务和T1/T2/T5精确写路径；把阶段5至7依赖统一为逐项`PASS_ACCEPTED`；冻结Gate D默认Provider调用0/费用0及独立授权口径；明确只清除临时、测试、重复或旧版本Skill残留并保留身份锁定的正式目标Skill。
+- 更正本日志较早的“阶段1从固定代码基线开始”表述：该说法已被双基线合同取代。阶段1执行者不得直接checkout`immutable_code_baseline`；只能使用`V2-GOV-REVIEW2`通过后由统筹锁定的完整`stage_1_builder_start_commit`。
+- 原始统筹提示附件精确路径在本次环境中不存在；未从聊天猜测。七个任务ID改由受保护历史handoff的精确路径和SHA256只读核实，该文件未修改、未暂存，也不构成授权。
+- `V2-GOV-FIX1`最多推进到`REVIEW_READY`；`next_authorized_task=V2-GOV-REVIEW2`。阶段1保持`READY_NOT_STARTED`，`stage_1_start_authorized_after_document_review=NO`，`stage_1_builder_start_commit=PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`。
+- 零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core修改；零生产测试、零WorkBuddy、零安装、零Provider、零费用、零媒体生成；未启动阶段1，未创建`V2-GOV-REVIEW2`。

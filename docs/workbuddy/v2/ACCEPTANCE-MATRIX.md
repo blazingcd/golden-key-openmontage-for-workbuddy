@@ -21,9 +21,10 @@
 
 ## 2. 通用裁决
 
+- `BLOCKED`：只用于执行前依赖、精确输入或授权未满足；
 - `PASS`：精确对象、规定动作、证据和最终退出全部满足；
 - `FAIL`：在正确对象和有效执行中证明合同或结果不满足；
-- `INCOMPLETE`：对象不一致、命令无最终退出、证据缺失、环境干扰或任务被用户停止；
+- `INCOMPLETE`：执行一旦开始后对象不一致、命令无最终退出、证据缺失、环境干扰或任务被用户停止；
 - `NOT_TESTED`：没有执行；
 - `NOT_APPLICABLE`：功能不在当前范围；
 - `PARTIAL`：只用于明确允许的非二元治理维度，不得替代关键Gate的PASS。
@@ -41,7 +42,7 @@
 - 正确环境中的最小Core preflight成功；
 - 实际解释器和Core身份进入会话回执；
 - Provider调用0、费用0；
-- 新增进程、窗口和Skill残留为0。
+- 新增进程和窗口残留为0；临时、测试、重复或旧版本Skill残留为0；正式受支持且身份锁定的目标Skill必须保留，不得误删。
 
 Gate A不证明Pipeline、成片或业务效果。
 
@@ -73,7 +74,7 @@ Gate B不证明最终渲染或业务效果。
 - Tool正常返回；
 - MP4有效；
 - Provider调用0、费用0；
-- 新增浏览器、进程和临时Skill残留为0。
+- 新增浏览器和进程残留为0；临时、测试、重复或旧版本Skill残留为0；正式受支持且身份锁定的目标Skill必须保留。
 
 Gate C不证明门店竖屏问题已修复。
 
@@ -92,11 +93,13 @@ Gate C不证明门店竖屏问题已修复。
 - 不使用Shell transpose、临时预转码Skill或项目级救火脚本；
 - 输出正确9:16成片；
 - 用户实际观看并确认业务效果；
-- `PROCESS_CORRECT`、`LOCAL_RENDER_E2E`和`BUSINESS_EFFECTIVE`分别报告。
+- `PROCESS_CORRECT`、`LOCAL_RENDER_E2E`和`BUSINESS_EFFECTIVE`分别报告；
+- 默认Provider调用=`0`、费用=`0`；
+- 若未来确需Provider，必须引用独立、显式的Provider授权和费用授权，并把调用、实际费用、对象和退出状态单独报告；该调用不得使Gate D自动获得`PROVIDER_E2E`，也不得替代Gate E。
 
 ## 7. Gate E：可选Provider扩展
 
-Gate E不是Shell V2本地版完成前置。
+Gate E不是Shell V2本地版完成前置，且与Gate D保持独立裁决。
 
 只有用户单独授权后才验证：
 

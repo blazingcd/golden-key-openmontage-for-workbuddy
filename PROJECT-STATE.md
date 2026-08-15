@@ -9,10 +9,11 @@
 - 治理内容来源提交为`def921a2e29b4858f289c44c3e9183619ba31ce6`和`e20eca7b73393e2897e8155e09499fea458909b6`；V2分支已从固定代码基线建立，并以`ee60947`、`3b62728`只选择性迁移治理文档，没有整体追随长期分支新HEAD。
 - 当前状态为`GOVERNANCE_DOCS=DONE / STAGE_1=READY_NOT_STARTED`。
 - 阶段1启动授权仍为`NO`；`codex/workbuddy-shell-v2`分支和本项目worktree只作为前置治理及独立审阅载体建立，没有修改生产代码、Skill、安装器、测试或Core。
-- `immutable_code_baseline`仍为`2a2bf09832d558388dc2816c54b32a2dce4aa607`；`stage_1_builder_start_commit=PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`。只有`V2-GOV-REVIEW2`通过后才由统筹锁定完整提交，未锁定不得启动T1；执行者不得直接checkout代码基线或任意`HEAD`。后续不得merge/rebase推进中的`main`或旧长期分支。
+- `immutable_code_baseline`仍为`2a2bf09832d558388dc2816c54b32a2dce4aa607`；`stage_1_builder_start_commit=PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`。治理复审已通过，但阶段1尚未获用户授权，因此该字段继续保持待锁定；未锁定不得启动T1。执行者不得直接checkout代码基线或任意`HEAD`，后续不得merge/rebase推进中的`main`或旧长期分支。
 - 首次独立审阅误挂在旧协调项目/旧分支，已停止并记为`INCOMPLETE_WRONG_PROJECT_CONTEXT`，零修改、零测试、零裁决；该错误任务不构成任何审阅证据。
 - 正确的独立审阅`V2-GOV-REVIEW1`由任务`01a00433-bad9-71c1-8fa5-468f676bd054`完成，结论为`REQUEST_CHANGES`，finding统计为`P0=0 / P1=5 / P2=1`。
-- `V2-GOV-FIX1`已完成有界治理文档修订，当前最多为`REVIEW_READY`；`next_authorized_task=V2-GOV-REVIEW2`，Reviewer由统筹另行安排。阶段1仍为`READY_NOT_STARTED`，`stage_1_start_authorized_after_document_review=NO`。
+- `V2-GOV-REVIEW2`确认REVIEW1六项finding全部关闭，但发现一项阶段级门禁范围回归并返回`REQUEST_CHANGES`；`V2-GOV-FIX2`以两处单行替换修复，`V2-GOV-REVIEW3`返回`APPROVE`且P0/P1/P2均为0。
+- 审阅通过对象`5874581c88c3f6bf8d025c58eefa1ad92a96e07d`已按用户授权快进集成到`codex/workbuddy-shell-v2`。治理Gate=`PASS_ACCEPTED`，但阶段1仍为`READY_NOT_STARTED`，启动授权仍为`NO`，当前没有已授权执行任务。
 - 最高职责原则已冻结：WorkBuddy是唯一对话Agent，OpenMontage Core是唯一生产决策与执行权威，Shell只负责安装、对象锁定、环境绑定、会话入口以及状态和结果转交；Shell不得成为第二个Director或生产状态机。
 - 状态语义已统一：`BLOCKED`只用于执行前依赖、精确输入或授权未满足；任务或审阅开始后，对象不一致、无最终退出、证据缺失或环境干扰必须为`INCOMPLETE`。
 - 长期工作区既有未跟踪`.codex/config.toml`与`docs/workbuddy/WORKBUDDY-SHELL-V2-REFACTOR-HANDOFF-2026-08-15.md`继续原样保护，不属于本次权威文档提交。

@@ -1023,3 +1023,12 @@
 - 原始统筹提示附件精确路径在本次环境中不存在；未从聊天猜测。七个任务ID改由受保护历史handoff的精确路径和SHA256只读核实，该文件未修改、未暂存，也不构成授权。
 - `V2-GOV-FIX1`最多推进到`REVIEW_READY`；`next_authorized_task=V2-GOV-REVIEW2`。阶段1保持`READY_NOT_STARTED`，`stage_1_start_authorized_after_document_review=NO`，`stage_1_builder_start_commit=PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`。
 - 零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core修改；零生产测试、零WorkBuddy、零安装、零Provider、零费用、零媒体生成；未启动阶段1，未创建`V2-GOV-REVIEW2`。
+
+## 2026-08-15：V2治理复审闭环与正式分支集成
+
+- `V2-GOV-REVIEW2`任务`01a0044a-8ef6-7362-846c-df50a50743a5`确认REVIEW1的六项finding全部`CLOSED`，同时发现FIX1新增一项阶段级门禁范围回归，结论`REQUEST_CHANGES`，统计`P0=0 / P1=1 / P2=0`。
+- `V2-GOV-FIX2`任务`01a00453-fc31-7ef2-9b0b-f56523432502`只在`DRIFT-GUARD.md`和`TASK-REGISTER.md`各替换一行，结果提交`5874581c88c3f6bf8d025c58eefa1ad92a96e07d`，相对父提交为2增2删、生产代码变化0。
+- `V2-GOV-REVIEW3`任务`01a00459-2839-7f43-bc82-eb33e52b2add`仅复审上述两行，结论`APPROVE`，`P1-R1=CLOSED`，统计`P0=0 / P1=0 / P2=0`。
+- 用户明确授权集成治理文档后，正式分支`codex/workbuddy-shell-v2`从`08bdecfd9542281b81f4b44c34b81c39bded1a41`快进到审阅通过对象`5874581c88c3f6bf8d025c58eefa1ad92a96e07d`并推送；没有合并提交、没有merge/rebase `main`或旧长期分支。
+- 本次集成及状态收口只涉及治理文档。阶段1仍为`READY_NOT_STARTED`，`stage_1_start_authorized_after_document_review=NO`，`stage_1_builder_start_commit=PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`，当前没有已授权执行任务。
+- 零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core修改；零WorkBuddy、零安装、零Provider、零费用、零媒体生成。

@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 统筹文档入口
 
-状态：`V2_GOV_FIX1_REVIEW_READY / STAGE_1_READY_NOT_STARTED`
+状态：`GOVERNANCE_REVIEW_PASS_ACCEPTED / STAGE_1_READY_NOT_STARTED`
 
 更新时间：2026-08-15
 
@@ -10,7 +10,7 @@
 
 项目状态、任务授权、职责边界和 Gate 结论不得依赖聊天记忆。聊天、旧 Prompt、历史报告和 Codex 任务只能作为证据输入；只有本目录的受版本控制文档及其明确引用的 Git 对象可以改变 V2 项目状态。
 
-当前尚未启动阶段1。为保证独立审阅由本项目、本分支承载，已完成仅含Git工作区建立和治理文档迁移的前置引导；该动作不属于阶段1实现。`V2-GOV-REVIEW1` 已返回 `REQUEST_CHANGES`，`V2-GOV-FIX1` 已把有界治理修订推进到 `REVIEW_READY`。当前唯一允许的下一动作是 `V2-GOV-REVIEW2` 独立只读审阅；只有该审阅通过、统筹锁定完整 `stage_1_builder_start_commit` 且用户另行授权后，阶段1才可从 `V2-S1-T1` 开始。
+当前尚未启动阶段1。治理文档经历 `REVIEW1 REQUEST_CHANGES -> FIX1 -> REVIEW2 REQUEST_CHANGES -> FIX2 -> REVIEW3 APPROVE`，审阅通过对象 `5874581c88c3f6bf8d025c58eefa1ad92a96e07d` 已按用户授权快进集成到正式V2分支。当前没有已授权执行任务；只有用户另行明确授权阶段1、统筹锁定完整 `stage_1_builder_start_commit` 后，阶段1才可从 `V2-S1-T1` 开始。
 
 ## 2. 权威优先级
 
@@ -32,7 +32,7 @@
 - V2项目分支：`codex/workbuddy-shell-v2`
 - `immutable_code_baseline`：`2a2bf09832d558388dc2816c54b32a2dce4aa607`
 - `stage_1_builder_start_commit`：`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`
-- `stage_1_builder_start_commit` 只能由统筹在 `V2-GOV-REVIEW2` 通过后锁定为完整40位提交；未锁定时不得启动 `V2-S1-T1`。执行者不得直接 checkout `immutable_code_baseline` 而丢失治理文档，也不得使用任意 `HEAD`。
+- `stage_1_builder_start_commit` 只能由统筹在治理复审通过且用户明确授权阶段1后锁定为完整40位提交；未锁定时不得启动 `V2-S1-T1`。执行者不得直接 checkout `immutable_code_baseline` 而丢失治理文档，也不得使用任意 `HEAD`。
 - 治理文档来源提交：`def921a2e29b4858f289c44c3e9183619ba31ce6`、`e20eca7b73393e2897e8155e09499fea458909b6`
 - V2分支选择性迁移提交：`ee60947`、`3b62728`
 - 已批准的V2代码基线：`2a2bf09832d558388dc2816c54b32a2dce4aa607`

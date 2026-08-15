@@ -31,7 +31,8 @@ governance_docs_commit: def921a2e29b4858f289c44c3e9183619ba31ce6
 governance_docs_source_branch: codex/w4.1-portable-python
 v2_governance_import_commits: ee60947, 3b62728
 v2_source_branch: codex/workbuddy-shell-v2
-v2_governance_fix_branch: codex/v2-gov-fix1
+v2_governance_reviewed_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
+v2_governance_integrated_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
 v2_worktree: D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
 immutable_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
 stage_1_builder_start_commit: PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK
@@ -48,15 +49,24 @@ wrong_project_review: INCOMPLETE_WRONG_PROJECT_CONTEXT
 v2_gov_review1: REQUEST_CHANGES
 v2_gov_review1_thread: 01a00433-bad9-71c1-8fa5-468f676bd054
 v2_gov_review1_findings: P0=0, P1=5, P2=1
-v2_gov_fix1: REVIEW_READY
-next_authorized_task: V2-GOV-REVIEW2
+v2_gov_fix1: DONE
+v2_gov_review2: REQUEST_CHANGES
+v2_gov_review2_thread: 01a0044a-8ef6-7362-846c-df50a50743a5
+v2_gov_review2_findings: P0=0, P1=1, P2=0
+v2_gov_fix2: DONE
+v2_gov_fix2_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
+v2_gov_review3: REVIEW_PASS
+v2_gov_review3_thread: 01a00459-2839-7f43-bc82-eb33e52b2add
+v2_gov_review3_findings: P0=0, P1=0, P2=0
+governance_review_gate: PASS_ACCEPTED
+next_authorized_task: NONE_AWAITING_EXPLICIT_USER_STAGE_1_AUTHORIZATION
 ```
 
 为让独立审阅在本项目、本分支发生，统筹已从固定代码基线`2a2bf09832d558388dc2816c54b32a2dce4aa607`建立V2工作树，并只选择性迁移治理文档。该前置引导不等于阶段1启动，不得把长期分支后续HEAD整体作为V2代码起点。
 
-`immutable_code_baseline`固定且不可变，只约束生产代码谱系；它不是阶段1 Builder的checkout目标。`stage_1_builder_start_commit`当前必须保持`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`，只有`V2-GOV-REVIEW2`通过后才由统筹锁定为完整40位提交。未锁定前不得启动`V2-S1-T1`；执行者不得直接checkout固定代码基线而丢失治理文档，也不得使用任意`HEAD`。
+`immutable_code_baseline`固定且不可变，只约束生产代码谱系；它不是阶段1 Builder的checkout目标。`stage_1_builder_start_commit`当前必须保持`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`，只有用户明确授权阶段1后才由统筹锁定为完整40位提交。未锁定前不得启动`V2-S1-T1`；执行者不得直接checkout固定代码基线而丢失治理文档，也不得使用任意`HEAD`。
 
-当前先执行 `V2-GOV-REVIEW2`。后续若审阅通过、统筹完成上述对象锁定且用户明确授权启动阶段1，才把`V2-S1-T1`改为`IN_PROGRESS`。
+当前没有已授权执行任务。后续只有用户明确授权启动阶段1且统筹完成上述对象锁定，才把`V2-S1-T1`改为`IN_PROGRESS`。
 
 ## 3. 八阶段总账
 
@@ -65,9 +75,12 @@ next_authorized_task: V2-GOV-REVIEW2
 | 前置治理 | `V2-GOV-001` | 固化章程、防漂移、账本、阶段1计划和验收矩阵 | `DONE` | 用户要求 | 不等于阶段1开始 |
 | 前置引导 | `V2-GOV-BOOTSTRAP` | 从固定基线建立V2分支/worktree并只迁入治理文档 | `DONE` | 用户要求独立审阅须在本项目本分支 | 不等于阶段1开始或代码实现 |
 | 前置审阅 | `V2-GOV-REVIEW1` | 在V2项目/分支独立只读审阅治理文档 | `REQUEST_CHANGES` | `V2-GOV-BOOTSTRAP DONE` | Reviewer任务`01a00433-bad9-71c1-8fa5-468f676bd054`；P0=0、P1=5、P2=1；不等于阶段1批准 |
-| 治理修订 | `V2-GOV-FIX1` | 有界关闭REVIEW1的六项finding | `REVIEW_READY` | `V2-GOV-REVIEW1 REQUEST_CHANGES` | 不等于APPROVE或阶段1批准 |
-| 修订复审 | `V2-GOV-REVIEW2` | 独立只读审阅FIX1精确提交 | `READY_NOT_STARTED` | `V2-GOV-FIX1 REVIEW_READY` | 由统筹另行创建；当前任务不得创建 |
-| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `READY_NOT_STARTED` | `V2-GOV-REVIEW2 APPROVE`、统筹锁定`stage_1_builder_start_commit`、用户明确授权 | 无生产实现 |
+| 治理修订 | `V2-GOV-FIX1` | 有界关闭REVIEW1的六项finding | `DONE` | `V2-GOV-REVIEW1 REQUEST_CHANGES` | 六项在REVIEW2全部CLOSED；修订已集成 |
+| 修订复审 | `V2-GOV-REVIEW2` | 独立只读审阅FIX1精确提交 | `REQUEST_CHANGES` | `V2-GOV-FIX1 REVIEW_READY` | 六项原finding关闭；发现新增P1×1 |
+| 最小修订 | `V2-GOV-FIX2` | 修复阶段级门禁范围回归 | `DONE` | `V2-GOV-REVIEW2 REQUEST_CHANGES` | 提交`5874581c...`已集成 |
+| 最小复审 | `V2-GOV-REVIEW3` | 只读复审FIX2两处单行替换 | `REVIEW_PASS` | `V2-GOV-FIX2 REVIEW_READY` | `APPROVE`；P0=0、P1=0、P2=0 |
+| 治理Gate | `V2-GOV-GATE` | 用户授权集成审阅通过文档 | `PASS_ACCEPTED` | `V2-GOV-REVIEW3 REVIEW_PASS` | 不等于阶段1启动授权 |
+| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `READY_NOT_STARTED` | 统筹锁定`stage_1_builder_start_commit`、用户明确授权 | 无生产实现 |
 | 2 | `V2-S2` | 建立Core Registration合同 | `PLANNED` | `V2-S1 PASS_ACCEPTED` | 无Schema、验证器、活动对象 |
 | 3 | `V2-S3` | 建立Launcher会话环境绑定 | `PLANNED` | `V2-S2 PASS_ACCEPTED` | 无V2 Launcher |
 | 4 | `V2-S4` | 重写生产Skill和Onboarding交接 | `PLANNED` | `V2-S3 PASS_ACCEPTED` | 无V2 Skill |
@@ -81,7 +94,7 @@ next_authorized_task: V2-GOV-REVIEW2
 | Task ID | 内容 | 状态 | 允许路径 | 前置 |
 |---|---|---|---|---|
 | `V2-S1-T0` | 建立固定分支和独立worktree | `SUPERSEDED` | 无 | 已由前置 `V2-GOV-BOOTSTRAP` 完成，不计为阶段1启动 |
-| `V2-S1-T1` | 建立V2文档入口和权威关系 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md` | `V2-GOV-REVIEW2 APPROVE`、统筹锁定`stage_1_builder_start_commit`且用户明确授权阶段1 |
+| `V2-S1-T1` | 建立V2文档入口和权威关系 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md` | 统筹锁定`stage_1_builder_start_commit`且用户明确授权阶段1 |
 | `V2-S1-T2` | 冻结职责和目标架构 | `BLOCKED` | `docs/workbuddy/v2/PROJECT-CHARTER.md` | T1 `REVIEW_READY` |
 | `V2-S1-T3` | 逐模块处置矩阵 | `BLOCKED` | `MODULE-DISPOSITION.md` | T2 |
 | `V2-S1-T4` | 冻结验收矩阵和状态模型 | `BLOCKED` | `ACCEPTANCE-MATRIX.md` | T2 |
@@ -105,9 +118,21 @@ review1_thread: 01a00433-bad9-71c1-8fa5-468f676bd054
 review1_verdict: REQUEST_CHANGES
 review1_findings: P0=0, P1=5, P2=1
 fix1_task_id: V2-GOV-FIX1
-fix1_status: REVIEW_READY
+fix1_status: DONE
 review2_task_id: V2-GOV-REVIEW2
-review2_status: READY_NOT_STARTED
+review2_thread: 01a0044a-8ef6-7362-846c-df50a50743a5
+review2_status: REQUEST_CHANGES
+review2_findings: P0=0, P1=1, P2=0
+fix2_task_id: V2-GOV-FIX2
+fix2_thread: 01a00453-fc31-7ef2-9b0b-f56523432502
+fix2_result_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
+fix2_status: DONE
+review3_task_id: V2-GOV-REVIEW3
+review3_thread: 01a00459-2839-7f43-bc82-eb33e52b2add
+review3_status: REVIEW_PASS
+review3_verdict: APPROVE
+review3_findings: P0=0, P1=0, P2=0
+governance_gate: PASS_ACCEPTED
 ```
 
 ## 5. 阶段2至8任务包

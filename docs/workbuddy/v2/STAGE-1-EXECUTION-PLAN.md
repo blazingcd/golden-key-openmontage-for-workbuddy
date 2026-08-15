@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 阶段1执行计划
 
-状态：`READY_NOT_STARTED / START_NOT_AUTHORIZED_AFTER_DOC_REVIEW`
+状态：`READY_NOT_STARTED / START_NOT_AUTHORIZED`
 
 ## 1. 阶段目标
 
@@ -18,7 +18,7 @@
 ## 2. 固定输入
 
 - `immutable_code_baseline`：`2a2bf09832d558388dc2816c54b32a2dce4aa607`。该对象只冻结生产代码谱系，不是阶段1 Builder的checkout目标；
-- `stage_1_builder_start_commit`：`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`。只有`V2-GOV-REVIEW2`通过后，统筹才可锁定完整40位提交；未锁定不得启动T1；
+- `stage_1_builder_start_commit`：`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`。治理复审已经通过，但只有用户另行明确授权阶段1后，统筹才可锁定完整40位提交；未锁定不得启动T1；
 - V2来源分支：`codex/workbuddy-shell-v2`
 - 当前worktree：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
 - `stage_1_builder_start_commit`上的V2治理文件：`docs/workbuddy/v2/README.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`PROJECT-STATE.md`、`WORK-LOG.md`；

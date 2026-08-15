@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 阶段2 OpenMontage 执行包登记与定位任务包
 
-状态：`PLAN_REVIEW_READY / IMPLEMENTATION_NOT_AUTHORIZED`
+状态：`IMPLEMENTATION_REVIEW_CHANGES_REQUIRED / CONTRACT_REVIEW_READY`
 
 规划起点：`fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9`
 
@@ -125,10 +125,11 @@ Locator每次重做Package Registration内容hash、唯一shape、规范路径�
 `active.json`必须且只能含`schema_version=golden-key-workbuddy-active-openmontage-package-v1`、固定`owner`和小写64位`registration_sha256`，同样拒绝未知/缺失/重复字段。
 
 - Package Registration对象先同目录临时写入、flush、`fsync`、回读核验，再原子发布；同hash同字节幂等，不同字节或外来对象拒绝覆盖。
-- 所有active package pointer writer共用固定锁`<DataRoot>/State/PackageRegistration/v1/active.lock`。锁文件内容必须精确为规范JSON `{"owner":"golden-key-workbuddy-shell-v2","schema_version":"golden-key-workbuddy-active-package-lock-v1"}\n`；只允许`register_package`在registry首次为空时用`O_CREAT|O_EXCL`建立，同字节已存在为幂等。已有Package Registration或pointer时锁文件缺失/改字节均为`TAMPERED`，不得重建。
+- 受支持的active package pointer writer仅为`activate_package`和`recover_active_package`；两者必须共用固定锁`<DataRoot>/State/PackageRegistration/v1/active.lock`。锁文件内容必须精确为规范JSON `{"owner":"golden-key-workbuddy-shell-v2","schema_version":"golden-key-workbuddy-active-package-lock-v1"}\n`；只允许`register_package`在registry首次为空时用`O_CREAT|O_EXCL`建立，同字节已存在为幂等。已有Package Registration或pointer时锁文件缺失/改字节均为`TAMPERED`，不得重建。
 - 排他锁必须是该固定文件byte 0上的内核级进程间独占锁：Windows每次先`seek(0)`再用`msvcrt.locking(..., LK_NBLCK, 1)`，释放时`seek(0)`后`LK_UNLCK`；POSIX用`fcntl.flock(..., LOCK_EX|LOCK_NB)`并以`LOCK_UN`释放。取得锁后必须在临界区重新读取并验证锁文件完整字节。禁止仅凭PID、进程内mutex或“锁文件存在”判断。固定超时5.0秒、单调时钟每0.05秒重试；超时/占用返回`ACTIVE_LOCK_BUSY`并零写入，不等待无界、不删锁文件。
-- `activate_package`和`recover_active_package`必须从取得同一排他锁后才开始最终读取`active.json`；在临界区内比较调用方给出的当前原始指针SHA或`MISSING`、完整复核目标、写/flush/`fsync`/回读同目录临时文件并执行`os.replace`。比较到replace之间不得释放锁，也不得调用未持锁的替换helper。
+- `activate_package`和`recover_active_package`必须从取得同一排他锁后才开始最终读取`active.json`；在临界区内比较调用方给出的当前原始指针SHA或`MISSING`、完整复核目标、写/flush/`fsync`/回读同目录临时文件并执行`os.replace`。比较到replace之间不得释放锁，也不得调用未持锁的替换helper。对所有守约writer，本合同保证互斥、expected raw pointer SHA/`MISSING` CAS、目标复核、`os.replace`原子可见和崩溃安全。
 - `activate_package`只接受有效现有指针或精确`MISSING`，且最终原始字节状态必须与expected一致；现有指针损坏时拒绝。`recover_active_package`只接受现有损坏指针的精确原始字节SHA；有效指针不得走恢复入口。两者CAS失败均不得覆盖当前writer结果。
+- 绕过`active.lock`直接写`active.json`者属于tampering，不是受支持的并发writer。writer对其在临界区内实际观察到的篡改必须fail closed；但本合同不承诺在最终比较完成后到`os.replace`调用前阻止或保留任意不守锁写入，也不承诺检测已被随后合法replace完全覆盖且未留下可观察痕迹的瞬时写入。替换后writer回读以及后续每次`locate_active_package`消费都必须完整重验，并对仍可观察的篡改fail closed。
 - 正常返回和任何异常都在`finally`释放内核锁并关闭句柄；进程崩溃由OS自动释放内核锁，持久`active.lock`身份文件不删除。后续writer重新获取成功后仍重做最终读取/CAS；锁文件缺失、损坏或平台锁API不可用时fail closed，不扫描、不猜测“陈旧锁”、不自动回退。
 - 新指针替换前失败保留旧指针；替换成功后回读必须有效。临时文件永远不被Locator读取。
 - 回滚只允许显式激活给定旧Package Registration SHA，且旧对象及其执行包身份完整重验通过；不得扫描、猜测、按时间选择或自动回退。
@@ -177,7 +178,7 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 - 输入合同：五个显式绝对路径参数；`package_python`必须是Manifest锁定的`PackageRoot/bootstrap/python/python.exe`，其余文件由测试夹具或已授权生命周期调用方提供。
 - 输出合同：规范Package Registration字节、`registration_sha256`和只读字段对象；失败抛出稳定的Package Registration合同错误并产生零写入。
 - 实现步骤：定义2.2唯一shape与严格JSON加载器；实现路径/Unicode/hash规范化；分别验证Manifest/Lock authority；验证sidecar、ZIP唯一条目、身份、bundle digest、全Lock清单、Guide和Manifest锁定Python；生成规范对象。
-- 必须测试：有效最小候选；根及每个嵌套对象的必需/未知/重复字段；两种authority完整shape及仅共有键交叉比较；commit/hash/size类型；sidecar/archive不一致；Manifest/Lock身份不一致；Python相对路径/owner/hash/size/bootstrap metadata；外部Python拒绝；安全路径、NFC和确定性对象SHA；失败前后文件系统快照相同。
+- 必须测试：有效最小候选；根及每个嵌套对象的必需/未知/重复字段；严格JSON拒绝`NaN`、`Infinity`、`-Infinity`和lone surrogate；两种authority完整shape及仅共有键交叉比较；commit/hash/size类型；sidecar/archive不一致；Manifest/Lock身份不一致；Python相对路径/owner/hash/size/bootstrap metadata；外部Python拒绝；安全路径、NFC和确定性对象SHA；Windows路径组件拒绝ADS、设备名、尾点、尾空格和alias；失败前后文件系统快照相同。
 - `PASS`：上述测试全部通过且纯验证路径零写入。`FAIL`：在精确对象上得到最终测试失败。`INCOMPLETE`：对象/环境漂移、命令无最终退出或证据缺失。
 - 提交推送：T1不单独提交；只在T5以精确白名单一次提交并推送。
 - Reviewer只读范围：最终`implementation_start_commit..implementation_result_commit`中的两个白名单文件，按本节合同定位T1变化。
@@ -190,8 +191,8 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 - 允许/禁止修改路径：第4节。
 - 输入合同：T1已验证的规范对象或显式`registration_sha256`；激活必须给出当前指针原始字节SHA或`MISSING`，恢复必须给出损坏指针原始字节SHA；`DataRoot`为调用方给出的绝对路径。
 - 输出合同：固定registry路径下的一个不可变对象和至多一个原子活动指针；返回精确对象SHA，不返回生产状态。
-- 实现步骤：冻结目录、owner和`active.lock`身份；temp同目录写入、flush/fsync、回读；对象内容寻址发布和幂等；实现两平台内核锁adapter及固定超时；让activate/recover在同一锁临界区完成最终读取、expected SHA/MISSING CAS、目标复核、temp落盘和`os.replace`；显式旧对象重新激活作为唯一回滚入口。
-- 必须测试：首次写、同对象幂等、外来/冲突对象拒绝、锁身份缺失/篡改/API不可用/占用超时、异常与模拟崩溃后内核锁释放、旧指针保留、replace失败、stale temp忽略；用barrier暂停writer A于“最终比较完成后、replace之前”，writer B必须因同锁阻塞/超时且不能replace，A完成释放后B以原expected重试必须`ACTIVE_CAS_MISMATCH`且零写入；activate与recover双向互斥；损坏指针正确对象锁恢复、错误锁/缺文件/并发字节变化/失效目标均拒绝；显式回滚成功/失效旧对象拒绝；固定路径外零写入。
+- 实现步骤：冻结目录、owner和`active.lock`身份；temp同目录写入、flush/fsync、回读；对象内容寻址发布和幂等；实现两平台内核锁adapter，并让进程内竞争与内核锁等待共享一个从调用开始计时、总计5.0秒的monotonic deadline；让activate/recover在同一锁临界区完成最终读取、expected SHA/MISSING CAS、目标复核、temp落盘和`os.replace`；显式旧对象重新激活作为唯一回滚入口。
+- 必须测试：首次写、同对象幂等、外来/冲突对象拒绝、锁身份缺失/篡改/API不可用/总计5.0秒共享monotonic deadline占用超时、异常与模拟崩溃后内核锁释放、旧指针保留、replace失败、stale temp忽略；用barrier暂停守约writer A于“最终比较完成后、replace之前”，守约writer B必须因同锁阻塞/超时且不能replace，A完成释放后B以原expected重试必须`ACTIVE_CAS_MISMATCH`且零写入；activate与recover双向互斥；损坏指针正确对象锁恢复、错误锁/缺文件/已观察并发字节变化/失效目标均拒绝；显式回滚成功/失效旧对象拒绝；固定路径外零写入。
 - `PASS/FAIL/INCOMPLETE`：与T1相同，并额外要求注入写入/替换失败时旧活动对象可读且无半成品被消费。
 - 提交推送：不单独提交；T5统一提交推送。
 - Reviewer只读范围：同T1，重点比较对象写入和指针函数，不审生命周期策略。
@@ -219,8 +220,8 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 - 禁止修改路径：第4节统一禁止路径。
 - 输入合同：由测试独立生成的本地小型ZIP、sidecar、Manifest、Lock、PackageRoot、Python与registry夹具；不得使用真实Release、网络或安装。
 - 输出合同：每个负例得到稳定错误类别、零活动指针前移、零对象猜测、零范围外写入。
-- 实现步骤：逐类单点破坏；记录预期错误；覆盖JSON重复key、两种authority shape、清单重复路径、archive重复条目、缺失、字节篡改、root/python/guide漂移、外部Python、path traversal和symlink/reparse逃逸；覆盖active锁/CAS竞态并证明恢复只接受显式损坏指针对象锁和显式有效Package Registration SHA。
-- 必须测试：本节全部矩阵；锁占用/损坏/超时，activate与recover互斥，最终比较后到replace前的竞争writer，expected过期，损坏指针恢复的错误当前SHA、无目标及坏目标；并证明“objects中仅一个候选”也不能替代缺失活动指针。
+- 实现步骤：逐类单点破坏；记录预期错误；覆盖严格JSON拒绝非有限数和lone surrogate、JSON重复key、两种authority shape、清单重复路径、archive重复条目、缺失、字节篡改、root/python/guide漂移、外部Python、path traversal、Windows ADS/设备名/尾点/尾空格/alias，以及真实symlink/reparse等逃逸负例；覆盖active锁/CAS竞态并证明恢复只接受显式损坏指针对象锁和显式有效Package Registration SHA。
+- 必须测试：本节全部矩阵；守约writer锁占用/损坏/总计5.0秒共享deadline超时，activate与recover互斥，守约writer在最终比较后到replace前仍被同锁排除，stale expected重试CAS失败，锁内实际观察到的绕锁篡改拒绝，替换后或后续Locator仍可观察的篡改拒绝，损坏指针恢复的错误当前SHA、无目标及坏目标；并证明“objects中仅一个候选”也不能替代缺失活动指针。不得要求系统保留或必然检测在最终比较后、合法`os.replace`前发生且随后被合法replace完全覆盖、没有可观察痕迹的不守锁瞬时写入。
 - `PASS`：所有负例明确拒绝且正例仍通过。`FAIL/INCOMPLETE`：与T1相同。
 - 提交推送：不单独提交；T5统一提交推送。
 - Reviewer只读范围：同T1；只检查负面合同覆盖，不要求真实安装或真实执行包。
@@ -242,32 +243,34 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 
 ## 6. 审阅、Gate和状态转换
 
-### 当前规划链
+### 已完成规划与实现审阅链
 
 ```text
 V2-S2-PLAN-BUILDER1@fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9 -> PLAN_REVIEW_READY
 V2-S2-PLAN-REVIEW1: 只读比较 fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9..planning_result_commit
-APPROVE -> V2-S2-PLAN-GATE
+APPROVE -> V2-S2-PLAN-GATE -> PASS_ACCEPTED@3027eed132ac53e85d2e0d25ec711675b55f18cb
 REQUEST_CHANGES -> 仅开 V2-S2-PLAN-FIX<n> 并复审直接diff
 INCOMPLETE -> 停止，保持 implementation_authorization=NOT_GRANTED
+V2-S2-BUILDER1@1ca826f04f80e0dcf940e62c1ac6605b03854e41 -> REVIEW_READY@0aac6efd1c524dab4a7dd07a9803ce4b125425e2
+V2-S2-REVIEW1 -> REQUEST_CHANGES / REVIEW_CHANGES_REQUIRED
 ```
 
-规划Reviewer必须确认本文可直接派发、两个实现白名单精确、每任务测试/退出条件齐全、其他五模块和生产控制面为零、相对规划起点生产代码变化为0；零修改、零commit、零push，结论只允许`APPROVE / REQUEST_CHANGES / INCOMPLETE`。
+规划Reviewer已确认本文可直接派发、两个实现白名单精确、每任务测试/退出条件齐全、其他五模块和生产控制面为零、相对规划起点生产代码变化为0，并已给出`APPROVE`。
 
-用户接受`V2-S2-PLAN-GATE`只把`stage_2_plan_status`设为`PASS_ACCEPTED`，不会授权实现。只有用户随后明确授权“启动阶段二实现”，统筹才可锁定精确`implementation_start_commit`并创建`V2-S2-BUILDER1`。
+用户随后另行明确授权阶段二实现，统筹已以`1ca826f04f80e0dcf940e62c1ac6605b03854e41`锁定`implementation_start_commit`并创建`V2-S2-BUILDER1`；该历史授权不改变当前实现结果的`REVIEW_CHANGES_REQUIRED`状态。
 
-### 未来实现链
+### 当前合同裁决链
 
 ```text
-V2-S2-BUILDER1@implementation_start_commit
-  -> 串行完成 T1..T5 -> REVIEW_READY@implementation_result_commit
-V2-S2-T6 / V2-S2-REVIEW1
-  -> 只读比较 implementation_start_commit..implementation_result_commit
-APPROVE -> V2-S2-GATE（用户接受阶段2实现）
-REQUEST_CHANGES -> 最小 V2-S2-FIX<n>，只复审修订diff及原finding
-INCOMPLETE -> 停止，不得提交用户实现Gate
+V2-S2-CONTRACT-ADJUDICATION1@1ca826f04f80e0dcf940e62c1ac6605b03854e41
+  -> 只修订STAGE-2-TASK-PACKET.md与TASK-REGISTER.md -> CONTRACT_REVIEW_READY@contract_adjudication_result_commit
+V2-S2-CONTRACT-REVIEW1
+  -> 只读比较 1ca826f04f80e0dcf940e62c1ac6605b03854e41..contract_adjudication_result_commit
+APPROVE -> 才可派发最小V2-S2-FIX1处理仍开放代码finding
+REQUEST_CHANGES -> 仅开V2-S2-CONTRACT-FIX1并复审直接diff
+INCOMPLETE -> 停止，保持REVIEW_CHANGES_REQUIRED，不得派发代码FIX或用户实现Gate
 ```
 
-实现Reviewer必须独立、只读、零修改/commit/push；核验任务合同、全部测试最终退出、唯一活动指针、Locator零写入、全负面矩阵、白名单和禁止路径、生产控制面为零。最终只允许`APPROVE / REQUEST_CHANGES / INCOMPLETE`。
+合同Reviewer必须独立、只读、零修改/commit/push；精确比较范围只允许`1ca826f04f80e0dcf940e62c1ac6605b03854e41..contract_adjudication_result_commit`中的`STAGE-2-TASK-PACKET.md`和`TASK-REGISTER.md`，并可把`1ca826f04f80e0dcf940e62c1ac6605b03854e41..0aac6efd1c524dab4a7dd07a9803ce4b125425e2`实现diff作为只读事实证据。Reviewer必须确认守约writer互斥/CAS/目标复核/原子替换/崩溃安全保持不降级，不再要求不可观察微窗口篡改必然被保留或检测，三项开放实现finding仍明确留给后续代码FIX，生产代码和测试变化均为0。最终只允许`APPROVE / REQUEST_CHANGES / INCOMPLETE`。
 
 只有结果已推送、Reviewer `APPROVE`、本地/远端/审阅对象一致、工作树clean、实现仅限本模块且用户接受`V2-S2-GATE`后，`stage_2_status`才可变为`PASS_ACCEPTED`。在此之前不得创建阶段3任务、实现其他五模块或声称真实WorkBuddy、Runtime、OpenMontage Agent流程、Provider或媒体已验证。

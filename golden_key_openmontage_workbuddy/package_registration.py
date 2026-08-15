@@ -86,6 +86,23 @@ ERROR_CODES = frozenset(
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+_WINDOWS_INVALID_COMPONENT_CHARS = frozenset('<>:"|?*')
+_WINDOWS_RESERVED_COMPONENT_STEMS = frozenset(
+    {
+        "con",
+        "prn",
+        "aux",
+        "nul",
+        *(f"com{number}" for number in range(1, 10)),
+        *(f"lpt{number}" for number in range(1, 10)),
+        "com¹",
+        "com²",
+        "com³",
+        "lpt¹",
+        "lpt²",
+        "lpt³",
+    }
+)
 _ACTIVE_LOCK_TIMEOUT_SECONDS = 5.0
 _ACTIVE_LOCK_RETRY_SECONDS = 0.05
 _PROCESS_ACTIVE_LOCK = threading.Lock()
@@ -124,15 +141,20 @@ def _freeze(value: Any) -> Any:
 
 
 def _canonical_json(value: Mapping[str, Any]) -> bytes:
-    return (
-        json.dumps(
-            value,
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-        ).encode("utf-8")
-        + b"\n"
-    )
+    _require_nfc(value, label="canonical JSON")
+    try:
+        return (
+            json.dumps(
+                value,
+                allow_nan=False,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+            + b"\n"
+        )
+    except (TypeError, ValueError, UnicodeEncodeError) as exc:
+        _fail("INPUT_INVALID", f"canonical JSON cannot be encoded: {exc}")
 
 
 def _duplicate_rejecting_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -144,13 +166,21 @@ def _duplicate_rejecting_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
+def _reject_json_constant(value: str) -> None:
+    _fail("INPUT_INVALID", f"non-finite JSON constant is forbidden: {value}")
+
+
 def _strict_json_bytes(raw: bytes, *, label: str) -> dict[str, Any]:
     try:
         text = raw.decode("utf-8")
     except UnicodeDecodeError as exc:
         _fail("INPUT_INVALID", f"{label} is not UTF-8: {exc}")
     try:
-        value = json.loads(text, object_pairs_hook=_duplicate_rejecting_object)
+        value = json.loads(
+            text,
+            object_pairs_hook=_duplicate_rejecting_object,
+            parse_constant=_reject_json_constant,
+        )
     except PackageRegistrationError:
         raise
     except json.JSONDecodeError as exc:
@@ -163,6 +193,8 @@ def _strict_json_bytes(raw: bytes, *, label: str) -> dict[str, Any]:
 
 def _require_nfc(value: Any, *, label: str) -> None:
     if isinstance(value, str):
+        if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+            _fail("INPUT_INVALID", f"{label} contains a Unicode surrogate code point")
         if unicodedata.normalize("NFC", value) != value:
             _fail("INPUT_INVALID", f"{label} contains a non-NFC string")
     elif isinstance(value, dict):
@@ -199,8 +231,7 @@ def _require_object(value: Any, *, label: str) -> dict[str, Any]:
 def _require_nonempty_string(value: Any, *, label: str) -> str:
     if not isinstance(value, str) or not value:
         _fail("INPUT_INVALID", f"{label} must be a non-empty string")
-    if unicodedata.normalize("NFC", value) != value:
-        _fail("INPUT_INVALID", f"{label} must be Unicode NFC")
+    _require_nfc(value, label=label)
     return value
 
 
@@ -228,6 +259,10 @@ def _path_key(value: str) -> str:
     return os.path.normcase(value) if os.name == "nt" else value
 
 
+def _windows_relative_path_key(value: str) -> str:
+    return "/".join(part.casefold() for part in PurePosixPath(value).parts)
+
+
 def _same_path(left: Path | str, right: Path | str) -> bool:
     return _path_key(str(left)) == _path_key(str(right))
 
@@ -240,8 +275,9 @@ def _absolute_existing_path(
 ) -> Path:
     try:
         path = Path(value)
-    except TypeError:
+    except (TypeError, ValueError, OSError):
         _fail("INPUT_INVALID", f"{label} must be a filesystem path")
+    _require_nfc(str(path), label=label)
     if "~" in path.parts or not path.is_absolute():
         _fail("PATH_VIOLATION", f"{label} must be an absolute path without '~'")
     try:
@@ -263,8 +299,25 @@ def _safe_relative(value: Any, *, label: str) -> str:
     pure = PurePosixPath(text)
     if pure.is_absolute() or any(part in {"", ".", ".."} for part in pure.parts):
         _fail("PATH_VIOLATION", f"{label} is unsafe: {text!r}")
-    if pure.as_posix() != text or not pure.parts or ":" in pure.parts[0]:
+    if pure.as_posix() != text or not pure.parts:
         _fail("PATH_VIOLATION", f"{label} is not canonical: {text!r}")
+    for component in pure.parts:
+        if component.endswith((".", " ")):
+            _fail(
+                "PATH_VIOLATION",
+                f"{label} contains a trailing-dot/space Windows alias: {component!r}",
+            )
+        if any(
+            ord(character) < 32 or character in _WINDOWS_INVALID_COMPONENT_CHARS
+            for character in component
+        ):
+            _fail("PATH_VIOLATION", f"{label} contains an invalid Windows component")
+        device_stem = component.split(".", 1)[0].rstrip(" .").casefold()
+        if device_stem in _WINDOWS_RESERVED_COMPONENT_STEMS:
+            _fail(
+                "PATH_VIOLATION",
+                f"{label} contains a reserved Windows device component: {component!r}",
+            )
     return text
 
 
@@ -375,7 +428,7 @@ def _validate_manifest_inventory(manifest: dict[str, Any]) -> dict[str, dict[str
     for index, entry_value in enumerate(entries):
         entry = _require_object(entry_value, label=f"Manifest files[{index}]")
         relative = _safe_relative(entry.get("path"), label=f"Manifest files[{index}].path")
-        key = _path_key(relative)
+        key = _windows_relative_path_key(relative)
         if key in seen:
             _fail("DUPLICATE", f"duplicate Manifest path: {relative}")
         seen.add(key)
@@ -406,7 +459,7 @@ def _validate_lock_inventory(lock: dict[str, Any]) -> list[dict[str, Any]]:
     for index, entry_value in enumerate(entries):
         entry = _require_object(entry_value, label=f"Lock files[{index}]")
         relative = _safe_relative(entry.get("source_path"), label=f"Lock files[{index}].source_path")
-        key = _path_key(relative)
+        key = _windows_relative_path_key(relative)
         if key in seen:
             _fail("DUPLICATE", f"duplicate Lock source_path: {relative}")
         seen.add(key)
@@ -578,7 +631,7 @@ def _validate_archive_members(
             if not candidate:
                 continue
             relative = _safe_relative(candidate, label="Release archive member")
-            key = _path_key(relative)
+            key = _windows_relative_path_key(relative)
             if key in seen:
                 _fail("DUPLICATE", f"duplicate Release archive member: {relative}")
             seen.add(key)
@@ -943,25 +996,25 @@ def _unlock_byte(handle: Any) -> None:
 
 @contextmanager
 def _active_lock(paths: _RegistryPaths) -> Iterator[None]:
+    deadline = time.monotonic() + _ACTIVE_LOCK_TIMEOUT_SECONDS
     if not paths.lock.is_file():
         _fail("TAMPERED", "active.lock is missing")
     _verify_fixed_existing(paths.lock, expected_parent=paths.registry_root, label="active.lock")
     process_acquired = False
-    process_deadline = time.monotonic() + _ACTIVE_LOCK_TIMEOUT_SECONDS
     while not process_acquired:
         process_acquired = _PROCESS_ACTIVE_LOCK.acquire(blocking=False)
         if process_acquired:
             break
-        if time.monotonic() >= process_deadline:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
             _fail("ACTIVE_LOCK_BUSY", "active.lock remained busy for 5.0 seconds")
-        time.sleep(_ACTIVE_LOCK_RETRY_SECONDS)
+        time.sleep(min(_ACTIVE_LOCK_RETRY_SECONDS, remaining))
     try:
         handle = paths.lock.open("r+b", buffering=0)
     except OSError as exc:
         _PROCESS_ACTIVE_LOCK.release()
         _fail("TAMPERED", f"cannot open active.lock: {exc}")
     acquired = False
-    deadline = time.monotonic() + _ACTIVE_LOCK_TIMEOUT_SECONDS
     try:
         while True:
             try:
@@ -971,9 +1024,10 @@ def _active_lock(paths: _RegistryPaths) -> Iterator[None]:
             except PackageRegistrationError:
                 raise
             except (OSError, BlockingIOError):
-                if time.monotonic() >= deadline:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
                     _fail("ACTIVE_LOCK_BUSY", "active.lock remained busy for 5.0 seconds")
-                time.sleep(_ACTIVE_LOCK_RETRY_SECONDS)
+                time.sleep(min(_ACTIVE_LOCK_RETRY_SECONDS, remaining))
         handle.seek(0)
         if handle.read() != LOCK_BYTES:
             _fail("TAMPERED", "active.lock changed inside the lock critical section")

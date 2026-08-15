@@ -68,6 +68,20 @@ def _write_json(path: Path, value: dict[str, Any]) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def _json_fixture_bytes(value: dict[str, Any]) -> bytes:
+    """Encode deliberately invalid JSON-domain values without encoding surrogates."""
+
+    return (
+        json.dumps(
+            value,
+            ensure_ascii=True,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("ascii")
+        + b"\n"
+    )
+
+
 def _inventory_entry(path: Path, relative: str, owner: str) -> dict[str, Any]:
     return {
         "path": relative,
@@ -329,6 +343,86 @@ else:
     )
 
 
+def _install_special_json_boundary(
+    candidate: Candidate, document: str, special: Any
+) -> tuple[Callable[[], Any], str]:
+    if document == "manifest":
+        manifest = candidate.manifest()
+        manifest["distribution"]["strict_json_probe"] = special
+        candidate.manifest_path.write_bytes(_json_fixture_bytes(manifest))
+        candidate.rebuild_archive()
+        return candidate.register, "INPUT_INVALID"
+
+    if document == "lock":
+        lock = candidate.lock()
+        lock["files"][0]["strict_json_probe"] = special
+        if not isinstance(special, str):
+            lock["bundle_sha256"] = _sha256_bytes(
+                json.dumps(
+                    lock["files"],
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            )
+        candidate.lock_path.write_bytes(_json_fixture_bytes(lock))
+        manifest = candidate.manifest()
+        lock_entry = next(
+            item for item in manifest["files"] if item["path"] == registration.LOCK_NAME
+        )
+        lock_entry["sha256"] = _sha256(candidate.lock_path)
+        lock_entry["size"] = candidate.lock_path.stat().st_size
+        candidate.write_manifest(manifest)
+        candidate.rebuild_archive()
+        return candidate.register, "INPUT_INVALID"
+
+    registered = candidate.register()
+    digest = registered["registration_sha256"]
+    if document == "registration":
+        value = json.loads(_object(candidate, digest).read_text(encoding="utf-8"))
+        value["contract_id"] = special
+        raw = _json_fixture_bytes(value)
+        changed_digest = _sha256_bytes(raw)
+        _object(candidate, changed_digest).write_bytes(raw)
+        _active(candidate).write_bytes(_pointer(changed_digest))
+        return lambda: locate_active_package(candidate.data_root), "INPUT_INVALID"
+
+    assert document == "active"
+    raw = _json_fixture_bytes(
+        {
+            "schema_version": registration.ACTIVE_POINTER_SCHEMA,
+            "owner": registration.REGISTRATION_OWNER,
+            "registration_sha256": special,
+        }
+    )
+    _active(candidate).write_bytes(raw)
+    return (
+        lambda: activate_package(candidate.data_root, _sha256_bytes(raw), digest),
+        "TAMPERED",
+    )
+
+
+def _create_real_directory_reparse(link: Path, target: Path) -> str:
+    try:
+        os.symlink(target, link, target_is_directory=True)
+        return "symlink"
+    except OSError as symlink_error:
+        if os.name != "nt":
+            raise AssertionError(f"could not create required real symlink: {symlink_error}")
+        created = subprocess.run(
+            ["cmd.exe", "/d", "/c", "mklink", "/J", str(link), str(target)],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=10,
+        )
+        assert created.returncode == 0, (
+            f"symlink failed: {symlink_error}; junction failed: "
+            f"stdout={created.stdout!r}, stderr={created.stderr!r}"
+        )
+        return "junction"
+
+
 def test_register_package_builds_canonical_immutable_v1_object_without_activation(
     tmp_path: Path,
 ) -> None:
@@ -514,6 +608,186 @@ def test_non_nfc_json_string_is_rejected(tmp_path: Path) -> None:
     _expect_code("INPUT_INVALID", candidate.register)
 
 
+@pytest.mark.parametrize("document", ["manifest", "lock", "registration", "active"])
+@pytest.mark.parametrize(
+    ("token", "special"),
+    [
+        ("NaN", float("nan")),
+        ("Infinity", float("inf")),
+        ("-Infinity", float("-inf")),
+    ],
+)
+def test_nonfinite_json_is_rejected_at_every_load_boundary_without_state_advance(
+    tmp_path: Path, document: str, token: str, special: float
+) -> None:
+    candidate = _make_candidate(tmp_path / f"{document}-{token}")
+    action, expected_code = _install_special_json_boundary(candidate, document, special)
+    before = _snapshot(candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar)
+    error = _expect_code(expected_code, action)
+    assert "non-finite JSON constant" in error.message
+    assert _snapshot(
+        candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar
+    ) == before
+
+
+@pytest.mark.parametrize("document", ["manifest", "lock", "registration", "active"])
+def test_lone_surrogate_is_rejected_at_every_load_boundary_without_native_exception(
+    tmp_path: Path, document: str
+) -> None:
+    candidate = _make_candidate(tmp_path / document)
+    action, expected_code = _install_special_json_boundary(candidate, document, "\ud800")
+    before = _snapshot(candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar)
+    error = _expect_code(expected_code, action)
+    assert "surrogate" in error.message
+    assert _snapshot(
+        candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar
+    ) == before
+
+
+@pytest.mark.parametrize("document", ["manifest", "lock"])
+@pytest.mark.parametrize(
+    "bad_path",
+    [
+        "nested/file.txt:stream",
+        "nested/CON.txt",
+        "nested/aUx.json",
+        "nested/COM1.cfg",
+        "nested/trailing.",
+        "nested/trailing ",
+    ],
+)
+def test_windows_unsafe_components_are_rejected_in_manifest_and_lock_paths(
+    tmp_path: Path, document: str, bad_path: str
+) -> None:
+    candidate = _make_candidate(tmp_path / document)
+    if document == "manifest":
+        manifest = candidate.manifest()
+        manifest["files"][0]["path"] = bad_path
+        candidate.write_manifest(manifest)
+    else:
+        lock = candidate.lock()
+        lock["files"][0]["source_path"] = bad_path
+        lock["bundle_sha256"] = _sha256_bytes(
+            json.dumps(
+                lock["files"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        )
+        candidate.write_lock(lock)
+    candidate.rebuild_archive()
+    before = _snapshot(candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar)
+    _expect_code("PATH_VIOLATION", candidate.register)
+    assert _snapshot(
+        candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar
+    ) == before
+    assert not _registry(candidate).exists()
+
+
+@pytest.mark.parametrize("document", ["manifest", "lock"])
+def test_windows_case_alias_collisions_are_rejected_in_both_inventories(
+    tmp_path: Path, document: str
+) -> None:
+    candidate = _make_candidate(tmp_path / document)
+    if document == "manifest":
+        manifest = candidate.manifest()
+        alias = dict(manifest["files"][0])
+        alias["path"] = manifest["files"][0]["path"].swapcase()
+        manifest["files"].append(alias)
+        candidate.write_manifest(manifest)
+    else:
+        lock = candidate.lock()
+        alias = dict(lock["files"][0])
+        alias["source_path"] = lock["files"][0]["source_path"].swapcase()
+        lock["files"].append(alias)
+        lock["bundle_sha256"] = _sha256_bytes(
+            json.dumps(
+                lock["files"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        )
+        candidate.write_lock(lock)
+    candidate.rebuild_archive()
+    _expect_code("DUPLICATE", candidate.register)
+    assert not _registry(candidate).exists()
+
+
+@pytest.mark.parametrize(
+    "member",
+    [
+        "root/nested/file.txt:stream",
+        "root/nested/NUL.txt",
+        "root/nested/trailing.",
+        "root/nested/trailing ",
+    ],
+)
+def test_zip_members_reject_windows_unsafe_components(tmp_path: Path, member: str) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    candidate.rebuild_archive(extra=[(member, b"unsafe")])
+    _expect_code("PATH_VIOLATION", candidate.register)
+    assert not _registry(candidate).exists()
+
+
+def test_zip_members_reject_windows_case_alias_collisions(tmp_path: Path) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    alias = f"goldenkeyopenmontageforworkbuddy/{registration.MANIFEST_NAME.swapcase()}"
+    candidate.rebuild_archive(extra=[(alias, candidate.manifest_path.read_bytes())])
+    _expect_code("DUPLICATE", candidate.register)
+    assert not _registry(candidate).exists()
+
+
+def test_real_symlink_or_junction_managed_path_escape_is_rejected_without_skip(
+    tmp_path: Path,
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    payload = outside / "payload.txt"
+    payload.write_text("outside\n", encoding="utf-8")
+    link = candidate.package_root / "escaped"
+    reparse_kind = _create_real_directory_reparse(link, outside)
+    assert reparse_kind in {"symlink", "junction"}
+
+    relative = "escaped/payload.txt"
+    lock = candidate.lock()
+    lock["files"].append(
+        {
+            "path": f"workbuddy-core/{relative}",
+            "source_path": relative,
+            "sha256": _sha256(payload),
+            "size": payload.stat().st_size,
+            "source_mode": "100644",
+            "apply_mode": "replace",
+            "classification": "workbuddy_callable",
+        }
+    )
+    lock["bundle_sha256"] = _sha256_bytes(
+        json.dumps(
+            lock["files"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+    )
+    candidate.write_lock(lock, sync_manifest=False)
+    manifest = candidate.manifest()
+    manifest["core"]["file_count"] = len(lock["files"])
+    manifest["files"].append(_inventory_entry(payload, relative, "managed_core"))
+    lock_entry = next(
+        item for item in manifest["files"] if item["path"] == registration.LOCK_NAME
+    )
+    lock_entry["sha256"] = _sha256(candidate.lock_path)
+    lock_entry["size"] = candidate.lock_path.stat().st_size
+    candidate.write_manifest(manifest)
+    candidate.rebuild_archive()
+    before_data = _snapshot(candidate.data_root)
+    before_outside = _snapshot(outside)
+    try:
+        _expect_code("PATH_VIOLATION", candidate.register)
+        assert _snapshot(candidate.data_root) == before_data
+        assert _snapshot(outside) == before_outside
+        assert not _registry(candidate).exists()
+    finally:
+        if link.is_symlink():
+            link.unlink()
+        elif link.exists():
+            link.rmdir()
+
+
 def test_archive_requires_unique_safe_manifest_and_lock(tmp_path: Path) -> None:
     candidate = _make_candidate(tmp_path / "candidate")
     with pytest.warns(UserWarning):
@@ -669,6 +943,54 @@ def test_lock_contention_times_out_without_pointer_write(
     assert not _active(candidate).exists()
 
 
+def test_process_and_kernel_lock_contention_share_one_total_deadline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    clock = [0.0]
+
+    class ScriptedProcessLock:
+        def __init__(self) -> None:
+            self.attempts = 0
+            self.released = False
+
+        def acquire(self, *, blocking: bool) -> bool:
+            assert blocking is False
+            self.attempts += 1
+            return self.attempts >= 4
+
+        def release(self) -> None:
+            self.released = True
+
+    process_lock = ScriptedProcessLock()
+
+    def monotonic() -> float:
+        return clock[0]
+
+    def advance(seconds: float) -> None:
+        clock[0] += seconds
+
+    def kernel_busy(handle: Any) -> None:
+        raise BlockingIOError("injected external kernel-lock contention")
+
+    monkeypatch.setattr(registration, "_PROCESS_ACTIVE_LOCK", process_lock)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_TIMEOUT_SECONDS", 5.0)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_RETRY_SECONDS", 1.0)
+    monkeypatch.setattr(registration.time, "monotonic", monotonic)
+    monkeypatch.setattr(registration.time, "sleep", advance)
+    monkeypatch.setattr(registration, "_lock_byte", kernel_busy)
+
+    _expect_code(
+        "ACTIVE_LOCK_BUSY",
+        lambda: activate_package(candidate.data_root, "MISSING", digest),
+    )
+    assert process_lock.attempts == 4
+    assert process_lock.released is True
+    assert clock[0] == pytest.approx(5.0)
+    assert not _active(candidate).exists()
+
+
 def test_process_crash_releases_kernel_lock_without_deleting_identity_file(
     tmp_path: Path,
 ) -> None:
@@ -727,7 +1049,7 @@ def test_replace_failure_preserves_old_pointer_and_hides_temp(
     assert activate_package(data_root, _sha256_bytes(before), new_sha) == new_sha
 
 
-def test_out_of_band_pointer_change_between_compare_and_replace_fails_cas(
+def test_lock_critical_section_observed_pointer_tampering_fails_cas(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     candidate = _make_candidate(tmp_path / "candidate")

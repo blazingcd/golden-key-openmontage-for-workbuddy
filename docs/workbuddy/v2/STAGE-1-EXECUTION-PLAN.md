@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 阶段1执行计划
 
-状态：`READY_NOT_STARTED / AUTHORIZED_FOR_NEXT_SESSION_AFTER_TAKEOVER_GATES`
+状态：`BUILDER_REVIEW_READY / T1-T5_COMPLETE / NOT_PASS_ACCEPTED`
 
 ## 1. 阶段目标
 
@@ -18,9 +18,11 @@
 ## 2. 固定输入
 
 - `immutable_code_baseline`：`2a2bf09832d558388dc2816c54b32a2dce4aa607`。该对象只冻结生产代码谱系，不是阶段1 Builder的checkout目标；
-- `stage_1_builder_start_commit`：`PENDING_NEXT_SESSION_HANDOFF_COMMIT`。新统筹必须使用用户Prompt提供的精确40位`EXPECTED_HANDOFF_COMMIT`；本地HEAD、远端分支和该对象不一致时不得启动T1；
+- `stage_1_builder_start_commit`：`08395ea947d8d878630fff8556a80b2947ccd376`；Builder启动前已核验当前HEAD精确相等，且来源分支本地/远端均指向该对象；
 - V2来源分支：`codex/workbuddy-shell-v2`
-- 当前worktree：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
+- V2来源worktree：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
+- Builder独立worktree：`C:\Users\blazi\.codex\worktrees\b665\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
+- Builder任务分支：`codex/v2-s1-builder1`
 - 新会话交接：`docs/workbuddy/v2/NEXT-SESSION-HANDOFF.md`；
 - 阶段1任务包：`docs/workbuddy/v2/STAGE-1-TASK-PACKETS.md`；
 - `stage_1_builder_start_commit`上的V2治理文件：`docs/workbuddy/v2/README.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`PROJECT-STATE.md`、`WORK-LOG.md`；
@@ -32,7 +34,7 @@
 - 官方对象：路径`D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-audit-4eab34c5`，commit=`4eab34c5cfcccaa4f1970554928feccce73ee930`；
 - Golden Key v0.3.23对象：路径`D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-e0-v0.3.23`，commit=`613d51abe02e0dff5caf83813c275612010a3e6f`。
 
-阶段1派发时必须只读核验上述路径和Git对象。若任一精确输入不存在、对象不匹配或证据任务没有可读取的最终状态，开始前使用`BLOCKED`；任务开始后发现则使用`INCOMPLETE_MISSING_EXACT_INPUTS`。不得递归搜索相似名称、改用聊天摘要或猜测替代值。
+阶段1派发时必须只读核验上述路径和Git对象。Builder启动前已完成该核验：所有精确路径和Git对象存在，七个证据任务均有可读取最终状态，受保护handoff SHA-256精确为`12D986F12E0DDB118871377144D80BA27D498DCCFC26BF23AE4C1629A880AA63`。Golden Key v0.3.23工作树的两个既有未跟踪文件与历史记录一致，读取时只使用固定`613d51a...` Git对象并排除工作树内容。若后续任一对象漂移，Reviewer必须返回`INCOMPLETE`。不得递归搜索相似名称、改用聊天摘要或猜测替代值。
 
 T1启动对象规则：执行者只能checkout统筹锁定的完整`stage_1_builder_start_commit`并验证`HEAD`相等。直接checkout `immutable_code_baseline`会丢失治理文档，使用任意`HEAD`会失去对象约束，两者都禁止。
 
@@ -168,3 +170,22 @@ Independent Reviewer APPROVE
 - 执行或审阅一旦开始，对象不一致、无最终退出、证据缺失或环境干扰必须为`INCOMPLETE`；
 - 阶段5必须等待`V2-S4 PASS_ACCEPTED`；阶段6必须等待`V2-S3`、`V2-S4`、`V2-S5`逐项`PASS_ACCEPTED`；阶段7必须等待`V2-S2`至`V2-S6`逐项`PASS_ACCEPTED`；
 - 未定义的“接口冻结”或“通过”不构成依赖满足；本修订不授权任何并行例外。
+
+## 10. Builder阶段1交付快照
+
+```text
+builder_task: V2-S1-BUILDER1
+builder_start_commit: 08395ea947d8d878630fff8556a80b2947ccd376
+builder_branch: codex/v2-s1-builder1
+T1: REVIEW_READY
+T2: REVIEW_READY
+T3: REVIEW_READY
+T4: REVIEW_READY
+T5: REVIEW_READY
+stage_1: REVIEW_READY
+result_commit: THIS_COMMIT
+source_branch_advanced: NO
+next_authorized_task: V2-S1-T6
+```
+
+`THIS_COMMIT`指包含该快照的Builder提交；精确40位结果SHA只能在提交形成后由Git分支指针和Builder最终报告给出，不能在同一提交内容中伪造自引用SHA。该表示不降低Reviewer对本地/远端分支40位对象一致性的核验要求。

@@ -34,11 +34,16 @@ v2_source_branch: codex/workbuddy-shell-v2
 v2_governance_reviewed_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
 v2_governance_integrated_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
 v2_worktree: D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
+stage_1_builder_worktree: C:\Users\blazi\.codex\worktrees\b665\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
 immutable_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
-stage_1_builder_start_commit: PENDING_NEXT_SESSION_HANDOFF_COMMIT
+stage_1_builder_start_commit: 08395ea947d8d878630fff8556a80b2947ccd376
+stage_1_builder_task: V2-S1-BUILDER1
+stage_1_builder_branch: codex/v2-s1-builder1
+stage_1_builder_result_commit: THIS_COMMIT
+stage_1_builder_push_target: origin/codex/v2-s1-builder1
 v2_bootstrap: DONE
-stage_1: READY_NOT_STARTED
-stage_1_start_authorized_after_document_review: YES_FOR_NEXT_SESSION_AFTER_TAKEOVER_GATES
+stage_1: REVIEW_READY
+stage_1_start_authorization: CONSUMED_BY_V2-S1-BUILDER1
 v2_branch_created: YES
 v2_worktree_created: YES
 code_modified: NO
@@ -59,16 +64,23 @@ v2_gov_review3: REVIEW_PASS
 v2_gov_review3_thread: 01a00459-2839-7f43-bc82-eb33e52b2add
 v2_gov_review3_findings: P0=0, P1=0, P2=0
 governance_review_gate: PASS_ACCEPTED
-next_session_handoff: READY
+next_session_handoff: DONE
 stage_1_task_packets: DONE
-next_authorized_task: V2-S1-TAKEOVER
+v2_s1_takeover: DONE
+v2_s1_t1: REVIEW_READY
+v2_s1_t2: REVIEW_READY
+v2_s1_t3: REVIEW_READY
+v2_s1_t4: REVIEW_READY
+v2_s1_t5: REVIEW_READY
+v2_s1_t6: READY_NOT_STARTED
+next_authorized_task: V2-S1-T6
 ```
 
 为让独立审阅在本项目、本分支发生，统筹已从固定代码基线`2a2bf09832d558388dc2816c54b32a2dce4aa607`建立V2工作树，并只选择性迁移治理文档。该前置引导不等于阶段1启动，不得把长期分支后续HEAD整体作为V2代码起点。
 
-`immutable_code_baseline`固定且不可变，只约束生产代码谱系；它不是阶段1 Builder的checkout目标。当前窗口完成交接提交后，用户会把最终40位commit写入新会话Prompt。新统筹只能在本地HEAD、远端分支和该`EXPECTED_HANDOFF_COMMIT`一致时，把它作为`stage_1_builder_start_commit`派发给Builder；不得直接checkout固定代码基线或使用任意`HEAD`。
+`immutable_code_baseline`固定且不可变，只约束生产代码谱系；它不是阶段1 Builder的checkout目标。Builder已按Prompt锁定完整`stage_1_builder_start_commit=08395ea947d8d878630fff8556a80b2947ccd376`，并在独立worktree/分支完成T1至T5。不得直接checkout固定代码基线或使用任意`HEAD`。
 
-用户已授权新的统筹会话在完成`V2-S1-TAKEOVER`核验后启动阶段1统筹。当前窗口不创建执行任务；新统筹核验通过后应直接创建`V2-S1-BUILDER1`，不再要求用户重复授权。
+`V2-S1-TAKEOVER`已由Builder Prompt中的精确对象、分支、路径和授权边界落实。Builder只把阶段1推进到`REVIEW_READY`；`THIS_COMMIT`表示包含本记录的单一Builder提交，精确40位结果由最终Git分支指针和Builder报告锁定。来源分支未前移，下一唯一允许任务为独立只读`V2-S1-T6`。
 
 ## 3. 八阶段总账
 
@@ -83,7 +95,7 @@ next_authorized_task: V2-S1-TAKEOVER
 | 最小复审 | `V2-GOV-REVIEW3` | 只读复审FIX2两处单行替换 | `REVIEW_PASS` | `V2-GOV-FIX2 REVIEW_READY` | `APPROVE`；P0=0、P1=0、P2=0 |
 | 治理Gate | `V2-GOV-GATE` | 用户授权集成审阅通过文档 | `PASS_ACCEPTED` | `V2-GOV-REVIEW3 REVIEW_PASS` | 不等于阶段1启动授权 |
 | 交接 | `V2-HANDOFF-001` | 固化新会话接管和阶段1任务包 | `DONE` | `V2-GOV-GATE PASS_ACCEPTED` | 不等于阶段1已经开始 |
-| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `READY_NOT_STARTED` | `V2-S1-TAKEOVER DONE` | 无生产实现 |
+| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `REVIEW_READY` | `V2-S1-T6`独立审阅 | Builder只完成文档；无生产实现，不等于通过 |
 | 2 | `V2-S2` | 建立Core Registration合同 | `PLANNED` | `V2-S1 PASS_ACCEPTED` | 无Schema、验证器、活动对象 |
 | 3 | `V2-S3` | 建立Launcher会话环境绑定 | `PLANNED` | `V2-S2 PASS_ACCEPTED` | 无V2 Launcher |
 | 4 | `V2-S4` | 重写生产Skill和Onboarding交接 | `PLANNED` | `V2-S3 PASS_ACCEPTED` | 无V2 Skill |
@@ -97,18 +109,40 @@ next_authorized_task: V2-S1-TAKEOVER
 | Task ID | 内容 | 状态 | 允许路径 | 前置 |
 |---|---|---|---|---|
 | `V2-S1-T0` | 建立固定分支和独立worktree | `SUPERSEDED` | 无 | 已由前置 `V2-GOV-BOOTSTRAP` 完成，不计为阶段1启动 |
-| `V2-S1-TAKEOVER` | 新统筹核验交接对象并派发Builder | `READY_NOT_STARTED` | 零生产写入；只读Git/权威文档 | 用户Prompt提供精确handoff commit |
-| `V2-S1-T1` | 建立V2文档入口和权威关系 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md` | `V2-S1-TAKEOVER DONE`；Builder Prompt锁定精确start commit |
-| `V2-S1-T2` | 冻结职责和目标架构 | `BLOCKED` | `docs/workbuddy/v2/PROJECT-CHARTER.md` | T1 `REVIEW_READY` |
-| `V2-S1-T3` | 逐模块处置矩阵 | `BLOCKED` | `docs/workbuddy/v2/MODULE-DISPOSITION.md` | T2 |
-| `V2-S1-T4` | 冻结验收矩阵和状态模型 | `BLOCKED` | `docs/workbuddy/v2/ACCEPTANCE-MATRIX.md` | T2 |
-| `V2-S1-T5` | 同步账本、状态和工作日志 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`PROJECT-STATE.md`；`WORK-LOG.md` | T3/T4 `REVIEW_READY` |
-| `V2-S1-T6` | 独立只读Reviewer | `BLOCKED` | 零写入 | Builder提交 |
+| `V2-S1-TAKEOVER` | 新统筹核验交接对象并派发Builder | `DONE` | 零生产写入；只读Git/权威文档 | 精确start commit已进入Builder Prompt |
+| `V2-S1-T1` | 建立V2文档入口和权威关系 | `REVIEW_READY` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md` | start/branch/权威关系已冻结 |
+| `V2-S1-T2` | 冻结职责和目标架构 | `REVIEW_READY` | `docs/workbuddy/v2/PROJECT-CHARTER.md` | 职责、信任边界、消息隔离、状态所有权已冻结 |
+| `V2-S1-T3` | 逐模块处置矩阵 | `REVIEW_READY` | `docs/workbuddy/v2/MODULE-DISPOSITION.md` | 固定baseline、消费者和禁止逻辑已逐项记录 |
+| `V2-S1-T4` | 冻结验收矩阵和状态模型 | `REVIEW_READY` | `docs/workbuddy/v2/ACCEPTANCE-MATRIX.md` | 分层证据、Gate A-E、状态和非证明已冻结 |
+| `V2-S1-T5` | 同步账本、状态和工作日志 | `REVIEW_READY` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`PROJECT-STATE.md`；`WORK-LOG.md` | 单一Builder提交、静态校验和push待最终收口 |
+| `V2-S1-T6` | 独立只读Reviewer | `READY_NOT_STARTED` | 零写入 | Builder提交及本地/远端40位对象一致 |
 | `V2-S1-GATE` | 用户阶段1 Gate | `BLOCKED` | 零写入 | Reviewer APPROVE |
 
-阶段1在新统筹完成TAKEOVER后从T1开始。T1至T5由一个`V2-S1-BUILDER1`有界文档任务串行完成；T6必须是独立任务。阶段1不得修改生产代码。精确步骤和门禁以`STAGE-1-TASK-PACKETS.md`为准。
+T1至T5已由一个`V2-S1-BUILDER1`有界文档任务串行完成并等待独立审阅；T6必须是独立任务。阶段1没有修改生产代码。精确步骤和门禁继续以`STAGE-1-TASK-PACKETS.md`为准。
 
-## 4.1 前置审阅记录
+### 4.1 V2-S1-BUILDER1记录
+
+```text
+task_id: V2-S1-BUILDER1
+objective: 串行完成V2-S1-T1至T5并形成独立可审阅文档提交
+immutable_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
+stage_1_builder_start_commit: 08395ea947d8d878630fff8556a80b2947ccd376
+allowed_paths: README.md, TASK-REGISTER.md, STAGE-1-EXECUTION-PLAN.md, PROJECT-CHARTER.md, MODULE-DISPOSITION.md, ACCEPTANCE-MATRIX.md, PROJECT-STATE.md, WORK-LOG.md
+forbidden_paths: production code, Skill, installer, tests, config, lock, Core
+dependencies: V2-S1-TAKEOVER DONE
+executor_thread: 01a00487-8b7b-74f1-a0ad-dafd0cb36bb9
+status: REVIEW_READY
+result_commit: THIS_COMMIT
+tests_and_exit_codes: documentation-only static checks recorded in final Builder report
+evidence_paths: docs/workbuddy/v2/*, PROJECT-STATE.md, WORK-LOG.md
+independent_review_thread: PENDING_V2-S1-T6
+review_verdict: NOT_REVIEWED
+known_non_proofs: no production implementation, no tests, no install, no WorkBuddy, no Provider, no media, no stage PASS
+files_changed: 8 allowed documents
+next_authorized_task: V2-S1-T6
+```
+
+## 4.2 前置审阅记录
 
 ```text
 incorrect_review_thread: 01a0042e-1a5a-7ce2-ac25-d85eb764c1ac
@@ -180,7 +214,7 @@ next_authorized_task:
 ## 7. 状态更新规则
 
 - 只有统筹任务更新本账本的跨任务状态。
-- Builder开始后：`READY_NOT_STARTED -> IN_PROGRESS`。
+- Builder开始后：`READY_NOT_STARTED -> IN_PROGRESS`；本任务已发生并由上述Builder记录保留。
 - Builder完成并推送精确commit：`IN_PROGRESS -> REVIEW_READY`。
 - Reviewer要求修改：`REVIEW_READY -> REQUEST_CHANGES`。
 - Reviewer通过：`REVIEW_READY -> REVIEW_PASS`。

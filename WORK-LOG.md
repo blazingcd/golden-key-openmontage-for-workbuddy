@@ -1042,3 +1042,16 @@
 - 用户授权新统筹在精确对象接管核验通过后直接启动阶段1统筹并创建Builder，不需重复请求批准。当前窗口仍不创建Builder或Reviewer，不启动阶段1执行。
 - 阶段1继续为`READY_NOT_STARTED`；`stage_1_builder_start_commit=PENDING_NEXT_SESSION_HANDOFF_COMMIT`，最终40位handoff commit由本窗口提交并推送后写入用户复制的新会话Prompt。
 - 零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core修改；零WorkBuddy、零安装、零Provider、零费用、零媒体生成。
+
+## 2026-08-15：V2-S1-BUILDER1阶段1文档Builder收口
+
+- 从精确`stage_1_builder_start_commit=08395ea947d8d878630fff8556a80b2947ccd376`在独立worktree建立`codex/v2-s1-builder1`；`immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`为其祖先。来源分支`codex/workbuddy-shell-v2`启动时本地/远端均指向起点，未被Builder快进或推送。
+- 启动前完整读取根规则、Shell V2权威包、`PROJECT-STATE.md`和最新Shell V2日志；只读核验阶段1计划第2节全部精确路径/Git对象及七个历史证据任务最终状态。受保护handoff SHA-256精确匹配；Golden Key v0.3.23工作树两个既有未跟踪文件原样保留且读取时排除。
+- T1=`REVIEW_READY`：三份活动入口文档统一精确起点、Builder身份、权威优先级、停止规则和后续阻断；阶段2至8继续等待阶段1`PASS_ACCEPTED`。
+- T2=`REVIEW_READY`：章程冻结唯一职责、信任边界、最小数据流、Core公开合同边界、Session Binding Receipt、literal `user_message`与`executor_controls`隔离、状态所有权和范围变更程序。
+- T3=`REVIEW_READY`：新增`docs/workbuddy/v2/MODULE-DISPOSITION.md`。固定baseline上的旧消费层调用链证明`runtime.py -> lib.checkpoint/lib.pipeline_loader/schemas.artifacts`，而CLI、17工具MCP和Tasks继续向外暴露该生产控制面，因此相关能力判为`REMOVE_FROM_V1/REWRITE`；安装所有权、hash、回滚、数据保护、脱敏和分层Runtime只保留有消费者证据的最小能力。
+- T4=`REVIEW_READY`：验收矩阵区分静态合同、Package/W0、安装对象、会话绑定、Core流程、本地能力/成片、业务效果、Provider和发布；冻结关键Gate无最终退出或对象漂移即`INCOMPLETE`，Gate D默认Provider调用0/费用0，Gate E继续可选且单独授权。
+- T5=`REVIEW_READY`：同步`README.md`、`TASK-REGISTER.md`、`PROJECT-STATE.md`和本日志；Builder结果只等待独立Reviewer，不自判`REVIEW_PASS/PASS_ACCEPTED`。`next_authorized_task=V2-S1-T6`。
+- 本轮精确允许写路径共8个：`docs/workbuddy/v2/README.md`、`TASK-REGISTER.md`、`STAGE-1-EXECUTION-PLAN.md`、`PROJECT-CHARTER.md`、`MODULE-DISPOSITION.md`、`ACCEPTANCE-MATRIX.md`、`PROJECT-STATE.md`、`WORK-LOG.md`。最终结果commit由本地/远端Builder分支和最终报告给出；文档内`THIS_COMMIT`表示包含本记录的单一提交，避免伪造自引用SHA。
+- 零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core变化；没有运行测试、安装、真实WorkBuddy、Provider或媒体生成，Provider调用0、费用0、发布0。
+- known_non_proofs：文档、diff检查、历史官方跑通、v0.3.23有限运行、旧包/doctor/registry/MP4均不证明V2实现或任一真实Gate通过。

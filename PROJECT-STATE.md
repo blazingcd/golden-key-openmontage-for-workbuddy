@@ -2,7 +2,23 @@
 
 更新时间：2026-08-15
 
+## 2026-08-15 WorkBuddy Shell V2 阶段1 Builder收口
+
+- 任务：`V2-S1-BUILDER1`；分支：`codex/v2-s1-builder1`；独立worktree：`C:\Users\blazi\.codex\worktrees\b665\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`。
+- 精确起点：`stage_1_builder_start_commit=08395ea947d8d878630fff8556a80b2947ccd376`；`immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`仍为其祖先。来源分支`codex/workbuddy-shell-v2`本地/远端在启动时均指向起点，Builder未推送或快进该分支。
+- 启动前已核验阶段1计划第2节全部精确路径和Git对象。受保护handoff SHA-256为`12D986F12E0DDB118871377144D80BA27D498DCCFC26BF23AE4C1629A880AA63`；官方对象`4eab34c5...`干净；Golden Key v0.3.23固定对象`613d51a...`可读，工作树两个既有未跟踪文件与历史一致并被排除；七个历史证据任务均有最终退出。
+- T1=`REVIEW_READY`：`README.md`、`TASK-REGISTER.md`和`STAGE-1-EXECUTION-PLAN.md`一致记录精确start commit、Builder任务/分支、权威关系、允许/禁止路径和`next_authorized_task=V2-S1-T6`。
+- T2=`REVIEW_READY`：`PROJECT-CHARTER.md`冻结WorkBuddy、Skill、Registration、Installer、Runtime、Launcher、Core及Tool/Provider职责；冻结最小数据流、信任边界、Session Binding Receipt、literal `user_message`/`executor_controls`隔离及范围变更程序。
+- T3=`REVIEW_READY`：新增`docs/workbuddy/v2/MODULE-DISPOSITION.md`，以固定baseline和消费者调用链逐项裁决旧Python模块、两个Skill、安装/包/Manifest/Lock、凭据、升级/回滚/卸载、Core同步、测试和审计资产。旧`runtime.py`直接导入Core checkpoint/pipeline/artifact内部合同、CLI/MCP/Tasks重复暴露生产控制面的事实被明确判为V2首版禁止迁移。
+- T4=`REVIEW_READY`：`ACCEPTANCE-MATRIX.md`冻结静态合同、Package/W0、安装对象、会话绑定、Core流程、本地能力/成片、业务效果和Provider层级；Gate A-D及可选E继续独立，任何对象不一致、证据缺失或无最终退出均为`INCOMPLETE`。
+- T5=`REVIEW_READY`：八个允许文档形成一个Builder提交；结果commit在Git提交形成后由`codex/v2-s1-builder1`本地/远端指针和最终报告锁定，文档内以`THIS_COMMIT`表示不可自引用的当前提交。
+- 当前阶段1状态：`REVIEW_READY / NOT_PASS_ACCEPTED`。下一唯一允许任务为`V2-S1-T6`独立只读Reviewer；本Builder不是Reviewer，不创建Reviewer，不授权阶段2。
+- 本轮零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core变化；零测试运行、零安装、零真实WorkBuddy、零Provider、零费用、零媒体生成、零发布。
+- 已知非证明：文档与静态校验不证明V2 Registration、Launcher、Skill、Runtime、安装包、真实WorkBuddy、Core流程、本地成片、业务效果、Provider或发布通过；历史官方本地跑通和v0.3.23有限运行只作输入。
+
 ## 2026-08-15 WorkBuddy Shell V2 统筹文档基线
+
+> 历史起点快照：其中`READY_NOT_STARTED`和`PENDING_NEXT_SESSION_HANDOFF_COMMIT`已被上方阶段1Builder收口状态取代；其余治理历史继续保留。
 
 - Shell V2统筹已经从聊天记忆迁移到版本化文档，权威入口为`docs/workbuddy/v2/README.md`。
 - 项目章程、防漂移停止规则、八阶段任务账本、阶段1执行计划和验收矩阵已经固化。

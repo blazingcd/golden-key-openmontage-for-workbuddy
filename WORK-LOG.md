@@ -1066,3 +1066,12 @@
 - 已审规划对象固定为`3027eed132ac53e85d2e0d25ec711675b55f18cb`；独立Reviewer结论为`APPROVE`，P0/P1/P2均为0，用户已接受`V2-S2-PLAN-GATE`。
 - `stage_2_plan_status=PASS_ACCEPTED`，`stage_2_implementation_authorization=GRANTED`；本收口提交即后续实现的`implementation_start_commit`。
 - 本轮仅更新`TASK-REGISTER.md`、`PROJECT-STATE.md`和`WORK-LOG.md`的状态与证据指针，已接受的计划内容变化为0；下一授权任务仅为`V2-S2-BUILDER1`。
+
+## 2026-08-15：V2-S2-GATE-PREP1阶段2用户Gate账本准备
+
+- 起点与合同门禁：source远端`origin/codex/v2-s2-contract-adjudication1`、本任务起点和合同对象均精确为`5dd144e40ff1bf8682c8b43ac9973e40fc0be946`；`immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`祖先关系成立；起点worktree/index clean。合同Reviewer任务`01a0059a-1f1e-7cc2-9919-18b1a81ba6a6`结论为`APPROVE`。
+- 实现对象链固定为：`implementation_start=1ca826f04f80e0dcf940e62c1ac6605b03854e41`、初始实现`0aac6efd1c524dab4a7dd07a9803ce4b125425e2`、fix1=`31c97407125c9ee05e4bfa7ebbaf3883ff1a2d28`、最终实现`ab1eddf474233859c6a3b32056a503f82ecdc117`。`codex/v2-s2-builder1`本地ref、远端`origin/codex/v2-s2-builder1`和Reviewer3审阅对象均精确为最终实现SHA。
+- 累计只读范围`1ca826f04f80e0dcf940e62c1ac6605b03854e41..ab1eddf474233859c6a3b32056a503f82ecdc117`仅新增`golden_key_openmontage_workbuddy/package_registration.py`与`tests/workbuddy/test_package_registration.py`；除该模块外其他生产代码变化0，治理以外本任务代码变化0，Skill、Installer、Runtime、Launcher、config、lock、执行包、SaaS Core及其他禁止类别变化0。
+- 最终独立Reviewer3任务`01a005c3-692c-7761-9f11-45e178c0d599`结论为`APPROVE`，`P0=0 / P1=0 / P2=0`。其独立证据为Python 3.11.9、只读绑定机器既有pytest 9.1.1、专项`113 passed` exit 0、组合`138 passed` exit 0、AST禁止导入结果为空 exit 0、D盘临时对抗探针`12/12` exit 0；Reviewer未安装依赖，未运行Installer、WorkBuddy、Provider、网络或媒体，无仓库修改、commit或push。
+- 本Gate准备任务严格只更新`docs/workbuddy/v2/TASK-REGISTER.md`、`PROJECT-STATE.md`和本日志：生产代码变化0、测试运行0、WorkBuddy运行0、Provider调用0、网络/媒体运行0。上述单元、组合、静态和对抗证据不证明真实Installer、Launcher、Runtime、WorkBuddy、OpenMontage生产流程、Provider或媒体E2E。
+- 状态收口为`stage_2_status=REVIEW_APPROVED_USER_GATE_PENDING`、`stage_2_user_gate=PENDING_NOT_ACCEPTED`、`stage_3_authorization=NOT_GRANTED`，最高仅`GATE_AUDIT_READY`。用户实现Gate接受前不得标记`PASS_ACCEPTED`，不得启动阶段3；下一唯一授权任务为只读`V2-S2-GATE-AUDIT1`，本任务不创建Gate Auditor。

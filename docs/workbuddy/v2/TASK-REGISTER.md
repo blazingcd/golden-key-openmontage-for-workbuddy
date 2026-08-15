@@ -7,7 +7,7 @@
 ## 当前状态与精确对象
 
 ```text
-task_id: V2-S2-PLAN-FIX2
+task_id: V2-S2-PLAN-NAMING-FIX1
 task_status: REVIEW_READY
 stage_1_status: PASS_ACCEPTED
 stage_1_reviewed_commit: 041c6600dc8eb9094b5c93cb4a4ed088894578af
@@ -17,11 +17,12 @@ stage_1_handoff_commit: fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9
 stage_2_plan_status: REVIEW_READY
 stage_2_planning_authorization: GRANTED
 stage_2_implementation_authorization: NOT_GRANTED
-stage_2_module: Core Registration only
+stage_2_module: OpenMontage Package Registration & Locator only
 immutable_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
 planning_start_commit: fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9
 planning_fix_start_commit: 2531396850e60048adb4ad46e70cd458b504cf62
 planning_fix2_start_commit: f5878b005dbfc31b89b25b1ca68589cff820f57e
+planning_naming_start_commit: b1a5f80f72e64063b285c2b7f42e58d60f2b9d09
 planning_result_commit: THIS_COMMIT
 builder_branch: codex/v2-s2-plan-builder1
 push_target: origin/codex/v2-s2-plan-builder1
@@ -33,14 +34,15 @@ installer_changes: 0
 test_changes: 0
 config_changes: 0
 lock_changes: 0
-core_changes: 0
+saas_core_changes: 0
+openmontage_package_content_changes: 0
 tests_run: 0
 workbuddy_runs: 0
 provider_calls: 0
 media_generated: 0
-next_authorized_task: V2-S2-PLAN-REVIEW3
+next_authorized_task: V2-S2-PLAN-NAMING-REVIEW1
 ```
 
-`THIS_COMMIT`指包含本记录和`STAGE-2-TASK-PACKET.md`的规划结果提交；其精确40位结果由本地分支、远端分支和Builder最终报告共同锁定，避免伪造自引用SHA。
+`THIS_COMMIT`指包含当前命名裁决、`STAGE-2-TASK-PACKET.md`和本记录的规划结果提交；其精确40位结果由本地分支、远端分支和Builder最终报告共同锁定，避免伪造自引用SHA。
 
 阶段1已闭环。阶段2规划结果只能进入独立只读审阅；阶段2实现仍未授权。Reviewer `APPROVE`并经用户接受`V2-S2-PLAN-GATE`后，也必须等待用户另行明确授权“启动阶段二实现”，才能创建实现Builder。

@@ -7,10 +7,10 @@
 | 状态 | 含义 | 不能由什么代替 |
 |---|---|---|
 | `SHELL_INSTALLED` | Shell和Skill进入受支持安装位置 | ZIP构建成功 |
-| `OBJECT_IDENTITY_VERIFIED` | Shell/Core/Release/Manifest/Lock/SHA/安装实例一致 | 文件名、目录名、最新时间 |
-| `RUNTIME_BOUND` | 实际CoreRoot、Python、cwd、DataRoot和env被锁定 | Python包存在、doctor文字说明 |
+| `OBJECT_IDENTITY_VERIFIED` | Shell/OpenMontage 执行包/Release/Manifest/Lock/SHA/安装实例一致 | 文件名、目录名、最新时间 |
+| `RUNTIME_BOUND` | 实际PackageRoot、package Python、cwd、DataRoot和env被锁定 | Python包存在、doctor文字说明 |
 | `REAL_WORKBUDDY` | 真实WorkBuddy客户端在新会话执行 | Codex、CLI、fixture或历史会话 |
-| `PROCESS_CORRECT` | Core原生Pipeline/Skill/Artifact/Reviewer/Checkpoint合同正确 | 产生项目目录或MP4 |
+| `PROCESS_CORRECT` | OpenMontage Agent原生Pipeline/Skill/Artifact/Reviewer/Checkpoint合同正确 | 产生项目目录或MP4 |
 | `CAPABILITY_REAL` | 真实工具或能力执行 | mock、静态registry、旧产物 |
 | `LOCAL_RENDER_E2E` | 本次运行产生有效本地成片 | 旧成片、单个中间媒体 |
 | `BUSINESS_EFFECTIVE` | 用户实际观看并认可业务结果 | ffprobe或自动评分 |
@@ -34,11 +34,11 @@
 | 模块 | 最小 PASS 条件 | 越界失败条件 |
 |---|---|---|
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
-| Core登记与定位 | 唯一活动 Registration 的身份、hash 和规范化路径与实际对象一致 | 扫盘猜测对象、身份漂移仍继续或修改/执行 Core |
+| OpenMontage 执行包登记与定位 | 唯一活动Package Registration的身份、hash和规范化路径与实际执行包一致 | 扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
 | Runtime按需准备 | 只对本次实际缺口和逐类授权准备组件，复用与失败结果可审计 | 首次一次全装、未授权下载或由 Shell 选择生产方案 |
-| 会话Launcher | 绑定精确环境并返回 Core 最终退出、结果指针和残留事实 | 接受任意 Shell、进入 Core 业务内部、创建 Artifact 或推进 Checkpoint |
-| WorkBuddy入口 | 真实新会话显式命中入口，literal 用户消息不变并交给锁定 Core | 全局截获、技术控制词进入用户消息或 Shell 作生产选择 |
-| 状态与结果转交 | 安装/会话/进程/退出/错误/结果指针可追溯且不改写 Core 语义 | 建立 Stage/FSM、解释 Artifact、自动重试或伪造成功 |
+| 会话Launcher | 绑定精确环境并返回OpenMontage Agent最终退出、结果指针和残留事实 | 接受任意Shell、进入Agent业务内部、创建Artifact或推进Checkpoint |
+| WorkBuddy入口 | 真实新会话显式命中入口，literal用户消息不变并交给活动执行包启动的Agent | 全局截获、技术控制词进入用户消息或Shell作生产选择 |
+| 状态与结果转交 | 安装/会话/进程/退出/错误/结果指针可追溯且不改写Agent语义 | 建立Stage/FSM、解释Artifact、自动重试或伪造成功 |
 
 ## 4. Gate A：对象与环境
 
@@ -46,12 +46,12 @@
 
 要求：
 
-- literal用户消息不含Core路径、Python或`.venv`；
+- literal用户消息不含PackageRoot、Python或`.venv`；
 - 显式Skill正确命中；
 - Locator只读取登记对象，不扫盘；
-- Launcher绑定精确CoreRoot、Python、cwd和DataRoot；
-- 正确环境中的最小Core preflight成功；
-- 实际解释器和Core身份进入会话回执；
+- Launcher绑定精确PackageRoot、package Python、cwd和DataRoot；
+- 正确环境中的最小OpenMontage Agent preflight成功；
+- 实际解释器和执行包身份进入会话回执；
 - Provider调用0、费用0；
 - 新增进程和窗口残留为0；临时、测试、重复或旧版本Skill残留为0；正式受支持且身份锁定的目标Skill必须保留，不得误删。
 
@@ -63,10 +63,10 @@ Gate A不证明Pipeline、成片或业务效果。
 
 要求：
 
-- WorkBuddy读取已绑定Core自己的Guide；
+- WorkBuddy读取活动执行包自己的Guide；
 - OpenMontage Agent自主选择Pipeline；
 - Shell没有推荐、覆盖或预填Pipeline；
-- 产生Core原生第一阶段Artifact；
+- 产生OpenMontage Agent原生第一阶段Artifact；
 - 产生原生Checkpoint或按Manifest进入相应Gate；
 - `user_message`与`executor_controls`证据分离。
 
@@ -80,7 +80,7 @@ Gate B不证明最终渲染或业务效果。
 
 - 使用无rotation争议的短素材；
 - 使用新WorkBuddy会话和新项目；
-- Core原生工具真实执行；
+- OpenMontage Agent原生工具真实执行；
 - Artifact、Checkpoint、Final Review和结果指针一致；
 - Tool正常返回；
 - MP4有效；
@@ -89,17 +89,17 @@ Gate B不证明最终渲染或业务效果。
 
 Gate C不证明门店竖屏问题已修复。
 
-## 7. Gate D：Core修复后的门店业务验收
+## 7. Gate D：OpenMontage修复后的门店业务验收
 
 入口：
 
 - Gate C `PASS_ACCEPTED`；
-- Core项目提供包含方向闭环的新不可变Release、ZIP/SHA/Lock和独立证据；
-- Shell通过原子切换登记该新Core。
+- OpenMontage发布项目提供包含方向闭环的新不可变执行包Release、ZIP/SHA/Lock和独立证据；
+- Shell通过原子活动执行包指针登记并切换到该新Package Registration。
 
 要求：
 
-- 普通用户消息不包含Core路径、Python、9:16或技术补丁；
+- 普通用户消息不包含PackageRoot、Python、9:16或技术补丁；
 - 自动识别素材实际显示方向；
 - 不使用Shell transpose、临时预转码Skill或项目级救火脚本；
 - 输出正确9:16成片；
@@ -117,7 +117,7 @@ Gate E不是Shell V2本地版完成前置，且与Gate D保持独立裁决。
 - Provider配置和身份；
 - 费用披露与预算；
 - 网络和真实生成调用；
-- Provider返回资产进入Core原生Artifact链；
+- Provider返回资产进入OpenMontage Agent原生Artifact链；
 - 完整成片及费用对账。
 
 Key存在、`present_unverified`、静态registry和Provider菜单均不能证明`PROVIDER_E2E`。
@@ -129,13 +129,14 @@ Key存在、`present_unverified`、静态registry和Provider菜单均不能证�
 ```text
 shell_commit
 shell_package_version
-core_release
-core_commit
-core_manifest_sha256
-core_lock_sha256
+openmontage_release
+openmontage_commit
+package_manifest_sha256
+package_lock_sha256
 install_root
 data_root
-core_python
+package_root
+package_python
 skill_hashes
 literal_user_message
 executor_controls

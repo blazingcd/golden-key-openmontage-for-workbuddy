@@ -1054,3 +1054,9 @@
 - 独立Reviewer `01a004a6-aab1-7992-abe0-6dcbe8490a71`对`041c6600dc8eb9094b5c93cb4a4ed088894578af`给出`APPROVE`，P0/P1/P2均为0，六模块MVP裁决为`MINIMAL_ENOUGH`。
 - 用户正式接受阶段1 Gate；仅更新八个文档的状态与证据指针，产品内容和七类禁止变化均为0。
 - `stage_1_status=PASS_ACCEPTED`；阶段2尚未授权，`next_authorized_task=NONE_PENDING_EXPLICIT_STAGE_2_AUTHORIZATION`。
+
+## 2026-08-15：V2-S2-PLAN-NAMING-FIX1命名裁决
+
+- 当前产品术语冻结为：`SaaS Core`仅指SaaS架构组件；本地登记对象为`OpenMontage 执行包`及其`Package Registration`；生产权威为从已验证执行包运行的`OpenMontage Agent`；Shell不登记或实现SaaS Core。
+- 阶段2模块、未来文件/API/schema/storage/字段/测试全链改为Package术语；包内既有`core.*`、`managed_core`和`GOLDEN_KEY_WORKBUDDY_CORE.lock.json`仅作为外部wire vocabulary保留。
+- 本轮只修订允许的活动治理文档及顶部/追加状态记录，不改变阶段2功能、锁/CAS、fail-closed、测试强度或实现授权；生产代码、测试实现、Skill、Installer、Runtime、Launcher、配置、lock和执行包内容变化均为0，真实执行为0。

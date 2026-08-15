@@ -10,9 +10,10 @@
 - 需要Shell决定Pipeline、Stage、Reviewer或Checkpoint；
 - 需要Launcher理解Artifact业务语义；
 - 需要Shell选择Provider或媒体处理路径；
-- 需要把Core路径、Python、`.venv`、CLI、Pipeline或Stage加入普通用户消息；
-- 需要通过临时脚本、外部Core目录或手工预转码制造PASS；
-- 需要直接修改Core才能让当前Shell任务通过；
+- 需要把PackageRoot、Python、`.venv`、CLI、Pipeline或Stage加入普通用户消息；
+- 需要通过临时脚本、外部执行包目录或手工预转码制造PASS；
+- 需要直接修改OpenMontage 执行包才能让当前Shell任务通过；
+- 需要Shell登记或实现SaaS Core；
 - 需要安装、下载、WorkBuddy、Provider、费用、发布或删除，但任务没有对应授权；
 - 固定Git对象、Manifest、Lock、SHA、安装对象或工作树发生漂移；
 - 发现另一任务正在修改重叠文件；
@@ -42,11 +43,11 @@ files_changed_before_stop:
 
 - `if user_request ... choose_pipeline(...)`；
 - Shell生成或修订Brief、Script、Scene Plan、Asset Manifest、Edit Decisions；
-- Shell导入Core的Pipeline Loader或Checkpoint writer；
-- Shell维护与Core Stage同构的FSM；
+- Shell导入执行包内的Pipeline Loader或Checkpoint writer；
+- Shell维护与OpenMontage Agent Stage同构的FSM；
 - Launcher接受任意命令字符串并直接交给shell；
 - 根据目录名包含`v0.3.23`推断正式对象；
-- 磁盘递归搜索后选择“看起来最新”的Core或Python；
+- 磁盘递归搜索后选择“看起来最新”的OpenMontage 执行包或Python；
 - 把`doctor=pass`、ZIP成功或一个MP4写成最终验收；
 - 为了本地成功而永久封锁所有API/Hybrid路径；
 - 安装阶段无条件准备Remotion、HyperFrames、浏览器和大型模型；
@@ -60,8 +61,8 @@ files_changed_before_stop:
 
 以下只能进入`executor_controls`或测试卡：
 
-- Shell/Core/包/安装实例身份；
-- Python、CoreRoot、DataRoot和cwd；
+- Shell/Package Registration/安装实例身份；
+- Python、PackageRoot、DataRoot和cwd；
 - 模型选择、测试编号、重试预算和停止条件；
 - 如何读取Guide、执行命令或判断PASS；
 - 下载、Provider、费用和环境隔离控制；
@@ -75,7 +76,7 @@ files_changed_before_stop:
 
 1. 当前任务停止在安全点；
 2. 记录新事实和受影响Gate；
-3. 判断归属：Shell、Core、Host、Tool、模型、Provider或产品范围；
+3. 判断归属：Shell、OpenMontage 执行包、OpenMontage Agent、SaaS Core、Host、Tool、模型、Provider或产品范围；
 4. 给出“不处理”“调整当前阶段”“新增后续任务”三个选项及影响；
 5. 由用户批准后更新`PROJECT-CHARTER.md`、`TASK-REGISTER.md`和对应阶段计划；
 6. 只有文档提交后才能恢复执行。
@@ -92,7 +93,7 @@ files_changed_before_stop:
 - 不清理其他任务的tracked、untracked、ignored、stash或worktree现场；
 - 每项迁移必须列出来源commit、文件、消费者和目标测试；
 - 递归删除或移动前必须验证绝对目标路径和所有权；
-- Core源码工作树只读，Shell任务不得修改。
+- OpenMontage 执行包源码工作树只读，Shell任务不得修改。
 
 ## 6. 证据防错
 
@@ -116,4 +117,4 @@ files_changed_before_stop:
 - 后续阶段不得在前一阶段 `PASS_ACCEPTED` 前启动；阶段1 T1–T5 的内部串行依赖以 `TASK-REGISTER` 第4节为准；本规则不授权并行执行。
 - 同一Gate的Builder和Reviewer必须独立；
 - Reviewer不得修改代码来制造APPROVE；
-- 后续真实WorkBuddy Gate不得与尚未完成的安装、Core切换或全局Skill变更并行。
+- 后续真实WorkBuddy Gate不得与尚未完成的安装、活动执行包切换或全局Skill变更并行。

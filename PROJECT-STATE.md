@@ -2,6 +2,13 @@
 
 更新时间：2026-08-15
 
+## 2026-08-15 WorkBuddy Shell V2 阶段2命名裁决
+
+- `SaaS Core`仅指金钥匙SaaS架构组件，不属于Shell V2登记、安装、定位或执行对象。
+- 阶段2唯一登记对象统一称`OpenMontage Package / OpenMontage 执行包`；模块名为`OpenMontage Package Registration & Locator / OpenMontage 执行包登记与定位`，活动对象为`Package Registration`。
+- 生产权威统一称`OpenMontage Agent`：它从已验证执行包运行并唯一拥有Pipeline、Stage、Artifact、Checkpoint、Reviewer、Tool、Provider、模型、媒体和创意决策；Shell不登记或实现SaaS Core。
+- 包内既有`core.*`、`managed_core`及`GOLDEN_KEY_WORKBUDDY_CORE.lock.json`仅为外部wire vocabulary，原样保留且不改变上述产品含义；本记录只改当前命名，不改变阶段2功能、授权或已审合同。
+
 ## 2026-08-15 WorkBuddy Shell V2 阶段1用户Gate收口
 
 - `V2-S1-GATE-CLOSEOUT1`接受已审阅对象`041c6600dc8eb9094b5c93cb4a4ed088894578af`；Reviewer `01a004a6-aab1-7992-abe0-6dcbe8490a71`结论为`APPROVE`、P0/P1/P2均为0。

@@ -1,4 +1,4 @@
-# WorkBuddy Shell V2 阶段2执行任务包
+# WorkBuddy Shell V2 阶段2 OpenMontage 执行包登记与定位任务包
 
 状态：`PLAN_REVIEW_READY / IMPLEMENTATION_NOT_AUTHORIZED`
 
@@ -6,9 +6,11 @@
 
 ## 1. 唯一范围和停止线
 
-阶段2只实现六模块中的 **Core登记与定位（Core Registration）**。WorkBuddy继续只负责对话，OpenMontage Core继续拥有全部生产决策和执行；本模块只把生命周期模块已经安装并提供的Core候选登记为可核验对象，再让后续Launcher只读取得唯一活动对象。
+阶段2只实现六模块中的 **OpenMontage 执行包登记与定位（OpenMontage Package Registration & Locator）**。WorkBuddy继续只负责对话，OpenMontage Agent继续拥有全部生产决策和执行；本模块只把生命周期模块已经安装并提供的OpenMontage 执行包候选登记为可核验对象，再让后续Launcher只读取得唯一活动执行包。
 
-出现下列任一需要时立即返回`STOPPED_SCOPE_EXPANSION`：修改或执行Core；实现Installer、Runtime或Launcher；扫描磁盘猜对象；选择Pipeline、Stage、Provider、模型、媒体或创意；创建Artifact、推进Checkpoint；导入Core业务内部模块；新增CLI/MCP/Jobs生产控制面；处理`user_message`或`executor_controls`。
+出现下列任一需要时立即返回`STOPPED_SCOPE_EXPANSION`：登记或实现SaaS Core；修改执行包或代替OpenMontage Agent执行生产；实现Installer、Runtime或Launcher；扫描磁盘猜对象；选择Pipeline、Stage、Provider、模型、媒体或创意；创建Artifact、推进Checkpoint；导入Agent业务内部模块；新增CLI/MCP/Jobs生产控制面；处理`user_message`或`executor_controls`。
+
+命名定义：`SaaS Core`只指金钥匙SaaS架构组件，不在本阶段范围；`OpenMontage 执行包`是本地Release ZIP、Manifest、Lock、bundled Python、`AGENT_GUIDE.md`和managed files；`OpenMontage Agent`从已验证执行包运行并拥有生产权威；Shell只登记/定位执行包。既有外部包合同的`core.contract_id`、`core.tag`、`core.source_commit`、`core.file_count`、`managed_core`、`golden-key-core`、`golden-key-workbuddy-callable-core-v1`、`GOLDEN_KEY_WORKBUDDY_CORE.lock.json`和历史路径`scripts/core_sync/sync_workbuddy_core.py`保持反引号字面量，它们是历史wire vocabulary，不代表SaaS Core。
 
 阶段2实现开始前，统筹必须把经独立审阅和用户计划Gate接受的40位提交写入派发Prompt，命名为`implementation_start_commit`。该值不是`HEAD`、分支名或`immutable_code_baseline`；缺失或与本地/远端不一致时为`INCOMPLETE_CONTEXT_MISMATCH`。`immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`仅用于V1来源和代码谱系核验。
 
@@ -16,34 +18,34 @@
 
 ### 2.1 最小职责、输入和输出
 
-唯一常规写入口为`register_core(...)`和`activate_core(...)`，损坏指针的唯一修复入口为`recover_active_core(...)`；唯一只读入口为`locate_active_core(...)`。四者放在新文件`golden_key_openmontage_workbuddy/core_registration.py`，不得加入CLI、MCP或WorkBuddy入口。
+唯一常规写入口为`register_package(...)`和`activate_package(...)`，损坏指针的唯一修复入口为`recover_active_package(...)`；唯一只读入口为`locate_active_package(...)`。四者放在新文件`golden_key_openmontage_workbuddy/package_registration.py`，不得加入CLI、MCP或WorkBuddy入口。
 
-- `register_core(data_root, release_archive, release_sha256_sidecar, core_root, core_python)`：只读取显式路径，验证Release包、SHA sidecar、Manifest、Lock、安装后的Core文件、Python和Guide，写入一个不可变Registration对象；不自动激活。
-- `activate_core(data_root, expected_active_pointer_sha256_or_missing, registration_sha256)`：只把已存在且当前仍完全有效的Registration设为唯一活动对象。调用方必须同时锁定当前指针原始字节SHA（首次激活用精确字面量`MISSING`）和目标对象SHA；不得按版本、时间或目录名选择。
-- `recover_active_core(data_root, expected_broken_pointer_sha256, replacement_registration_sha256)`：只在现有`active.json`原始字节SHA与显式损坏对象锁完全一致时，以完整复核通过的显式Registration替换它；不得创建Registration或选择回退对象。
-- `locate_active_core(data_root)`：只读固定活动指针和其精确对象，重新验证身份、路径和hash，返回后续Launcher所需的不可变字段；零写入、零修复、零执行Core。
+- `register_package(data_root, release_archive, release_sha256_sidecar, package_root, package_python)`：只读取显式路径，验证OpenMontage Release包、SHA sidecar、Manifest、Lock、安装后的managed files、bundled Python和Guide，写入一个不可变Package Registration；不自动激活。
+- `activate_package(data_root, expected_active_pointer_sha256_or_missing, registration_sha256)`：只把已存在且当前仍完全有效的Package Registration设为唯一活动执行包。调用方必须同时锁定当前指针原始字节SHA（首次激活用精确字面量`MISSING`）和目标对象SHA；不得按版本、时间或目录名选择。
+- `recover_active_package(data_root, expected_broken_pointer_sha256, replacement_registration_sha256)`：只在现有`active.json`原始字节SHA与显式损坏对象锁完全一致时，以完整复核通过的显式Package Registration替换它；不得创建Package Registration或选择回退对象。
+- `locate_active_package(data_root)`：只读固定活动执行包指针和其精确Package Registration，重新验证身份、路径和hash，返回后续Launcher所需的不可变字段；零写入、零修复、零执行OpenMontage Agent。
 
 固定存储位置：
 
 ```text
-<DataRoot>/State/CoreRegistration/v1/objects/<registration_sha256>.json
-<DataRoot>/State/CoreRegistration/v1/active.json
-<DataRoot>/State/CoreRegistration/v1/active.lock
+<DataRoot>/State/PackageRegistration/v1/objects/<registration_sha256>.json
+<DataRoot>/State/PackageRegistration/v1/active.json
+<DataRoot>/State/PackageRegistration/v1/active.lock
 ```
 
 `DataRoot`必须由调用方以已绑定的绝对路径传入；模块不得使用环境变量、用户目录、注册表、盘符搜索或“最新”目录作为回退。
 
-### 2.2 Registration v1 唯一JSON shape
+### 2.2 Package Registration v1 唯一JSON shape
 
 对象根和每个嵌套对象都执行`additionalProperties=false`：下列键全部必需、不得为`null`，未知键、缺键、重复JSON key全部拒绝。`string`是Unicode NFC；`sha256`是小写64位hex；`size`是大于0的JSON整数。
 
 ```json
 {
-  "schema_version": "golden-key-workbuddy-core-registration-v1",
+  "schema_version": "golden-key-workbuddy-openmontage-package-registration-v1",
   "owner": "golden-key-workbuddy-shell-v2",
   "contract_id": "string",
-  "core_release": "string",
-  "core_commit": "lowercase-40-hex",
+  "openmontage_release": "string",
+  "openmontage_commit": "lowercase-40-hex",
   "authority": {
     "manifest": {
       "invocation_model": "direct_agent",
@@ -63,8 +65,8 @@
     "archive_sha256": "sha256",
     "sha256_sidecar_name": "basename.zip.sha256"
   },
-  "core_root": "canonical-absolute-path",
-  "core_python": {
+  "package_root": "canonical-absolute-path",
+  "package_python": {
     "relative_path": "bootstrap/python/python.exe",
     "path": "canonical-absolute-path",
     "sha256": "sha256",
@@ -97,42 +99,42 @@
 }
 ```
 
-`contract_id / core_release / core_commit`分别来自Manifest `core.contract_id / core.tag / core.source_commit`和Lock `contract_id / source_ref / source_commit`，每对逐字一致。Manifest和Lock authority不要求完整对象相同：Manifest authority必须且只能是上列2键shape；Lock authority必须且只能是上列6键shape；只交叉比较共有的`invocation_model`和`nested_agent_host_allowed`，并分别对各自完整shape精确验证。
+`contract_id / openmontage_release / openmontage_commit`分别来自Manifest外部wire字段`core.contract_id / core.tag / core.source_commit`和Lock `contract_id / source_ref / source_commit`，每对逐字一致。Manifest和Lock authority不要求完整对象相同：Manifest authority必须且只能是上列2键shape；Lock authority必须且只能是上列6键shape；只交叉比较共有的`invocation_model`和`nested_agent_host_allowed`，并分别对各自完整shape精确验证。
 
-`core_python`的唯一权威来源是已验证Release Manifest：`installation.runtime_roles.python`必须为`bundled_private_interpreter`；`files`中必须有且只有一个`path=bootstrap/python/python.exe`且`owner=workbuddy_bootstrap_runtime`的条目；其`sha256 / size`必须与文件一致；`bootstrap_runtime.python`必须且只能含`version / source / archive_sha256 / system_python_required`，其中version非空、source固定为`python.org_windows_embeddable_x64`、archive hash为sha256、`system_python_required=false`。调用方传入的`core_python`必须规范化后精确等于`CoreRoot/bootstrap/python/python.exe`；外部或任意Python一律`IDENTITY_MISMATCH`，本阶段不建立第二Runtime合同。
+`package_python`的唯一权威来源是已验证Release Manifest：`installation.runtime_roles.python`必须为`bundled_private_interpreter`；`files`中必须有且只有一个`path=bootstrap/python/python.exe`且`owner=workbuddy_bootstrap_runtime`的条目；其`sha256 / size`必须与文件一致；`bootstrap_runtime.python`必须且只能含`version / source / archive_sha256 / system_python_required`，其中version非空、source固定为`python.org_windows_embeddable_x64`、archive hash为sha256、`system_python_required=false`。调用方传入的`package_python`必须规范化后精确等于`PackageRoot/bootstrap/python/python.exe`；外部或任意Python一律`IDENTITY_MISMATCH`，本阶段不建立第二Runtime合同。
 
-所有路径来自固定相对路径与显式绝对`CoreRoot`，存储为`str(Path.resolve(strict=True))`；不展开`~`。比较使用平台路径语义。规范JSON使用UTF-8无BOM、上述唯一shape、Unicode NFC、key排序、`separators=(",", ":")`和尾部一个LF；`registration_sha256`是完整规范字节SHA-256，也是对象文件名，不写入对象本身。
+所有路径来自固定相对路径与显式绝对`PackageRoot`，存储为`str(Path.resolve(strict=True))`；不展开`~`。比较使用平台路径语义。规范JSON使用UTF-8无BOM、上述唯一shape、Unicode NFC、key排序、`separators=(",", ":")`和尾部一个LF；`registration_sha256`是完整规范字节SHA-256，也是Package Registration对象文件名，不写入对象本身。
 
-Registration只接受精确`v1`，Manifest只接受上列v1，Lock只接受整数`2`；未知版本必须新建合同。错误类别固定为`INPUT_INVALID / PATH_VIOLATION / OBJECT_MISSING / DUPLICATE / IDENTITY_MISMATCH / HASH_MISMATCH / TAMPERED / ACTIVE_LOCK_BUSY / ACTIVE_CAS_MISMATCH / ATOMIC_WRITE_FAILED`。
+Package Registration只接受精确`v1`，Manifest只接受上列v1，Lock只接受整数`2`；未知版本必须新建合同。错误类别固定为`INPUT_INVALID / PATH_VIOLATION / OBJECT_MISSING / DUPLICATE / IDENTITY_MISMATCH / HASH_MISMATCH / TAMPERED / ACTIVE_LOCK_BUSY / ACTIVE_CAS_MISMATCH / ATOMIC_WRITE_FAILED`。
 
 ### 2.3 相互验证链
 
 登记时必须一次完成以下闭环，失败则不写对象或指针：
 
-1. sidecar只允许一个64位digest及可选精确archive basename；archive实际hash、sidecar和Registration `release.archive_sha256`一致。
-2. archive内Manifest和Lock各唯一、安全且字节与`CoreRoot`固定文件相同；Manifest `files`还必须锁定Python、Lock和Guide的hash/size/owner。
+1. sidecar只允许一个64位digest及可选精确archive basename；archive实际hash、sidecar和Package Registration `release.archive_sha256`一致。
+2. archive内Manifest和Lock各唯一、安全且字节与`PackageRoot`固定文件相同；Manifest `files`还必须锁定Python、Lock和Guide的hash/size/owner。
 3. 按2.2分别验证两个authority完整shape，只交叉比较两个共有键；身份三元组逐对一致，Manifest `core.file_count`等于Lock `files`长度。
 4. Lock `bundle_sha256`固定为对原顺序`files`执行`json.dumps(entries, ensure_ascii=False, sort_keys=True, separators=(",", ":"))`后取UTF-8字节SHA-256。
-5. Lock每个`source_path`安全且唯一；Manifest有唯一对应`managed_core`条目，hash/size一致；`CoreRoot`实际受管文件逐项一致且解析后不得逃出根。
-6. Guide固定为`AGENT_GUIDE.md`并同时通过Manifest、Lock和Registration验证；Python按2.2的Manifest私有解释器合同验证，不执行解释器。
+5. Lock每个`source_path`安全且唯一；Manifest有唯一对应外部wire owner `managed_core`条目，hash/size一致；`PackageRoot`实际受管文件逐项一致且解析后不得逃出根。
+6. Guide固定为`AGENT_GUIDE.md`并同时通过Manifest、Lock和Package Registration验证；Python按2.2的Manifest私有解释器合同验证，不执行解释器。
 
-Locator每次重做对象内容hash、唯一shape、规范路径、Manifest/Lock/Guide/Python hash及Lock受管文件验证。Release archive可由生命周期模块在登记后回收，Locator只核验已冻结Release SHA事实，不声称重新验证远端Release。
+Locator每次重做Package Registration内容hash、唯一shape、规范路径、Manifest/Lock/Guide/Python hash及Lock受管文件验证。Release archive可由生命周期模块在登记后回收，Locator只核验已冻结Release SHA事实，不声称重新验证远端Release。
 
 ### 2.4 唯一活动指针和失败恢复
 
-`active.json`必须且只能含`schema_version=golden-key-workbuddy-active-core-v1`、固定`owner`和小写64位`registration_sha256`，同样拒绝未知/缺失/重复字段。
+`active.json`必须且只能含`schema_version=golden-key-workbuddy-active-openmontage-package-v1`、固定`owner`和小写64位`registration_sha256`，同样拒绝未知/缺失/重复字段。
 
-- Registration对象先同目录临时写入、flush、`fsync`、回读核验，再原子发布；同hash同字节幂等，不同字节或外来对象拒绝覆盖。
-- 所有active pointer writer共用固定锁`<DataRoot>/State/CoreRegistration/v1/active.lock`。锁文件内容必须精确为规范JSON `{"owner":"golden-key-workbuddy-shell-v2","schema_version":"golden-key-workbuddy-active-lock-v1"}\n`；只允许`register_core`在registry首次为空时用`O_CREAT|O_EXCL`建立，同字节已存在为幂等。已有Registration或pointer时锁文件缺失/改字节均为`TAMPERED`，不得重建。
+- Package Registration对象先同目录临时写入、flush、`fsync`、回读核验，再原子发布；同hash同字节幂等，不同字节或外来对象拒绝覆盖。
+- 所有active package pointer writer共用固定锁`<DataRoot>/State/PackageRegistration/v1/active.lock`。锁文件内容必须精确为规范JSON `{"owner":"golden-key-workbuddy-shell-v2","schema_version":"golden-key-workbuddy-active-package-lock-v1"}\n`；只允许`register_package`在registry首次为空时用`O_CREAT|O_EXCL`建立，同字节已存在为幂等。已有Package Registration或pointer时锁文件缺失/改字节均为`TAMPERED`，不得重建。
 - 排他锁必须是该固定文件byte 0上的内核级进程间独占锁：Windows每次先`seek(0)`再用`msvcrt.locking(..., LK_NBLCK, 1)`，释放时`seek(0)`后`LK_UNLCK`；POSIX用`fcntl.flock(..., LOCK_EX|LOCK_NB)`并以`LOCK_UN`释放。取得锁后必须在临界区重新读取并验证锁文件完整字节。禁止仅凭PID、进程内mutex或“锁文件存在”判断。固定超时5.0秒、单调时钟每0.05秒重试；超时/占用返回`ACTIVE_LOCK_BUSY`并零写入，不等待无界、不删锁文件。
-- `activate_core`和`recover_active_core`必须从取得同一排他锁后才开始最终读取`active.json`；在临界区内比较调用方给出的当前原始指针SHA或`MISSING`、完整复核目标、写/flush/`fsync`/回读同目录临时文件并执行`os.replace`。比较到replace之间不得释放锁，也不得调用未持锁的替换 helper。
-- `activate_core`只接受有效现有指针或精确`MISSING`，且最终原始字节状态必须与expected一致；现有指针损坏时拒绝。`recover_active_core`只接受现有损坏指针的精确原始字节SHA；有效指针不得走恢复入口。两者CAS失败均不得覆盖当前writer结果。
+- `activate_package`和`recover_active_package`必须从取得同一排他锁后才开始最终读取`active.json`；在临界区内比较调用方给出的当前原始指针SHA或`MISSING`、完整复核目标、写/flush/`fsync`/回读同目录临时文件并执行`os.replace`。比较到replace之间不得释放锁，也不得调用未持锁的替换helper。
+- `activate_package`只接受有效现有指针或精确`MISSING`，且最终原始字节状态必须与expected一致；现有指针损坏时拒绝。`recover_active_package`只接受现有损坏指针的精确原始字节SHA；有效指针不得走恢复入口。两者CAS失败均不得覆盖当前writer结果。
 - 正常返回和任何异常都在`finally`释放内核锁并关闭句柄；进程崩溃由OS自动释放内核锁，持久`active.lock`身份文件不删除。后续writer重新获取成功后仍重做最终读取/CAS；锁文件缺失、损坏或平台锁API不可用时fail closed，不扫描、不猜测“陈旧锁”、不自动回退。
 - 新指针替换前失败保留旧指针；替换成功后回读必须有效。临时文件永远不被Locator读取。
-- 回滚只允许显式激活给定旧Registration SHA，且旧对象及其Core身份完整重验通过；不得扫描、猜测、按时间选择或自动回退。
-- Locator遇到无/坏指针、缺目标、对象hash不符或目标失效直接fail closed；objects中即使只有一个对象也不得采用。
+- 回滚只允许显式激活给定旧Package Registration SHA，且旧对象及其执行包身份完整重验通过；不得扫描、猜测、按时间选择或自动回退。
+- Locator遇到无/坏活动执行包指针、缺目标、对象hash不符或目标失效直接fail closed；objects中即使只有一个对象也不得采用。
 
-objects目录可保留多个已验证对象供显式升级/回滚；活动对象始终只有固定指针所指的一个SHA。`DUPLICATE`专指重复JSON key、ZIP成员、Manifest/Lock清单路径或同内容寻址文件名不同字节。
+objects目录可保留多个已验证Package Registration供显式升级/回滚；活动执行包始终只有固定指针所指的一个SHA。`DUPLICATE`专指重复JSON key、ZIP成员、Manifest/Lock清单路径或同内容寻址文件名不同字节。
 
 ## 3. V1处置
 
@@ -140,11 +142,11 @@ objects目录可保留多个已验证对象供显式升级/回滚；活动对象
 
 | V1来源 | 阶段2裁决 | 仅允许的最小元素 | 禁止带入 |
 |---|---|---|---|
-| `golden_key_openmontage_workbuddy/paths.py` | `ADAPT_NAMED_ELEMENTS` | `Path.resolve`式规范化思路 | 环境变量默认、包目录回退、用户目录猜测 |
+| `golden_key_openmontage_workbuddy/paths.py` | `ADAPT_NAMED_ELEMENTS` | `Path.resolve`式规范化思路 | 环境变量默认、执行包目录回退、用户目录猜测 |
 | `packaging/workbuddy/install-workbuddy.ps1` | `ADAPT_NAMED_ELEMENTS` | SHA-256、清单安全路径、staging后切换、所有权拒绝覆盖的合同 | 安装/升级/repair、Skill写入、doctor/runtime调用、整文件复制 |
-| `scripts/core_sync/sync_workbuddy_core.py` | `HISTORICAL_REFERENCE_ONLY` | ZIP/Lock/逐文件hash和bundle digest的负面夹具与算法事实 | 运行时导入、下载、同步、镜像、删除和维护者流程 |
+| 历史路径`scripts/core_sync/sync_workbuddy_core.py` | `HISTORICAL_REFERENCE_ONLY` | ZIP/Lock/逐文件hash和bundle digest的负面夹具与算法事实 | 运行时导入、下载、同步、镜像、删除和维护者流程；路径中的`core`仅为历史命名 |
 | `golden_key_openmontage_workbuddy/doctor.py`、`gate.py` | `REWRITE` | “身份不一致即失败”这一问题定义 | v0.3.21硬编码、Pipeline/runtime/provider探测、PASS聚合 |
-| `runtime.py`、`tasks.py`、`mcp_server.py`、旧CLI与Skill | `DROP_FOR_STAGE_2` | 无 | 任何生产控制、Core内部导入、Artifact/Checkpoint/Stage/Tool逻辑 |
+| `runtime.py`、`tasks.py`、`mcp_server.py`、旧CLI与Skill | `DROP_FOR_STAGE_2` | 无 | 任何生产控制、OpenMontage Agent业务内部导入、Artifact/Checkpoint/Stage/Tool逻辑 |
 
 阶段2不得修改上述V1来源文件。实现Builder必须在最终证据中列明新模块没有从任何V1文件整文件复制。
 
@@ -153,8 +155,8 @@ objects目录可保留多个已验证对象供显式升级/回滚；活动对象
 全部T1至T4只允许：
 
 ```text
-golden_key_openmontage_workbuddy/core_registration.py
-tests/workbuddy/test_core_registration.py
+golden_key_openmontage_workbuddy/package_registration.py
+tests/workbuddy/test_package_registration.py
 ```
 
 T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_key_openmontage_workbuddy/{__init__,__main__,cli,doctor,gate,paths,runtime,runtime_prepare,tasks,mcp_server,model_config}.py`、`packaging/**`、`scripts/**`、`workbuddy-skill/**`、`.agents/**`、`skills/**`、`config/**`、`*lock*`、`AGENT_GUIDE.md`、`pipeline_defs/**`、`lib/**`、`schemas/artifacts/**`和本文档以外的治理文档。
@@ -168,12 +170,12 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 ### V2-S2-T1：Schema和版本合同
 
 - `task_id`：`V2-S2-T1`
-- 单一目标：在新模块中实现第2节的纯解析、规范化、Release/Manifest/Lock/Core/Python/Guide验证和规范Registration字节生成，不写登记目录。
+- 单一目标：在新模块中实现第2节的纯解析、规范化、Release/Manifest/Lock/managed files/Python/Guide验证和规范Package Registration字节生成，不写登记目录。
 - 精确前置Git对象：派发Prompt中的40位`implementation_start_commit`；T1开始时必须仍等于Builder分支HEAD。
 - 允许修改路径：第4节两个白名单文件。
 - 禁止修改路径：第4节统一禁止路径。
-- 输入合同：五个显式绝对路径参数；`core_python`必须是Manifest锁定的`CoreRoot/bootstrap/python/python.exe`，其余文件由测试夹具或已授权生命周期调用方提供。
-- 输出合同：规范Registration字节、`registration_sha256`和只读字段对象；失败抛出稳定的Registration合同错误并产生零写入。
+- 输入合同：五个显式绝对路径参数；`package_python`必须是Manifest锁定的`PackageRoot/bootstrap/python/python.exe`，其余文件由测试夹具或已授权生命周期调用方提供。
+- 输出合同：规范Package Registration字节、`registration_sha256`和只读字段对象；失败抛出稳定的Package Registration合同错误并产生零写入。
 - 实现步骤：定义2.2唯一shape与严格JSON加载器；实现路径/Unicode/hash规范化；分别验证Manifest/Lock authority；验证sidecar、ZIP唯一条目、身份、bundle digest、全Lock清单、Guide和Manifest锁定Python；生成规范对象。
 - 必须测试：有效最小候选；根及每个嵌套对象的必需/未知/重复字段；两种authority完整shape及仅共有键交叉比较；commit/hash/size类型；sidecar/archive不一致；Manifest/Lock身份不一致；Python相对路径/owner/hash/size/bootstrap metadata；外部Python拒绝；安全路径、NFC和确定性对象SHA；失败前后文件系统快照相同。
 - `PASS`：上述测试全部通过且纯验证路径零写入。`FAIL`：在精确对象上得到最终测试失败。`INCOMPLETE`：对象/环境漂移、命令无最终退出或证据缺失。
@@ -197,13 +199,13 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 ### V2-S2-T3：只读Locator与身份复核
 
 - `task_id`：`V2-S2-T3`
-- 单一目标：实现`locate_active_core(data_root)`，让后续Launcher只读获得精确Core绑定，不实现Launcher。
+- 单一目标：实现`locate_active_package(data_root)`，让后续Launcher只读获得精确执行包绑定，不实现Launcher。
 - 精确前置Git对象：同一Builder中T1、T2完成且HEAD仍为`implementation_start_commit`。
 - 允许/禁止修改路径：第4节。
 - 输入合同：显式绝对`DataRoot`；固定`active.json`及其内容寻址对象。
-- 输出合同：不可变值对象，仅含`registration_sha256 / contract_id / core_release / core_commit / authority / release / core_root / core_python / guide / manifest / lock`，嵌套shape与2.2一致；不得返回命令字符串、Pipeline或生产状态。
+- 输出合同：不可变值对象，仅含`registration_sha256 / contract_id / openmontage_release / openmontage_commit / authority / release / package_root / package_python / guide / manifest / lock`，嵌套shape与2.2一致；不得返回命令字符串、Pipeline或生产状态。
 - 实现步骤：严格读指针；按SHA读单一对象；验证对象hash和schema；重做第2.3节本地身份验证；返回字段副本。不得枚举对象作为fallback。
-- 必须测试：有效定位；无指针、坏指针、缺对象、改对象、改Manifest/Lock/Guide/Python/Core文件、路径移动/alias、多个对象无指针；成功和失败调用前后registry及Core树字节/mtime快照完全一致。
+- 必须测试：有效定位；无指针、坏指针、缺对象、改对象、改Manifest/Lock/Guide/Python/managed file、路径移动/alias、多个对象无指针；成功和失败调用前后registry及PackageRoot树字节/mtime快照完全一致。
 - `PASS`：全部测试通过且Locator零写入、零子进程、零网络。`FAIL/INCOMPLETE`：与T1相同。
 - 提交推送：不单独提交；T5统一提交推送。
 - Reviewer只读范围：同T1；确认未来Launcher只能消费返回对象，Locator不接受用户消息或执行控制。
@@ -213,15 +215,15 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 - `task_id`：`V2-S2-T4`
 - 单一目标：以参数化测试冻结缺失、重复、篡改、漂移、hash和路径异常的拒绝结果，不新增能力。
 - 精确前置Git对象：同一Builder中T1至T3完成且HEAD仍为`implementation_start_commit`。
-- 允许修改路径：优先只改`tests/workbuddy/test_core_registration.py`；只有测试证明合同缺陷时才可最小改`core_registration.py`。
+- 允许修改路径：优先只改`tests/workbuddy/test_package_registration.py`；只有测试证明合同缺陷时才可最小改`package_registration.py`。
 - 禁止修改路径：第4节统一禁止路径。
-- 输入合同：由测试独立生成的本地小型ZIP、sidecar、Manifest、Lock、CoreRoot、Python与registry夹具；不得使用真实Release、网络或安装。
+- 输入合同：由测试独立生成的本地小型ZIP、sidecar、Manifest、Lock、PackageRoot、Python与registry夹具；不得使用真实Release、网络或安装。
 - 输出合同：每个负例得到稳定错误类别、零活动指针前移、零对象猜测、零范围外写入。
-- 实现步骤：逐类单点破坏；记录预期错误；覆盖JSON重复key、两种authority shape、清单重复路径、archive重复条目、缺失、字节篡改、root/python/guide漂移、外部Python、path traversal和symlink/reparse逃逸；覆盖active锁/CAS竞态并证明恢复只接受显式损坏指针对象锁和显式有效Registration SHA。
+- 实现步骤：逐类单点破坏；记录预期错误；覆盖JSON重复key、两种authority shape、清单重复路径、archive重复条目、缺失、字节篡改、root/python/guide漂移、外部Python、path traversal和symlink/reparse逃逸；覆盖active锁/CAS竞态并证明恢复只接受显式损坏指针对象锁和显式有效Package Registration SHA。
 - 必须测试：本节全部矩阵；锁占用/损坏/超时，activate与recover互斥，最终比较后到replace前的竞争writer，expected过期，损坏指针恢复的错误当前SHA、无目标及坏目标；并证明“objects中仅一个候选”也不能替代缺失活动指针。
 - `PASS`：所有负例明确拒绝且正例仍通过。`FAIL/INCOMPLETE`：与T1相同。
 - 提交推送：不单独提交；T5统一提交推送。
-- Reviewer只读范围：同T1；只检查负面合同覆盖，不要求真实安装或Core。
+- Reviewer只读范围：同T1；只检查负面合同覆盖，不要求真实安装或真实执行包。
 
 ### V2-S2-T5：REVIEW_READY证据收口
 
@@ -232,11 +234,11 @@ T5不允许再修改文件。除此之外全部禁止，尤其包括：`golden_k
 - 禁止修改路径：除两白名单文件外全部路径；禁止`git add .`。
 - 输入合同：T1至T4完成的工作树和已绑定Python；Python解释器绝对路径、版本和最终退出码必须进入证据。
 - 输出合同：一个只含白名单文件的提交，推送到`origin/codex/v2-s2-builder1`，本地/远端SHA一致、工作树clean、状态最多`REVIEW_READY`。
-- 实现步骤：先对未提交修改执行`git diff --check`，并用`git status --porcelain=v1`确认worktree/index只含两个白名单路径；精确`git add -- <path1> <path2>`后执行`git diff --cached --check`并核验`git diff --cached --name-only`仍是精确白名单。在D盘任务专用Temp下执行两条pytest和禁止导入静态检查；提交、推送后记录`implementation_result_commit`，再执行`git diff --check "implementation_start_commit..implementation_result_commit"`、`git diff --name-only`路径分类、所有禁止类别计数、本地/远端SHA及clean复核。
+- 实现步骤：先对未提交修改执行`git diff --check`，并用`git status --porcelain=v1`确认worktree/index只含两个白名单路径；精确`git add -- <path1> <path2>`后执行`git diff --cached --check`并核验`git diff --cached --name-only`仍是精确白名单。在D盘任务专用Temp下执行`python -m pytest tests/workbuddy/test_package_registration.py -q`和`python -m pytest tests/workbuddy/test_package_registration.py tests/workbuddy/test_portable_bundle.py -q`及禁止导入静态检查；提交、推送后记录`implementation_result_commit`，再执行`git diff --check "implementation_start_commit..implementation_result_commit"`、`git diff --name-only`路径分类、所有禁止类别计数、本地/远端SHA及clean复核。
 - 必须测试：上述两条pytest命令，均须有最终退出0；不得安装依赖、运行安装器、WorkBuddy、Provider或媒体。
 - `PASS`：提交前worktree/index检查、测试、提交后精确累计diff、路径、零边界、本地/远端/审阅对象全部满足；不得用提交前的`implementation_start_commit..HEAD`空范围作证。`FAIL`：精确环境中的最终测试失败。`INCOMPLETE`：任一命令无最终退出、对象/环境不一致或证据缺失。
 - 提交推送：提交信息`docs`以外不得伪装；实现提交必须精确包含两个白名单文件，推送后不得改写。
-- Reviewer只读范围：`implementation_start_commit..implementation_result_commit`；生产代码变化只允许新`core_registration.py`，其他生产代码变化为0。
+- Reviewer只读范围：`implementation_start_commit..implementation_result_commit`；生产代码变化只允许新`package_registration.py`，其他生产代码变化为0。
 
 ## 6. 审阅、Gate和状态转换
 
@@ -268,4 +270,4 @@ INCOMPLETE -> 停止，不得提交用户实现Gate
 
 实现Reviewer必须独立、只读、零修改/commit/push；核验任务合同、全部测试最终退出、唯一活动指针、Locator零写入、全负面矩阵、白名单和禁止路径、生产控制面为零。最终只允许`APPROVE / REQUEST_CHANGES / INCOMPLETE`。
 
-只有结果已推送、Reviewer `APPROVE`、本地/远端/审阅对象一致、工作树clean、实现仅限本模块且用户接受`V2-S2-GATE`后，`stage_2_status`才可变为`PASS_ACCEPTED`。在此之前不得创建阶段3任务、实现其他五模块或声称真实WorkBuddy、Runtime、Core流程、Provider或媒体已验证。
+只有结果已推送、Reviewer `APPROVE`、本地/远端/审阅对象一致、工作树clean、实现仅限本模块且用户接受`V2-S2-GATE`后，`stage_2_status`才可变为`PASS_ACCEPTED`。在此之前不得创建阶段3任务、实现其他五模块或声称真实WorkBuddy、Runtime、OpenMontage Agent流程、Provider或媒体已验证。

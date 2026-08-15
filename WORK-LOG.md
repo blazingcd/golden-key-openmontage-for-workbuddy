@@ -1003,3 +1003,11 @@
 - 本次文档工作不是阶段1执行：没有创建`codex/workbuddy-shell-v2`分支或worktree，没有修改生产代码、Skill、安装器、测试、配置、lock或Core，没有运行测试、WorkBuddy、安装、Provider或媒体生成。
 - 已批准的V2代码基线保持`2a2bf09832d558388dc2816c54b32a2dce4aa607`；阶段1必须在文档审阅和新授权后才能从该精确提交开始。
 - 既有未跟踪`.codex/config.toml`和`docs/workbuddy/WORKBUDDY-SHELL-V2-REFACTOR-HANDOFF-2026-08-15.md`未修改、未暂存、未纳入本次文档范围。
+
+## 2026-08-15：V2独立审阅承载位置纠正
+
+- 首次独立审阅任务误挂在旧协调项目`Golden_Key_OpenMontage_for_WorkBuddy`及旧长期分支上。发现后立即要求停止，最终状态为`INCOMPLETE_WRONG_PROJECT_CONTEXT`；任务ID=`01a0042e-1a5a-7ce2-ac25-d85eb764c1ac`，零修改、零测试、零WorkBuddy、零Provider、零治理裁决，随后归档。
+- 为满足“审阅必须在本项目、本分支”的要求，从固定代码基线`2a2bf09832d558388dc2816c54b32a2dce4aa607`建立`codex/workbuddy-shell-v2`及`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`。
+- 仅选择性迁移治理文档来源提交`def921a2...`和`e20eca7...`，形成V2提交`ee60947`和`3b62728`；未带入旧长期分支后续生产代码，未触碰旧工作区两个未跟踪文件。
+- 此动作记为前置`V2-GOV-BOOTSTRAP=DONE`，只建立治理与审阅载体，不等于阶段1启动。阶段1继续为`READY_NOT_STARTED`，启动授权继续为`NO`。
+- 下一唯一允许任务为`V2-GOV-REVIEW1`：由V2项目、`codex/workbuddy-shell-v2`分支承载的独立只读治理文档审阅。

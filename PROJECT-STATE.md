@@ -6,10 +6,11 @@
 
 - Shell V2统筹已经从聊天记忆迁移到版本化文档，权威入口为`docs/workbuddy/v2/README.md`。
 - 项目章程、防漂移停止规则、八阶段任务账本、阶段1执行计划和验收矩阵已经固化。
-- 治理内容提交为`def921a2e29b4858f289c44c3e9183619ba31ce6`；阶段1从固定代码基线建立后只选择性迁移该治理提交，不整体追随长期分支新HEAD。
+- 治理内容来源提交为`def921a2e29b4858f289c44c3e9183619ba31ce6`和`e20eca7b73393e2897e8155e09499fea458909b6`；V2分支已从固定代码基线建立，并以`ee60947`、`3b62728`只选择性迁移治理文档，没有整体追随长期分支新HEAD。
 - 当前状态为`GOVERNANCE_DOCS=DONE / STAGE_1=READY_NOT_STARTED`。
-- 阶段1启动授权在本套文档审阅后仍为`NO`；当前没有创建`codex/workbuddy-shell-v2`分支或独立worktree，没有修改生产代码、Skill、安装器、测试或Core。
-- 已批准的V2代码基线仍为`2a2bf09832d558388dc2816c54b32a2dce4aa607`。后续阶段1从该固定提交建立worktree，再选择性带入本次治理文档，不merge/rebase推进中的`main`或旧长期分支。
+- 阶段1启动授权仍为`NO`；`codex/workbuddy-shell-v2`分支和本项目worktree只作为前置治理及独立审阅载体建立，没有修改生产代码、Skill、安装器、测试或Core。
+- 已批准的V2代码基线仍为`2a2bf09832d558388dc2816c54b32a2dce4aa607`。后续不得merge/rebase推进中的`main`或旧长期分支。
+- 首次独立审阅误挂在旧协调项目/旧分支，已停止并记为`INCOMPLETE_WRONG_PROJECT_CONTEXT`，零修改、零测试、零裁决；该错误任务不构成任何审阅证据。
 - 最高职责原则已冻结：WorkBuddy是唯一对话Agent，OpenMontage Core是唯一生产决策与执行权威，Shell只负责安装、对象锁定、环境绑定、会话入口以及状态和结果转交；Shell不得成为第二个Director或生产状态机。
 - 长期工作区既有未跟踪`.codex/config.toml`与`docs/workbuddy/WORKBUDDY-SHELL-V2-REFACTOR-HANDOFF-2026-08-15.md`继续原样保护，不属于本次权威文档提交。
 

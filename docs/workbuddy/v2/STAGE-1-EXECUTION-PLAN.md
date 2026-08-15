@@ -18,24 +18,24 @@
 ## 2. 固定输入
 
 - V2代码基线：`2a2bf09832d558388dc2816c54b32a2dce4aa607`
-- 计划分支：`codex/workbuddy-shell-v2`
-- 计划worktree：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
+- 当前分支：`codex/workbuddy-shell-v2`
+- 当前worktree：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
 - 本目录的项目章程、防漂移规则、任务账本和验收矩阵；
 - 当前仓库权威文件、两个现有Skill和消费层核心实现；
 - 已列入项目交接的七个既有Codex证据任务；
 - 官方对象`4eab34c5...`和v0.3.23对象`613d51a...`的只读事实。
 
-## 3. T0：建立固定工作区
+## 3. 前置引导：固定工作区（已完成，不计为阶段1启动）
 
 1. 只读核验长期工作区分支、HEAD、远端和status；
 2. 核验两个既有未跟踪文件未变化；
-3. 确认目标目录为空、不是worktree，目标分支不存在；
+3. 确认目标目录原为空、不是worktree，目标分支原不存在；
 4. 从精确`2a2bf098...`建立V2分支和worktree；
-5. 核验新worktree HEAD、分支、远端和clean状态；
+5. 只选择性迁移已批准的治理文档提交，并核验没有带入长期分支后续代码；
 6. 不携带长期工作区的未跟踪文件；
 7. 不merge、rebase、stash或复制working-tree现场。
 
-任一对象不一致时停止为`INCOMPLETE`，不得删除目标目录或自行换基线。
+该前置引导已完成并记录为 `V2-GOV-BOOTSTRAP=DONE`。它只提供V2审阅承载位置，不授权T1至T6。任一对象不一致时停止为`INCOMPLETE`，不得删除目标目录或自行换基线。
 
 ## 4. T1至T5：文档Builder
 

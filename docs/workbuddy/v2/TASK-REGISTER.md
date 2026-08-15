@@ -7,7 +7,7 @@
 ## 当前状态与精确对象
 
 ```text
-task_id: V2-S2-PLAN-BUILDER1
+task_id: V2-S2-PLAN-FIX1
 task_status: REVIEW_READY
 stage_1_status: PASS_ACCEPTED
 stage_1_reviewed_commit: 041c6600dc8eb9094b5c93cb4a4ed088894578af
@@ -20,6 +20,7 @@ stage_2_implementation_authorization: NOT_GRANTED
 stage_2_module: Core Registration only
 immutable_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
 planning_start_commit: fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9
+planning_fix_start_commit: 2531396850e60048adb4ad46e70cd458b504cf62
 planning_result_commit: THIS_COMMIT
 builder_branch: codex/v2-s2-plan-builder1
 push_target: origin/codex/v2-s2-plan-builder1
@@ -36,7 +37,7 @@ tests_run: 0
 workbuddy_runs: 0
 provider_calls: 0
 media_generated: 0
-next_authorized_task: V2-S2-PLAN-REVIEW1
+next_authorized_task: V2-S2-PLAN-REVIEW2
 ```
 
 `THIS_COMMIT`指包含本记录和`STAGE-2-TASK-PACKET.md`的规划结果提交；其精确40位结果由本地分支、远端分支和Builder最终报告共同锁定，避免伪造自引用SHA。

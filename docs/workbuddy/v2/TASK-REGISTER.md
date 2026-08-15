@@ -26,6 +26,8 @@ DONE
 
 ```text
 governance_docs: DONE
+governance_docs_commit: def921a2e29b4858f289c44c3e9183619ba31ce6
+governance_docs_branch: codex/w4.1-portable-python
 stage_1: READY_NOT_STARTED
 stage_1_start_authorized_after_document_review: NO
 v2_branch_created: NO
@@ -36,6 +38,8 @@ provider_call: NO
 media_generated: NO
 next_authorized_task: NONE
 ```
+
+阶段1必须从固定代码基线`2a2bf09832d558388dc2816c54b32a2dce4aa607`建立工作树，再选择性迁移治理内容提交`def921a2e29b4858f289c44c3e9183619ba31ce6`。不得把长期分支后续HEAD整体作为V2代码起点。
 
 用户需要先审阅本套文档。后续若明确授权启动阶段1，才把`V2-S1-T0`改为`IN_PROGRESS`。
 

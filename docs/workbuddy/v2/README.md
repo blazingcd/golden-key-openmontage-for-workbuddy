@@ -30,10 +30,12 @@
 
 - 协调仓库：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy`
 - 当前长期分支：`codex/w4.1-portable-python`
+- V2治理内容提交：`def921a2e29b4858f289c44c3e9183619ba31ce6`
 - 已批准的V2代码基线：`2a2bf09832d558388dc2816c54b32a2dce4aa607`
 - 计划分支：`codex/workbuddy-shell-v2`
 - 计划工作树：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
 - 上述V2分支和工作树尚未建立。
+- 阶段1若从固定代码基线建立工作树，必须显式选择性迁移上述治理内容提交；不得因此改用长期分支推进后的全部HEAD作为代码基线。
 - 长期工作区既有未跟踪文件必须原样保护：
   - `.codex/config.toml`
   - `docs/workbuddy/WORKBUDDY-SHELL-V2-REFACTOR-HANDOFF-2026-08-15.md`

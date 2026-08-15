@@ -6,6 +6,7 @@
 
 - Shell V2统筹已经从聊天记忆迁移到版本化文档，权威入口为`docs/workbuddy/v2/README.md`。
 - 项目章程、防漂移停止规则、八阶段任务账本、阶段1执行计划和验收矩阵已经固化。
+- 治理内容提交为`def921a2e29b4858f289c44c3e9183619ba31ce6`；阶段1从固定代码基线建立后只选择性迁移该治理提交，不整体追随长期分支新HEAD。
 - 当前状态为`GOVERNANCE_DOCS=DONE / STAGE_1=READY_NOT_STARTED`。
 - 阶段1启动授权在本套文档审阅后仍为`NO`；当前没有创建`codex/workbuddy-shell-v2`分支或独立worktree，没有修改生产代码、Skill、安装器、测试或Core。
 - 已批准的V2代码基线仍为`2a2bf09832d558388dc2816c54b32a2dce4aa607`。后续阶段1从该固定提交建立worktree，再选择性带入本次治理文档，不merge/rebase推进中的`main`或旧长期分支。

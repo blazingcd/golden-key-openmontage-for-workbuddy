@@ -2,11 +2,11 @@
 
 更新时间：2026-08-15
 
-## 2026-08-15 WorkBuddy Shell V2 阶段1 MVP收敛
+## 2026-08-15 WorkBuddy Shell V2 阶段1用户Gate收口
 
-- `V2-S1-REDUCE1`在`codex/v2-s1-builder1`上以`b5fdd4c7ea3be918ba0f19f18e9fe997455560a1`为父提交，把阶段1候选净删除式收敛为六模块 MVP；精确起点仍为`08395ea947d8d878630fff8556a80b2947ccd376`。
-- 状态为`REVIEW_READY / NOT_REVIEWED`；仅八个既定文档变化，生产代码、Skill、安装器、测试、配置、lock 和 Core 变化均为0。
-- 来源分支保持起点；下一唯一允许任务为`V2-S1-T6`独立只读 Reviewer，阶段2至8未授权。
+- `V2-S1-GATE-CLOSEOUT1`接受已审阅对象`041c6600dc8eb9094b5c93cb4a4ed088894578af`；Reviewer `01a004a6-aab1-7992-abe0-6dcbe8490a71`结论为`APPROVE`、P0/P1/P2均为0。
+- 用户已正式接受阶段1 Gate，`stage_1_status=PASS_ACCEPTED`；本次只更新状态与证据指针，产品内容变化为0。
+- 来源分支保持`08395ea947d8d878630fff8556a80b2947ccd376`；阶段2尚未授权，当前无后续执行任务。
 
 ## 2026-08-15 WorkBuddy Shell V2 统筹文档基线
 

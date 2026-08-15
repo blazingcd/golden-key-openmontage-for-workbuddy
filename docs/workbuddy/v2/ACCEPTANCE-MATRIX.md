@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_1_REVIEW_READY / SIX_MODULE_MVP / NOT_PASS_ACCEPTED`
+状态：`STAGE_1_PASS_ACCEPTED / SIX_MODULE_MVP`
 
 ## 1. 状态必须独立报告
 

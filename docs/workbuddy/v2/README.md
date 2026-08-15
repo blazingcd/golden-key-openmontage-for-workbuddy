@@ -1,10 +1,10 @@
 # WorkBuddy Shell V2 阶段1入口
 
-状态：`REVIEW_READY / SIX_MODULE_MVP / NOT_PASS_ACCEPTED`
+状态：`STAGE_1_PASS_ACCEPTED / SIX_MODULE_MVP`
 
 更新时间：2026-08-15
 
-阶段1已收敛为六模块 MVP 文档候选，只回答 Shell 由哪些模块组成、各自负责什么、旧资产如何处置以及怎样验收。当前未创建 Reviewer，下一唯一允许任务为`V2-S1-T6`。
+阶段1六模块 MVP 已由独立 Reviewer `APPROVE`并经用户 Gate 正式接受。阶段2尚未授权；当前没有后续执行任务，等待用户未来显式授权。
 
 ## 三个权威产物
 

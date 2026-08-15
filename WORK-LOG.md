@@ -1048,3 +1048,9 @@
 - 在同一`codex/v2-s1-builder1`分支上，以已发布候选`b5fdd4c7ea3be918ba0f19f18e9fe997455560a1`为父提交，删除重复治理、快照和验收说明，把阶段1收敛为六模块 MVP。
 - 只修改八个既定文档；生产代码、Skill、安装器、测试、配置、lock、Core 变化均为0，且未运行测试、安装、WorkBuddy、Provider或媒体生成。
 - 结果最多为`REVIEW_READY`，未创建 Reviewer；来源分支仍为`08395ea947d8d878630fff8556a80b2947ccd376`，下一唯一允许任务为`V2-S1-T6`。
+
+## 2026-08-15：V2-S1-GATE-CLOSEOUT1阶段1用户Gate收口
+
+- 独立Reviewer `01a004a6-aab1-7992-abe0-6dcbe8490a71`对`041c6600dc8eb9094b5c93cb4a4ed088894578af`给出`APPROVE`，P0/P1/P2均为0，六模块MVP裁决为`MINIMAL_ENOUGH`。
+- 用户正式接受阶段1 Gate；仅更新八个文档的状态与证据指针，产品内容和七类禁止变化均为0。
+- `stage_1_status=PASS_ACCEPTED`；阶段2尚未授权，`next_authorized_task=NONE_PENDING_EXPLICIT_STAGE_2_AUTHORIZATION`。

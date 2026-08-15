@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 项目章程
 
-状态：`STAGE_1_REVIEW_READY / SIX_MODULE_MVP / NOT_PASS_ACCEPTED`
+状态：`STAGE_1_PASS_ACCEPTED / SIX_MODULE_MVP`
 
 ## 1. 产品目标
 
@@ -50,4 +50,4 @@
 - 生产代码谱系固定于 `2a2bf09832d558388dc2816c54b32a2dce4aa607`；V2 不 merge/rebase 推进中的 `main` 或旧长期分支，只允许带来源与消费者证据的选择性迁移。
 - Shell、Core、Runtime、DataRoot 和 Projects 分离；路径必须来自登记对象，不得扫描盘符猜测。
 - 开发、测试、缓存、构建和临时文件优先放 D 盘；升级和卸载默认保留 Projects、素材、配置、模型和输出。
-- 阶段1只冻结本章程、旧资产处置和验收口径；`REVIEW_READY`不是 Reviewer 或用户 Gate 结论。
+- 阶段1只冻结本章程、旧资产处置和验收口径；`PASS_ACCEPTED`不构成阶段2授权。

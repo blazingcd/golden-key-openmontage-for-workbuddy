@@ -1,4 +1,3 @@
-# OpenMontage - Codex Agent Instructions
+# WorkBuddy Shell V2
 
-> **Start here:** See [`AGENT_GUIDE.md`](AGENT_GUIDE.md) — the complete operating guide and agent contract.
-> **Project context:** See [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) for architecture, key files, and conventions.
+Read [`AGENTS.md`](AGENTS.md) and then [`AGENT_GUIDE.md`](AGENT_GUIDE.md) completely. Stay within the Shell V2 six-module boundary; do not run OpenMontage production, Providers, or media from this repository.

@@ -1060,3 +1060,9 @@
 - 当前产品术语冻结为：`SaaS Core`仅指SaaS架构组件；本地登记对象为`OpenMontage 执行包`及其`Package Registration`；生产权威为从已验证执行包运行的`OpenMontage Agent`；Shell不登记或实现SaaS Core。
 - 阶段2模块、未来文件/API/schema/storage/字段/测试全链改为Package术语；包内既有`core.*`、`managed_core`和`GOLDEN_KEY_WORKBUDDY_CORE.lock.json`仅作为外部wire vocabulary保留。
 - 本轮只修订允许的活动治理文档及顶部/追加状态记录，不改变阶段2功能、锁/CAS、fail-closed、测试强度或实现授权；生产代码、测试实现、Skill、Installer、Runtime、Launcher、配置、lock和执行包内容变化均为0，真实执行为0。
+
+## 2026-08-15：V2-S2-PLAN-GATE-CLOSEOUT1收口
+
+- 已审规划对象固定为`3027eed132ac53e85d2e0d25ec711675b55f18cb`；独立Reviewer结论为`APPROVE`，P0/P1/P2均为0，用户已接受`V2-S2-PLAN-GATE`。
+- `stage_2_plan_status=PASS_ACCEPTED`，`stage_2_implementation_authorization=GRANTED`；本收口提交即后续实现的`implementation_start_commit`。
+- 本轮仅更新`TASK-REGISTER.md`、`PROJECT-STATE.md`和`WORK-LOG.md`的状态与证据指针，已接受的计划内容变化为0；下一授权任务仅为`V2-S2-BUILDER1`。

@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 阶段1执行计划
 
-状态：`READY_NOT_STARTED / START_NOT_AUTHORIZED`
+状态：`READY_NOT_STARTED / AUTHORIZED_FOR_NEXT_SESSION_AFTER_TAKEOVER_GATES`
 
 ## 1. 阶段目标
 
@@ -18,9 +18,11 @@
 ## 2. 固定输入
 
 - `immutable_code_baseline`：`2a2bf09832d558388dc2816c54b32a2dce4aa607`。该对象只冻结生产代码谱系，不是阶段1 Builder的checkout目标；
-- `stage_1_builder_start_commit`：`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`。治理复审已经通过，但只有用户另行明确授权阶段1后，统筹才可锁定完整40位提交；未锁定不得启动T1；
+- `stage_1_builder_start_commit`：`PENDING_NEXT_SESSION_HANDOFF_COMMIT`。新统筹必须使用用户Prompt提供的精确40位`EXPECTED_HANDOFF_COMMIT`；本地HEAD、远端分支和该对象不一致时不得启动T1；
 - V2来源分支：`codex/workbuddy-shell-v2`
 - 当前worktree：`D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
+- 新会话交接：`docs/workbuddy/v2/NEXT-SESSION-HANDOFF.md`；
+- 阶段1任务包：`docs/workbuddy/v2/STAGE-1-TASK-PACKETS.md`；
 - `stage_1_builder_start_commit`上的V2治理文件：`docs/workbuddy/v2/README.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`PROJECT-STATE.md`、`WORK-LOG.md`；
 - `immutable_code_baseline`上的仓库权威/历史输入：`AGENT_GUIDE.md`、`PROJECT_CONTEXT.md`、`PROJECT-STATE.md`、`WORK-LOG.md`、`docs/workbuddy/ARCHITECTURE.md`、`docs/workbuddy/ROADMAP.md`、`docs/workbuddy/PACKAGING-DECISION.md`、`docs/workbuddy/CORE-SYNC-POLICY.md`、`docs/workbuddy/LOCAL-STORAGE-POLICY.md`；
 - `immutable_code_baseline`上的两个现有Skill：`workbuddy-skill/golden-key-openmontage/SKILL.md`、`workbuddy-skill/golden-key-openmontage-onboarding/SKILL.md`；

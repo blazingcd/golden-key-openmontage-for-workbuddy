@@ -1032,3 +1032,13 @@
 - 用户明确授权集成治理文档后，正式分支`codex/workbuddy-shell-v2`从`08bdecfd9542281b81f4b44c34b81c39bded1a41`快进到审阅通过对象`5874581c88c3f6bf8d025c58eefa1ad92a96e07d`并推送；没有合并提交、没有merge/rebase `main`或旧长期分支。
 - 本次集成及状态收口只涉及治理文档。阶段1仍为`READY_NOT_STARTED`，`stage_1_start_authorized_after_document_review=NO`，`stage_1_builder_start_commit=PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`，当前没有已授权执行任务。
 - 零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core修改；零WorkBuddy、零安装、零Provider、零费用、零媒体生成。
+
+## 2026-08-15：新统筹会话交接准备
+
+- 用户判断当前长对话继续承载执行统筹会降低可靠性，明确要求本窗口更新权威文档、纳入阶段1拆解任务，并提供新会话Prompt；后续由新会话进行具体执行统筹。
+- 新增`docs/workbuddy/v2/STAGE-1-TASK-PACKETS.md`，固化`V2-S1-TAKEOVER`、T1至T6和用户Gate的目标、步骤、允许路径、禁止路径、完成证据及停止规则。
+- 新增`docs/workbuddy/v2/NEXT-SESSION-HANDOFF.md`，固化新统筹必读顺序、项目身份、授权边界、第一轮动作和接管失败处理。
+- 为减少任务碎片和重复审阅，阶段1采用一个`V2-S1-BUILDER1`串行完成T1至T5、一个独立`V2-S1-T6` Reviewer和一个用户Gate；不为T1至T5分别创建五个会话。
+- 用户授权新统筹在精确对象接管核验通过后直接启动阶段1统筹并创建Builder，不需重复请求批准。当前窗口仍不创建Builder或Reviewer，不启动阶段1执行。
+- 阶段1继续为`READY_NOT_STARTED`；`stage_1_builder_start_commit=PENDING_NEXT_SESSION_HANDOFF_COMMIT`，最终40位handoff commit由本窗口提交并推送后写入用户复制的新会话Prompt。
+- 零生产代码、零Skill、零安装器、零测试、零配置、零lock、零Core修改；零WorkBuddy、零安装、零Provider、零费用、零媒体生成。

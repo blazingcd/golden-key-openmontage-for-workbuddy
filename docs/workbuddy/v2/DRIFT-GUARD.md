@@ -88,7 +88,7 @@ files_changed_before_stop:
 - 不删除、移动、暂存或覆盖`.codex/config.toml`；
 - 不删除、移动、暂存或覆盖当前未跟踪handoff，除非用户另行明确授权；
 - 不merge/rebase `main`或长期旧分支进入V2；
-- `immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`只冻结代码谱系；阶段1执行者必须使用统筹在`V2-GOV-REVIEW2`通过后锁定的完整`stage_1_builder_start_commit`。字段仍为`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`时不得启动T1；不得直接checkout代码基线或任意`HEAD`；
+- `immutable_code_baseline=2a2bf09832d558388dc2816c54b32a2dce4aa607`只冻结代码谱系；阶段1执行者必须使用新统筹从用户Prompt取得、并通过本地HEAD与远端分支三方一致核验的完整`stage_1_builder_start_commit`。字段仍为`PENDING_NEXT_SESSION_HANDOFF_COMMIT`或三方不一致时不得启动T1；不得直接checkout代码基线或任意`HEAD`；
 - 不清理其他任务的tracked、untracked、ignored、stash或worktree现场；
 - 每项迁移必须列出来源commit、文件、消费者和目标测试；
 - 递归删除或移动前必须验证绝对目标路径和所有权；

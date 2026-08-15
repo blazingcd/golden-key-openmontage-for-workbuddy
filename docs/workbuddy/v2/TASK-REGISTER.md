@@ -35,10 +35,10 @@ v2_governance_reviewed_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
 v2_governance_integrated_commit: 5874581c88c3f6bf8d025c58eefa1ad92a96e07d
 v2_worktree: D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
 immutable_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
-stage_1_builder_start_commit: PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK
+stage_1_builder_start_commit: PENDING_NEXT_SESSION_HANDOFF_COMMIT
 v2_bootstrap: DONE
 stage_1: READY_NOT_STARTED
-stage_1_start_authorized_after_document_review: NO
+stage_1_start_authorized_after_document_review: YES_FOR_NEXT_SESSION_AFTER_TAKEOVER_GATES
 v2_branch_created: YES
 v2_worktree_created: YES
 code_modified: NO
@@ -59,14 +59,16 @@ v2_gov_review3: REVIEW_PASS
 v2_gov_review3_thread: 01a00459-2839-7f43-bc82-eb33e52b2add
 v2_gov_review3_findings: P0=0, P1=0, P2=0
 governance_review_gate: PASS_ACCEPTED
-next_authorized_task: NONE_AWAITING_EXPLICIT_USER_STAGE_1_AUTHORIZATION
+next_session_handoff: READY
+stage_1_task_packets: DONE
+next_authorized_task: V2-S1-TAKEOVER
 ```
 
 为让独立审阅在本项目、本分支发生，统筹已从固定代码基线`2a2bf09832d558388dc2816c54b32a2dce4aa607`建立V2工作树，并只选择性迁移治理文档。该前置引导不等于阶段1启动，不得把长期分支后续HEAD整体作为V2代码起点。
 
-`immutable_code_baseline`固定且不可变，只约束生产代码谱系；它不是阶段1 Builder的checkout目标。`stage_1_builder_start_commit`当前必须保持`PENDING_REVIEW_PASS_AND_COORDINATOR_LOCK`，只有用户明确授权阶段1后才由统筹锁定为完整40位提交。未锁定前不得启动`V2-S1-T1`；执行者不得直接checkout固定代码基线而丢失治理文档，也不得使用任意`HEAD`。
+`immutable_code_baseline`固定且不可变，只约束生产代码谱系；它不是阶段1 Builder的checkout目标。当前窗口完成交接提交后，用户会把最终40位commit写入新会话Prompt。新统筹只能在本地HEAD、远端分支和该`EXPECTED_HANDOFF_COMMIT`一致时，把它作为`stage_1_builder_start_commit`派发给Builder；不得直接checkout固定代码基线或使用任意`HEAD`。
 
-当前没有已授权执行任务。后续只有用户明确授权启动阶段1且统筹完成上述对象锁定，才把`V2-S1-T1`改为`IN_PROGRESS`。
+用户已授权新的统筹会话在完成`V2-S1-TAKEOVER`核验后启动阶段1统筹。当前窗口不创建执行任务；新统筹核验通过后应直接创建`V2-S1-BUILDER1`，不再要求用户重复授权。
 
 ## 3. 八阶段总账
 
@@ -80,7 +82,8 @@ next_authorized_task: NONE_AWAITING_EXPLICIT_USER_STAGE_1_AUTHORIZATION
 | 最小修订 | `V2-GOV-FIX2` | 修复阶段级门禁范围回归 | `DONE` | `V2-GOV-REVIEW2 REQUEST_CHANGES` | 提交`5874581c...`已集成 |
 | 最小复审 | `V2-GOV-REVIEW3` | 只读复审FIX2两处单行替换 | `REVIEW_PASS` | `V2-GOV-FIX2 REVIEW_READY` | `APPROVE`；P0=0、P1=0、P2=0 |
 | 治理Gate | `V2-GOV-GATE` | 用户授权集成审阅通过文档 | `PASS_ACCEPTED` | `V2-GOV-REVIEW3 REVIEW_PASS` | 不等于阶段1启动授权 |
-| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `READY_NOT_STARTED` | 统筹锁定`stage_1_builder_start_commit`、用户明确授权 | 无生产实现 |
+| 交接 | `V2-HANDOFF-001` | 固化新会话接管和阶段1任务包 | `DONE` | `V2-GOV-GATE PASS_ACCEPTED` | 不等于阶段1已经开始 |
+| 1 | `V2-S1` | 冻结V2架构和旧模块处置 | `READY_NOT_STARTED` | `V2-S1-TAKEOVER DONE` | 无生产实现 |
 | 2 | `V2-S2` | 建立Core Registration合同 | `PLANNED` | `V2-S1 PASS_ACCEPTED` | 无Schema、验证器、活动对象 |
 | 3 | `V2-S3` | 建立Launcher会话环境绑定 | `PLANNED` | `V2-S2 PASS_ACCEPTED` | 无V2 Launcher |
 | 4 | `V2-S4` | 重写生产Skill和Onboarding交接 | `PLANNED` | `V2-S3 PASS_ACCEPTED` | 无V2 Skill |
@@ -94,15 +97,16 @@ next_authorized_task: NONE_AWAITING_EXPLICIT_USER_STAGE_1_AUTHORIZATION
 | Task ID | 内容 | 状态 | 允许路径 | 前置 |
 |---|---|---|---|---|
 | `V2-S1-T0` | 建立固定分支和独立worktree | `SUPERSEDED` | 无 | 已由前置 `V2-GOV-BOOTSTRAP` 完成，不计为阶段1启动 |
-| `V2-S1-T1` | 建立V2文档入口和权威关系 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md` | 统筹锁定`stage_1_builder_start_commit`且用户明确授权阶段1 |
+| `V2-S1-TAKEOVER` | 新统筹核验交接对象并派发Builder | `READY_NOT_STARTED` | 零生产写入；只读Git/权威文档 | 用户Prompt提供精确handoff commit |
+| `V2-S1-T1` | 建立V2文档入口和权威关系 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`docs/workbuddy/v2/STAGE-1-EXECUTION-PLAN.md` | `V2-S1-TAKEOVER DONE`；Builder Prompt锁定精确start commit |
 | `V2-S1-T2` | 冻结职责和目标架构 | `BLOCKED` | `docs/workbuddy/v2/PROJECT-CHARTER.md` | T1 `REVIEW_READY` |
-| `V2-S1-T3` | 逐模块处置矩阵 | `BLOCKED` | `MODULE-DISPOSITION.md` | T2 |
-| `V2-S1-T4` | 冻结验收矩阵和状态模型 | `BLOCKED` | `ACCEPTANCE-MATRIX.md` | T2 |
+| `V2-S1-T3` | 逐模块处置矩阵 | `BLOCKED` | `docs/workbuddy/v2/MODULE-DISPOSITION.md` | T2 |
+| `V2-S1-T4` | 冻结验收矩阵和状态模型 | `BLOCKED` | `docs/workbuddy/v2/ACCEPTANCE-MATRIX.md` | T2 |
 | `V2-S1-T5` | 同步账本、状态和工作日志 | `BLOCKED` | `docs/workbuddy/v2/README.md`；`docs/workbuddy/v2/TASK-REGISTER.md`；`PROJECT-STATE.md`；`WORK-LOG.md` | T3/T4 `REVIEW_READY` |
 | `V2-S1-T6` | 独立只读Reviewer | `BLOCKED` | 零写入 | Builder提交 |
 | `V2-S1-GATE` | 用户阶段1 Gate | `BLOCKED` | 零写入 | Reviewer APPROVE |
 
-阶段1获准后从T1开始，T1至T5可由一个有界的文档Builder任务串行完成；T6必须是独立任务。阶段1不得修改生产代码。前置 `V2-GOV-REVIEW1` 与阶段1完成后的 `V2-S1-T6` 是两个不同审阅任务，不得互相冒充。
+阶段1在新统筹完成TAKEOVER后从T1开始。T1至T5由一个`V2-S1-BUILDER1`有界文档任务串行完成；T6必须是独立任务。阶段1不得修改生产代码。精确步骤和门禁以`STAGE-1-TASK-PACKETS.md`为准。
 
 ## 4.1 前置审阅记录
 

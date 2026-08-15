@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 import subprocess
@@ -310,6 +311,20 @@ def _expect_code(code: str, action: Callable[[], Any]) -> PackageRegistrationErr
     return captured.value
 
 
+def _assert_error_is_console_safe(error: PackageRegistrationError) -> None:
+    rendered = str(error)
+    assert not any(0xD800 <= ord(character) <= 0xDFFF for character in rendered)
+    for encoding in ("utf-8", "cp936"):
+        encoded = rendered.encode(encoding, errors="strict")
+        assert encoded.decode(encoding, errors="strict") == rendered
+        buffer = io.BytesIO()
+        stream = io.TextIOWrapper(buffer, encoding=encoding, errors="strict")
+        print(error, file=stream)
+        stream.flush()
+        assert buffer.getvalue().endswith("\n".encode(encoding))
+        stream.detach()
+
+
 def _activation_child(
     data_root: Path, expected: str, target: str, *, timeout_seconds: float = 0.12
 ) -> subprocess.CompletedProcess[str]:
@@ -395,6 +410,54 @@ def _install_special_json_boundary(
             "registration_sha256": special,
         }
     )
+    _active(candidate).write_bytes(raw)
+    return (
+        lambda: activate_package(candidate.data_root, _sha256_bytes(raw), digest),
+        "TAMPERED",
+    )
+
+
+def _inject_surrogate_key(raw: bytes, *, duplicate: bool) -> bytes:
+    assert raw.startswith(b"{")
+    entries = b'"\\ud800":1'
+    if duplicate:
+        entries += b',"\\ud800":2'
+    return b"{" + entries + b"," + raw[1:]
+
+
+def _install_surrogate_key_boundary(
+    candidate: Candidate, document: str, *, duplicate: bool
+) -> tuple[Callable[[], Any], str]:
+    if document == "manifest":
+        raw = _inject_surrogate_key(candidate.manifest_path.read_bytes(), duplicate=duplicate)
+        candidate.manifest_path.write_bytes(raw)
+        candidate.rebuild_archive()
+        return candidate.register, "INPUT_INVALID"
+
+    if document == "lock":
+        raw = _inject_surrogate_key(candidate.lock_path.read_bytes(), duplicate=duplicate)
+        candidate.lock_path.write_bytes(raw)
+        manifest = candidate.manifest()
+        lock_entry = next(
+            item for item in manifest["files"] if item["path"] == registration.LOCK_NAME
+        )
+        lock_entry["sha256"] = _sha256(candidate.lock_path)
+        lock_entry["size"] = candidate.lock_path.stat().st_size
+        candidate.write_manifest(manifest)
+        candidate.rebuild_archive()
+        return candidate.register, "INPUT_INVALID"
+
+    registered = candidate.register()
+    digest = registered["registration_sha256"]
+    if document == "registration":
+        raw = _inject_surrogate_key(_object(candidate, digest).read_bytes(), duplicate=duplicate)
+        changed_digest = _sha256_bytes(raw)
+        _object(candidate, changed_digest).write_bytes(raw)
+        _active(candidate).write_bytes(_pointer(changed_digest))
+        return lambda: locate_active_package(candidate.data_root), "INPUT_INVALID"
+
+    assert document == "active"
+    raw = _inject_surrogate_key(_pointer(digest), duplicate=duplicate)
     _active(candidate).write_bytes(raw)
     return (
         lambda: activate_package(candidate.data_root, _sha256_bytes(raw), digest),
@@ -639,6 +702,25 @@ def test_lone_surrogate_is_rejected_at_every_load_boundary_without_native_except
     before = _snapshot(candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar)
     error = _expect_code(expected_code, action)
     assert "surrogate" in error.message
+    _assert_error_is_console_safe(error)
+    assert _snapshot(
+        candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar
+    ) == before
+
+
+@pytest.mark.parametrize("document", ["manifest", "lock", "registration", "active"])
+@pytest.mark.parametrize("duplicate", [False, True], ids=["single-key", "duplicate-key"])
+def test_surrogate_json_keys_are_rejected_before_duplicate_messages_at_every_boundary(
+    tmp_path: Path, document: str, duplicate: bool
+) -> None:
+    candidate = _make_candidate(tmp_path / document)
+    action, expected_code = _install_surrogate_key_boundary(
+        candidate, document, duplicate=duplicate
+    )
+    before = _snapshot(candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar)
+    error = _expect_code(expected_code, action)
+    assert "surrogate" in error.message
+    _assert_error_is_console_safe(error)
     assert _snapshot(
         candidate.data_root, candidate.package_root, candidate.archive, candidate.sidecar
     ) == before

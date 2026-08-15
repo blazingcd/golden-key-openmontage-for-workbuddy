@@ -157,9 +157,15 @@ def _canonical_json(value: Mapping[str, Any]) -> bytes:
         _fail("INPUT_INVALID", f"canonical JSON cannot be encoded: {exc}")
 
 
+def _require_unicode_scalar(value: str, *, label: str) -> None:
+    if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+        _fail("INPUT_INVALID", f"{label} contains a Unicode surrogate code point")
+
+
 def _duplicate_rejecting_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     result: dict[str, Any] = {}
     for key, value in pairs:
+        _require_unicode_scalar(key, label="JSON key")
         if key in result:
             _fail("DUPLICATE", f"duplicate JSON key: {key}")
         result[key] = value
@@ -193,8 +199,7 @@ def _strict_json_bytes(raw: bytes, *, label: str) -> dict[str, Any]:
 
 def _require_nfc(value: Any, *, label: str) -> None:
     if isinstance(value, str):
-        if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
-            _fail("INPUT_INVALID", f"{label} contains a Unicode surrogate code point")
+        _require_unicode_scalar(value, label=label)
         if unicodedata.normalize("NFC", value) != value:
             _fail("INPUT_INVALID", f"{label} contains a non-NFC string")
     elif isinstance(value, dict):

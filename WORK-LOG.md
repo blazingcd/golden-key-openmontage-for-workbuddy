@@ -992,3 +992,14 @@
 ### 零边界
 
 - 零WorkBuddy启动、零Provider调用、零费用、零测试/渲染/安装/repair/W0、零媒体生成。
+
+## 2026-08-15：WorkBuddy Shell V2统筹文档固化
+
+- 根据用户明确要求，将Shell V2目标、职责边界、防漂移停止规则、任务todo/done、阶段1执行步骤和分层验收从聊天内容迁移为版本化项目文档。
+- 新建`docs/workbuddy/v2/`权威入口及六份文档：`README.md`、`PROJECT-CHARTER.md`、`DRIFT-GUARD.md`、`TASK-REGISTER.md`、`STAGE-1-EXECUTION-PLAN.md`、`ACCEPTANCE-MATRIX.md`。
+- 权威关系冻结为：任务状态以`TASK-REGISTER.md`为准；目标和职责以`PROJECT-CHARTER.md`为准；停止条件以`DRIFT-GUARD.md`为准；阶段1只按专门执行计划推进；旧架构和handoff只作历史输入。
+- 最高原则明确为：WorkBuddy负责对话，OpenMontage负责生产决策与执行，Shell只负责安装、对象锁定、运行环境绑定、会话入口以及状态和结果转交。Shell不得选择Pipeline、创建Artifact、推进Checkpoint、选择Provider、判断媒体方案或形成第二套Director/FSM。
+- 八阶段全部登记为任务；当前`V2-GOV-001=DONE`，`V2-S1=READY_NOT_STARTED`，阶段2至8均为`PLANNED`且受前序Gate阻断。
+- 本次文档工作不是阶段1执行：没有创建`codex/workbuddy-shell-v2`分支或worktree，没有修改生产代码、Skill、安装器、测试、配置、lock或Core，没有运行测试、WorkBuddy、安装、Provider或媒体生成。
+- 已批准的V2代码基线保持`2a2bf09832d558388dc2816c54b32a2dce4aa607`；阶段1必须在文档审阅和新授权后才能从该精确提交开始。
+- 既有未跟踪`.codex/config.toml`和`docs/workbuddy/WORKBUDDY-SHELL-V2-REFACTOR-HANDOFF-2026-08-15.md`未修改、未暂存、未纳入本次文档范围。

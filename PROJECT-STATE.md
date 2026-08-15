@@ -1,6 +1,16 @@
 # Project State
 
-更新时间：2026-08-14 16:20 +08:00
+更新时间：2026-08-15
+
+## 2026-08-15 WorkBuddy Shell V2 统筹文档基线
+
+- Shell V2统筹已经从聊天记忆迁移到版本化文档，权威入口为`docs/workbuddy/v2/README.md`。
+- 项目章程、防漂移停止规则、八阶段任务账本、阶段1执行计划和验收矩阵已经固化。
+- 当前状态为`GOVERNANCE_DOCS=DONE / STAGE_1=READY_NOT_STARTED`。
+- 阶段1启动授权在本套文档审阅后仍为`NO`；当前没有创建`codex/workbuddy-shell-v2`分支或独立worktree，没有修改生产代码、Skill、安装器、测试或Core。
+- 已批准的V2代码基线仍为`2a2bf09832d558388dc2816c54b32a2dce4aa607`。后续阶段1从该固定提交建立worktree，再选择性带入本次治理文档，不merge/rebase推进中的`main`或旧长期分支。
+- 最高职责原则已冻结：WorkBuddy是唯一对话Agent，OpenMontage Core是唯一生产决策与执行权威，Shell只负责安装、对象锁定、环境绑定、会话入口以及状态和结果转交；Shell不得成为第二个Director或生产状态机。
+- 长期工作区既有未跟踪`.codex/config.toml`与`docs/workbuddy/WORKBUDDY-SHELL-V2-REFACTOR-HANDOFF-2026-08-15.md`继续原样保护，不属于本次权威文档提交。
 
 ## 当前里程碑
 

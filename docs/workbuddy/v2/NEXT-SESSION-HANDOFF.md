@@ -1,8 +1,10 @@
 # WorkBuddy Shell V2 新统筹会话交接
 
-状态：`HANDOFF_READY / STAGE_1_READY_NOT_STARTED`
+状态：`HISTORICAL / SUPERSEDED_BY_STAGE_1_PASS_ACCEPTED`
 
 更新时间：2026-08-15
+
+> 本文件保留为阶段1启动前的历史交接记录，不再表示当前任务状态或下一步授权。阶段1当前权威状态为`STAGE_1_PASS_ACCEPTED`，正式收口提交为`e9dddb313d6df3ba869efc140c4f9184857c3a40`。当前状态以`README.md`、`TASK-REGISTER.md`、`PROJECT-CHARTER.md`、`MODULE-DISPOSITION.md`、`ACCEPTANCE-MATRIX.md`及根`PROJECT-STATE.md`顶部当前段为准。
 
 ## 1. 交接目的
 

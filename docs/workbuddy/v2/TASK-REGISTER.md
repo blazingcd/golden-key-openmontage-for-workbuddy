@@ -1,35 +1,59 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`ACTIVE AUTHORITY / V2_REPO_HYGIENE_WAVE_A_CLOSEOUT1_REVIEW_READY`
+状态：`ACTIVE AUTHORITY / V2_REPO_HYGIENE_REMAINING_SEQUENCE_REVIEW_READY`
 
 更新时间：2026-08-16
 
 ## 当前任务
 
 ```text
-task_id: V2-REPO-HYGIENE-WAVE-A-CLOSEOUT1
+task_id: V2-REPO-HYGIENE-SEQUENCE-AUTHORITY-FIX1
 task_status: REVIEW_READY
-start_commit: 830d44ab7b910e20bfc9093bf2c505850860880a
+authority_id: V2-REPO-HYGIENE-REMAINING-SEQUENCE
+authority_commit: THIS_COMMIT
+authority_lifetime: ONE_TIME_BOUNDED
+pre_activation_status: REVIEW_READY
+activation_condition: origin/codex/workbuddy-shell-v2 == THIS_COMMIT AND independent_reviewer == APPROVE
+post_activation_status: ACTIVE_SEQUENCE_AUTHORITY
+start_commit: 385a20bbff9624703682eecba3b38fc3c6d2d6b9
 result_commit: THIS_COMMIT
-branch: codex/v2-repo-hygiene-wave-a-closeout1
-review_range: 830d44ab7b910e20bfc9093bf2c505850860880a..THIS_COMMIT
-completed_wave: V2-REPO-HYGIENE-WAVE-A
-completed_wave_status: PASS_PROMOTED
-completed_wave_result: 830d44ab7b910e20bfc9093bf2c505850860880a
-completed_wave_reviewer: 01a0065c-d83a-78d3-a36e-8386c08036ed / APPROVE
-completed_wave_promotion: 01a00932-5403-7880-8214-680eebcda050 / PASS
+branch: codex/v2-repo-hygiene-sequence-authority-fix1
+review_range: 385a20bbff9624703682eecba3b38fc3c6d2d6b9..THIS_COMMIT
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 830d44ab7b910e20bfc9093bf2c505850860880a
-next_authorized_task: V2-REPO-HYGIENE-WAVE-A-CLOSEOUT-REVIEW1
-next_after_approval_and_promotion: V2-REPO-HYGIENE-WAVE-B-BUILDER1
-tracked_files: 2160
-stage_3_planning_authorization: GRANTED
-stage_3_implementation_authorization: NOT_GRANTED
+formal_target_at_start: 385a20bbff9624703682eecba3b38fc3c6d2d6b9
+completed_wave_a_status: PASS_PROMOTED
+completed_wave_a_result: 830d44ab7b910e20bfc9093bf2c505850860880a
+completed_wave_a_reviewer: 01a0065c-d83a-78d3-a36e-8386c08036ed / APPROVE
+completed_wave_a_promotion: 01a00932-5403-7880-8214-680eebcda050 / PASS
+completed_wave_a_closeout: 385a20bbff9624703682eecba3b38fc3c6d2d6b9
+completed_wave_a_closeout_reviewer: 01a00940-fe94-7883-bcc0-e7d396b56a3a / APPROVE
+completed_wave_a_closeout_promotion: 01a00943-8a3e-7b81-a2d8-03f192fed82e / PASS
+tracked_at_sequence_start: 2160
+authorized_sequence:
+  1. V2-REPO-HYGIENE-WAVE-B-BUILDER1
+  2. V2-REPO-HYGIENE-WAVE-B-REVIEW1
+  3. V2-REPO-HYGIENE-WAVE-B-PROMOTE1
+  4. V2-REPO-HYGIENE-WAVE-C-BUILDER1
+  5. V2-REPO-HYGIENE-WAVE-C-REVIEW1
+  6. V2-REPO-HYGIENE-WAVE-C-PROMOTE1
+  7. V2-REPO-HYGIENE-MAIN-WORKTREE-NORMALIZE1
+  8. V2-REPO-HYGIENE-FINAL-AUDIT1
+  9. V2-REPO-HYGIENE-FINAL-GATE
+sequence_rule: 必须按authorized_sequence的编号严格顺序执行，不得跳过或并行越级。
+failure_rule: 任一步非PASS/APPROVE则停止，仅允许最小FIX+复审；不得跳到后续。
+branch_rule: Builder使用临时分支；Reviewer只读；正式主线只允许fast-forward；推广后删除已完全合入且无未合入commit的远端临时分支；本地临时分支等待对应worktree关闭后再删除。
+wave_b_contract: start=本authority激活后的正式主线；change_shape=D54/A2/M2；tracked=2108；tests=registration+TRANSITION。
+wave_c_contract: start=Wave B已推广后的正式主线；change_shape=D2075/M1；tracked=33；tests=registration+FINAL。
+final_gate: 正式主线、远端和D盘工作区一致；exact_tracked=33；tests=PASS；远端临时分支已清理；Stage3实现=NOT_GRANTED。
+stage3_planning: GRANTED
+stage3_implementation: NOT_GRANTED
+stage3_all_modules: NOT_GRANTED
+dynamic_path_or_test_relaxation: NOT_GRANTED
 production_code_changes: 0
 test_changes: 0
 ```
 
-本次closeout只修复Wave A已推广后账本状态权威的矛盾，不是Wave B或Stage3实现。`THIS_COMMIT`表示本记录与本次closeout结果在同一个不可变提交中；提交后的本地和远端分支指针提供精确40位SHA。Reviewer必须以该SHA替换语义占位符后审阅，不得把工作树状态当结果对象。
+本次只建立一次性、有界、条件激活的剩余仓库卫生序列权威，不实施Wave B、Wave C或Stage3。`THIS_COMMIT`表示本记录与本次结果在同一个不可变提交中；Reviewer必须用结果分支的精确40位SHA解析该语义占位符并只读审阅。只有独立Reviewer给出`APPROVE`且同一结果被fast-forward推广至正式主线后，上述序列才从`REVIEW_READY`自动成为`ACTIVE_SEQUENCE_AUTHORITY`，无需再提交自引用closeout。该序列不得授权任何Stage3实现，也不得根据当时的工作树动态放宽已列明的路径、数量或测试合同。
 
 ## 阶段状态
 

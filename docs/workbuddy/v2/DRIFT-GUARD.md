@@ -15,6 +15,15 @@
 - 命令超时、输出截断、没有最终退出、证据缺失，或文档与任务账本冲突；
 - 需要reset、stash、merge、rebase或改写已审对象。
 
+以下范围扩张直接报告`STOPPED_SCOPE_EXPANSION`，不得以“预留”“通用化”或“后续复用”为理由继续：
+
+- 没有已验证上游输入或直接下游消费者仍新增生产代码；
+- 阶段3预建通用Runtime管理器、下载器、包管理器、公共resume/repair、系统Python/PATH修改或多组件插件框架；
+- 阶段4接受任意Shell、启动多个Agent、自动重试、建立队列/调度/常驻服务或进入Agent业务内部；
+- 阶段5并存多套生产入口、全局截获用户意图或成为第二聊天Agent；
+- 阶段6在Launcher回执可直接消费时仍建立独立服务、数据库、轮询/流式平台，或解释Artifact业务语义；
+- 任一阶段超过一个公共入口、一个生产模块和一个直接测试文件，且没有单独的新授权与消费者证据。
+
 ## 产品边界
 
 WorkBuddy负责对话，OpenMontage Agent负责生产，Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。

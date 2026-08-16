@@ -22,7 +22,7 @@ Shell V2 owns installation/lifecycle, Package Registration/Locator, runtime prep
 - `tests/workbuddy/test_package_registration.py`: its contract evidence.
 - `docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`: stable behavior and wire contract.
 
-Stage 3 implementation is not authorized. No Launcher, WorkBuddy entry, runtime preparation, or status/result relay implementation may be inferred from planning authorization.
+Stage 3 implementation and Stages 4-6 are not authorized. The reduced plan is also fail-closed on necessity: Stage 3 and Stage 6 may complete with zero production code, Stage 4 is one controlled process launch, and Stage 5 is one explicit WorkBuddy entry. No Launcher, WorkBuddy entry, runtime preparation, or status/result relay implementation may be inferred from planning or scope-review authorization.
 
 ## Authority order
 

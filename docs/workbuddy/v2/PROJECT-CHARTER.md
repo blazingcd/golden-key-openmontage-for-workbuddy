@@ -35,12 +35,32 @@
 |---|---|---|---|
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 登记并核验唯一活动执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、bundled Python和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；登记/实现SaaS Core |
-| Runtime按需准备 | 只准备当前OpenMontage Agent会话声明缺少且用户已授权的运行时层 | 输入：活动Package Registration所对应会话的实际缺口与逐类授权；输出：所需组件的准备/复用/失败结果 | 首次使用前一次全装；选择生产方案；把Provider配置当调用授权 |
-| 会话Launcher | 绑定PackageRoot、package Python、DataRoot、ProjectsRoot、cwd和最小环境，调用受控OpenMontage Agent入口 | 输入：有效Package Registration、运行时结果、分离的用户消息与执行控制；输出：会话绑定回执、Agent退出码、结果指针和残留事实 | 解析用户意图；接受任意Shell；导入OpenMontage Agent业务内部；创建Artifact或推进Checkpoint |
-| WorkBuddy入口 | 提供显式产品入口、必要授权提示、用户原话转交和结果呈现 | 输入：用户显式请求、素材和授权；输出：经Locator/Launcher交给活动执行包所启动Agent的原话及面向用户的结果 | 全局截获；选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
-| 状态与结果转交 | 原样转交安装、会话、进程、退出、错误和OpenMontage Agent结果指针 | 输入：生命周期/Launcher状态与Agent公开结果；输出：可审计状态、错误和结果位置 | 解释Artifact业务语义；复制Agent Stage/FSM；自动重试或伪造成功 |
+| Runtime按需准备 | 只核验本次真实Runtime缺口；仅在执行包声明、身份锁定且用户逐项授权后准备首个已证明的组件类型；没有额外缺口时零代码结束 | 输入：活动Package Registration、受验证的具体缺口和匹配授权；输出：`READY_REUSED`、单组件`READY_PREPARED`或失败事实 | 首次一次全装；通用下载/包管理/repair框架；选择组件或版本；修改系统Python/PATH；把Provider配置当调用授权 |
+| 会话Launcher | 绑定精确环境并启动一次已验证OpenMontage Agent公开入口 | 输入：有效Package Registration、Runtime就绪事实、分离的用户消息与执行控制；输出：一次会话回执、真实退出码、结果指针和残留事实 | 解析用户意图；接受任意Shell；自动重试；调度多任务；导入Agent业务内部；创建Artifact或推进Checkpoint |
+| WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher交给活动执行包所启动Agent的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
+| 状态与结果转交 | 优先直接转交Launcher的安装、会话、进程、退出、错误和Agent结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Launcher事实与Agent公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制Agent Stage/FSM；自动重试或伪造成功 |
 
 安全、凭据保护、日志脱敏、路径所有权和单真实执行锁是六个模块的横切约束，不是独立模块，也不得发展为生产控制面。
+
+### 4.1 阶段3至阶段6最小实现规则
+
+阶段3至阶段6形成唯一顺序链路：
+
+```text
+LocatorResult
+-> Runtime readiness or one authorized missing component
+-> one controlled Agent process
+-> one explicit WorkBuddy entry
+-> unchanged exit facts and result pointer
+```
+
+- 每阶段最多一个公共入口、一个生产模块和一个直接测试文件；不能为了阶段编号制造文件。
+- 没有已验证输入或直接下游消费者时必须零代码退出，不得用通用框架替代缺失合同。
+- 阶段3没有额外Runtime缺口时返回`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`；第一版不得联网下载、执行第三方安装脚本或管理系统环境。
+- 阶段4只启动一个进程一次；不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
+- 阶段5只保留一种经真实WorkBuddy合同确认的入口形式；在格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
+- 阶段6优先直接复用Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。
+- 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
 
 ## 5. 消息与授权边界
 

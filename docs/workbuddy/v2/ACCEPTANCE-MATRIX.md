@@ -35,10 +35,25 @@
 |---|---|---|
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration的身份、hash和规范化路径与实际执行包一致 | 扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
-| Runtime按需准备 | 只对本次实际缺口和逐类授权准备组件，复用与失败结果可审计 | 首次一次全装、未授权下载或由 Shell 选择生产方案 |
-| 会话Launcher | 绑定精确环境并返回OpenMontage Agent最终退出、结果指针和残留事实 | 接受任意Shell、进入Agent业务内部、创建Artifact或推进Checkpoint |
-| WorkBuddy入口 | 真实新会话显式命中入口，literal用户消息不变并交给活动执行包启动的Agent | 全局截获、技术控制词进入用户消息或Shell作生产选择 |
-| 状态与结果转交 | 安装/会话/进程/退出/错误/结果指针可追溯且不改写Agent语义 | 建立Stage/FSM、解释Artifact、自动重试或伪造成功 |
+| Runtime按需准备 | 证明没有额外缺口并零代码退出，或只对一个已声明、身份锁定、逐项授权的真实组件完成可审计准备 | 为阶段编号制造代码；首次一次全装；通用下载/包管理/repair；修改系统Python/PATH；Shell选择组件、版本或生产方案 |
+| 会话Launcher | 绑定精确环境，只启动一次已验证Agent公开入口，并返回真实退出码、结果指针和残留事实 | 接受任意Shell；多进程调度；自动重试；进入Agent业务内部；创建Artifact或推进Checkpoint |
+| WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变并交给活动执行包启动的Agent | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
+| 状态与结果转交 | 直接复用Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写Agent语义 | 无格式缺口仍造模块；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
+
+### 3.1 阶段3至阶段6缩减Gate
+
+阶段3只有两条合法PASS路径：
+
+1. 已验证Package和真实下游合同证明没有额外Runtime缺口，记录`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`，生产代码变化为0；
+2. 锁定一个真实组件的声明、版本、hash、大小、来源、许可证、目标和逐项授权，只实现该组件的inspect/prepare、同目录staging、互斥、原子发布与幂等。
+
+缺少运行时需求权威、首个真实组件或Launcher消费者合同不是扩大为通用框架的理由；应记`BLOCKED`。首版网络下载、第三方安装脚本、公共resume/repair、系统Python/PATH修改均为越界`FAIL`。
+
+阶段4 `PASS`要求一次Locator重验、一次精确环境绑定、一次非任意Shell进程启动和一个最终回执。任何自动重试、队列、调度、常驻服务、多Agent或Agent业务内部导入均为越界`FAIL`。
+
+阶段5 `PASS`要求真实WorkBuddy合同确认的一种显式入口、新会话命中、literal `user_message`不变、授权与`executor_controls`分离。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
+
+阶段6先验证WorkBuddy能否直接消费Launcher回执：能则记录`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0；不能则必须有精确字段差异和真实消费者证据，只允许一次确定性转换。非零退出、超时、缺少结果指针和残留进程必须保持原事实。
 
 ## 4. Gate A：对象与环境
 

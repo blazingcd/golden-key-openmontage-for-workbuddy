@@ -5,20 +5,27 @@
 ```text
 STAGE_1_PASS_ACCEPTED
 STAGE_2_PASS_ACCEPTED
+REPOSITORY_HYGIENE_PASS_ACCEPTED_AT_20DDAB75825C1B6E7DE5A51603AFE8B6FD82ECEB
 STAGE_3_PLANNING_GRANTED
 STAGE_3_IMPLEMENTATION_NOT_GRANTED
+STAGE_4_LAUNCHER_NOT_GRANTED
+STAGE_5_WORKBUDDY_ENTRY_NOT_GRANTED
+STAGE_6_STATUS_RESULT_RELAY_NOT_GRANTED
+STAGE_3_TO_6_SCOPE_REDUCTION_REVIEW_READY
 ```
 
-本仓库只实现WorkBuddy Shell V2。WorkBuddy负责用户对话，外部已验证执行包中的OpenMontage Agent负责生产，Shell只负责六模块。当前仓库卫生清理不是阶段3实现。
+本仓库只实现WorkBuddy Shell V2。WorkBuddy负责用户对话，外部已验证执行包中的OpenMontage Agent负责生产，Shell只负责六模块。仓库卫生已收敛到固定33文件；当前只审阅阶段3至阶段6的缩减范围，不实施任何模块。
 
 ## 权威文档
 
 - `TASK-REGISTER.md`：实时任务、精确Git对象、授权与下一任务的唯一状态权威。
 - `PROJECT-CHARTER.md`：产品角色、六模块职责和非目标。
 - `PACKAGE-REGISTRATION-CONTRACT.md`：阶段2已接受的Package Registration与Locator稳定合同。
-- `ACCEPTANCE-MATRIX.md`：证据与Gate语义。
+- `ACCEPTANCE-MATRIX.md`：证据、阶段3至阶段6零代码出口与Gate语义。
 - `DRIFT-GUARD.md`：停止条件、范围保护和Git生命周期。
 - `MODULE-DISPOSITION.md`：V1能力处置的历史映射，不是当前实现授权。
+
+阶段3至阶段6不另建平行职责文档：职责只以`PROJECT-CHARTER.md`为准，实施必要性和PASS边界只以`ACCEPTANCE-MATRIX.md`为准，实时授权只以`TASK-REGISTER.md`为准。
 
 ## Git任务生命周期
 

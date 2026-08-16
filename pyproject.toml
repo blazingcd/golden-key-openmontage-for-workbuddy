@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "golden-key-openmontage-workbuddy"
+version = "0.1.0a0"
+description = "WorkBuddy Shell V2 Package Registration"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[tool.setuptools]
+packages = ["golden_key_openmontage_workbuddy"]

@@ -224,14 +224,32 @@ def test_wave_c_content_is_outside_transition_scan() -> None:
 
 def test_ci_runs_only_the_two_transition_test_files() -> None:
     ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    expected_trigger_block = (
+        "on:\n"
+        "  pull_request:\n"
+        "    branches:\n"
+        "      - codex/workbuddy-shell-v2\n"
+        "  push:\n"
+        "    branches:\n"
+        "      - codex/workbuddy-shell-v2\n"
+    )
     command = (
         "python -m pytest -p no:cacheprovider "
         "tests/workbuddy/test_package_registration.py "
         "tests/workbuddy/test_repository_hygiene.py -q"
     )
+    trigger_block = ci.split("\non:\n", maxsplit=1)[1].split("\npermissions:\n", maxsplit=1)[0]
+    trigger_keys = {
+        line.removeprefix("  ").removesuffix(":")
+        for line in trigger_block.splitlines()
+        if line.startswith("  ") and not line.startswith("    ") and line.endswith(":")
+    }
+    assert ci.count(expected_trigger_block) == 1
+    assert trigger_keys == {"pull_request", "push"}
+    assert "workflow_dispatch" not in ci
     assert ci.count("python -m pytest") == 1
     assert ci.count(command) == 1
-    assert "codex/workbuddy-shell-v2" in ci
+    assert trigger_block.count("branches:\n      - codex/workbuddy-shell-v2") == 2
     assert "python-version: \"3.11\"" in ci
     assert "cache-dependency-path: pyproject.toml" in ci
     assert "ffmpeg" not in ci.lower()

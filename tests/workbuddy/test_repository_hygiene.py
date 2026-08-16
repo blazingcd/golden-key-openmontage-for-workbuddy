@@ -225,31 +225,76 @@ def test_wave_c_content_is_outside_transition_scan() -> None:
 def test_ci_runs_only_the_two_transition_test_files() -> None:
     ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     expected_trigger_block = (
-        "on:\n"
-        "  pull_request:\n"
-        "    branches:\n"
-        "      - codex/workbuddy-shell-v2\n"
-        "  push:\n"
-        "    branches:\n"
-        "      - codex/workbuddy-shell-v2\n"
+        "pull_request:\n"
+        "  branches:\n"
+        "    - codex/workbuddy-shell-v2\n"
+        "push:\n"
+        "  branches:\n"
+        "    - codex/workbuddy-shell-v2\n"
     )
     command = (
         "python -m pytest -p no:cacheprovider "
         "tests/workbuddy/test_package_registration.py "
         "tests/workbuddy/test_repository_hygiene.py -q"
     )
-    trigger_block = ci.split("\non:\n", maxsplit=1)[1].split("\npermissions:\n", maxsplit=1)[0]
-    trigger_keys = {
-        line.removeprefix("  ").removesuffix(":")
-        for line in trigger_block.splitlines()
-        if line.startswith("  ") and not line.startswith("    ") and line.endswith(":")
-    }
-    assert ci.count(expected_trigger_block) == 1
-    assert trigger_keys == {"pull_request", "push"}
-    assert "workflow_dispatch" not in ci
+    def extract_top_level_on(source: str) -> str:
+        assert source.count("\non:\n") == 1
+        after_on = source.split("\non:\n", maxsplit=1)[1]
+        next_top_level_key = re.search(r"(?m)^(?=\S)", after_on)
+        assert next_top_level_key is not None
+        indented_body = after_on[: next_top_level_key.start()]
+        assert indented_body.endswith("\n\n")
+        indented_body = indented_body.removesuffix("\n")
+        assert all(
+            line.startswith("  ")
+            for line in indented_body.splitlines(keepends=True)
+        )
+        return "".join(
+            line[2:] for line in indented_body.splitlines(keepends=True)
+        )
+
+    trigger_block = extract_top_level_on(ci)
+    assert trigger_block == expected_trigger_block
+
+    rejected_mutations = (
+        ci.replace(
+            "  push:\n"
+            "    branches:\n"
+            "      - codex/workbuddy-shell-v2\n",
+            "  push:\n"
+            "    branches:\n"
+            "      - codex/workbuddy-shell-v2\n"
+            "      - main\n",
+            1,
+        ),
+        ci.replace(
+            "  push:\n"
+            "    branches:\n"
+            "      - codex/workbuddy-shell-v2\n",
+            "  push:\n"
+            "    branches:\n"
+            "      - codex/workbuddy-shell-v2\n"
+            "    tags:\n"
+            "      - v*\n",
+            1,
+        ),
+        ci.replace(
+            "  push:\n"
+            "    branches:\n"
+            "      - codex/workbuddy-shell-v2\n",
+            "  push:\n"
+            "    branches:\n"
+            "      - codex/workbuddy-shell-v2\n"
+            "  workflow_dispatch:\n",
+            1,
+        ),
+    )
+    assert all(
+        extract_top_level_on(mutated_ci) != expected_trigger_block
+        for mutated_ci in rejected_mutations
+    )
     assert ci.count("python -m pytest") == 1
     assert ci.count(command) == 1
-    assert trigger_block.count("branches:\n      - codex/workbuddy-shell-v2") == 2
     assert "python-version: \"3.11\"" in ci
     assert "cache-dependency-path: pyproject.toml" in ci
     assert "ffmpeg" not in ci.lower()

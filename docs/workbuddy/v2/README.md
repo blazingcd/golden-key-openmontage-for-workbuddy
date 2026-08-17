@@ -32,6 +32,8 @@ STAGE_2_S3_RUNTIME_CORRECTION_REVIEW_READY
 
 阶段3至阶段6不另建平行职责文档：职责只以`PROJECT-CHARTER.md`为准，实施必要性和PASS边界只以`ACCEPTANCE-MATRIX.md`为准，实时授权只以`TASK-REGISTER.md`为准。
 
+阶段3的可执行任务包已经在上述现有权威中冻结：`TASK-REGISTER.md`记录条件授权、启动Gate、精确实现路径和执行步骤，`PROJECT-CHARTER.md`记录单一接口与DataRoot边界，`ACCEPTANCE-MATRIX.md`记录直接验收。当前仍等待阶段2和本轮规划结果正式推广，不得据此提前实现。
+
 ## Git任务生命周期
 
 - Builder分支只是一项任务的临时隔离，不是长期交付分支。

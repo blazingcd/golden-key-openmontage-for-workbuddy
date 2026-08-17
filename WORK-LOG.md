@@ -31,6 +31,14 @@
 - 阶段4没有有效Runtime就绪回执时必须返回`RUNTIME_NOT_READY`。阶段6不得安装、解释或重试。
 - 本次12个变化路径均在现有任务白名单内；`git diff --check`、旧冲突措辞扫描、固定33文件、零未跟踪文件及零生产代码/测试/CI变化检查均为`PASS`。项目`.venv`仍不存在，未使用全局Python，未运行pytest。
 
+### 阶段3可执行任务包补充
+
+- 用户确认在阶段2全部完成后，经只读交接检查通过即可启动阶段3；该授权固化为`GRANTED_AFTER_ALL_START_GATES_PASS`，当前仍为`NOT_GRANTED`，不得提前实现。
+- 阶段3路径收敛为一个`runtime_prepare.py`生产模块、一个`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`和一个直接测试文件，唯一入口为`prepare_runtime_on_demand(...)`；不恢复独立`host_tools.py`、通用下载器或第二入口。
+- 启动Gate、八步执行路径、三项SHA授权绑定、`DataRoot/Runtime`精确目标、私有Python bootstrap/import探针、FFmpeg直连阻断和直接验收矩阵已经写入现有权威文档。
+- 本次仍只修改文档，不创建上述实现文件，不运行下载、安装、WorkBuddy或媒体生产。下一步仍是独立Reviewer和正式分支fast-forward；阶段2完成前保持等待。
+- 12个变化路径均在当前文档任务白名单内；`git diff --check`、单一`public_entry`、33文件、零未跟踪文件、零生产代码/测试/CI变化和禁止提前授权字段检查均为`PASS`。项目`.venv`不存在，未使用全局Python，pytest保持`NOT_RUN_PROJECT_VENV_MISSING`。
+
 ## 2026-08-17：V2-S3-S6-SCOPE-DOCS1
 
 ### 对象与授权

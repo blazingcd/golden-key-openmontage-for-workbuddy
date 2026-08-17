@@ -20,6 +20,8 @@ The Golden Key WorkBuddy delivery includes its own package-private Python bootst
 
 Stages 3, 4, 5, and 6 are built and accepted in numeric order, but the end-user runtime call starts at the Stage 5 WorkBuddy entry. That entry revalidates Stage 2 registration, asks Stage 3 for one of its fixed outcomes, calls Stage 4 only with a valid runtime-ready receipt, and lets Stage 6 relay facts. A missing/incompatible Stage 3 outcome requires a separately authorized missing-only preparation and a later explicit WorkBuddy invocation; the Shell never automatically retries the original request.
 
+Stage 3 has conditional user authorization only: do not implement it until the refreshed Stage 2 Package and this planning correction are independently accepted and promoted to the formal branch, the exact Package/Manifest/Lock/Guide/private-Python identity is revalidated, the private Python bootstrap can actually install and import the locked dependencies without system Python, and the current Package inputs are sufficient to freeze an exact Runtime Lock as Stage 3's first step. Stage 3 is one production module, one public entry, one Runtime Lock, and one direct test file. It writes only product-owned targets under `<DataRoot>/Runtime` and caches under `<DataRoot>/Caches`; it never changes Package bytes, system Python, PATH, or the registry.
+
 ## External Package Guide
 
 An external Package's `AGENT_GUIDE.md` is not this repository's operating guide. It may be read only by the downstream consumer authorized for a session, and only after Package Registration identity validation has succeeded and the Locator has returned the verified PackageRoot and Guide identity. Never scan disks, guess a Package, or read an unverified Guide as authority.

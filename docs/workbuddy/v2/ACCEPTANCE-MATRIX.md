@@ -57,6 +57,18 @@
 
 阶段6先验证WorkBuddy能否直接消费Runtime计划/准备事实和Launcher回执：能则记录`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0；不能则必须有精确字段差异和真实消费者证据，只允许一次确定性转换。非零退出、超时、缺少结果指针和残留进程必须保持原事实；阶段6不得安装、解释或重试。
 
+### 3.2 阶段3启动与交付Gate
+
+阶段3开始前必须同时证明：本次规划纠偏和新版阶段2结果均经独立Reviewer批准并进入最新正式分支；当前Package Registration全身份重验通过；包内私有Python真实可启动、版本/架构兼容，并能在不使用系统Python时完成锁定bootstrap/import探针；当前Package提供足以冻结新版Runtime Lock的依赖输入；正式Git对象、33文件白名单、工作树和任务路径无漂移。任何一项缺失时，阶段3仍为`NOT_GRANTED`。
+
+阶段3实现最多包括`golden_key_openmontage_workbuddy/runtime_prepare.py`、`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`和`tests/workbuddy/test_runtime_prepare.py`。唯一公共入口为`prepare_runtime_on_demand(locator_result, data_root, runtime_lock, confirmation=None)`；不得另建宿主工具模块、下载框架或第二入口。
+
+阶段3直接验收至少覆盖：全部就绪时零下载`READY_REUSED`；缺失时只产生完整且身份锁定的计划；无确认、三项SHA不匹配或输入变化时零写入；只准备计划中的缺失项；已就绪项不重下不覆盖；来源/hash/大小/许可/目标/能力探针不完整时fail closed；PATH和登记候选重新核验；外来目标保留；中途失败回滚和临时文件清理；准备后二次发现零下载复用；Package、系统Python、PATH和注册表零修改；盘符扫描、管理员依赖、阶段4调用和原请求自动重试均为零。
+
+Python依赖必须由阶段2登记的包内私有Python安装到`<DataRoot>/Runtime/Python`；其余目标固定在`<DataRoot>/Runtime`的FFmpeg、Node、Composition/Remotion、Composition/HyperFrames和Browsers/HyperFrames子目录，缓存固定为`<DataRoot>/Caches`。路径或所有权不符时不能以repair覆盖。
+
+FFmpeg无代理/VPN大陆直连尚未验证时，`BLOCKED_SOURCE_ACCESS_UNVERIFIED`路径可以通过测试和审阅，但真实FFmpeg下载与`READY_PREPARED`全闭集验收不能通过；直连失败后必须保持`BLOCKED_SOURCE_UNREACHABLE`并等待新的来源裁决。
+
 ## 4. Gate A：对象与环境
 
 入口：阶段7安装候选通过离线测试并锁定安装对象。

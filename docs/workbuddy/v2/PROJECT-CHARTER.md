@@ -88,6 +88,16 @@ User
 
 不得把“大陆镜像失败”解释为可以回退海外官方源。FFmpeg例外在直连验证前返回`BLOCKED_SOURCE_ACCESS_UNVERIFIED`，直连失败返回`BLOCKED_SOURCE_UNREACHABLE`并等待新源裁决，不能自动换源。所有内容仍须以Runtime Lock中的版本、文件名、大小和SHA-256校验；镜像或临时例外都不是放弃供应链验证的理由。
 
+### 4.3 阶段3最小执行合同
+
+阶段3只允许一个公共入口`prepare_runtime_on_demand(locator_result, data_root, runtime_lock, confirmation=None)`。`confirmation`为空时只能执行只读发现并返回`READY_REUSED`或身份锁定的`MISSING_OR_INCOMPATIBLE`计划；`confirmation`必须精确绑定Package Registration SHA、Runtime Lock SHA和计划SHA，匹配后才可准备计划内全部缺失/不兼容项并返回`READY_PREPARED`或真实失败。输入变化时旧授权失效。
+
+未来实现范围固定为一个生产模块`golden_key_openmontage_workbuddy/runtime_prepare.py`、一个`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`和一个直接测试文件`tests/workbuddy/test_runtime_prepare.py`。不另建`host_tools.py`、下载器框架、CLI、后台服务或任务数据库；已有受管对象、可选的外部登记记录和PATH候选都在同一模块内只读核验。阶段3不负责创建宿主工具登记UI或额外公共入口。
+
+所有新准备对象都必须位于Shell提供的DataRoot：Python私有依赖为`<DataRoot>/Runtime/Python`，FFmpeg为`<DataRoot>/Runtime/FFmpeg`，Node为`<DataRoot>/Runtime/Node`，Remotion为`<DataRoot>/Runtime/Composition/Remotion`，HyperFrames为`<DataRoot>/Runtime/Composition/HyperFrames`，锁定浏览器为`<DataRoot>/Runtime/Browsers/HyperFrames`，下载缓存为`<DataRoot>/Caches`。Python依赖使用阶段2登记的包内私有Python执行锁定bootstrap并安装到独立Runtime目录；不得写入Package、系统Python、系统PATH或注册表。
+
+每个准备动作必须使用同卷staging、来源与SHA-256核验、产品所有权标记、原子发布、失败回滚和临时文件清理。现有目标不属于本产品或身份不匹配时必须保留原物并fail closed，不能用repair或覆盖处理。
+
 ## 5. 消息与授权边界
 
 `user_message`只包含用户真实会说的业务请求、素材、事实、授权和期望结果。执行包/Shell身份、路径、Python、cwd、测试编号、重试预算、停止条件以及证据采集只属于独立的`executor_controls`，两者禁止拼接。

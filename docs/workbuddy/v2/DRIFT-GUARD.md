@@ -22,6 +22,9 @@
 - 阶段3从默认Git/GitHub、Google、npmjs、PyPI、nodejs.org或其他未批准海外源下载，在批准大陆镜像失败后静默回退，或把临时批准的精确FFmpeg `gyan.dev`例外扩展到其他组件；
 - 阶段3在无代理/VPN中国大陆网络直连验证通过前使用FFmpeg `gyan.dev`例外，或直连失败后仍继续下载/安装；
 - 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，或覆盖未知/外来目录；
+- 阶段3在规划纠偏或新版阶段2尚未审阅推广、当前Package身份未重验、包内Python bootstrap不可用、Runtime Lock输入不完整或正式Git对象漂移时提前编码；
+- 阶段3新增`runtime_prepare.py`、Runtime Lock和一个直接测试之外的生产结构，或把旧`host_tools.py`、通用下载器、CLI/MCP、服务、数据库恢复为第二入口；
+- 阶段3把Python依赖写进Package或系统Python，把任何组件写出`<DataRoot>/Runtime`，修改系统PATH/注册表，要求管理员权限，或在失败后遗留staging/cache临时对象；
 - 阶段4接受任意Shell、启动多个Agent、自动重试、建立队列/调度/常驻服务或进入Agent业务内部；
 - 阶段4在没有有效Runtime就绪回执时仍调用工具，而不是返回`RUNTIME_NOT_READY`；
 - 阶段5并存多套生产入口、全局截获用户意图或成为第二聊天Agent；
@@ -34,6 +37,8 @@
 腾讯WorkBuddy是唯一运行中的Agent，读取已验证Package Guide后承担OpenMontage生产角色；不存在由Shell另行启动的OpenMontage Agent进程。Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。
 
 金钥匙版交付包必须自带Manifest/Lock锁定的私有Python，普通用户无需系统Python。阶段3闭集固定为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器；发现只来自受管路径、明确登记的宿主工具或正常PATH命令解析。missing-only下载必须有用户明确同意，并使用Runtime Lock批准的中国大陆镜像。唯一例外是用户临时批准的精确FFmpeg 9.0 `gyan.dev`资产；它在无代理/VPN大陆网络直连验证前保持阻断，且绝不形成通用海外回退权。
+
+用户对阶段3的授权是条件授权，不是立即实现授权。只有`TASK-REGISTER.md`列出的启动Gate全部通过并把实时字段更新为`GRANTED`后，Builder才能从最新正式提交开始；聊天中的“开始”不得绕过阶段2、独立Reviewer、fast-forward或精确Git对象检查。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

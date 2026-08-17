@@ -10,7 +10,7 @@
 task_id: V2-S2-S3-RUNTIME-CORRECTION-DOCS1
 task_status: REVIEW_READY
 task_kind: DOCUMENTATION_CONTRACT_CORRECTION
-user_authorization: 2026-08-17 / 固化包内Python、宿主运行时发现、缺失项安装、大陆镜像及临时gyan.dev FFmpeg例外
+user_authorization: 2026-08-17 / 固化包内Python、宿主运行时发现、缺失项安装、大陆镜像及临时gyan.dev FFmpeg例外；阶段2全部完成且启动审计通过后可启动阶段3
 start_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 result_commit: THIS_COMMIT
 branch: codex/v2-s3-s6-scope-docs1
@@ -58,6 +58,9 @@ repository_tracked_files: 33
 stage_3_planning_authorization: GRANTED_FOR_CORRECTION_ONLY
 stage3_planning: RUNTIME_SCOPE_CORRECTED_FOR_REVIEW
 stage_3_implementation_authorization: NOT_GRANTED
+stage_3_conditional_authorization: GRANTED_AFTER_ALL_START_GATES_PASS
+stage_3_start_gate: WAITING_STAGE_2_AND_PLANNING_PROMOTION
+stage_3_execution_packet: FROZEN_FOR_INDEPENDENT_REVIEW
 stage3_implementation: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
@@ -98,6 +101,57 @@ stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 ```
 
 上述范围是规划边界，不是实现授权。任何需要阶段3扫描盘符、扫描/下载包内Python、选择渲染引擎/版本、使用未批准海外默认源、把FFmpeg临时例外扩展到其他组件、未通过直连验证即使用gyan.dev或覆盖外来目录，阶段4启动第二Agent、解析意图或调度任务，阶段5建立第二聊天Agent，阶段6解释Artifact或自动重试的方案，必须停止并返回`STOPPED_SCOPE_EXPANSION`。
+
+## 阶段3待执行任务包
+
+阶段3的唯一目标是把阶段2交付的已验证Package和私有Python，与当前机器上闭集Runtime的真实状态绑定，并返回可被阶段4消费的Runtime就绪事实。它不运行WorkBuddy、不进入OpenMontage生产、不制作视频。
+
+### 启动Gate
+
+只有以下条件全部满足，才能把`stage_3_implementation_authorization`从`NOT_GRANTED`更新为`GRANTED`并建立阶段3Builder；任一失败都只报告阻断，不写阶段3代码：
+
+1. 本次规划纠偏已经独立Reviewer `APPROVE`并普通fast-forward进入`origin/codex/workbuddy-shell-v2`；
+2. 当前新版阶段2为`PASS_ACCEPTED`，其已审结果已经进入同一正式分支，旧Package历史PASS不得替代；
+3. `locate_active_package`对当前Package、Manifest、Lock、Guide和包内私有Python完成全身份重验；
+4. 包内私有Python可真实启动，版本/架构兼容，并能在不使用系统Python的情况下执行锁定依赖bootstrap和import探针；
+5. 当前Package提供完整、可核验的依赖输入，且版本、来源、SHA-256、大小、许可证、目标和能力探针信息足以在阶段3第一步冻结新版Runtime Lock；
+6. 当前正式本地、origin tracking、实时远端、任务起点、tracked白名单和工作树完全一致，无重叠改动。
+
+FFmpeg `gyan.dev`直连结果不是编写阶段3阻断逻辑的启动前置，但决定真实下载和完整Runtime验收：未验证时只能实现并测试`BLOCKED_SOURCE_ACCESS_UNVERIFIED`，不得执行FFmpeg下载或通过全闭集`READY_PREPARED`；直连失败时保持`BLOCKED_SOURCE_UNREACHABLE`并等待新来源裁决。
+
+### 冻结实现路径
+
+```text
+public_entry: prepare_runtime_on_demand(locator_result, data_root, runtime_lock, confirmation=None)
+production_module: golden_key_openmontage_workbuddy/runtime_prepare.py
+runtime_lock: WORKBUDDY-PRODUCTION-RUNTIME.lock.json
+direct_test: tests/workbuddy/test_runtime_prepare.py
+managed_root: <DataRoot>/Runtime
+cache_root: <DataRoot>/Caches
+```
+
+阶段3最多新增上述一个生产模块、一个数据锁和一个直接测试文件；状态文档只作必要更新。若阶段2最终接口证明这些路径不能成立，必须先返回规划纠偏，不得临时增加`host_tools.py`、通用下载器、CLI/MCP、服务、数据库或其他生产文件。
+
+### 执行步骤
+
+1. 从最新正式提交建立单一有界Builder，固定精确base、允许路径和Reviewer范围；
+2. 用阶段2 Locator结果冻结新版Runtime Lock，旧锁只能提供渠道和结构参考，不能直接冒充当前版本；
+3. 实现零写入发现：只核验受管目录、已有明确登记记录和正常PATH候选；PATH命中仍须验证路径、版本、能力和身份；
+4. 生成完整missing-only计划，包含Package/Runtime/计划SHA、全部缺失/不兼容项、版本、来源、hash、下载量、安装量、许可证和目标；
+5. 将`confirmation`与三项SHA精确绑定；无确认、确认过期或身份变化时保持零下载、零安装；
+6. 使用包内私有Python及批准来源，仅在`<DataRoot>/Runtime`准备确认计划中的全部缺失项；执行同卷staging、hash核验、所有权检查、原子发布、失败回滚和清理；
+7. 重新核验全部闭集并返回`READY_PREPARED`或真实失败；准备完成后停止，不调用阶段4、不自动重试原生产请求；
+8. 完成直接测试、静态边界检查、独立只读Reviewer和普通fast-forward推广，推广前不得宣称阶段3交付。
+
+### 输出与失败边界
+
+- `READY_REUSED`：全部闭集已验证就绪，零下载、零修改；
+- `MISSING_OR_INCOMPATIBLE`：只返回身份锁定的完整计划，零写入；
+- `READY_PREPARED`：确认计划内全部项目准备并复核通过；
+- `BLOCKED_SOURCE_UNAPPROVED`、`BLOCKED_SOURCE_ACCESS_UNVERIFIED`、`BLOCKED_SOURCE_UNREACHABLE`或其他真实错误：保持失败事实，不换源、不伪造就绪；
+- `STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`：阶段2最终交付和真实下游合同证明无需阶段3生产实现时的合法零代码出口。
+
+阶段3不创建或修改Package，不扫描盘符，不使用系统Python，不修改系统PATH/注册表，不要求管理员权限，不覆盖外来目录，不让用户选择渲染方案，不启动WorkBuddy/第二Agent，不执行OpenMontage生产，不建立通用包管理器或自动重试。
 
 ## 已接受对象与证据边界
 

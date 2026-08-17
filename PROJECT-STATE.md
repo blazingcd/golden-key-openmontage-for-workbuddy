@@ -15,6 +15,9 @@ repository_hygiene: PASS_ACCEPTED
 repository_tracked_files: 33
 stage_3_planning: RUNTIME_SCOPE_CORRECTED_FOR_REVIEW
 stage_3_implementation: NOT_GRANTED
+stage_3_conditional_authorization: GRANTED_AFTER_ALL_START_GATES_PASS
+stage_3_start_gate: WAITING_STAGE_2_AND_PLANNING_PROMOTION
+stage_3_execution_packet: FROZEN_FOR_INDEPENDENT_REVIEW
 stage_4_launcher: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
@@ -54,3 +57,9 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 - 阶段6直接转交Runtime计划/准备事实和Launcher回执；无需独立转换时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`零代码结束，不解释、不安装、不重试。
 
 详细实时字段只以`docs/workbuddy/v2/TASK-REGISTER.md`为准；Git历史中的Wave A/B/C记录不是当前任务授权。
+
+## 阶段3启动检查摘要
+
+用户已给出条件授权：阶段2全部完成后，先由本任务进行只读交接检查，全部通过才可启动阶段3。当前仍不能启动，因为新版阶段2和本轮规划纠偏都尚未在正式分支形成已审结果。
+
+启动检查固定为：规划纠偏已审推广；新版阶段2已审推广；当前Package/Manifest/Lock/Guide/私有Python全身份重验；私有Python可执行且bootstrap/import探针通过；当前Package依赖输入足以冻结精确Runtime Lock；正式Git对象、33文件白名单和工作树无漂移；FFmpeg直连状态按`BLOCKED_SOURCE_ACCESS_UNVERIFIED`/可用/`BLOCKED_SOURCE_UNREACHABLE`如实处理。完整任务路径、实现文件和验收条件只以`docs/workbuddy/v2/TASK-REGISTER.md`及`ACCEPTANCE-MATRIX.md`为准。

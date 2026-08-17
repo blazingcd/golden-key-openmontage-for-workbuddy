@@ -23,3 +23,5 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 金钥匙版交付包必须自带经Manifest/Lock固定的私有Python，普通用户不需要系统Python。阶段3只发现并准备闭集运行组件：Python私有依赖、FFmpeg、Node、Remotion、HyperFrames及其锁定浏览器；它只检查受管路径、明确登记的宿主工具或PATH命令解析，不扫描磁盘。缺失项必须先形成missing-only计划、展示下载量/目标/许可并取得用户明确同意。除临时批准且精确锁定的FFmpeg `gyan.dev`资产外，其余下载只允许批准的中国大陆镜像；FFmpeg例外在“不使用代理/VPN的中国大陆网络直连”验证通过前仍不可执行，任何组件都不得自动回退其他海外源。
 
 阶段3至阶段6按编号建设和验收，但用户实际运行从阶段5的显式WorkBuddy入口开始。阶段5先触发阶段2 Locator重验和阶段3单一闭集检查；只有有效Runtime就绪回执才进入阶段4。若缺失，阶段6转交missing-only计划，用户另行授权后由阶段3准备并停止，原生产请求不自动重试。阶段4不启动第二个Agent，只绑定一次WorkBuddy会话；阶段6直接转交Runtime及Launcher事实，除真实格式缺口外不新增转换层。
+
+阶段3任务包已经按条件授权冻结，但当前不是立即实现许可。只有新版阶段2和本轮规划纠偏均独立审阅、进入正式分支，并通过只读交接审计后才能启动。最大实现范围为一个`runtime_prepare.py`公共入口、一个生产Runtime Lock和一个直接测试文件；受管写入只允许位于`<DataRoot>/Runtime`和`<DataRoot>/Caches`。

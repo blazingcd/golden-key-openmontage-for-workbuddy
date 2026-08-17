@@ -1,105 +1,152 @@
 # OpenMontage Package Registration and Locator Contract
 
-状态：`STAGE_2_PASS_ACCEPTED / STABLE_CONTRACT`
+状态：`V2-S2-OFFICIAL-PACKAGE-ALIGNMENT / REVIEW_READY`
 
 ## 1. Scope
 
-This contract binds one explicitly supplied, already-installed, versioned OpenMontage Package to immutable local identity records and locates the single active Package. It does not install, download, execute, repair, or select a Package; it does not run the OpenMontage Agent.
+Stage 2 binds one explicitly supplied official OpenMontage Git checkout to an
+immutable local registration and locates the single explicitly activated checkout.
+It does not scan disks, infer a package from a directory name, choose "latest",
+fetch or update Git, install dependencies, create a Python environment, execute
+OpenMontage, or modify the checkout.
 
-The four public entries are:
+The public entries are:
 
 ```python
-register_package(data_root, release_archive, release_sha256_sidecar, package_root, package_python)
+register_package(data_root, package_root, expected_origin_url, expected_commit)
 activate_package(data_root, expected_active_pointer_sha256_or_missing, registration_sha256)
 recover_active_package(data_root, expected_broken_pointer_sha256, replacement_registration_sha256)
 locate_active_package(data_root)
 ```
 
-`register_package` validates and writes an immutable registration but never activates it. `activate_package` performs an explicit CAS selection. `recover_active_package` replaces only an explicitly hash-locked broken pointer and rejects a valid pointer. `locate_active_package` is read-only and performs full identity revalidation; it never repairs, enumerates fallback objects, launches a process, accesses a network, or writes.
+Registration validates and publishes an immutable object but does not activate it.
+Activation is an explicit compare-and-swap (CAS). Recovery replaces only an
+explicitly hash-locked broken pointer with an explicitly named valid registration.
+Locator is offline, read-only, and performs complete revalidation without repair or
+fallback selection.
 
-## 2. Identifiers and authority
+## 2. Fixed v2 identity and storage
 
 ```text
-registration schema: golden-key-workbuddy-openmontage-package-registration-v1
+registration schema: golden-key-workbuddy-openmontage-git-registration-v2
 registration owner: golden-key-workbuddy-shell-v2
-active pointer schema: golden-key-workbuddy-active-openmontage-package-v1
-active lock schema: golden-key-workbuddy-active-package-lock-v1
-manifest schema: golden-key-workbuddy-portable-bundle-v1
-lock schema: integer 2
-manifest path: BUNDLE-MANIFEST.json
-lock path: GOLDEN_KEY_WORKBUDDY_CORE.lock.json
+active pointer schema: golden-key-workbuddy-active-openmontage-package-v2
+active lock schema: golden-key-workbuddy-active-package-lock-v2
+official origin: https://github.com/calesthio/OpenMontage.git
 guide path: AGENT_GUIDE.md
-bundled Python path: bootstrap/python/python.exe
+registry path: <DataRoot>/State/PackageRegistration/v2
+object path: <registry>/objects/<registration_sha256>.json
+active pointer: <registry>/active.json
+active lock: <registry>/active.lock
 ```
 
-Manifest authority must be exactly:
+`PackageRegistration/v1` is a different historical schema. Stage 2 does not read,
+activate, repair, import, or automatically migrate v1. The current deployment has no
+real v1 registry; a future migration, if ever authorized, requires a separate task
+and explicit evidence.
 
-```json
-{"invocation_model":"direct_agent","nested_agent_host_allowed":false}
-```
+## 3. Explicit inputs and Git command boundary
 
-Lock authority must be exactly:
+All four registration inputs are mandatory. `data_root` and `package_root` must be
+existing canonical absolute directories. PackageRoot must itself be the exact Git
+worktree top level, not a parent, nested directory, symlink, junction, reparse alias,
+or guessed location.
 
-```json
-{"consumer":"workbuddy","consumer_direct_official_sync_allowed":false,"invocation_model":"direct_agent","nested_agent_host_allowed":false,"official_openmontage_role":"reviewed_upstream_baseline_only","source":"golden-key-core"}
-```
+`expected_origin_url` is normalized only to the fixed official HTTPS URL (an omitted
+terminal `.git` is accepted); other hosts, owners, repositories, schemes,
+credentials, ports, queries, fragments, and case-different repository paths fail
+closed. `expected_commit` is an explicit lowercase 40-hex commit. The Shell never
+resolves a branch or tag into a preferred commit and never selects "latest".
 
-The external wire fields `core.contract_id`, `core.tag`, `core.source_commit`, `core.file_count`, `managed_core`, `golden-key-core`, `golden-key-workbuddy-callable-core-v1`, and `GOLDEN_KEY_WORKBUDDY_CORE.lock.json` retain their literal meanings. They do not mean the Golden Key SaaS Core. SaaS Core is outside this contract and outside Stage 2.
+Every Git call uses a fixed argument list, `shell=False`, captured byte output, an
+explicit 10-second timeout, and an explicit exit-code check. Output must be UTF-8 and
+NFC where text is expected. `GIT_OPTIONAL_LOCKS=0`, `GIT_TERMINAL_PROMPT=0`, and
+`GCM_INTERACTIVE=Never` keep identity reads non-interactive and prevent optional Git
+index refresh locks. A timeout, non-zero exit, malformed output, or non-UTF-8 output
+fails closed. Stage 2 never invokes `fetch`, `pull`, `push`, `clone`, or `ls-remote`;
+online comparison with official remote HEAD is external takeover-gate evidence.
 
-## 3. Registration identity
+## 4. Checkout and inventory validation
 
-A Package Registration contains only these required root fields and rejects missing or unknown fields:
+Registration and every later activation, recovery, and locate operation revalidate:
+
+- PackageRoot is the exact independent Git worktree root;
+- normalized `remote.origin.url` equals the fixed official URL and the explicit
+  expected URL;
+- `HEAD^{commit}` exactly equals the explicit expected commit;
+- `HEAD^{tree}` is recorded as the Git tree identity;
+- `git status --porcelain=v1 -z --untracked-files=all --ignored=no` is empty;
+- `git ls-tree -rz --full-tree HEAD` exactly supplies the fixed tracked inventory;
+- each inventory path is unique under Windows case aliases, canonical, relative,
+  traversal-safe, ADS-safe, and free of reserved names or trailing-dot/space aliases;
+- every entry is a regular Git blob with mode `100644` or `100755` and resolves to a
+  regular file without symlink, junction, or reparse traversal;
+- every tracked file records its path, Git mode, byte size, and working-tree SHA-256;
+- the canonical complete entry array records a file count and inventory SHA-256;
+- `AGENT_GUIDE.md` exists, is tracked by the same inventory, is non-empty, and records
+  its path, mode, size, and SHA-256.
+
+Tracked modifications, staged changes, deleted tracked files, and untracked files are
+all dirty and rejected. Ignored files are explicitly allowed, excluded from the
+registration inventory, and do not contribute identity; they cannot replace or
+shadow any tracked inventory entry. This ignored-file policy is fixed, not inferred
+per checkout.
+
+The Guide bytes are used only to compute identity after PackageRoot, origin, HEAD,
+tree, and clean-state validation. Stage 2 does not interpret the Guide. A downstream
+authorized session consumer may read it only after successful Registration/Locator
+identity validation.
+
+## 5. Immutable registration and Locator result
+
+The closed registration object has exactly:
 
 ```text
-schema_version, owner, contract_id, openmontage_release,
-openmontage_commit, authority, release, package_root,
-package_python, manifest, lock, guide
+schema_version, owner, package_root, origin_url, openmontage_commit,
+git_tree, inventory, guide
 ```
 
-Nested shapes are also closed:
+`inventory` has exactly `file_count`, `sha256`, and `entries`; each entry has exactly
+`path`, `git_mode`, `sha256`, and `size`. `guide` has exactly `relative_path`, `path`,
+`git_mode`, `sha256`, and `size`. Canonical object bytes are UTF-8 without BOM, sorted
+keys, compact separators, and exactly one trailing LF. The SHA-256 of those bytes is
+the object filename and returned `registration_sha256`.
 
-- `authority`: exact `manifest` and `lock` objects above.
-- `release`: ZIP basename, archive SHA-256, and exact `.zip.sha256` sidecar basename.
-- `package_python`: fixed relative path, canonical absolute path, SHA-256, positive size, version, fixed source `python.org_windows_embeddable_x64`, and source archive SHA-256.
-- `manifest`: fixed relative/absolute path, schema, SHA-256, and positive size.
-- `lock`: fixed relative/absolute path, integer schema 2, SHA-256, positive size, and bundle SHA-256.
-- `guide`: fixed relative/absolute path, SHA-256, and positive size.
-
-Strings are Unicode NFC and must not contain surrogate code points. SHA-256 is lowercase 64-hex; commit is lowercase 40-hex; sizes are JSON integers. Canonical object bytes are UTF-8 without BOM, sorted keys, compact separators, and exactly one trailing LF. The SHA-256 of those complete canonical bytes is the `registration_sha256` and object filename; it is not duplicated inside the object.
-
-## 4. Validation chain
-
-Registration accepts only explicit absolute existing paths and never expands `~`, searches a drive, consults environment defaults, or guesses the newest Package. It validates:
-
-- the Release ZIP actual SHA against the sidecar, including an optional exact archive basename;
-- exactly one safe Manifest and Lock archive member, byte-identical to the installed files;
-- Manifest/Lock schema, closed authority shapes, and matching contract/release/commit identities;
-- Lock bundle digest, unique safe inventory paths, Manifest `managed_core` ownership, file count, SHA, size, and every installed managed file;
-- the fixed non-empty Guide through Manifest, Lock, registration identity, and installed bytes;
-- the fixed bundled private Python declared by Manifest, including runtime role, owner, metadata, SHA, size, and canonical PackageRoot path;
-- canonical PackageRoot and fixed child paths that do not escape through traversal, symlink/reparse resolution, Windows aliases, ADS, reserved device names, trailing dots, or trailing spaces.
-
-Every later activation, recovery, and locate operation reloads the content-addressed object and revalidates its canonical bytes, filename hash, paths, Manifest, Lock, Guide, Python, and managed files. A lifecycle component may reclaim the Release archive after registration; Locator revalidates the frozen local identity and does not claim to re-fetch or revalidate a remote Release.
-
-## 5. Storage, lock, CAS, and recovery
+Locator returns an immutable mapping containing exactly:
 
 ```text
-<DataRoot>/State/PackageRegistration/v1/objects/<registration_sha256>.json
-<DataRoot>/State/PackageRegistration/v1/active.json
-<DataRoot>/State/PackageRegistration/v1/active.lock
+registration_sha256, package_root, guide, origin_url, openmontage_commit,
+git_tree, inventory
 ```
 
-Registration objects are content-addressed and immutable. Publication uses a same-directory temporary file, flush, `fsync`, readback, and atomic publication. Existing identical bytes are idempotent; conflicting bytes at the same hash path fail closed.
+The Locator inventory result exposes its immutable `file_count` and `sha256` identity;
+the complete entries remain in the content-addressed registration object. Locator
+does not return Release, Manifest, Lock, bundled Python, or `package_python` pseudo-
+identity. It performs no write, network access, Git update, repair, process launch,
+or fallback enumeration.
 
-`active.lock` has fixed canonical identity bytes and persists as the lock identity file. It is created only when an empty registry is initialized; if registrations or a pointer exist, a missing or changed lock is tampering. Activation and recovery share a process guard and a kernel-level exclusive byte-0 lock, use one monotonic 5-second deadline with 0.05-second retries, re-read the lock in the critical section, and always release/close in `finally`.
+## 6. Publication, lock, CAS, and recovery
 
-Inside the same critical section, a writer reads the raw active pointer, compares its caller-supplied SHA-256 or literal `MISSING`, fully revalidates the explicit target registration, writes/flushes/`fsync`s/reads back a same-directory temporary pointer, rechecks raw pointer bytes, and uses `os.replace`. A stale expected value cannot overwrite another writer. Failure before replacement preserves the old pointer; Locator never reads temporary files.
+Registration objects remain content-addressed and immutable. Publication uses a
+same-directory temporary file, flush, `fsync`, readback, and atomic hard-link
+publication; identical bytes are idempotent and conflicting bytes at one content
+address fail closed.
 
-Recovery requires the exact SHA-256 of an existing damaged pointer and an explicit fully valid replacement registration SHA. It never creates a registration, chooses a fallback, accepts a missing pointer, or replaces a valid pointer. Rollback is explicit activation of a named older valid registration; there is no time-based or directory-based selection.
+`active.lock` is a persistent fixed-identity file. Initialization is allowed only for
+an empty v2 registry. Writers share one process guard and an exclusive kernel byte-0
+lock with one monotonic five-second deadline. Inside the critical section they
+revalidate the lock, pointer, and explicit target; write, flush, `fsync`, and read back
+a same-directory temporary pointer; repeat the raw-byte CAS; and publish with
+`os.replace`. Failures before replacement preserve the prior pointer.
 
-## 6. Fail-closed errors
+Recovery requires the exact SHA-256 of an existing damaged pointer and an explicit
+valid replacement registration. It does not accept a missing or valid pointer,
+create a registration, choose another object, or silently repair. Rollback is an
+explicit CAS activation of a named older valid object.
 
-Stable error codes are:
+## 7. Fail-closed errors
+
+Stable codes are:
 
 ```text
 INPUT_INVALID
@@ -109,23 +156,29 @@ DUPLICATE
 IDENTITY_MISMATCH
 HASH_MISMATCH
 TAMPERED
+GIT_COMMAND_FAILED
+GIT_TIMEOUT
+GIT_OUTPUT_INVALID
 ACTIVE_LOCK_BUSY
 ACTIVE_CAS_MISMATCH
 ATOMIC_WRITE_FAILED
 ```
 
-Missing objects, unknown or missing fields, duplicate JSON keys or inventory/archive paths, non-finite JSON, surrogate/NFC violations, tampered bytes, identity drift, unsafe paths, hash/size mismatch, lock damage, stale CAS, and atomic-write failures all reject without guessing or silently repairing. Even a registry with exactly one object is not a substitute for a missing active pointer.
+Unknown or missing fields, duplicate JSON or inventory paths, invalid Unicode,
+unsafe paths, symlink/reparse traversal, dirty status, Git identity drift, file
+hash/size/mode drift, pointer/object/lock tampering, stale CAS, and publication
+failure all reject without guessing or state repair.
 
-## 7. Future consumers and message boundary
+## 8. Explicit non-goals and evidence boundary
 
-A future Launcher may only read the immutable mapping returned by `locate_active_package` to bind the exact PackageRoot, bundled Python, Guide, Manifest, Lock, Release, authority, and commit. This document does not implement or authorize the Launcher, Runtime preparation, WorkBuddy entry, or status/result relay.
+The official checkout is registered without adding Golden Key Manifest/Lock files and
+without requiring `BUNDLE-MANIFEST.json`,
+`GOLDEN_KEY_WORKBUDDY_CORE.lock.json`, or `bootstrap/python/python.exe`.
+Registration never creates a venv, downloads packages, or runs OpenMontage.
 
-The verified external Package Guide may be read only after successful Registration/Locator identity validation and only by the correct downstream session consumer. The Shell must not interpret that Guide as permission to direct production.
-
-`user_message` remains the user's literal business request, materials, facts, authorizations, and desired result. Package identity, paths, Python, cwd, commands, retries, stop conditions, and evidence collection remain separate `executor_controls`; the two must never be concatenated.
-
-## 8. Implementation evidence
-
-`golden_key_openmontage_workbuddy/package_registration.py` is the accepted implementation. `tests/workbuddy/test_package_registration.py` is the implementation evidence for closed schemas, Release/Manifest/Lock/Python/Guide identity, canonical encoding, path safety, missing/duplicate/surrogate/tamper/drift/hash failures, immutable publication, active lock/CAS concurrency, recovery, rollback, and read-only Locator behavior.
-
-That test evidence does not prove installation, Runtime, Launcher, real WorkBuddy, OpenMontage production, Provider, SaaS, network, media, or business E2E.
+Package Python, Runtime preparation, Launcher, WorkBuddy Entry, Relay, status/result
+handoff, Provider, Pipeline, media, and production control belong to Stage 3 or later
+separately authorized modules. Their implementation authorization remains
+`NOT_GRANTED`. Passing this contract proves only Stage 2 registration/locator behavior;
+it does not prove installation, Runtime, real WorkBuddy, OpenMontage production,
+Provider, network, media, SaaS, or business E2E.

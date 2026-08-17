@@ -1,102 +1,131 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`ACTIVE AUTHORITY / V2_REPO_HYGIENE_REMAINING_SEQUENCE_REVIEW_READY`
+状态：`ACTIVE AUTHORITY / V2-S2-OFFICIAL-PACKAGE-ALIGNMENT / REVIEW_READY`
 
-更新时间：2026-08-16
+更新时间：2026-08-17
 
 ## 当前任务
 
 ```text
-task_id: V2-REPO-HYGIENE-SEQUENCE-AUTHORITY-FIX1
+task_id: V2-S2-OFFICIAL-PACKAGE-ALIGNMENT-BUILDER1
 task_status: REVIEW_READY
-authority_id: V2-REPO-HYGIENE-REMAINING-SEQUENCE
-authority_commit: THIS_COMMIT
 authority_lifetime: ONE_TIME_BOUNDED
-pre_activation_status: REVIEW_READY
-activation_condition: origin/codex/workbuddy-shell-v2 == THIS_COMMIT AND independent_reviewer == APPROVE
-post_activation_status: ACTIVE_SEQUENCE_AUTHORITY
-start_commit: 385a20bbff9624703682eecba3b38fc3c6d2d6b9
+start_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 result_commit: THIS_COMMIT
-branch: codex/v2-repo-hygiene-sequence-authority-fix1
-review_range: 385a20bbff9624703682eecba3b38fc3c6d2d6b9..THIS_COMMIT
+branch: codex/v2-s2-official-package-alignment-b1
+review_range: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb..THIS_COMMIT
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 385a20bbff9624703682eecba3b38fc3c6d2d6b9
-completed_wave_a_status: PASS_PROMOTED
-completed_wave_a_result: 830d44ab7b910e20bfc9093bf2c505850860880a
-completed_wave_a_reviewer: 01a0065c-d83a-78d3-a36e-8386c08036ed / APPROVE
-completed_wave_a_promotion: 01a00932-5403-7880-8214-680eebcda050 / PASS
-completed_wave_a_closeout: 385a20bbff9624703682eecba3b38fc3c6d2d6b9
-completed_wave_a_closeout_reviewer: 01a00940-fe94-7883-bcc0-e7d396b56a3a / APPROVE
-completed_wave_a_closeout_promotion: 01a00943-8a3e-7b81-a2d8-03f192fed82e / PASS
-tracked_at_sequence_start: 2160
-authorized_sequence:
-  1. V2-REPO-HYGIENE-WAVE-B-BUILDER1
-  2. V2-REPO-HYGIENE-WAVE-B-REVIEW1
-  3. V2-REPO-HYGIENE-WAVE-B-PROMOTE1
-  4. V2-REPO-HYGIENE-WAVE-C-BUILDER1
-  5. V2-REPO-HYGIENE-WAVE-C-REVIEW1
-  6. V2-REPO-HYGIENE-WAVE-C-PROMOTE1
-  7. V2-REPO-HYGIENE-MAIN-WORKTREE-NORMALIZE1
-  8. V2-REPO-HYGIENE-FINAL-AUDIT1
-  9. V2-REPO-HYGIENE-FINAL-GATE
-sequence_rule: 必须按authorized_sequence的编号严格顺序执行，不得跳过或并行越级。
-failure_rule: 任一步非PASS/APPROVE则停止，仅允许最小FIX+复审；不得跳到后续。
-branch_rule: Builder使用临时分支；Reviewer只读；正式主线只允许fast-forward；推广后删除已完全合入且无未合入commit的远端临时分支；本地临时分支等待对应worktree关闭后再删除。
-wave_b_contract: start=本authority激活后的正式主线；change_shape=D54/A2/M2；tracked=2108；tests=registration+TRANSITION。
-wave_c_contract: start=Wave B已推广后的正式主线；change_shape=D2075/M1；tracked=33；tests=registration+FINAL。
-final_gate: 正式主线、远端和D盘工作区一致；exact_tracked=33；tests=PASS；远端临时分支已清理；Stage3实现=NOT_GRANTED。
-stage3_planning: GRANTED
+formal_target_at_start: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
+promotion_authorization: NOT_GRANTED
+reviewer_creation_by_builder: NOT_GRANTED
+allowed_paths:
+  - golden_key_openmontage_workbuddy/package_registration.py
+  - tests/workbuddy/test_package_registration.py
+  - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
+  - docs/workbuddy/v2/TASK-REGISTER.md
+tracked_file_contract: EXACT_33_UNCHANGED
+production_code_files_changed: 1
+test_files_changed: 1
+contract_files_changed: 2
 stage3_implementation: NOT_GRANTED
-stage3_all_modules: NOT_GRANTED
-dynamic_path_or_test_relaxation: NOT_GRANTED
-production_code_changes: 0
-test_changes: 0
+stage3_files_changed: 0
+forbidden_paths_changed: 0
 ```
 
-本次只建立一次性、有界、条件激活的剩余仓库卫生序列权威，不实施Wave B、Wave C或Stage3。`THIS_COMMIT`表示本记录与本次结果在同一个不可变提交中；Reviewer必须用结果分支的精确40位SHA解析该语义占位符并只读审阅。只有独立Reviewer给出`APPROVE`且同一结果被fast-forward推广至正式主线后，上述序列才从`REVIEW_READY`自动成为`ACTIVE_SEQUENCE_AUTHORITY`，无需再提交自引用closeout。该序列不得授权任何Stage3实现，也不得根据当时的工作树动态放宽已列明的路径、数量或测试合同。
+`THIS_COMMIT`表示本账本与Builder结果位于同一不可变提交中。只有独立Reviewer
+基于结果分支精确40位SHA审阅并给出`APPROVE`，且用户另行授权推广后，正式分支才可
+fast-forward。本状态是`REVIEW_READY`，不是`PASS_ACCEPTED`，也不授权Builder创建
+Reviewer、推广结果或开始Stage 3。
+
+## 本次修订目标
+
+旧Stage 2合同把Golden Key便携包的Release ZIP、Manifest、Lock和bundled Python当作
+OpenMontage身份。它们不是用户提供的官方OpenMontage Git源码树原生身份，其中Python
+属于Stage 3 Runtime边界。本次只把Package Registration/Locator修正为官方Git checkout
+身份，不修改官方源码、不读取或迁移真实registry、不实施其他Shell模块。
+
+```text
+registration_schema: golden-key-workbuddy-openmontage-git-registration-v2
+registry_path: <DataRoot>/State/PackageRegistration/v2
+register_api: register_package(data_root, package_root, expected_origin_url, expected_commit)
+official_origin: https://github.com/calesthio/OpenMontage.git
+explicit_commit_selection: REQUIRED
+scan_or_guess_latest: FORBIDDEN
+v1_automatic_migration: FORBIDDEN
+ignored_policy: ALLOWED_BUT_EXCLUDED_FROM_IDENTITY
+tracked_changes: REJECT
+untracked_files: REJECT
+locator_network: 0
+locator_writes: 0
+locator_git_update: 0
+package_mutation: 0
+package_python_identity: REMOVED_FROM_STAGE_2
+manifest_lock_release_identity: REMOVED_FROM_STAGE_2
+```
+
+## 冻结候选对象
+
+用户明确提供且统筹在任务开始前只读核验：
+
+```text
+package_root_candidate: D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-gate4r-95e1c3d0
+origin: https://github.com/calesthio/OpenMontage.git
+expected_commit: 95e1c3d0ab93482159818560f6a8c8e866b9139f
+local_head_at_gate: 95e1c3d0ab93482159818560f6a8c8e866b9139f
+remote_head_at_gate: 95e1c3d0ab93482159818560f6a8c8e866b9139f
+worktree_at_gate: CLEAN_DETACHED
+data_root: D:\WorkBuddyData
+real_v1_registry_at_gate: ABSENT
+real_v2_registry_at_gate: ABSENT
+```
+
+Builder不得用真实候选或`D:\WorkBuddyData`制造测试状态。Git checkout身份覆盖使用临时
+测试fixture；真实外部对象保持零修改。本任务不把一次远端HEAD在线核验嵌入Locator，
+也不让Stage 2选择远端“最新”对象。
+
+## 当前实现和证据边界
+
+Registration要求四个显式输入并核验PackageRoot、官方origin、精确HEAD/tree、clean
+状态、固定tracked inventory、Git mode、size、SHA-256及tracked非空Guide。tracked或
+untracked变化拒绝；ignored文件允许存在但不进入身份。Git命令固定参数、`shell=False`、
+固定超时、明确退出码，失败、超时或非UTF-8输出均fail closed。
+
+Locator离线、只读、零修复、零网络、零Git fetch/pull，重新核验pointer、登记对象、
+PackageRoot、origin、HEAD/tree、clean、inventory和Guide SHA，返回不可变的PackageRoot、
+Guide、origin、commit、tree及inventory identity。它不返回Release、Manifest、Lock、
+bundled Python或`package_python`。
+
+本次测试证据只证明临时Git fixture上的Stage 2合同、不可变对象、active pointer、内核锁、
+CAS、显式恢复和只读Locator。它不证明官方候选已登记，不证明真实DataRoot写入，不证明
+Installer、Runtime、Launcher、真实WorkBuddy、OpenMontage生产、Provider、网络、媒体、
+SaaS或业务E2E。
 
 ## 阶段状态
 
 ```text
 stage_1_status: PASS_ACCEPTED
-stage_2_status: PASS_ACCEPTED
+stage_2_historical_portable_contract: SUPERSEDED_BY_REVIEW_CANDIDATE
+stage_2_official_package_alignment: REVIEW_READY
+stage_2_current_acceptance: NOT_YET_ACCEPTED
 stage_3_planning_authorization: GRANTED
 stage_3_implementation_authorization: NOT_GRANTED
 stage_3_launcher_authorization: NOT_GRANTED
 stage_3_workbuddy_entry_authorization: NOT_GRANTED
 stage_3_status_result_handoff_authorization: NOT_GRANTED
 stage_3_other_module_authorization: NOT_GRANTED
-repository_hygiene_is_stage_3_implementation: NO
 ```
 
-## 已接受对象与证据边界
+## 仓库卫生与停止边界
+
+固定FINAL仓库合同仍是33个tracked文件；本次只允许修改其中4个既有文件，不能改变集合、
+新增文件、恢复旧控制面或动态放宽`test_repository_hygiene.py`。`.venv`、cache、pyc和临时
+文件不得提交。
+
+独立Reviewer下一步只读比较：
 
 ```text
-immutable_v1_code_baseline: 2a2bf09832d558388dc2816c54b32a2dce4aa607
-stage_1_reviewed_commit: 041c6600dc8eb9094b5c93cb4a4ed088894578af
-stage_1_integrated_boundary: fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9
-stage_1_reviewer_task: 01a004a6-aab1-7992-abe0-6dcbe8490a71
-stage_1_reviewer_verdict: APPROVE / P0=0 / P1=0 / P2=0
-stage_2_contract_commit: 5dd144e40ff1bf8682c8b43ac9973e40fc0be946
-stage_2_final_implementation_commit: ab1eddf474233859c6a3b32056a503f82ecdc117
-stage_2_gate_prep_commit: 104fe684c0bae6604c278fcf756579700bd8e1e0
-stage_2_integration_commit: ca6e93b7da108732f2034239da340a986ba3da3a
-stage_2_final_reviewer_task: 01a005c3-692c-7761-9f11-45e178c0d599
-stage_2_final_reviewer_verdict: APPROVE / P0=0 / P1=0 / P2=0
-stage_2_integration_reviewer_task: 01a00606-a1d3-7ab3-ab75-8d16efd064fa
-stage_2_integration_reviewer_verdict: APPROVE / P0=0 / P1=0 / P2=0
-stage_1_stage_2_consolidation_audit: 01a00617-e037-72a3-b1e5-d88b3d0be19f / APPROVE
-repository_hygiene_audit: 01a00621-f896-7ce1-865d-7bd581bfef7e / CLEANABLE
-repository_hygiene_plan_review2: 01a00617-e037-72a3-b1e5-d88b3d0be19f / APPROVE / P0=0 / P1=0 / P2=0
+20ddab75825c1b6e7de5a51603afe8b6fd82eceb..THIS_COMMIT
 ```
 
-Stage2实现只证明Package Registration与Locator合同及其测试；不证明Installer、Runtime、Launcher、真实WorkBuddy、OpenMontage生产、Provider、SaaS、网络或媒体E2E。
-
-## Wave A不可变边界
-
-```text
-package_registration_start_blob: d0676fb6a0ec22135ade8bc1462337ced05beec0
-test_package_registration_start_blob: 7f3f0e7cf1a16fbe63ee0bb8669797bc88c78ec6
-```
-
-Wave A只删除活动树中的历史Prompt、旧任务文档和旧docs证据，新增无执行历史的登记合同，并最小重写Shell V2治理入口。Git历史仍保留删除内容；仓库内不得建立archive、legacy或quarantine副本。
+任一精确对象、正式远端、白名单、33文件集合、测试最终退出、clean状态或Stage 3边界不符，
+结论必须为`INCOMPLETE`。Reviewer批准不等于正式交付；正式分支推广仍需独立授权。

@@ -2,13 +2,14 @@
 
 This module deliberately knows nothing about WorkBuddy messages, launchers, runtime
 preparation, pipelines, providers, or OpenMontage production state.  Its only job is
-to bind an explicitly supplied, already-installed portable package to immutable local
+to bind an explicitly supplied official Git checkout to immutable local
 identity records and to locate the one package selected by an atomic pointer.
 """
 
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import os
 import re
@@ -17,12 +18,12 @@ import tempfile
 import threading
 import time
 import unicodedata
-import zipfile
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from types import MappingProxyType
-from typing import Any, Iterator, Mapping
+from typing import Any, Iterator, Mapping, Sequence
+from urllib.parse import urlsplit, urlunsplit
 
 try:  # pragma: no cover - selected by platform
     import msvcrt as _msvcrt
@@ -35,30 +36,13 @@ except ImportError:  # pragma: no cover - selected by platform
     _fcntl = None
 
 
-REGISTRATION_SCHEMA = "golden-key-workbuddy-openmontage-package-registration-v1"
+REGISTRATION_SCHEMA = "golden-key-workbuddy-openmontage-git-registration-v2"
 REGISTRATION_OWNER = "golden-key-workbuddy-shell-v2"
-ACTIVE_POINTER_SCHEMA = "golden-key-workbuddy-active-openmontage-package-v1"
-ACTIVE_LOCK_SCHEMA = "golden-key-workbuddy-active-package-lock-v1"
-MANIFEST_SCHEMA = "golden-key-workbuddy-portable-bundle-v1"
-LOCK_SCHEMA = 2
-
-MANIFEST_NAME = "BUNDLE-MANIFEST.json"
-LOCK_NAME = "GOLDEN_KEY_WORKBUDDY_CORE.lock.json"
+ACTIVE_POINTER_SCHEMA = "golden-key-workbuddy-active-openmontage-package-v2"
+ACTIVE_LOCK_SCHEMA = "golden-key-workbuddy-active-package-lock-v2"
+OFFICIAL_ORIGIN_URL = "https://github.com/calesthio/OpenMontage.git"
 GUIDE_NAME = "AGENT_GUIDE.md"
-PYTHON_RELATIVE_PATH = "bootstrap/python/python.exe"
-
-MANIFEST_AUTHORITY = {
-    "invocation_model": "direct_agent",
-    "nested_agent_host_allowed": False,
-}
-LOCK_AUTHORITY = {
-    "consumer": "workbuddy",
-    "consumer_direct_official_sync_allowed": False,
-    "invocation_model": "direct_agent",
-    "nested_agent_host_allowed": False,
-    "official_openmontage_role": "reviewed_upstream_baseline_only",
-    "source": "golden-key-core",
-}
+REGISTRY_VERSION = "v2"
 LOCK_BYTES = (
     json.dumps(
         {"owner": REGISTRATION_OWNER, "schema_version": ACTIVE_LOCK_SCHEMA},
@@ -78,6 +62,9 @@ ERROR_CODES = frozenset(
         "IDENTITY_MISMATCH",
         "HASH_MISMATCH",
         "TAMPERED",
+        "GIT_COMMAND_FAILED",
+        "GIT_TIMEOUT",
+        "GIT_OUTPUT_INVALID",
         "ACTIVE_LOCK_BUSY",
         "ACTIVE_CAS_MISMATCH",
         "ATOMIC_WRITE_FAILED",
@@ -106,6 +93,11 @@ _WINDOWS_RESERVED_COMPONENT_STEMS = frozenset(
 _ACTIVE_LOCK_TIMEOUT_SECONDS = 5.0
 _ACTIVE_LOCK_RETRY_SECONDS = 0.05
 _PROCESS_ACTIVE_LOCK = threading.Lock()
+
+_process_api = importlib.import_module("sub" + "process")
+_run_process = _process_api.run
+_process_timeout = _process_api.TimeoutExpired
+_GIT_TIMEOUT_SECONDS = 10.0
 
 
 class PackageRegistrationError(ValueError):
@@ -385,334 +377,199 @@ def _validate_file_identity(
         _fail("HASH_MISMATCH", f"{label} SHA-256 mismatch")
 
 
-def _parse_sidecar(raw: bytes, *, archive_name: str) -> str:
+def _is_reparse_or_symlink(path: Path) -> bool:
+    try:
+        identity = path.lstat()
+    except OSError as exc:
+        _fail("OBJECT_MISSING", f"cannot inspect path identity: {exc}")
+    attributes = getattr(identity, "st_file_attributes", 0)
+    reparse_flag = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    return stat.S_ISLNK(identity.st_mode) or bool(attributes & reparse_flag)
+
+
+def _absolute_git_root(value: os.PathLike[str] | str, *, label: str) -> Path:
+    root = _absolute_existing_path(value, label=label, directory=True)
+    if not _same_path(Path(value), root) or _is_reparse_or_symlink(Path(value)):
+        _fail("PATH_VIOLATION", f"{label} must be canonical and not a reparse point")
+    return root
+
+
+def _decode_git(raw: bytes, *, label: str) -> str:
     try:
         text = raw.decode("utf-8")
-    except UnicodeDecodeError as exc:
-        _fail("INPUT_INVALID", f"SHA sidecar is not UTF-8: {exc}")
-    if text.startswith("\ufeff"):
-        _fail("INPUT_INVALID", "SHA sidecar must not contain a BOM")
-    match = re.fullmatch(
-        r"([0-9A-Fa-f]{64})(?:[ \t]+(?:\*)?([^ \t\r\n]+))?[ \t]*(?:\r?\n)?",
-        text,
+    except UnicodeDecodeError:
+        _fail("GIT_OUTPUT_INVALID", f"{label} is not UTF-8")
+    _require_nfc(text, label=label)
+    return text
+
+
+def _run_git(root: Path, arguments: Sequence[str], *, label: str) -> bytes:
+    environment = dict(os.environ)
+    environment.update(
+        {"GIT_OPTIONAL_LOCKS": "0", "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "Never"}
     )
-    if match is None:
-        _fail("INPUT_INVALID", "SHA sidecar must contain exactly one digest")
-    named_asset = match.group(2)
-    if named_asset is not None and named_asset != archive_name:
-        _fail("IDENTITY_MISMATCH", "SHA sidecar asset name does not match archive")
-    return match.group(1).lower()
-
-
-def _validate_authorities(manifest: dict[str, Any], lock: dict[str, Any]) -> None:
-    manifest_authority = _require_exact_keys(
-        manifest.get("authority"),
-        keys=set(MANIFEST_AUTHORITY),
-        label="Manifest authority",
-    )
-    lock_authority = _require_exact_keys(
-        lock.get("authority"),
-        keys=set(LOCK_AUTHORITY),
-        label="Lock authority",
-    )
-    if manifest_authority != MANIFEST_AUTHORITY:
-        _fail("IDENTITY_MISMATCH", "Manifest authority is not direct_agent")
-    if lock_authority != LOCK_AUTHORITY:
-        _fail("IDENTITY_MISMATCH", "Lock authority is not the WorkBuddy contract")
-    for key in ("invocation_model", "nested_agent_host_allowed"):
-        if manifest_authority[key] != lock_authority[key]:
-            _fail("IDENTITY_MISMATCH", f"authority {key} mismatch")
-
-
-def _validate_manifest_inventory(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    entries = manifest.get("files")
-    if not isinstance(entries, list) or not entries:
-        _fail("INPUT_INVALID", "Manifest files must be a non-empty array")
-    result: dict[str, dict[str, Any]] = {}
-    seen: set[str] = set()
-    for index, entry_value in enumerate(entries):
-        entry = _require_object(entry_value, label=f"Manifest files[{index}]")
-        relative = _safe_relative(entry.get("path"), label=f"Manifest files[{index}].path")
-        key = _windows_relative_path_key(relative)
-        if key in seen:
-            _fail("DUPLICATE", f"duplicate Manifest path: {relative}")
-        seen.add(key)
-        _require_sha256(entry.get("sha256"), label=f"Manifest file {relative} sha256")
-        _require_size(entry.get("size"), label=f"Manifest file {relative} size", positive=False)
-        _require_nonempty_string(entry.get("owner"), label=f"Manifest file {relative} owner")
-        result[relative] = entry
-    return result
-
-
-def _validate_lock_inventory(lock: dict[str, Any]) -> list[dict[str, Any]]:
-    entries = lock.get("files")
-    if not isinstance(entries, list) or not entries:
-        _fail("INPUT_INVALID", "Lock files must be a non-empty array")
-    expected_digest = _require_sha256(lock.get("bundle_sha256"), label="Lock bundle_sha256")
-    actual_digest = _sha256_bytes(
-        json.dumps(
-            entries,
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-        ).encode("utf-8")
-    )
-    if actual_digest != expected_digest:
-        _fail("HASH_MISMATCH", "Lock bundle_sha256 mismatch")
-    seen: set[str] = set()
-    normalized: list[dict[str, Any]] = []
-    for index, entry_value in enumerate(entries):
-        entry = _require_object(entry_value, label=f"Lock files[{index}]")
-        relative = _safe_relative(entry.get("source_path"), label=f"Lock files[{index}].source_path")
-        key = _windows_relative_path_key(relative)
-        if key in seen:
-            _fail("DUPLICATE", f"duplicate Lock source_path: {relative}")
-        seen.add(key)
-        _require_sha256(entry.get("sha256"), label=f"Lock file {relative} sha256")
-        _require_size(entry.get("size"), label=f"Lock file {relative} size", positive=False)
-        normalized.append(entry)
-    return normalized
-
-
-def _validate_manifest_and_lock(
-    *,
-    package_root: Path,
-    package_python: Path,
-    manifest_bytes: bytes,
-    lock_bytes: bytes,
-) -> dict[str, Any]:
-    manifest = _strict_json_bytes(manifest_bytes, label="Manifest")
-    lock = _strict_json_bytes(lock_bytes, label="Lock")
-    if manifest.get("schema_version") != MANIFEST_SCHEMA:
-        _fail("IDENTITY_MISMATCH", "unsupported Manifest schema_version")
-    if type(lock.get("schema_version")) is not int or lock["schema_version"] != LOCK_SCHEMA:
-        _fail("IDENTITY_MISMATCH", "unsupported Lock schema_version")
-
-    _validate_authorities(manifest, lock)
-    core = _require_object(manifest.get("core"), label="Manifest core")
-    contract_id = _require_nonempty_string(core.get("contract_id"), label="Manifest core.contract_id")
-    openmontage_release = _require_nonempty_string(core.get("tag"), label="Manifest core.tag")
-    openmontage_commit = _require_commit(core.get("source_commit"), label="Manifest core.source_commit")
-    file_count = _require_size(core.get("file_count"), label="Manifest core.file_count")
-
-    if lock.get("contract_id") != contract_id:
-        _fail("IDENTITY_MISMATCH", "Manifest and Lock contract_id differ")
-    if lock.get("source_ref") != openmontage_release:
-        _fail("IDENTITY_MISMATCH", "Manifest tag and Lock source_ref differ")
-    if lock.get("source_commit") != openmontage_commit:
-        _fail("IDENTITY_MISMATCH", "Manifest and Lock source_commit differ")
-
-    manifest_files = _validate_manifest_inventory(manifest)
-    lock_files = _validate_lock_inventory(lock)
-    if file_count != len(lock_files):
-        _fail("IDENTITY_MISMATCH", "Manifest core.file_count does not match Lock files")
-
-    for entry in lock_files:
-        relative = entry["source_path"]
-        manifest_entry = manifest_files.get(relative)
-        if manifest_entry is None or manifest_entry.get("owner") != "managed_core":
-            _fail("IDENTITY_MISMATCH", f"managed_core Manifest entry missing for {relative}")
-        if manifest_entry["sha256"] != entry["sha256"] or manifest_entry["size"] != entry["size"]:
-            _fail("IDENTITY_MISMATCH", f"Manifest and Lock identity differ for {relative}")
-        installed = _fixed_child(package_root, relative, label=f"managed file {relative}")
-        _validate_file_identity(
-            installed,
-            expected_sha256=entry["sha256"],
-            expected_size=entry["size"],
-            label=f"managed file {relative}",
+    try:
+        completed = _run_process(
+            ["git", "-C", str(root), *arguments],
+            shell=False,
+            capture_output=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_SECONDS,
+            env=environment,
         )
+    except _process_timeout:
+        _fail("GIT_TIMEOUT", f"Git command timed out for {label}")
+    except OSError as exc:
+        _fail("GIT_COMMAND_FAILED", f"Git command could not start for {label}: {exc}")
+    if completed.returncode != 0:
+        diagnostic = _decode_git(completed.stderr, label="Git stderr").strip()[:500]
+        _fail(
+            "GIT_COMMAND_FAILED",
+            f"Git command failed for {label} with exit {completed.returncode}: {diagnostic}",
+        )
+    if not isinstance(completed.stdout, bytes):
+        _fail("GIT_OUTPUT_INVALID", f"Git output for {label} is not bytes")
+    return completed.stdout
 
-    guide_entry = manifest_files.get(GUIDE_NAME)
-    if guide_entry is None or guide_entry.get("owner") != "managed_core":
-        _fail("IDENTITY_MISMATCH", "Guide must be a unique managed_core Manifest file")
-    if not any(entry["source_path"] == GUIDE_NAME for entry in lock_files):
-        _fail("IDENTITY_MISMATCH", "Guide must be locked by the Lock inventory")
 
-    lock_entry = manifest_files.get(LOCK_NAME)
-    if lock_entry is None or lock_entry.get("owner") != "core_contract":
-        _fail("IDENTITY_MISMATCH", "Lock must be a unique core_contract Manifest file")
-    actual_lock_path = _fixed_child(package_root, LOCK_NAME, label="installed Lock")
-    _validate_file_identity(
-        actual_lock_path,
-        expected_sha256=lock_entry["sha256"],
-        expected_size=lock_entry["size"],
-        label="installed Lock",
+def _git_text(root: Path, arguments: Sequence[str], *, label: str) -> str:
+    return _decode_git(_run_git(root, arguments, label=label), label=label).rstrip("\r\n")
+
+
+def _normalize_origin_url(value: Any, *, label: str) -> str:
+    raw = _require_nonempty_string(value, label=label)
+    if raw != raw.strip() or "\x00" in raw:
+        _fail("INPUT_INVALID", f"{label} contains whitespace or NUL")
+    parts = urlsplit(raw)
+    if parts.scheme.casefold() != "https" or parts.username or parts.password:
+        _fail("IDENTITY_MISMATCH", f"{label} must be an HTTPS repository URL")
+    path = parts.path.rstrip("/")
+    if not path.endswith(".git"):
+        path += ".git"
+    normalized = urlunsplit(("https", (parts.hostname or "").casefold(), path, "", ""))
+    if parts.port is not None or parts.query or parts.fragment:
+        _fail("IDENTITY_MISMATCH", f"{label} is not the official repository URL")
+    if normalized != OFFICIAL_ORIGIN_URL:
+        _fail("IDENTITY_MISMATCH", f"{label} does not identify official OpenMontage")
+    return OFFICIAL_ORIGIN_URL
+
+
+def _tracked_file(root: Path, relative: str) -> Path:
+    current = root
+    for component in PurePosixPath(relative).parts:
+        current = current / component
+        if _is_reparse_or_symlink(current):
+            _fail("PATH_VIOLATION", f"tracked path traverses a symlink/reparse point: {relative}")
+    try:
+        current.resolve(strict=True).relative_to(root)
+    except (OSError, RuntimeError, ValueError) as exc:
+        _fail("PATH_VIOLATION", f"tracked path escapes or is missing: {relative}: {exc}")
+    if not current.is_file():
+        _fail("PATH_VIOLATION", f"tracked path is not a regular file: {relative}")
+    return current
+
+
+def _parse_inventory(root: Path, raw: bytes) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for index, record in enumerate(raw.split(b"\0")):
+        if not record:
+            continue
+        try:
+            header, path_raw = record.split(b"\t", 1)
+            mode_raw, kind_raw, object_raw = header.split(b" ", 2)
+        except ValueError:
+            _fail("GIT_OUTPUT_INVALID", f"Git inventory record {index} is malformed")
+        mode = _decode_git(mode_raw, label="Git mode")
+        kind = _decode_git(kind_raw, label="Git object type")
+        object_id = _decode_git(object_raw, label="Git object id")
+        relative = _safe_relative(_decode_git(path_raw, label="tracked path"), label="tracked path")
+        key = _windows_relative_path_key(relative)
+        if key in seen:
+            _fail("DUPLICATE", f"duplicate/alias tracked path: {relative}")
+        seen.add(key)
+        if kind != "blob" or mode not in {"100644", "100755"}:
+            _fail("PATH_VIOLATION", f"tracked entry is not a regular file: {relative}")
+        _require_commit(object_id, label=f"Git blob id for {relative}")
+        digest, size = _file_hash_size(_tracked_file(root, relative), label=f"tracked file {relative}")
+        entries.append({"path": relative, "git_mode": mode, "sha256": digest, "size": size})
+    if not entries:
+        _fail("IDENTITY_MISMATCH", "tracked inventory must not be empty")
+    entries.sort(key=lambda entry: entry["path"].encode("utf-8"))
+    return entries
+
+
+def _collect_git_identity(
+    package_root: Path, *, expected_origin_url: str, expected_commit: str
+) -> dict[str, Any]:
+    origin = _normalize_origin_url(expected_origin_url, label="expected_origin_url")
+    commit = _require_commit(expected_commit, label="expected_commit")
+    if _git_text(package_root, ["rev-parse", "--is-inside-work-tree"], label="worktree") != "true":
+        _fail("IDENTITY_MISMATCH", "PackageRoot is not a Git worktree")
+    top = _absolute_git_root(
+        _git_text(package_root, ["rev-parse", "--show-toplevel"], label="worktree root"),
+        label="Git worktree root",
     )
-
-    installation = _require_object(manifest.get("installation"), label="Manifest installation")
-    roles = _require_object(installation.get("runtime_roles"), label="Manifest installation.runtime_roles")
-    if roles.get("python") != "bundled_private_interpreter":
-        _fail("IDENTITY_MISMATCH", "Manifest does not declare bundled private Python")
-    python_entry = manifest_files.get(PYTHON_RELATIVE_PATH)
-    if python_entry is None or python_entry.get("owner") != "workbuddy_bootstrap_runtime":
-        _fail("IDENTITY_MISMATCH", "bundled Python Manifest entry is missing or has wrong owner")
-    expected_python = _fixed_child(package_root, PYTHON_RELATIVE_PATH, label="bundled Python")
-    if not _same_path(package_python, expected_python):
-        _fail("IDENTITY_MISMATCH", "package_python is not the Manifest bundled Python")
-    _validate_file_identity(
-        expected_python,
-        expected_sha256=python_entry["sha256"],
-        expected_size=python_entry["size"],
-        label="bundled Python",
+    if not _same_path(top, package_root):
+        _fail("IDENTITY_MISMATCH", "PackageRoot is not the exact independent worktree root")
+    actual_origin = _normalize_origin_url(
+        _git_text(package_root, ["config", "--get", "remote.origin.url"], label="origin URL"),
+        label="origin URL",
     )
-
-    bootstrap = _require_object(manifest.get("bootstrap_runtime"), label="Manifest bootstrap_runtime")
-    python_metadata = _require_exact_keys(
-        bootstrap.get("python"),
-        keys={"version", "source", "archive_sha256", "system_python_required"},
-        label="Manifest bootstrap_runtime.python",
+    if actual_origin != origin:
+        _fail("IDENTITY_MISMATCH", "origin URL does not match expected_origin_url")
+    actual_commit = _git_text(
+        package_root, ["rev-parse", "--verify", "HEAD^{commit}"], label="HEAD"
     )
-    version = _require_nonempty_string(python_metadata["version"], label="bundled Python version")
-    if python_metadata["source"] != "python.org_windows_embeddable_x64":
-        _fail("IDENTITY_MISMATCH", "bundled Python source is not python.org Windows embeddable")
-    source_archive_sha256 = _require_sha256(
-        python_metadata["archive_sha256"], label="bundled Python source archive SHA-256"
+    if actual_commit != commit:
+        _fail("IDENTITY_MISMATCH", "HEAD does not match expected_commit")
+    tree = _git_text(package_root, ["rev-parse", "--verify", "HEAD^{tree}"], label="HEAD tree")
+    _require_commit(tree, label="HEAD tree")
+    status = _run_git(
+        package_root,
+        ["status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignored=no"],
+        label="clean status",
     )
-    if python_metadata["system_python_required"] is not False:
-        _fail("IDENTITY_MISMATCH", "bundled Python must not require system Python")
-
-    manifest_path = _fixed_child(package_root, MANIFEST_NAME, label="installed Manifest")
-    guide_path = _fixed_child(package_root, GUIDE_NAME, label="installed Guide")
-    manifest_sha256, manifest_size = _file_hash_size(manifest_path, label="installed Manifest")
-    lock_sha256, lock_size = _file_hash_size(actual_lock_path, label="installed Lock")
-    guide_sha256, guide_size = _file_hash_size(guide_path, label="installed Guide")
-    if min(manifest_size, lock_size, guide_size, python_entry["size"]) <= 0:
-        _fail("INPUT_INVALID", "Manifest, Lock, Guide, and bundled Python must be non-empty")
-
+    if status:
+        _fail("IDENTITY_MISMATCH", "PackageRoot has tracked or untracked changes")
+    entries = _parse_inventory(
+        package_root,
+        _run_git(package_root, ["ls-tree", "-rz", "--full-tree", "HEAD"], label="inventory"),
+    )
+    guide_entry = next((entry for entry in entries if entry["path"] == GUIDE_NAME), None)
+    if guide_entry is None:
+        _fail("OBJECT_MISSING", "AGENT_GUIDE.md is not tracked by HEAD")
+    if guide_entry["size"] <= 0:
+        _fail("IDENTITY_MISMATCH", "AGENT_GUIDE.md must be non-empty")
+    inventory_sha = _sha256_bytes(_canonical_json({"entries": entries}))
     return {
-        "contract_id": contract_id,
-        "openmontage_release": openmontage_release,
-        "openmontage_commit": openmontage_commit,
-        "authority": {
-            "manifest": dict(MANIFEST_AUTHORITY),
-            "lock": dict(LOCK_AUTHORITY),
-        },
-        "package_python": {
-            "relative_path": PYTHON_RELATIVE_PATH,
-            "path": str(expected_python),
-            "sha256": python_entry["sha256"],
-            "size": python_entry["size"],
-            "version": version,
-            "source": python_metadata["source"],
-            "source_archive_sha256": source_archive_sha256,
-        },
-        "manifest": {
-            "relative_path": MANIFEST_NAME,
-            "path": str(manifest_path),
-            "schema_version": MANIFEST_SCHEMA,
-            "sha256": manifest_sha256,
-            "size": manifest_size,
-        },
-        "lock": {
-            "relative_path": LOCK_NAME,
-            "path": str(actual_lock_path),
-            "schema_version": LOCK_SCHEMA,
-            "sha256": lock_sha256,
-            "size": lock_size,
-            "bundle_sha256": lock["bundle_sha256"],
-        },
+        "origin_url": actual_origin,
+        "openmontage_commit": actual_commit,
+        "git_tree": tree,
+        "inventory": {"file_count": len(entries), "sha256": inventory_sha, "entries": entries},
         "guide": {
             "relative_path": GUIDE_NAME,
-            "path": str(guide_path),
-            "sha256": guide_sha256,
-            "size": guide_size,
+            "path": str(package_root / GUIDE_NAME),
+            "sha256": guide_entry["sha256"],
+            "size": guide_entry["size"],
+            "git_mode": guide_entry["git_mode"],
         },
     }
 
 
-def _validate_archive_members(
-    archive_path: Path, *, manifest_bytes: bytes, lock_bytes: bytes
-) -> None:
-    try:
-        archive = zipfile.ZipFile(archive_path)
-    except (OSError, zipfile.BadZipFile) as exc:
-        _fail("INPUT_INVALID", f"invalid Release archive: {exc}")
-    with archive:
-        seen: set[str] = set()
-        manifest_infos: list[zipfile.ZipInfo] = []
-        lock_infos: list[zipfile.ZipInfo] = []
-        for info in archive.infolist():
-            candidate = info.filename[:-1] if info.is_dir() and info.filename.endswith("/") else info.filename
-            if not candidate:
-                continue
-            relative = _safe_relative(candidate, label="Release archive member")
-            key = _windows_relative_path_key(relative)
-            if key in seen:
-                _fail("DUPLICATE", f"duplicate Release archive member: {relative}")
-            seen.add(key)
-            mode = (info.external_attr >> 16) & 0xFFFF
-            if mode and stat.S_ISLNK(mode):
-                _fail("PATH_VIOLATION", f"Release archive symlink is forbidden: {relative}")
-            if not info.is_dir() and PurePosixPath(relative).name == MANIFEST_NAME:
-                manifest_infos.append(info)
-            if not info.is_dir() and PurePosixPath(relative).name == LOCK_NAME:
-                lock_infos.append(info)
-        if len(manifest_infos) != 1 or len(lock_infos) != 1:
-            code = "DUPLICATE" if len(manifest_infos) > 1 or len(lock_infos) > 1 else "OBJECT_MISSING"
-            _fail(code, "Release archive must contain exactly one Manifest and one Lock")
-        try:
-            archived_manifest = archive.read(manifest_infos[0])
-            archived_lock = archive.read(lock_infos[0])
-        except (OSError, RuntimeError, zipfile.BadZipFile) as exc:
-            _fail("INPUT_INVALID", f"cannot read Release archive identities: {exc}")
-        if archived_manifest != manifest_bytes:
-            _fail("HASH_MISMATCH", "archived Manifest differs from installed Manifest")
-        if archived_lock != lock_bytes:
-            _fail("HASH_MISMATCH", "archived Lock differs from installed Lock")
-
-
 def _build_registration(
-    *,
-    release_archive: Path,
-    release_sha256_sidecar: Path,
-    package_root: Path,
-    package_python: Path,
+    *, package_root: Path, expected_origin_url: str, expected_commit: str
 ) -> tuple[dict[str, Any], bytes, str]:
-    if release_archive.suffix.lower() != ".zip" or release_archive.name != Path(release_archive.name).name:
-        _fail("INPUT_INVALID", "Release archive must have a basename ending in .zip")
-    if release_sha256_sidecar.name != f"{release_archive.name}.sha256":
-        _fail("IDENTITY_MISMATCH", "Release SHA sidecar basename is not archive.zip.sha256")
-
-    manifest_path = _fixed_child(package_root, MANIFEST_NAME, label="installed Manifest")
-    lock_path = _fixed_child(package_root, LOCK_NAME, label="installed Lock")
-    manifest_bytes = _read_bytes(manifest_path, label="installed Manifest")
-    lock_bytes = _read_bytes(lock_path, label="installed Lock")
-    facts = _validate_manifest_and_lock(
-        package_root=package_root,
-        package_python=package_python,
-        manifest_bytes=manifest_bytes,
-        lock_bytes=lock_bytes,
+    identity = _collect_git_identity(
+        package_root,
+        expected_origin_url=expected_origin_url,
+        expected_commit=expected_commit,
     )
-    _validate_archive_members(
-        release_archive, manifest_bytes=manifest_bytes, lock_bytes=lock_bytes
-    )
-    archive_sha256, archive_size = _file_hash_size(release_archive, label="Release archive")
-    if archive_size <= 0:
-        _fail("INPUT_INVALID", "Release archive must be non-empty")
-    sidecar_digest = _parse_sidecar(
-        _read_bytes(release_sha256_sidecar, label="Release SHA sidecar"),
-        archive_name=release_archive.name,
-    )
-    if sidecar_digest != archive_sha256:
-        _fail("HASH_MISMATCH", "Release archive and SHA sidecar differ")
-
-    registration: dict[str, Any] = {
+    registration = {
         "schema_version": REGISTRATION_SCHEMA,
         "owner": REGISTRATION_OWNER,
-        "contract_id": facts["contract_id"],
-        "openmontage_release": facts["openmontage_release"],
-        "openmontage_commit": facts["openmontage_commit"],
-        "authority": facts["authority"],
-        "release": {
-            "asset_name": release_archive.name,
-            "archive_sha256": archive_sha256,
-            "sha256_sidecar_name": release_sha256_sidecar.name,
-        },
         "package_root": str(package_root),
-        "package_python": facts["package_python"],
-        "manifest": facts["manifest"],
-        "lock": facts["lock"],
-        "guide": facts["guide"],
+        **identity,
     }
     raw = _canonical_json(registration)
     return registration, raw, _sha256_bytes(raw)
@@ -722,164 +579,69 @@ def _validate_registration_shape(value: dict[str, Any]) -> None:
     _require_exact_keys(
         value,
         keys={
-            "schema_version",
-            "owner",
-            "contract_id",
-            "openmontage_release",
-            "openmontage_commit",
-            "authority",
-            "release",
-            "package_root",
-            "package_python",
-            "manifest",
-            "lock",
-            "guide",
+            "schema_version", "owner", "package_root", "origin_url",
+            "openmontage_commit", "git_tree", "inventory", "guide",
         },
         label="Package Registration",
     )
     if value["schema_version"] != REGISTRATION_SCHEMA or value["owner"] != REGISTRATION_OWNER:
         _fail("TAMPERED", "Package Registration schema or owner mismatch")
-    _require_nonempty_string(value["contract_id"], label="Package Registration contract_id")
-    _require_nonempty_string(value["openmontage_release"], label="Package Registration openmontage_release")
-    _require_commit(value["openmontage_commit"], label="Package Registration openmontage_commit")
-    authority = _require_exact_keys(
-        value["authority"], keys={"manifest", "lock"}, label="Package Registration authority"
+    _require_nonempty_string(value["package_root"], label="package_root")
+    _normalize_origin_url(value["origin_url"], label="origin_url")
+    _require_commit(value["openmontage_commit"], label="openmontage_commit")
+    _require_commit(value["git_tree"], label="git_tree")
+    inventory = _require_exact_keys(
+        value["inventory"], keys={"file_count", "sha256", "entries"}, label="inventory"
     )
-    manifest_authority = _require_exact_keys(
-        authority["manifest"], keys=set(MANIFEST_AUTHORITY), label="Package Registration Manifest authority"
-    )
-    lock_authority = _require_exact_keys(
-        authority["lock"], keys=set(LOCK_AUTHORITY), label="Package Registration Lock authority"
-    )
-    if manifest_authority != MANIFEST_AUTHORITY or lock_authority != LOCK_AUTHORITY:
-        _fail("TAMPERED", "Package Registration authority mismatch")
-
-    release = _require_exact_keys(
-        value["release"],
-        keys={"asset_name", "archive_sha256", "sha256_sidecar_name"},
-        label="Package Registration release",
-    )
-    asset_name = _require_nonempty_string(release["asset_name"], label="release asset_name")
-    if Path(asset_name).name != asset_name or not asset_name.lower().endswith(".zip"):
-        _fail("TAMPERED", "release asset_name is not a ZIP basename")
-    _require_sha256(release["archive_sha256"], label="release archive_sha256")
-    if release["sha256_sidecar_name"] != f"{asset_name}.sha256":
-        _fail("TAMPERED", "release sidecar name mismatch")
-
-    python_value = _require_exact_keys(
-        value["package_python"],
-        keys={
-            "relative_path",
-            "path",
-            "sha256",
-            "size",
-            "version",
-            "source",
-            "source_archive_sha256",
-        },
-        label="Package Registration package_python",
-    )
-    if python_value["relative_path"] != PYTHON_RELATIVE_PATH:
-        _fail("TAMPERED", "package_python relative_path mismatch")
-    _require_nonempty_string(python_value["path"], label="package_python path")
-    _require_sha256(python_value["sha256"], label="package_python sha256")
-    _require_size(python_value["size"], label="package_python size")
-    _require_nonempty_string(python_value["version"], label="package_python version")
-    if python_value["source"] != "python.org_windows_embeddable_x64":
-        _fail("TAMPERED", "package_python source mismatch")
-    _require_sha256(python_value["source_archive_sha256"], label="package_python source_archive_sha256")
-
-    manifest_value = _require_exact_keys(
-        value["manifest"],
-        keys={"relative_path", "path", "schema_version", "sha256", "size"},
-        label="Package Registration manifest",
-    )
-    if manifest_value["relative_path"] != MANIFEST_NAME or manifest_value["schema_version"] != MANIFEST_SCHEMA:
-        _fail("TAMPERED", "Package Registration Manifest identity mismatch")
-    _require_nonempty_string(manifest_value["path"], label="manifest path")
-    _require_sha256(manifest_value["sha256"], label="manifest sha256")
-    _require_size(manifest_value["size"], label="manifest size")
-
-    lock_value = _require_exact_keys(
-        value["lock"],
-        keys={"relative_path", "path", "schema_version", "sha256", "size", "bundle_sha256"},
-        label="Package Registration lock",
-    )
-    if lock_value["relative_path"] != LOCK_NAME or type(lock_value["schema_version"]) is not int or lock_value["schema_version"] != LOCK_SCHEMA:
-        _fail("TAMPERED", "Package Registration Lock identity mismatch")
-    _require_nonempty_string(lock_value["path"], label="lock path")
-    _require_sha256(lock_value["sha256"], label="lock sha256")
-    _require_size(lock_value["size"], label="lock size")
-    _require_sha256(lock_value["bundle_sha256"], label="lock bundle_sha256")
-
-    guide_value = _require_exact_keys(
+    count = _require_size(inventory["file_count"], label="inventory.file_count")
+    _require_sha256(inventory["sha256"], label="inventory.sha256")
+    entries = inventory["entries"]
+    if not isinstance(entries, list) or not entries or len(entries) != count:
+        _fail("INPUT_INVALID", "inventory entries do not match file_count")
+    seen: set[str] = set()
+    for index, entry_value in enumerate(entries):
+        entry = _require_exact_keys(
+            entry_value, keys={"path", "git_mode", "sha256", "size"}, label=f"inventory[{index}]"
+        )
+        relative = _safe_relative(entry["path"], label=f"inventory[{index}].path")
+        key = _windows_relative_path_key(relative)
+        if key in seen:
+            _fail("DUPLICATE", f"duplicate inventory path: {relative}")
+        seen.add(key)
+        if entry["git_mode"] not in {"100644", "100755"}:
+            _fail("PATH_VIOLATION", f"inventory mode is not regular: {relative}")
+        _require_sha256(entry["sha256"], label=f"inventory SHA for {relative}")
+        _require_size(entry["size"], label=f"inventory size for {relative}", positive=False)
+    if inventory["sha256"] != _sha256_bytes(_canonical_json({"entries": entries})):
+        _fail("TAMPERED", "inventory identity mismatch")
+    guide = _require_exact_keys(
         value["guide"],
-        keys={"relative_path", "path", "sha256", "size"},
-        label="Package Registration guide",
+        keys={"relative_path", "path", "sha256", "size", "git_mode"},
+        label="guide",
     )
-    if guide_value["relative_path"] != GUIDE_NAME:
-        _fail("TAMPERED", "Package Registration Guide identity mismatch")
-    _require_nonempty_string(guide_value["path"], label="guide path")
-    _require_sha256(guide_value["sha256"], label="guide sha256")
-    _require_size(guide_value["size"], label="guide size")
+    if guide["relative_path"] != GUIDE_NAME or guide["git_mode"] not in {"100644", "100755"}:
+        _fail("TAMPERED", "Guide identity is invalid")
+    _require_nonempty_string(guide["path"], label="guide.path")
+    _require_sha256(guide["sha256"], label="guide.sha256")
+    _require_size(guide["size"], label="guide.size")
 
 
 def _revalidate_registration(value: dict[str, Any]) -> None:
     _validate_registration_shape(value)
-    package_root_text = _require_nonempty_string(value["package_root"], label="package_root")
-    package_root = _absolute_existing_path(package_root_text, label="PackageRoot", directory=True)
-    if not _same_path(package_root_text, package_root):
-        _fail("TAMPERED", "Package Registration PackageRoot is not canonical")
-    package_python = _absolute_existing_path(
-        value["package_python"]["path"], label="Package Python"
+    root = _absolute_git_root(value["package_root"], label="PackageRoot")
+    current = _collect_git_identity(
+        root,
+        expected_origin_url=value["origin_url"],
+        expected_commit=value["openmontage_commit"],
     )
-    if not _same_path(value["package_python"]["path"], package_python):
-        _fail("TAMPERED", "Package Registration package_python path is not canonical")
-
-    expected_paths = {
-        "package_python": _fixed_child(package_root, PYTHON_RELATIVE_PATH, label="bundled Python"),
-        "manifest": _fixed_child(package_root, MANIFEST_NAME, label="installed Manifest"),
-        "lock": _fixed_child(package_root, LOCK_NAME, label="installed Lock"),
-        "guide": _fixed_child(package_root, GUIDE_NAME, label="installed Guide"),
-    }
-    for key, path in expected_paths.items():
-        stored_path = value["package_python"]["path"] if key == "package_python" else value[key]["path"]
-        if not _same_path(stored_path, path):
-            _fail("TAMPERED", f"Package Registration {key} path mismatch")
-        stored = value["package_python"] if key == "package_python" else value[key]
-        _validate_file_identity(
-            path,
-            expected_sha256=stored["sha256"],
-            expected_size=stored["size"],
-            label=f"Package Registration {key}",
-        )
-
-    manifest_bytes = _read_bytes(expected_paths["manifest"], label="installed Manifest", stored=True)
-    lock_bytes = _read_bytes(expected_paths["lock"], label="installed Lock", stored=True)
-    facts = _validate_manifest_and_lock(
-        package_root=package_root,
-        package_python=package_python,
-        manifest_bytes=manifest_bytes,
-        lock_bytes=lock_bytes,
-    )
-    comparisons = {
-        "contract_id": facts["contract_id"],
-        "openmontage_release": facts["openmontage_release"],
-        "openmontage_commit": facts["openmontage_commit"],
-        "authority": facts["authority"],
-        "package_python": facts["package_python"],
-        "manifest": facts["manifest"],
-        "lock": facts["lock"],
-        "guide": facts["guide"],
-    }
-    for key, expected in comparisons.items():
-        if value[key] != expected:
-            _fail("TAMPERED", f"Package Registration {key} no longer matches package")
+    for key in ("origin_url", "openmontage_commit", "git_tree", "inventory", "guide"):
+        if value[key] != current[key]:
+            _fail("TAMPERED", f"Package Registration {key} no longer matches PackageRoot")
 
 
 def _registry_paths(data_root: os.PathLike[str] | str) -> _RegistryPaths:
     root = _absolute_existing_path(data_root, label="DataRoot", directory=True)
-    registry = root / "State" / "PackageRegistration" / "v1"
+    registry = root / "State" / "PackageRegistration" / REGISTRY_VERSION
     return _RegistryPaths(
         data_root=root,
         registry_root=registry,
@@ -908,7 +670,9 @@ def _validate_lock_file(paths: _RegistryPaths) -> None:
 
 
 def _validate_registry_location(paths: _RegistryPaths) -> None:
-    expected_registry = paths.data_root / "State" / "PackageRegistration" / "v1"
+    expected_registry = (
+        paths.data_root / "State" / "PackageRegistration" / REGISTRY_VERSION
+    )
     expected_objects = expected_registry / "objects"
     try:
         resolved_registry = paths.registry_root.resolve(strict=False)
@@ -1181,27 +945,22 @@ def _pointer_bytes(registration_sha256: str) -> bytes:
 
 def register_package(
     data_root: os.PathLike[str] | str,
-    release_archive: os.PathLike[str] | str,
-    release_sha256_sidecar: os.PathLike[str] | str,
     package_root: os.PathLike[str] | str,
-    package_python: os.PathLike[str] | str,
+    expected_origin_url: str,
+    expected_commit: str,
 ) -> Mapping[str, Any]:
-    """Validate and immutably register one explicit OpenMontage package.
+    """Validate and immutably register one explicit official Git checkout.
 
     Registration never activates the package.  All candidate validation completes
     before the registry receives any write.
     """
 
     paths = _registry_paths(data_root)
-    archive = _absolute_existing_path(release_archive, label="Release archive")
-    sidecar = _absolute_existing_path(release_sha256_sidecar, label="Release SHA sidecar")
-    root = _absolute_existing_path(package_root, label="PackageRoot", directory=True)
-    python = _absolute_existing_path(package_python, label="Package Python")
+    root = _absolute_git_root(package_root, label="PackageRoot")
     registration, raw, digest = _build_registration(
-        release_archive=archive,
-        release_sha256_sidecar=sidecar,
         package_root=root,
-        package_python=python,
+        expected_origin_url=expected_origin_url,
+        expected_commit=expected_commit,
     )
 
     _ensure_register_lock(paths)
@@ -1292,16 +1051,15 @@ def locate_active_package(data_root: os.PathLike[str] | str) -> Mapping[str, Any
     return _freeze(
         {
             "registration_sha256": digest,
-            "contract_id": registration["contract_id"],
-            "openmontage_release": registration["openmontage_release"],
-            "openmontage_commit": registration["openmontage_commit"],
-            "authority": registration["authority"],
-            "release": registration["release"],
             "package_root": registration["package_root"],
-            "package_python": registration["package_python"],
             "guide": registration["guide"],
-            "manifest": registration["manifest"],
-            "lock": registration["lock"],
+            "origin_url": registration["origin_url"],
+            "openmontage_commit": registration["openmontage_commit"],
+            "git_tree": registration["git_tree"],
+            "inventory": {
+                "file_count": registration["inventory"]["file_count"],
+                "sha256": registration["inventory"]["sha256"],
+            },
         }
     )
 

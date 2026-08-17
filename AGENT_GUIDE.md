@@ -4,8 +4,8 @@ Read this file completely before acting in this repository.
 
 ## Product boundary
 
-- **WorkBuddy owns the user conversation.** It receives the user's literal business request and presents results.
-- **The OpenMontage Agent owns production.** It runs from a verified, external OpenMontage Package and owns Pipeline, Stage, Artifact, Checkpoint, Reviewer, Tool, Provider, model, media, and creative decisions.
+- **Tencent WorkBuddy is the only running Agent and owns the user conversation.** It receives the user's literal business request, reads the verified Golden Key OpenMontage Package Guide, follows that Package's Pipeline/Stage/Artifact/Checkpoint/Reviewer/Tool/Provider contracts, and presents results.
+- **"OpenMontage Agent" is a logical production role assumed by WorkBuddy after it loads the verified Package.** It is not a second Agent, nested Agent Host, or separately launched model process.
 - **This repository owns only the Shell V2 six-module boundary:**
   1. installation and lifecycle;
   2. OpenMontage Package Registration and Locator;
@@ -14,7 +14,9 @@ Read this file completely before acting in this repository.
   5. WorkBuddy entry;
   6. status and result relay.
 
-The Shell must not become a second Director, workflow engine, Agent host, production FSM, or media control plane. Repository agents must not run a video Pipeline, Provider, media generation, or OpenMontage production work from this tree.
+The Shell must not become a Director, workflow engine, Agent host, production FSM, or media control plane. Repository agents must not run a video Pipeline, Provider, media generation, or OpenMontage production work from this tree.
+
+The Golden Key WorkBuddy delivery includes its own package-private Python bootstrap. Stage 3 must not discover or depend on system Python. Other closed-set runtime components may be discovered only from managed paths, an explicitly registered host-tool record, or normal command resolution; never scan drives. Missing components may be prepared only from an identity-locked missing-only plan, after explicit user consent, through approved mainland-China mirrors. No default GitHub/Git, Google, npmjs, PyPI, or other overseas fallback is allowed in the end-user download path.
 
 ## External Package Guide
 

@@ -1,5 +1,22 @@
 # Work Log
 
+## 2026-08-17：V2-S2-S3-RUNTIME-CORRECTION-DOCS1
+
+### 用户裁决与历史证据
+
+- 用户明确裁决：金钥匙版OpenMontage for WorkBuddy交付包必须自带私有Python，避免普通用户首次运行前缺少解释器；其他运行组件先发现，缺失时再安装；终端用户下载必须使用中国大陆镜像，不得使用默认Git等海外位置。
+- Git历史`347272c`已实现包内便携Python引导；`899592d`已实现锁定Python依赖、FFmpeg、Node、Remotion、HyperFrames和浏览器，并记录阿里云/清华PyPI、npmmirror npm/Node/Chrome源；`639978d`已实现`managed`、`registered_host`、`PATH_host`、`missing`分类和missing-only准备。
+- 旧FFmpeg锁仍使用gyan.dev，不符合本轮“终端用户下载只用批准大陆镜像”的更严格裁决；新版Runtime Lock没有批准且可校验的大陆FFmpeg源前必须fail closed，不能静默回退海外源。
+
+### 文档固化边界
+
+- 纠正Agent身份：腾讯WorkBuddy是唯一运行中的Agent；“OpenMontage Agent”只表示WorkBuddy读取已验证Package Guide后承担的逻辑生产角色，不是第二Agent进程。
+- 阶段2重新打开：旧实现与集成只保留为旧Package历史证据；新版官方输入必须重新组装为带锁定私有Python的金钥匙版Package，并完成重新登记、独立审阅和推广。
+- 阶段3固定闭集为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器。包内Python不发现、不下载；其余组件只查受管路径、明确登记宿主工具和PATH命令候选，不扫描盘符。
+- discover/plan必须零写入；只有完整missing-only计划展示组件、版本、hash、大小、目标和许可并取得用户明确同意后，才能从Runtime Lock批准的中国大陆镜像准备缺失项。无批准镜像返回`BLOCKED_SOURCE_UNAPPROVED`。
+- 本任务只修改现有文档，不新增生产代码、测试或Runtime资产，不运行下载、安装、WorkBuddy、Provider或媒体生产。结果最多为`REVIEW_READY`，独立Reviewer批准并fast-forward到正式分支前不算交付。
+- 静态一致性检查=`PASS`：13个变化路径全部在本任务白名单内，tracked仍精确33，生产代码/测试/CI变化0，`git diff --check`通过；项目`.venv`不存在，未混用全局Python，pytest保持`NOT_RUN_PROJECT_VENV_MISSING`。
+
 ## 2026-08-17：V2-S3-S6-SCOPE-DOCS1
 
 ### 对象与授权

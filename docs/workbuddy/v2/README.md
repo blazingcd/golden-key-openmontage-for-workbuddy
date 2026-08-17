@@ -4,24 +4,27 @@
 
 ```text
 STAGE_1_PASS_ACCEPTED
-STAGE_2_PASS_ACCEPTED
+STAGE_2_REOPENED_PACKAGE_REFRESH_REQUIRED
+STAGE_2_PREVIOUS_PACKAGE_PASS_ACCEPTED_HISTORICAL
 REPOSITORY_HYGIENE_PASS_ACCEPTED_AT_20DDAB75825C1B6E7DE5A51603AFE8B6FD82ECEB
-STAGE_3_PLANNING_GRANTED
+STAGE_3_RUNTIME_SCOPE_CORRECTED_FOR_REVIEW
 STAGE_3_IMPLEMENTATION_NOT_GRANTED
 STAGE_4_LAUNCHER_NOT_GRANTED
 STAGE_5_WORKBUDDY_ENTRY_NOT_GRANTED
 STAGE_6_STATUS_RESULT_RELAY_NOT_GRANTED
-STAGE_3_TO_6_SCOPE_REDUCTION_REVIEW_READY
+STAGE_2_S3_RUNTIME_CORRECTION_REVIEW_READY
 ```
 
-本仓库只实现WorkBuddy Shell V2。WorkBuddy负责用户对话，外部已验证执行包中的OpenMontage Agent负责生产，Shell只负责六模块。仓库卫生已收敛到固定33文件；当前只审阅阶段3至阶段6的缩减范围，不实施任何模块。
+本仓库只实现WorkBuddy Shell V2。腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage执行包后承担生产角色，不存在第二个OpenMontage Agent进程。Shell只负责六模块。仓库卫生已收敛到固定33文件；当前只固化阶段二重新登记前置条件和阶段三至阶段六纠偏范围，不实施任何模块。
+
+运行时裁决：金钥匙版交付包自带锁定私有Python；阶段三只从受管路径、明确登记的宿主工具和PATH命令解析中发现Python依赖、FFmpeg、Node、Remotion、HyperFrames及锁定浏览器，不扫描盘符。缺失项经missing-only计划、用户明确同意后，只能从批准的中国大陆镜像准备；无批准镜像必须fail closed，不能回退默认Git/GitHub、Google、npmjs或PyPI源。
 
 ## 权威文档
 
 - `TASK-REGISTER.md`：实时任务、精确Git对象、授权与下一任务的唯一状态权威。
 - `PROJECT-CHARTER.md`：产品角色、六模块职责和非目标。
-- `PACKAGE-REGISTRATION-CONTRACT.md`：阶段2已接受的Package Registration与Locator稳定合同。
-- `ACCEPTANCE-MATRIX.md`：证据、阶段3至阶段6零代码出口与Gate语义。
+- `PACKAGE-REGISTRATION-CONTRACT.md`：旧Package已接受合同和当前Package重新登记裁决。
+- `ACCEPTANCE-MATRIX.md`：证据、阶段3闭集发现/missing-only准备、阶段6零代码出口与Gate语义。
 - `DRIFT-GUARD.md`：停止条件、范围保护和Git生命周期。
 - `MODULE-DISPOSITION.md`：V1能力处置的历史映射，不是当前实现授权。
 

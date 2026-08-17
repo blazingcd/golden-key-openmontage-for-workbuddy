@@ -8,9 +8,9 @@
 |---|---|---|
 | `SHELL_INSTALLED` | Shell和Skill进入受支持安装位置 | ZIP构建成功 |
 | `OBJECT_IDENTITY_VERIFIED` | Shell/OpenMontage 执行包/Release/Manifest/Lock/SHA/安装实例一致 | 文件名、目录名、最新时间 |
-| `RUNTIME_BOUND` | 实际PackageRoot、package Python、cwd、DataRoot和env被锁定 | Python包存在、doctor文字说明 |
+| `RUNTIME_BOUND` | 实际PackageRoot、包内私有Python、cwd、DataRoot和闭集组件来源/路径被锁定 | Python包存在、系统PATH命中或doctor文字说明 |
 | `REAL_WORKBUDDY` | 真实WorkBuddy客户端在新会话执行 | Codex、CLI、fixture或历史会话 |
-| `PROCESS_CORRECT` | OpenMontage Agent原生Pipeline/Skill/Artifact/Reviewer/Checkpoint合同正确 | 产生项目目录或MP4 |
+| `PROCESS_CORRECT` | WorkBuddy依据已验证Package执行原生Pipeline/Skill/Artifact/Reviewer/Checkpoint合同 | 产生项目目录或MP4 |
 | `CAPABILITY_REAL` | 真实工具或能力执行 | mock、静态registry、旧产物 |
 | `LOCAL_RENDER_E2E` | 本次运行产生有效本地成片 | 旧成片、单个中间媒体 |
 | `BUSINESS_EFFECTIVE` | 用户实际观看并认可业务结果 | ffprobe或自动评分 |
@@ -35,21 +35,23 @@
 |---|---|---|
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration的身份、hash和规范化路径与实际执行包一致 | 扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
-| Runtime按需准备 | 证明没有额外缺口并零代码退出，或只对一个已声明、身份锁定、逐项授权的真实组件完成可审计准备 | 为阶段编号制造代码；首次一次全装；通用下载/包管理/repair；修改系统Python/PATH；Shell选择组件、版本或生产方案 |
-| 会话Launcher | 绑定精确环境，只启动一次已验证Agent公开入口，并返回真实退出码、结果指针和残留事实 | 接受任意Shell；多进程调度；自动重试；进入Agent业务内部；创建Artifact或推进Checkpoint |
-| WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变并交给活动执行包启动的Agent | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
-| 状态与结果转交 | 直接复用Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写Agent语义 | 无格式缺口仍造模块；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
+| Runtime按需准备 | 包内私有Python身份有效；闭集组件按`managed`/`registered_host`/`PATH_host`/`missing`分类；discover/plan零写入；用户确认后只从批准大陆镜像准备锁定缺失项；二次调用零下载复用 | 扫盘；扫描或下载Python；首次盲目全装；通用下载/包管理/repair；海外默认源回退；修改系统Python/PATH；Shell选择渲染引擎、版本或生产方案 |
+| 会话Launcher | 绑定精确环境，只为WorkBuddy会话调用一次固定工具入口，并返回真实退出码、结果指针和残留事实 | 启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
+| WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
+| 状态与结果转交 | 直接复用Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
 
 ### 3.1 阶段3至阶段6缩减Gate
 
 阶段3只有两条合法PASS路径：
 
 1. 已验证Package和真实下游合同证明没有额外Runtime缺口，记录`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`，生产代码变化为0；
-2. 锁定一个真实组件的声明、版本、hash、大小、来源、许可证、目标和逐项授权，只实现该组件的inspect/prepare、同目录staging、互斥、原子发布与幂等。
+2. 对固定闭集执行只读发现，形成只包含缺失/不兼容项的锁定计划；计划完整列出组件、版本、hash、大小、批准的中国大陆镜像、许可证和目标，用户明确同意后，只实现该计划的prepare、同目录staging、互斥、原子发布与幂等。
 
-缺少运行时需求权威、首个真实组件或Launcher消费者合同不是扩大为通用框架的理由；应记`BLOCKED`。首版网络下载、第三方安装脚本、公共resume/repair、系统Python/PATH修改均为越界`FAIL`。
+固定闭集为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器。包内私有Python由阶段2登记，阶段3不得扫描、替换或下载它。发现只允许受管路径、明确登记且重新核验的宿主工具和正常PATH命令解析，不允许盘符扫描。Runtime Lock没有批准的大陆镜像、精确hash或许可证时必须返回`BLOCKED_SOURCE_UNAPPROVED`；默认Git/GitHub、Google、npmjs、PyPI、nodejs.org或其他未批准海外源回退为`FAIL`。
 
-阶段4 `PASS`要求一次Locator重验、一次精确环境绑定、一次非任意Shell进程启动和一个最终回执。任何自动重试、队列、调度、常驻服务、多Agent或Agent业务内部导入均为越界`FAIL`。
+阶段3不让普通用户在Remotion、HyperFrames或FFmpeg之间作技术安装选择；确认的是一份包含全部真实缺失/不兼容闭集组件的missing-only计划。组件就绪后，WorkBuddy才依据已验证Package生产合同在具体视频方案中选择渲染能力。下载授权不得推导Provider、费用或生产授权。
+
+阶段4 `PASS`要求一次Locator重验、一次精确环境绑定、一次固定工具进程调用和一个最终回执。任何第二Agent启动、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
 
 阶段5 `PASS`要求真实WorkBuddy合同确认的一种显式入口、新会话命中、literal `user_message`不变、授权与`executor_controls`分离。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
 
@@ -64,8 +66,8 @@
 - literal用户消息不含PackageRoot、Python或`.venv`；
 - 显式Skill正确命中；
 - Locator只读取登记对象，不扫盘；
-- Launcher绑定精确PackageRoot、package Python、cwd和DataRoot；
-- 正确环境中的最小OpenMontage Agent preflight成功；
+- Launcher绑定精确PackageRoot、包内私有Python、闭集Runtime、cwd和DataRoot；
+- 正确环境中的最小WorkBuddy/Package工具preflight成功；
 - 实际解释器和执行包身份进入会话回执；
 - Provider调用0、费用0；
 - 新增进程和窗口残留为0；临时、测试、重复或旧版本Skill残留为0；正式受支持且身份锁定的目标Skill必须保留，不得误删。
@@ -79,9 +81,9 @@ Gate A不证明Pipeline、成片或业务效果。
 要求：
 
 - WorkBuddy读取活动执行包自己的Guide；
-- OpenMontage Agent自主选择Pipeline；
+- WorkBuddy依据Package Guide自主选择Pipeline；
 - Shell没有推荐、覆盖或预填Pipeline；
-- 产生OpenMontage Agent原生第一阶段Artifact；
+- 产生WorkBuddy依据Package合同创建的原生第一阶段Artifact；
 - 产生原生Checkpoint或按Manifest进入相应Gate；
 - `user_message`与`executor_controls`证据分离。
 
@@ -95,7 +97,7 @@ Gate B不证明最终渲染或业务效果。
 
 - 使用无rotation争议的短素材；
 - 使用新WorkBuddy会话和新项目；
-- OpenMontage Agent原生工具真实执行；
+- WorkBuddy依据Package合同调用原生工具真实执行；
 - Artifact、Checkpoint、Final Review和结果指针一致；
 - Tool正常返回；
 - MP4有效；
@@ -132,7 +134,7 @@ Gate E不是Shell V2本地版完成前置，且与Gate D保持独立裁决。
 - Provider配置和身份；
 - 费用披露与预算；
 - 网络和真实生成调用；
-- Provider返回资产进入OpenMontage Agent原生Artifact链；
+- Provider返回资产进入WorkBuddy依据Package合同维护的原生Artifact链；
 - 完整成片及费用对账。
 
 Key存在、`present_unverified`、静态registry和Provider菜单均不能证明`PROVIDER_E2E`。

@@ -10,7 +10,7 @@
 - 需要修改任务未授权路径，或与其他任务/用户改动重叠；
 - 需要Shell选择或运行Pipeline、Stage、Provider、模型、媒体或创意；
 - 需要实现未授权的Runtime、Launcher、WorkBuddy入口、状态结果转交或其他阶段；
-- 需要扫描磁盘、猜测“最新”执行包、读取未验证Package Guide或修改外部执行包；
+- 需要扫描磁盘、猜测“最新”执行包、读取未验证Package Guide或修改外部执行包；正常PATH命令解析不等于扫盘，但只能产生待核验候选；
 - 需要把PackageRoot、Python、cwd、测试编号、重试或证据控制拼入literal `user_message`；
 - 命令超时、输出截断、没有最终退出、证据缺失，或文档与任务账本冲突；
 - 需要reset、stash、merge、rebase或改写已审对象。
@@ -18,7 +18,9 @@
 以下范围扩张直接报告`STOPPED_SCOPE_EXPANSION`，不得以“预留”“通用化”或“后续复用”为理由继续：
 
 - 没有已验证上游输入或直接下游消费者仍新增生产代码；
-- 阶段3预建通用Runtime管理器、下载器、包管理器、公共resume/repair、系统Python/PATH修改或多组件插件框架；
+- 阶段3扫描/下载/替换包内私有Python，或预建通用Runtime管理器、包管理器、公共resume/repair、多组件插件框架、系统Python/PATH修改；
+- 阶段3从默认Git/GitHub、Google、npmjs、PyPI、nodejs.org或其他未批准海外源下载，或在批准大陆镜像失败后静默回退；
+- 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，或覆盖未知/外来目录；
 - 阶段4接受任意Shell、启动多个Agent、自动重试、建立队列/调度/常驻服务或进入Agent业务内部；
 - 阶段5并存多套生产入口、全局截获用户意图或成为第二聊天Agent；
 - 阶段6在Launcher回执可直接消费时仍建立独立服务、数据库、轮询/流式平台，或解释Artifact业务语义；
@@ -26,7 +28,9 @@
 
 ## 产品边界
 
-WorkBuddy负责对话，OpenMontage Agent负责生产，Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。
+腾讯WorkBuddy是唯一运行中的Agent，读取已验证Package Guide后承担OpenMontage生产角色；不存在由Shell另行启动的OpenMontage Agent进程。Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。
+
+金钥匙版交付包必须自带Manifest/Lock锁定的私有Python，普通用户无需系统Python。阶段3闭集固定为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器；发现只来自受管路径、明确登记的宿主工具或正常PATH命令解析。missing-only下载必须有用户明确同意，并只使用Runtime Lock批准的中国大陆镜像；没有批准镜像即fail closed。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

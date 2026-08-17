@@ -1,10 +1,16 @@
 # OpenMontage Package Registration and Locator Contract
 
-状态：`STAGE_2_PASS_ACCEPTED / STABLE_CONTRACT`
+状态：`PREVIOUS_PACKAGE_PASS_ACCEPTED / CURRENT_PACKAGE_REFRESH_REQUIRED`
+
+## 0. Current package adjudication
+
+The upstream official OpenMontage Release does not include Python; it declares a compatible Python requirement for a developer/user-managed environment. The Stage 2 object is instead the **Golden Key OpenMontage for WorkBuddy Package**, which is assembled for ordinary WorkBuddy users and must include a package-private Python bootstrap at the fixed path below. Package assembly/lifecycle puts Python into the delivery; Stage 2 only verifies, registers, activates, and locates the already-assembled bytes.
+
+The previously accepted implementation proves this contract only for the previous registered Golden Key Package. Because the official OpenMontage input has changed, Stage 2 is reopened until a new Golden Key Package with an exactly pinned, compatibility-proven private Python is built, registered, independently reviewed, and promoted. The previous registration must not be relabeled as current evidence.
 
 ## 1. Scope
 
-This contract binds one explicitly supplied, already-installed, versioned OpenMontage Package to immutable local identity records and locates the single active Package. It does not install, download, execute, repair, or select a Package; it does not run the OpenMontage Agent.
+This contract binds one explicitly supplied, already-installed, versioned Golden Key OpenMontage Package to immutable local identity records and locates the single active Package. It does not assemble, install, download, execute, repair, or select a Package; it does not run WorkBuddy or production.
 
 The four public entries are:
 
@@ -118,7 +124,7 @@ Missing objects, unknown or missing fields, duplicate JSON keys or inventory/arc
 
 ## 7. Future consumers and message boundary
 
-A future Launcher may only read the immutable mapping returned by `locate_active_package` to bind the exact PackageRoot, bundled Python, Guide, Manifest, Lock, Release, authority, and commit. This document does not implement or authorize the Launcher, Runtime preparation, WorkBuddy entry, or status/result relay.
+A future Launcher may only read the immutable mapping returned by `locate_active_package` to bind the exact PackageRoot, bundled private Python, Guide, Manifest, Lock, Release, authority, and commit for one WorkBuddy-owned session. This document does not implement or authorize the Launcher, Runtime preparation, WorkBuddy entry, or status/result relay, and it does not authorize a second Agent process.
 
 The verified external Package Guide may be read only after successful Registration/Locator identity validation and only by the correct downstream session consumer. The Shell must not interpret that Guide as permission to direct production.
 
@@ -126,6 +132,6 @@ The verified external Package Guide may be read only after successful Registrati
 
 ## 8. Implementation evidence
 
-`golden_key_openmontage_workbuddy/package_registration.py` is the accepted implementation. `tests/workbuddy/test_package_registration.py` is the implementation evidence for closed schemas, Release/Manifest/Lock/Python/Guide identity, canonical encoding, path safety, missing/duplicate/surrogate/tamper/drift/hash failures, immutable publication, active lock/CAS concurrency, recovery, rollback, and read-only Locator behavior.
+`golden_key_openmontage_workbuddy/package_registration.py` is the implementation accepted for the previous Golden Key Package. `tests/workbuddy/test_package_registration.py` is historical implementation evidence for closed schemas, Release/Manifest/Lock/Python/Guide identity, canonical encoding, path safety, missing/duplicate/surrogate/tamper/drift/hash failures, immutable publication, active lock/CAS concurrency, recovery, rollback, and read-only Locator behavior. It is not current-package acceptance until the reopened Stage 2 completes against the new exact Package and private-Python identity.
 
 That test evidence does not prove installation, Runtime, Launcher, real WorkBuddy, OpenMontage production, Provider, SaaS, network, media, or business E2E.

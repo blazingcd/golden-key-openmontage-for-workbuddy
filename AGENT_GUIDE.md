@@ -16,7 +16,7 @@ Read this file completely before acting in this repository.
 
 The Shell must not become a Director, workflow engine, Agent host, production FSM, or media control plane. Repository agents must not run a video Pipeline, Provider, media generation, or OpenMontage production work from this tree.
 
-The Golden Key WorkBuddy delivery includes its own package-private Python bootstrap. Stage 3 must not discover or depend on system Python. Other closed-set runtime components may be discovered only from managed paths, an explicitly registered host-tool record, or normal command resolution; never scan drives. Missing components may be prepared only from an identity-locked missing-only plan, after explicit user consent, through approved mainland-China mirrors. No default GitHub/Git, Google, npmjs, PyPI, or other overseas fallback is allowed in the end-user download path.
+The Golden Key WorkBuddy delivery includes its own package-private Python bootstrap. Stage 3 must not discover or depend on system Python. Other closed-set runtime components may be discovered only from managed paths, an explicitly registered host-tool record, or normal command resolution; never scan drives. Missing components may be prepared only from an identity-locked missing-only plan, after explicit user consent. Mainland-China mirrors are mandatory except for the one temporarily approved, exactly locked FFmpeg asset from `gyan.dev`; that exception remains unusable until a no-proxy/no-VPN mainland-network access probe passes. No automatic overseas fallback is allowed for any component.
 
 ## External Package Guide
 

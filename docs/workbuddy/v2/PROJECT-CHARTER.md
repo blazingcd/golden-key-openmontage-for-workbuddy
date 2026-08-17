@@ -59,7 +59,7 @@ LocatorResult
 - 没有已验证输入或直接下游消费者时必须零代码退出，不得用通用框架替代缺失合同。
 - 包内私有Python是阶段2登记前置，不属于阶段3发现或下载对象。阶段3发现范围固定为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器；无额外缺口时返回`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`。
 - 阶段3只检查Shell受管路径、用户明确登记且重新核验的宿主工具以及正常PATH命令解析，不扫描盘符。只有missing-only计划完整展示组件、版本、hash、下载量、目标路径和许可证并取得用户明确同意后，才可准备缺失项。
-- 阶段3面向最终用户的下载只能使用Runtime Lock批准的中国大陆镜像。不得回退默认Git/GitHub、Google、npmjs、PyPI、nodejs.org或其他未批准海外源；缺少可验证大陆镜像时返回`BLOCKED_SOURCE_UNAPPROVED`。
+- 阶段3面向最终用户的下载原则上只使用Runtime Lock批准的中国大陆镜像。唯一临时例外是下表精确锁定的FFmpeg `gyan.dev`资产；它必须先在不使用代理/VPN的中国大陆网络完成直连验证。不得把例外扩展到其他组件，也不得在任何源失败后自动选择另一个海外源。
 - 阶段4只绑定一个WorkBuddy会话并调用一个固定工具入口一次；不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
 - 阶段5只保留一种经真实WorkBuddy合同确认的入口形式；在格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
 - 阶段6优先直接复用Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。
@@ -76,9 +76,9 @@ LocatorResult
 | npm依赖（Remotion/HyperFrames） | `https://registry.npmmirror.com` |
 | Node.js归档 | `https://npmmirror.com/mirrors/node/`下的锁定版本资产 |
 | Chrome for Testing / Headless Shell | `https://registry.npmmirror.com/-/binary/chrome-for-testing/`下的锁定版本资产 |
-| FFmpeg | `PENDING_APPROVED_MAINLAND_MIRROR`；锁定前返回`BLOCKED_SOURCE_UNAPPROVED` |
+| FFmpeg | 临时批准`https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0-essentials_build.zip`，SHA-256=`e6b54767a6065919048f1a098eb27211ca4e12b4348a05d88777a5855d0b6e71`；大陆无代理/VPN直连尚未验证 |
 
-不得把“大陆镜像失败”解释为可以回退海外官方源。镜像内容仍须以Runtime Lock中的版本、文件名、大小和SHA-256校验；镜像不是放弃供应链验证的理由。
+不得把“大陆镜像失败”解释为可以回退海外官方源。FFmpeg例外在直连验证前返回`BLOCKED_SOURCE_ACCESS_UNVERIFIED`，直连失败返回`BLOCKED_SOURCE_UNREACHABLE`并等待新源裁决，不能自动换源。所有内容仍须以Runtime Lock中的版本、文件名、大小和SHA-256校验；镜像或临时例外都不是放弃供应链验证的理由。
 
 ## 5. 消息与授权边界
 

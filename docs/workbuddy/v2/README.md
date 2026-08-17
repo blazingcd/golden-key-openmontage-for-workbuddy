@@ -17,7 +17,7 @@ STAGE_2_S3_RUNTIME_CORRECTION_REVIEW_READY
 
 本仓库只实现WorkBuddy Shell V2。腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage执行包后承担生产角色，不存在第二个OpenMontage Agent进程。Shell只负责六模块。仓库卫生已收敛到固定33文件；当前只固化阶段二重新登记前置条件和阶段三至阶段六纠偏范围，不实施任何模块。
 
-运行时裁决：金钥匙版交付包自带锁定私有Python；阶段三只从受管路径、明确登记的宿主工具和PATH命令解析中发现Python依赖、FFmpeg、Node、Remotion、HyperFrames及锁定浏览器，不扫描盘符。缺失项经missing-only计划、用户明确同意后，只能从批准的中国大陆镜像准备；无批准镜像必须fail closed，不能回退默认Git/GitHub、Google、npmjs或PyPI源。
+运行时裁决：金钥匙版交付包自带锁定私有Python；阶段三只从受管路径、明确登记的宿主工具和PATH命令解析中发现Python依赖、FFmpeg、Node、Remotion、HyperFrames及锁定浏览器，不扫描盘符。缺失项经missing-only计划、用户明确同意后从批准的中国大陆镜像准备；唯一临时例外是精确锁定的FFmpeg 9.0 `gyan.dev`资产，它在无代理/VPN大陆网络直连验证通过前保持阻断。任何组件都不能自动回退其他海外源。
 
 ## 权威文档
 

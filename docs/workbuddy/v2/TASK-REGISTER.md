@@ -10,7 +10,7 @@
 task_id: V2-S2-S3-RUNTIME-CORRECTION-DOCS1
 task_status: REVIEW_READY
 task_kind: DOCUMENTATION_CONTRACT_CORRECTION
-user_authorization: 2026-08-17 / 固化包内Python、宿主运行时发现、缺失项安装和中国大陆镜像结论
+user_authorization: 2026-08-17 / 固化包内Python、宿主运行时发现、缺失项安装、大陆镜像及临时gyan.dev FFmpeg例外
 start_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 result_commit: THIS_COMMIT
 branch: codex/v2-s3-s6-scope-docs1
@@ -39,7 +39,7 @@ pytest: NOT_RUN_PROJECT_VENV_MISSING
 next_authorized_task: V2-S2-S3-RUNTIME-CORRECTION-DOCS-REVIEW1
 ```
 
-本任务把老项目中已经实现和验证过的产品结论选择性固化到V2：金钥匙版Package自带私有Python；其余闭集Runtime先发现、后对缺失项制定计划；只有用户明确同意后才从批准的中国大陆镜像准备；WorkBuddy是唯一运行中的Agent。它不新增治理文档，不恢复V1大型Runtime实现，不实现Runtime、Launcher、WorkBuddy入口或状态结果转交。`THIS_COMMIT`由独立Reviewer解析为结果分支的精确40位SHA；只有Reviewer `APPROVE`且同一结果fast-forward进入正式分支后，本次文档收口才算仓库完成。
+本任务把老项目中已经实现和验证过的产品结论选择性固化到V2：金钥匙版Package自带私有Python；其余闭集Runtime先发现、后对缺失项制定计划；只有用户明确同意后才从批准的中国大陆镜像或唯一经直连验证的FFmpeg临时例外准备；WorkBuddy是唯一运行中的Agent。它不新增治理文档，不恢复V1大型Runtime实现，不实现Runtime、Launcher、WorkBuddy入口或状态结果转交。`THIS_COMMIT`由独立Reviewer解析为结果分支的精确40位SHA；只有Reviewer `APPROVE`且同一结果fast-forward进入正式分支后，本次文档收口才算仓库完成。
 
 ## 当前正式状态
 
@@ -88,14 +88,14 @@ Stage 6: Status and Result Relay
 ```text
 stage_3_scope: 包内私有Python固定不扫描；闭集发现Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器，并只准备用户确认的missing-only计划中的缺失/不兼容项。
 stage_3_zero_code_exit: STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED
-stage_3_download_policy: APPROVED_MAINLAND_CHINA_MIRRORS_ONLY / NO_OVERSEAS_DEFAULT_FALLBACK
+stage_3_download_policy: APPROVED_MAINLAND_CHINA_MIRRORS / TEMP_LOCKED_GYAN_FFMPEG_EXCEPTION_PENDING_DIRECT_ACCESS_PROBE / NO_AUTOMATIC_OVERSEAS_FALLBACK
 stage_4_scope: 只为一次WorkBuddy会话绑定精确Package和Runtime并调用一个固定工具入口；不启动第二Agent，无任意Shell、无自动重试。
 stage_5_scope: 只保留一种真实WorkBuddy显式入口，literal user_message不变，技术控制独立。
 stage_6_scope: 优先直接转交Launcher回执；仅有真实格式转换缺口时才允许独立实现。
 stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 ```
 
-上述范围是规划边界，不是实现授权。任何需要阶段3扫描盘符、扫描/下载包内Python、选择渲染引擎/版本、使用未批准海外默认源或覆盖外来目录，阶段4启动第二Agent、解析意图或调度任务，阶段5建立第二聊天Agent，阶段6解释Artifact或自动重试的方案，必须停止并返回`STOPPED_SCOPE_EXPANSION`。
+上述范围是规划边界，不是实现授权。任何需要阶段3扫描盘符、扫描/下载包内Python、选择渲染引擎/版本、使用未批准海外默认源、把FFmpeg临时例外扩展到其他组件、未通过直连验证即使用gyan.dev或覆盖外来目录，阶段4启动第二Agent、解析意图或调度任务，阶段5建立第二聊天Agent，阶段6解释Artifact或自动重试的方案，必须停止并返回`STOPPED_SCOPE_EXPANSION`。
 
 ## 已接受对象与证据边界
 
@@ -125,4 +125,4 @@ repository_hygiene_wave_c_result: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 
 旧Stage2只证明旧金钥匙版Package的Registration与Locator：明确路径输入、不可变登记对象、活动指针CAS、破损指针显式恢复和只读Locator。它不证明当前新版Package、Installer、Runtime、Launcher、真实WorkBuddy、Provider、SaaS、网络或媒体E2E。阶段3至阶段6不得读取未验证Package Guide、扫描磁盘猜测对象，或把技术控制词写入literal `user_message`。
 
-老项目可迁移证据：`347272c`固定包内便携Python；`899592d`固定完整Runtime、hash、许可、DataRoot和大陆PyPI/npm/Node/浏览器镜像；`639978d`增加`managed`、`registered_host`、`PATH_host`、`missing`发现与missing-only准备。旧FFmpeg锁仍指向海外gyan.dev，不满足本次“终端用户下载只走批准大陆镜像”的新裁决；新版Runtime Lock未给出可验证大陆FFmpeg源前必须返回`BLOCKED_SOURCE_UNAPPROVED`。
+老项目可迁移证据：`347272c`固定包内便携Python；`899592d`固定完整Runtime、hash、许可、DataRoot和大陆PyPI/npm/Node/浏览器镜像；`639978d`增加`managed`、`registered_host`、`PATH_host`、`missing`发现与missing-only准备。用户于2026-08-17临时批准继续使用旧锁中的精确FFmpeg 9.0 `gyan.dev`资产，并将在不使用代理/VPN的中国大陆网络验证直连。验证前为`BLOCKED_SOURCE_ACCESS_UNVERIFIED`；失败为`BLOCKED_SOURCE_UNREACHABLE`，不得自动换用其他海外源。

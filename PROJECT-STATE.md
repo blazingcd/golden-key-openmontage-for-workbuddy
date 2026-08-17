@@ -24,7 +24,7 @@ current_result: THIS_COMMIT
 next: V2-S2-S3-RUNTIME-CORRECTION-DOCS-REVIEW1
 ```
 
-腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色，不存在第二个OpenMontage Agent进程。金钥匙版Package必须自带锁定私有Python；阶段3只对Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器执行闭集发现与missing-only准备，终端用户下载只允许批准的中国大陆镜像。本结论等待独立只读Reviewer；这不是任何实现授权。
+腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色，不存在第二个OpenMontage Agent进程。金钥匙版Package必须自带锁定私有Python；阶段3只对Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器执行闭集发现与missing-only准备。下载使用批准的中国大陆镜像，另临时允许精确锁定的FFmpeg `gyan.dev`资产；该例外在无代理/VPN大陆网络直连验证通过前不可执行。本结论等待独立只读Reviewer；这不是任何实现授权。
 
 ## 已接受对象
 
@@ -44,7 +44,7 @@ LocatorResult
 ```
 
 - 包内Python是阶段2登记对象，阶段3不扫描、不下载、不替换它。阶段3只检查受管路径、明确登记宿主工具和PATH命令候选；不扫描盘符。
-- 阶段3没有真实额外Runtime缺口时以`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`零代码结束；存在缺口时必须先输出锁定missing-only计划并取得用户明确同意，只使用批准大陆镜像。
+- 阶段3没有真实额外Runtime缺口时以`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`零代码结束；存在缺口时必须先输出锁定missing-only计划并取得用户明确同意。除临时批准且通过大陆直连验证的FFmpeg `gyan.dev`精确资产外，只使用批准大陆镜像，且没有自动海外回退。
 - 阶段4只允许为WorkBuddy会话调用一次固定工具进程，不接受任意Shell、不自动重试、不启动第二Agent或进入Package业务内部。
 - 阶段5只允许一种真实WorkBuddy显式入口，用户原话与执行控制严格分离。
 - 阶段6优先直接复用Launcher回执；无需独立转换时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`零代码结束。

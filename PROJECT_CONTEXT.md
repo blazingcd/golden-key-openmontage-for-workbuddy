@@ -22,7 +22,7 @@ Tencent WorkBuddy is the only running Agent. Shell V2 owns installation/lifecycl
 - `tests/workbuddy/test_package_registration.py`: its contract evidence.
 - `docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`: previous-package behavior plus the current refresh adjudication.
 
-Stage 3 implementation and Stages 4-6 are not authorized. The runtime scope is now corrected from historical evidence: private Python is bundled in the Golden Key Package; Stage 3 performs closed-set discovery and missing-only preparation for Python dependencies, FFmpeg, Node, Remotion, HyperFrames, and the locked browser, with explicit consent and mainland-China-only end-user download sources. Stage 4 binds one WorkBuddy-owned session and does not launch a second Agent. No Launcher, WorkBuddy entry, runtime preparation, or status/result relay implementation may be inferred from documentation authorization.
+Stage 3 implementation and Stages 4-6 are not authorized. The runtime scope is now corrected from historical evidence: private Python is bundled in the Golden Key Package; Stage 3 performs closed-set discovery and missing-only preparation for Python dependencies, FFmpeg, Node, Remotion, HyperFrames, and the locked browser, with explicit consent. End-user sources are approved mainland-China mirrors plus one temporary exact FFmpeg `gyan.dev` exception gated by a no-proxy/no-VPN mainland-network probe. Stage 4 binds one WorkBuddy-owned session and does not launch a second Agent. No Launcher, WorkBuddy entry, runtime preparation, or status/result relay implementation may be inferred from documentation authorization.
 
 ## Authority order
 

@@ -20,6 +20,6 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 
 本仓库不得运行或指挥视频Pipeline、Provider或媒体生产；这些能力由WorkBuddy依据已验证执行包合同执行，不存在第二个OpenMontage Agent进程。
 
-金钥匙版交付包必须自带经Manifest/Lock固定的私有Python，普通用户不需要系统Python。阶段3只发现并准备闭集运行组件：Python私有依赖、FFmpeg、Node、Remotion、HyperFrames及其锁定浏览器；它只检查受管路径、明确登记的宿主工具或PATH命令解析，不扫描磁盘。缺失项必须先形成missing-only计划、展示下载量/目标/许可并取得用户明确同意，随后只从批准的中国大陆镜像下载；不得回退到默认Git/GitHub、Google、npmjs或PyPI源。
+金钥匙版交付包必须自带经Manifest/Lock固定的私有Python，普通用户不需要系统Python。阶段3只发现并准备闭集运行组件：Python私有依赖、FFmpeg、Node、Remotion、HyperFrames及其锁定浏览器；它只检查受管路径、明确登记的宿主工具或PATH命令解析，不扫描磁盘。缺失项必须先形成missing-only计划、展示下载量/目标/许可并取得用户明确同意。除临时批准且精确锁定的FFmpeg `gyan.dev`资产外，其余下载只允许批准的中国大陆镜像；FFmpeg例外在“不使用代理/VPN的中国大陆网络直连”验证通过前仍不可执行，任何组件都不得自动回退其他海外源。
 
 阶段4不启动第二个Agent，只为一次WorkBuddy会话绑定已验证Package与Runtime；阶段5只保留一个显式WorkBuddy入口；阶段6优先直接复用Launcher回执。

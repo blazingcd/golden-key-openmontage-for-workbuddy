@@ -18,6 +18,7 @@ import tempfile
 import threading
 import time
 import unicodedata
+import ctypes
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -121,6 +122,108 @@ _GIT_COMMAND_CONFIG = (
     "-c",
     "gc.auto=0",
 )
+
+
+class _WindowsHandleApi:
+    _GENERIC_READ = 0x80000000
+    _FILE_SHARE_ALL = 0x00000007
+    _OPEN_EXISTING = 3
+    _FILE_FLAG_OPEN_REPARSE_POINT = 0x00200000
+    _FILE_ATTRIBUTE_REPARSE_POINT = 0x00000400
+    _FILE_ATTRIBUTE_TAG_INFO_CLASS = 9
+
+    class _FileAttributeTagInfo(ctypes.Structure):
+        _fields_ = [("file_attributes", ctypes.c_uint32), ("reparse_tag", ctypes.c_uint32)]
+
+    def __init__(self) -> None:
+        from ctypes import wintypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        self._create_file = kernel32.CreateFileW
+        self._create_file.argtypes = (
+            wintypes.LPCWSTR,
+            wintypes.DWORD,
+            wintypes.DWORD,
+            wintypes.LPVOID,
+            wintypes.DWORD,
+            wintypes.DWORD,
+            wintypes.HANDLE,
+        )
+        self._create_file.restype = wintypes.HANDLE
+        self._get_final_path = kernel32.GetFinalPathNameByHandleW
+        self._get_final_path.argtypes = (
+            wintypes.HANDLE,
+            wintypes.LPWSTR,
+            wintypes.DWORD,
+            wintypes.DWORD,
+        )
+        self._get_final_path.restype = wintypes.DWORD
+        self._get_file_information = kernel32.GetFileInformationByHandleEx
+        self._get_file_information.argtypes = (
+            wintypes.HANDLE,
+            ctypes.c_int,
+            wintypes.LPVOID,
+            wintypes.DWORD,
+        )
+        self._get_file_information.restype = wintypes.BOOL
+        self._close_handle = kernel32.CloseHandle
+        self._close_handle.argtypes = (wintypes.HANDLE,)
+        self._close_handle.restype = wintypes.BOOL
+        self._invalid_handle = ctypes.c_void_p(-1).value
+
+    def open_no_reparse(self, path: Path) -> int:
+        handle = self._create_file(
+            str(path),
+            self._GENERIC_READ,
+            self._FILE_SHARE_ALL,
+            None,
+            self._OPEN_EXISTING,
+            self._FILE_FLAG_OPEN_REPARSE_POINT,
+            None,
+        )
+        if handle is None or handle == self._invalid_handle:
+            raise OSError(ctypes.get_last_error(), "CreateFileW failed")
+        try:
+            return int(handle)
+        except (TypeError, ValueError) as exc:
+            raise OSError("CreateFileW returned an invalid handle") from exc
+
+    def close(self, handle: int) -> None:
+        self._close_handle(handle)
+
+    def validate_regular_non_reparse(self, handle: int) -> None:
+        info = self._FileAttributeTagInfo()
+        if not self._get_file_information(
+            handle,
+            self._FILE_ATTRIBUTE_TAG_INFO_CLASS,
+            ctypes.byref(info),
+            ctypes.sizeof(info),
+        ):
+            raise OSError(ctypes.get_last_error(), "GetFileInformationByHandleEx failed")
+        if info.file_attributes & self._FILE_ATTRIBUTE_REPARSE_POINT:
+            raise OSError("opened handle is a reparse point")
+
+    def final_path(self, handle: int) -> str:
+        size = 32768
+        buffer = ctypes.create_unicode_buffer(size)
+        length = self._get_final_path(handle, buffer, size, 0)
+        if length == 0:
+            raise OSError(ctypes.get_last_error(), "GetFinalPathNameByHandleW failed")
+        if length >= size:
+            buffer = ctypes.create_unicode_buffer(length + 1)
+            length = self._get_final_path(handle, buffer, length + 1, 0)
+            if length == 0 or length > len(buffer):
+                raise OSError(ctypes.get_last_error(), "GetFinalPathNameByHandleW retry failed")
+        return buffer.value
+
+
+if os.name == "nt":
+    try:
+        _WINDOWS_HANDLE_API: _WindowsHandleApi | None = _WindowsHandleApi()
+    except (AttributeError, OSError):
+        _WINDOWS_HANDLE_API = None
+else:
+    _WINDOWS_HANDLE_API = None
 
 
 class PackageRegistrationError(ValueError):
@@ -520,16 +623,90 @@ def _opened_object_identity(value: os.stat_result) -> tuple[int, int, int]:
     return (value.st_dev, value.st_ino, stat.S_IFMT(value.st_mode))
 
 
+def _tracked_open_race_hook(path: Path) -> None:
+    """Test seam executed after path checks and immediately before secure open."""
+
+
+def _windows_handle_path_key(value: str) -> str:
+    if value.startswith("\\\\?\\UNC\\"):
+        value = "\\\\" + value[8:]
+    elif value.startswith("\\\\?\\"):
+        value = value[4:]
+    return os.path.normcase(os.path.normpath(value))
+
+
+def _validate_windows_handle_path(handle: int, expected_path: Path) -> None:
+    api = _WINDOWS_HANDLE_API
+    if api is None:
+        _fail("TAMPERED", "safe Windows tracked-file handle APIs are unavailable")
+    try:
+        api.validate_regular_non_reparse(handle)
+        final_path = api.final_path(handle)
+    except (AttributeError, OSError, TypeError, ValueError) as exc:
+        _fail("TAMPERED", f"cannot validate Windows tracked-file handle: {exc}")
+    if _windows_handle_path_key(final_path) != _windows_handle_path_key(str(expected_path)):
+        _fail("PATH_VIOLATION", "opened Windows handle does not match tracked path")
+
+
+def _open_tracked_descriptor(path: Path) -> int:
+    if os.name == "nt":
+        api = _WINDOWS_HANDLE_API
+        if (
+            api is None
+            or _msvcrt is None
+            or not hasattr(_msvcrt, "open_osfhandle")
+            or not hasattr(_msvcrt, "get_osfhandle")
+        ):
+            _fail("TAMPERED", "safe Windows tracked-file handle APIs are unavailable")
+        try:
+            handle = api.open_no_reparse(path)
+        except (AttributeError, OSError, TypeError, ValueError) as exc:
+            _fail("TAMPERED", f"cannot securely open Windows tracked file: {exc}")
+        transferred = False
+        try:
+            _validate_windows_handle_path(handle, path)
+            descriptor = _msvcrt.open_osfhandle(
+                handle, os.O_RDONLY | getattr(os, "O_BINARY", 0)
+            )
+            transferred = True
+            return descriptor
+        except PackageRegistrationError:
+            raise
+        except (OSError, ValueError) as exc:
+            _fail("TAMPERED", f"cannot bind Windows tracked-file handle: {exc}")
+        finally:
+            if not transferred:
+                api.close(handle)
+    if not hasattr(os, "O_NOFOLLOW"):
+        _fail("TAMPERED", "POSIX O_NOFOLLOW is unavailable")
+    try:
+        return os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    except OSError as exc:
+        _fail("TAMPERED", f"cannot securely open POSIX tracked file: {exc}")
+
+
+def _revalidate_open_descriptor(descriptor: int, expected_path: Path) -> None:
+    if os.name != "nt":
+        return
+    if _msvcrt is None or not hasattr(_msvcrt, "get_osfhandle"):
+        _fail("TAMPERED", "Windows descriptor handle lookup is unavailable")
+    try:
+        handle = _msvcrt.get_osfhandle(descriptor)
+    except (OSError, TypeError, ValueError) as exc:
+        _fail("TAMPERED", f"cannot recover Windows tracked-file handle: {exc}")
+    _validate_windows_handle_path(handle, expected_path)
+
+
 def _stable_tracked_file_identity(
     root: Path, relative: str, *, expected_blob: str
 ) -> tuple[str, int]:
     path = _tracked_file(root, relative)
     try:
         before = os.stat(path, follow_symlinks=False)
-        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
-        descriptor = os.open(path, flags)
     except OSError as exc:
-        _fail("OBJECT_MISSING", f"cannot securely open tracked file {relative}: {exc}")
+        _fail("OBJECT_MISSING", f"cannot stat tracked file {relative}: {exc}")
+    _tracked_open_race_hook(path)
+    descriptor = _open_tracked_descriptor(path)
     sha256 = hashlib.sha256()
     git_blob = hashlib.sha1(usedforsecurity=False)
     git_blob.update(f"blob {before.st_size}\0".encode("ascii"))
@@ -547,6 +724,8 @@ def _stable_tracked_file_identity(
                 sha256.update(chunk)
                 git_blob.update(chunk)
                 size += len(chunk)
+            _revalidate_open_descriptor(handle.fileno(), path)
+            _tracked_file(root, relative)
             after_handle = os.fstat(handle.fileno())
     except PackageRegistrationError:
         raise

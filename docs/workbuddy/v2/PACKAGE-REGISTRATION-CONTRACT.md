@@ -91,9 +91,14 @@ Registration and every later activation, recovery, and locate operation revalida
 - assume-unchanged and skip-worktree index flags are forbidden for every tracked path;
 - every tracked file records its path, Git mode, HEAD blob OID, byte size, and
   working-tree SHA-256;
-- each file is opened without following symlink/reparse paths, read through a stable
-  handle, checked for the same file identity before/after reading, and proven to hash
-  to its recorded HEAD blob;
+- POSIX requires `O_NOFOLLOW` and fails closed if it is unavailable. Windows never
+  falls back to ordinary `os.open`: it uses `CreateFileW` with
+  `FILE_FLAG_OPEN_REPARSE_POINT`, rejects a reparse final handle, and requires
+  `GetFinalPathNameByHandleW` to equal the exact expected tracked path. While that
+  handle remains open, the implementation rechecks the handle path and every path
+  component's reparse state. Win32 API absence/failure, a junction escape, or any
+  path mismatch is rejected. The stable handle is then checked for the same file
+  identity before/after reading and proven to hash to its recorded HEAD blob;
 - the canonical complete entry array records a file count and inventory SHA-256;
 - `AGENT_GUIDE.md` exists, is tracked by the same inventory, is non-empty, and records
   its path, mode, size, and SHA-256.

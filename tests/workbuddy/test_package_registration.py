@@ -199,6 +199,26 @@ else:
     )
 
 
+def _create_real_directory_reparse(link: Path, target: Path) -> str:
+    assert os.name == "nt"
+    try:
+        os.symlink(target, link, target_is_directory=True)
+        return "symlink"
+    except OSError as symlink_error:
+        created = subprocess.run(
+            ["cmd.exe", "/d", "/c", "mklink", "/J", str(link), str(target)],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=10,
+        )
+        assert created.returncode == 0, (
+            f"symlink failed: {symlink_error}; junction failed: "
+            f"stdout={created.stdout!r}, stderr={created.stderr!r}"
+        )
+        return "junction"
+
+
 def test_registers_canonical_immutable_v2_git_identity_without_activation(
     tmp_path: Path,
 ) -> None:
@@ -529,7 +549,7 @@ def test_duplicate_inventory_alias_is_rejected(
     _expect_code("DUPLICATE", candidate.register)
 
 
-def test_symlink_or_reparse_tracked_path_is_rejected(
+def test_reparse_or_symlink_is_rejected(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     candidate = _make_candidate(tmp_path / "candidate")
@@ -540,6 +560,99 @@ def test_symlink_or_reparse_tracked_path_is_rejected(
 
     monkeypatch.setattr(registration, "_is_reparse_or_symlink", injected)
     _expect_code("PATH_VIOLATION", candidate.register)
+
+
+def test_windows_missing_safe_handle_api_fails_closed_without_plain_open(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert os.name == "nt"
+    candidate = _make_candidate(tmp_path / "candidate")
+    plain_open_called = False
+    real_open = registration.os.open
+
+    def observe_open(path: Any, flags: int, *args: Any, **kwargs: Any) -> int:
+        nonlocal plain_open_called
+        if Path(path).is_relative_to(candidate.root):
+            plain_open_called = True
+        return real_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(registration, "_WINDOWS_HANDLE_API", None)
+    monkeypatch.setattr(registration.os, "open", observe_open)
+    _expect_code("TAMPERED", candidate.register)
+    assert plain_open_called is False
+    assert not _registry(candidate).exists()
+
+
+def test_windows_real_junction_swap_after_precheck_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert os.name == "nt"
+    candidate = _make_candidate(tmp_path / "candidate")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    outside_file = outside / "fixture.txt"
+    os.link(candidate.managed, outside_file)
+    source_parent = candidate.root / "src"
+    retained_parent = candidate.root / "src.prechecked"
+    swapped = False
+    reparse_kind = ""
+
+    def swap_parent(path: Path) -> None:
+        nonlocal swapped, reparse_kind
+        if path == candidate.managed and not swapped:
+            source_parent.rename(retained_parent)
+            reparse_kind = _create_real_directory_reparse(source_parent, outside)
+            swapped = True
+
+    monkeypatch.setattr(registration, "_tracked_open_race_hook", swap_parent)
+    try:
+        _expect_code("PATH_VIOLATION", candidate.register)
+        assert swapped is True
+        assert reparse_kind in {"symlink", "junction"}
+        assert os.path.samefile(retained_parent / "fixture.txt", outside_file)
+        assert not _registry(candidate).exists()
+    finally:
+        if source_parent.is_symlink():
+            source_parent.unlink()
+        elif source_parent.exists():
+            source_parent.rmdir()
+        if retained_parent.exists():
+            retained_parent.rename(source_parent)
+    assert source_parent.is_dir()
+    assert candidate.managed.read_text(encoding="utf-8") == "fixture\n"
+
+
+def test_windows_open_handle_final_path_must_match_tracked_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert os.name == "nt"
+    candidate = _make_candidate(tmp_path / "candidate")
+    api = registration._WINDOWS_HANDLE_API
+    assert api is not None
+    monkeypatch.setattr(api, "final_path", lambda handle: str(tmp_path / "outside.txt"))
+    _expect_code("PATH_VIOLATION", candidate.register)
+
+
+def test_windows_open_handle_final_path_change_during_read_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert os.name == "nt"
+    candidate = _make_candidate(tmp_path / "candidate")
+    api = registration._WINDOWS_HANDLE_API
+    assert api is not None
+    real_final_path = api.final_path
+    calls = 0
+
+    def change_after_open(handle: int) -> str:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return real_final_path(handle)
+        return str(tmp_path / "changed-after-open.txt")
+
+    monkeypatch.setattr(api, "final_path", change_after_open)
+    _expect_code("PATH_VIOLATION", candidate.register)
+    assert calls == 2
 
 
 @pytest.mark.parametrize("guide_case", ["missing", "untracked", "empty"])

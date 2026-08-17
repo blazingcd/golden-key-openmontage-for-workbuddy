@@ -13,8 +13,8 @@
 | 术语 | 唯一含义 | 本项目边界 |
 |---|---|---|
 | SaaS Core | 金钥匙SaaS架构中的Core组件 | 不属于Shell V2的登记、安装、定位或执行对象；Shell不得登记或实现SaaS Core |
-| 官方OpenMontage源码/Release | 上游项目原始发布物；要求兼容Python但不负责为WorkBuddy用户携带私有Python | 仅作为金钥匙版执行包的经验证上游输入，不直接作为阶段2登记成品 |
-| Golden Key OpenMontage Package / 金钥匙版执行包 | 面向WorkBuddy交付的本地安装、版本化、可验证Release ZIP，包含Manifest、Lock、包内私有Python、`AGENT_GUIDE.md`和managed files | 阶段2唯一登记对象；包内Python由交付构建携带并锁定，普通用户无需系统Python |
+| 官方OpenMontage源码/Release | 上游项目原始发布物；公开Prerequisites为Python 3.10+、FFmpeg和Node.js 18+，但不替金钥匙普通用户携带这些环境 | 仅作为金钥匙版执行包的经验证上游输入，不直接作为阶段2登记成品 |
+| Golden Key OpenMontage Package / 金钥匙版执行包 | 面向WorkBuddy交付的本地安装、版本化、可验证Release ZIP，包含Manifest、Lock、`AGENT_GUIDE.md`、managed files以及完整必带私有工具链：可用Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx | 阶段2唯一登记对象；普通用户无需系统Python、FFmpeg或Node；Node锁定版本必须满足当前Package最高要求，不能只按18+最低线 |
 | OpenMontage Agent角色 | WorkBuddy读取已验证Package Guide后承担的逻辑生产角色，拥有Pipeline、Stage、Artifact、Checkpoint、Reviewer、Tool、Provider、模型、媒体和创意决策 | 不是另一个Agent、Agent Host或独立模型进程；Shell不得启动或复制它 |
 | Shell | 安装与登记执行包、绑定环境、提供会话入口并转交状态和结果 | 不登记SaaS Core，不拥有生产决策 |
 
@@ -35,9 +35,9 @@
 | 模块 | 职责 | 输入 / 输出 | 明确禁止 |
 |---|---|---|---|
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
-| OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、包内私有Python和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖系统Python；登记/实现SaaS Core |
-| Runtime按需准备 | 只读发现闭集组件的真实就绪状态，并对确认计划中全部确实缺失/不兼容的项进行受控准备；不要求普通用户选择技术组件 | 输入：活动Package Registration、包内Python、Runtime Lock、受管/登记宿主/PATH候选及用户对完整missing-only计划的明确授权；输出：组件来源与状态、`READY_REUSED`、`READY_PREPARED`或失败事实 | 扫盘；扫描/替换包内Python；通用包管理器；未授权下载；海外默认源回退；选择生产所用渲染引擎、Pipeline或版本；修改系统Python/PATH |
-| 会话Launcher | 为一次WorkBuddy拥有的会话绑定精确Package、私有Python和已验证Runtime，并调用一个固定工具入口 | 输入：有效Package Registration、Runtime就绪事实、分离的用户消息与执行控制；输出：一次调用回执、真实退出码、结果指针和残留事实 | 启动第二Agent/模型进程；解析用户意图；接受任意Shell；自动重试；调度多任务；创建Artifact或推进Checkpoint |
+| OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、完整必带私有工具链和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、Python/FFmpeg/ffprobe/Node/npm/npx身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖任何系统Python/FFmpeg/Node；登记/实现SaaS Core |
+| Runtime按需准备 | 只读发现已由WorkBuddy/OpenMontage锁定的可选渲染能力，并对用户确认计划中的缺失项进行受控准备 | 输入：活动Package Registration、经验证的可选能力要求、Optional Runtime Lock、受管/登记宿主/PATH候选及用户对计划的明确授权；输出：所选能力来源与状态、`READY_REUSED`、`READY_PREPARED`或失败事实 | 扫盘；发现/下载/替换必带Python/FFmpeg/Node工具链；一次安装所有可选能力；由Shell或普通用户替OpenMontage选择Remotion/HyperFrames；通用包管理器；未授权下载；海外默认源回退；修改系统PATH/注册表 |
+| 会话Launcher | 为一次WorkBuddy拥有的会话绑定精确Package、完整必带工具链和当前实际需要的已验证可选能力，并调用一个固定工具入口 | 输入：有效Package Registration、阶段2必带工具链就绪事实、执行所选可选能力时对应的阶段3就绪事实、分离的用户消息与执行控制；输出：一次调用回执、真实退出码、结果指针和残留事实 | 启动第二Agent/模型进程；解析用户意图；接受任意Shell；自动重试；调度多任务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
 | 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
 
@@ -50,25 +50,24 @@
 ```text
 User
 -> Stage 5: one explicit WorkBuddy entry
--> Stage 2: Package Registration / Locator revalidation
--> Stage 3: one closed-set runtime check
-   -> READY_REUSED or READY_PREPARED
-      -> Stage 4: one WorkBuddy-owned bound tool call
-      -> Stage 6: unchanged runtime, exit, error and result facts
-   -> MISSING_OR_INCOMPATIBLE
-      -> Stage 6: relay one missing-only plan
+-> Stage 2: revalidate required private Python / FFmpeg / Node toolchain
+-> Stage 4: one WorkBuddy-owned bound tool call with required toolchain
+-> WorkBuddy/OpenMontage: lock the actual render capability
+   -> package FFmpeg capability: continue with bundled FFmpeg
+   -> Remotion or HyperFrames capability missing
+      -> Stage 3: relay one capability-specific missing-only plan
       -> separate explicit user consent
-      -> Stage 3: prepare every confirmed missing/incompatible item
-      -> Stage 6: relay preparation facts and stop
-      -> a later explicit WorkBuddy invocation starts this check again
+      -> Stage 3: prepare only the locked optional capability
+      -> continue only through the future verified session contract
+-> Stage 6: unchanged preparation, exit, error and result facts
 ```
 
 - 每阶段最多一个公共入口、一个生产模块和一个直接测试文件；不能为了阶段编号制造文件。
 - 没有已验证输入或直接下游消费者时必须零代码退出，不得用通用框架替代缺失合同。
-- 包内私有Python是阶段2登记前置，不属于阶段3发现或下载对象。阶段3发现范围固定为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器；无额外缺口时返回`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`。
-- 阶段3只有一个闭集接口，不是两条实现路线。该接口只检查Shell受管路径、用户明确登记且重新核验的宿主工具以及正常PATH命令解析，不扫描盘符；它返回“已就绪/复用”或“缺失/不兼容计划”事实。只有missing-only计划完整展示组件、版本、hash、下载量、目标路径和许可证并取得用户另一次明确同意后，才可准备全部确认缺失项；准备结束后不得自动重放原生产请求。
-- 阶段3面向最终用户的下载原则上只使用Runtime Lock批准的中国大陆镜像。唯一临时例外是下表精确锁定的FFmpeg `gyan.dev`资产；它必须先在不使用代理/VPN的中国大陆网络完成直连验证。不得把例外扩展到其他组件，也不得在任何源失败后自动选择另一个海外源。
-- 阶段4只接受有效的Runtime就绪回执并绑定一个WorkBuddy会话，随后调用一个固定工具入口一次；没有就绪回执时返回`RUNTIME_NOT_READY`。它不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
+- Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是阶段2登记前置，不属于阶段3发现或下载对象。阶段3只处理经WorkBuddy/OpenMontage实际选择的Remotion或HyperFrames能力，以及该能力锁精确声明的浏览器等附属资产；没有可选能力要求时返回`STAGE_3_NO_OPTIONAL_CAPABILITY_REQUIRED`。
+- 阶段3只有一个按需准备接口，不是“扫描所有可选能力后全部安装”。Shell不决定Remotion或HyperFrames，普通用户也不承担技术选型；WorkBuddy依据已验证Package合同形成能力要求，用户只确认对应下载量、目标和许可证。
+- 阶段3面向最终用户的可选能力下载只使用Optional Runtime Lock批准的中国大陆镜像，不得在失败后自动选择海外源。FFmpeg `gyan.dev`不再是阶段3终端用户下载源；它属于必带Package组装供应链并由阶段2核验。
+- 阶段4启动固定工具前必须接受阶段2的完整必带工具链就绪事实；所选可选渲染能力在实际执行前还必须接受对应阶段3就绪事实。缺少相应事实时返回`RUNTIME_NOT_READY`。它不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
 - 阶段5只保留一种经真实WorkBuddy合同确认的入口形式，是用户实际运行的起点；在格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
 - 阶段6直接转交Runtime计划/准备事实和Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。它不得解释、安装或自动重试。
 - 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
@@ -79,24 +78,22 @@ User
 
 | 组件 | 终端用户下载渠道 |
 |---|---|
-| Python解释器 | 不下载；随金钥匙版Package交付并由阶段2登记 |
-| Python依赖 | 主源`https://mirrors.aliyun.com/pypi/simple/`；备用`https://pypi.tuna.tsinghua.edu.cn/simple/` |
-| npm依赖（Remotion/HyperFrames） | `https://registry.npmmirror.com` |
-| Node.js归档 | `https://npmmirror.com/mirrors/node/`下的锁定版本资产 |
-| Chrome for Testing / Headless Shell | `https://registry.npmmirror.com/-/binary/chrome-for-testing/`下的锁定版本资产 |
-| FFmpeg | 临时批准`https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0-essentials_build.zip`，SHA-256=`e6b54767a6065919048f1a098eb27211ca4e12b4348a05d88777a5855d0b6e71`；大陆无代理/VPN直连尚未验证 |
+| Python解释器及核心依赖 | 终端用户不下载；随金钥匙版Package交付并由阶段2登记 |
+| FFmpeg/ffprobe | 终端用户不下载；随Package交付。当前候选组装资产仍为精确锁定的`gyan.dev` FFmpeg 9.0 ZIP，必须在Package构建、许可证和分发证据中核验 |
+| Node/npm/npx | 终端用户不下载；随Package交付。锁定版本必须至少满足OpenMontage 18+且满足当前HyperFrames 22+，因此当前下限取22+ |
+| Remotion可选依赖 | `https://registry.npmmirror.com`，仅在已选Remotion能力缺失时按锁准备 |
+| HyperFrames可选依赖 | `https://registry.npmmirror.com`，仅在已选HyperFrames能力缺失时按锁准备 |
+| 可选浏览器资产 | 只有所选能力的当前锁明确要求时，才使用批准大陆镜像的精确资产；不得预设为所有用户必装 |
 
-不得把“大陆镜像失败”解释为可以回退海外官方源。FFmpeg例外在直连验证前返回`BLOCKED_SOURCE_ACCESS_UNVERIFIED`，直连失败返回`BLOCKED_SOURCE_UNREACHABLE`并等待新源裁决，不能自动换源。所有内容仍须以Runtime Lock中的版本、文件名、大小和SHA-256校验；镜像或临时例外都不是放弃供应链验证的理由。
+不得把“大陆镜像失败”解释为可以回退海外官方源。可选能力仍须以Optional Runtime Lock中的版本、文件名、大小和SHA-256校验。必带FFmpeg和Node在Package组装时解决来源与分发，不能转嫁为终端用户阶段3下载。
 
-### 4.3 阶段3最小执行合同
+### 4.3 阶段3重新规划边界
 
-阶段3只允许一个公共入口`prepare_runtime_on_demand(locator_result, data_root, runtime_lock, confirmation=None)`。`confirmation`为空时只能执行只读发现并返回`READY_REUSED`或身份锁定的`MISSING_OR_INCOMPATIBLE`计划；`confirmation`必须精确绑定Package Registration SHA、Runtime Lock SHA和计划SHA，匹配后才可准备计划内全部缺失/不兼容项并返回`READY_PREPARED`或真实失败。输入变化时旧授权失效。
+上一版`prepare_runtime_on_demand(...)`及其把Python依赖、FFmpeg、Node列为阶段3目标的Runtime Lock已失效，不得实施。新版阶段3入口必须等待两个真实输入：阶段2返回完整必带工具链身份，以及WorkBuddy/OpenMontage返回已经锁定的可选能力要求。届时仍限制为一个生产模块、一个公共入口、一个Optional Runtime Lock和一个直接测试文件。
 
-未来实现范围固定为一个生产模块`golden_key_openmontage_workbuddy/runtime_prepare.py`、一个`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`和一个直接测试文件`tests/workbuddy/test_runtime_prepare.py`。不另建`host_tools.py`、下载器框架、CLI、后台服务或任务数据库；已有受管对象、可选的外部登记记录和PATH候选都在同一模块内只读核验。阶段3不负责创建宿主工具登记UI或额外公共入口。
+Remotion的受管目标可位于`<DataRoot>/Runtime/Composition/Remotion`，HyperFrames可位于`<DataRoot>/Runtime/Composition/HyperFrames`；浏览器只有被当前能力锁要求时才位于`<DataRoot>/Runtime/Browsers/<capability>`，缓存为`<DataRoot>/Caches`。阶段3不得创建`Runtime/Python`、`Runtime/FFmpeg`或`Runtime/Node`作为Package必带工具链的替代品。
 
-所有新准备对象都必须位于Shell提供的DataRoot：Python私有依赖为`<DataRoot>/Runtime/Python`，FFmpeg为`<DataRoot>/Runtime/FFmpeg`，Node为`<DataRoot>/Runtime/Node`，Remotion为`<DataRoot>/Runtime/Composition/Remotion`，HyperFrames为`<DataRoot>/Runtime/Composition/HyperFrames`，锁定浏览器为`<DataRoot>/Runtime/Browsers/HyperFrames`，下载缓存为`<DataRoot>/Caches`。Python依赖使用阶段2登记的包内私有Python执行锁定bootstrap并安装到独立Runtime目录；不得写入Package、系统Python、系统PATH或注册表。
-
-每个准备动作必须使用同卷staging、来源与SHA-256核验、产品所有权标记、原子发布、失败回滚和临时文件清理。现有目标不属于本产品或身份不匹配时必须保留原物并fail closed，不能用repair或覆盖处理。
+每个可选准备动作仍必须使用同卷staging、来源与SHA-256核验、产品所有权标记、原子发布、失败回滚和临时文件清理。现有目标不属于本产品或身份不匹配时必须保留原物并fail closed。
 
 ## 5. 消息与授权边界
 

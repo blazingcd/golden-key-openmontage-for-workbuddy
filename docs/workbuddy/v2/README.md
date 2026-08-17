@@ -4,35 +4,35 @@
 
 ```text
 STAGE_1_PASS_ACCEPTED
-STAGE_2_REOPENED_PACKAGE_REFRESH_REQUIRED
-STAGE_2_PREVIOUS_PACKAGE_PASS_ACCEPTED_HISTORICAL
+STAGE_2_REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH
+STAGE_2_PREVIOUS_PYTHON_ONLY_PACKAGE_PASS_ACCEPTED_HISTORICAL
 REPOSITORY_HYGIENE_PASS_ACCEPTED_AT_20DDAB75825C1B6E7DE5A51603AFE8B6FD82ECEB
-STAGE_3_RUNTIME_SCOPE_CORRECTED_FOR_REVIEW
+STAGE_3_REOPENED_OPTIONAL_CAPABILITY_RECLASSIFICATION_REQUIRED
 STAGE_3_IMPLEMENTATION_NOT_GRANTED
 STAGE_4_LAUNCHER_NOT_GRANTED
 STAGE_5_WORKBUDDY_ENTRY_NOT_GRANTED
 STAGE_6_STATUS_RESULT_RELAY_NOT_GRANTED
-STAGE_2_S3_RUNTIME_CORRECTION_REVIEW_READY
+REQUIRED_TOOLCHAIN_CORRECTION_DOCS_REVIEW_READY
 ```
 
 本仓库只实现WorkBuddy Shell V2。腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage执行包后承担生产角色，不存在第二个OpenMontage Agent进程。Shell只负责六模块。仓库卫生已收敛到固定33文件；当前只固化阶段二重新登记前置条件和阶段三至阶段六纠偏范围，不实施任何模块。
 
-运行时裁决：金钥匙版交付包自带锁定私有Python；阶段三只从受管路径、明确登记的宿主工具和PATH命令解析中发现Python依赖、FFmpeg、Node、Remotion、HyperFrames及锁定浏览器，不扫描盘符。缺失项经missing-only计划、用户明确同意后从批准的中国大陆镜像准备；唯一临时例外是精确锁定的FFmpeg 9.0 `gyan.dev`资产，它在无代理/VPN大陆网络直连验证通过前保持阻断。任何组件都不能自动回退其他海外源。
+运行时裁决：金钥匙版交付包必须自带并由阶段2登记完整必带工具链，即可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node按当前Package最高要求锁定，当前不得低于22。只登记Python的旧阶段2结果不再足够。阶段3只处理WorkBuddy/OpenMontage已经锁定的一个可选Remotion或HyperFrames能力及其Lock声明附属资产，不处理三项Prerequisites。
 
-阶段3至阶段6按编号建设和验收，但用户实际运行从阶段5入口开始：阶段5调用阶段2 Locator重验和阶段3单一闭集接口；Runtime已就绪才进入阶段4，阶段6转交Runtime及Launcher事实。若缺失，用户另行确认计划后由阶段3准备并停止，原请求不自动重试。
+终端用户可选能力下载必须使用批准的中国大陆镜像，形成精确missing-only计划并取得明确同意；不自动海外回退。`gyan.dev` FFmpeg候选改归Package组装供应链审查。阶段3与阶段4的真实暂停/继续关系等待WorkBuddy消费者合同重新冻结，Shell不选渲染器、不自动重试原请求。
 
 ## 权威文档
 
 - `TASK-REGISTER.md`：实时任务、精确Git对象、授权与下一任务的唯一状态权威。
 - `PROJECT-CHARTER.md`：产品角色、六模块职责和非目标。
 - `PACKAGE-REGISTRATION-CONTRACT.md`：旧Package已接受合同和当前Package重新登记裁决。
-- `ACCEPTANCE-MATRIX.md`：证据、阶段3闭集发现/missing-only准备、阶段6零代码出口与Gate语义。
+- `ACCEPTANCE-MATRIX.md`：证据、阶段3单一可选能力missing-only准备、阶段6零代码出口与Gate语义。
 - `DRIFT-GUARD.md`：停止条件、范围保护和Git生命周期。
 - `MODULE-DISPOSITION.md`：V1能力处置的历史映射，不是当前实现授权。
 
 阶段3至阶段6不另建平行职责文档：职责只以`PROJECT-CHARTER.md`为准，实施必要性和PASS边界只以`ACCEPTANCE-MATRIX.md`为准，实时授权只以`TASK-REGISTER.md`为准。
 
-阶段3的可执行任务包已经在上述现有权威中冻结：`TASK-REGISTER.md`记录条件授权、启动Gate、精确实现路径和执行步骤，`PROJECT-CHARTER.md`记录单一接口与DataRoot边界，`ACCEPTANCE-MATRIX.md`记录直接验收。当前仍等待阶段2和本轮规划结果正式推广，不得据此提前实现。
+旧阶段3可执行任务包、入口签名、全组件Runtime Lock和条件授权已经`SUPERSEDED`或暂停。当前权威只冻结重新规划的前置输入和边界；必须先完成阶段2完整必带工具链登记，再取得真实WorkBuddy/OpenMontage可选能力消费者合同，之后才能冻结新的执行步骤、路径和精确文件范围。阶段3实现仍为`NOT_GRANTED`。
 
 ## Git任务生命周期
 

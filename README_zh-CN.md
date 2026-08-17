@@ -5,14 +5,14 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 当前状态：
 
 - 阶段1：`PASS_ACCEPTED`
-- 阶段2：`REOPENED_PACKAGE_REFRESH_REQUIRED`（旧Package为`PASS_ACCEPTED_HISTORICAL`）
+- 阶段2：`REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH`（只登记Python的旧Package为`PASS_ACCEPTED_HISTORICAL`）
 - 仓库卫生：`PASS_ACCEPTED`，正式对象`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，精确33文件
-- 阶段3规划：`RUNTIME_SCOPE_CORRECTED_FOR_REVIEW`
+- 阶段3规划：`REOPENED_OPTIONAL_CAPABILITY_RECLASSIFICATION_REQUIRED`
 - 阶段3实现：`NOT_GRANTED`
 - 阶段4 Launcher：`NOT_GRANTED`
 - 阶段5 WorkBuddy入口：`NOT_GRANTED`
 - 阶段6状态结果转交：`NOT_GRANTED`
-- 阶段2/3 Runtime纠偏文档：`REVIEW_READY`
+- 必带工具链纠偏文档：`REVIEW_READY`
 
 当前任务只把阶段2重新登记前置条件、阶段3 Runtime范围及WorkBuddy唯一Agent结论统一到现有权威中，不构成实现授权。实时状态和精确Git对象只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。
 
@@ -20,8 +20,8 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 
 本仓库不得运行或指挥视频Pipeline、Provider或媒体生产；这些能力由WorkBuddy依据已验证执行包合同执行，不存在第二个OpenMontage Agent进程。
 
-金钥匙版交付包必须自带经Manifest/Lock固定的私有Python，普通用户不需要系统Python。阶段3只发现并准备闭集运行组件：Python私有依赖、FFmpeg、Node、Remotion、HyperFrames及其锁定浏览器；它只检查受管路径、明确登记的宿主工具或PATH命令解析，不扫描磁盘。缺失项必须先形成missing-only计划、展示下载量/目标/许可并取得用户明确同意。除临时批准且精确锁定的FFmpeg `gyan.dev`资产外，其余下载只允许批准的中国大陆镜像；FFmpeg例外在“不使用代理/VPN的中国大陆网络直连”验证通过前仍不可执行，任何组件都不得自动回退其他海外源。
+金钥匙版交付包必须自带并登记完整的私有必带工具链：可用Python 3.10+环境及锁定核心依赖、FFmpeg/ffprobe、Node.js及npm/npx。Node必须满足当前Package内最高要求；因为当前HyperFrames要求Node 22+，不能只锁官方通用README的18+下限。只登记Python的旧阶段2结果仅是历史证据，不是本次交付验收。精确`gyan.dev` FFmpeg资产改归Package组装供应链候选，接受来源、hash、许可和分发审查，不再作为阶段3面向终端用户的下载项。
 
-阶段3至阶段6按编号建设和验收，但用户实际运行从阶段5的显式WorkBuddy入口开始。阶段5先触发阶段2 Locator重验和阶段3单一闭集检查；只有有效Runtime就绪回执才进入阶段4。若缺失，阶段6转交missing-only计划，用户另行授权后由阶段3准备并停止，原生产请求不自动重试。阶段4不启动第二个Agent，只绑定一次WorkBuddy会话；阶段6直接转交Runtime及Launcher事实，除真实格式缺口外不新增转换层。
+阶段3只负责WorkBuddy/OpenMontage已经选择并锁定的一个可选能力：Remotion或HyperFrames，以及该能力Lock明确声明的附属资产。阶段3不选择渲染器，不预装两种渲染器，也不发现、下载或替换Python、FFmpeg、Node。终端用户可选下载必须先形成精确missing-only计划、取得明确同意并使用批准的中国大陆镜像，不得自动海外回退。阶段3与阶段4在真实会话中的暂停/继续合同必须来自真实WorkBuddy消费者，Shell不得预先猜测。
 
-阶段3任务包已经按条件授权冻结，但当前不是立即实现许可。只有新版阶段2和本轮规划纠偏均独立审阅、进入正式分支，并通过只读交接审计后才能启动。最大实现范围为一个`runtime_prepare.py`公共入口、一个生产Runtime Lock和一个直接测试文件；受管写入只允许位于`<DataRoot>/Runtime`和`<DataRoot>/Caches`。
+旧阶段3任务包、公共入口签名和全组件Runtime Lock均已标记`SUPERSEDED`，原条件授权暂停。只有阶段2登记完整必带工具链，并从真实WorkBuddy/OpenMontage消费者冻结新的可选能力输入合同和精确任务包后，阶段3才可能获得实现授权；当前仍为`NOT_GRANTED`。

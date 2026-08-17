@@ -11,6 +11,7 @@
 - 需要Shell选择或运行Pipeline、Stage、Provider、模型、媒体或创意；
 - 需要实现未授权的Runtime、Launcher、WorkBuddy入口、状态结果转交或其他阶段；
 - 需要扫描磁盘、猜测“最新”执行包、读取未验证Package Guide或修改外部执行包；正常PATH命令解析不等于扫盘，但只能产生待核验候选；
+- 阶段2试图把只登记Python的旧Package重新标记为当前PASS，或接受缺少FFmpeg/ffprobe、Node/npm/npx任一必带项的Package；
 - 需要把PackageRoot、Python、cwd、测试编号、重试或证据控制拼入literal `user_message`；
 - 命令超时、输出截断、没有最终退出、证据缺失，或文档与任务账本冲突；
 - 需要reset、stash、merge、rebase或改写已审对象。
@@ -18,13 +19,13 @@
 以下范围扩张直接报告`STOPPED_SCOPE_EXPANSION`，不得以“预留”“通用化”或“后续复用”为理由继续：
 
 - 没有已验证上游输入或直接下游消费者仍新增生产代码；
-- 阶段3扫描/下载/替换包内私有Python，或预建通用Runtime管理器、包管理器、公共resume/repair、多组件插件框架、系统Python/PATH修改；
-- 阶段3从默认Git/GitHub、Google、npmjs、PyPI、nodejs.org或其他未批准海外源下载，在批准大陆镜像失败后静默回退，或把临时批准的精确FFmpeg `gyan.dev`例外扩展到其他组件；
-- 阶段3在无代理/VPN中国大陆网络直连验证通过前使用FFmpeg `gyan.dev`例外，或直连失败后仍继续下载/安装；
-- 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，或覆盖未知/外来目录；
-- 阶段3在规划纠偏或新版阶段2尚未审阅推广、当前Package身份未重验、包内Python bootstrap不可用、Runtime Lock输入不完整或正式Git对象漂移时提前编码；
-- 阶段3新增`runtime_prepare.py`、Runtime Lock和一个直接测试之外的生产结构，或把旧`host_tools.py`、通用下载器、CLI/MCP、服务、数据库恢复为第二入口；
-- 阶段3把Python依赖写进Package或系统Python，把任何组件写出`<DataRoot>/Runtime`，修改系统PATH/注册表，要求管理员权限，或在失败后遗留staging/cache临时对象；
+- 阶段3发现、下载、替换或回退到系统Python/FFmpeg/Node，借此补偿阶段2必带工具链不完整；
+- 阶段3同时安装Remotion与HyperFrames、替WorkBuddy/OpenMontage选择渲染器，或准备所选能力锁未声明的浏览器/附属资产；
+- 阶段3从默认Git/GitHub、Google、npmjs或其他未批准海外源下载，在批准大陆镜像失败后静默回退；
+- 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，扫描盘符，或覆盖未知/外来目录；
+- 阶段3在新版阶段2完整工具链尚未审阅推广、当前Package身份未重验、真实WorkBuddy/OpenMontage可选能力输入合同不完整或正式Git对象漂移时提前编码；
+- 阶段3实现已标记`SUPERSEDED`的旧`prepare_runtime_on_demand(...)`签名、旧全闭集Runtime Lock或旧任务包，或恢复`host_tools.py`、通用下载器、CLI/MCP、服务、数据库等第二入口；
+- 阶段3把可选能力写入Package、系统目录或必带工具链目录，修改系统PATH/注册表，要求管理员权限，或在失败后遗留staging/cache临时对象；
 - 阶段4接受任意Shell、启动多个Agent、自动重试、建立队列/调度/常驻服务或进入Agent业务内部；
 - 阶段4在没有有效Runtime就绪回执时仍调用工具，而不是返回`RUNTIME_NOT_READY`；
 - 阶段5并存多套生产入口、全局截获用户意图或成为第二聊天Agent；
@@ -36,9 +37,9 @@
 
 腾讯WorkBuddy是唯一运行中的Agent，读取已验证Package Guide后承担OpenMontage生产角色；不存在由Shell另行启动的OpenMontage Agent进程。Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。
 
-金钥匙版交付包必须自带Manifest/Lock锁定的私有Python，普通用户无需系统Python。阶段3闭集固定为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器；发现只来自受管路径、明确登记的宿主工具或正常PATH命令解析。missing-only下载必须有用户明确同意，并使用Runtime Lock批准的中国大陆镜像。唯一例外是用户临时批准的精确FFmpeg 9.0 `gyan.dev`资产；它在无代理/VPN大陆网络直连验证前保持阻断，且绝不形成通用海外回退权。
+金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2负责验证和登记这些Package自有字节。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
 
-用户对阶段3的授权是条件授权，不是立即实现授权。只有`TASK-REGISTER.md`列出的启动Gate全部通过并把实时字段更新为`GRANTED`后，Builder才能从最新正式提交开始；聊天中的“开始”不得绕过阶段2、独立Reviewer、fast-forward或精确Git对象检查。
+阶段3只准备经验证WorkBuddy/OpenMontage决定并锁定的一个可选能力，当前为Remotion或HyperFrames，以及该能力锁明确声明的附属资产。普通用户只确认精确missing-only计划，不选择技术组件；终端用户可选下载必须使用批准的中国大陆镜像且不得自动海外回退。旧阶段3条件授权、入口签名、全闭集Lock和执行包均已暂停并标记`SUPERSEDED`；只有完整阶段2和真实消费者合同完成后重新冻结任务包，`TASK-REGISTER.md`再明确写为`GRANTED`，Builder才可开始。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

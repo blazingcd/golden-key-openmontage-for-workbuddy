@@ -1,12 +1,16 @@
 # OpenMontage Package Registration and Locator Contract
 
-状态：`PREVIOUS_PACKAGE_PASS_ACCEPTED / CURRENT_PACKAGE_REFRESH_REQUIRED`
+状态：`PREVIOUS_PYTHON_ONLY_PACKAGE_PASS_ACCEPTED / CURRENT_REQUIRED_TOOLCHAIN_SCHEMA_REDESIGN_REQUIRED`
 
 ## 0. Current package adjudication
 
-The upstream official OpenMontage Release does not include Python; it declares a compatible Python requirement for a developer/user-managed environment. The Stage 2 object is instead the **Golden Key OpenMontage for WorkBuddy Package**, which is assembled for ordinary WorkBuddy users and must include a package-private Python bootstrap at the fixed path below. Package assembly/lifecycle puts Python into the delivery; Stage 2 only verifies, registers, activates, and locates the already-assembled bytes.
+The upstream official OpenMontage Quick Start declares three baseline prerequisites: Python 3.10+, FFmpeg, and Node.js 18+. Current HyperFrames documentation raises its own Node floor to 22+. The Stage 2 object is the **Golden Key OpenMontage for WorkBuddy Package** for ordinary users, so it must include a complete package-private required toolchain: a usable Python environment with locked core dependencies, FFmpeg plus ffprobe, and a Node distribution with npm/npx satisfying the highest current Package requirement.
 
-The previously accepted implementation proves this contract only for the previous registered Golden Key Package. Because the official OpenMontage input has changed, Stage 2 is reopened until a new Golden Key Package with an exactly pinned, compatibility-proven private Python is built, registered, independently reviewed, and promoted. The previous registration must not be relabeled as current evidence.
+Current upstream evidence: [OpenMontage Quick Start](https://github.com/calesthio/OpenMontage#quick-start), [official setup Makefile](https://github.com/calesthio/OpenMontage/blob/main/Makefile), and [runtime architecture requirements](https://github.com/calesthio/OpenMontage/blob/main/docs/ARCHITECTURE.md). These links establish upstream inputs only; Stage 2 still has to lock exact distributable artifacts, hashes, licenses, capabilities, and paths for the Golden Key Package.
+
+The previously accepted implementation and schema register only the private Python identity explicitly. They are historical evidence and are insufficient for the current Package. Stage 2 is reopened until Package assembly, Manifest/Lock, Registration schema, Locator output, tests, independent review, and promotion all cover Python/core dependencies, FFmpeg/ffprobe, and Node/npm/npx. The previous registration must not be relabeled as current evidence.
+
+Sections 1-8 below describe the previous Python-only accepted wire contract. They remain useful regression evidence, but every API signature, closed root shape, validation chain, future-consumer statement, and test claim that names only `package_python` is superseded for the current Package. The current Stage 2 task must freeze a new closed required-toolchain shape from the actual assembled bytes; Stage 3 may not compensate by downloading missing prerequisites.
 
 ## 1. Scope
 
@@ -124,7 +128,7 @@ Missing objects, unknown or missing fields, duplicate JSON keys or inventory/arc
 
 ## 7. Future consumers and message boundary
 
-A future Launcher may only read the immutable mapping returned by `locate_active_package` to bind the exact PackageRoot, bundled private Python, Guide, Manifest, Lock, Release, authority, and commit for one WorkBuddy-owned session. This document does not implement or authorize the Launcher, Runtime preparation, WorkBuddy entry, or status/result relay, and it does not authorize a second Agent process.
+A future Launcher may use the previous mapping only with the previous Package. The current Launcher contract requires a revised `locate_active_package` mapping that binds the exact PackageRoot, complete required private toolchain, Guide, Manifest, Lock, Release, authority, and commit for one WorkBuddy-owned session. This document does not implement or authorize the Launcher, optional capability preparation, WorkBuddy entry, or status/result relay, and it does not authorize a second Agent process.
 
 The verified external Package Guide may be read only after successful Registration/Locator identity validation and only by the correct downstream session consumer. The Shell must not interpret that Guide as permission to direct production.
 
@@ -132,6 +136,6 @@ The verified external Package Guide may be read only after successful Registrati
 
 ## 8. Implementation evidence
 
-`golden_key_openmontage_workbuddy/package_registration.py` is the implementation accepted for the previous Golden Key Package. `tests/workbuddy/test_package_registration.py` is historical implementation evidence for closed schemas, Release/Manifest/Lock/Python/Guide identity, canonical encoding, path safety, missing/duplicate/surrogate/tamper/drift/hash failures, immutable publication, active lock/CAS concurrency, recovery, rollback, and read-only Locator behavior. It is not current-package acceptance until the reopened Stage 2 completes against the new exact Package and private-Python identity.
+`golden_key_openmontage_workbuddy/package_registration.py` is the implementation accepted for the previous Python-only Golden Key Package. `tests/workbuddy/test_package_registration.py` is historical implementation evidence for that closed schema. It is not current-package acceptance until reopened Stage 2 replaces or extends the closed schema and proves the exact complete required toolchain.
 
 That test evidence does not prove installation, Runtime, Launcher, real WorkBuddy, OpenMontage production, Provider, SaaS, network, media, or business E2E.

@@ -1,43 +1,28 @@
 # Work Log
 
-## 2026-08-17：V2-S2-S3-RUNTIME-CORRECTION-DOCS1
+## 2026-08-18：V2必带工具链重新分类纠偏
 
-### 用户裁决与历史证据
+### 最新用户裁决
 
-- 用户明确裁决：金钥匙版OpenMontage for WorkBuddy交付包必须自带私有Python，避免普通用户首次运行前缺少解释器；其他运行组件先发现，缺失时再安装；终端用户下载必须使用中国大陆镜像，不得使用默认Git等海外位置。
-- Git历史`347272c`已实现包内便携Python引导；`899592d`已实现锁定Python依赖、FFmpeg、Node、Remotion、HyperFrames和浏览器，并记录阿里云/清华PyPI、npmmirror npm/Node/Chrome源；`639978d`已实现`managed`、`registered_host`、`PATH_host`、`missing`分类和missing-only准备。
-- 旧FFmpeg锁仍使用gyan.dev，不符合本轮“终端用户下载只用批准大陆镜像”的更严格裁决；新版Runtime Lock没有批准且可校验的大陆FFmpeg源前必须fail closed，不能静默回退海外源。
+- 官方OpenMontage基础Prerequisites为Python 3.10+、FFmpeg和Node.js 18+；金钥匙版面向普通用户，三项都必须随Package交付，不能只打包Python。
+- 当前HyperFrames要求Node.js 22+，所以金钥匙Package的Node锁必须满足Package内最高要求，当前按22+，不能只取通用README的18+下限。
+- Remotion、HyperFrames及其各自明确需要的浏览器/附属资产属于可选能力；由WorkBuddy/OpenMontage形成技术选择并锁定，普通用户只确认精确下载计划。
 
-### 文档固化边界
+### 对阶段2和阶段3的影响
 
-- 纠正Agent身份：腾讯WorkBuddy是唯一运行中的Agent；“OpenMontage Agent”只表示WorkBuddy读取已验证Package Guide后承担的逻辑生产角色，不是第二Agent进程。
-- 阶段2重新打开：旧实现与集成只保留为旧Package历史证据；新版官方输入必须重新组装为带锁定私有Python的金钥匙版Package，并完成重新登记、独立审阅和推广。
-- 阶段3固定闭集为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器。包内Python不发现、不下载；其余组件只查受管路径、明确登记宿主工具和PATH命令候选，不扫描盘符。
-- discover/plan必须零写入；只有完整missing-only计划展示组件、版本、hash、大小、目标和许可并取得用户明确同意后，才能从Runtime Lock批准的中国大陆镜像或唯一经直连验证的FFmpeg临时例外准备缺失项。无批准源返回`BLOCKED_SOURCE_UNAPPROVED`。
-- 本任务只修改现有文档，不新增生产代码、测试或Runtime资产，不运行下载、安装、WorkBuddy、Provider或媒体生产。结果最多为`REVIEW_READY`，独立Reviewer批准并fast-forward到正式分支前不算交付。
-- 静态一致性检查=`PASS`：13个变化路径全部在本任务白名单内，tracked仍精确33，生产代码/测试/CI变化0，`git diff --check`通过；项目`.venv`不存在，未混用全局Python，pytest保持`NOT_RUN_PROJECT_VENV_MISSING`。
+- 阶段2再次重新打开：Package组装、Manifest/Lock、Registration、Locator和测试必须覆盖可用私有Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx。此前只显式登记Python的实现保留为历史证据，不得标为当前PASS。
+- 阶段3不再发现、下载、替换或回退到系统Python/FFmpeg/Node；只处理已选定的一个Remotion或HyperFrames可选能力和该能力Lock声明的附属资产。未选择能力时允许零代码/零下载。
+- 终端用户可选能力下载继续要求精确missing-only计划、明确同意、批准的中国大陆镜像和禁止自动海外回退。精确`gyan.dev` FFmpeg资产改归Package组装供应链候选，接受来源、hash、许可和分发审查，不再属于阶段3下载流程。
+- 旧阶段3入口`prepare_runtime_on_demand(...)`、全组件Runtime Lock、精确文件范围、八步路径和条件授权全部`SUPERSEDED`或暂停。必须等待完整阶段2输出和真实WorkBuddy/OpenMontage可选能力消费者合同后重新冻结，不得把旧包交给Builder。
+- 本任务仍只修改现有文档，不新增生产代码、测试或Runtime资产，不运行下载、安装、WorkBuddy、Provider或媒体生产。结果最多为`REVIEW_READY`；独立Reviewer批准并fast-forward到正式分支前不算仓库交付。
+- 静态范围复核：13个变化路径全部在任务白名单内，tracked仍精确33，未跟踪文件0，生产代码/测试/CI变化0，`git diff --check`通过。项目测试仍不运行；本轮只验证文档合同一致性。
 
-### FFmpeg临时下载源补充裁决
+## 2026-08-17：V2-S2-S3-RUNTIME-CORRECTION-DOCS1（已被2026-08-18纠偏取代）
 
-- 用户临时批准继续使用老项目锁定的FFmpeg 9.0 `gyan.dev`资产，并计划在不使用代理/VPN的中国大陆网络自行验证能否直连。
-- 该裁决只解除“必须先找到大陆FFmpeg镜像”的来源批准阻断，不等于已经证明可访问。直连验证前状态为`BLOCKED_SOURCE_ACCESS_UNVERIFIED`；失败为`BLOCKED_SOURCE_UNREACHABLE`并等待新来源裁决。
-- 例外不得扩展到Python依赖、Node、Remotion、HyperFrames或浏览器；其余组件继续使用批准大陆镜像。任何下载失败都不得触发自动海外回退。
-
-### 建设顺序与实际运行顺序纠偏
-
-- 阶段3、4、5、6仍按编号完成建设、独立审阅和正式推广；该编号顺序不是最终用户调用顺序。
-- 最终用户实际运行从阶段5唯一WorkBuddy入口开始，经阶段2 Locator重验、阶段3单一闭集接口检查；只有有效Runtime就绪回执才进入阶段4，阶段6直接转交Runtime和Launcher事实。
-- 阶段3的ready与missing/incompatible是同一接口的结果，不是两条实现路线。缺失时阶段6先转交完整计划，用户另行授权后阶段3准备并停止；不自动重试原生产请求。
-- 阶段4没有有效Runtime就绪回执时必须返回`RUNTIME_NOT_READY`。阶段6不得安装、解释或重试。
-- 本次12个变化路径均在现有任务白名单内；`git diff --check`、旧冲突措辞扫描、固定33文件、零未跟踪文件及零生产代码/测试/CI变化检查均为`PASS`。项目`.venv`仍不存在，未使用全局Python，未运行pytest。
-
-### 阶段3可执行任务包补充
-
-- 用户确认在阶段2全部完成后，经只读交接检查通过即可启动阶段3；该授权固化为`GRANTED_AFTER_ALL_START_GATES_PASS`，当前仍为`NOT_GRANTED`，不得提前实现。
-- 阶段3路径收敛为一个`runtime_prepare.py`生产模块、一个`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`和一个直接测试文件，唯一入口为`prepare_runtime_on_demand(...)`；不恢复独立`host_tools.py`、通用下载器或第二入口。
-- 启动Gate、八步执行路径、三项SHA授权绑定、`DataRoot/Runtime`精确目标、私有Python bootstrap/import探针、FFmpeg直连阻断和直接验收矩阵已经写入现有权威文档。
-- 本次仍只修改文档，不创建上述实现文件，不运行下载、安装、WorkBuddy或媒体生产。下一步仍是独立Reviewer和正式分支fast-forward；阶段2完成前保持等待。
-- 12个变化路径均在当前文档任务白名单内；`git diff --check`、单一`public_entry`、33文件、零未跟踪文件、零生产代码/测试/CI变化和禁止提前授权字段检查均为`PASS`。项目`.venv`不存在，未使用全局Python，pytest保持`NOT_RUN_PROJECT_VENV_MISSING`。
+- 当日先将Python设为Package必带项，并把Python核心依赖、FFmpeg、Node、Remotion、HyperFrames和浏览器划入阶段3闭集；这项Required/Optional分类已被上方最新裁决取代，不能作为活动执行依据。
+- 当日为FFmpeg阶段3下载设置的`gyan.dev`直连阻断已退出阶段3；该资产现在只可能作为Package组装供应链候选。
+- 当日冻结的阶段3单一入口、全组件Runtime Lock、八步执行路径和`GRANTED_AFTER_ALL_START_GATES_PASS`已全部`SUPERSEDED`或暂停。当前阶段3仍为`NOT_GRANTED`，新任务包尚未冻结。
+- WorkBuddy唯一Agent、Shell不成为生产控制面、不得扫描盘符、可选下载必须missing-only且不得自动海外回退等未受本次纠偏影响的边界继续有效。
 
 ## 2026-08-17：V2-S3-S6-SCOPE-DOCS1
 

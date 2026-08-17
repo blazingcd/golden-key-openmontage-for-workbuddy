@@ -8,7 +8,7 @@
 |---|---|---|
 | `SHELL_INSTALLED` | Shell和Skill进入受支持安装位置 | ZIP构建成功 |
 | `OBJECT_IDENTITY_VERIFIED` | Shell/OpenMontage 执行包/Release/Manifest/Lock/SHA/安装实例一致 | 文件名、目录名、最新时间 |
-| `RUNTIME_BOUND` | 实际PackageRoot、包内私有Python、cwd、DataRoot和闭集组件来源/路径被锁定 | Python包存在、系统PATH命中或doctor文字说明 |
+| `RUNTIME_BOUND` | 实际PackageRoot、完整必带工具链、cwd、DataRoot以及当前已选可选能力（如有）的来源/路径被锁定 | 单个Python包存在、系统PATH命中或doctor文字说明 |
 | `REAL_WORKBUDDY` | 真实WorkBuddy客户端在新会话执行 | Codex、CLI、fixture或历史会话 |
 | `PROCESS_CORRECT` | WorkBuddy依据已验证Package执行原生Pipeline/Skill/Artifact/Reviewer/Checkpoint合同 | 产生项目目录或MP4 |
 | `CAPABILITY_REAL` | 真实工具或能力执行 | mock、静态registry、旧产物 |
@@ -34,40 +34,31 @@
 | 模块 | 最小 PASS 条件 | 越界失败条件 |
 |---|---|---|
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
-| OpenMontage 执行包登记与定位 | 唯一活动Package Registration的身份、hash和规范化路径与实际执行包一致 | 扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
-| Runtime按需准备 | 包内私有Python身份有效；闭集组件按`managed`/`registered_host`/`PATH_host`/`missing`分类；discover/plan零写入；用户确认后从批准大陆镜像或唯一已验证FFmpeg临时例外准备锁定缺失项；二次调用零下载复用 | 扫盘；扫描或下载Python；首次盲目全装；通用下载/包管理/repair；自动海外源回退；未验证即使用FFmpeg例外；修改系统Python/PATH；Shell选择渲染引擎、版本或生产方案 |
-| 会话Launcher | 只接受有效Runtime就绪回执，绑定精确环境，只为WorkBuddy会话调用一次固定工具入口，并返回真实退出码、结果指针和残留事实；无就绪回执返回`RUNTIME_NOT_READY` | 绕过Runtime就绪检查；启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
+| OpenMontage 执行包登记与定位 | 唯一活动Package Registration同时锁定Package、可用私有Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx的身份、hash、版本、能力和规范化路径 | 只登记Python；依赖系统Python/FFmpeg/Node；扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
+| Runtime按需准备 | 只消费WorkBuddy/OpenMontage已锁定的Remotion或HyperFrames能力要求；discover/plan零写入；用户确认后从批准大陆镜像只准备该能力及其锁声明附属资产；二次调用零下载复用 | 扫盘；发现/下载/替换必带Python/FFmpeg/Node；同时安装全部可选能力；通用下载/包管理/repair；自动海外源回退；修改系统PATH/注册表；Shell或普通用户替OpenMontage选择渲染器 |
+| 会话Launcher | 用阶段2必带工具链事实启动固定入口；所选可选能力执行前另有对应阶段3就绪事实；返回真实退出码、结果指针和残留事实 | 绕过相应就绪检查；启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
 | 状态与结果转交 | 直接转交Runtime计划/准备事实与Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；安装Runtime；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
 
 ### 3.1 阶段3至阶段6缩减Gate
 
-阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户的运行调用顺序。用户运行从阶段5入口开始，经阶段2 Locator重验和阶段3检查后，只有有效Runtime就绪回执才能进入阶段4，最后由阶段6转交事实。阶段3只有一个公共接口，以下是同一接口的两种合法PASS结果，不是两条实现路线：
+阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户运行顺序。旧“阶段3先检查所有Runtime再进入阶段4”的链路已失效：阶段4可依据阶段2必带工具链事实启动固定工具；WorkBuddy/OpenMontage锁定可选渲染能力后，只有该能力缺失时才调用阶段3。
 
-1. 已验证Package和真实下游合同证明没有额外Runtime缺口，记录`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`，生产代码变化为0；
-2. 对固定闭集执行只读发现，形成只包含缺失/不兼容项的锁定计划；阶段6转交该计划；计划完整列出组件、版本、hash、大小、批准源、许可证和目标，用户另行明确同意后，只实现该计划的prepare、同目录staging、互斥、原子发布与幂等，然后停止且不自动重试原生产请求。
+阶段3只有两个合法结果类别：没有可选能力要求或所选能力已就绪时记录`STAGE_3_NO_OPTIONAL_CAPABILITY_REQUIRED`/`READY_REUSED`并零下载；所选Remotion或HyperFrames缺失时形成只针对该能力及锁声明附属资产的计划，用户确认后按锁准备。不得把另一渲染器或未声明浏览器顺带安装。
 
-固定闭集为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器。包内私有Python由阶段2登记，阶段3不得扫描、替换或下载它。发现只允许受管路径、明确登记且重新核验的宿主工具和正常PATH命令解析，不允许盘符扫描。除精确锁定的FFmpeg 9.0 `gyan.dev`临时例外外，Runtime Lock没有批准大陆镜像、精确hash或许可证时必须返回`BLOCKED_SOURCE_UNAPPROVED`；FFmpeg例外直连验证前返回`BLOCKED_SOURCE_ACCESS_UNVERIFIED`，失败返回`BLOCKED_SOURCE_UNREACHABLE`。任何自动海外源回退为`FAIL`。
+Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具链。阶段2缺少任何一项时是`FAIL`，阶段3不得以宿主PATH、下载或受管目录补救。Node虽然官方Quick Start最低为18+，但当前HyperFrames要求22+，Package锁定值必须满足最高当前要求。
 
-阶段3不让普通用户在Remotion、HyperFrames或FFmpeg之间作技术安装选择；确认的是一份包含全部真实缺失/不兼容闭集组件的missing-only计划。组件就绪后，WorkBuddy才依据已验证Package生产合同在具体视频方案中选择渲染能力。下载授权不得推导Provider、费用或生产授权。
-
-阶段4 `PASS`要求消费有效Runtime就绪回执、一次精确环境绑定、一次固定工具进程调用和一个最终回执。缺少就绪回执必须返回`RUNTIME_NOT_READY`；任何第二Agent启动、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
+阶段4 `PASS`要求在启动时消费阶段2必带工具链就绪事实，并在执行已选可选能力前消费对应阶段3就绪事实。缺少相应事实必须返回`RUNTIME_NOT_READY`；任何第二Agent启动、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
 
 阶段5是用户实际运行起点。`PASS`要求真实WorkBuddy合同确认的一种显式入口、新会话命中、literal `user_message`不变、授权与`executor_controls`分离。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
 
 阶段6先验证WorkBuddy能否直接消费Runtime计划/准备事实和Launcher回执：能则记录`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0；不能则必须有精确字段差异和真实消费者证据，只允许一次确定性转换。非零退出、超时、缺少结果指针和残留进程必须保持原事实；阶段6不得安装、解释或重试。
 
-### 3.2 阶段3启动与交付Gate
+### 3.2 阶段3重新规划Gate
 
-阶段3开始前必须同时证明：本次规划纠偏和新版阶段2结果均经独立Reviewer批准并进入最新正式分支；当前Package Registration全身份重验通过；包内私有Python真实可启动、版本/架构兼容，并能在不使用系统Python时完成锁定bootstrap/import探针；当前Package提供足以冻结新版Runtime Lock的依赖输入；正式Git对象、33文件白名单、工作树和任务路径无漂移。任何一项缺失时，阶段3仍为`NOT_GRANTED`。
+上一版阶段3入口、全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`，不能实施。重新规划前必须得到阶段2完整工具链Locator输出、真实WorkBuddy/OpenMontage可选能力要求、能力锁和同一会话的暂停/继续消费者合同。
 
-阶段3实现最多包括`golden_key_openmontage_workbuddy/runtime_prepare.py`、`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`和`tests/workbuddy/test_runtime_prepare.py`。唯一公共入口为`prepare_runtime_on_demand(locator_result, data_root, runtime_lock, confirmation=None)`；不得另建宿主工具模块、下载框架或第二入口。
-
-阶段3直接验收至少覆盖：全部就绪时零下载`READY_REUSED`；缺失时只产生完整且身份锁定的计划；无确认、三项SHA不匹配或输入变化时零写入；只准备计划中的缺失项；已就绪项不重下不覆盖；来源/hash/大小/许可/目标/能力探针不完整时fail closed；PATH和登记候选重新核验；外来目标保留；中途失败回滚和临时文件清理；准备后二次发现零下载复用；Package、系统Python、PATH和注册表零修改；盘符扫描、管理员依赖、阶段4调用和原请求自动重试均为零。
-
-Python依赖必须由阶段2登记的包内私有Python安装到`<DataRoot>/Runtime/Python`；其余目标固定在`<DataRoot>/Runtime`的FFmpeg、Node、Composition/Remotion、Composition/HyperFrames和Browsers/HyperFrames子目录，缓存固定为`<DataRoot>/Caches`。路径或所有权不符时不能以repair覆盖。
-
-FFmpeg无代理/VPN大陆直连尚未验证时，`BLOCKED_SOURCE_ACCESS_UNVERIFIED`路径可以通过测试和审阅，但真实FFmpeg下载与`READY_PREPARED`全闭集验收不能通过；直连失败后必须保持`BLOCKED_SOURCE_UNREACHABLE`并等待新的来源裁决。
+新阶段3仍最多一个公共入口、一个生产模块、一个Optional Runtime Lock和一个直接测试文件。直接验收必须覆盖：无能力要求零代码/零下载；只检查已选能力；另一渲染器零触碰；锁未声明浏览器时浏览器零触碰；无确认零写入；身份变化使确认失效；只使用批准大陆镜像；外来目标保留；失败回滚和清理；二次调用零下载复用；必带Package工具链零修改；Shell选择渲染器和自动重放业务请求均为零。
 
 ## 4. Gate A：对象与环境
 
@@ -78,7 +69,7 @@ FFmpeg无代理/VPN大陆直连尚未验证时，`BLOCKED_SOURCE_ACCESS_UNVERIFI
 - literal用户消息不含PackageRoot、Python或`.venv`；
 - 显式Skill正确命中；
 - Locator只读取登记对象，不扫盘；
-- Launcher绑定精确PackageRoot、包内私有Python、闭集Runtime、cwd和DataRoot；
+- Launcher绑定精确PackageRoot、阶段2登记的完整必带工具链、cwd和DataRoot；若本次执行需要已选可选能力，还绑定对应阶段3就绪事实；
 - 正确环境中的最小WorkBuddy/Package工具preflight成功；
 - 实际解释器和执行包身份进入会话回执；
 - Provider调用0、费用0；
@@ -166,6 +157,12 @@ install_root
 data_root
 package_root
 package_python
+package_ffmpeg
+package_ffprobe
+package_node
+package_npm
+package_npx
+selected_optional_capability
 skill_hashes
 literal_user_message
 executor_controls

@@ -98,6 +98,29 @@ _process_api = importlib.import_module("sub" + "process")
 _run_process = _process_api.run
 _process_timeout = _process_api.TimeoutExpired
 _GIT_TIMEOUT_SECONDS = 10.0
+_GIT_ENVIRONMENT_ALLOWLIST = (
+    "COMSPEC",
+    "PATH",
+    "PATHEXT",
+    "SYSTEMROOT",
+    "TEMP",
+    "TMP",
+    "WINDIR",
+)
+_GIT_COMMAND_CONFIG = (
+    "-c",
+    "core.fsmonitor=false",
+    "-c",
+    "core.untrackedCache=false",
+    "-c",
+    "core.preloadIndex=false",
+    "-c",
+    "core.fscache=false",
+    "-c",
+    "maintenance.auto=false",
+    "-c",
+    "gc.auto=0",
+)
 
 
 class PackageRegistrationError(ValueError):
@@ -403,14 +426,29 @@ def _decode_git(raw: bytes, *, label: str) -> str:
     return text
 
 
-def _run_git(root: Path, arguments: Sequence[str], *, label: str) -> bytes:
-    environment = dict(os.environ)
+def _git_environment() -> dict[str, str]:
+    environment = {
+        key: os.environ[key]
+        for key in _GIT_ENVIRONMENT_ALLOWLIST
+        if key in os.environ
+    }
     environment.update(
-        {"GIT_OPTIONAL_LOCKS": "0", "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "Never"}
+        {
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_OPTIONAL_LOCKS": "0",
+            "GIT_TERMINAL_PROMPT": "0",
+            "GCM_INTERACTIVE": "Never",
+        }
     )
+    return environment
+
+
+def _run_git(root: Path, arguments: Sequence[str], *, label: str) -> bytes:
+    environment = _git_environment()
     try:
         completed = _run_process(
-            ["git", "-C", str(root), *arguments],
+            ["git", *_GIT_COMMAND_CONFIG, "-C", str(root), *arguments],
             shell=False,
             capture_output=True,
             check=False,
@@ -469,6 +507,71 @@ def _tracked_file(root: Path, relative: str) -> Path:
     return current
 
 
+def _file_identity(value: os.stat_result) -> tuple[int, int, int, int]:
+    return (
+        value.st_dev,
+        value.st_ino,
+        stat.S_IFMT(value.st_mode),
+        value.st_size,
+    )
+
+
+def _opened_object_identity(value: os.stat_result) -> tuple[int, int, int]:
+    return (value.st_dev, value.st_ino, stat.S_IFMT(value.st_mode))
+
+
+def _stable_tracked_file_identity(
+    root: Path, relative: str, *, expected_blob: str
+) -> tuple[str, int]:
+    path = _tracked_file(root, relative)
+    try:
+        before = os.stat(path, follow_symlinks=False)
+        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+        descriptor = os.open(path, flags)
+    except OSError as exc:
+        _fail("OBJECT_MISSING", f"cannot securely open tracked file {relative}: {exc}")
+    sha256 = hashlib.sha256()
+    git_blob = hashlib.sha1(usedforsecurity=False)
+    git_blob.update(f"blob {before.st_size}\0".encode("ascii"))
+    size = 0
+    try:
+        opened = os.fstat(descriptor)
+        if (
+            not stat.S_ISREG(opened.st_mode)
+            or _opened_object_identity(opened) != _opened_object_identity(before)
+        ):
+            _fail("TAMPERED", f"tracked file changed while opening: {relative}")
+        with os.fdopen(descriptor, "rb") as handle:
+            descriptor = -1
+            while chunk := handle.read(1024 * 1024):
+                sha256.update(chunk)
+                git_blob.update(chunk)
+                size += len(chunk)
+            after_handle = os.fstat(handle.fileno())
+    except PackageRegistrationError:
+        raise
+    except OSError as exc:
+        _fail("OBJECT_MISSING", f"cannot securely read tracked file {relative}: {exc}")
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+    try:
+        after_path = os.stat(path, follow_symlinks=False)
+    except OSError as exc:
+        _fail("TAMPERED", f"tracked file disappeared after reading: {relative}: {exc}")
+    _tracked_file(root, relative)
+    expected_identity = _file_identity(before)
+    if (
+        _file_identity(after_handle) != expected_identity
+        or _file_identity(after_path) != expected_identity
+        or size != before.st_size
+    ):
+        _fail("TAMPERED", f"tracked file changed while hashing: {relative}")
+    if git_blob.hexdigest() != expected_blob:
+        _fail("HASH_MISMATCH", f"tracked file does not match HEAD blob: {relative}")
+    return sha256.hexdigest(), size
+
+
 def _parse_inventory(root: Path, raw: bytes) -> list[dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -491,12 +594,76 @@ def _parse_inventory(root: Path, raw: bytes) -> list[dict[str, Any]]:
         if kind != "blob" or mode not in {"100644", "100755"}:
             _fail("PATH_VIOLATION", f"tracked entry is not a regular file: {relative}")
         _require_commit(object_id, label=f"Git blob id for {relative}")
-        digest, size = _file_hash_size(_tracked_file(root, relative), label=f"tracked file {relative}")
-        entries.append({"path": relative, "git_mode": mode, "sha256": digest, "size": size})
+        digest, size = _stable_tracked_file_identity(
+            root, relative, expected_blob=object_id
+        )
+        entries.append(
+            {
+                "path": relative,
+                "git_mode": mode,
+                "git_blob": object_id,
+                "sha256": digest,
+                "size": size,
+            }
+        )
     if not entries:
         _fail("IDENTITY_MISMATCH", "tracked inventory must not be empty")
     entries.sort(key=lambda entry: entry["path"].encode("utf-8"))
     return entries
+
+
+def _validate_index_flags(raw: bytes, *, expected_paths: set[str]) -> None:
+    actual_paths: set[str] = set()
+    for index, record in enumerate(raw.split(b"\0")):
+        if not record:
+            continue
+        try:
+            tag_raw, path_raw = record.split(b" ", 1)
+        except ValueError:
+            _fail("GIT_OUTPUT_INVALID", f"Git index flag record {index} is malformed")
+        tag = _decode_git(tag_raw, label="Git index tag")
+        relative = _safe_relative(
+            _decode_git(path_raw, label="Git index path"), label="Git index path"
+        )
+        if relative in actual_paths:
+            _fail("DUPLICATE", f"duplicate Git index path: {relative}")
+        actual_paths.add(relative)
+        if tag.casefold() == "s":
+            _fail("IDENTITY_MISMATCH", f"skip-worktree is forbidden: {relative}")
+        if tag.islower():
+            _fail("IDENTITY_MISMATCH", f"assume-unchanged is forbidden: {relative}")
+        if tag != "H":
+            _fail("IDENTITY_MISMATCH", f"unsupported Git index state {tag}: {relative}")
+    if actual_paths != expected_paths:
+        _fail("IDENTITY_MISMATCH", "Git index paths do not match HEAD inventory")
+
+
+def _validate_own_git_metadata(root: Path, git_dir_text: str) -> None:
+    git_dir = _absolute_existing_path(git_dir_text, label="Git metadata", directory=True)
+    dot_git = root / ".git"
+    if not dot_git.exists() or _is_reparse_or_symlink(dot_git):
+        _fail("IDENTITY_MISMATCH", "PackageRoot does not own safe .git metadata")
+    if dot_git.is_dir():
+        if not _same_path(dot_git.resolve(strict=True), git_dir):
+            _fail("IDENTITY_MISMATCH", "PackageRoot .git directory does not match Git metadata")
+        return
+    if not dot_git.is_file():
+        _fail("IDENTITY_MISMATCH", "PackageRoot .git metadata has an unsupported type")
+    try:
+        marker = dot_git.read_text(encoding="utf-8").strip()
+    except (OSError, UnicodeError) as exc:
+        _fail("IDENTITY_MISMATCH", f"cannot read PackageRoot .git metadata: {exc}")
+    if not marker.startswith("gitdir: "):
+        _fail("IDENTITY_MISMATCH", "PackageRoot .git file is malformed")
+    declared = Path(marker.removeprefix("gitdir: "))
+    if not declared.is_absolute():
+        declared = root / declared
+    try:
+        declared = declared.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        _fail("IDENTITY_MISMATCH", f"PackageRoot .git target is invalid: {exc}")
+    if not _same_path(declared, git_dir):
+        _fail("IDENTITY_MISMATCH", "PackageRoot .git file does not match Git metadata")
 
 
 def _collect_git_identity(
@@ -512,6 +679,16 @@ def _collect_git_identity(
     )
     if not _same_path(top, package_root):
         _fail("IDENTITY_MISMATCH", "PackageRoot is not the exact independent worktree root")
+    if _git_text(package_root, ["rev-parse", "--is-bare-repository"], label="bare status") != "false":
+        _fail("IDENTITY_MISMATCH", "PackageRoot must not be a bare repository")
+    _validate_own_git_metadata(
+        package_root,
+        _git_text(
+            package_root,
+            ["rev-parse", "--absolute-git-dir"],
+            label="Git metadata",
+        ),
+    )
     actual_origin = _normalize_origin_url(
         _git_text(package_root, ["config", "--get", "remote.origin.url"], label="origin URL"),
         label="origin URL",
@@ -525,17 +702,59 @@ def _collect_git_identity(
         _fail("IDENTITY_MISMATCH", "HEAD does not match expected_commit")
     tree = _git_text(package_root, ["rev-parse", "--verify", "HEAD^{tree}"], label="HEAD tree")
     _require_commit(tree, label="HEAD tree")
-    status = _run_git(
+    object_format = _git_text(
+        package_root, ["rev-parse", "--show-object-format"], label="object format"
+    )
+    if object_format != "sha1":
+        _fail("IDENTITY_MISMATCH", "only the official SHA-1 Git object format is supported")
+    status_before = _run_git(
         package_root,
         ["status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignored=no"],
         label="clean status",
     )
-    if status:
+    if status_before:
         _fail("IDENTITY_MISMATCH", "PackageRoot has tracked or untracked changes")
-    entries = _parse_inventory(
-        package_root,
-        _run_git(package_root, ["ls-tree", "-rz", "--full-tree", "HEAD"], label="inventory"),
+    inventory_before = _run_git(
+        package_root, ["ls-tree", "-rz", "--full-tree", "HEAD"], label="inventory"
     )
+    index_before = _run_git(
+        package_root,
+        ["ls-files", "-v", "-z", "--full-name"],
+        label="index flags",
+    )
+    entries = _parse_inventory(package_root, inventory_before)
+    expected_paths = {entry["path"] for entry in entries}
+    _validate_index_flags(index_before, expected_paths=expected_paths)
+    actual_commit_after = _git_text(
+        package_root, ["rev-parse", "--verify", "HEAD^{commit}"], label="HEAD after hash"
+    )
+    tree_after = _git_text(
+        package_root, ["rev-parse", "--verify", "HEAD^{tree}"], label="HEAD tree after hash"
+    )
+    status_after = _run_git(
+        package_root,
+        ["status", "--porcelain=v1", "-z", "--untracked-files=all", "--ignored=no"],
+        label="clean status after hash",
+    )
+    inventory_after = _run_git(
+        package_root,
+        ["ls-tree", "-rz", "--full-tree", "HEAD"],
+        label="inventory after hash",
+    )
+    index_after = _run_git(
+        package_root,
+        ["ls-files", "-v", "-z", "--full-name"],
+        label="index flags after hash",
+    )
+    if actual_commit_after != actual_commit or tree_after != tree:
+        _fail("IDENTITY_MISMATCH", "HEAD or tree changed while hashing inventory")
+    if status_after or status_after != status_before:
+        _fail("IDENTITY_MISMATCH", "worktree status changed while hashing inventory")
+    if inventory_after != inventory_before:
+        _fail("IDENTITY_MISMATCH", "HEAD inventory changed while hashing files")
+    if index_after != index_before:
+        _fail("IDENTITY_MISMATCH", "Git index flags changed while hashing files")
+    _validate_index_flags(index_after, expected_paths=expected_paths)
     guide_entry = next((entry for entry in entries if entry["path"] == GUIDE_NAME), None)
     if guide_entry is None:
         _fail("OBJECT_MISSING", "AGENT_GUIDE.md is not tracked by HEAD")
@@ -601,7 +820,9 @@ def _validate_registration_shape(value: dict[str, Any]) -> None:
     seen: set[str] = set()
     for index, entry_value in enumerate(entries):
         entry = _require_exact_keys(
-            entry_value, keys={"path", "git_mode", "sha256", "size"}, label=f"inventory[{index}]"
+            entry_value,
+            keys={"path", "git_mode", "git_blob", "sha256", "size"},
+            label=f"inventory[{index}]",
         )
         relative = _safe_relative(entry["path"], label=f"inventory[{index}].path")
         key = _windows_relative_path_key(relative)
@@ -610,6 +831,7 @@ def _validate_registration_shape(value: dict[str, Any]) -> None:
         seen.add(key)
         if entry["git_mode"] not in {"100644", "100755"}:
             _fail("PATH_VIOLATION", f"inventory mode is not regular: {relative}")
+        _require_commit(entry["git_blob"], label=f"inventory Git blob for {relative}")
         _require_sha256(entry["sha256"], label=f"inventory SHA for {relative}")
         _require_size(entry["size"], label=f"inventory size for {relative}", positive=False)
     if inventory["sha256"] != _sha256_bytes(_canonical_json({"entries": entries})):

@@ -60,10 +60,15 @@ resolves a branch or tag into a preferred commit and never selects "latest".
 
 Every Git call uses a fixed argument list, `shell=False`, captured byte output, an
 explicit 10-second timeout, and an explicit exit-code check. Output must be UTF-8 and
-NFC where text is expected. `GIT_OPTIONAL_LOCKS=0`, `GIT_TERMINAL_PROMPT=0`, and
-`GCM_INTERACTIVE=Never` keep identity reads non-interactive and prevent optional Git
-index refresh locks. A timeout, non-zero exit, malformed output, or non-UTF-8 output
-fails closed. Stage 2 never invokes `fetch`, `pull`, `push`, `clone`, or `ls-remote`;
+NFC where text is expected. The child environment is constructed from a fixed OS
+allowlist rather than inherited wholesale: repository/worktree/index/object-directory
+redirectors and caller-supplied `GIT_CONFIG_*` entries are absent. System and global
+Git configuration are disabled; command-level configuration disables fsmonitor,
+untracked cache, index preload/file cache, maintenance, and automatic GC.
+`GIT_OPTIONAL_LOCKS=0`, `GIT_TERMINAL_PROMPT=0`, and `GCM_INTERACTIVE=Never` keep
+identity reads non-interactive and prevent optional Git index refresh locks. A timeout,
+non-zero exit, malformed output, or non-UTF-8 output fails closed. Stage 2 never
+invokes `fetch`, `pull`, `push`, `clone`, or `ls-remote`;
 online comparison with official remote HEAD is external takeover-gate evidence.
 
 ## 4. Checkout and inventory validation
@@ -81,7 +86,14 @@ Registration and every later activation, recovery, and locate operation revalida
   traversal-safe, ADS-safe, and free of reserved names or trailing-dot/space aliases;
 - every entry is a regular Git blob with mode `100644` or `100755` and resolves to a
   regular file without symlink, junction, or reparse traversal;
-- every tracked file records its path, Git mode, byte size, and working-tree SHA-256;
+- PackageRoot owns the `.git` metadata relation reported by Git; inherited environment
+  variables cannot redirect it to foreign metadata;
+- assume-unchanged and skip-worktree index flags are forbidden for every tracked path;
+- every tracked file records its path, Git mode, HEAD blob OID, byte size, and
+  working-tree SHA-256;
+- each file is opened without following symlink/reparse paths, read through a stable
+  handle, checked for the same file identity before/after reading, and proven to hash
+  to its recorded HEAD blob;
 - the canonical complete entry array records a file count and inventory SHA-256;
 - `AGENT_GUIDE.md` exists, is tracked by the same inventory, is non-empty, and records
   its path, mode, size, and SHA-256.
@@ -91,6 +103,11 @@ all dirty and rejected. Ignored files are explicitly allowed, excluded from the
 registration inventory, and do not contribute identity; they cannot replace or
 shadow any tracked inventory entry. This ignored-file policy is fixed, not inferred
 per checkout.
+
+After all file reads and hashes, Registration/Locator re-read HEAD, tree, status,
+`ls-tree` inventory, and index flags and require exact equality with the pre-read
+observations. A swap or identity change between status and hashing therefore fails
+closed rather than becoming a registration object.
 
 The Guide bytes are used only to compute identity after PackageRoot, origin, HEAD,
 tree, and clean-state validation. Stage 2 does not interpret the Guide. A downstream
@@ -107,7 +124,7 @@ git_tree, inventory, guide
 ```
 
 `inventory` has exactly `file_count`, `sha256`, and `entries`; each entry has exactly
-`path`, `git_mode`, `sha256`, and `size`. `guide` has exactly `relative_path`, `path`,
+`path`, `git_mode`, `git_blob`, `sha256`, and `size`. `guide` has exactly `relative_path`, `path`,
 `git_mode`, `sha256`, and `size`. Canonical object bytes are UTF-8 without BOM, sorted
 keys, compact separators, and exactly one trailing LF. The SHA-256 of those bytes is
 the object filename and returned `registration_sha256`.

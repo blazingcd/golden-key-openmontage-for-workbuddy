@@ -1,19 +1,21 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`ACTIVE AUTHORITY / V2-S2-OFFICIAL-PACKAGE-ALIGNMENT / REVIEW_READY`
+状态：`ACTIVE AUTHORITY / V2-S2-OFFICIAL-PACKAGE-ALIGNMENT-FIX1 / REVIEW_READY`
 
 更新时间：2026-08-17
 
 ## 当前任务
 
 ```text
-task_id: V2-S2-OFFICIAL-PACKAGE-ALIGNMENT-BUILDER1
+task_id: V2-S2-OFFICIAL-PACKAGE-ALIGNMENT-FIX1
 task_status: REVIEW_READY
 authority_lifetime: ONE_TIME_BOUNDED
-start_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
+start_commit: 9b8ebb2f7c0e910758ad97c91e885c0ba18fdd79
+cumulative_start_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 result_commit: THIS_COMMIT
 branch: codex/v2-s2-official-package-alignment-b1
-review_range: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb..THIS_COMMIT
+fix_review_range: 9b8ebb2f7c0e910758ad97c91e885c0ba18fdd79..THIS_COMMIT
+cumulative_review_range: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb..THIS_COMMIT
 formal_target_branch: origin/codex/workbuddy-shell-v2
 formal_target_at_start: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 promotion_authorization: NOT_GRANTED
@@ -30,6 +32,9 @@ contract_files_changed: 2
 stage3_implementation: NOT_GRANTED
 stage3_files_changed: 0
 forbidden_paths_changed: 0
+reviewer1_p1_1_git_blob_closure: CLOSED_BY_TEST_CANDIDATE
+reviewer1_p1_2_git_environment_closure: CLOSED_BY_TEST_CANDIDATE
+reviewer1_p1_3_lock_cas_recovery_evidence: CLOSED_BY_TEST_CANDIDATE
 ```
 
 `THIS_COMMIT`表示本账本与Builder结果位于同一不可变提交中。只有独立Reviewer
@@ -89,6 +94,12 @@ Registration要求四个显式输入并核验PackageRoot、官方origin、精确
 状态、固定tracked inventory、Git mode、size、SHA-256及tracked非空Guide。tracked或
 untracked变化拒绝；ignored文件允许存在但不进入身份。Git命令固定参数、`shell=False`、
 固定超时、明确退出码，失败、超时或非UTF-8输出均fail closed。
+
+FIX1进一步把每个`ls-tree` blob OID纳入登记并用稳定文件handle证明工作树字节对应HEAD
+blob；拒绝assume-unchanged/skip-worktree，并在hash后复核HEAD/tree/status/inventory/index
+flags。Git子进程只接收受控环境，拒绝Git路径、index、object和config注入，且命令级关闭
+fsmonitor及可选Git写入。内核锁、跨进程竞争、统一deadline、crash释放、原子replace、
+pointer CAS和activate/recover互斥均由v2 Git fixture重新覆盖。
 
 Locator离线、只读、零修复、零网络、零Git fetch/pull，重新核验pointer、登记对象、
 PackageRoot、origin、HEAD/tree、clean、inventory和Guide SHA，返回不可变的PackageRoot、

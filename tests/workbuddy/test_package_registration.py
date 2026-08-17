@@ -4,7 +4,9 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 import threading
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType, SimpleNamespace
@@ -164,6 +166,39 @@ def _install_changed_object(
     return digest
 
 
+def _activation_child(
+    data_root: Path, expected: str, target: str, *, timeout_seconds: float = 0.15
+) -> subprocess.CompletedProcess[str]:
+    child_code = r"""
+import sys
+from golden_key_openmontage_workbuddy import package_registration as module
+
+module._ACTIVE_LOCK_TIMEOUT_SECONDS = float(sys.argv[4])
+module._ACTIVE_LOCK_RETRY_SECONDS = 0.01
+try:
+    module.activate_package(sys.argv[1], sys.argv[2], sys.argv[3])
+except module.PackageRegistrationError as exc:
+    print(exc.code)
+else:
+    print("SUCCESS")
+"""
+    return subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            child_code,
+            str(data_root),
+            expected,
+            target,
+            str(timeout_seconds),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+
+
 def test_registers_canonical_immutable_v2_git_identity_without_activation(
     tmp_path: Path,
 ) -> None:
@@ -249,6 +284,184 @@ def test_ignored_files_are_allowed_and_excluded_from_inventory(tmp_path: Path) -
     assert "ignored.tmp" not in paths
     activate_package(candidate.data_root, "MISSING", registered["registration_sha256"])
     assert locate_active_package(candidate.data_root)["inventory"]["file_count"] == 3
+
+
+def test_assume_unchanged_tracked_file_cannot_be_registered(tmp_path: Path) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    _git(candidate.root, "update-index", "--assume-unchanged", "--", "src/fixture.txt")
+    _expect_code("IDENTITY_MISMATCH", candidate.register)
+    assert not _registry(candidate).exists()
+
+
+def test_skip_worktree_tracked_file_cannot_be_registered(tmp_path: Path) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    _git(candidate.root, "update-index", "--skip-worktree", "--", "src/fixture.txt")
+    _expect_code("IDENTITY_MISMATCH", candidate.register)
+    assert not _registry(candidate).exists()
+
+
+def test_worktree_file_must_match_head_blob(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    candidate.managed.write_text("not the committed blob\n", encoding="utf-8")
+    original = registration._run_git
+
+    def hide_status(root: Path, arguments: list[str], *, label: str) -> bytes:
+        if arguments and arguments[0] == "status":
+            return b""
+        return original(root, arguments, label=label)
+
+    monkeypatch.setattr(registration, "_run_git", hide_status)
+    _expect_code("HASH_MISMATCH", candidate.register)
+
+
+def test_inventory_rejects_file_swap_between_status_and_hash(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    original = registration._stable_tracked_file_identity
+
+    def swap_then_hash(
+        root: Path, relative: str, *, expected_blob: str
+    ) -> tuple[str, int]:
+        if relative == "src/fixture.txt":
+            candidate.managed.write_text("swapped after status\n", encoding="utf-8")
+        return original(root, relative, expected_blob=expected_blob)
+
+    monkeypatch.setattr(registration, "_stable_tracked_file_identity", swap_then_hash)
+    _expect_code("HASH_MISMATCH", candidate.register)
+
+
+def test_locator_rejects_file_swap_during_revalidation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    activate_package(candidate.data_root, "MISSING", digest)
+    original = registration._stable_tracked_file_identity
+
+    def swap_then_hash(
+        root: Path, relative: str, *, expected_blob: str
+    ) -> tuple[str, int]:
+        if relative == "src/fixture.txt":
+            candidate.managed.write_text("locator swap\n", encoding="utf-8")
+        return original(root, relative, expected_blob=expected_blob)
+
+    monkeypatch.setattr(registration, "_stable_tracked_file_identity", swap_then_hash)
+    _expect_code("HASH_MISMATCH", lambda: locate_active_package(candidate.data_root))
+
+
+def test_git_environment_cannot_redirect_package_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    other = _make_candidate(tmp_path / "other")
+    monkeypatch.setenv("GIT_DIR", str(other.root / ".git"))
+    monkeypatch.setenv("GIT_WORK_TREE", str(other.root))
+    result = candidate.register()
+    assert result["package_root"] == str(candidate.root)
+    assert result["openmontage_commit"] == candidate.commit
+
+
+def test_git_config_environment_cannot_spoof_origin(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(
+        tmp_path / "candidate", origin="https://github.com/other/OpenMontage.git"
+    )
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "remote.origin.url")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", ORIGIN)
+    _expect_code("IDENTITY_MISMATCH", candidate.register)
+
+
+def test_package_root_requires_its_own_git_metadata(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = _make_candidate(tmp_path / "source")
+    plain = (tmp_path / "plain").resolve()
+    plain.mkdir()
+    (plain / registration.GUIDE_NAME).write_bytes(source.guide.read_bytes())
+    (plain / ".gitignore").write_bytes((source.root / ".gitignore").read_bytes())
+    (plain / "src").mkdir()
+    (plain / "src" / "fixture.txt").write_bytes(source.managed.read_bytes())
+    data = (tmp_path / "data").resolve()
+    data.mkdir()
+    original = registration._run_git
+
+    def redirect_reads(root: Path, arguments: list[str], *, label: str) -> bytes:
+        if arguments == ["rev-parse", "--show-toplevel"]:
+            return str(plain).encode("utf-8") + b"\n"
+        return original(source.root, arguments, label=label)
+
+    monkeypatch.setattr(registration, "_run_git", redirect_reads)
+    _expect_code(
+        "IDENTITY_MISMATCH",
+        lambda: register_package(data, plain, ORIGIN, source.commit),
+    )
+
+
+def test_locator_disables_fsmonitor_and_optional_git_writes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    activate_package(candidate.data_root, "MISSING", digest)
+    real = registration._run_process
+    observed: list[tuple[list[str], dict[str, Any]]] = []
+
+    def capture(argv: list[str], **kwargs: Any) -> Any:
+        observed.append((argv, kwargs))
+        return real(argv, **kwargs)
+
+    monkeypatch.setattr(registration, "_run_process", capture)
+    locate_active_package(candidate.data_root)
+    assert observed
+    for argv, kwargs in observed:
+        assert ["-c", "core.fsmonitor=false"] == argv[1:3]
+        assert kwargs["env"]["GIT_OPTIONAL_LOCKS"] == "0"
+        assert kwargs["env"]["GIT_CONFIG_NOSYSTEM"] == "1"
+        assert kwargs["env"]["GIT_CONFIG_GLOBAL"] == os.devnull
+
+
+def test_git_environment_is_allowlisted_not_inherited(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    injected = {
+        "UNRELATED_SECRET": "secret",
+        "GIT_DIR": "redirect",
+        "GIT_WORK_TREE": "redirect",
+        "GIT_INDEX_FILE": "redirect",
+        "GIT_OBJECT_DIRECTORY": "redirect",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES": "redirect",
+        "GIT_CONFIG_COUNT": "1",
+        "GIT_CONFIG_KEY_0": "remote.origin.url",
+        "GIT_CONFIG_VALUE_0": "spoof",
+    }
+    for key, value in injected.items():
+        monkeypatch.setenv(key, value)
+    real = registration._run_process
+    environments: list[dict[str, str]] = []
+
+    def capture(argv: list[str], **kwargs: Any) -> Any:
+        environments.append(kwargs["env"])
+        return real(argv, **kwargs)
+
+    monkeypatch.setattr(registration, "_run_process", capture)
+    candidate.register()
+    controlled = {
+        "GIT_CONFIG_GLOBAL",
+        "GIT_CONFIG_NOSYSTEM",
+        "GIT_OPTIONAL_LOCKS",
+        "GIT_TERMINAL_PROMPT",
+        "GCM_INTERACTIVE",
+    }
+    allowed = set(registration._GIT_ENVIRONMENT_ALLOWLIST) | controlled
+    assert environments
+    assert all(set(environment) <= allowed for environment in environments)
+    assert all(not (set(injected) & set(environment)) for environment in environments)
 
 
 @pytest.mark.parametrize("drift", ["missing", "hash", "size", "extra"])
@@ -451,6 +664,261 @@ def test_activation_cas_race_has_one_winner(tmp_path: Path) -> None:
         thread.join(timeout=10)
     assert sorted(outcomes).count("ACTIVE_CAS_MISMATCH") == 1
     assert locate_active_package(data)["registration_sha256"] in {first_sha, second_sha}
+
+
+def test_unavailable_kernel_lock_api_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    if os.name == "nt":
+        monkeypatch.setattr(registration, "_msvcrt", None)
+    else:
+        monkeypatch.setattr(registration, "_fcntl", None)
+    _expect_code(
+        "TAMPERED",
+        lambda: activate_package(candidate.data_root, "MISSING", digest),
+    )
+    assert not _active(candidate).exists()
+
+
+def test_lock_contention_times_out_without_pointer_write(tmp_path: Path) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    paths = registration._registry_paths(candidate.data_root)
+    with registration._active_lock(paths):
+        child = _activation_child(candidate.data_root, "MISSING", digest)
+    assert child.returncode == 0, child.stderr
+    assert child.stdout.strip() == "ACTIVE_LOCK_BUSY"
+    assert not _active(candidate).exists()
+
+
+def test_process_and_kernel_lock_contention_share_one_total_deadline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    clock = [0.0]
+
+    class ScriptedProcessLock:
+        def __init__(self) -> None:
+            self.attempts = 0
+            self.released = False
+
+        def acquire(self, *, blocking: bool) -> bool:
+            assert blocking is False
+            self.attempts += 1
+            return self.attempts >= 4
+
+        def release(self) -> None:
+            self.released = True
+
+    process_lock = ScriptedProcessLock()
+
+    def monotonic() -> float:
+        return clock[0]
+
+    def advance(seconds: float) -> None:
+        clock[0] += seconds
+
+    def kernel_busy(handle: Any) -> None:
+        raise BlockingIOError("injected kernel contention")
+
+    monkeypatch.setattr(registration, "_PROCESS_ACTIVE_LOCK", process_lock)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_TIMEOUT_SECONDS", 5.0)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_RETRY_SECONDS", 1.0)
+    monkeypatch.setattr(registration.time, "monotonic", monotonic)
+    monkeypatch.setattr(registration.time, "sleep", advance)
+    monkeypatch.setattr(registration, "_lock_byte", kernel_busy)
+
+    _expect_code(
+        "ACTIVE_LOCK_BUSY",
+        lambda: activate_package(candidate.data_root, "MISSING", digest),
+    )
+    assert process_lock.attempts == 4
+    assert process_lock.released is True
+    assert clock[0] == pytest.approx(5.0)
+    assert not _active(candidate).exists()
+
+
+def test_process_crash_releases_kernel_lock_without_deleting_identity_file(
+    tmp_path: Path,
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    lock_path = _registry(candidate) / "active.lock"
+    child_code = r"""
+import os
+import sys
+
+handle = open(sys.argv[1], "r+b", buffering=0)
+handle.seek(0)
+if os.name == "nt":
+    import msvcrt
+    msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+else:
+    import fcntl
+    fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+os._exit(23)
+"""
+    crashed = subprocess.run(
+        [sys.executable, "-c", child_code, str(lock_path)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert crashed.returncode == 23, crashed.stderr
+    assert lock_path.read_bytes() == registration.LOCK_BYTES
+    assert activate_package(candidate.data_root, "MISSING", digest) == digest
+
+
+def test_replace_failure_preserves_old_pointer_and_hides_temp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = (tmp_path / "data").resolve()
+    data.mkdir()
+    old = _make_candidate(tmp_path / "old", data_root=data)
+    new = _make_candidate(tmp_path / "new", data_root=data)
+    old_sha = old.register()["registration_sha256"]
+    new_sha = new.register()["registration_sha256"]
+    activate_package(data, "MISSING", old_sha)
+    before = _active(old).read_bytes()
+    real_replace = registration.os.replace
+
+    def fail_replace(source: Any, destination: Any) -> None:
+        raise OSError("injected replace failure")
+
+    monkeypatch.setattr(registration.os, "replace", fail_replace)
+    _expect_code(
+        "ATOMIC_WRITE_FAILED",
+        lambda: activate_package(data, _sha256_bytes(before), new_sha),
+    )
+    assert _active(old).read_bytes() == before
+    assert not list(_registry(old).glob(".active.*.tmp"))
+    monkeypatch.setattr(registration.os, "replace", real_replace)
+    assert activate_package(data, _sha256_bytes(before), new_sha) == new_sha
+
+
+def test_lock_critical_section_observed_pointer_tampering_fails_cas(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    digest = candidate.register()["registration_sha256"]
+    original = registration._atomic_replace_active
+    intruder = b"out-of-band-change"
+
+    def change_then_replace(
+        path: Path, payload: bytes, expected_current_raw: bytes | None
+    ) -> None:
+        path.write_bytes(intruder)
+        original(path, payload, expected_current_raw)
+
+    monkeypatch.setattr(registration, "_atomic_replace_active", change_then_replace)
+    _expect_code(
+        "ACTIVE_CAS_MISMATCH",
+        lambda: activate_package(candidate.data_root, "MISSING", digest),
+    )
+    assert _active(candidate).read_bytes() == intruder
+    assert not list(_registry(candidate).glob(".active.*.tmp"))
+
+
+def test_writer_holds_kernel_lock_from_final_compare_through_replace(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = (tmp_path / "data").resolve()
+    data.mkdir()
+    current = _make_candidate(tmp_path / "current", data_root=data)
+    next_a = _make_candidate(tmp_path / "next-a", data_root=data)
+    next_b = _make_candidate(tmp_path / "next-b", data_root=data)
+    current_sha = current.register()["registration_sha256"]
+    a_sha = next_a.register()["registration_sha256"]
+    b_sha = next_b.register()["registration_sha256"]
+    activate_package(data, "MISSING", current_sha)
+    expected = _sha256(_active(current))
+    entered = threading.Event()
+    release = threading.Event()
+    original = registration._atomic_replace_active
+
+    def paused_replace(
+        path: Path, payload: bytes, expected_current_raw: bytes | None
+    ) -> None:
+        if threading.current_thread().name == "writer-a":
+            entered.set()
+            assert release.wait(timeout=5)
+        original(path, payload, expected_current_raw)
+
+    monkeypatch.setattr(registration, "_atomic_replace_active", paused_replace)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_TIMEOUT_SECONDS", 0.15)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_RETRY_SECONDS", 0.01)
+    outcomes: dict[str, str] = {}
+
+    def writer_a() -> None:
+        outcomes["a"] = activate_package(data, expected, a_sha)
+
+    first = threading.Thread(target=writer_a, name="writer-a")
+    first.start()
+    assert entered.wait(timeout=5)
+    child = _activation_child(data, expected, b_sha, timeout_seconds=0.15)
+    assert child.returncode == 0, child.stderr
+    outcomes["b"] = child.stdout.strip()
+    assert outcomes["b"] == "ACTIVE_LOCK_BUSY"
+    release.set()
+    first.join(timeout=5)
+    assert not first.is_alive()
+    assert outcomes["a"] == a_sha
+    _expect_code(
+        "ACTIVE_CAS_MISMATCH",
+        lambda: activate_package(data, expected, b_sha),
+    )
+    assert locate_active_package(data)["registration_sha256"] == a_sha
+
+
+def test_activate_and_recover_are_mutually_exclusive(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = (tmp_path / "data").resolve()
+    data.mkdir()
+    first = _make_candidate(tmp_path / "first", data_root=data)
+    second = _make_candidate(tmp_path / "second", data_root=data)
+    first_sha = first.register()["registration_sha256"]
+    second_sha = second.register()["registration_sha256"]
+    broken = b"broken-pointer"
+    _active(first).write_bytes(broken)
+    entered = threading.Event()
+    release = threading.Event()
+    original = registration._atomic_replace_active
+
+    def paused_replace(
+        path: Path, payload: bytes, expected_current_raw: bytes | None
+    ) -> None:
+        if threading.current_thread().name == "recover-writer":
+            entered.set()
+            assert release.wait(timeout=5)
+        original(path, payload, expected_current_raw)
+
+    monkeypatch.setattr(registration, "_atomic_replace_active", paused_replace)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_TIMEOUT_SECONDS", 0.15)
+    monkeypatch.setattr(registration, "_ACTIVE_LOCK_RETRY_SECONDS", 0.01)
+    result: dict[str, str] = {}
+
+    def recover_writer() -> None:
+        result["recover"] = recover_active_package(
+            data, _sha256_bytes(broken), first_sha
+        )
+
+    thread = threading.Thread(target=recover_writer, name="recover-writer")
+    thread.start()
+    assert entered.wait(timeout=5)
+    child = _activation_child(
+        data, _sha256_bytes(broken), second_sha, timeout_seconds=0.15
+    )
+    assert child.returncode == 0, child.stderr
+    result["activate"] = child.stdout.strip()
+    release.set()
+    thread.join(timeout=5)
+    assert not thread.is_alive()
+    assert result == {"activate": "ACTIVE_LOCK_BUSY", "recover": first_sha}
 
 
 def test_explicit_recovery_replaces_only_hash_locked_broken_pointer(tmp_path: Path) -> None:

@@ -23,6 +23,14 @@
 - 该裁决只解除“必须先找到大陆FFmpeg镜像”的来源批准阻断，不等于已经证明可访问。直连验证前状态为`BLOCKED_SOURCE_ACCESS_UNVERIFIED`；失败为`BLOCKED_SOURCE_UNREACHABLE`并等待新来源裁决。
 - 例外不得扩展到Python依赖、Node、Remotion、HyperFrames或浏览器；其余组件继续使用批准大陆镜像。任何下载失败都不得触发自动海外回退。
 
+### 建设顺序与实际运行顺序纠偏
+
+- 阶段3、4、5、6仍按编号完成建设、独立审阅和正式推广；该编号顺序不是最终用户调用顺序。
+- 最终用户实际运行从阶段5唯一WorkBuddy入口开始，经阶段2 Locator重验、阶段3单一闭集接口检查；只有有效Runtime就绪回执才进入阶段4，阶段6直接转交Runtime和Launcher事实。
+- 阶段3的ready与missing/incompatible是同一接口的结果，不是两条实现路线。缺失时阶段6先转交完整计划，用户另行授权后阶段3准备并停止；不自动重试原生产请求。
+- 阶段4没有有效Runtime就绪回执时必须返回`RUNTIME_NOT_READY`。阶段6不得安装、解释或重试。
+- 本次12个变化路径均在现有任务白名单内；`git diff --check`、旧冲突措辞扫描、固定33文件、零未跟踪文件及零生产代码/测试/CI变化检查均为`PASS`。项目`.venv`仍不存在，未使用全局Python，未运行pytest。
+
 ## 2026-08-17：V2-S3-S6-SCOPE-DOCS1
 
 ### 对象与授权

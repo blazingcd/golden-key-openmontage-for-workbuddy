@@ -33,20 +33,24 @@ next: V2-S2-S3-RUNTIME-CORRECTION-DOCS-REVIEW1
 - 仓库卫生最终树：`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`；tracked精确33并受固定白名单保护。
 - 旧阶段2只证明旧金钥匙版Package的Registration与Locator，不证明当前新版Package、Installer、Runtime、Launcher、真实WorkBuddy、Provider、SaaS或媒体E2E。
 
-## 阶段3至阶段6最小链路
+## 阶段3至阶段6建设顺序与实际运行链路
+
+建设、审阅和交付严格按`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`推进；这不等于最终用户的调用顺序。实际运行从阶段5开始：
 
 ```text
-LocatorResult
--> closed-set discovery and confirmed missing-only preparation
--> one WorkBuddy-owned bound tool session
--> one explicit WorkBuddy entry
--> unchanged exit facts and result pointer
+User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
+     -> Stage 3 closed-set runtime check
+        -> ready: Stage 4 fixed tool call -> Stage 6 fact relay
+        -> missing/incompatible: Stage 6 missing-only plan relay
+           -> separate user consent -> Stage 3 preparation
+           -> Stage 6 preparation fact relay -> stop
+           -> later explicit WorkBuddy invocation rechecks runtime
 ```
 
 - 包内Python是阶段2登记对象，阶段3不扫描、不下载、不替换它。阶段3只检查受管路径、明确登记宿主工具和PATH命令候选；不扫描盘符。
-- 阶段3没有真实额外Runtime缺口时以`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`零代码结束；存在缺口时必须先输出锁定missing-only计划并取得用户明确同意。除临时批准且通过大陆直连验证的FFmpeg `gyan.dev`精确资产外，只使用批准大陆镜像，且没有自动海外回退。
-- 阶段4只允许为WorkBuddy会话调用一次固定工具进程，不接受任意Shell、不自动重试、不启动第二Agent或进入Package业务内部。
-- 阶段5只允许一种真实WorkBuddy显式入口，用户原话与执行控制严格分离。
-- 阶段6优先直接复用Launcher回执；无需独立转换时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`零代码结束。
+- 阶段3是一个闭集接口的不同结果，不是两条实现路线。没有真实额外Runtime缺口时以`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`零代码结束；存在缺口时先输出锁定missing-only计划并取得另一次明确同意。准备后停止，不自动重试原请求。除临时批准且通过大陆直连验证的FFmpeg `gyan.dev`精确资产外，只使用批准大陆镜像，且没有自动海外回退。
+- 阶段4只接受有效Runtime就绪回执并为WorkBuddy会话调用一次固定工具进程；否则返回`RUNTIME_NOT_READY`。它不接受任意Shell、不自动重试、不启动第二Agent或进入Package业务内部。
+- 阶段5是用户实际运行起点，只允许一种真实WorkBuddy显式入口，用户原话与执行控制严格分离。
+- 阶段6直接转交Runtime计划/准备事实和Launcher回执；无需独立转换时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`零代码结束，不解释、不安装、不重试。
 
 详细实时字段只以`docs/workbuddy/v2/TASK-REGISTER.md`为准；Git历史中的Wave A/B/C记录不是当前任务授权。

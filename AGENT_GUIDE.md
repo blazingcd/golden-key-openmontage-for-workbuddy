@@ -18,6 +18,8 @@ The Shell must not become a Director, workflow engine, Agent host, production FS
 
 The Golden Key WorkBuddy delivery includes its own package-private Python bootstrap. Stage 3 must not discover or depend on system Python. Other closed-set runtime components may be discovered only from managed paths, an explicitly registered host-tool record, or normal command resolution; never scan drives. Missing components may be prepared only from an identity-locked missing-only plan, after explicit user consent. Mainland-China mirrors are mandatory except for the one temporarily approved, exactly locked FFmpeg asset from `gyan.dev`; that exception remains unusable until a no-proxy/no-VPN mainland-network access probe passes. No automatic overseas fallback is allowed for any component.
 
+Stages 3, 4, 5, and 6 are built and accepted in numeric order, but the end-user runtime call starts at the Stage 5 WorkBuddy entry. That entry revalidates Stage 2 registration, asks Stage 3 for one of its fixed outcomes, calls Stage 4 only with a valid runtime-ready receipt, and lets Stage 6 relay facts. A missing/incompatible Stage 3 outcome requires a separately authorized missing-only preparation and a later explicit WorkBuddy invocation; the Shell never automatically retries the original request.
+
 ## External Package Guide
 
 An external Package's `AGENT_GUIDE.md` is not this repository's operating guide. It may be read only by the downstream consumer authorized for a session, and only after Package Registration identity validation has succeeded and the Locator has returned the verified PackageRoot and Guide identity. Never scan disks, guess a Package, or read an unverified Guide as authority.

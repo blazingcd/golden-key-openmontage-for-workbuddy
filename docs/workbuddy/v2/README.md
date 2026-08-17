@@ -19,6 +19,8 @@ STAGE_2_S3_RUNTIME_CORRECTION_REVIEW_READY
 
 运行时裁决：金钥匙版交付包自带锁定私有Python；阶段三只从受管路径、明确登记的宿主工具和PATH命令解析中发现Python依赖、FFmpeg、Node、Remotion、HyperFrames及锁定浏览器，不扫描盘符。缺失项经missing-only计划、用户明确同意后从批准的中国大陆镜像准备；唯一临时例外是精确锁定的FFmpeg 9.0 `gyan.dev`资产，它在无代理/VPN大陆网络直连验证通过前保持阻断。任何组件都不能自动回退其他海外源。
 
+阶段3至阶段6按编号建设和验收，但用户实际运行从阶段5入口开始：阶段5调用阶段2 Locator重验和阶段3单一闭集接口；Runtime已就绪才进入阶段4，阶段6转交Runtime及Launcher事实。若缺失，用户另行确认计划后由阶段3准备并停止，原请求不自动重试。
+
 ## 权威文档
 
 - `TASK-REGISTER.md`：实时任务、精确Git对象、授权与下一任务的唯一状态权威。

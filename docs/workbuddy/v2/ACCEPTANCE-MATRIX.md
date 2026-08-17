@@ -36,26 +36,26 @@
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration的身份、hash和规范化路径与实际执行包一致 | 扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
 | Runtime按需准备 | 包内私有Python身份有效；闭集组件按`managed`/`registered_host`/`PATH_host`/`missing`分类；discover/plan零写入；用户确认后从批准大陆镜像或唯一已验证FFmpeg临时例外准备锁定缺失项；二次调用零下载复用 | 扫盘；扫描或下载Python；首次盲目全装；通用下载/包管理/repair；自动海外源回退；未验证即使用FFmpeg例外；修改系统Python/PATH；Shell选择渲染引擎、版本或生产方案 |
-| 会话Launcher | 绑定精确环境，只为WorkBuddy会话调用一次固定工具入口，并返回真实退出码、结果指针和残留事实 | 启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
+| 会话Launcher | 只接受有效Runtime就绪回执，绑定精确环境，只为WorkBuddy会话调用一次固定工具入口，并返回真实退出码、结果指针和残留事实；无就绪回执返回`RUNTIME_NOT_READY` | 绕过Runtime就绪检查；启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
-| 状态与结果转交 | 直接复用Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
+| 状态与结果转交 | 直接转交Runtime计划/准备事实与Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；安装Runtime；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
 
 ### 3.1 阶段3至阶段6缩减Gate
 
-阶段3只有两条合法PASS路径：
+阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户的运行调用顺序。用户运行从阶段5入口开始，经阶段2 Locator重验和阶段3检查后，只有有效Runtime就绪回执才能进入阶段4，最后由阶段6转交事实。阶段3只有一个公共接口，以下是同一接口的两种合法PASS结果，不是两条实现路线：
 
 1. 已验证Package和真实下游合同证明没有额外Runtime缺口，记录`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`，生产代码变化为0；
-2. 对固定闭集执行只读发现，形成只包含缺失/不兼容项的锁定计划；计划完整列出组件、版本、hash、大小、批准源、许可证和目标，用户明确同意后，只实现该计划的prepare、同目录staging、互斥、原子发布与幂等。
+2. 对固定闭集执行只读发现，形成只包含缺失/不兼容项的锁定计划；阶段6转交该计划；计划完整列出组件、版本、hash、大小、批准源、许可证和目标，用户另行明确同意后，只实现该计划的prepare、同目录staging、互斥、原子发布与幂等，然后停止且不自动重试原生产请求。
 
 固定闭集为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器。包内私有Python由阶段2登记，阶段3不得扫描、替换或下载它。发现只允许受管路径、明确登记且重新核验的宿主工具和正常PATH命令解析，不允许盘符扫描。除精确锁定的FFmpeg 9.0 `gyan.dev`临时例外外，Runtime Lock没有批准大陆镜像、精确hash或许可证时必须返回`BLOCKED_SOURCE_UNAPPROVED`；FFmpeg例外直连验证前返回`BLOCKED_SOURCE_ACCESS_UNVERIFIED`，失败返回`BLOCKED_SOURCE_UNREACHABLE`。任何自动海外源回退为`FAIL`。
 
 阶段3不让普通用户在Remotion、HyperFrames或FFmpeg之间作技术安装选择；确认的是一份包含全部真实缺失/不兼容闭集组件的missing-only计划。组件就绪后，WorkBuddy才依据已验证Package生产合同在具体视频方案中选择渲染能力。下载授权不得推导Provider、费用或生产授权。
 
-阶段4 `PASS`要求一次Locator重验、一次精确环境绑定、一次固定工具进程调用和一个最终回执。任何第二Agent启动、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
+阶段4 `PASS`要求消费有效Runtime就绪回执、一次精确环境绑定、一次固定工具进程调用和一个最终回执。缺少就绪回执必须返回`RUNTIME_NOT_READY`；任何第二Agent启动、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
 
-阶段5 `PASS`要求真实WorkBuddy合同确认的一种显式入口、新会话命中、literal `user_message`不变、授权与`executor_controls`分离。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
+阶段5是用户实际运行起点。`PASS`要求真实WorkBuddy合同确认的一种显式入口、新会话命中、literal `user_message`不变、授权与`executor_controls`分离。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
 
-阶段6先验证WorkBuddy能否直接消费Launcher回执：能则记录`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0；不能则必须有精确字段差异和真实消费者证据，只允许一次确定性转换。非零退出、超时、缺少结果指针和残留进程必须保持原事实。
+阶段6先验证WorkBuddy能否直接消费Runtime计划/准备事实和Launcher回执：能则记录`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0；不能则必须有精确字段差异和真实消费者证据，只允许一次确定性转换。非零退出、超时、缺少结果指针和残留进程必须保持原事实；阶段6不得安装、解释或重试。
 
 ## 4. Gate A：对象与环境
 

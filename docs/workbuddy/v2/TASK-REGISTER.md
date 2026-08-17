@@ -70,7 +70,7 @@ runtime_correction: FROZEN_FOR_INDEPENDENT_REVIEW
 
 仓库卫生最终树的可重复本地事实是：正式本地分支、origin tracking、实时远端与D盘工作区均为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，工作树clean，tracked精确33且等于固定白名单。`repository_final_audit`来自用户提供并再次确认的正式交接身份；本次Reviewer仍须核对当前文档是否忠实记录该交接且无前后冲突。
 
-## 阶段3至阶段6冻结顺序
+## 阶段3至阶段6建设与交付顺序
 
 ```text
 Stage 3: Runtime Preparation on Demand
@@ -79,19 +79,21 @@ Stage 5: WorkBuddy Entry
 Stage 6: Status and Result Relay
 ```
 
-必须严格顺序执行。每个阶段都从当时最新的`origin/codex/workbuddy-shell-v2`精确提交开始，经单一有界Builder、独立只读Reviewer、普通非force fast-forward推广、远端临时分支清理和本地worktree关闭后，下一阶段才可接管。规划接受、Builder提交或Reviewer批准均不等于正式交付。
+该顺序只表示建设、审阅和正式交付顺序，不是最终用户运行时的调用顺序。每个阶段都从当时最新的`origin/codex/workbuddy-shell-v2`精确提交开始，经单一有界Builder、独立只读Reviewer、普通非force fast-forward推广、远端临时分支清理和本地worktree关闭后，下一阶段才可接管。规划接受、Builder提交或Reviewer批准均不等于正式交付。
+
+最终用户实际运行从`用户 -> 阶段5显式WorkBuddy入口 -> 阶段2 Locator重验 -> 阶段3闭集检查`开始。若Runtime已就绪，则`阶段4固定工具调用 -> 阶段6事实转交`；若阶段3发现缺失/不兼容项，则`阶段6转交完整missing-only计划 -> 用户另行明确授权 -> 阶段3准备全部确认项 -> 阶段6转交准备事实 -> 停止`。原生产请求不得自动重试，只能由用户稍后再次显式调用WorkBuddy并重新检查。
 
 阶段3至阶段6共同约束：每阶段最多一个公共入口；没有可验证输入或直接下游消费者时必须零代码退出；不得预建通用Runtime管理器、CLI/MCP镜像、任务平台、后台服务、第二Agent Host、生产FSM或状态数据库。WorkBuddy是唯一运行中的Agent；所谓OpenMontage Agent只能指WorkBuddy读取已验证Package Guide后承担的逻辑生产角色。
 
 ## 阶段授权与零代码出口
 
 ```text
-stage_3_scope: 包内私有Python固定不扫描；闭集发现Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器，并只准备用户确认的missing-only计划中的缺失/不兼容项。
+stage_3_scope: 单一闭集接口；包内私有Python固定不扫描；发现Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器，返回ready或missing/incompatible事实，并只准备用户另行确认的missing-only计划中的全部缺失/不兼容项；准备后不自动重试原请求。
 stage_3_zero_code_exit: STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED
 stage_3_download_policy: APPROVED_MAINLAND_CHINA_MIRRORS / TEMP_LOCKED_GYAN_FFMPEG_EXCEPTION_PENDING_DIRECT_ACCESS_PROBE / NO_AUTOMATIC_OVERSEAS_FALLBACK
-stage_4_scope: 只为一次WorkBuddy会话绑定精确Package和Runtime并调用一个固定工具入口；不启动第二Agent，无任意Shell、无自动重试。
-stage_5_scope: 只保留一种真实WorkBuddy显式入口，literal user_message不变，技术控制独立。
-stage_6_scope: 优先直接转交Launcher回执；仅有真实格式转换缺口时才允许独立实现。
+stage_4_scope: 只接受有效Runtime就绪回执，为一次WorkBuddy会话绑定精确Package和Runtime并调用一个固定工具入口；缺少就绪回执返回RUNTIME_NOT_READY；不启动第二Agent，无任意Shell、无自动重试。
+stage_5_scope: 用户实际运行起点；只保留一种真实WorkBuddy显式入口，literal user_message不变，技术控制独立。
+stage_6_scope: 直接转交Runtime计划/准备事实与Launcher回执；仅有真实格式转换缺口时才允许独立实现；不解释、不安装、不重试。
 stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 ```
 

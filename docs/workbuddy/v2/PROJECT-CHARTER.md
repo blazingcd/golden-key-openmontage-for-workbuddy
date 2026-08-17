@@ -39,30 +39,38 @@
 | Runtime按需准备 | 只读发现闭集组件的真实就绪状态，并对确认计划中全部确实缺失/不兼容的项进行受控准备；不要求普通用户选择技术组件 | 输入：活动Package Registration、包内Python、Runtime Lock、受管/登记宿主/PATH候选及用户对完整missing-only计划的明确授权；输出：组件来源与状态、`READY_REUSED`、`READY_PREPARED`或失败事实 | 扫盘；扫描/替换包内Python；通用包管理器；未授权下载；海外默认源回退；选择生产所用渲染引擎、Pipeline或版本；修改系统Python/PATH |
 | 会话Launcher | 为一次WorkBuddy拥有的会话绑定精确Package、私有Python和已验证Runtime，并调用一个固定工具入口 | 输入：有效Package Registration、Runtime就绪事实、分离的用户消息与执行控制；输出：一次调用回执、真实退出码、结果指针和残留事实 | 启动第二Agent/模型进程；解析用户意图；接受任意Shell；自动重试；调度多任务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
-| 状态与结果转交 | 优先直接转交Launcher的安装、会话、进程、退出、错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
+| 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
 
 安全、凭据保护、日志脱敏、路径所有权和单真实执行锁是六个模块的横切约束，不是独立模块，也不得发展为生产控制面。
 
 ### 4.1 阶段3至阶段6最小实现规则
 
-阶段3至阶段6形成唯一顺序链路：
+阶段编号表示建设、审阅和正式交付顺序，固定为`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`。这不是最终用户的一次运行调用顺序。最终用户实际运行从阶段5的WorkBuddy入口开始：
 
 ```text
-LocatorResult
--> closed-set runtime discovery and one confirmed missing-only plan
--> one WorkBuddy-owned bound tool session
--> one explicit WorkBuddy entry
--> unchanged exit facts and result pointer
+User
+-> Stage 5: one explicit WorkBuddy entry
+-> Stage 2: Package Registration / Locator revalidation
+-> Stage 3: one closed-set runtime check
+   -> READY_REUSED or READY_PREPARED
+      -> Stage 4: one WorkBuddy-owned bound tool call
+      -> Stage 6: unchanged runtime, exit, error and result facts
+   -> MISSING_OR_INCOMPATIBLE
+      -> Stage 6: relay one missing-only plan
+      -> separate explicit user consent
+      -> Stage 3: prepare every confirmed missing/incompatible item
+      -> Stage 6: relay preparation facts and stop
+      -> a later explicit WorkBuddy invocation starts this check again
 ```
 
 - 每阶段最多一个公共入口、一个生产模块和一个直接测试文件；不能为了阶段编号制造文件。
 - 没有已验证输入或直接下游消费者时必须零代码退出，不得用通用框架替代缺失合同。
 - 包内私有Python是阶段2登记前置，不属于阶段3发现或下载对象。阶段3发现范围固定为Python私有依赖、FFmpeg、Node、Remotion、HyperFrames和锁定浏览器；无额外缺口时返回`STAGE_3_NO_ADDITIONAL_RUNTIME_REQUIRED`。
-- 阶段3只检查Shell受管路径、用户明确登记且重新核验的宿主工具以及正常PATH命令解析，不扫描盘符。只有missing-only计划完整展示组件、版本、hash、下载量、目标路径和许可证并取得用户明确同意后，才可准备缺失项。
+- 阶段3只有一个闭集接口，不是两条实现路线。该接口只检查Shell受管路径、用户明确登记且重新核验的宿主工具以及正常PATH命令解析，不扫描盘符；它返回“已就绪/复用”或“缺失/不兼容计划”事实。只有missing-only计划完整展示组件、版本、hash、下载量、目标路径和许可证并取得用户另一次明确同意后，才可准备全部确认缺失项；准备结束后不得自动重放原生产请求。
 - 阶段3面向最终用户的下载原则上只使用Runtime Lock批准的中国大陆镜像。唯一临时例外是下表精确锁定的FFmpeg `gyan.dev`资产；它必须先在不使用代理/VPN的中国大陆网络完成直连验证。不得把例外扩展到其他组件，也不得在任何源失败后自动选择另一个海外源。
-- 阶段4只绑定一个WorkBuddy会话并调用一个固定工具入口一次；不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
-- 阶段5只保留一种经真实WorkBuddy合同确认的入口形式；在格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
-- 阶段6优先直接复用Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。
+- 阶段4只接受有效的Runtime就绪回执并绑定一个WorkBuddy会话，随后调用一个固定工具入口一次；没有就绪回执时返回`RUNTIME_NOT_READY`。它不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
+- 阶段5只保留一种经真实WorkBuddy合同确认的入口形式，是用户实际运行的起点；在格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
+- 阶段6直接转交Runtime计划/准备事实和Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。它不得解释、安装或自动重试。
 - 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
 
 ### 4.2 中国大陆镜像合同

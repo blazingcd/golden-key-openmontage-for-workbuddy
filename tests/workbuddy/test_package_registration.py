@@ -1069,6 +1069,54 @@ def test_real_symlink_or_junction_managed_path_escape_is_rejected_without_skip(
             link.rmdir()
 
 
+@pytest.mark.parametrize("target_kind", ["internal", "cycle"])
+def test_required_toolchain_rejects_internal_and_cyclic_directory_reparse_points(
+    tmp_path: Path, target_kind: str
+) -> None:
+    candidate = _make_candidate(tmp_path / target_kind)
+    node_root = candidate.package_root / "bootstrap" / "node"
+    if target_kind == "internal":
+        target = node_root / "real-target"
+        target.mkdir()
+        (target / "payload.bin").write_bytes(b"inside-package")
+    else:
+        target = node_root
+    link = node_root / f"{target_kind}-reparse"
+    reparse_kind = _create_real_directory_reparse(link, target)
+    before_data = _snapshot(candidate.data_root)
+    try:
+        error = _expect_code("PATH_VIOLATION", candidate.register)
+        assert "symlink, junction, or reparse point" in error.message
+        assert _snapshot(candidate.data_root) == before_data
+        assert not _registry(candidate).exists()
+    finally:
+        if link.is_symlink():
+            link.unlink()
+        elif link.exists():
+            link.rmdir()
+    assert reparse_kind in {"symlink", "junction"}
+
+
+def test_required_toolchain_resolve_runtime_error_is_stable_path_violation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    failing_path = candidate.package_root / "bootstrap" / "node"
+    original_resolve = Path.resolve
+
+    def fail_one_resolve(path: Path, strict: bool = False) -> Path:
+        if path == failing_path:
+            raise RuntimeError("injected required-toolchain resolution loop")
+        return original_resolve(path, strict=strict)
+
+    monkeypatch.setattr(Path, "resolve", fail_one_resolve)
+    before_data = _snapshot(candidate.data_root)
+    error = _expect_code("PATH_VIOLATION", candidate.register)
+    assert "does not resolve inside PackageRoot" in error.message
+    assert _snapshot(candidate.data_root) == before_data
+    assert not _registry(candidate).exists()
+
+
 def test_archive_requires_unique_safe_manifest_and_lock(tmp_path: Path) -> None:
     candidate = _make_candidate(tmp_path / "candidate")
     with pytest.warns(UserWarning):

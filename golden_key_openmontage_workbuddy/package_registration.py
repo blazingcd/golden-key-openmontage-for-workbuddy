@@ -522,41 +522,70 @@ def _required_tool_identity(
     }
 
 
+def _reject_required_toolchain_reparse(path: Path, *, label: str) -> None:
+    try:
+        status = path.lstat()
+        is_junction = getattr(path, "is_junction", None)
+        junction = bool(is_junction()) if callable(is_junction) else False
+    except (OSError, RuntimeError) as exc:
+        _fail("PATH_VIOLATION", f"{label} cannot be inspected safely: {exc}")
+    reparse_flag = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    file_attributes = getattr(status, "st_file_attributes", 0)
+    if path.is_symlink() or junction or bool(file_attributes & reparse_flag):
+        _fail("PATH_VIOLATION", f"{label} must not be a symlink, junction, or reparse point")
+
+
+def _resolve_required_toolchain_path(
+    path: Path, *, package_root: Path, label: str
+) -> Path:
+    _reject_required_toolchain_reparse(path, label=label)
+    try:
+        resolved = path.resolve(strict=True)
+        resolved.relative_to(package_root)
+    except (OSError, RuntimeError, ValueError) as exc:
+        _fail("PATH_VIOLATION", f"{label} does not resolve inside PackageRoot: {exc}")
+    return resolved
+
+
 def _actual_toolchain_files(package_root: Path) -> set[str]:
     actual: set[str] = set()
     seen_keys: set[str] = set()
     for root_relative in REQUIRED_TOOLCHAIN_ROOTS:
         root = package_root.joinpath(*PurePosixPath(root_relative).parts)
-        try:
-            resolved_root = root.resolve(strict=True)
-            resolved_root.relative_to(package_root)
-        except (OSError, RuntimeError, ValueError) as exc:
-            _fail("PATH_VIOLATION", f"required toolchain root is unsafe: {exc}")
+        resolved_root = _resolve_required_toolchain_path(
+            root,
+            package_root=package_root,
+            label=f"required toolchain root {root_relative}",
+        )
         if not resolved_root.is_dir():
             _fail("PATH_VIOLATION", f"required toolchain root is not a directory: {root_relative}")
         try:
-            walker = os.walk(resolved_root, followlinks=False)
+            def walk_error(error: OSError) -> None:
+                _fail("PATH_VIOLATION", f"required toolchain cannot be enumerated: {error}")
+
+            walker = os.walk(resolved_root, followlinks=False, onerror=walk_error)
             for directory, directory_names, file_names in walker:
                 directory_path = Path(directory)
-                resolved_directory = directory_path.resolve(strict=True)
-                try:
-                    resolved_directory.relative_to(package_root)
-                except ValueError:
-                    _fail("PATH_VIOLATION", "required toolchain directory escapes PackageRoot")
+                _resolve_required_toolchain_path(
+                    directory_path,
+                    package_root=package_root,
+                    label="required toolchain directory",
+                )
                 for child_name in directory_names:
                     child = directory_path / child_name
-                    try:
-                        resolved_child = child.resolve(strict=True)
-                        resolved_child.relative_to(package_root)
-                    except (OSError, RuntimeError, ValueError):
-                        _fail("PATH_VIOLATION", "required toolchain directory is a path escape")
+                    _resolve_required_toolchain_path(
+                        child,
+                        package_root=package_root,
+                        label="required toolchain child directory",
+                    )
                 for file_name in file_names:
                     path = directory_path / file_name
-                    resolved = path.resolve(strict=True)
-                    try:
-                        relative = resolved.relative_to(package_root).as_posix()
-                    except ValueError:
-                        _fail("PATH_VIOLATION", "required toolchain file escapes PackageRoot")
+                    resolved = _resolve_required_toolchain_path(
+                        path,
+                        package_root=package_root,
+                        label="required toolchain file",
+                    )
+                    relative = resolved.relative_to(package_root).as_posix()
                     if not resolved.is_file():
                         _fail("PATH_VIOLATION", f"required toolchain object is not a file: {relative}")
                     key = _windows_relative_path_key(relative)

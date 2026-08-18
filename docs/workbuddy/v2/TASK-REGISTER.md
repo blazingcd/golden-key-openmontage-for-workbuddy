@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2_S2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / REVIEW_READY`
+状态：`V2_S2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH_FIX1 / REVIEW_READY`
 
 更新时间：2026-08-18
 
@@ -18,12 +18,19 @@ authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
 authority_production_code_changes: 0
 authority_test_changes: 0
 task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
-task_status: REVIEW_READY
+task_status: REVIEW_READY_FIX1
 task_kind: STAGE_2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH
 user_authorization: 2026-08-18 / 尽快把这个阻塞完成
 implementation_authorization: GRANTED_FOR_REQUIRED_TOOLCHAIN_REFRESH_ONLY
 start_commit: 55781b45ac9217693843f2c73cec994805e4024c
 start_commit_resolution: Authority1经独立APPROVE并fast-forward推广后的精确40位result SHA
+initial_result_commit: 62a47afa2301eb187a8b63e33ad08f1b5476c318
+review1_initial_verdict: REQUEST_CHANGES / P0=0 / P1=1 / P2=1
+fix1_scope: reject every required-toolchain symlink/junction/reparse and stabilize traversal/resolve failures; add exact command evidence
+fix1_allowed_paths:
+  - golden_key_openmontage_workbuddy/package_registration.py
+  - tests/workbuddy/test_package_registration.py
+  - docs/workbuddy/v2/TASK-REGISTER.md
 result_commit: THIS_COMMIT
 branch: codex/v2-s2-toolchain-package-refresh-b1
 formal_target_branch: origin/codex/workbuddy-shell-v2
@@ -71,7 +78,20 @@ real_release_size: 223112435
 real_release_sha256: f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03
 real_registration_sha256: aa5aba5ff543258d58acf944a0f4e87d80b9f38e62205268ae23b5266b78659b
 real_register_activate_locate: PASS / task-only DataRoot
-builder_changed_files: production=1 / test=1 / docs=2
+builder_changed_files_cumulative: production=1 / test=1 / docs=2
+fix1_changed_files: production=1 / test=1 / docs=1
+pre_fix_full_test_command: D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\.venv\Scripts\python.exe -m pytest -q
+pre_fix_full_test_result: 141 passed in 22.49s / final exit 0
+fix1_target_test_command: D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\.venv\Scripts\python.exe -m pytest tests/workbuddy/test_package_registration.py -q -k "required_toolchain_rejects_internal_and_cyclic or required_toolchain_resolve_runtime_error"
+fix1_target_test_result: 3 passed / 131 deselected in 3.03s / final exit 0 / real Windows reparse tests not skipped
+fix1_full_test_command: D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\.venv\Scripts\python.exe -m pytest -q
+fix1_full_test_result: 144 passed in 20.46s / measured wrapper 20.84s / final exit 0
+real_package_assembly_command: D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\.venv\Scripts\python.exe D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\assemble.py D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\export\package D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\release
+real_package_assembly_result: final exit 0 / Release size and SHA-256 unchanged
+real_registration_command: PYTHONPATH=<ShellRepo>; D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\.venv\Scripts\python.exe D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1\register_evidence.py D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1
+real_registration_result: register + task-only activate + locate / final exit 0 / registration SHA-256 unchanged
+real_tool_commands: bootstrap/python/python.exe -B -c <core imports + SSL + same-interpreter subprocess>; bootstrap/ffmpeg/bin/ffmpeg.exe -version; bootstrap/ffmpeg/bin/ffprobe.exe -version; bootstrap/node/node.exe --version; bootstrap/node/npm.cmd --version; bootstrap/node/npx.cmd --version
+real_tool_results: Python 3.14.7/OpenSSL 3.5.7; FFmpeg+ffprobe 9.0.1; Node 22.23.2; npm+npx 10.9.8 / every command final exit 0
 exit_evidence: commit+push+REVIEW_READY；真实构建和注册证据；临时构建根及任务venv清理；用户下载Python源保留
 next_authorized_task: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-REVIEW1
 ```
@@ -84,7 +104,7 @@ next_authorized_task: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-REVIEW1
 formal_branch: codex/workbuddy-shell-v2
 formal_handoff_commit: 55781b45ac9217693843f2c73cec994805e4024c
 stage_1_status: PASS_ACCEPTED
-stage_2_status: REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / REVIEW_READY_NOT_PROMOTED
+stage_2_status: REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / FIX1_REVIEW_READY_NOT_PROMOTED
 stage_2_previous_package_status: PASS_ACCEPTED_HISTORICAL
 stage_2_integration_commit: ca6e93b7da108732f2034239da340a986ba3da3a
 repository_hygiene_status: PASS_ACCEPTED
@@ -103,7 +123,7 @@ stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 stage_3_to_6_scope_reduction: SUPERSEDED_BY_REQUIRED_TOOLCHAIN_CORRECTION
-runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_BUILDER_REVIEW_READY
+runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_FIX1_REVIEW_READY
 ```
 
 阶段2此前通过的是旧金钥匙版Package登记合同和实现，不是更新后的当前Package。官方当前Quick Start明确列出Python 3.10+、FFmpeg和Node.js 18+三项基础Prerequisites；当前HyperFrames合同进一步要求Node.js 22+。金钥匙Package必须因此自带可用私有Python环境及核心依赖、FFmpeg/ffprobe、满足最高要求的Node/npm/npx，并在Manifest/Lock与Registration中逐项锁定。只登记Python的旧阶段2合同不足，必须修订、重新组装、独立审阅和推广；完成前阶段3不得启动。

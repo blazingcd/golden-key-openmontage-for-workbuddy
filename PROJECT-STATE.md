@@ -7,47 +7,38 @@
 ```text
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
-formal_baseline_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head_after_closeout: THIS_COMMIT
+formal_head: 7c15aae4e77c579309312b21c79076f930970214
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
 final_package_artifact: NOT_MATERIALIZED
 production_package_registration: NOT_CREATED
-stage_2_previous_package: PASS_ACCEPTED_HISTORICAL
 repository_hygiene: PASS_ACCEPTED
-repository_tracked_files: 33
-stage_3_planning: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
-stage_3_implementation: NOT_GRANTED
-stage_3_conditional_authorization: NOT_GRANTED
-stage_3_start_gate: BLOCKED_FINAL_PACKAGE_DECLARED_CAPABILITY_LOCKS_AND_INTERFACE_CONTRACT
-stage_3_execution_packet: REPLANNED_BOUNDARY_PASS_ACCEPTED / IMPLEMENTATION_NOT_GRANTED
-stage_4_launcher: NOT_GRANTED
+repository_tracked_files: 35
+stage_3_implementation: PASS_ACCEPTED / a3f8959682d296301dc573c2835f8c705a52e8b2
+stage_3_closeout: PASS_ACCEPTED / 7c15aae4e77c579309312b21c79076f930970214
+stage_3_evidence: 55 direct / 10 hygiene / 199 full / all exit 0 / no skip
+stage_3_evidence_boundary: no real third-party or mainland-mirror download, production DataRoot, WorkBuddy, Stage4, Provider, media or video E2E proof
+stage_4_planning: ELIGIBLE_AFTER_CURRENT_DOCS_PROMOTION
+stage_4_implementation_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1
-current_task_status: PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD
-current_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed / APPROVE / P0=0 / P1=0 / P2=0 / FORMAL_FAST_FORWARD_COMPLETE
-reviewed_planning_result: 72719c758f092868fc6446e44a803d13eeae44a6
-reviewed_planning_verdict: APPROVE / P0=0 / P1=0 / P2=0
-final_package_gate: BLOCKED_RELEASE_CAPABILITY_DECLARATION_AND_DECLARED_LOCKS
-package_optional_capability_declaration: NOT_FROZEN / MAY_DECLARE_ZERO_ONE_OR_BOTH
-declared_package_capability_locks: NOT_EVALUATED_UNTIL_DECLARATION
-stage_3_positive_capability_input: NOT_AVAILABLE_UNTIL_RELEASE_DECLARES_AT_LEAST_ONE_SUPPORTED_CAPABILITY
-stage_3_consumer_interface_contract: PASS_ACCEPTED_FROZEN
-real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
-next: FREEZE_PACKAGE_OPTIONAL_CAPABILITY_DECLARATION_AND_LOCKS_FOR_DECLARED_SUPPORT / NOT_GRANTED_IN_SHELL_REPOSITORY
+current_task: V2-S3-TO-S4-DOCS-SYNC1
+current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+stage_4_contract_gap: fixed Package tool-entry identity absent from current Locator output; exact Stage4 public entry and immutable receipt field names not frozen
+next_authorized_task: NONE
+final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_AUTHORIZED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
 ```
 
-腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色。阶段2已经接受完整必带工具链的登记实现和一次真实临时Package验证，但临时Package已清理，最终Release、生产PackageRoot和生产Registration都不存在。阶段3只准备WorkBuddy/OpenMontage已经选择且当前Package版本明确声明支持的一个可选Remotion或HyperFrames能力及其Package-owned Lock声明附属资产；两个能力都不是必带Runtime。当前只完成重新规划与合同纠偏，实施仍未授权。
+腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色。阶段2已经接受完整必带工具链的Registration/Locator实现和一次真实临时Package验证。阶段3已完成Remotion与HyperFrames的有界探测、报告、逐能力授权集成合同实现并正式收口；两项始终是OpenMontage候选能力，Shell不选择渲染器，缺失、拒绝或延期不阻塞基础工具链路径。
 
 ## 已接受对象
 
 - 阶段1已审对象：`041c6600dc8eb9094b5c93cb4a4ed088894578af`；正式集成边界：`fd68eb5a33af4c77b3bc879ca0d0c75b4c22e5b9`。
 - 阶段2完整工具链登记实现：`709c8e880b144fa9e9be26e9feb5d776dd6025e2`；状态收口：`95eeeff175060f06ca2f549737e724160edc9e14`。它证明登记能力、负面测试和一次临时Package组装/登记，不证明最终Package已经保留。
-- 仓库卫生最终树：`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`；tracked精确33并受固定白名单保护。
-- 当前D盘任务临时Package不存在，生产DataRoot没有活动Package Registration；Installer、Runtime、Launcher、真实WorkBuddy、Provider、SaaS和媒体E2E均未证明。
+- 阶段3实现：`a3f8959682d296301dc573c2835f8c705a52e8b2`，独立`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；closeout：`7c15aae4e77c579309312b21c79076f930970214`，已正式推广。
+- 阶段3证据：55 direct、10 hygiene、199 full，全部最终退出0且无skip；未证明真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E。
+- 当前正式树tracked精确35。最终Release、生产PackageRoot和生产Registration仍属于后续最终交付/Installer任务，最迟在Stage5真实WorkBuddy生产验收前完成；它不是Stage4规划或编码前置。
 
 ## 阶段3至阶段6建设顺序与实际运行链路
 
@@ -55,27 +46,25 @@ next: FREEZE_PACKAGE_OPTIONAL_CAPABILITY_DECLARATION_AND_LOCKS_FOR_DECLARED_SUPP
 
 ```text
 User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
-     -> Stage 4 base fixed-tool call with bundled required toolchain
+     -> Stage 4 one fixed Package-tool call with bundled required toolchain
      -> WorkBuddy/OpenMontage locks render capability
         -> bundled FFmpeg path: continue
-       -> selected Remotion/HyperFrames: Stage 3 verifies Registration + Package Lock
-          -> exact existing capability: READY_REUSED
-          -> missing capability: consented optional preparation -> READY_PREPARED
+       -> explicit Remotion/HyperFrames execution: require matching Stage 3 PRESENT or INTEGRATED evidence
      -> Stage 6 fact relay
 ```
 
 - Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是阶段2登记对象，阶段3不得扫描、下载、替换或用系统PATH补救。
-- 阶段3只处理已选Remotion或HyperFrames能力；无能力要求时返回`NO_OPTIONAL_CAPABILITY_REQUIRED`且零下载。浏览器只有当前Package-owned能力Lock明确要求时才准备。
-- 阶段4启动时接受阶段2必带工具链事实；执行已选可选能力前接受对应阶段3就绪事实。否则返回`RUNTIME_NOT_READY`。
-- 阶段5是用户实际运行起点，只允许一种真实WorkBuddy显式入口，用户原话与执行控制严格分离。
-- 阶段6直接转交Runtime计划/准备事实和Launcher回执；无需独立转换时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`零代码结束，不解释、不安装、不重试。
+- 阶段3公共入口是`prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`；结果闭集是`DETECTION_REPORT/CONSENT_REQUIRED/INTEGRATED/SKIPPED/BLOCKED`。
+- 阶段4先调用`locate_active_package(data_root)`；基础固定工具调用只依赖阶段2必带工具链。只有本次明确执行某可选能力时，才要求同一capability+definition的`PRESENT`或`INTEGRATED`证据。
+- 阶段5拥有真实WorkBuddy新会话、唯一入口、literal `user_message`不变、逐能力询问和同任务继续的实现/验收；这些不是Stage4前置。
+- 阶段6只在Stage4回执和Stage5真实消费者存在后判断；可直接消费时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`和生产代码0结束。
 
 详细实时字段只以`docs/workbuddy/v2/TASK-REGISTER.md`为准；Git历史中的Wave A/B/C记录不是当前任务授权。
 
-## 阶段3启动检查摘要
+## Stage 4接管审计摘要
 
-旧阶段3任务包已经失效。当前重新规划建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`，输出仅允许`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`或`BLOCKED`。最大实现范围为一个新生产模块、一个导出编辑和一个直接测试文件；Shell不拥有另一份Runtime Lock。
+当前`locate_active_package(data_root)`会重验并返回Registration、PackageRoot、完整必带工具链、Guide、Manifest和Lock身份，但没有给出固定Package工具入口的权威身份。现有权威也没有冻结Stage4精确公共入口和不可改写进程回执字段。因此本docs sync推广后具备启动Stage4规划的条件，不具备直接实施条件。
 
-阶段3实现启动前必须同时证明：最终Package持久落盘；生产Registration/Activation存在；新进程Locator成功；当前Package版本已明确声明其支持的可选能力集合；每个声明支持的能力都有被Manifest绑定的Package-owned Lock；至少一个声明能力形成正向实现输入；最小结果到WorkBuddy动作接口已冻结；正式Git对象和精确Builder白名单获授权。Release声明零能力不阻塞最终Package，但该Release的阶段3必须零代码/不需要实现。真实WorkBuddy新会话与继续能力验证属于阶段5验收，不是阶段3前置。完整实时状态只以`TASK-REGISTER.md`为准。
+未来单独授权的Stage4规划任务必须冻结：固定工具入口身份来自何种经验证Package定义、相对路径/hash/owner和固定argv形状；唯一公共入口；一次不可改写真实进程回执的精确字段。工具身份由批准OpenMontage Package定义及后续最终交付/Installer所有者提供，Launcher API和回执字段由Stage4规划所有者冻结；不得重开Stage2、猜测未验证Guide，或把最终Package/真实WorkBuddy变成Stage4规划前置。
 
-当前下一项不是阶段3编码，也不是要求Remotion/HyperFrames本体进入最终Package。外部Golden Key OpenMontage Package必须先声明本Release支持零个、一个或两个可选能力，并只为声明支持者提供Manifest覆盖的合格Lock；本Release未声明的能力既不需要Lock，也不是阶段3安装目标。随后才可独立授权`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`，一次性持久生成最终Release、安装生产PackageRoot、建立生产Registration/Activation并做新进程Locator核验；最后才可发出阶段3 Builder任务包。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`不得作为最终Package发布；上述门禁也不得塞入阶段3Runtime模块。
+Stage4最小边界只允许一次WorkBuddy拥有的会话调用一个固定Package工具并返回真实回执；禁止任意shell/命令、意图解析、第二Agent、Runtime安装、渲染器选择、自动重试/重放、队列/服务/数据库/多进程调度、媒体生产、Artifact创建和Checkpoint推进。当前`next_authorized_task=NONE`，Stage4实现仍`NOT_GRANTED`。

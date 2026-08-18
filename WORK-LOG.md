@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-08-18：V2-S3-TO-S4-DOCS-SYNC1
+
+- Stage 3实现`a3f8959682d296301dc573c2835f8c705a52e8b2`经独立只读Reviewer批准`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；closeout `7c15aae4e77c579309312b21c79076f930970214`也已正式推广，现行状态直接为`PASS_ACCEPTED`。
+- 已接受证据为55 direct、10 hygiene、199 full，全部最终退出0且无skip。未进行真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E；这些不是Stage3失败或编码前置。
+- 本次只同步九个现有文档。`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`归后续最终交付/Installer任务，最迟在Stage5真实WorkBuddy生产验收前完成，不是Stage3或Stage4编码/规划前置。
+- Stage5负责真实WorkBuddy新会话、唯一入口、literal `user_message`不变、逐能力授权询问和同任务继续；Stage6只在Stage4回执与Stage5真实消费者存在后判断，能直接消费即`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。本任务不规划或授权Stage5/6。
+- Stage4最小接管边界冻结为：一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`重验活动Package和必带工具链；只有明确执行某可选能力时才接受同一capability+definition的Stage3 `PRESENT`或`INTEGRATED`证据；然后只调用一个固定Package工具入口并返回一次不可改写真实进程回执。基础工具链路径不依赖Remotion/HyperFrames。
+- 审计发现真实合同缺口：当前Locator输出没有固定Package工具入口身份，现有权威也未冻结Stage4精确公共入口和回执字段。批准OpenMontage Package定义及后续最终交付/Installer所有者负责提供可验证固定工具身份；未来单独授权的Stage4规划任务负责冻结唯一Launcher API与回执字段。本docs sync推广后仅`planning_eligible`，Stage4实现仍`NOT_GRANTED`，`next_authorized_task=NONE`。
+- 本任务没有修改代码、测试、CI或pyproject，没有新建文件，没有生成最终Package、运行WorkBuddy或启动Stage4/5/6。历史日志保持原样，其旧模型只作已取代历史。
+
 ## 2026-08-18：V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1
 
 - 用户确认Remotion与HyperFrames始终是可选能力。本次撤销“两份Lock一律阻塞最终Package”的过度前置：每个不可变Package Release可声明支持零个、一个或两个，只为声明支持者携带Manifest覆盖的能力Lock；未声明能力不需要Lock、不是安装目标，也不阻塞最终Package。

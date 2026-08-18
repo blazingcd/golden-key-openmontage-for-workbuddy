@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 旧资产处置
 
-状态：`STAGE_1_PASS_ACCEPTED / MAPPING_ONLY / STAGE_3_REPLANNED_IMPLEMENTATION_NOT_GRANTED`
+状态：`STAGE_3_PASS_ACCEPTED / MAPPING_ONLY / STAGE_4_PLANNING_ELIGIBLE_AFTER_DOCS_PROMOTION / STAGE_4_IMPLEMENTATION_NOT_GRANTED`
 
 固定来源：`2a2bf09832d558388dc2816c54b32a2dce4aa607`
 
@@ -19,9 +19,9 @@
 
 | V1 来源 | 真实消费者 / 调用链 | V2 归属 / 裁决 | 最小保留能力 | 禁止迁移逻辑 | 后续消费者证据 | 最小验收 |
 |---|---|---|---|---|---|---|
-| `__init__.py`、`__main__.py`、`cli.py` | 包导入、`python -m`、控制台入口、Launcher、两个Skill | 会话Launcher / `REWRITE` | 一个固定入口为WorkBuddy会话调用一个已验证工具进程并返回真实退出事实 | 恢复CLI平台；启动第二Agent；Project/Stage/Tool/Artifact/Checkpoint命令；任意Shell；自动重试；生产任务FSM | 正式入口只调用六模块合同，WorkBuddy直接读取Package Guide并承担生产角色 | 一次调用、退出码、结果指针、残留事实和未知入口拒绝 |
+| `__init__.py`、`__main__.py`、`cli.py` | 包导入、`python -m`、控制台入口、Launcher、两个Skill | 会话Launcher / `REWRITE` | 一次WorkBuddy拥有的会话先用Stage2 Locator重验，再调用一个固定Package工具并返回不可改写真实进程回执；基础调用不依赖可选能力 | 恢复CLI平台；改写用户原话；读未验证Guide；启动第二Agent；Project/Stage/Tool/Artifact/Checkpoint命令；任意Shell/命令；Runtime安装；渲染器选择；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产 | 当前Locator缺固定Package工具入口身份；批准Package定义/最终交付所有者提供工具身份，未来Stage4规划所有者冻结唯一API与回执字段 | 规划推广后才可判断实现任务；当前实现`NOT_GRANTED`，未知入口拒绝且无代码预建 |
 | `doctor.py`、`paths.py`、`gate.py` | CLI/MCP/Skill与维护者CI | OpenMontage 执行包登记与定位 / `REWRITE`；静态gate仅`HISTORICAL`参考 | 只读Package Registration、完整必带工具链身份和规范化路径报告 | 硬编码版本/Pipeline、扫盘、隐式准备、把doctor/gate当产品PASS | Locator与Launcher消费唯一活动Package Registration | Python/核心依赖、FFmpeg/ffprobe、Node/npm/npx任一未登记或漂移即fail closed，零写入 |
-| `runtime_prepare.py`、`host_tools.py`、Runtime locks、`subprocess_guard/**` | doctor、CLI runtime、安装repair、宿主工具发现、missing-only准备、运行时/离线测试 | Runtime按需准备 / `HISTORICAL_REFERENCE_REPLANNED_IMPLEMENTATION_NOT_GRANTED` | 只保留可选能力的missing-only、锁定来源/hash/许可、同卷staging、所有权、回滚和幂等模式；未来唯一入口只核验WorkBuddy/OpenMontage已经选择且当前Release声明支持的一个Remotion或HyperFrames及其Package-owned Lock声明附属资产，精确存在时返回`READY_REUSED`，缺失且获授权时才准备 | 迁移Python核心依赖、FFmpeg或Node准备逻辑；把两个可选能力当必带Runtime；处理Release未声明能力；恢复旧全闭集Lock、旧入口签名、大型文件、Shell-owned Lock、独立`host_tools.py`/`subprocess_guard`框架；扫盘；通用下载/包管理/公共resume/repair；同时安装两种渲染器；准备未声明浏览器；Shell选择渲染引擎/版本；修改系统Python/PATH/注册表 | 生产Package Registration、Release能力声明、声明能力对应的Manifest覆盖Package-owned Lock，以及已冻结接口给出的单一能力请求 | 未选择能力时零下载；未声明能力`BLOCKED`且零写入；已存在声明能力仍经阶段3核验并返回`READY_REUSED`；仅准备已选能力的确认缺失项；源/hash/许可/目标不全fail closed；大陆镜像；失败清理和幂等复用；必带工具链零修改 |
+| `runtime_prepare.py`、`host_tools.py`、Runtime locks、`subprocess_guard/**` | doctor、CLI runtime、安装repair、宿主工具发现、missing-only准备、运行时/离线测试 | Runtime按需准备 / `REWRITE_PASS_ACCEPTED_AT_A3F8959682D296301DC573C2835F8C705A52E8B2` | 唯一入口`prepare_optional_capabilities(...)`有界探测Remotion/HyperFrames，报告`PRESENT/MISSING/INCOMPATIBLE`，缺失/不兼容时零下载计划，逐能力批准后才受管集成；拒绝/延期为`SKIPPED/NOT_INTEGRATED` | 迁移Python核心依赖、FFmpeg或Node准备逻辑；把可选能力当必带Runtime；恢复旧全闭集Lock、旧入口签名、Shell-owned Lock、独立`host_tools.py`/`subprocess_guard`框架；扫盘；通用包管理；自动安装；Shell选择渲染器；修改系统Python/PATH/注册表 | Stage4仅在明确执行某能力时消费同一capability+definition的`PRESENT`或`INTEGRATED`证据；基础调用不依赖可选能力 | 55 direct、10 hygiene、199 full全部退出0无skip；真实下载、生产DataRoot、WorkBuddy、Stage4、Provider和媒体/视频E2E不在该证据层 |
 | `security.py` | CLI/MCP/runtime/tasks 输出 | 六模块横切 / `KEEP` | 纯函数脱敏 | 读取或记录明文凭据；用脱敏掩盖对象或退出状态 | 安装、Launcher 与状态回执共同消费同一边界 | 明文 canary 不出现在输出 |
 | `tasks.py` | CLI task、MCP、生产Skill，并调用`runtime.py` | 状态与结果转交 / `REWRITE` | 优先直接转交Runtime计划/准备事实与Launcher回执；仅保留真实需要的一次确定性格式转换 | Runtime安装、任务数据库、轮询/流式平台、Stage/Tool校验、生产FSM、自动重试、强杀Agent、伪称Checkpoint | 真实WorkBuddy证明不能直接消费Runtime或Launcher事实后才允许独立实现 | 可直用时零代码；否则计划、准备、退出、死亡、错误与结果指针原样可审计 |
 | `runtime.py` | CLI、MCP、tasks；直连执行包内业务模块 | `DROP` | 无 | 导入执行包内业务实现、创建Project、操作Stage/Tool/Artifact/Checkpoint及写生产状态 | WorkBuddy读取已验证Guide后自行形成原生调用链 | Shell对Package业务内部导入和Artifact/Checkpoint写入为零 |
@@ -34,4 +34,4 @@
 
 ## 3. 收口
 
-全部旧资产已映射到六个模块、`DROP`或`HISTORICAL`，无`UNKNOWN`。CLI/MCP不是独立MVP模块；其中只允许受控入口适配，其生产编排能力一律`DROP`。`347272c`的包内Python结论和`899592d`中Python核心依赖、FFmpeg、Node的锁定/组装模式移交Package交付与阶段2登记，不再进入阶段3；`639978d`的发现/missing-only模式仅可在真实可选能力合同证明需要后选择性迁移。阶段3已完成接管前重新规划，但实现仍为`NOT_GRANTED`；旧全闭集入口、Shell-owned Lock和第二框架已`SUPERSEDED`。没有已选可选能力时阶段3零下载，已有能力必须经阶段3身份核验后返回`READY_REUSED`，阶段6可直接复用Launcher回执时同样允许零代码退出。
+全部旧资产已映射到六个模块、`DROP`或`HISTORICAL`，无`UNKNOWN`。CLI/MCP不是独立MVP模块；其中只允许受控入口适配，其生产编排能力一律`DROP`。`347272c`的包内Python结论和`899592d`中Python核心依赖、FFmpeg、Node的锁定/组装模式移交Package交付与阶段2登记，不再进入阶段3；Stage3实现和closeout已经正式推广并`PASS_ACCEPTED`，旧全闭集入口、Shell-owned Lock和第二框架已`SUPERSEDED`。本docs sync推广后Stage4只具备规划接管条件；固定Package工具入口身份、唯一Launcher API和不可改写回执字段仍需单独规划，实施保持`NOT_GRANTED`。Stage5/6及最终Package Gate均未授权。

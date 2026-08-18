@@ -24,27 +24,29 @@
 - 把Remotion或HyperFrames写成必带Runtime，或因能力缺失、用户拒绝/暂缓集成而阻塞Package、项目、最终交付或其他已有/基础能力；
 - 阶段3从默认Git/GitHub、Google、npmjs或其他未批准海外源下载，在批准大陆镜像失败后静默回退；
 - 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，扫描盘符，或覆盖未知/外来目录；
-- 阶段3在本五文档纠偏尚未独立审阅/正式推广或精确Builder授权缺失时提前编码；或重新增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate；
+- 把历史阶段3前置Gate重新激活，或否认已正式推广的Stage3实现/closeout；重新增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate；
 - 阶段3接受能力定义外的任意URL、命令或目标，或把批准OpenMontage能力定义扩张成通用包管理框架；
 - 阶段3实现已标记`SUPERSEDED`的旧`prepare_runtime_on_demand(...)`签名、旧全闭集Runtime Lock或旧任务包，或恢复`host_tools.py`、通用下载器、CLI/MCP、服务、数据库等第二入口；
 - 阶段3把可选能力写入Package、系统目录或必带工具链目录，修改系统PATH/注册表，要求管理员权限，或在失败后遗留staging/cache临时对象；
 - 阶段3准备前为了发现或互斥而创建Runtime、缓存、锁文件或staging，或在没有该能力最终`PRESENT`或`INTEGRATED`证据时让阶段4把完整或不完整的已发布对象视为可执行能力；
-- 阶段4接受任意Shell、启动多个Agent、自动重试、建立队列/调度/常驻服务或进入Agent业务内部；
+- 阶段4接受任意Shell/命令、改写literal `user_message`、解析意图、读取未验证Package Guide、启动多个Agent、安装Runtime、选择渲染器、自动重试/重放、建立队列/调度/常驻服务/数据库、执行媒体生产、创建Artifact、推进Checkpoint或进入Agent业务内部；
 - 阶段4基础固定工具调用未绑定有效Registration和必带工具链，或执行Remotion/HyperFrames时没有Stage 3对该能力给出的`PRESENT`或`INTEGRATED`证据；
 - 阶段5并存多套生产入口、全局截获用户意图或成为第二聊天Agent；
 - 阶段6在Runtime计划/准备事实或Launcher回执可直接消费时仍建立独立服务、数据库、轮询/流式平台，或自行安装Runtime、解释Artifact业务语义；
 - 把建设顺序`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`误写成最终用户调用顺序，或在阶段3准备后自动重试原生产请求；
-- 阶段3产品实现超过一个公共入口、一个新增生产模块、对`__init__.py`的导出式修改和一个直接测试文件；未来阶段3Builder除这三个产品路径外，只允许同步编辑现有`tests/workbuddy/test_repository_hygiene.py`和`.github/workflows/ci.yml`以更新固定tracked/API/source断言并运行直接测试，任何第六个路径或在这两个文件中加入产品逻辑都必须停止；其他阶段超过其任务包明示的最小文件范围且没有单独的新授权与消费者证据。
+- 改写已接受Stage3的一个公共入口、一个新增生产模块、`__init__.py`导出、一个直接测试及两项验收基础设施闭集；其他阶段超过其未来任务包明示的最小文件范围且没有单独的新授权与消费者证据。
 
 ## 产品边界
 
 腾讯WorkBuddy是唯一运行中的Agent，读取已验证Package Guide后承担OpenMontage生产角色；不存在由Shell另行启动的OpenMontage Agent进程。Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。
 
-金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2已经接受Registration/Locator实现，并以一次随后清理的真实临时Package完成组装、register、task-only activate和new-process locate验证；清理不重开、不重做阶段2，但也不等于最终Release、已安装生产PackageRoot或生产Registration已经存在。最终Package的持久组装、安装与生产登记仍是强制交付要求，但只属于后续最终交付或Installer收口Gate，最迟在阶段5真实WorkBuddy入口和生产验收前完成，绝不是阶段3编码前置。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
+金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2已经接受Registration/Locator实现，并以一次随后清理的真实临时Package完成组装、register、task-only activate和new-process locate验证；清理不重开、不重做阶段2，但也不等于最终Release、已安装生产PackageRoot或生产Registration已经存在。最终Package的持久组装、安装与生产登记仍是强制交付要求，但只属于后续最终交付或Installer收口任务，最迟在阶段5真实WorkBuddy生产验收前完成，绝不是阶段3或阶段4编码/规划前置。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
 
-阶段3只对Remotion和HyperFrames执行有界探测、事实报告、零下载计划和用户逐能力批准后的受管集成。探测仅允许受管DataRoot、明确登记/配置候选路径和正常命令解析；禁止遍历盘符、系统软件清单、全局npm状态或猜目录。结果闭集为`DETECTION_REPORT/CONSENT_REQUIRED/INTEGRATED/SKIPPED/BLOCKED`，能力事实为`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`。缺失、拒绝或暂缓不是失败；Shell不选择渲染器，OpenMontage从实际可用能力中决定生产使用。唯一入口为`prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`，最大代码面仍为一个新增生产模块、一次仅导出修改和一个直接测试文件。当前Stage 3编码阻塞只有本五文档纠偏审阅/推广与精确Builder授权。
+阶段3只对Remotion和HyperFrames执行有界探测、事实报告、零下载计划和用户逐能力批准后的受管集成。探测仅允许受管DataRoot、明确登记/配置候选路径和正常命令解析；禁止遍历盘符、系统软件清单、全局npm状态或猜目录。结果闭集为`DETECTION_REPORT/CONSENT_REQUIRED/INTEGRATED/SKIPPED/BLOCKED`，能力事实为`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`。缺失、拒绝或暂缓不是失败；Shell不选择渲染器，OpenMontage从实际可用能力中决定生产使用。唯一入口为`prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`。实现`a3f8959682d296301dc573c2835f8c705a52e8b2`和closeout `7c15aae4e77c579309312b21c79076f930970214`已正式推广，Stage3现为`PASS_ACCEPTED`；证据层为55 direct、10 hygiene、199 full，全部退出0且无skip，不包含真实下载、生产DataRoot、WorkBuddy、Stage4、Provider或媒体/视频E2E。
 
-阶段3未来Builder的验收基础设施例外固定为两个现有文件：`tests/workbuddy/test_repository_hygiene.py`和`.github/workflows/ci.yml`。原因是当前固定33文件、固定两个Python源码和“阶段3未实现”断言会拒绝合法新增文件，而当前CI又不运行未来直接测试；这两个编辑必须与实现同一候选原子审阅，且只能更新最终固定白名单、公共导出/源码集合断言和唯一pytest命令。它们不改变“一个生产模块、一个公共入口”的产品边界。
+阶段3已接受Builder只编辑三个产品路径及`tests/workbuddy/test_repository_hygiene.py`、`.github/workflows/ci.yml`两项验收基础设施，正式树tracked精确35；这不改变“一个生产模块、一个公共入口”的产品边界。
+
+本九文档同步正式推广后，Stage4仅为`planning_eligible`，实现仍`NOT_GRANTED`。当前Locator会重验Registration、PackageRoot、必带工具链、Guide、Manifest和Lock，但不提供固定Package工具入口身份；Stage4精确公共入口和不可改写回执字段也未冻结。未来单独授权的Stage4规划必须由批准OpenMontage Package定义及后续最终交付/Installer所有者取得可验证固定工具身份，并自行冻结唯一Launcher API与回执字段；不得猜Guide、重开Stage2、预写代码，或把最终Package和真实WorkBuddy变成规划前置。Stage5拥有真实WorkBuddy会话/入口/询问/继续；Stage6须等待Stage4回执及Stage5真实消费者，直接消费时生产代码为0。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

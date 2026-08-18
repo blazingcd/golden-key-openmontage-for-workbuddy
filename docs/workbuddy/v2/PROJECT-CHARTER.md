@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 项目章程
 
-状态：`STAGE_1_PASS_ACCEPTED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_ELIGIBLE_AFTER_DOCS_PROMOTION / SIX_MODULE_MVP`
 
 ## 1. 产品目标
 
@@ -37,7 +37,7 @@
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、完整必带私有工具链和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、Python/FFmpeg/ffprobe/Node/npm/npx身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖任何系统Python/FFmpeg/Node；登记/实现SaaS Core |
 | Runtime按需准备 | 有界探测Remotion和HyperFrames，报告存在、缺失或不兼容；仅按用户逐能力授权集成批准的缺失项 | 输入：DataRoot、经批准的OpenMontage能力定义、受管/明确登记或配置/正常命令候选及逐能力用户决定；输出：`DETECTION_REPORT`、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`或`BLOCKED`事实，以及每项能力的`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`状态 | 扫盘或枚举系统软件；把Remotion/HyperFrames当必带Runtime；发现/下载/替换必带Python/FFmpeg/Node；未授权或全局安装；由Shell或用户替OpenMontage选择渲染器；通用包管理器；海外默认源回退；修改系统PATH/注册表 |
-| 会话Launcher | 为一次WorkBuddy拥有的会话绑定精确Package、完整必带工具链和当前实际需要的已验证可选能力，并调用一个固定工具入口 | 输入：有效Package Registration、阶段2必带工具链就绪事实、执行所选可选能力时对应的阶段3就绪事实、分离的用户消息与执行控制；输出：一次调用回执、真实退出码、结果指针和残留事实 | 启动第二Agent/模型进程；解析用户意图；接受任意Shell；自动重试；调度多任务；创建Artifact或推进Checkpoint |
+| 会话Launcher | 对一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`重验活动Package和完整必带工具链；只在明确执行某可选能力时核对同一capability+definition的阶段3`PRESENT`或`INTEGRATED`证据；随后调用一个固定Package工具入口并返回一次不可改写真实进程回执 | 输入：DataRoot、分离的literal `user_message`与`executor_controls`、固定工具请求，以及可选能力调用时的对应阶段3证据；输出：绑定Registration和工具身份的一次真实退出、结果指针及残留事实 | 改写用户原话；读取未验证Package Guide；启动第二Agent；解析意图；接受任意Shell/命令；安装Runtime；选择渲染器；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
 | 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
 
@@ -47,7 +47,7 @@
 
 阶段编号表示建设、审阅和正式交付顺序，固定为`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`。这不是最终用户的一次运行调用顺序。阶段2已经接受Registration/Locator实现和真实临时证明；它不重开，也不成为Stage 3编码输入。最终用户实际运行从阶段5的WorkBuddy入口开始：
 
-`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`是阶段3之外的后续最终交付或Installer收口门禁：它持久生成最终Release、安装PackageRoot、建立生产Registration/Activation并用新进程Locator验明身份，最迟在阶段5真实WorkBuddy入口和生产验收前完成。它不是阶段3编码前置；不得把这些动作塞入阶段3Runtime模块，也不得因规划或task-only候选验证已完成而自动视为最终交付。
+`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`是后续最终交付或Installer收口任务：它持久生成最终Release、安装PackageRoot、建立生产Registration/Activation并用新进程Locator验明身份，最迟在阶段5真实WorkBuddy生产验收前完成。它不是阶段3或阶段4编码/规划前置；不得把这些动作塞入Runtime或Launcher，也不得因规划或task-only候选验证已完成而自动视为最终交付。
 
 ```text
 User
@@ -98,7 +98,7 @@ User
 
 实现顺序固定为有界只读探测、逐能力事实报告、缺失/不兼容项的零下载计划、WorkBuddy询问、逐能力授权复核、同卷staging与来源/hash/许可核验、受管发布、失败回滚和最终探针。受管目标为`<DataRoot>/Runtime/Composition/<capability>/<definition_sha256>/`，缓存为`<DataRoot>/Caches/optional-runtime/`；浏览器只有批准定义和本次授权明确包含时才位于`<DataRoot>/Runtime/Browsers/<capability>/<definition_sha256>/`。阶段3不得创建`Runtime/Python`、`Runtime/FFmpeg`或`Runtime/Node`。
 
-未来实现最多一个新`runtime_prepare.py`生产模块、`__init__.py`的一次导出编辑和一个`test_runtime_prepare.py`直接测试。当前Stage 3编码阻塞只包括本五文档纠偏完成独立审阅/正式推广，以及live authority授予精确Builder基线、五路径白名单和Reviewer范围；不得再增加Package、Registration、Package绑定能力元数据或Stage 5输入Gate。
+已接受实现只有一个新`runtime_prepare.py`生产模块、`__init__.py`的一次导出编辑和一个`test_runtime_prepare.py`直接测试，并同步更新两项验收基础设施。实现`a3f8959682d296301dc573c2835f8c705a52e8b2`及closeout `7c15aae4e77c579309312b21c79076f930970214`均已正式推广，Stage 3现为`PASS_ACCEPTED`。
 
 ### 4.4 最小WorkBuddy消费者接口
 
@@ -190,9 +190,21 @@ plan_sha256: INTEGRATED only
 
 ### 4.8 阶段3实现单元与后续交接
 
-未来物理生产实现仍只有`golden_key_openmontage_workbuddy/runtime_prepare.py`一个新模块。模块内部只需定义验证、有界探测、事实报告、计划生成、逐能力授权、staging发布、清理和最终探针等私有职责；它们不形成额外公共模块或入口。`__init__.py`只导出唯一入口，`test_runtime_prepare.py`只提供阶段3直接测试。
+已接受物理生产实现只有`golden_key_openmontage_workbuddy/runtime_prepare.py`一个新模块。模块内部的定义验证、有界探测、事实报告、计划生成、逐能力授权、staging发布、清理和最终探针均为私有职责；`__init__.py`只导出唯一入口，`test_runtime_prepare.py`只提供阶段3直接测试。
 
 产品运行衔接固定为：阶段5接收用户原话并触发阶段2重验；阶段4可先用必带工具链执行基础固定工具；阶段3有界探测并按用户逐能力批准集成；OpenMontage从实际可用能力中决定生产选择；阶段6原样转交探测、计划、用户决定、集成、退出和错误事实。建设顺序仍是`3 -> 4 -> 5 -> 6`，不得把它误写成用户运行顺序。
+
+### 4.9 Stage 4规划接管边界与已知缺口
+
+本九文档同步经审阅并正式推广后，Stage 4只获得`planning_eligible`，实现授权仍为`NOT_GRANTED`，下一授权任务仍为`NONE`。规划目标仅是冻结一次WorkBuddy拥有会话中的固定Package工具调用和不可改写真实进程回执；不得创建Stage5/6 Task Packet或预建Launcher实现。
+
+当前Stage 2 `locate_active_package(data_root)`已权威返回并重验Registration SHA、PackageRoot、Python/FFmpeg/ffprobe/Node/npm/npx、Guide、Manifest和Lock身份，但没有返回固定Package工具入口身份。现有权威也没有唯一确定Stage4公共入口签名及回执字段。后续单独授权的Stage4规划必须精确闭合：
+
+1. 由批准OpenMontage Package定义及后续最终交付/Installer所有者提供可验证的固定工具身份来源、Package内相对路径、hash/owner和固定argv形状；不得重开Stage2，也不得把最终Package物化变成规划前置。
+2. 由Stage4规划所有者冻结唯一公共入口，以及至少绑定Registration、Package/tool identity、进程启动事实、真实退出码、结果指针、错误和残留事实的不可改写回执精确字段。
+3. 基础固定工具调用只依赖阶段2必带工具链；可选能力证据仅在本次明确执行该能力时适用，且必须匹配同一capability+definition。
+
+真实WorkBuddy新会话、唯一入口、literal `user_message`不变、逐能力询问和同任务继续归Stage5实现/验收。Stage6只在Stage4回执和Stage5真实消费者存在后判断；直接消费必须走`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0。
 
 ## 5. 消息与授权边界
 

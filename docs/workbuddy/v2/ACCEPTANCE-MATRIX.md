@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_1_PASS_ACCEPTED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_ELIGIBLE_AFTER_DOCS_PROMOTION / SIX_MODULE_MVP`
 
 ## 1. 状态必须独立报告
 
@@ -38,7 +38,7 @@
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration同时锁定Package、可用私有Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx的身份、hash、版本、能力和规范化路径 | 只登记Python；依赖系统Python/FFmpeg/Node；扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
 | Runtime按需准备 | 有界探测Remotion和HyperFrames并逐项报告`PRESENT/MISSING/INCOMPATIBLE`；对缺失/不兼容项零下载展示批准OpenMontage能力定义中的来源、版本、大小、许可证和目标；用户逐能力同意后只集成批准项并验证；拒绝/暂缓返回`SKIPPED/NOT_INTEGRATED`，其他已有/基础能力继续可用 | 扫盘、枚举系统软件或猜目录；把Remotion/HyperFrames当必带Runtime；发现/下载/替换Python/FFmpeg/Node；Shell选择渲染器；未授权、全局或全部自动安装；自动海外回退；修改PATH/注册表；把能力缺失或用户拒绝当Package/项目失败 |
-| 会话Launcher | 用阶段2必带工具链事实启动固定入口；所选可选能力执行前另有对应阶段3就绪事实；返回真实退出码、结果指针和残留事实 | 绕过相应就绪检查；启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
+| 会话Launcher | 一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`；基础固定工具调用只需重验后的Package/必带工具链，明确执行某可选能力时另需同一capability+definition的阶段3`PRESENT`或`INTEGRATED`证据；只调用一个固定Package工具入口并返回绑定身份、真实退出码、结果指针、错误和残留事实的不可改写回执 | 改写literal `user_message`；读取未验证Guide；绕过对应就绪检查；启动第二Agent；接受任意Shell/命令；安装Runtime；选择渲染器；多进程调度/队列/服务/数据库；自动重试/重放；媒体生产；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
 | 状态与结果转交 | 直接转交Runtime计划/准备事实与Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；安装Runtime；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
 
@@ -58,7 +58,7 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 ### 3.2 阶段3重新规划Gate
 
-旧Package绑定能力元数据、Registration绑定及零能力零代码模型全部`SUPERSEDED`。当前Stage 3编码启动只需本五文档纠偏完成独立审阅/正式推广，并由live authority授予最新正式Git对象、精确五路径和Reviewer范围；不得增加Package、Registration、Package绑定能力元数据或Stage 5输入Gate。`FINAL_PACKAGE_MATERIALIZED`和`PRODUCTION_PACKAGE_REGISTERED`仍是后续最终交付要求，但不是Stage 3编码前置。
+旧Package绑定能力元数据、Registration绑定及零能力零代码模型全部`SUPERSEDED`。Stage 3实现`a3f8959682d296301dc573c2835f8c705a52e8b2`和closeout `7c15aae4e77c579309312b21c79076f930970214`已正式推广，现行状态为`PASS_ACCEPTED`。`FINAL_PACKAGE_MATERIALIZED`和`PRODUCTION_PACKAGE_REGISTERED`仍是后续最终交付/Installer要求，最迟在Stage5真实WorkBuddy生产验收前完成；不是Stage3或Stage4编码/规划前置。
 
 新阶段3最多一个公共入口`prepare_optional_capabilities(...)`、一个新生产模块、一个导出编辑和一个直接测试文件；不得新增通用Runtime框架。直接验收必须覆盖：
 
@@ -77,7 +77,7 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 ### 3.3 阶段3交付闭集和不断档验收
 
-阶段3仓库交付只有一个公共入口、五种结果、一套数据驱动的两能力探测/集成事务和阶段4可验证的能力证据。实现不得增加第二个公共入口、独立下载器或后台状态模块。产品实现文件固定为`runtime_prepare.py`、`__init__.py`导出编辑和`test_runtime_prepare.py`；未来同一个已授权Builder必须同步更新现有`test_repository_hygiene.py`和`.github/workflows/ci.yml`，使最终tracked白名单、公共导出断言和唯一CI pytest命令覆盖Stage 3。这两项是验收基础设施，不增加产品模块或产品行为。
+阶段3仓库交付只有一个公共入口、五种结果、一套数据驱动的两能力探测/集成事务和阶段4可验证的能力证据。产品实现文件固定为`runtime_prepare.py`、`__init__.py`导出编辑和`test_runtime_prepare.py`，并已同步更新`test_repository_hygiene.py`和`.github/workflows/ci.yml`两项验收基础设施；正式树tracked精确35。
 
 最小交付成果必须同时满足：
 
@@ -99,6 +99,14 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 1. 两能力均存在；2. 一项存在一项缺失；3. 不兼容版本；4. 显式登记/配置候选；5. 正常命令候选；6. 禁止盘符扫描；7. 禁止系统软件/全局npm枚举；8. 缺失只返回计划；9. 拒绝；10. 暂缓；11. 授权缺失；12. 旧定义或旧plan授权；13. 非大陆来源；14. 大陆来源失败且海外回退为零；15. 来源/大小/hash/许可不完整；16. 空间/权限/网络失败；17. 外来目标；18. 重复或并发调用无半成品；19. 失败清理且必带工具链零修改；20. 能力证据不能跨能力或定义消费。
 
 阶段3直接测试和完整仓库测试都必须有未截断输出和最终退出0。真实大陆镜像下载证据、真实WorkBuddy继续、阶段4真实执行和视频E2E仍是后续独立证据层，不能塞入阶段3直接测试或用mock冒充。
+
+### 3.4 Stage 3完成证据与Stage 4规划Gate
+
+Stage 3已接受证据为：direct 55 passed、repository hygiene 10 passed、CI-equivalent full 199 passed，全部最终退出0且无skip；独立Reviewer只读核验精确对象、代码、测试定义和Builder原始输出，没有重跑测试。该证据不证明真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E，也不需要这些后续证据来维持Stage3 `PASS_ACCEPTED`。
+
+本九文档同步推广后，Stage4规划可接管，但实现仍`NOT_GRANTED`。规划前已知合同缺口为：当前Locator输出没有固定Package工具入口权威身份；Stage4唯一公共入口和不可改写回执的精确字段未冻结。前者由批准OpenMontage Package定义及后续最终交付/Installer所有者提供可验证身份，后者由未来单独授权的Stage4规划所有者冻结。最终Package物化与真实WorkBuddy都不得被当作弥补规划缺口的前置。
+
+Stage4规划只有在以下输出被唯一冻结后，才可提交实现授权判断：固定工具身份来源/相对路径/hash/owner/固定argv；唯一Launcher入口；绑定Registration和工具身份、进程事实、真实退出、结果指针、错误及残留事实的精确不可改写回执。当前`next_authorized_task=NONE`。
 
 ## 4. Gate A：对象与环境
 

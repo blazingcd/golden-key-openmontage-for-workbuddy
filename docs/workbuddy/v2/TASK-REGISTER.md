@@ -1,31 +1,25 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S3-RUNTIME-PREPARE-CLOSEOUT1 / PASS_ACCEPTED_PENDING_CLOSEOUT_PROMOTION`
+状态：`V2-S3-TO-S4-DOCS-SYNC1 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
 更新时间：2026-08-18
 
 ## 当前任务
 
 ```text
-task_id: V2-S3-RUNTIME-PREPARE-CLOSEOUT1
-task_status: PASS_ACCEPTED_PENDING_CLOSEOUT_PROMOTION
-task_kind: STAGE3_CLOSEOUT / DOCS_ONLY / NO_IMPLEMENTATION
-user_authorization: 2026-08-18 / 收口已审且已正式推广的Stage3实现；不得启动Stage4或扩大边界
-stage_3_builder_base: 1c18edf9910e57541c37614c3e7cedf2fb11e372
-reviewed_implementation_candidate: a3f8959682d296301dc573c2835f8c705a52e8b2
-reviewed_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
-implementation_tree: eca057c3643c36248cccbfb9606d9aea12b3dc42
-implementation_commits: 300894359780684fed69a62f9b6c6b5902d51735; d77a69098e212ef2b5e0622ea589527798ec59d3; a3f8959682d296301dc573c2835f8c705a52e8b2
-start_commit: a3f8959682d296301dc573c2835f8c705a52e8b2
+task_id: V2-S3-TO-S4-DOCS-SYNC1
+task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+task_kind: STAGE3_TO_STAGE4_DOCUMENT_SYNC / DOCS_ONLY / NO_IMPLEMENTATION
+user_authorization: 2026-08-18 / 同步Stage3完成事实；后续要求归回相关阶段；只判断推广后Stage4规划接管条件；严禁阶段越界
+start_commit: 7c15aae4e77c579309312b21c79076f930970214
 result_commit: THIS_COMMIT
-branch: codex/v2-s3-runtime-closeout1
+branch: codex/v2-s3-to-s4-docs-sync1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: a3f8959682d296301dc573c2835f8c705a52e8b2
-review_range: 1c18edf9910e57541c37614c3e7cedf2fb11e372..a3f8959682d296301dc573c2835f8c705a52e8b2
-independent_review: APPROVE / P0=0 / P1=0 / P2=0
-formal_promotion: PASS / origin/codex/workbuddy-shell-v2=a3f8959682d296301dc573c2835f8c705a52e8b2
-closeout_formal_promotion: PENDING / after promotion Stage3 status is PASS_ACCEPTED
-repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md
+formal_target_at_start: 7c15aae4e77c579309312b21c79076f930970214
+review_range: 7c15aae4e77c579309312b21c79076f930970214..THIS_COMMIT
+independent_review: NOT_STARTED / REQUIRED_ZERO_WRITE
+formal_promotion: NOT_STARTED / DOCS_SYNC_CANDIDATE_ONLY
+repository_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; WORK-LOG.md; docs/workbuddy/v2/README.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/MODULE-DISPOSITION.md
 production_code_changes: 0
 test_changes: 0
 ci_changes: 0
@@ -33,6 +27,12 @@ new_tracked_files: 0
 tracked_files_expected: 35
 external_writes_performed: NONE
 task_temp_root_status: NOT_CREATED
+stage_3_builder_base: 1c18edf9910e57541c37614c3e7cedf2fb11e372
+stage_3_reviewed_implementation: a3f8959682d296301dc573c2835f8c705a52e8b2 / APPROVE / P0=0 / P1=0 / P2=0
+stage_3_implementation_tree: eca057c3643c36248cccbfb9606d9aea12b3dc42
+stage_3_implementation_commits: 300894359780684fed69a62f9b6c6b5902d51735; d77a69098e212ef2b5e0622ea589527798ec59d3; a3f8959682d296301dc573c2835f8c705a52e8b2
+stage_3_closeout: 7c15aae4e77c579309312b21c79076f930970214 / FORMALLY_PROMOTED
+stage_3_status: PASS_ACCEPTED
 implementation_exact_changed_path_count: 5
 implementation_exact_changed_paths: .github/workflows/ci.yml; golden_key_openmontage_workbuddy/__init__.py; golden_key_openmontage_workbuddy/runtime_prepare.py; tests/workbuddy/test_repository_hygiene.py; tests/workbuddy/test_runtime_prepare.py
 stage_3_public_entry: prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)
@@ -40,7 +40,7 @@ stage_3_result_set: DETECTION_REPORT / CONSENT_REQUIRED / INTEGRATED / SKIPPED /
 builder_direct_test_evidence: 55 passed / final exit 0 / no skip
 builder_hygiene_test_evidence: 10 passed / final exit 0 / no skip
 builder_ci_equivalent_evidence: 199 passed / final exit 0 / no skip
-reviewer_evidence: independent zero-write review of exact Git objects, code, test definitions and original Builder output / tests not rerun by Reviewer
+stage_3_reviewer_evidence: independent zero-write review of exact Git objects, code, test definitions and original Builder output / tests not rerun by Reviewer
 evidence_boundary: no real third-party or mainland-mirror download; no production DataRoot integration; no WorkBuddy, Stage4, Provider, media or video E2E proof / these are not Stage3 failures or coding prerequisites
 single_transaction: bounded detect Remotion and HyperFrames -> report PRESENT/MISSING/INCOMPATIBLE -> zero-download per-capability plan -> WorkBuddy asks -> approve integrates only named items / decline or defer returns SKIPPED -> verify and report
 product_code_paths: golden_key_openmontage_workbuddy/runtime_prepare.py; export-only golden_key_openmontage_workbuddy/__init__.py; tests/workbuddy/test_runtime_prepare.py
@@ -57,13 +57,21 @@ consumer_mapping: DETECTION_REPORT=display_facts; CONSENT_REQUIRED=display_plan_
 consent_binding: capability + definition_sha256 + plan_sha256 / explicit per-capability approve only
 real_workbuddy_evidence_stage: STAGE_5_ACCEPTANCE_ONLY
 same_task_continuation_rule: verify in Stage5; if unsupported ask user to reply 继续刚才的任务; Shell never auto-replays
-validation_diff_check: PASS / exact one-file scope / untracked 0 / git diff --check exit 0 / closeout status fields consistent
-validation_full_test: NOT_RUN_BY_CLOSEOUT / accepted Builder test evidence recorded above; Reviewer did not rerun
-validation_scope: docs/workbuddy/v2/TASK-REGISTER.md only / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
-future_final_package_gate_rule: final persistent Release/sidecar, production PackageRoot and production Registration/Activation move to later final-delivery or Installer closeout; complete no later than Stage5 real WorkBuddy entry and production acceptance
+validation_diff_check: PASS / exact 9 existing docs / untracked 0 / git diff --check exit 0 / active stale Stage3 model tokens 0
+validation_full_test: NOT_RUN_DOCS_ONLY / Reviewer must inspect content and exact objects zero-write
+validation_scope: exact 9 existing docs / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
+future_final_package_gate_rule: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1 is a later final-delivery or Installer task due before Stage5 real WorkBuddy production acceptance; it is not a Stage3 or Stage4 coding/planning prerequisite
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
-forbidden_scope: Release; Registration; Installer; Launcher; WorkBuddy; Provider; media; CLI; MCP; service; database; second public entry; generic framework; any sixth path
+stage_4_takeover_boundary: planning_eligible_after_this_docs_promotion / implementation_authorization=NOT_GRANTED
+stage_4_registration_audit: locate_active_package returns revalidated Registration, PackageRoot, required toolchain, Guide, Manifest and Lock identities; it does not return an authoritative fixed Package tool entry identity
+stage_4_contract_gap: exact public entry and immutable process receipt field names are not frozen; fixed Package tool identity source/path/hash/owner/fixed argv shape is not present in current Registration output
+stage_4_gap_owner_package_tool_identity: approved OpenMontage Package definition plus later final-delivery or Installer owner / must provide a verifiable fixed tool identity without reopening Stage2 or making final Package a Stage4 planning prerequisite
+stage_4_gap_owner_launcher_api_and_receipt: future separately authorized Stage4 planning task / must freeze one public entry and exact immutable receipt fields before any implementation grant
+stage_5_deferred_scope: real new WorkBuddy session, single entry, unchanged literal user_message, per-capability authorization question and same-task continuation / implementation and acceptance only
+stage_6_deferred_rule: evaluate only after Stage4 receipt and Stage5 real consumer exist; direct consumption means STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE and production code 0
+forbidden_scope: Stage4/5/6 implementation; final Package generation; Installer; WorkBuddy run; Provider; media/video E2E; production DataRoot; code/tests/CI/pyproject; new files; any tenth path
 next_authorized_task: NONE
+stage_4_planning: ELIGIBLE_AFTER_THIS_DOCS_PROMOTION
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -155,8 +163,9 @@ formal_branch: codex/workbuddy-shell-v2
 accepted_authority_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
 formal_handoff_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
 accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head_before_current_closeout: a3f8959682d296301dc573c2835f8c705a52e8b2
-formal_head_after_closeout: THIS_COMMIT / PENDING_CLOSEOUT_PROMOTION
+formal_head: 7c15aae4e77c579309312b21c79076f930970214
+stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
+stage_3_closeout_formal_result: 7c15aae4e77c579309312b21c79076f930970214
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED
@@ -190,8 +199,9 @@ stage_3_consumer_interface_contract: PASS_ACCEPTED_FORMALLY_PROMOTED_AT_061AC842
 stage_3_product_execution_contract: PASS_ACCEPTED_FORMALLY_PROMOTED_AT_061AC8428823C8732F241B01A7FD9E54A732599A
 real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
 stage_3_execution_packet: CONSUMED_COMPLETE / EXACT_5_PATHS
-stage3_implementation: PASS_ACCEPTED_AFTER_THIS_CLOSEOUT_FORMAL_PROMOTION
-stage_3_status: PASS_ACCEPTED_AFTER_THIS_CLOSEOUT_FORMAL_PROMOTION
+stage3_implementation: PASS_ACCEPTED
+stage_3_status: PASS_ACCEPTED
+stage_4_planning: ELIGIBLE_AFTER_THIS_DOCS_PROMOTION
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -199,7 +209,7 @@ stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
 
-`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了Stage 2必带工具链和Registration/Locator的真实临时证明；该历史事实不重开，也不再作为Stage 3输入。Stage 3实现已经独立审阅并正式推广为`a3f8959682d296301dc573c2835f8c705a52e8b2`；本closeout正式推广后Stage 3即为`PASS_ACCEPTED`。下一授权任务为`NONE`，Stage 4、5、6及最终Package Gate均未获授权。
+`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了Stage 2必带工具链和Registration/Locator的真实临时证明；该历史事实不重开，也不再作为Stage 3输入。Stage 3实现已经独立审阅并正式推广为`a3f8959682d296301dc573c2835f8c705a52e8b2`，closeout `7c15aae4e77c579309312b21c79076f930970214`也已正式推广，因此Stage 3现为`PASS_ACCEPTED`。本docs sync推广后只具备启动Stage 4规划/接管判断的条件；下一授权任务仍为`NONE`，Stage 4、5、6及最终Package Gate均未获实现授权。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35。没有恢复任何已清理内容。
 
@@ -243,9 +253,9 @@ stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 
 上一版阶段3执行包、`prepare_runtime_on_demand(...)`签名，以及Package绑定能力元数据、Registration绑定和零能力零代码模型全部`SUPERSEDED`，不得交给Builder。新阶段3只做Remotion和HyperFrames的有界探测、事实报告、零下载计划、逐能力用户决定和批准项受管集成。
 
-### 实现启动Gate
+### 历史实现启动Gate（已满足并消费）
 
-以下两项全部满足前，阶段3生产代码变化必须为0：
+以下两项是Stage 3实现前的历史Gate，现已满足并由正式结果消费：
 
 1. 当前五文档产品模型纠偏完成独立审阅，并正式fast-forward推广到`origin/codex/workbuddy-shell-v2`；
 2. `TASK-REGISTER.md`基于当时最新正式Git对象明确授予精确Builder基线、五文件允许路径、直接测试和独立Reviewer范围。
@@ -287,9 +297,9 @@ normal_command_name: optional
 - 阶段6优先原样转交探测、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`、`BLOCKED`和Launcher事实；不安装、不解释Artifact、不自动重试。
 - Shell不得声称已无缝继续；阶段5真实WorkBuddy测试证明同一任务可继续后才允许该说法，否则由WorkBuddy要求用户回复“继续刚才的任务”。
 
-### 最小文件和交付
+### 已接受的最小文件和交付
 
-未来产品实现最多新增`golden_key_openmontage_workbuddy/runtime_prepare.py`，最小编辑`golden_key_openmontage_workbuddy/__init__.py`导出唯一入口，并新增`tests/workbuddy/test_runtime_prepare.py`。同一Builder还必须只为验收同步编辑现有`tests/workbuddy/test_repository_hygiene.py`和`.github/workflows/ci.yml`，使固定tracked白名单、公共导出/源码断言和唯一CI pytest命令覆盖Stage 3。这两个文件不承载产品逻辑，也不授权第六个路径。不新增通用Runtime框架、`host_tools.py`、CLI/MCP、服务、数据库、后台进程、UI或通用下载器。交付为单一入口、稳定结果集、有界探测/计划/用户决定/集成事实、直接测试证据和阶段4可消费合同；不是Installer、最终Package、WorkBuddy入口、Launcher或视频E2E。
+已接受产品实现只新增`golden_key_openmontage_workbuddy/runtime_prepare.py`，最小编辑`golden_key_openmontage_workbuddy/__init__.py`导出唯一入口，并新增`tests/workbuddy/test_runtime_prepare.py`；同一Builder只为验收同步编辑了`tests/workbuddy/test_repository_hygiene.py`和`.github/workflows/ci.yml`。正式结果保持单一入口、稳定结果集、有界探测/计划/用户决定/集成事实及直接测试证据；它不是Installer、最终Package、WorkBuddy入口、Launcher或视频E2E证明。
 
 ## 已接受对象与证据边界
 

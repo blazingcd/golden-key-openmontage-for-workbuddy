@@ -37,16 +37,16 @@
 |---|---|---|
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration同时锁定Package、可用私有Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx的身份、hash、版本、能力和规范化路径 | 只登记Python；依赖系统Python/FFmpeg/Node；扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
-| Runtime按需准备 | 只消费绑定生产Registration、当前Release能力声明及对应Package-owned Lock的一个已选Remotion或HyperFrames要求；`none`或未声明能力不要求Lock且零下载；discover/plan零写入；用户确认后从批准大陆镜像只准备声明支持的所选能力及其锁声明附属资产；二次调用零下载复用；向阶段4返回身份绑定回执 | 最终Package/生产Registration不存在仍实现；把Remotion/HyperFrames当必带Runtime；为未声明能力下载；扫盘；Shell-owned重复Lock；发现/下载/替换必带Python/FFmpeg/Node；同时安装全部可选能力；通用下载/包管理/repair；自动海外源回退；修改系统PATH/注册表；Shell或普通用户替OpenMontage选择渲染器 |
+| Runtime按需准备 | 有界探测Remotion和HyperFrames并逐项报告`PRESENT/MISSING/INCOMPATIBLE`；对缺失/不兼容项零下载展示批准OpenMontage能力定义中的来源、版本、大小、许可证和目标；用户逐能力同意后只集成批准项并验证；拒绝/暂缓返回`SKIPPED/NOT_INTEGRATED`，其他已有/基础能力继续可用 | 扫盘、枚举系统软件或猜目录；把Remotion/HyperFrames当必带Runtime；发现/下载/替换Python/FFmpeg/Node；Shell选择渲染器；未授权、全局或全部自动安装；自动海外回退；修改PATH/注册表；把能力缺失或用户拒绝当Package/项目失败 |
 | 会话Launcher | 用阶段2必带工具链事实启动固定入口；所选可选能力执行前另有对应阶段3就绪事实；返回真实退出码、结果指针和残留事实 | 绕过相应就绪检查；启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
 | 状态与结果转交 | 直接转交Runtime计划/准备事实与Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；安装Runtime；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
 
 ### 3.1 阶段3至阶段6缩减Gate
 
-阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户运行顺序。旧“阶段3先检查所有Runtime再进入阶段4”的链路已失效：阶段4可依据阶段2必带工具链事实启动基础固定工具；WorkBuddy/OpenMontage锁定Remotion或HyperFrames后必须调用阶段3核验同一Registration和Package-owned Lock。能力精确存在时返回`READY_REUSED`，只有下载/准备动作限于能力缺失并取得用户同意时。
+阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户运行顺序。阶段4可依据阶段2必带工具链事实启动基础固定工具；阶段3独立有界探测Remotion和HyperFrames，能力存在则复用，缺失/不兼容则询问用户是否集成。OpenMontage只从实际可用能力中决定生产选择。
 
-阶段3结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。每个Package Release可声明支持零个、一个或两个允许的可选能力，只要求声明能力的Lock。没有可选能力要求或所选能力已就绪时零下载；选择未声明能力返回`BLOCKED`且零下载；声明支持的所选能力缺失时形成只针对该能力及Package-owned Lock声明附属资产的计划，用户确认后按锁准备。不得把另一渲染器或未声明浏览器顺带安装。
+阶段3结果闭集为`DETECTION_REPORT`、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`和`BLOCKED`。每项能力事实只取`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`。缺失、拒绝或暂缓不阻塞Package、项目、最终交付或其他能力；只有无效定义、越界目标或已授权集成失败才可`BLOCKED`。
 
 Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具链。阶段2缺少任何一项时是`FAIL`，阶段3不得以宿主PATH、下载或受管目录补救。Node虽然官方Quick Start最低为18+，但当前HyperFrames要求22+，Package锁定值必须满足最高当前要求。
 
@@ -58,25 +58,47 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 ### 3.2 阶段3重新规划Gate
 
-上一版阶段3入口、Shell-owned全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`。新实现Gate必须同时证明：`FINAL_PACKAGE_MATERIALIZED`、`PRODUCTION_PACKAGE_REGISTERED`、新进程Locator成功、当前Release已声明其可选能力集合、每个声明支持的能力Lock被Manifest覆盖、至少一个声明能力形成正向实现输入、最小结果到WorkBuddy动作接口已冻结、最新正式Git对象和精确Builder白名单获授权。Release声明零能力不阻塞最终Package，但阶段3应记`NO_IMPLEMENTATION_REQUIRED_FOR_THIS_RELEASE`并保持零代码。真实WorkBuddy新会话与继续证据属于阶段5验收。实现授权前缺一项时，任务治理裁决为`INCOMPLETE_STAGE_3_INPUT`并零代码停止；它不增加公共结果。未来运行期同类输入问题只能表示为五种结果之一的`BLOCKED(reason_code=INCOMPLETE_STAGE_3_INPUT)`，`BLOCKED_BEFORE_PUBLISH`同样只能是`BLOCKED`的原因码。
+旧Package绑定能力元数据、Registration绑定及零能力零代码模型全部`SUPERSEDED`。当前Stage 3编码启动只需本五文档纠偏完成独立审阅/正式推广，并由live authority授予最新正式Git对象、精确五路径和Reviewer范围；不得增加Package、Registration、Package绑定能力元数据或Stage 5输入Gate。`FINAL_PACKAGE_MATERIALIZED`和`PRODUCTION_PACKAGE_REGISTERED`仍是后续最终交付要求，但不是Stage 3编码前置。
 
-新阶段3最多一个公共入口`prepare_optional_capability(...)`、一个新生产模块、一个导出编辑和一个直接测试文件；不得新增Shell Runtime Lock。直接验收必须覆盖：
+新阶段3最多一个公共入口`prepare_optional_capabilities(...)`、一个新生产模块、一个导出编辑和一个直接测试文件；不得新增通用Runtime框架。直接验收必须覆盖：
 
-1. 无能力要求返回`NO_OPTIONAL_CAPABILITY_REQUIRED`，零下载/零写入；
-2. 只检查已选能力，另一渲染器零触碰；
-3. Lock未声明浏览器时浏览器零触碰；
-4. 无确认只返回绑定版本、镜像、hash、大小、许可证、目标和`plan_sha256`的`CONSENT_REQUIRED`，零写入；
-5. Registration、Lock或计划身份变化使旧确认失效；
-6. 只使用批准大陆镜像，禁止自动海外回退；
-7. 外来目标保留，hash/大小/许可/来源/能力失败全部回滚并清理；
-8. 二次调用返回`READY_REUSED`且零下载；
-9. 必带Package工具链、Manifest、Registration和另一能力零修改；
-10. `READY_PREPARED`回执精确绑定Registration、能力Lock、runtime root、入口和版本证据；
-11. 阶段4拒绝过期、跨Package或能力不匹配回执；
-12. Shell选择渲染器、自动重放业务请求、扫描盘符、全局npm修改均为零。
-13. 当前Release声明零能力时，`none`路径不要求Lock且零下载；声明子集时只验证该子集，未声明能力返回`BLOCKED`且零写入。
+1. 同次有界探测Remotion和HyperFrames，并分别产生`PRESENT/MISSING/INCOMPATIBLE`事实；
+2. 探测只使用受管DataRoot、明确登记/配置候选路径和正常命令解析，盘符/软件清单/全局npm枚举为零；
+3. 已存在且兼容的能力复用并报告，零下载/零写入；
+4. 缺失/不兼容项只返回绑定定义、版本、来源、hash、大小、许可证、目标和`plan_sha256`的计划，零下载；
+5. `decline/defer`返回`SKIPPED/NOT_INTEGRATED`，不是失败；
+6. 定义、计划或探测事实变化使旧批准失效；
+7. 只使用批准大陆来源，禁止自动海外回退和全局安装；
+8. 外来目标保留，hash/大小/许可/来源/探针失败全部回滚并清理；
+9. 未批准能力、必带Python/FFmpeg/Node、Package和用户消息零修改；
+10. Shell选择渲染器、自动重放业务请求和生产执行均为零。
 
 证据必须分层：阶段3单元/负面测试、本地真实准备、大陆镜像网络验证、阶段5真实WorkBuddy消费和视频E2E分别报告；前一层PASS不能替代后一层，阶段5证据不得反向作为阶段3实现前置。
+
+### 3.3 阶段3交付闭集和不断档验收
+
+阶段3仓库交付只有一个公共入口、五种结果、一套数据驱动的两能力探测/集成事务和阶段4可验证的能力证据。实现不得增加第二个公共入口、独立下载器或后台状态模块。产品实现文件固定为`runtime_prepare.py`、`__init__.py`导出编辑和`test_runtime_prepare.py`；未来同一个已授权Builder必须同步更新现有`test_repository_hygiene.py`和`.github/workflows/ci.yml`，使最终tracked白名单、公共导出断言和唯一CI pytest命令覆盖Stage 3。这两项是验收基础设施，不增加产品模块或产品行为。
+
+最小交付成果必须同时满足：
+
+1. `prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`是唯一公共入口；
+2. 能力定义和用户决定拒绝未知/缺失字段，调用方不能注入任意URL、任意命令或安装目标；
+3. 五种结果及WorkBuddy动作保持闭集，能力证据不能跨能力或定义复用；
+4. 只读阶段不创建受管目录、缓存、准备锁、staging或临时文件；
+5. 缺失/不兼容计划规范排序并绑定能力、定义、精确资产、来源、许可、目标和总量；
+6. 仅有效批准后的第二次调用可以产生网络和受管写入，且必须先重新执行只读Gate；
+7. 只使用批准OpenMontage能力定义中的大陆来源和阶段2必带Node/npm/npx，无自动海外回退；
+8. 同卷staging中的所有对象通过来源、大小、SHA-256、许可和能力探针后才可发布；失败清理任务临时对象并保留外来对象；
+9. 最终探针从发布目标重新取证，`PRESENT`或`INTEGRATED`证据绑定同一能力和定义；
+10. PackageRoot、Registration、Activation、Python、FFmpeg、Node、未批准能力和literal用户消息全程零修改；
+11. 阶段4可以只凭阶段3能力证据判断该可选能力是否可执行，不需要理解阶段3集成内部；
+12. 阶段5只按五结果映射展示、询问或继续，阶段6可原样转交，不要求补建平行状态服务。
+
+阶段3直接测试至少闭合以下20类反例和成功路径，并分别断言结果、网络次数、最终文件树、外来对象、mtime/hash和任务临时残留：
+
+1. 两能力均存在；2. 一项存在一项缺失；3. 不兼容版本；4. 显式登记/配置候选；5. 正常命令候选；6. 禁止盘符扫描；7. 禁止系统软件/全局npm枚举；8. 缺失只返回计划；9. 拒绝；10. 暂缓；11. 授权缺失；12. 旧定义或旧plan授权；13. 非大陆来源；14. 大陆来源失败且海外回退为零；15. 来源/大小/hash/许可不完整；16. 空间/权限/网络失败；17. 外来目标；18. 重复或并发调用无半成品；19. 失败清理且必带工具链零修改；20. 能力证据不能跨能力或定义消费。
+
+阶段3直接测试和完整仓库测试都必须有未截断输出和最终退出0。真实大陆镜像下载证据、真实WorkBuddy继续、阶段4真实执行和视频E2E仍是后续独立证据层，不能塞入阶段3直接测试或用mock冒充。
 
 ## 4. Gate A：对象与环境
 

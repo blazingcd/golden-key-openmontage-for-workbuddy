@@ -36,7 +36,7 @@
 |---|---|---|---|
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、完整必带私有工具链和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、Python/FFmpeg/ffprobe/Node/npm/npx身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖任何系统Python/FFmpeg/Node；登记/实现SaaS Core |
-| Runtime按需准备 | 只读发现已由WorkBuddy/OpenMontage选择且当前Package版本声明支持的一个可选渲染能力，并对用户确认计划中的缺失项进行受控准备 | 输入：活动Package Registration、当前Release可选能力声明、经验证的单一能力要求、该能力Package自有Lock、受管/明确候选/PATH候选及用户对计划的明确授权；输出：所选能力来源与状态、`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`或`BLOCKED`事实 | 扫盘；把Remotion/HyperFrames当必带Runtime；处理本Release未声明的能力；发现/下载/替换必带Python/FFmpeg/Node工具链；一次安装所有可选能力；由Shell或普通用户替OpenMontage选择Remotion/HyperFrames；通用包管理器；未授权下载；海外默认源回退；修改系统PATH/注册表 |
+| Runtime按需准备 | 有界探测Remotion和HyperFrames，报告存在、缺失或不兼容；仅按用户逐能力授权集成批准的缺失项 | 输入：DataRoot、经批准的OpenMontage能力定义、受管/明确登记或配置/正常命令候选及逐能力用户决定；输出：`DETECTION_REPORT`、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`或`BLOCKED`事实，以及每项能力的`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`状态 | 扫盘或枚举系统软件；把Remotion/HyperFrames当必带Runtime；发现/下载/替换必带Python/FFmpeg/Node；未授权或全局安装；由Shell或用户替OpenMontage选择渲染器；通用包管理器；海外默认源回退；修改系统PATH/注册表 |
 | 会话Launcher | 为一次WorkBuddy拥有的会话绑定精确Package、完整必带工具链和当前实际需要的已验证可选能力，并调用一个固定工具入口 | 输入：有效Package Registration、阶段2必带工具链就绪事实、执行所选可选能力时对应的阶段3就绪事实、分离的用户消息与执行控制；输出：一次调用回执、真实退出码、结果指针和残留事实 | 启动第二Agent/模型进程；解析用户意图；接受任意Shell；自动重试；调度多任务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
 | 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
@@ -45,9 +45,9 @@
 
 ### 4.1 阶段3至阶段6最小实现规则
 
-阶段编号表示建设、审阅和正式交付顺序，固定为`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`。这不是最终用户的一次运行调用顺序。阶段2当前只证明登记实现和一次已清理的临时Package，最终Release、生产PackageRoot和生产Registration必须先通过交付门禁。最终用户实际运行从阶段5的WorkBuddy入口开始：
+阶段编号表示建设、审阅和正式交付顺序，固定为`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`。这不是最终用户的一次运行调用顺序。阶段2已经接受Registration/Locator实现和真实临时证明；它不重开，也不成为Stage 3编码输入。最终用户实际运行从阶段5的WorkBuddy入口开始：
 
-这个交付门禁是阶段3之外的`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`：它持久生成最终Release、安装PackageRoot、建立生产Registration/Activation并用新进程Locator验明身份。不得把这些动作塞入阶段3Runtime模块，也不得因规划已完成而自动视为已授权。
+`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`是阶段3之外的后续最终交付或Installer收口门禁：它持久生成最终Release、安装PackageRoot、建立生产Registration/Activation并用新进程Locator验明身份，最迟在阶段5真实WorkBuddy入口和生产验收前完成。它不是阶段3编码前置；不得把这些动作塞入阶段3Runtime模块，也不得因规划或task-only候选验证已完成而自动视为最终交付。
 
 ```text
 User
@@ -56,51 +56,49 @@ User
 -> Stage 4: one base fixed-tool call with required toolchain
 -> WorkBuddy/OpenMontage: lock the actual render capability
    -> package FFmpeg capability: continue with bundled FFmpeg
-   -> Remotion or HyperFrames selected
-      -> undeclared by this Package Release: BLOCKED
-      -> declared by this Package Release: Stage 3 validates that capability's Package-owned Lock and exact installed state
-      -> ready: return a receipt bound to Registration and capability Lock
-      -> missing: return one capability-specific missing-only plan
-      -> separate explicit user consent
-      -> Stage 3: prepare only the locked optional capability
-      -> WorkBuddy follows the frozen result-to-action interface; real continuation is accepted at Stage 5
+   -> Stage 3 bounded-detects Remotion and HyperFrames
+      -> present: report and reuse
+      -> missing or incompatible: return a zero-download integration plan
+      -> user declines or defers: SKIPPED / NOT_INTEGRATED; other capabilities remain usable
+      -> user explicitly approves named items: integrate only those items under managed DataRoot and verify
+   -> OpenMontage decides which available capability production uses
 -> Stage 6: unchanged preparation, exit, error and result facts
 ```
 
 - 每阶段最多一个公共入口、一个生产模块和一个直接测试文件；不能为了阶段编号制造文件。
 - 没有已验证输入或直接下游消费者时必须零代码退出，不得用通用框架替代缺失合同。
-- Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是Package交付及阶段2登记前置，不属于阶段3发现或下载对象。Remotion和HyperFrames只是允许的可选能力目录；每个不可变Package Release可声明支持零个、一个或两个，并只为声明支持者携带Lock。阶段3只处理经WorkBuddy/OpenMontage实际选择且本Release声明支持的一个能力，以及该能力Lock精确声明的浏览器等附属资产；没有可选能力要求时返回`NO_OPTIONAL_CAPABILITY_REQUIRED`，选择未声明能力时返回`BLOCKED`且零下载。Release声明零能力不阻塞最终Package，但不给阶段3提供正向消费者输入，因此该Release不得为阶段3制造通用框架或生产代码。
-- 阶段3只有一个按需准备接口，不是“扫描所有可选能力后全部安装”。Shell不决定Remotion或HyperFrames，普通用户也不承担技术选型；WorkBuddy依据已验证Package合同形成能力要求，用户只确认对应下载量、目标和许可证。
-- 阶段3面向最终用户的可选能力下载只使用Package自有能力Lock批准的中国大陆镜像，不得在失败后自动选择海外源。FFmpeg `gyan.dev`不再是阶段3终端用户下载源；它属于必带Package组装供应链并由阶段2核验。
-- 阶段4基础固定工具调用必须接受阶段2生产Locator事实；所选可选渲染能力在实际执行前还必须接受与同一`registration_sha256`及`capability_lock_sha256`绑定的阶段3就绪回执。缺少相应事实时返回`RUNTIME_NOT_READY`。它不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
+- Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是Package交付及阶段2登记前置，不属于阶段3探测或下载对象。Remotion和HyperFrames是OpenMontage候选能力，可存在、缺失、稍后集成或一直不集成；缺失、拒绝或暂缓不阻塞Package、项目或其他已有/基础能力。
+- 阶段3只有一个按需准备接口。所谓“扫描”仅指受管DataRoot路径、明确登记或配置的候选路径、正常命令解析三类有界探测；禁止遍历盘符、枚举系统软件清单、全局npm状态或猜目录。
+- 阶段3只使用经批准OpenMontage能力定义给出的大陆来源、版本、大小、hash、许可证和目标事实生成计划；失败时不得自动回退海外源。用户同意只授权下载/集成逐项列明的能力，不构成渲染器选择。
+- 阶段4基础固定工具调用继续接受阶段2必带工具链事实；执行Remotion或HyperFrames前只需阶段3对该能力给出的`PRESENT`或`INTEGRATED`证据。缺少能力时OpenMontage可以使用其他已有/基础能力；阶段4不得自行安装。
 - 阶段3前只冻结最小结果到WorkBuddy动作接口，不要求真实WorkBuddy已经跑通。阶段5只保留一种真实WorkBuddy Skill入口，是用户实际运行的起点；在阶段5验收中证明新会话命中、明确同意与同任务继续，不能继续时固定提示用户回复“继续刚才的任务”。在入口格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
 - 阶段6直接转交Runtime计划/准备事实和Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。它不得解释、安装或自动重试。
 - 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
 
 ### 4.2 中国大陆镜像合同
 
-老项目已经验证的大陆镜像先例只用于冻结渠道类别；新版Package自有能力Lock仍必须给出精确版本URL、大小和SHA-256：
+老项目已经验证的大陆镜像先例只用于冻结渠道类别；每项经批准OpenMontage能力定义必须给出精确版本URL、大小、SHA-256、许可证和受管目标：
 
 | 组件 | 终端用户下载渠道 |
 |---|---|
 | Python解释器及核心依赖 | 终端用户不下载；随金钥匙版Package交付并由阶段2登记 |
 | FFmpeg/ffprobe | 终端用户不下载；随Package交付。当前已接受临时证明使用`gyan.dev`的`.7z`资产，二进制实际报告`9.0.1-essentials_build`；下一交付门禁必须以任务账本和Registration合同中的精确URL、大小、SHA-256及许可证为权威，不得凭“9.0”标签或ZIP字样猜测 |
 | Node/npm/npx | 终端用户不下载；随Package交付。锁定版本必须至少满足OpenMontage 18+且满足当前HyperFrames 22+，因此当前下限取22+ |
-| Remotion可选依赖 | `https://registry.npmmirror.com`，仅在已选Remotion能力缺失时按锁准备 |
-| HyperFrames可选依赖 | `https://registry.npmmirror.com`，仅在已选HyperFrames能力缺失时按锁准备 |
-| 可选浏览器资产 | 只有所选能力的当前锁明确要求时，才使用批准大陆镜像的精确资产；不得预设为所有用户必装 |
+| Remotion可选依赖 | `https://registry.npmmirror.com`，仅在探测为缺失/不兼容且用户逐项批准时按批准能力定义集成 |
+| HyperFrames可选依赖 | `https://registry.npmmirror.com`，仅在探测为缺失/不兼容且用户逐项批准时按批准能力定义集成 |
+| 可选浏览器资产 | 只有批准能力定义明确列入当前计划且用户一并批准时才集成；不得预设为所有用户必装 |
 
-不得把“大陆镜像失败”解释为可以回退海外官方源。可选能力仍须以Package自有能力Lock中的版本、文件名、大小和SHA-256校验。必带FFmpeg和Node在Package组装时解决来源与分发，不能转嫁为终端用户阶段3下载。
+不得把“大陆镜像失败”解释为可以回退海外官方源。可选能力必须以批准OpenMontage能力定义中的版本、文件名、大小、SHA-256、许可证和目标校验。必带FFmpeg和Node在Package组装时解决来源与分发，不能转嫁为终端用户阶段3下载。
 
 ### 4.3 阶段3重新规划边界
 
-上一版`prepare_runtime_on_demand(...)`、Shell-owned全组件Runtime Lock以及把Python依赖、FFmpeg、Node列为阶段3目标的形状已失效。新阶段3唯一建议入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`；结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。
+上一版`prepare_runtime_on_demand(...)`以及把Python依赖、FFmpeg、Node、Package身份元数据或Registration列为阶段3输入的形状全部失效。新阶段3唯一建议入口为`prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`；结果闭集为`DETECTION_REPORT`、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`和`BLOCKED`，每项能力事实只取`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`。
 
-`capability_request`只允许当前Registration SHA、`none/remotion/hyperframes`、当前Release的可选能力声明，以及非`none`时Package内对应能力Lock相对路径及SHA，再加可选的一个明确候选路径。`none`不要求能力Lock；非`none`但未被当前Release声明支持或缺少对应Lock时返回`BLOCKED`。下载URL、命令、目标和资产必须来自已验证Package-owned Lock，Shell不维护另一份Lock。用户授权只在绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`时有效；身份变化后重新确认。
+`capability_definitions`只包含Remotion和HyperFrames经批准的OpenMontage定义：版本、入口、批准大陆来源、文件/资产、大小、SHA-256、许可证、受管目标，以及可选的明确登记/配置候选路径和正常命令名。调用方不能注入任意URL、任意命令或任意安装根。`user_decisions`只表达对精确`capability + definition_sha256 + plan_sha256`的逐能力`approve/decline/defer`决定；定义、计划或当前探测事实变化后旧批准失效。
 
-实现顺序固定为Locator重验、请求与Lock验证、只读发现、零写入裁决、missing-only计划、授权复核、同卷staging与hash/许可核验、原子发布、失败回滚、重新探针和就绪回执。Remotion或HyperFrames受管目标为`<DataRoot>/Runtime/Composition/<capability>/<capability_lock_sha256>/`，缓存为`<DataRoot>/Caches/optional-runtime/`；浏览器只有当前Lock要求时才位于`<DataRoot>/Runtime/Browsers/<capability>/`。阶段3不得创建`Runtime/Python`、`Runtime/FFmpeg`或`Runtime/Node`。
+实现顺序固定为有界只读探测、逐能力事实报告、缺失/不兼容项的零下载计划、WorkBuddy询问、逐能力授权复核、同卷staging与来源/hash/许可核验、受管发布、失败回滚和最终探针。受管目标为`<DataRoot>/Runtime/Composition/<capability>/<definition_sha256>/`，缓存为`<DataRoot>/Caches/optional-runtime/`；浏览器只有批准定义和本次授权明确包含时才位于`<DataRoot>/Runtime/Browsers/<capability>/<definition_sha256>/`。阶段3不得创建`Runtime/Python`、`Runtime/FFmpeg`或`Runtime/Node`。
 
-未来实现最多一个新`runtime_prepare.py`生产模块、`__init__.py`的一次导出编辑和一个`test_runtime_prepare.py`直接测试。没有持久最终Package、生产Registration/Activation、新进程Locator、Release可选能力声明、声明能力对应的Package-owned Lock或下述最小消费者接口合同时，生产代码必须保持0。真实WorkBuddy运行证据在阶段5验收，不是此处前置。现有目标不属于本产品或身份不匹配时保留原物并fail closed。
+未来实现最多一个新`runtime_prepare.py`生产模块、`__init__.py`的一次导出编辑和一个`test_runtime_prepare.py`直接测试。当前Stage 3编码阻塞只包括本五文档纠偏完成独立审阅/正式推广，以及live authority授予精确Builder基线、五路径白名单和Reviewer范围；不得再增加Package、Registration、Package绑定能力元数据或Stage 5输入Gate。
 
 ### 4.4 最小WorkBuddy消费者接口
 
@@ -108,13 +106,93 @@ User
 
 | 阶段3结果 | 唯一WorkBuddy动作 |
 |---|---|
-| `NO_OPTIONAL_CAPABILITY_REQUIRED` | 直接继续原任务 |
-| `READY_REUSED` | 使用已验证的现有能力继续 |
-| `CONSENT_REQUIRED` | 展示所选能力的来源、大小、许可证和目标并询问用户；本次调用零下载 |
-| `READY_PREPARED` | 继续原任务；不得重新选择能力 |
-| `BLOCKED` | 原样报告原因并停止相应可选能力执行 |
+| `DETECTION_REPORT` | 展示Remotion和HyperFrames的`PRESENT/MISSING/INCOMPATIBLE`事实；不替OpenMontage选择 |
+| `CONSENT_REQUIRED` | 对每个缺失/不兼容项展示来源、版本、大小、许可证和目标并逐项询问；本次零下载 |
+| `INTEGRATED` | 报告已按授权集成并验证的能力；是否用于生产仍由OpenMontage决定 |
+| `SKIPPED` | 报告用户拒绝或暂缓的能力为`NOT_INTEGRATED`；继续使用其他已有/基础能力 |
+| `BLOCKED` | 只报告无效定义、越界目标或已授权集成失败；能力单纯缺失或用户拒绝不是`BLOCKED` |
 
-WorkBuddy只在用户明确同意后回传绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`的批准事实；任一身份变化都必须重新询问。阶段5用唯一Skill在真实新会话验证上述两次调用。优先在同一任务上下文继续；若真实客户端不能自动继续，则只提示用户回复“继续刚才的任务”，Shell不得保存或自动重放原始业务消息。
+WorkBuddy只在用户明确同意后回传绑定`capability + definition_sha256 + plan_sha256`的逐能力批准事实；任一事实变化都必须重新询问。拒绝或暂缓同样作为明确决定传回并得到`SKIPPED/NOT_INTEGRATED`。阶段5用唯一Skill验证真实交互；Shell不得保存或自动重放原始业务消息。
+
+### 4.5 阶段3唯一产品事务
+
+阶段3不是启动前的全环境检查，也不是安装中心。它以同一套有界算法探测Remotion和HyperFrames，报告事实，并只对用户逐项批准的缺失/不兼容能力执行受管集成。能力是否用于生产始终由OpenMontage决定。
+
+固定事务顺序为：
+
+1. 验证Remotion和HyperFrames两项批准能力定义；定义必须闭合来源、版本、入口、大小、hash、许可证和受管目标，调用方不得覆盖目标或注入任意命令/URL。
+2. 只按受管DataRoot目标、明确登记或配置的候选路径、批准定义中的正常命令解析做只读探测；命令命中只产生待验证候选，禁止扫盘、全局npm枚举、系统软件清单和猜目录。
+3. 对每项能力报告`PRESENT/MISSING/INCOMPATIBLE`及入口、版本和来源事实。能力存在则复用；能力缺失或不兼容本身不是失败。
+4. 对每个缺失/不兼容项生成确定性零下载计划，包含批准来源、版本、文件/资产、大小、SHA-256、许可证、受管目标、总下载量和`plan_sha256`，返回`CONSENT_REQUIRED`。
+5. WorkBuddy逐项询问用户。`decline/defer`返回`SKIPPED/NOT_INTEGRATED`，不得下载，也不影响其他能力或基础能力。
+6. 仅对绑定`capability + definition_sha256 + plan_sha256`的`approve`项重新探测和复核；事实变化使旧批准失效。
+7. 有效批准后才可在DataRoot同卷创建该能力专用staging，使用阶段2必带Node/npm/npx和批准大陆来源只准备批准的缺失对象，逐项验证后原子发布；禁止全局安装和自动海外回退。
+8. 从受管目标重新探针入口、版本和资产，确认未批准能力与必带工具链零变化后返回`INTEGRATED`；失败回滚并清理任务临时对象。
+
+阶段3的五种公共结果是`DETECTION_REPORT/CONSENT_REQUIRED/INTEGRATED/SKIPPED/BLOCKED`。探测、报告、计划和拒绝/暂缓必须零下载、零写入。有效授权后的失败可发生网络和任务临时写入，但不得发布半成品，必须清除本任务staging、部分下载和临时对象，并保留所有外来对象。阶段3不得自动重放原始业务请求。
+
+### 4.6 阶段3输入、计划和就绪回执
+
+`capability_definitions`中每项最小闭合字段为：
+
+```text
+capability: remotion | hyperframes
+definition_sha256
+version
+verified_entrypoint
+approved_mainland_sources
+assets: filename + size + sha256 + license + managed_target
+explicit_registered_or_configured_candidate_paths: optional
+normal_command_name: optional
+```
+
+能力定义来自批准的OpenMontage能力定义权威，不依赖Package绑定能力元数据。请求不得携带定义外URL、任意命令、任意安装根、盘符扫描请求或literal `user_message`。
+
+`user_decisions`中每项决定的最小闭合字段为：
+
+```text
+decision: approve | decline | defer
+capability
+definition_sha256
+plan_sha256
+```
+
+计划必须以规范JSON和稳定排序计算hash，至少包含能力、定义身份、受管目标、每个缺失对象的类型/文件名/大陆镜像URL/大小/SHA-256/许可证/目标/准备方式和总下载量。定义、现有探测状态、资产、来源、许可或目标任一变化导致计划变化时，旧授权立即失效。
+
+`PRESENT`探测事实和`INTEGRATED`结果向阶段4交付的最小能力证据为：
+
+```text
+status: PRESENT | INTEGRATED
+capability
+definition_sha256
+runtime_root
+verified_entrypoint
+version_evidence
+asset_evidence
+plan_sha256: INTEGRATED only
+```
+
+该证据不是布尔值，不能跨能力或跨定义复用。阶段4必须重新比对能力、入口和版本；缺失或不匹配时不得自行安装，OpenMontage可选择其他已有/基础能力。
+
+### 4.7 阶段3受管数据和原子性
+
+阶段3只允许使用：
+
+```text
+<DataRoot>/Runtime/Composition/<capability>/<definition_sha256>/
+<DataRoot>/Caches/optional-runtime/
+<DataRoot>/Runtime/Browsers/<capability>/<definition_sha256>/  # only when approved in the plan
+```
+
+准备前的只读路径不得为了加锁而创建缓存或目录。取得有效授权后，互斥锁、下载临时对象和staging都必须位于`Caches/optional-runtime`内并与当前能力和定义绑定。取得准备锁后必须重新探测，允许并发调用复用另一调用已经完成的精确对象。所有对象先完整进入同卷staging并通过验证，再以原子目录发布；任何不完整对象和任务临时对象必须清除。
+
+阶段3禁止创建`Runtime/Python`、`Runtime/FFmpeg`、`Runtime/Node`，禁止写PackageRoot、Registration、Activation、系统PATH、注册表、系统安装目录或用户全局npm目录。未知或外来目标必须保留原物并`BLOCKED`；能力单纯缺失或用户拒绝/暂缓不属于此状态。
+
+### 4.8 阶段3实现单元与后续交接
+
+未来物理生产实现仍只有`golden_key_openmontage_workbuddy/runtime_prepare.py`一个新模块。模块内部只需定义验证、有界探测、事实报告、计划生成、逐能力授权、staging发布、清理和最终探针等私有职责；它们不形成额外公共模块或入口。`__init__.py`只导出唯一入口，`test_runtime_prepare.py`只提供阶段3直接测试。
+
+产品运行衔接固定为：阶段5接收用户原话并触发阶段2重验；阶段4可先用必带工具链执行基础固定工具；阶段3有界探测并按用户逐能力批准集成；OpenMontage从实际可用能力中决定生产选择；阶段6原样转交探测、计划、用户决定、集成、退出和错误事实。建设顺序仍是`3 -> 4 -> 5 -> 6`，不得把它误写成用户运行顺序。
 
 ## 5. 消息与授权边界
 

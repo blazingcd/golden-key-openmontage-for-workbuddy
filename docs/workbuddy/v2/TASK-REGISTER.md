@@ -1,59 +1,68 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1 / PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD`
+状态：`V2-S3-EXECUTION-CONTRACT-FREEZE2 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
 更新时间：2026-08-18
 
 ## 当前任务
 
 ```text
-task_id: V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1
-task_status: PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD
-task_kind: CONTRACT_CORRECTION / NO_IMPLEMENTATION
-user_authorization: 2026-08-18 / 纠正并固化Remotion/HyperFrames可选边界和真实WorkBuddy消费者合同阶段归属
+task_id: V2-S3-EXECUTION-CONTRACT-FREEZE2
+task_status: REVIEW_APPROVED_READY_FOR_CANDIDATE_COMMIT_AND_FORMAL_PROMOTION
+task_kind: PRODUCT_EXECUTION_CONTRACT_FREEZE / DOCS_ONLY / NO_IMPLEMENTATION
+user_authorization: 2026-08-18 / 把阶段3具体职责、单一路径、边界、交付成果和阶段4至6不断档衔接固化到现有权威
+stage_3_execution_user_authorization: 2026-08-18 / GRANTED / 启动阶段三执行；独立Builder与Reviewer；持续跟踪直至阶段三完成；严禁边界膨胀
 implementation_authorization: DOCS_ONLY
-start_commit: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-result_commit: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-branch: codex/v2-s3-optional-consumer-contract-correction1 / DELETE_AFTER_CLOSEOUT_PROMOTION
+start_commit: 4d74d6576773dc9d383efec091bdc8d42f0d480c
+result_commit: THIS_COMMIT
+branch: codex/v2-s3-execution-contract-freeze2
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-review_range: 068408f02c87a1eabeda58ea1ebce3df606c0a0c..7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
+formal_target_at_start: 4d74d6576773dc9d383efec091bdc8d42f0d480c
+review_range: 4d74d6576773dc9d383efec091bdc8d42f0d480c..THIS_COMMIT
 independent_review: APPROVE / P0=0 / P1=0 / P2=0
-formal_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-closeout_candidate: THIS_COMMIT
-closeout_branch: codex/v2-s3-optional-consumer-contract-closeout1
-closeout_allowed_paths: PROJECT-STATE.md; WORK-LOG.md; docs/workbuddy/v2/TASK-REGISTER.md
-closeout_activation_condition: independent APPROVE and ordinary fast-forward to formal branch
-repository_allowed_paths: AGENT_GUIDE.md; PROJECT_CONTEXT.md; PROJECT-STATE.md; README.md; README_zh-CN.md; WORK-LOG.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/MODULE-DISPOSITION.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/README.md; docs/workbuddy/v2/TASK-REGISTER.md
+formal_promotion: NOT_STARTED
+repository_allowed_paths: AGENT_GUIDE.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/TASK-REGISTER.md
 production_code_changes: 0
 test_changes: 0
 ci_changes: 0
 new_tracked_files: 0
 tracked_files_expected: 33
-external_writes_performed: D:\BlazingCD\Personal\Temp\workbuddy-v2-s3-contract-correction1 task-only test venv / CLEANED
-task_temp_root_status: CLEANED_AFTER_144_TESTS
-candidate_release_f00e83_status: STAGE2_TEMPORARY_PROOF_ONLY / MUST_NOT_PUBLISH_AS_FINAL
+external_writes_performed: NONE
+task_temp_root_status: NOT_CREATED
+candidate_contract_result: STAGE_3_BOUNDED_DETECT_REPORT_AND_USER_AUTHORIZED_INTEGRATION_CONTRACT_CORRECTED
+candidate_planning_result: USER_PRODUCT_MODEL_CORRECTION_REVIEW_APPROVED / FORMAL_PROMOTION_PENDING
+current_correction_reason: USER_PRODUCT_MODEL_CORRECTION / remove inflated Package Release declaration, capability Lock, Registration and task-only Package gates from Stage3; optional capabilities are detected and integrated only by explicit user consent
+user_correction_record: a real candidate Release is not a Stage3 input; Remotion and HyperFrames are optional OpenMontage capabilities; Stage3 may implement after this five-document correction is formally promoted and an exact Builder packet is granted
+stage_3_true_remaining_inputs: THIS_REVIEWED_CANDIDATE_FORMAL_PROMOTION_ONLY / exact Builder authorization already granted conditionally for post-promotion start
+single_transaction: bounded detect Remotion and HyperFrames -> report PRESENT/MISSING/INCOMPATIBLE -> zero-download per-capability plan -> WorkBuddy asks -> approve integrates only named items / decline or defer returns SKIPPED -> verify and report
+product_code_paths: golden_key_openmontage_workbuddy/runtime_prepare.py; export-only golden_key_openmontage_workbuddy/__init__.py; tests/workbuddy/test_runtime_prepare.py
+acceptance_infrastructure_paths: tests/workbuddy/test_repository_hygiene.py; .github/workflows/ci.yml
+future_builder_exact_path_count: 5 / 3 product paths + 2 existing acceptance-infrastructure edits
+acceptance_infrastructure_reason: current fixed-33 hygiene assertions forbid the two new tracked files and current CI omits the direct Stage3 test; both must change atomically with implementation so the accepted tree and executed suite remain exact
+stage2_temporary_release_f00e83_status: STAGE2_TEMPORARY_PROOF_ONLY / MUST_NOT_PUBLISH_AS_FINAL / NOT_A_STAGE3_INPUT
 optional_capability_catalog: remotion / hyperframes
-release_declaration_rule: each immutable Package Release may declare zero, one, or both optional capabilities
-lock_requirement_rule: Lock required only for each capability declared supported by that exact Release
-undeclared_capability_rule: BLOCKED / ZERO_DOWNLOAD / NOT_A_FINAL_PACKAGE_BLOCKER
-zero_declared_capabilities_rule: FINAL_PACKAGE_MAY_PROCEED / STAGE3_NO_IMPLEMENTATION_REQUIRED_FOR_THIS_RELEASE
-consumer_interface_contract: FROZEN_RESULT_TO_ACTION_MAPPING
-consumer_mapping: NO_OPTIONAL_CAPABILITY_REQUIRED=continue; READY_REUSED=continue; CONSENT_REQUIRED=display_and_ask_zero_download; READY_PREPARED=continue; BLOCKED=report_and_stop
-consent_binding: registration_sha256 + capability_lock_sha256 + plan_sha256
+capability_definition_rule: approved OpenMontage definitions provide source/version/size/hash/license/target facts; they are not Package Release declarations or capability Locks
+bounded_detection_rule: managed DataRoot + explicitly registered/configured candidate paths + normal command resolution only / no drive or system-software enumeration
+missing_or_declined_rule: MISSING or INCOMPATIBLE -> ask; decline/defer -> SKIPPED/NOT_INTEGRATED / not a Package or project blocker
+consumer_interface_contract: CORRECTED_RESULT_TO_ACTION_MAPPING
+consumer_mapping: DETECTION_REPORT=display_facts; CONSENT_REQUIRED=display_plan_and_ask; INTEGRATED=report_available; SKIPPED=continue_with_other_or_base_capabilities; BLOCKED=report_invalid_definition_or_failed_authorized_integration
+consent_binding: capability + definition_sha256 + plan_sha256 / explicit per-capability approve only
 real_workbuddy_evidence_stage: STAGE_5_ACCEPTANCE_ONLY
 same_task_continuation_rule: verify in Stage5; if unsupported ask user to reply 继续刚才的任务; Shell never auto-replays
-validation_diff_check: PASS
-validation_full_test: 144 passed in 26.33s / final exit 0 / task-owned D-drive venv
-validation_scope: 12 allowed existing docs / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=33
-future_final_package_gate_rule: first freeze the Release optional-capability declaration and Locks only for declared support; then freeze exact wheel filenames/sizes/SHA-256 and hash-locked deterministic assembly; publish/install/register only that new identity
+validation_diff_check: PASS / D-workspace exact 5 allowed docs / untracked 0 / git diff --check exit 0 / obsolete Stage3 Package-bound model tokens 0 / corrected bounded-detect contract tokens all present
+validation_full_test: NOT_RUN / repository .venv absent / no global Python or dependency installation used
+validation_scope: 5 allowed existing docs / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=33
+future_final_package_gate_rule: final persistent Release/sidecar, production PackageRoot and production Registration/Activation move to later final-delivery or Installer closeout; complete no later than Stage5 real WorkBuddy entry and production acceptance
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
 forbidden_scope: production code/tests/CI; external Package mutation; Package materialization; Stage3/4/5/6 implementation; optional installation; WorkBuddy/Provider/media execution; new docs/frameworks/services/MCP/CLI
-next_authorized_task: NONE_IN_SHELL_REPOSITORY
-next_task_authorization: NOT_GRANTED_PENDING_EXTERNAL_RELEASE_CAPABILITY_DECLARATION
+next_authorized_task: V2-S3-RUNTIME-PREPARE-BUILDER1
+next_task_authorization: GRANTED_AFTER_THIS_REVIEWED_CANDIDATE_FORMAL_PROMOTION
+next_task_start_commit_rule: create from the then-live exact SHA of origin/codex/workbuddy-shell-v2 after formal promotion; no stale SHA or task-branch takeover
+next_task_exact_allowed_paths: golden_key_openmontage_workbuddy/runtime_prepare.py; golden_key_openmontage_workbuddy/__init__.py; tests/workbuddy/test_runtime_prepare.py; tests/workbuddy/test_repository_hygiene.py; .github/workflows/ci.yml
+next_task_forbidden_scope: Release; Registration; Installer; Launcher; WorkBuddy; Provider; media; second public entry; generic runtime framework; any sixth path
 ```
 
-本次纠偏撤销“Remotion和HyperFrames两份Lock一律阻塞最终Package”以及“真实WorkBuddy已经跑通才可启动阶段3”的过度前置。可选能力本体始终不随Package必带；每个Release只声明自身支持的子集，并只为声明支持者携带安装Lock。阶段3前冻结五种结果到WorkBuddy动作的最小接口，真实新会话、用户确认和继续能力在阶段5验收。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`仍不得冒充最终Package。
+本次按用户权威撤销膨胀模型：真实Package、Registration和Package绑定能力元数据都不是Stage 3输入。Stage 3只对Remotion和HyperFrames做有界探测与事实报告，对缺失/不兼容项生成零下载计划，并在WorkBuddy取得用户逐能力明确同意后集成批准项；拒绝或暂缓返回`SKIPPED/NOT_INTEGRATED`。没有新增生产代码、测试、CI、Package字节或外部写入。未来实现仍为三个产品路径加两个验收基础设施路径。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`只保留历史证据边界，不是Stage 3输入。
 
 ## 阶段2已完成任务证据
 
@@ -127,9 +136,9 @@ real_tool_results: Python 3.14.7/OpenSSL 3.5.7; FFmpeg+ffprobe 9.0.1; Node 22.23
 exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidence capture; no retained final Release, installed production PackageRoot, or production Registration
 ```
 
-上述证据证明完整工具链组装和登记能力，不证明最终交付Package仍存在。阶段2生产实现边界不因本次规划而扩张；最终Package持久构建、安装、生产登记和激活属于阶段3实现前的交付门禁，不得塞入阶段3Runtime代码。
+上述证据证明完整工具链组装能力、Stage 2 Registration/Locator实现，以及一次真实register、task-only activate和new-process locate已经完成并正式接受；临时实例清理不重开、不重做阶段2。它仍不证明最终交付Package持续存在。最终Package持久构建、安装、生产登记和激活仍是强制交付要求，但只属于后续最终交付或Installer收口门禁，最迟在Stage 5真实WorkBuddy入口和生产验收前完成；它绝不是Stage 3编码前置，也不得塞入Stage 3 Runtime代码。
 
-正确顺序是：先冻结当前Release声明支持的可选能力集合，并只为声明支持者产出Manifest覆盖的能力Lock；同时在Shell文档冻结五种结果到WorkBuddy动作的最小接口；再生成最终Package、安装、生产登记/激活并做新进程Locator；然后冻结阶段3 Builder任务包；真实WorkBuddy新会话、用户确认和继续能力在阶段5验收。当前Shell任务不授权修改外部Package，也不授权最终Package门禁或任何实现。
+纠偏后的Stage 3编码顺序只剩：本五文档纠偏完成独立审阅和正式推广，然后由live authority给出精确Builder基线、五路径白名单和Reviewer范围。不得增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate。持久最终Package与生产Registration仍在后续最终交付或Installer Gate收口，但不阻塞Stage 3编码。当前任务不授权生产实现、外部对象或DataRoot写入。
 
 ## 当前正式状态
 
@@ -160,17 +169,19 @@ production_package_registration: NOT_CREATED
 production_package_activation: NOT_CREATED
 stage_3_planning_authorization: GRANTED_FOR_CURRENT_DOCS_ONLY
 stage3_planning: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
-stage_3_implementation_authorization: NOT_GRANTED
-stage_3_conditional_authorization: NOT_GRANTED
-stage_3_start_gate: BLOCKED_FINAL_PACKAGE_DECLARED_CAPABILITY_LOCKS_AND_INTERFACE_CONTRACT
-final_package_gate: BLOCKED_RELEASE_CAPABILITY_DECLARATION_AND_DECLARED_LOCKS
-package_optional_capability_declaration: NOT_FROZEN / MAY_DECLARE_ZERO_ONE_OR_BOTH
-declared_package_capability_locks: NOT_EVALUATED_UNTIL_DECLARATION
-stage_3_positive_capability_input: NOT_AVAILABLE_UNTIL_RELEASE_DECLARES_AT_LEAST_ONE_SUPPORTED_CAPABILITY
-stage_3_consumer_interface_contract: PASS_ACCEPTED_FROZEN
+stage_3_implementation_authorization: GRANTED_AFTER_THIS_REVIEWED_CANDIDATE_FORMAL_PROMOTION
+stage_3_conditional_authorization: GRANTED / CONDITION=THIS_REVIEWED_CANDIDATE_FORMAL_PROMOTION
+stage_3_start_gate: BLOCKED_THIS_REVIEWED_CANDIDATE_FORMAL_PROMOTION_ONLY
+stage_3_final_package_dependency: NOT_REQUIRED_FOR_CODING_START
+final_package_gate: DEFERRED_TO_FINAL_DELIVERY_OR_INSTALLER_CLOSEOUT_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
+stage_3_package_release_input: NOT_REQUIRED
+stage_3_registration_input: NOT_REQUIRED
+stage_3_package_bound_capability_metadata: REMOVED_FROM_INPUT_MODEL
+stage_3_consumer_interface_contract: REVIEW_APPROVED_PENDING_FORMAL_PROMOTION
+stage_3_product_execution_contract: REVIEW_APPROVED_PENDING_FORMAL_PROMOTION
 real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
-stage_3_execution_packet: REPLANNED_BOUNDARY_PASS_ACCEPTED / IMPLEMENTATION_NOT_GRANTED
-stage3_implementation: NOT_GRANTED
+stage_3_execution_packet: GRANTED_AFTER_THIS_REVIEWED_CANDIDATE_FORMAL_PROMOTION / EXACT_5_PATHS
+stage3_implementation: NOT_STARTED / ELIGIBLE_ONLY_AFTER_FORMAL_PROMOTION
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -178,7 +189,7 @@ stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
 
-`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了必带Python及47个锁定依赖、FFmpeg/ffprobe、Node/npm/npx的一次真实临时Package组装、Registration/Locator验证、负测、独立审阅和正式推广。临时构建根和task-only DataRoot随后已清理，所以`stage_2_status`只表示登记实现与临时证明通过，不表示最终分发物存在。阶段3实施仍被最终Package、Release可选能力声明及其声明Locks、精确Builder授权阻断；真实WorkBuddy证据不再是阶段3前置。
+`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了Stage 2必带工具链和Registration/Locator的真实临时证明；该历史事实不重开，但也不再作为Stage 3输入。当前Stage 3实施剩余阻塞只有：本五文档纠偏的独立审阅与正式推广，以及live authority的精确Builder授权。
 
 仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是已审规划结果`72719c758f092868fc6446e44a803d13eeae44a6`的祖先。阶段2刷新和阶段3规划都没有恢复已清理内容或增加tracked文件。
 
@@ -193,21 +204,24 @@ Stage 6: Status and Result Relay
 
 该顺序只表示建设、审阅和正式交付顺序，不是最终用户运行时的调用顺序。每个阶段都从当时最新的`origin/codex/workbuddy-shell-v2`精确提交开始，经单一有界Builder、独立只读Reviewer、普通非force fast-forward推广、远端临时分支清理和本地worktree关闭后，下一阶段才可接管。规划接受、Builder提交或Reviewer批准均不等于正式交付。
 
-上一版`阶段5 -> 阶段2 -> 阶段3全闭集检查 -> 阶段4`运行链路已失效。新的固定关系是：阶段5触发阶段2 Locator重验最终生产Package；阶段4的基础固定工具调用只依赖阶段2必带工具链；WorkBuddy/OpenMontage形成Remotion或HyperFrames能力要求后，只有当前Release声明支持该能力时才额外要求阶段3就绪回执，未声明则`BLOCKED`且零下载。WorkBuddy拥有暂停、用户确认和继续；Shell不选渲染器、不自动重放原业务请求。阶段5真实验收若证明不能在同一任务继续，WorkBuddy固定要求用户回复“继续刚才的任务”。
+新的固定关系是：阶段4基础调用依赖阶段2必带工具链；阶段3有界探测Remotion和HyperFrames并报告事实，缺失/不兼容时由WorkBuddy询问用户，只有逐能力批准才集成。拒绝或暂缓不阻塞其他已有/基础能力。OpenMontage决定生产使用哪项实际可用能力；Shell不选渲染器、不自动重放原业务请求。
 
 阶段3至阶段6共同约束：每阶段最多一个公共入口；没有可验证输入或直接下游消费者时必须零代码退出；不得预建通用Runtime管理器、CLI/MCP镜像、任务平台、后台服务、第二Agent Host、生产FSM或状态数据库。WorkBuddy是唯一运行中的Agent；所谓OpenMontage Agent只能指WorkBuddy读取已验证Package Guide后承担的逻辑生产角色。
 
 ## 阶段授权与零代码出口
 
 ```text
-stage_3_scope: 仅对WorkBuddy/OpenMontage已经选择且当前Release声明支持的一个可选Remotion或HyperFrames能力及其锁声明附属资产执行按需发现和用户确认后的准备；不得处理未声明能力或必带Python/FFmpeg/Node工具链。
-stage_3_public_entry: prepare_optional_capability(data_root, capability_request, authorization_receipt=None)
-stage_3_result_set: NO_OPTIONAL_CAPABILITY_REQUIRED / READY_REUSED / CONSENT_REQUIRED / READY_PREPARED / BLOCKED
-stage_3_zero_write_result: NO_OPTIONAL_CAPABILITY_REQUIRED / READY_REUSED / CONSENT_REQUIRED / BLOCKED(reason_code=BLOCKED_BEFORE_PUBLISH)
+stage_3_scope: bounded detect Remotion and HyperFrames; report PRESENT/MISSING/INCOMPATIBLE; integrate only explicitly approved missing/incompatible items under managed DataRoot; decline/defer is SKIPPED/NOT_INTEGRATED; never detect/download Python/FFmpeg/Node
+stage_3_public_entry: prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)
+stage_3_result_set: DETECTION_REPORT / CONSENT_REQUIRED / INTEGRATED / SKIPPED / BLOCKED
+stage_3_capability_fact_set: PRESENT / MISSING / INCOMPATIBLE / NOT_INTEGRATED
+stage_3_zero_write_result: DETECTION_REPORT / CONSENT_REQUIRED / SKIPPED / BLOCKED(reason_code=INVALID_DEFINITION_OR_TARGET)
 stage_3_download_policy: OPTIONAL_CAPABILITY_APPROVED_MAINLAND_CHINA_MIRRORS / NO_AUTOMATIC_OVERSEAS_FALLBACK
-stage_3_lock_authority: VERIFIED_PACKAGE_OWNED / SHELL_MUST_NOT_DUPLICATE
-stage_3_maximum_code_paths: golden_key_openmontage_workbuddy/runtime_prepare.py + export-only golden_key_openmontage_workbuddy/__init__.py + tests/workbuddy/test_runtime_prepare.py
-stage_4_scope: 基础固定工具调用接受阶段2必带工具链事实；执行已选Remotion/HyperFrames前还必须接受同一registration_sha256和capability_lock_sha256的阶段3就绪回执；缺少相应事实返回RUNTIME_NOT_READY；不启动第二Agent，无任意Shell、无自动重试。
+stage_3_definition_authority: APPROVED_OPENMONTAGE_CAPABILITY_DEFINITION / INDEPENDENT_OF_PACKAGE_IDENTITY_METADATA
+stage_3_product_code_paths: golden_key_openmontage_workbuddy/runtime_prepare.py + export-only golden_key_openmontage_workbuddy/__init__.py + tests/workbuddy/test_runtime_prepare.py
+stage_3_acceptance_infrastructure_paths: tests/workbuddy/test_repository_hygiene.py + .github/workflows/ci.yml
+stage_3_future_builder_exact_allowlist_rule: exactly the 3 product paths plus the 2 existing acceptance-infrastructure paths; no other path; the latter only updates fixed tracked/API/source assertions and the one CI pytest command
+stage_4_scope: 基础固定工具调用接受阶段2必带工具链事实；执行Remotion/HyperFrames前接受阶段3对该能力的PRESENT或INTEGRATED证据；缺失时可由OpenMontage选择其他已有/基础能力；阶段4不自行安装、不启动第二Agent、无任意Shell、无自动重试。
 stage_5_scope: 用户实际运行起点；只保留一种真实WorkBuddy显式入口，literal user_message不变，技术控制独立。
 stage_6_scope: 直接转交Runtime计划/准备事实与Launcher回执；仅有真实格式转换缺口时才允许独立实现；不解释、不安装、不重试。
 stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
@@ -217,57 +231,55 @@ stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 
 ## 阶段3重新规划合同
 
-上一版阶段3执行包、`prepare_runtime_on_demand(...)`签名和Shell-owned `WORKBUDDY-PRODUCTION-RUNTIME.lock.json`全闭集形状全部`SUPERSEDED`，不得交给Builder。新阶段3只把一个已验证Package和一个WorkBuddy/OpenMontage已选能力请求转换为可供阶段4消费的能力就绪回执。
+上一版阶段3执行包、`prepare_runtime_on_demand(...)`签名，以及Package绑定能力元数据、Registration绑定和零能力零代码模型全部`SUPERSEDED`，不得交给Builder。新阶段3只做Remotion和HyperFrames的有界探测、事实报告、零下载计划、逐能力用户决定和批准项受管集成。
 
 ### 实现启动Gate
 
-以下全部满足前，阶段3生产代码变化必须为0：
+以下两项全部满足前，阶段3生产代码变化必须为0：
 
-1. 最终Release ZIP及SHA sidecar持久保留，安装后的生产PackageRoot存在；
-2. 生产DataRoot已有Registration和显式Activation，新进程`locate_active_package()`成功；
-3. Locator返回的Python及47个锁定依赖、FFmpeg/ffprobe、Node/npm/npx身份和路径全部有效；
-4. Package明确声明本Release支持零个、一个或两个允许的可选能力，并只为每个声明支持者提供被Manifest管理且hash锁定的能力Lock；Shell不复制另一份版本权威；声明零能力不阻塞最终Package，但阶段3对该Release保持零代码/不需要实现；
-5. 五种阶段3结果到WorkBuddy动作的最小接口已经冻结；真实WorkBuddy新会话、用户确认和继续能力留到阶段5验收；
-6. 最新正式Git对象、精确允许路径、直接测试和独立Reviewer范围写入新的实现任务包。
+1. 当前五文档产品模型纠偏完成独立审阅，并正式fast-forward推广到`origin/codex/workbuddy-shell-v2`；
+2. `TASK-REGISTER.md`基于当时最新正式Git对象明确授予精确Builder基线、五文件允许路径、直接测试和独立Reviewer范围。
 
-实现授权前任一Gate输入缺失，任务治理裁决为`INCOMPLETE_STAGE_3_INPUT`并零代码停止；它不是公共接口的第六种结果。未来接口存在后，运行期输入缺失统一返回`BLOCKED(reason_code=INCOMPLETE_STAGE_3_INPUT)`。不得创建占位实现、通用Runtime框架或测试假合同。
+不得再增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate。授权前缺一项时零代码停止；不得创建占位实现、通用Runtime框架或测试假合同。
 
 ### 唯一输入合同
 
-`capability_request`最少固定为：
+`capability_definitions`中Remotion和HyperFrames每项最少固定为：
 
 ```text
-registration_sha256
-capability: none | remotion | hyperframes
-release_declared_optional_capabilities: [] | [remotion] | [hyperframes] | [remotion, hyperframes]
-capability_lock_relative_path
-capability_lock_sha256
-explicit_candidate_path: optional
+capability: remotion | hyperframes
+definition_sha256
+version
+verified_entrypoint
+approved_mainland_sources
+assets: filename + size + sha256 + license + managed_target
+explicit_registered_or_configured_candidate_paths: optional
+normal_command_name: optional
 ```
 
-调用方不能提供任意下载URL、任意命令或任意安装目录。`capability=none`时Lock字段为空；非`none`必须同时出现在当前Release声明中，且`capability_lock_relative_path`位于已验证PackageRoot内并被Manifest覆盖，否则返回`BLOCKED`且零写入。`authorization_receipt`只有在精确绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`时有效；任一身份变化使旧确认失效。literal `user_message`永远不进入本接口。
+能力定义来自批准的OpenMontage能力定义权威。调用方不能提供定义外URL、任意命令、任意安装目录、盘符扫描或系统软件枚举请求。`user_decisions`只能对精确`capability + definition_sha256 + plan_sha256`表达`approve/decline/defer`；任一事实变化使旧批准失效。literal `user_message`永远不进入本接口。
 
 ### 固定执行步骤
 
-1. **Locator重验**：只从生产DataRoot读取活动Registration；缺失、漂移或必带工具链无效即`BLOCKED`，零修复、零下载。
-2. **请求、Release声明与Lock验证**：只接受`none/remotion/hyperframes`；`none`不要求Lock，非`none`先验证本Release声明支持，再验证对应Package-owned Lock、版本、入口、批准镜像、大小、SHA-256、许可证、目标和附属资产；未声明能力`BLOCKED`且零写入。
-3. **只读发现**：按受管目标、明确候选路径、Lock明确允许的正常命令解析顺序核验；不扫盘、不枚举全局npm、不因PATH命中直接通过。
-4. **零写入裁决**：不需可选能力返回`NO_OPTIONAL_CAPABILITY_REQUIRED`；精确能力已存在返回`READY_REUSED`。
-5. **missing-only计划**：只列所选能力及Lock声明资产，返回版本、镜像、hash、大小、总下载量、许可证、目标和`plan_sha256`，状态`CONSENT_REQUIRED`；不得下载。
-6. **授权复核与准备**：仅在授权回执仍匹配时，使用Package自带Node/npm/npx，从批准大陆镜像下载到同卷staging，核验后原子发布到`<DataRoot>/Runtime/Composition/<capability>/<capability_lock_sha256>/`；缓存只在`<DataRoot>/Caches/optional-runtime/`。
-7. **失败处理**：外来目标保留并fail closed；hash、大小、许可、来源、命令或能力探针失败即回滚，清除staging和任务临时文件，不修改系统PATH、注册表或全局npm。
-8. **回执**：重新核验所选能力、另一渲染器零触碰和必带Package零变化后，返回绑定`registration_sha256`、`capability`、`capability_lock_sha256`、`runtime_root`、验证入口、版本证据和`plan_sha256`的`READY_PREPARED`回执。
+1. **定义验证**：验证两项批准OpenMontage能力定义的版本、入口、批准大陆来源、大小、SHA-256、许可证和受管目标；拒绝任意URL、命令和目标注入。
+2. **有界探测**：只检查受管DataRoot目标、明确登记/配置的候选路径和正常命令解析；禁止遍历盘符、系统软件清单、全局npm状态和猜目录。
+3. **事实报告**：分别报告Remotion和HyperFrames的`PRESENT/MISSING/INCOMPATIBLE`、入口、版本和来源。存在则复用；缺失或不兼容不是失败。
+4. **零下载计划**：为每个缺失/不兼容项返回来源、版本、hash、大小、许可证、受管目标、总下载量和`plan_sha256`，状态`CONSENT_REQUIRED`；不得下载或写入。
+5. **用户决定**：WorkBuddy逐项询问。`decline/defer`返回`SKIPPED/NOT_INTEGRATED`，不影响其他能力或基础能力。
+6. **授权复核与集成**：仅对仍匹配`capability + definition_sha256 + plan_sha256`的`approve`项，使用阶段2必带Node/npm/npx从批准大陆来源下载到同卷staging，核验后发布到`<DataRoot>/Runtime/Composition/<capability>/<definition_sha256>/`。
+7. **失败处理**：外来目标保留并fail closed；hash、大小、许可、来源、命令或探针失败即回滚，清除staging和任务临时文件，不修改系统PATH、注册表或全局npm，不自动海外回退。
+8. **最终报告**：重新探针批准项，确认未批准能力和必带Python/FFmpeg/Node零变化后返回`INTEGRATED`及能力、定义、runtime root、入口、版本和资产证据。
 
 ### 后续阶段交接
 
-- 阶段4基础调用只消费阶段2Locator事实；执行Remotion/HyperFrames时额外校验阶段3回执，不能自行安装或接受跨Package回执。
+- 阶段4基础调用只消费阶段2必带工具链事实；执行Remotion/HyperFrames时校验阶段3的`PRESENT`或`INTEGRATED`能力证据，不能自行安装。
 - 阶段5拥有用户对话、计划展示、明确同意和真实WorkBuddy继续动作；真实验收优先同任务继续，不能时固定提示“继续刚才的任务”；技术控制与用户原话分离。
-- 阶段6优先原样转交`CONSENT_REQUIRED`、`READY_*`、`BLOCKED`和Launcher事实；不安装、不解释Artifact、不自动重试。
+- 阶段6优先原样转交探测、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`、`BLOCKED`和Launcher事实；不安装、不解释Artifact、不自动重试。
 - Shell不得声称已无缝继续；阶段5真实WorkBuddy测试证明同一任务可继续后才允许该说法，否则由WorkBuddy要求用户回复“继续刚才的任务”。
 
 ### 最小文件和交付
 
-未来实现最多新增`golden_key_openmontage_workbuddy/runtime_prepare.py`，最小编辑`golden_key_openmontage_workbuddy/__init__.py`导出唯一入口，并新增`tests/workbuddy/test_runtime_prepare.py`。不新增Shell Runtime Lock、`host_tools.py`、CLI/MCP、服务、数据库、后台进程、UI或通用下载器。交付为单一入口、稳定结果集、绑定身份的计划/就绪回执、直接测试证据和阶段4可消费合同；不是Installer、最终Package、WorkBuddy入口、Launcher或视频E2E。
+未来产品实现最多新增`golden_key_openmontage_workbuddy/runtime_prepare.py`，最小编辑`golden_key_openmontage_workbuddy/__init__.py`导出唯一入口，并新增`tests/workbuddy/test_runtime_prepare.py`。同一Builder还必须只为验收同步编辑现有`tests/workbuddy/test_repository_hygiene.py`和`.github/workflows/ci.yml`，使固定tracked白名单、公共导出/源码断言和唯一CI pytest命令覆盖Stage 3。这两个文件不承载产品逻辑，也不授权第六个路径。不新增通用Runtime框架、`host_tools.py`、CLI/MCP、服务、数据库、后台进程、UI或通用下载器。交付为单一入口、稳定结果集、有界探测/计划/用户决定/集成事实、直接测试证据和阶段4可消费合同；不是Installer、最终Package、WorkBuddy入口、Launcher或视频E2E。
 
 ## 已接受对象与证据边界
 

@@ -20,28 +20,31 @@
 
 - 没有已验证上游输入或直接下游消费者仍新增生产代码；
 - 阶段3发现、下载、替换或回退到系统Python/FFmpeg/Node，借此补偿阶段2必带工具链不完整；
-- 阶段3同时安装Remotion与HyperFrames、替WorkBuddy/OpenMontage选择渲染器，或准备所选能力锁未声明的浏览器/附属资产；
-- 把Remotion或HyperFrames写成所有Package Release必带Runtime，要求未声明支持的能力也必须有Lock，或因未声明能力缺Lock而阻塞最终Package；
+- 阶段3自动安装Remotion或HyperFrames、替WorkBuddy/OpenMontage选择渲染器，或准备用户未逐项批准的浏览器/附属资产；
+- 把Remotion或HyperFrames写成必带Runtime，或因能力缺失、用户拒绝/暂缓集成而阻塞Package、项目、最终交付或其他已有/基础能力；
 - 阶段3从默认Git/GitHub、Google、npmjs或其他未批准海外源下载，在批准大陆镜像失败后静默回退；
 - 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，扫描盘符，或覆盖未知/外来目录；
-- 阶段3在最终Release未保留、生产Package未登记、Locator未在新进程重验、Release可选能力声明未冻结、声明支持的能力缺少Package自有Lock、最小结果到WorkBuddy动作接口不完整或正式Git对象漂移时提前编码；
-- 阶段3在Shell仓库复制、维护或猜测可选能力Lock，而不是核验当前Registration所绑定Package内的能力Lock；
+- 阶段3在本五文档纠偏尚未独立审阅/正式推广或精确Builder授权缺失时提前编码；或重新增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate；
+- 阶段3接受能力定义外的任意URL、命令或目标，或把批准OpenMontage能力定义扩张成通用包管理框架；
 - 阶段3实现已标记`SUPERSEDED`的旧`prepare_runtime_on_demand(...)`签名、旧全闭集Runtime Lock或旧任务包，或恢复`host_tools.py`、通用下载器、CLI/MCP、服务、数据库等第二入口；
 - 阶段3把可选能力写入Package、系统目录或必带工具链目录，修改系统PATH/注册表，要求管理员权限，或在失败后遗留staging/cache临时对象；
+- 阶段3准备前为了发现或互斥而创建Runtime、缓存、锁文件或staging，或在没有该能力最终`PRESENT`或`INTEGRATED`证据时让阶段4把完整或不完整的已发布对象视为可执行能力；
 - 阶段4接受任意Shell、启动多个Agent、自动重试、建立队列/调度/常驻服务或进入Agent业务内部；
-- 阶段4基础固定工具调用未绑定有效Registration和必带工具链，或可选Remotion/HyperFrames执行在没有同一Registration、同一Package能力Lock的阶段3就绪回执时仍继续；
+- 阶段4基础固定工具调用未绑定有效Registration和必带工具链，或执行Remotion/HyperFrames时没有Stage 3对该能力给出的`PRESENT`或`INTEGRATED`证据；
 - 阶段5并存多套生产入口、全局截获用户意图或成为第二聊天Agent；
 - 阶段6在Runtime计划/准备事实或Launcher回执可直接消费时仍建立独立服务、数据库、轮询/流式平台，或自行安装Runtime、解释Artifact业务语义；
 - 把建设顺序`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`误写成最终用户调用顺序，或在阶段3准备后自动重试原生产请求；
-- 阶段3超过一个公共入口、一个新增生产模块、对`__init__.py`的导出式修改和一个直接测试文件，或其他阶段超过其任务包明示的最小文件范围，且没有单独的新授权与消费者证据。
+- 阶段3产品实现超过一个公共入口、一个新增生产模块、对`__init__.py`的导出式修改和一个直接测试文件；未来阶段3Builder除这三个产品路径外，只允许同步编辑现有`tests/workbuddy/test_repository_hygiene.py`和`.github/workflows/ci.yml`以更新固定tracked/API/source断言并运行直接测试，任何第六个路径或在这两个文件中加入产品逻辑都必须停止；其他阶段超过其任务包明示的最小文件范围且没有单独的新授权与消费者证据。
 
 ## 产品边界
 
 腾讯WorkBuddy是唯一运行中的Agent，读取已验证Package Guide后承担OpenMontage生产角色；不存在由Shell另行启动的OpenMontage Agent进程。Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。
 
-金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2已经接受Registration/Locator实现，并以一次随后清理的真实临时Package验证这些字节；这不等于最终Release、已安装生产PackageRoot或生产Registration已经存在。最终Package的持久组装、安装与生产登记必须在阶段3实现前单独过Gate。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
+金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2已经接受Registration/Locator实现，并以一次随后清理的真实临时Package完成组装、register、task-only activate和new-process locate验证；清理不重开、不重做阶段2，但也不等于最终Release、已安装生产PackageRoot或生产Registration已经存在。最终Package的持久组装、安装与生产登记仍是强制交付要求，但只属于后续最终交付或Installer收口Gate，最迟在阶段5真实WorkBuddy入口和生产验收前完成，绝不是阶段3编码前置。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
 
-阶段3只准备经验证WorkBuddy/OpenMontage决定且当前Package Release声明支持的一个可选能力，允许目录当前为Remotion或HyperFrames，以及该能力Package自有Lock明确声明的附属资产。每个Release可声明零个、一个或两个；未声明能力不需要Lock且不是安装目标。普通用户只确认精确missing-only计划，不选择技术组件；终端用户可选下载必须使用批准的中国大陆镜像且不得自动海外回退。阶段3建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`，最大代码面为一个新增生产模块、一次仅导出修改和一个直接测试文件。旧阶段3条件授权、入口签名、全闭集Lock和执行包均已暂停并标记`SUPERSEDED`；只有最终Package、生产登记、Release声明及对应Locks、最小结果到WorkBuddy动作接口和精确任务包全部满足Start Gate，`TASK-REGISTER.md`再明确写为`GRANTED`，Builder才可开始。真实WorkBuddy新会话和继续验证属于阶段5验收，不得反向阻塞阶段3。
+阶段3只对Remotion和HyperFrames执行有界探测、事实报告、零下载计划和用户逐能力批准后的受管集成。探测仅允许受管DataRoot、明确登记/配置候选路径和正常命令解析；禁止遍历盘符、系统软件清单、全局npm状态或猜目录。结果闭集为`DETECTION_REPORT/CONSENT_REQUIRED/INTEGRATED/SKIPPED/BLOCKED`，能力事实为`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`。缺失、拒绝或暂缓不是失败；Shell不选择渲染器，OpenMontage从实际可用能力中决定生产使用。唯一入口为`prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`，最大代码面仍为一个新增生产模块、一次仅导出修改和一个直接测试文件。当前Stage 3编码阻塞只有本五文档纠偏审阅/推广与精确Builder授权。
+
+阶段3未来Builder的验收基础设施例外固定为两个现有文件：`tests/workbuddy/test_repository_hygiene.py`和`.github/workflows/ci.yml`。原因是当前固定33文件、固定两个Python源码和“阶段3未实现”断言会拒绝合法新增文件，而当前CI又不运行未来直接测试；这两个编辑必须与实现同一候选原子审阅，且只能更新最终固定白名单、公共导出/源码集合断言和唯一pytest命令。它们不改变“一个生产模块、一个公共入口”的产品边界。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

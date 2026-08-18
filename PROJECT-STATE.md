@@ -8,7 +8,8 @@
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
 formal_baseline_before_authority: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
-formal_head_after_authority: THIS_COMMIT
+accepted_authority_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
+formal_head_after_closeout: THIS_COMMIT
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -25,9 +26,9 @@ stage_3_execution_packet: REPLANNED_BOUNDARY_PASS_ACCEPTED / IMPLEMENTATION_NOT_
 stage_4_launcher: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-FINAL-PACKAGE-GATE-ORDER-CORRECTION1
-current_task_status: REVIEW_READY_AFTER_REQUEST_CHANGES
-current_result: THIS_COMMIT
+current_task: V2-PACKAGE-OWNED-OPTIONAL-CAPABILITY-LOCK-INPUT-GATE1
+current_task_status: BLOCKED_EXTERNAL_PACKAGE_INPUT_REQUIRED
+current_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e / APPROVE / P0=0 / P1=0 / P2=0 / FORMAL_FAST_FORWARD_COMPLETE
 reviewed_planning_result: 72719c758f092868fc6446e44a803d13eeae44a6
 reviewed_planning_verdict: APPROVE / P0=0 / P1=0 / P2=0
 final_package_gate: BLOCKED_PACKAGE_CAPABILITY_LOCK

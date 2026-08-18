@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2_FINAL_PACKAGE_GATE_ORDER_CORRECTION / REVIEW_READY；FINAL_PACKAGE_GATE / BLOCKED_PACKAGE_CAPABILITY_LOCK`
+状态：`V2_FINAL_PACKAGE_GATE_ORDER_CORRECTION / PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD；FINAL_PACKAGE_GATE / BLOCKED_PACKAGE_CAPABILITY_LOCK`
 
 更新时间：2026-08-18
 
@@ -8,15 +8,17 @@
 
 ```text
 authority_task_id: V2-FINAL-PACKAGE-GATE-ORDER-CORRECTION1
-authority_status: REVIEW_READY_AFTER_REQUEST_CHANGES
+authority_status: PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD
 authority_start_commit: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
 authority_initial_result_commit: 037ed38e1fb1e04af241d99ddf5a8a07592ae85c
 authority_initial_review: REQUEST_CHANGES / P0=0 / P1=3 / P2=1
-authority_result_commit: THIS_COMMIT
-authority_branch: codex/v2-final-package-gate-authority1
-authority_review_range: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2..THIS_COMMIT
+authority_result_commit: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
+authority_branch: DELETED_AFTER_FORMAL_FAST_FORWARD
+authority_review_range: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2..ba0a84d93a4b26c09eaf7e2469d09c064c27710e
+authority_final_review: APPROVE / P0=0 / P1=0 / P2=0
+authority_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=ba0a84d93a4b26c09eaf7e2469d09c064c27710e
 authority_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
-authority_activation_condition: independent APPROVE and ordinary fast-forward to formal branch
+authority_activation_condition: CONSUMED_COMPLETE
 task_id: V2-PACKAGE-OWNED-OPTIONAL-CAPABILITY-LOCK-INPUT-GATE1
 task_status: BLOCKED_EXTERNAL_PACKAGE_INPUT_REQUIRED
 task_kind: EXTERNAL_PACKAGE_INPUT_GATE / NO_SHELL_IMPLEMENTATION
@@ -50,8 +52,8 @@ required_consumer_result: real WorkBuddy/OpenMontage pause/consent/continue requ
 future_final_package_gate_rule: run once only after both inputs; freeze exact wheel filenames/sizes/SHA-256 and a hash-locked deterministic assembly procedure; publish/install/register only the resulting new Package identity
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
 forbidden_scope: Shell production code/tests/CI; ad-hoc modification of external dirty worktree; Shell-owned capability Lock; publishing f00e83 as final; Stage3 code; optional installation; WorkBuddy/Launcher/Provider/media
-next_authorized_task: V2-FINAL-PACKAGE-GATE-ORDER-CORRECTION-REVIEW1
-next_task_authorization: READ_ONLY_REVIEW_ONLY
+next_authorized_task: NONE_IN_SHELL_REPOSITORY
+next_task_authorization: NOT_GRANTED_PENDING_EXTERNAL_PACKAGE_AND_WORKBUDDY_INPUTS
 ```
 
 Reviewer确认直接发布`f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`会造成必然返工：阶段3要求的Package-owned能力Lock尚不存在或不合格，一旦补入就会改变Manifest、Release SHA、PackageRoot和Registration。因此本次没有创建临时根、下载、Release、PackageRoot或生产Registration。Shell仓库只记录正确顺序，不替外部Package发明Lock，也不以旧npm lock冒充阶段3合同。

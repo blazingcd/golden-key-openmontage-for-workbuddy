@@ -8,6 +8,7 @@ from pathlib import Path
 
 import golden_key_openmontage_workbuddy as package_api
 from golden_key_openmontage_workbuddy import package_registration
+from golden_key_openmontage_workbuddy import runtime_prepare
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -44,9 +45,11 @@ EXPECTED_TRACKED_FILES = frozenset(
         "docs/workbuddy/v2/TASK-REGISTER.md",
         "golden_key_openmontage_workbuddy/__init__.py",
         "golden_key_openmontage_workbuddy/package_registration.py",
+        "golden_key_openmontage_workbuddy/runtime_prepare.py",
         "pyproject.toml",
         "tests/workbuddy/test_package_registration.py",
         "tests/workbuddy/test_repository_hygiene.py",
+        "tests/workbuddy/test_runtime_prepare.py",
     }
 )
 
@@ -98,7 +101,6 @@ REMOVED_SHELL_CONTROL_PLANE_PATHS = (
     "golden_key_openmontage_workbuddy/model_config.py",
     "golden_key_openmontage_workbuddy/paths.py",
     "golden_key_openmontage_workbuddy/runtime.py",
-    "golden_key_openmontage_workbuddy/runtime_prepare.py",
     "golden_key_openmontage_workbuddy/security.py",
     "golden_key_openmontage_workbuddy/subprocess_guard",
     "golden_key_openmontage_workbuddy/tasks.py",
@@ -118,7 +120,6 @@ REMOVED_LEGACY_TESTS = (
     "test_mcp_server.py",
     "test_model_provider_config.py",
     "test_portable_bundle.py",
-    "test_runtime_prepare.py",
     "test_skill_package.py",
     "test_task_runtime.py",
     "test_w0_audit.py",
@@ -126,11 +127,10 @@ REMOVED_LEGACY_TESTS = (
     "test_w3_offline_isolation.py",
 )
 
-STAGE3_IMPLEMENTATION_PATHS = (
+REPLACEMENT_CONTROL_PLANE_PATHS = (
     "golden_key_openmontage_workbuddy/entry.py",
     "golden_key_openmontage_workbuddy/launcher.py",
     "golden_key_openmontage_workbuddy/relay.py",
-    "golden_key_openmontage_workbuddy/runtime_prepare.py",
     "golden_key_openmontage_workbuddy/status_result_relay.py",
     "golden_key_openmontage_workbuddy/workbuddy.py",
     "golden_key_openmontage_workbuddy/workbuddy_entry.py",
@@ -196,10 +196,10 @@ def _source_inventory() -> tuple[frozenset[str], frozenset[str]]:
     return frozenset(files), frozenset(directories)
 
 
-def test_final_git_index_is_the_fixed_33_file_contract() -> None:
+def test_final_git_index_is_the_fixed_35_file_contract() -> None:
     actual = _git_index_files()
-    assert len(EXPECTED_TRACKED_FILES) == 33
-    assert len(actual) == 33
+    assert len(EXPECTED_TRACKED_FILES) == 35
+    assert len(actual) == 35
     assert actual == EXPECTED_TRACKED_FILES
 
 
@@ -235,7 +235,7 @@ def test_no_archive_legacy_quarantine_or_repository_copy_exists() -> None:
     )
 
 
-def test_pyproject_packages_only_package_registration() -> None:
+def test_pyproject_keeps_one_dependency_free_shell_package() -> None:
     pyproject_path = REPO_ROOT / "pyproject.toml"
     source = pyproject_path.read_text(encoding="utf-8")
     project = tomllib.loads(source)
@@ -260,7 +260,7 @@ def test_pyproject_packages_only_package_registration() -> None:
     assert "console_scripts" not in source
 
 
-def test_stage2_registration_api_and_only_that_api_remain() -> None:
+def test_stage2_registration_and_stage3_runtime_prepare_are_the_only_apis() -> None:
     registration_path = (
         REPO_ROOT / "golden_key_openmontage_workbuddy" / "package_registration.py"
     )
@@ -274,34 +274,40 @@ def test_stage2_registration_api_and_only_that_api_remain() -> None:
         "activate_package",
         "recover_active_package",
         "locate_active_package",
+        "prepare_optional_capabilities",
         "__version__",
     ]
     assert package_api.__version__ == "0.1.0a0"
     assert package_api.__all__ == expected_exports
-    for name in expected_exports[:-1]:
+    for name in expected_exports[:5]:
         assert getattr(package_api, name) is getattr(package_registration, name)
+    assert package_api.prepare_optional_capabilities is runtime_prepare.prepare_optional_capabilities
 
     package_sources = {
         path.name
         for path in (REPO_ROOT / "golden_key_openmontage_workbuddy").glob("*.py")
     }
-    assert package_sources == {"__init__.py", "package_registration.py"}
+    assert package_sources == {"__init__.py", "package_registration.py", "runtime_prepare.py"}
 
 
-def test_stage3_and_replacement_control_planes_are_not_implemented() -> None:
-    assert all(not (REPO_ROOT / relative).exists() for relative in STAGE3_IMPLEMENTATION_PATHS)
+def test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented() -> None:
+    assert (REPO_ROOT / "golden_key_openmontage_workbuddy/runtime_prepare.py").is_file()
+    assert all(
+        not (REPO_ROOT / relative).exists()
+        for relative in REPLACEMENT_CONTROL_PLANE_PATHS
+    )
     task_register = (
         REPO_ROOT / "docs" / "workbuddy" / "v2" / "TASK-REGISTER.md"
     ).read_text(encoding="utf-8")
-    assert "stage3_implementation: NOT_GRANTED" in task_register
-    assert "stage_3_implementation_authorization: NOT_GRANTED" in task_register
+    assert "stage3_implementation: AUTHORIZED_NOT_STARTED" in task_register
+    assert "stage_3_implementation_authorization: GRANTED" in task_register
 
     init_source = (
         REPO_ROOT / "golden_key_openmontage_workbuddy" / "__init__.py"
     ).read_text(encoding="utf-8")
     assert not any(
         forbidden in init_source.casefold()
-        for forbidden in ("launcher", "mcp", "relay", "runtime", "task", "workbuddy_entry")
+        for forbidden in ("launcher", "mcp", "relay", "task", "workbuddy_entry")
     )
 
 
@@ -317,7 +323,7 @@ def test_agent_guide_preserves_the_shell_and_verified_package_boundaries() -> No
     ) in guide
 
 
-def test_ci_targets_only_the_formal_branch_and_the_two_final_tests() -> None:
+def test_ci_targets_only_the_formal_branch_and_the_three_final_tests() -> None:
     ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     expected_trigger_block = (
         "pull_request:\n"
@@ -330,6 +336,7 @@ def test_ci_targets_only_the_formal_branch_and_the_two_final_tests() -> None:
     command = (
         "python -m pytest -p no:cacheprovider "
         "tests/workbuddy/test_package_registration.py "
+        "tests/workbuddy/test_runtime_prepare.py "
         "tests/workbuddy/test_repository_hygiene.py -q"
     )
 
@@ -352,7 +359,7 @@ def test_ci_targets_only_the_formal_branch_and_the_two_final_tests() -> None:
     assert "workflow_dispatch" not in ci
     assert not any(
         forbidden in ci.casefold()
-        for forbidden in (" ffmpeg", " make ", " setup.py", " gate", " mcp", " runtime")
+        for forbidden in (" ffmpeg", " make ", " setup.py", " gate", " mcp")
     )
 
 

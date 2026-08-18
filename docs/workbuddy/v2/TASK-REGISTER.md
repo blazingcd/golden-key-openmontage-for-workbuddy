@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1 / REVIEW_READY`
+状态：`V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1 / PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD`
 
 更新时间：2026-08-18
 
@@ -8,16 +8,22 @@
 
 ```text
 task_id: V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1
-task_status: REVIEW_READY
+task_status: PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD
 task_kind: CONTRACT_CORRECTION / NO_IMPLEMENTATION
 user_authorization: 2026-08-18 / 纠正并固化Remotion/HyperFrames可选边界和真实WorkBuddy消费者合同阶段归属
 implementation_authorization: DOCS_ONLY
 start_commit: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-result_commit: THIS_COMMIT
-branch: codex/v2-s3-optional-consumer-contract-correction1
+result_commit: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
+branch: codex/v2-s3-optional-consumer-contract-correction1 / DELETE_AFTER_CLOSEOUT_PROMOTION
 formal_target_branch: origin/codex/workbuddy-shell-v2
 formal_target_at_start: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-review_range: 068408f02c87a1eabeda58ea1ebce3df606c0a0c..THIS_COMMIT
+review_range: 068408f02c87a1eabeda58ea1ebce3df606c0a0c..7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
+independent_review: APPROVE / P0=0 / P1=0 / P2=0
+formal_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
+closeout_candidate: THIS_COMMIT
+closeout_branch: codex/v2-s3-optional-consumer-contract-closeout1
+closeout_allowed_paths: PROJECT-STATE.md; WORK-LOG.md; docs/workbuddy/v2/TASK-REGISTER.md
+closeout_activation_condition: independent APPROVE and ordinary fast-forward to formal branch
 repository_allowed_paths: AGENT_GUIDE.md; PROJECT_CONTEXT.md; PROJECT-STATE.md; README.md; README_zh-CN.md; WORK-LOG.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/MODULE-DISPOSITION.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/README.md; docs/workbuddy/v2/TASK-REGISTER.md
 production_code_changes: 0
 test_changes: 0
@@ -43,8 +49,8 @@ validation_scope: 12 allowed existing docs / production=0 / tests=0 / CI=0 / new
 future_final_package_gate_rule: first freeze the Release optional-capability declaration and Locks only for declared support; then freeze exact wheel filenames/sizes/SHA-256 and hash-locked deterministic assembly; publish/install/register only that new identity
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
 forbidden_scope: production code/tests/CI; external Package mutation; Package materialization; Stage3/4/5/6 implementation; optional installation; WorkBuddy/Provider/media execution; new docs/frameworks/services/MCP/CLI
-next_authorized_task: V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION-REVIEW1
-next_task_authorization: READ_ONLY_REVIEW_ONLY
+next_authorized_task: NONE_IN_SHELL_REPOSITORY
+next_task_authorization: NOT_GRANTED_PENDING_EXTERNAL_RELEASE_CAPABILITY_DECLARATION
 ```
 
 本次纠偏撤销“Remotion和HyperFrames两份Lock一律阻塞最终Package”以及“真实WorkBuddy已经跑通才可启动阶段3”的过度前置。可选能力本体始终不随Package必带；每个Release只声明自身支持的子集，并只为声明支持者携带安装Lock。阶段3前冻结五种结果到WorkBuddy动作的最小接口，真实新会话、用户确认和继续能力在阶段5验收。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`仍不得冒充最终Package。
@@ -131,7 +137,8 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 formal_branch: codex/workbuddy-shell-v2
 accepted_authority_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
 formal_handoff_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-current_correction_candidate: THIS_COMMIT
+accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
+formal_head_after_closeout: THIS_COMMIT
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED
@@ -160,7 +167,7 @@ final_package_gate: BLOCKED_RELEASE_CAPABILITY_DECLARATION_AND_DECLARED_LOCKS
 package_optional_capability_declaration: NOT_FROZEN / MAY_DECLARE_ZERO_ONE_OR_BOTH
 declared_package_capability_locks: NOT_EVALUATED_UNTIL_DECLARATION
 stage_3_positive_capability_input: NOT_AVAILABLE_UNTIL_RELEASE_DECLARES_AT_LEAST_ONE_SUPPORTED_CAPABILITY
-stage_3_consumer_interface_contract: FROZEN_BY_THIS_COMMIT_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD
+stage_3_consumer_interface_contract: PASS_ACCEPTED_FROZEN
 real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
 stage_3_execution_packet: REPLANNED_BOUNDARY_PASS_ACCEPTED / IMPLEMENTATION_NOT_GRANTED
 stage3_implementation: NOT_GRANTED

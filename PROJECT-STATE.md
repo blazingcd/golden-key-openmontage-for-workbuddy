@@ -8,7 +8,8 @@
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
 formal_baseline_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-current_correction_candidate: THIS_COMMIT
+accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
+formal_head_after_closeout: THIS_COMMIT
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -26,15 +27,15 @@ stage_4_launcher: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
 current_task: V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1
-current_task_status: REVIEW_READY
-current_result: THIS_COMMIT / REQUIRES_INDEPENDENT_REVIEW_AND_FORMAL_FAST_FORWARD
+current_task_status: PASS_ACCEPTED_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD
+current_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed / APPROVE / P0=0 / P1=0 / P2=0 / FORMAL_FAST_FORWARD_COMPLETE
 reviewed_planning_result: 72719c758f092868fc6446e44a803d13eeae44a6
 reviewed_planning_verdict: APPROVE / P0=0 / P1=0 / P2=0
 final_package_gate: BLOCKED_RELEASE_CAPABILITY_DECLARATION_AND_DECLARED_LOCKS
 package_optional_capability_declaration: NOT_FROZEN / MAY_DECLARE_ZERO_ONE_OR_BOTH
 declared_package_capability_locks: NOT_EVALUATED_UNTIL_DECLARATION
 stage_3_positive_capability_input: NOT_AVAILABLE_UNTIL_RELEASE_DECLARES_AT_LEAST_ONE_SUPPORTED_CAPABILITY
-stage_3_consumer_interface_contract: FROZEN_BY_THIS_COMMIT_AFTER_REVIEW_AND_FORMAL_FAST_FORWARD
+stage_3_consumer_interface_contract: PASS_ACCEPTED_FROZEN
 real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
 next: FREEZE_PACKAGE_OPTIONAL_CAPABILITY_DECLARATION_AND_LOCKS_FOR_DECLARED_SUPPORT / NOT_GRANTED_IN_SHELL_REPOSITORY
 ```

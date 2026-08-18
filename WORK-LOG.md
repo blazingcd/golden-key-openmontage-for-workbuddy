@@ -8,6 +8,7 @@
 - 本任务只更新现有文档，不新增文件，不修改生产代码、测试或CI，不生成最终Package，不安装可选能力，不实现阶段3至阶段6。
 - 本节是2026-08-18早先“Remotion/HyperFrames两份Lock + 真实WorkBuddy合同先于最终Package/阶段3”结论的活动纠偏；早先记录只保留历史，不得作为当前执行依据。
 - 静态范围与全文旧结论检查通过，tracked仍为33；使用D盘任务独立`.venv`执行全量测试`144 passed in 26.33s`、最终退出0，随后已清理该任务临时目录。候选仍须独立只读Reviewer批准并普通fast-forward后才生效。
+- 候选`7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed`经独立只读Reviewer批准：`APPROVE / P0=0 / P1=0 / P2=0`，随后普通fast-forward进入`origin/codex/workbuddy-shell-v2`。本状态收口只有三份既有文档，仍须独立只读审查并进入正式分支后才激活完成状态。
 
 ## 2026-08-18：V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT1
 

@@ -1,48 +1,77 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2_S2_REGISTRATION_AND_TEMP_PACKAGE_PROOF / PASS_ACCEPTED；V2_S3_PRETAKEOVER_REPLAN / PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD`
+状态：`V2_FINAL_PACKAGE_MATERIALIZATION_AND_PRODUCTION_REGISTRATION_GATE1 / AUTHORITY_REVIEW_READY`
 
 更新时间：2026-08-18
 
 ## 当前任务
 
 ```text
-task_id: V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT1
-task_status: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
-task_kind: STAGE_3_PRETAKEOVER_REPLAN_STATE_CLOSEOUT
-user_authorization: 2026-08-18 / 将阶段三重新规划结论固化并合入项目主线
-closeout_authorization: GRANTED_FOR_EXISTING_STATE_DOCUMENTS_ONLY
-implementation_authorization: NOT_GRANTED
-start_commit: 72719c758f092868fc6446e44a803d13eeae44a6
-start_commit_resolution: independently approved planning result after ordinary formal fast-forward
-result_commit: THIS_COMMIT
-branch: codex/v2-s3-pretakeover-replan-closeout1
-review_range: 72719c758f092868fc6446e44a803d13eeae44a6..THIS_COMMIT
+authority_task_id: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1-AUTHORITY1
+authority_status: REVIEW_READY
+authority_start_commit: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
+authority_result_commit: THIS_COMMIT
+authority_branch: codex/v2-final-package-gate-authority1
+authority_review_range: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2..THIS_COMMIT
+authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
+authority_activation_condition: independent APPROVE and ordinary fast-forward to formal branch
+task_id: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1
+task_status: READY_AFTER_AUTHORITY_PROMOTION
+task_kind: EXTERNAL_FINAL_PACKAGE_MATERIALIZATION_INSTALL_AND_PRODUCTION_REGISTRATION
+user_authorization: 2026-08-18 / 开始并尽快收尾，以便尽快启动阶段三；不得扩充边界或膨胀功能
+implementation_authorization: GRANTED_FOR_EXACT_GATE_AFTER_AUTHORITY_PROMOTION
+start_commit: THIS_COMMIT
+start_commit_resolution: Authority1经独立APPROVE并正式fast-forward后的精确40位SHA
+result_commit: NOT_CREATED
+branch: codex/v2-final-package-materialization-registration-gate1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 72719c758f092868fc6446e44a803d13eeae44a6
-reviewed_planning_result: 72719c758f092868fc6446e44a803d13eeae44a6
-reviewed_planning_range: 95eeeff175060f06ca2f549737e724160edc9e14..72719c758f092868fc6446e44a803d13eeae44a6
-reviewed_planning_verdict: APPROVE / P0=0 / P1=0 / P2=0
-reviewed_planning_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=72719c758f092868fc6446e44a803d13eeae44a6
-allowed_paths:
+formal_target_at_authority_start: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
+repository_allowed_paths:
   - PROJECT-STATE.md
   - README.md
   - README_zh-CN.md
   - WORK-LOG.md
   - docs/workbuddy/v2/README.md
   - docs/workbuddy/v2/TASK-REGISTER.md
+  - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
+  - docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
 production_code_changes: 0
 test_changes: 0
 tracked_files_expected: 33
-pytest: NOT_RUN_DOCUMENTATION_ONLY_PROJECT_VENV_MISSING
-next_authorized_task: V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT-REVIEW1
-next_task_status: READY_AFTER_PUSH
+task_temp_root: D:\BlazingCD\Personal\Temp\workbuddy-v2-final-package-gate1
+source_repository: D:\BlazingCD\Personal\golden_key_short_video_agent-openmontage-agent-cleanroom
+source_commit: 8395e578165e802990d53fef5a166f8b4cf0461a
+source_package_tree_path: packages/golden-key-openmontage
+source_package_tree: 0464861c5985c7c9072e789b94889d29cf9a937a
+source_rule: git-object export only; source dirty worktree read/write/cleanup forbidden
+python_archive: D:\Downloads\Working\python-3.14.7-embed-amd64.zip
+python_archive_size: 12673227
+python_archive_sha256: d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15
+python_dependency_resolution: exact previously accepted 47 versions; Aliyun PyPI download only; offline install with no compile; remove RECORD and bin wrappers
+python_dependency_versions: Pillow==12.3.0; annotated-doc==0.0.5; annotated-types==0.8.0; anyio==4.14.2; attrs==26.1.0; certifi==2026.7.22; cffi==2.1.1; charset-normalizer==3.5.1; click==8.4.2; colorama==0.4.6; cryptography==50.0.0; distro==1.9.0; fastapi==0.141.1; google-auth==2.56.3; google-genai==2.18.1; h11==0.16.0; httpcore==1.0.9; httpcore2==2.10.0; httpx==0.28.1; httpx2==2.10.0; idna==3.18; jiter==0.16.0; jsonschema==4.26.0; jsonschema-specifications==2025.9.1; numpy==2.5.2; openai==3.1.0; pyasn1==0.6.4; pyasn1-modules==0.4.2; pycparser==3.0; pydantic==2.13.4; pydantic-core==2.46.4; python-dotenv==1.2.3; pyyaml==6.0.3; referencing==0.37.0; requests==2.34.2; rpds-py==2026.6.3; sniffio==1.3.1; starlette==1.6.0; tenacity==9.1.4; tqdm==4.70.0; truststore==0.10.4; typing-extensions==4.16.0; typing-inspection==0.4.4; urllib3==2.7.0; uvicorn==0.52.3; watchfiles==1.2.0; websockets==16.1.1
+node_archive_url: https://npmmirror.com/mirrors/node/v22.23.2/node-v22.23.2-win-x64.zip
+node_archive_size: 35683585
+node_archive_sha256: 1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97
+ffmpeg_archive_url: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z
+ffmpeg_archive_size: 34372199
+ffmpeg_archive_sha256: 49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85
+release_archive: D:\WorkBuddyDistributions\GoldenKeyOpenMontageForWorkBuddy\Releases\0.3.24\golden-key-openmontage-workbuddy-0.3.24.zip
+release_sidecar: D:\WorkBuddyDistributions\GoldenKeyOpenMontageForWorkBuddy\Releases\0.3.24\golden-key-openmontage-workbuddy-0.3.24.zip.sha256
+expected_release_size: 223112435
+expected_release_sha256: f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03
+installed_package_root: D:\WorkBuddyApps\GoldenKeyOpenMontageForWorkBuddy\Packages\0.3.24\f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03
+production_data_root: D:\WorkBuddyData\GoldenKeyOpenMontageForWorkBuddy
+external_write_policy: exact new paths only; same-volume staging; hash verification before publish; never overwrite or delete foreign objects
+registration_action: register exact Release + installed PackageRoot; explicit activate from MISSING; new-process locate
+acceptance: retained Release and sidecar + installed PackageRoot + production Registration/Activation + new-process Locator + complete private Python/FFmpeg/Node tool probes
+forbidden_scope: production code/tests/CI; Installer feature; Stage3 code; optional capability installation; capability Lock invention; WorkBuddy/Launcher/Provider/media; source-repo mutation; disk scan; system PATH/registry/global npm
+stage_3_effect: closes final-Package and production-Registration blockers only
+remaining_stage_3_inputs: Package-owned Manifest-covered capability Lock + real WorkBuddy pause/consent/continue consumer contract + exact Stage3 Builder packet
+next_authorized_task: V2-FINAL-PACKAGE-GATE-AUTHORITY-REVIEW1
 next_task_authorization: READ_ONLY_REVIEW_ONLY
-next_after_docs_promotion: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1
-next_after_docs_promotion_authorization: NOT_GRANTED_BY_THIS_DOCS_TASK
 ```
 
-规划结果`72719c758f092868fc6446e44a803d13eeae44a6`已经独立只读Reviewer最终`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward进入正式主线。本收口只把入口状态从`REVIEW_READY`统一为条件式`PASS_ACCEPTED`；`THIS_COMMIT`仍须独立只读Reviewer批准并普通fast-forward后，该条件才成立。本任务不创建阶段3代码、Lock、测试、Installer、最终Package或生产Registration，也不授权下一交付门禁。
+本Authority只授权复现阶段二已经接受的精确Package对象，并把它持久发布、安装、生产登记、显式激活和新进程重验；不是重新设计Package或实现Installer。任何输出hash不是`f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`、需要修改生产代码/测试、需要覆盖既有目录，或试图顺带实现阶段3时，必须在发布写入前停止。Authority未经独立`APPROVE`和正式fast-forward不得执行外部写入。
 
 ## 阶段2已完成任务证据
 

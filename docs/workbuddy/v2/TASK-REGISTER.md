@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`CONDITIONAL AUTHORITY / V2_S2_REQUIRED_TOOLCHAIN_REFRESH_AUTHORITY_REVIEW_READY`
+状态：`V2_S2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / REVIEW_READY`
 
 更新时间：2026-08-18
 
@@ -8,26 +8,26 @@
 
 ```text
 authority_task_id: V2-S2-REQUIRED-TOOLCHAIN-REFRESH-AUTHORITY1
-authority_task_status: REVIEW_READY
+authority_task_status: PASS_ACCEPTED
 authority_start_commit: 29a890db22181db9532263a168dcbe5f708b7149
-authority_result_commit: THIS_COMMIT
+authority_result_commit: 55781b45ac9217693843f2c73cec994805e4024c
 authority_branch: codex/v2-s2-toolchain-refresh-authority1
-authority_review_range: 29a890db22181db9532263a168dcbe5f708b7149..THIS_COMMIT
-authority_activation_condition: independent_reviewer == APPROVE AND THIS_COMMIT fast-forwarded to origin/codex/workbuddy-shell-v2
+authority_review_range: 29a890db22181db9532263a168dcbe5f708b7149..55781b45ac9217693843f2c73cec994805e4024c
+authority_activation_condition: SATISFIED / independent APPROVE and fast-forward promotion
 authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
 authority_production_code_changes: 0
 authority_test_changes: 0
 task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
-task_status: READY_NOT_STARTED
+task_status: REVIEW_READY
 task_kind: STAGE_2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH
 user_authorization: 2026-08-18 / 尽快把这个阻塞完成
 implementation_authorization: GRANTED_FOR_REQUIRED_TOOLCHAIN_REFRESH_ONLY
-start_commit: THIS_COMMIT
-start_commit_resolution: Authority1经独立APPROVE并fast-forward推广后的精确40位result SHA；绝不从29a890旧对象启动
-result_commit: NOT_CREATED
-branch: codex/v2-s2-required-toolchain-package-refresh-b1
+start_commit: 55781b45ac9217693843f2c73cec994805e4024c
+start_commit_resolution: Authority1经独立APPROVE并fast-forward推广后的精确40位result SHA
+result_commit: THIS_COMMIT
+branch: codex/v2-s2-toolchain-package-refresh-b1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_authority_start: 29a890db22181db9532263a168dcbe5f708b7149
+formal_target_at_builder_start: 55781b45ac9217693843f2c73cec994805e4024c
 previous_contract_correction_status: PASS_ACCEPTED
 previous_contract_correction_formal_commit: 29a890db22181db9532263a168dcbe5f708b7149
 previous_contract_correction_review: INDEPENDENT_APPROVE_AND_FAST_FORWARD_PROMOTED
@@ -51,7 +51,8 @@ node_version: v22.23.2-win-x64
 node_archive_url: https://npmmirror.com/mirrors/node/v22.23.2/node-v22.23.2-win-x64.zip
 node_archive_size: 35683585
 node_archive_sha256: 1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97
-ffmpeg_version: 9.0 essentials
+ffmpeg_publisher_channel_label: 9.0 essentials
+ffmpeg_actual_binary_version: 9.0.1-essentials_build
 ffmpeg_archive_url: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z
 ffmpeg_archive_size: 34372199
 ffmpeg_archive_sha256: 49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85
@@ -61,19 +62,29 @@ project_venv_rule: 必须使用该任务在D盘的独立.venv；不得混用系�
 package_build_scope: 一次真实临时Package；源树+干净私有Python及锁定核心依赖+FFmpeg/ffprobe+Node/npm/npx
 registration_scope: Stage2必须验证并返回全部必带工具身份与固定路径；负面测试fail closed
 forbidden_scope: external source repo、官方OpenMontage、Installer、Runtime、Launcher、Stage3、Skill、config、其他测试、生产DataRoot激活、WorkBuddy、Provider、媒体
-exit_evidence: commit+push+REVIEW_READY；真实构建和注册证据；production=1/test=1/docs<=2；临时构建根清理
-next_authorized_task: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
+resolved_python_distributions: 47
+offline_dependency_rebuild: 4555 files / missing=0 / extra=0 / changed=0
+real_package_core_files: 2155
+real_package_toolchain_files: 6670
+real_package_manifest_entries: 8826
+real_release_size: 223112435
+real_release_sha256: f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03
+real_registration_sha256: aa5aba5ff543258d58acf944a0f4e87d80b9f38e62205268ae23b5266b78659b
+real_register_activate_locate: PASS / task-only DataRoot
+builder_changed_files: production=1 / test=1 / docs=2
+exit_evidence: commit+push+REVIEW_READY；真实构建和注册证据；临时构建根及任务venv清理；用户下载Python源保留
+next_authorized_task: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-REVIEW1
 ```
 
-`THIS_COMMIT`由Authority1 Reviewer解析为本分支精确40位结果SHA。只有该结果获独立`APPROVE`并fast-forward进入正式分支后，Builder才从同一精确SHA启动；未推广前不得启动。Builder只刷新阶段2必带工具链Package及其Registration合同和测试，不授权阶段3或其他Shell模块。
+`THIS_COMMIT`由独立Reviewer解析为本Builder分支精确40位结果SHA。Reviewer只读比较`55781b45ac9217693843f2c73cec994805e4024c..THIS_COMMIT`，确认四文件白名单、真实Package证据、生产1/测试1/文档2、全部测试最终exit 0、生产DataRoot零写入、阶段3零实现。Builder结果获`APPROVE`并fast-forward进入正式分支前，阶段2仍未完成，阶段3仍未授权。
 
 ## 当前正式状态
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-formal_handoff_commit: 29a890db22181db9532263a168dcbe5f708b7149
+formal_handoff_commit: 55781b45ac9217693843f2c73cec994805e4024c
 stage_1_status: PASS_ACCEPTED
-stage_2_status: REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / READY_NOT_STARTED
+stage_2_status: REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / REVIEW_READY_NOT_PROMOTED
 stage_2_previous_package_status: PASS_ACCEPTED_HISTORICAL
 stage_2_integration_commit: ca6e93b7da108732f2034239da340a986ba3da3a
 repository_hygiene_status: PASS_ACCEPTED
@@ -92,12 +103,12 @@ stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 stage_3_to_6_scope_reduction: SUPERSEDED_BY_REQUIRED_TOOLCHAIN_CORRECTION
-runtime_correction: REOPENED_REQUIRED_TOOLCHAIN_CORRECTION
+runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_BUILDER_REVIEW_READY
 ```
 
 阶段2此前通过的是旧金钥匙版Package登记合同和实现，不是更新后的当前Package。官方当前Quick Start明确列出Python 3.10+、FFmpeg和Node.js 18+三项基础Prerequisites；当前HyperFrames合同进一步要求Node.js 22+。金钥匙Package必须因此自带可用私有Python环境及核心依赖、FFmpeg/ffprobe、满足最高要求的Node/npm/npx，并在Manifest/Lock与Registration中逐项锁定。只登记Python的旧阶段2合同不足，必须修订、重新组装、独立审阅和推广；完成前阶段3不得启动。
 
-仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `29a890db22181db9532263a168dcbe5f708b7149`的祖先。后续文档修订没有恢复已清理内容，也没有生产代码或测试变化。
+仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `55781b45ac9217693843f2c73cec994805e4024c`的祖先。本Builder只修改四个既有白名单文件，没有恢复已清理内容或新增仓库文件。
 
 ## 阶段3至阶段6建设与交付顺序
 
@@ -168,4 +179,4 @@ repository_hygiene_wave_c_result: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 
 旧Stage2只证明旧金钥匙版Package的Registration与Locator：明确路径输入、不可变登记对象、活动指针CAS、破损指针显式恢复和只读Locator。它不证明当前新版Package、Installer、Runtime、Launcher、真实WorkBuddy、Provider、SaaS、网络或媒体E2E。阶段3至阶段6不得读取未验证Package Guide、扫描磁盘猜测对象，或把技术控制词写入literal `user_message`。
 
-老项目可迁移证据：`347272c`固定包内便携Python；`899592d`固定完整Runtime、hash、许可、DataRoot和大陆PyPI/npm/Node/浏览器镜像；`639978d`增加`managed`、`registered_host`、`PATH_host`、`missing`发现与missing-only准备。旧锁中的精确FFmpeg 9.0 `gyan.dev`资产现只作为必带Package组装候选；阶段2必须核验其来源、SHA-256、许可、分发和实际可获得性。它不再形成阶段3下载授权，也不得扩展为其他可选能力的海外回退权。
+老项目可迁移证据：`347272c`固定包内便携Python；`899592d`固定完整Runtime、hash、许可、DataRoot和大陆PyPI/npm/Node/浏览器镜像；`639978d`增加`managed`、`registered_host`、`PATH_host`、`missing`发现与missing-only准备。旧锁中的“FFmpeg 9.0 essentials”只提供候选来源标签；本次冻结URL与hash对应二进制实际报告`9.0.1-essentials_build`。它不形成阶段3下载授权，也不得扩展为其他可选能力的海外回退权。

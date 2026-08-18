@@ -1,22 +1,14 @@
 # OpenMontage Package Registration and Locator Contract
 
-状态：`PREVIOUS_PYTHON_ONLY_PACKAGE_PASS_ACCEPTED / CURRENT_REQUIRED_TOOLCHAIN_SCHEMA_REDESIGN_REQUIRED`
+状态：`REQUIRED_TOOLCHAIN_REFRESH / REVIEW_READY`
 
-## 0. Current package adjudication
+## 1. Object and boundary
 
-The upstream official OpenMontage Quick Start declares three baseline prerequisites: Python 3.10+, FFmpeg, and Node.js 18+. Current HyperFrames documentation raises its own Node floor to 22+. The Stage 2 object is the **Golden Key OpenMontage for WorkBuddy Package** for ordinary users, so it must include a complete package-private required toolchain: a usable Python environment with locked core dependencies, FFmpeg plus ffprobe, and a Node distribution with npm/npx satisfying the highest current Package requirement.
+Stage 2 registers one explicitly supplied **Golden Key OpenMontage for WorkBuddy Package**. The Package is an already assembled portable ZIP plus its installed PackageRoot. It contains the reviewed Golden Key OpenMontage resource directory and the complete package-private required toolchain.
 
-Current upstream evidence: [OpenMontage Quick Start](https://github.com/calesthio/OpenMontage#quick-start), [official setup Makefile](https://github.com/calesthio/OpenMontage/blob/main/Makefile), and [runtime architecture requirements](https://github.com/calesthio/OpenMontage/blob/main/docs/ARCHITECTURE.md). These links establish upstream inputs only; Stage 2 still has to lock exact distributable artifacts, hashes, licenses, capabilities, and paths for the Golden Key Package.
+Stage 2 does not download, install, launch, repair, select a renderer, run WorkBuddy, interpret the external Guide, or perform media production. Stage 3 must not replace or fall back to system Python, FFmpeg, or Node.
 
-The previously accepted implementation and schema register only the private Python identity explicitly. They are historical evidence and are insufficient for the current Package. Stage 2 is reopened until Package assembly, Manifest/Lock, Registration schema, Locator output, tests, independent review, and promotion all cover Python/core dependencies, FFmpeg/ffprobe, and Node/npm/npx. The previous registration must not be relabeled as current evidence.
-
-Sections 1-8 below describe the previous Python-only accepted wire contract. They remain useful regression evidence, but every API signature, closed root shape, validation chain, future-consumer statement, and test claim that names only `package_python` is superseded for the current Package. The current Stage 2 task must freeze a new closed required-toolchain shape from the actual assembled bytes; Stage 3 may not compensate by downloading missing prerequisites.
-
-## 1. Scope
-
-This contract binds one explicitly supplied, already-installed, versioned Golden Key OpenMontage Package to immutable local identity records and locates the single active Package. It does not assemble, install, download, execute, repair, or select a Package; it does not run WorkBuddy or production.
-
-The four public entries are:
+The public entries remain:
 
 ```python
 register_package(data_root, release_archive, release_sha256_sidecar, package_root, package_python)
@@ -25,117 +17,80 @@ recover_active_package(data_root, expected_broken_pointer_sha256, replacement_re
 locate_active_package(data_root)
 ```
 
-`register_package` validates and writes an immutable registration but never activates it. `activate_package` performs an explicit CAS selection. `recover_active_package` replaces only an explicitly hash-locked broken pointer and rejects a valid pointer. `locate_active_package` is read-only and performs full identity revalidation; it never repairs, enumerates fallback objects, launches a process, accesses a network, or writes.
+`package_python` is retained as the compatibility input and must equal the fixed Python executable declared by the Package. No new public entry is added.
 
-## 2. Identifiers and authority
+## 2. Fixed schemas, authority, and paths
 
 ```text
-registration schema: golden-key-workbuddy-openmontage-package-registration-v1
+registration schema: golden-key-workbuddy-openmontage-package-registration-v2
 registration owner: golden-key-workbuddy-shell-v2
 active pointer schema: golden-key-workbuddy-active-openmontage-package-v1
 active lock schema: golden-key-workbuddy-active-package-lock-v1
-manifest schema: golden-key-workbuddy-portable-bundle-v1
-lock schema: integer 2
-manifest path: BUNDLE-MANIFEST.json
-lock path: GOLDEN_KEY_WORKBUDDY_CORE.lock.json
-guide path: AGENT_GUIDE.md
-bundled Python path: bootstrap/python/python.exe
+manifest schema: golden-key-workbuddy-portable-bundle-v2
+core lock schema: integer 2
+dependency lock schema: golden-key-workbuddy-python-core-dependencies-v1
+manifest: BUNDLE-MANIFEST.json
+core lock: GOLDEN_KEY_WORKBUDDY_CORE.lock.json
+guide: AGENT_GUIDE.md
+python: bootstrap/python/python.exe
+python dependency lock: bootstrap/python/CORE-DEPENDENCIES.lock.json
+ffmpeg: bootstrap/ffmpeg/bin/ffmpeg.exe
+ffprobe: bootstrap/ffmpeg/bin/ffprobe.exe
+node: bootstrap/node/node.exe
+npm: bootstrap/node/npm.cmd
+npx: bootstrap/node/npx.cmd
 ```
 
-Manifest authority must be exactly:
+Manifest authority remains exactly `direct_agent / nested_agent_host_allowed=false`. Core Lock authority remains exactly the WorkBuddy direct-agent authority accepted in Stage 2. The Shell does not become a second Agent, Director, FSM, or production control plane.
 
-```json
-{"invocation_model":"direct_agent","nested_agent_host_allowed":false}
-```
+## 3. Closed required-toolchain contract
 
-Lock authority must be exactly:
+Manifest `installation.runtime_roles` has exactly `python`, `ffmpeg`, and `node`. Manifest `required_toolchain` has exactly `python`, `ffmpeg`, `node`, and `managed_files`.
 
-```json
-{"consumer":"workbuddy","consumer_direct_official_sync_allowed":false,"invocation_model":"direct_agent","nested_agent_host_allowed":false,"official_openmontage_role":"reviewed_upstream_baseline_only","source":"golden-key-core"}
-```
+- Python declares version, fixed source label, source archive SHA-256 and size, `system_python_required=false`, executable, and dependency-lock path.
+- FFmpeg declares actual version, fixed source label, source archive SHA-256 and size, and fixed `ffmpeg`/`ffprobe` paths.
+- Node declares version, fixed source label, source archive SHA-256 and size, and fixed `node`/`npm`/`npx` paths.
+- Every byte below `bootstrap/python`, `bootstrap/ffmpeg`, and `bootstrap/node` is listed exactly once in `required_toolchain.managed_files` and exactly once in Manifest `files` with owner `workbuddy_required_toolchain`. The actual filesystem set must equal that declared set.
 
-The external wire fields `core.contract_id`, `core.tag`, `core.source_commit`, `core.file_count`, `managed_core`, `golden-key-core`, `golden-key-workbuddy-callable-core-v1`, and `GOLDEN_KEY_WORKBUDDY_CORE.lock.json` retain their literal meanings. They do not mean the Golden Key SaaS Core. SaaS Core is outside this contract and outside Stage 2.
+The Python dependency lock has a closed root of `schema_version`, `python_version`, `requirements`, and `packages`. Each package has exactly `name`, `version`, and its managed `.dist-info/METADATA` path. Names are normalization-unique; every installed distribution metadata file is locked; recorded Name/Version must equal installed metadata.
 
-## 3. Registration identity
+The Registration root remains closed and adds only `required_toolchain`; `package_python` remains as a compatibility identity. `required_toolchain` returns the exact fixed path, canonical path, SHA-256, size, version, source archive identity, dependency lock, 47 resolved Python distributions, FFmpeg/ffprobe, and Node/npm/npx. Manifest hash binds the complete managed-file closure without duplicating thousands of entries into the Registration object.
 
-A Package Registration contains only these required root fields and rejects missing or unknown fields:
+## 4. Validation and fail-closed behavior
+
+Registration and every later activation, recovery, or locate perform the previous Release/sidecar, archive-member, Manifest, Core Lock, Guide, managed-core, canonical-path, object-hash, active-lock, CAS, and atomic-pointer checks. They additionally:
+
+1. reject missing or unknown toolchain schema fields;
+2. reject absolute, escaping, aliased, reserved, ADS, symlink, or reparse tool paths;
+3. reject missing, duplicate, unlisted, or extra toolchain managed files;
+4. hash and size-check every managed toolchain file;
+5. reject executable identity exchange or source/version drift;
+6. reject dependency-lock duplicates, uncovered distributions, and installed Name/Version mismatch;
+7. re-run the complete validation from the immutable Registration object during Locator reads.
+
+Stable errors remain `INPUT_INVALID`, `PATH_VIOLATION`, `OBJECT_MISSING`, `DUPLICATE`, `IDENTITY_MISMATCH`, `HASH_MISMATCH`, `TAMPERED`, `ACTIVE_LOCK_BUSY`, `ACTIVE_CAS_MISMATCH`, and `ATOMIC_WRITE_FAILED`.
+
+Registration never activates. Activation remains explicit CAS. Recovery remains explicit hash-locked replacement of a broken pointer. Locator remains read-only and never repairs, scans, downloads, launches, or chooses a fallback.
+
+## 5. Exact refresh evidence
 
 ```text
-schema_version, owner, contract_id, openmontage_release,
-openmontage_commit, authority, release, package_root,
-package_python, manifest, lock, guide
+source package commit: 8395e578165e802990d53fef5a166f8b4cf0461a
+source package tree: 0464861c5985c7c9072e789b94889d29cf9a937a
+Python: 3.14.7 / archive 12,673,227 bytes / d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15
+FFmpeg and ffprobe actual version: 9.0.1-essentials_build
+FFmpeg archive: 34,372,199 bytes / 49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85
+Node: 22.23.2; npm/npx: 10.9.8
+Node archive: 35,683,585 bytes / 1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97
+locked Python distributions: 47
+offline reconstruction: 4,555 files / missing 0 / extra 0 / changed 0
+core files: 2,155
+required-toolchain managed files: 6,670
+Manifest entries: 8,826
+Release ZIP: 223,112,435 bytes / f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03
+real temporary registration: aa5aba5ff543258d58acf944a0f4e87d80b9f38e62205268ae23b5266b78659b
 ```
 
-Nested shapes are also closed:
+The dependency reconstruction uses the frozen Aliyun-resolved wheelhouse twice with `--no-compile`. Location-dependent console wrappers and pip `RECORD` installation receipts are excluded from both reconstructions; the remaining runtime dependency trees are byte-identical. The final private Python successfully imports every requirement and passes SSL plus same-interpreter subprocess checks. FFmpeg, ffprobe, Node, npm, and npx version commands pass. Real register, temporary activation, and read-only locate pass in a task-only DataRoot.
 
-- `authority`: exact `manifest` and `lock` objects above.
-- `release`: ZIP basename, archive SHA-256, and exact `.zip.sha256` sidecar basename.
-- `package_python`: fixed relative path, canonical absolute path, SHA-256, positive size, version, fixed source `python.org_windows_embeddable_x64`, and source archive SHA-256.
-- `manifest`: fixed relative/absolute path, schema, SHA-256, and positive size.
-- `lock`: fixed relative/absolute path, integer schema 2, SHA-256, positive size, and bundle SHA-256.
-- `guide`: fixed relative/absolute path, SHA-256, and positive size.
-
-Strings are Unicode NFC and must not contain surrogate code points. SHA-256 is lowercase 64-hex; commit is lowercase 40-hex; sizes are JSON integers. Canonical object bytes are UTF-8 without BOM, sorted keys, compact separators, and exactly one trailing LF. The SHA-256 of those complete canonical bytes is the `registration_sha256` and object filename; it is not duplicated inside the object.
-
-## 4. Validation chain
-
-Registration accepts only explicit absolute existing paths and never expands `~`, searches a drive, consults environment defaults, or guesses the newest Package. It validates:
-
-- the Release ZIP actual SHA against the sidecar, including an optional exact archive basename;
-- exactly one safe Manifest and Lock archive member, byte-identical to the installed files;
-- Manifest/Lock schema, closed authority shapes, and matching contract/release/commit identities;
-- Lock bundle digest, unique safe inventory paths, Manifest `managed_core` ownership, file count, SHA, size, and every installed managed file;
-- the fixed non-empty Guide through Manifest, Lock, registration identity, and installed bytes;
-- the fixed bundled private Python declared by Manifest, including runtime role, owner, metadata, SHA, size, and canonical PackageRoot path;
-- canonical PackageRoot and fixed child paths that do not escape through traversal, symlink/reparse resolution, Windows aliases, ADS, reserved device names, trailing dots, or trailing spaces.
-
-Every later activation, recovery, and locate operation reloads the content-addressed object and revalidates its canonical bytes, filename hash, paths, Manifest, Lock, Guide, Python, and managed files. A lifecycle component may reclaim the Release archive after registration; Locator revalidates the frozen local identity and does not claim to re-fetch or revalidate a remote Release.
-
-## 5. Storage, lock, CAS, and recovery
-
-```text
-<DataRoot>/State/PackageRegistration/v1/objects/<registration_sha256>.json
-<DataRoot>/State/PackageRegistration/v1/active.json
-<DataRoot>/State/PackageRegistration/v1/active.lock
-```
-
-Registration objects are content-addressed and immutable. Publication uses a same-directory temporary file, flush, `fsync`, readback, and atomic publication. Existing identical bytes are idempotent; conflicting bytes at the same hash path fail closed.
-
-`active.lock` has fixed canonical identity bytes and persists as the lock identity file. It is created only when an empty registry is initialized; if registrations or a pointer exist, a missing or changed lock is tampering. Activation and recovery share a process guard and a kernel-level exclusive byte-0 lock, use one monotonic 5-second deadline with 0.05-second retries, re-read the lock in the critical section, and always release/close in `finally`.
-
-Inside the same critical section, a writer reads the raw active pointer, compares its caller-supplied SHA-256 or literal `MISSING`, fully revalidates the explicit target registration, writes/flushes/`fsync`s/reads back a same-directory temporary pointer, rechecks raw pointer bytes, and uses `os.replace`. A stale expected value cannot overwrite another writer. Failure before replacement preserves the old pointer; Locator never reads temporary files.
-
-Recovery requires the exact SHA-256 of an existing damaged pointer and an explicit fully valid replacement registration SHA. It never creates a registration, chooses a fallback, accepts a missing pointer, or replaces a valid pointer. Rollback is explicit activation of a named older valid registration; there is no time-based or directory-based selection.
-
-## 6. Fail-closed errors
-
-Stable error codes are:
-
-```text
-INPUT_INVALID
-PATH_VIOLATION
-OBJECT_MISSING
-DUPLICATE
-IDENTITY_MISMATCH
-HASH_MISMATCH
-TAMPERED
-ACTIVE_LOCK_BUSY
-ACTIVE_CAS_MISMATCH
-ATOMIC_WRITE_FAILED
-```
-
-Missing objects, unknown or missing fields, duplicate JSON keys or inventory/archive paths, non-finite JSON, surrogate/NFC violations, tampered bytes, identity drift, unsafe paths, hash/size mismatch, lock damage, stale CAS, and atomic-write failures all reject without guessing or silently repairing. Even a registry with exactly one object is not a substitute for a missing active pointer.
-
-## 7. Future consumers and message boundary
-
-A future Launcher may use the previous mapping only with the previous Package. The current Launcher contract requires a revised `locate_active_package` mapping that binds the exact PackageRoot, complete required private toolchain, Guide, Manifest, Lock, Release, authority, and commit for one WorkBuddy-owned session. This document does not implement or authorize the Launcher, optional capability preparation, WorkBuddy entry, or status/result relay, and it does not authorize a second Agent process.
-
-The verified external Package Guide may be read only after successful Registration/Locator identity validation and only by the correct downstream session consumer. The Shell must not interpret that Guide as permission to direct production.
-
-`user_message` remains the user's literal business request, materials, facts, authorizations, and desired result. Package identity, paths, Python, cwd, commands, retries, stop conditions, and evidence collection remain separate `executor_controls`; the two must never be concatenated.
-
-## 8. Implementation evidence
-
-`golden_key_openmontage_workbuddy/package_registration.py` is the implementation accepted for the previous Python-only Golden Key Package. `tests/workbuddy/test_package_registration.py` is historical implementation evidence for that closed schema. It is not current-package acceptance until reopened Stage 2 replaces or extends the closed schema and proves the exact complete required toolchain.
-
-That test evidence does not prove installation, Runtime, Launcher, real WorkBuddy, OpenMontage production, Provider, SaaS, network, media, or business E2E.
+This evidence does not prove Installer, Stage 3 optional capabilities, Launcher, real WorkBuddy, Provider, media, SaaS, network production, or business E2E.

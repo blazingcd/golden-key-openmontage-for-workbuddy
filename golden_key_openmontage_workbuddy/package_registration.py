@@ -20,6 +20,8 @@ import unicodedata
 import zipfile
 from contextlib import contextmanager
 from dataclasses import dataclass
+from email.parser import BytesParser
+from email.policy import compat32
 from pathlib import Path, PurePosixPath
 from types import MappingProxyType
 from typing import Any, Iterator, Mapping
@@ -35,17 +37,30 @@ except ImportError:  # pragma: no cover - selected by platform
     _fcntl = None
 
 
-REGISTRATION_SCHEMA = "golden-key-workbuddy-openmontage-package-registration-v1"
+REGISTRATION_SCHEMA = "golden-key-workbuddy-openmontage-package-registration-v2"
 REGISTRATION_OWNER = "golden-key-workbuddy-shell-v2"
 ACTIVE_POINTER_SCHEMA = "golden-key-workbuddy-active-openmontage-package-v1"
 ACTIVE_LOCK_SCHEMA = "golden-key-workbuddy-active-package-lock-v1"
-MANIFEST_SCHEMA = "golden-key-workbuddy-portable-bundle-v1"
+MANIFEST_SCHEMA = "golden-key-workbuddy-portable-bundle-v2"
 LOCK_SCHEMA = 2
+DEPENDENCY_LOCK_SCHEMA = "golden-key-workbuddy-python-core-dependencies-v1"
 
 MANIFEST_NAME = "BUNDLE-MANIFEST.json"
 LOCK_NAME = "GOLDEN_KEY_WORKBUDDY_CORE.lock.json"
 GUIDE_NAME = "AGENT_GUIDE.md"
 PYTHON_RELATIVE_PATH = "bootstrap/python/python.exe"
+PYTHON_DEPENDENCY_LOCK_RELATIVE_PATH = "bootstrap/python/CORE-DEPENDENCIES.lock.json"
+FFMPEG_RELATIVE_PATH = "bootstrap/ffmpeg/bin/ffmpeg.exe"
+FFPROBE_RELATIVE_PATH = "bootstrap/ffmpeg/bin/ffprobe.exe"
+NODE_RELATIVE_PATH = "bootstrap/node/node.exe"
+NPM_RELATIVE_PATH = "bootstrap/node/npm.cmd"
+NPX_RELATIVE_PATH = "bootstrap/node/npx.cmd"
+REQUIRED_TOOLCHAIN_OWNER = "workbuddy_required_toolchain"
+REQUIRED_TOOLCHAIN_ROOTS = (
+    "bootstrap/python",
+    "bootstrap/ffmpeg",
+    "bootstrap/node",
+)
 
 MANIFEST_AUTHORITY = {
     "invocation_model": "direct_agent",
@@ -474,6 +489,169 @@ def _validate_lock_inventory(lock: dict[str, Any]) -> list[dict[str, Any]]:
     return normalized
 
 
+def _normalized_distribution_name(value: str) -> str:
+    return re.sub(r"[-_.]+", "-", value).lower()
+
+
+def _required_tool_identity(
+    *,
+    package_root: Path,
+    manifest_files: Mapping[str, dict[str, Any]],
+    relative: Any,
+    expected_relative: str,
+    label: str,
+) -> dict[str, Any]:
+    normalized = _safe_relative(relative, label=f"{label} relative path")
+    if normalized != expected_relative:
+        _fail("IDENTITY_MISMATCH", f"{label} is not at its fixed Package path")
+    entry = manifest_files.get(normalized)
+    if entry is None or entry.get("owner") != REQUIRED_TOOLCHAIN_OWNER:
+        _fail("IDENTITY_MISMATCH", f"{label} is not owned by required toolchain")
+    path = _fixed_child(package_root, normalized, label=label)
+    _validate_file_identity(
+        path,
+        expected_sha256=entry["sha256"],
+        expected_size=entry["size"],
+        label=label,
+    )
+    return {
+        "relative_path": normalized,
+        "path": str(path),
+        "sha256": entry["sha256"],
+        "size": entry["size"],
+    }
+
+
+def _actual_toolchain_files(package_root: Path) -> set[str]:
+    actual: set[str] = set()
+    seen_keys: set[str] = set()
+    for root_relative in REQUIRED_TOOLCHAIN_ROOTS:
+        root = package_root.joinpath(*PurePosixPath(root_relative).parts)
+        try:
+            resolved_root = root.resolve(strict=True)
+            resolved_root.relative_to(package_root)
+        except (OSError, RuntimeError, ValueError) as exc:
+            _fail("PATH_VIOLATION", f"required toolchain root is unsafe: {exc}")
+        if not resolved_root.is_dir():
+            _fail("PATH_VIOLATION", f"required toolchain root is not a directory: {root_relative}")
+        try:
+            walker = os.walk(resolved_root, followlinks=False)
+            for directory, directory_names, file_names in walker:
+                directory_path = Path(directory)
+                resolved_directory = directory_path.resolve(strict=True)
+                try:
+                    resolved_directory.relative_to(package_root)
+                except ValueError:
+                    _fail("PATH_VIOLATION", "required toolchain directory escapes PackageRoot")
+                for child_name in directory_names:
+                    child = directory_path / child_name
+                    try:
+                        resolved_child = child.resolve(strict=True)
+                        resolved_child.relative_to(package_root)
+                    except (OSError, RuntimeError, ValueError):
+                        _fail("PATH_VIOLATION", "required toolchain directory is a path escape")
+                for file_name in file_names:
+                    path = directory_path / file_name
+                    resolved = path.resolve(strict=True)
+                    try:
+                        relative = resolved.relative_to(package_root).as_posix()
+                    except ValueError:
+                        _fail("PATH_VIOLATION", "required toolchain file escapes PackageRoot")
+                    if not resolved.is_file():
+                        _fail("PATH_VIOLATION", f"required toolchain object is not a file: {relative}")
+                    key = _windows_relative_path_key(relative)
+                    if key in seen_keys:
+                        _fail("DUPLICATE", f"required toolchain file alias collision: {relative}")
+                    seen_keys.add(key)
+                    actual.add(relative)
+        except PackageRegistrationError:
+            raise
+        except OSError as exc:
+            _fail("OBJECT_MISSING", f"cannot enumerate required toolchain: {exc}")
+    return actual
+
+
+def _validate_dependency_lock(
+    *,
+    package_root: Path,
+    lock_identity: Mapping[str, Any],
+    expected_python_version: str,
+    managed_files: set[str],
+) -> tuple[dict[str, Any], ...]:
+    raw = _read_bytes(Path(lock_identity["path"]), label="Python dependency lock")
+    dependency_lock = _strict_json_bytes(raw, label="Python dependency lock")
+    _require_exact_keys(
+        dependency_lock,
+        keys={"schema_version", "python_version", "requirements", "packages"},
+        label="Python dependency lock",
+    )
+    if dependency_lock["schema_version"] != DEPENDENCY_LOCK_SCHEMA:
+        _fail("IDENTITY_MISMATCH", "unsupported Python dependency lock schema")
+    if dependency_lock["python_version"] != expected_python_version:
+        _fail("IDENTITY_MISMATCH", "Python dependency lock version differs from interpreter")
+    requirements = dependency_lock["requirements"]
+    if not isinstance(requirements, list) or not requirements:
+        _fail("INPUT_INVALID", "Python dependency lock requirements must be non-empty")
+    for index, requirement in enumerate(requirements):
+        _require_nonempty_string(requirement, label=f"Python dependency requirement[{index}]")
+    packages = dependency_lock["packages"]
+    if not isinstance(packages, list) or not packages:
+        _fail("INPUT_INVALID", "Python dependency lock packages must be non-empty")
+    seen_names: set[str] = set()
+    metadata_paths: set[str] = set()
+    normalized_packages: list[dict[str, Any]] = []
+    for index, package_value in enumerate(packages):
+        package = _require_exact_keys(
+            package_value,
+            keys={"name", "version", "metadata_path"},
+            label=f"Python dependency lock packages[{index}]",
+        )
+        name = _require_nonempty_string(package["name"], label="dependency package name")
+        version = _require_nonempty_string(package["version"], label="dependency package version")
+        name_key = _normalized_distribution_name(name)
+        if name_key in seen_names:
+            _fail("DUPLICATE", f"duplicate locked Python distribution: {name}")
+        seen_names.add(name_key)
+        metadata_relative = _safe_relative(
+            package["metadata_path"], label=f"dependency {name} metadata_path"
+        )
+        if not metadata_relative.startswith("bootstrap/python/Lib/site-packages/") or not metadata_relative.endswith(
+            ".dist-info/METADATA"
+        ):
+            _fail("PATH_VIOLATION", f"dependency {name} metadata_path is outside fixed site-packages")
+        metadata_key = _windows_relative_path_key(metadata_relative)
+        if any(_windows_relative_path_key(item) == metadata_key for item in metadata_paths):
+            _fail("DUPLICATE", f"duplicate dependency metadata path: {metadata_relative}")
+        metadata_paths.add(metadata_relative)
+        if metadata_relative not in managed_files:
+            _fail("IDENTITY_MISMATCH", f"dependency {name} metadata is not managed")
+        metadata_path = _fixed_child(package_root, metadata_relative, label=f"dependency {name} metadata")
+        try:
+            message = BytesParser(policy=compat32).parsebytes(
+                _read_bytes(metadata_path, label=f"dependency {name} metadata")
+            )
+        except (ValueError, TypeError) as exc:
+            _fail("INPUT_INVALID", f"dependency {name} metadata cannot be parsed: {exc}")
+        actual_name = message.get("Name")
+        actual_version = message.get("Version")
+        if not isinstance(actual_name, str) or _normalized_distribution_name(actual_name) != name_key:
+            _fail("IDENTITY_MISMATCH", f"dependency {name} installed metadata name differs")
+        if actual_version != version:
+            _fail("IDENTITY_MISMATCH", f"dependency {name} installed version differs")
+        normalized_packages.append(
+            {"name": name, "version": version, "metadata_path": metadata_relative}
+        )
+    actual_metadata = {
+        item
+        for item in managed_files
+        if item.startswith("bootstrap/python/Lib/site-packages/")
+        and item.endswith(".dist-info/METADATA")
+    }
+    if actual_metadata != metadata_paths:
+        _fail("IDENTITY_MISMATCH", "Python dependency lock does not cover installed distributions")
+    return tuple(normalized_packages)
+
+
 def _validate_manifest_and_lock(
     *,
     package_root: Path,
@@ -540,44 +718,198 @@ def _validate_manifest_and_lock(
     )
 
     installation = _require_object(manifest.get("installation"), label="Manifest installation")
-    roles = _require_object(installation.get("runtime_roles"), label="Manifest installation.runtime_roles")
-    if roles.get("python") != "bundled_private_interpreter":
-        _fail("IDENTITY_MISMATCH", "Manifest does not declare bundled private Python")
-    python_entry = manifest_files.get(PYTHON_RELATIVE_PATH)
-    if python_entry is None or python_entry.get("owner") != "workbuddy_bootstrap_runtime":
-        _fail("IDENTITY_MISMATCH", "bundled Python Manifest entry is missing or has wrong owner")
-    expected_python = _fixed_child(package_root, PYTHON_RELATIVE_PATH, label="bundled Python")
-    if not _same_path(package_python, expected_python):
-        _fail("IDENTITY_MISMATCH", "package_python is not the Manifest bundled Python")
-    _validate_file_identity(
-        expected_python,
-        expected_sha256=python_entry["sha256"],
-        expected_size=python_entry["size"],
-        label="bundled Python",
+    roles = _require_exact_keys(
+        installation.get("runtime_roles"),
+        keys={"python", "ffmpeg", "node"},
+        label="Manifest installation.runtime_roles",
     )
+    if roles != {
+        "python": "bundled_private_interpreter",
+        "ffmpeg": "bundled_media_toolchain",
+        "node": "bundled_javascript_toolchain",
+    }:
+        _fail("IDENTITY_MISMATCH", "Manifest required toolchain runtime roles differ")
 
-    bootstrap = _require_object(manifest.get("bootstrap_runtime"), label="Manifest bootstrap_runtime")
-    python_metadata = _require_exact_keys(
-        bootstrap.get("python"),
-        keys={"version", "source", "archive_sha256", "system_python_required"},
-        label="Manifest bootstrap_runtime.python",
+    toolchain = _require_exact_keys(
+        manifest.get("required_toolchain"),
+        keys={"python", "ffmpeg", "node", "managed_files"},
+        label="Manifest required_toolchain",
     )
-    version = _require_nonempty_string(python_metadata["version"], label="bundled Python version")
+    managed_values = toolchain["managed_files"]
+    if not isinstance(managed_values, list) or not managed_values:
+        _fail("INPUT_INVALID", "required_toolchain.managed_files must be non-empty")
+    managed_files: set[str] = set()
+    managed_keys: set[str] = set()
+    for index, value in enumerate(managed_values):
+        relative = _safe_relative(value, label=f"required toolchain managed_files[{index}]")
+        key = _windows_relative_path_key(relative)
+        if key in managed_keys:
+            _fail("DUPLICATE", f"duplicate required toolchain managed file: {relative}")
+        managed_keys.add(key)
+        managed_files.add(relative)
+    manifest_owned = {
+        relative
+        for relative, entry in manifest_files.items()
+        if entry.get("owner") == REQUIRED_TOOLCHAIN_OWNER
+    }
+    if managed_files != manifest_owned:
+        _fail("IDENTITY_MISMATCH", "required toolchain managed list differs from Manifest ownership")
+    actual_files = _actual_toolchain_files(package_root)
+    if actual_files != managed_files:
+        missing = sorted(managed_files - actual_files)
+        unknown = sorted(actual_files - managed_files)
+        _fail(
+            "IDENTITY_MISMATCH",
+            f"required toolchain file closure differs; missing={missing}, unknown={unknown}",
+        )
+    for relative in sorted(managed_files):
+        entry = manifest_files[relative]
+        path = _fixed_child(package_root, relative, label=f"required toolchain file {relative}")
+        _validate_file_identity(
+            path,
+            expected_sha256=entry["sha256"],
+            expected_size=entry["size"],
+            label=f"required toolchain file {relative}",
+        )
+
+    python_metadata = _require_exact_keys(
+        toolchain["python"],
+        keys={
+            "version",
+            "source",
+            "source_archive_sha256",
+            "source_archive_size",
+            "system_python_required",
+            "executable",
+            "dependency_lock",
+        },
+        label="Manifest required_toolchain.python",
+    )
+    python_version = _require_nonempty_string(
+        python_metadata["version"], label="bundled Python version"
+    )
     if python_metadata["source"] != "python.org_windows_embeddable_x64":
         _fail("IDENTITY_MISMATCH", "bundled Python source is not python.org Windows embeddable")
-    source_archive_sha256 = _require_sha256(
-        python_metadata["archive_sha256"], label="bundled Python source archive SHA-256"
+    python_archive_sha256 = _require_sha256(
+        python_metadata["source_archive_sha256"], label="bundled Python source archive SHA-256"
+    )
+    python_archive_size = _require_size(
+        python_metadata["source_archive_size"], label="bundled Python source archive size"
     )
     if python_metadata["system_python_required"] is not False:
         _fail("IDENTITY_MISMATCH", "bundled Python must not require system Python")
+    python_identity = _required_tool_identity(
+        package_root=package_root,
+        manifest_files=manifest_files,
+        relative=python_metadata["executable"],
+        expected_relative=PYTHON_RELATIVE_PATH,
+        label="bundled Python",
+    )
+    if not _same_path(package_python, python_identity["path"]):
+        _fail("IDENTITY_MISMATCH", "package_python is not the Manifest bundled Python")
+    dependency_lock_identity = _required_tool_identity(
+        package_root=package_root,
+        manifest_files=manifest_files,
+        relative=python_metadata["dependency_lock"],
+        expected_relative=PYTHON_DEPENDENCY_LOCK_RELATIVE_PATH,
+        label="Python dependency lock",
+    )
+    dependencies = _validate_dependency_lock(
+        package_root=package_root,
+        lock_identity=dependency_lock_identity,
+        expected_python_version=python_version,
+        managed_files=managed_files,
+    )
+
+    ffmpeg_metadata = _require_exact_keys(
+        toolchain["ffmpeg"],
+        keys={
+            "version",
+            "source",
+            "source_archive_sha256",
+            "source_archive_size",
+            "ffmpeg",
+            "ffprobe",
+        },
+        label="Manifest required_toolchain.ffmpeg",
+    )
+    ffmpeg_version = _require_nonempty_string(
+        ffmpeg_metadata["version"], label="bundled FFmpeg version"
+    )
+    if ffmpeg_metadata["source"] != "gyan.dev_ffmpeg_release_essentials_x64":
+        _fail("IDENTITY_MISMATCH", "bundled FFmpeg source differs")
+    ffmpeg_archive_sha256 = _require_sha256(
+        ffmpeg_metadata["source_archive_sha256"], label="FFmpeg source archive SHA-256"
+    )
+    ffmpeg_archive_size = _require_size(
+        ffmpeg_metadata["source_archive_size"], label="FFmpeg source archive size"
+    )
+    ffmpeg_identity = _required_tool_identity(
+        package_root=package_root,
+        manifest_files=manifest_files,
+        relative=ffmpeg_metadata["ffmpeg"],
+        expected_relative=FFMPEG_RELATIVE_PATH,
+        label="bundled FFmpeg",
+    )
+    ffprobe_identity = _required_tool_identity(
+        package_root=package_root,
+        manifest_files=manifest_files,
+        relative=ffmpeg_metadata["ffprobe"],
+        expected_relative=FFPROBE_RELATIVE_PATH,
+        label="bundled ffprobe",
+    )
+
+    node_metadata = _require_exact_keys(
+        toolchain["node"],
+        keys={
+            "version",
+            "source",
+            "source_archive_sha256",
+            "source_archive_size",
+            "node",
+            "npm",
+            "npx",
+        },
+        label="Manifest required_toolchain.node",
+    )
+    node_version = _require_nonempty_string(node_metadata["version"], label="bundled Node version")
+    if node_metadata["source"] != "npmmirror_node_windows_x64":
+        _fail("IDENTITY_MISMATCH", "bundled Node source differs")
+    node_archive_sha256 = _require_sha256(
+        node_metadata["source_archive_sha256"], label="Node source archive SHA-256"
+    )
+    node_archive_size = _require_size(
+        node_metadata["source_archive_size"], label="Node source archive size"
+    )
+    node_identity = _required_tool_identity(
+        package_root=package_root,
+        manifest_files=manifest_files,
+        relative=node_metadata["node"],
+        expected_relative=NODE_RELATIVE_PATH,
+        label="bundled Node",
+    )
+    npm_identity = _required_tool_identity(
+        package_root=package_root,
+        manifest_files=manifest_files,
+        relative=node_metadata["npm"],
+        expected_relative=NPM_RELATIVE_PATH,
+        label="bundled npm",
+    )
+    npx_identity = _required_tool_identity(
+        package_root=package_root,
+        manifest_files=manifest_files,
+        relative=node_metadata["npx"],
+        expected_relative=NPX_RELATIVE_PATH,
+        label="bundled npx",
+    )
 
     manifest_path = _fixed_child(package_root, MANIFEST_NAME, label="installed Manifest")
     guide_path = _fixed_child(package_root, GUIDE_NAME, label="installed Guide")
     manifest_sha256, manifest_size = _file_hash_size(manifest_path, label="installed Manifest")
     lock_sha256, lock_size = _file_hash_size(actual_lock_path, label="installed Lock")
     guide_sha256, guide_size = _file_hash_size(guide_path, label="installed Guide")
-    if min(manifest_size, lock_size, guide_size, python_entry["size"]) <= 0:
-        _fail("INPUT_INVALID", "Manifest, Lock, Guide, and bundled Python must be non-empty")
+    if min(manifest_size, lock_size, guide_size, python_identity["size"]) <= 0:
+        _fail("INPUT_INVALID", "Manifest, Lock, Guide, and required toolchain must be non-empty")
 
     return {
         "contract_id": contract_id,
@@ -588,13 +920,38 @@ def _validate_manifest_and_lock(
             "lock": dict(LOCK_AUTHORITY),
         },
         "package_python": {
-            "relative_path": PYTHON_RELATIVE_PATH,
-            "path": str(expected_python),
-            "sha256": python_entry["sha256"],
-            "size": python_entry["size"],
-            "version": version,
+            **python_identity,
+            "version": python_version,
             "source": python_metadata["source"],
-            "source_archive_sha256": source_archive_sha256,
+            "source_archive_sha256": python_archive_sha256,
+        },
+        "required_toolchain": {
+            "python": {
+                **python_identity,
+                "version": python_version,
+                "source": python_metadata["source"],
+                "source_archive_sha256": python_archive_sha256,
+                "source_archive_size": python_archive_size,
+                "dependency_lock": dependency_lock_identity,
+                "dependencies": list(dependencies),
+            },
+            "ffmpeg": {
+                "version": ffmpeg_version,
+                "source": ffmpeg_metadata["source"],
+                "source_archive_sha256": ffmpeg_archive_sha256,
+                "source_archive_size": ffmpeg_archive_size,
+                "ffmpeg": ffmpeg_identity,
+                "ffprobe": ffprobe_identity,
+            },
+            "node": {
+                "version": node_version,
+                "source": node_metadata["source"],
+                "source_archive_sha256": node_archive_sha256,
+                "source_archive_size": node_archive_size,
+                "node": node_identity,
+                "npm": npm_identity,
+                "npx": npx_identity,
+            },
         },
         "manifest": {
             "relative_path": MANIFEST_NAME,
@@ -710,12 +1067,29 @@ def _build_registration(
         },
         "package_root": str(package_root),
         "package_python": facts["package_python"],
+        "required_toolchain": facts["required_toolchain"],
         "manifest": facts["manifest"],
         "lock": facts["lock"],
         "guide": facts["guide"],
     }
     raw = _canonical_json(registration)
     return registration, raw, _sha256_bytes(raw)
+
+
+def _validate_stored_file_identity_shape(
+    value: Any, *, expected_relative: str, label: str
+) -> dict[str, Any]:
+    identity = _require_exact_keys(
+        value,
+        keys={"relative_path", "path", "sha256", "size"},
+        label=f"Package Registration {label}",
+    )
+    if identity["relative_path"] != expected_relative:
+        _fail("TAMPERED", f"Package Registration {label} relative path differs")
+    _require_nonempty_string(identity["path"], label=f"registered {label} path")
+    _require_sha256(identity["sha256"], label=f"registered {label} SHA-256")
+    _require_size(identity["size"], label=f"registered {label} size")
+    return identity
 
 
 def _validate_registration_shape(value: dict[str, Any]) -> None:
@@ -731,6 +1105,7 @@ def _validate_registration_shape(value: dict[str, Any]) -> None:
             "release",
             "package_root",
             "package_python",
+            "required_toolchain",
             "manifest",
             "lock",
             "guide",
@@ -788,6 +1163,106 @@ def _validate_registration_shape(value: dict[str, Any]) -> None:
     if python_value["source"] != "python.org_windows_embeddable_x64":
         _fail("TAMPERED", "package_python source mismatch")
     _require_sha256(python_value["source_archive_sha256"], label="package_python source_archive_sha256")
+
+    toolchain_value = _require_exact_keys(
+        value["required_toolchain"],
+        keys={"python", "ffmpeg", "node"},
+        label="Package Registration required_toolchain",
+    )
+    toolchain_python = _require_exact_keys(
+        toolchain_value["python"],
+        keys={
+            "relative_path",
+            "path",
+            "sha256",
+            "size",
+            "version",
+            "source",
+            "source_archive_sha256",
+            "source_archive_size",
+            "dependency_lock",
+            "dependencies",
+        },
+        label="Package Registration required_toolchain.python",
+    )
+    for key in ("relative_path", "path", "sha256", "size", "version", "source", "source_archive_sha256"):
+        if toolchain_python[key] != python_value[key]:
+            _fail("TAMPERED", "required_toolchain Python differs from package_python compatibility field")
+    _require_size(toolchain_python["source_archive_size"], label="Python source archive size")
+    dependency_lock = _validate_stored_file_identity_shape(
+        toolchain_python["dependency_lock"],
+        expected_relative=PYTHON_DEPENDENCY_LOCK_RELATIVE_PATH,
+        label="Python dependency lock",
+    )
+    dependencies = toolchain_python["dependencies"]
+    if not isinstance(dependencies, list) or not dependencies:
+        _fail("INPUT_INVALID", "registered Python dependencies must be non-empty")
+    seen_dependencies: set[str] = set()
+    for index, dependency_value in enumerate(dependencies):
+        dependency = _require_exact_keys(
+            dependency_value,
+            keys={"name", "version", "metadata_path"},
+            label=f"registered Python dependency[{index}]",
+        )
+        name = _require_nonempty_string(dependency["name"], label="registered dependency name")
+        _require_nonempty_string(dependency["version"], label="registered dependency version")
+        normalized_name = _normalized_distribution_name(name)
+        if normalized_name in seen_dependencies:
+            _fail("DUPLICATE", f"duplicate registered Python dependency: {name}")
+        seen_dependencies.add(normalized_name)
+        _safe_relative(dependency["metadata_path"], label="registered dependency metadata_path")
+
+    ffmpeg_value = _require_exact_keys(
+        toolchain_value["ffmpeg"],
+        keys={
+            "version",
+            "source",
+            "source_archive_sha256",
+            "source_archive_size",
+            "ffmpeg",
+            "ffprobe",
+        },
+        label="Package Registration required_toolchain.ffmpeg",
+    )
+    _require_nonempty_string(ffmpeg_value["version"], label="registered FFmpeg version")
+    if ffmpeg_value["source"] != "gyan.dev_ffmpeg_release_essentials_x64":
+        _fail("TAMPERED", "registered FFmpeg source differs")
+    _require_sha256(ffmpeg_value["source_archive_sha256"], label="FFmpeg source archive SHA-256")
+    _require_size(ffmpeg_value["source_archive_size"], label="FFmpeg source archive size")
+    _validate_stored_file_identity_shape(
+        ffmpeg_value["ffmpeg"], expected_relative=FFMPEG_RELATIVE_PATH, label="FFmpeg"
+    )
+    _validate_stored_file_identity_shape(
+        ffmpeg_value["ffprobe"], expected_relative=FFPROBE_RELATIVE_PATH, label="ffprobe"
+    )
+
+    node_value = _require_exact_keys(
+        toolchain_value["node"],
+        keys={
+            "version",
+            "source",
+            "source_archive_sha256",
+            "source_archive_size",
+            "node",
+            "npm",
+            "npx",
+        },
+        label="Package Registration required_toolchain.node",
+    )
+    _require_nonempty_string(node_value["version"], label="registered Node version")
+    if node_value["source"] != "npmmirror_node_windows_x64":
+        _fail("TAMPERED", "registered Node source differs")
+    _require_sha256(node_value["source_archive_sha256"], label="Node source archive SHA-256")
+    _require_size(node_value["source_archive_size"], label="Node source archive size")
+    _validate_stored_file_identity_shape(
+        node_value["node"], expected_relative=NODE_RELATIVE_PATH, label="Node"
+    )
+    _validate_stored_file_identity_shape(
+        node_value["npm"], expected_relative=NPM_RELATIVE_PATH, label="npm"
+    )
+    _validate_stored_file_identity_shape(
+        node_value["npx"], expected_relative=NPX_RELATIVE_PATH, label="npx"
+    )
 
     manifest_value = _require_exact_keys(
         value["manifest"],
@@ -868,6 +1343,7 @@ def _revalidate_registration(value: dict[str, Any]) -> None:
         "openmontage_commit": facts["openmontage_commit"],
         "authority": facts["authority"],
         "package_python": facts["package_python"],
+        "required_toolchain": facts["required_toolchain"],
         "manifest": facts["manifest"],
         "lock": facts["lock"],
         "guide": facts["guide"],
@@ -1299,6 +1775,7 @@ def locate_active_package(data_root: os.PathLike[str] | str) -> Mapping[str, Any
             "release": registration["release"],
             "package_root": registration["package_root"],
             "package_python": registration["package_python"],
+            "required_toolchain": registration["required_toolchain"],
             "guide": registration["guide"],
             "manifest": registration["manifest"],
             "lock": registration["lock"],

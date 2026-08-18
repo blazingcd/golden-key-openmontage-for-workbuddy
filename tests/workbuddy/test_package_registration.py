@@ -98,6 +98,13 @@ class Candidate:
     data_root: Path
     package_root: Path
     package_python: Path
+    dependency_lock_path: Path
+    dependency_metadata_path: Path
+    ffmpeg_path: Path
+    ffprobe_path: Path
+    node_path: Path
+    npm_path: Path
+    npx_path: Path
     manifest_path: Path
     lock_path: Path
     guide_path: Path
@@ -166,6 +173,48 @@ def _make_candidate(
     package_python = root / "bootstrap" / "python" / "python.exe"
     package_python.parent.mkdir(parents=True)
     package_python.write_bytes(python_payload)
+    dependency_metadata = (
+        root
+        / "bootstrap"
+        / "python"
+        / "Lib"
+        / "site-packages"
+        / "fixture_dependency-1.2.3.dist-info"
+        / "METADATA"
+    )
+    dependency_metadata.parent.mkdir(parents=True)
+    dependency_metadata.write_text(
+        "Metadata-Version: 2.4\nName: fixture-dependency\nVersion: 1.2.3\n\n",
+        encoding="utf-8",
+    )
+    dependency_lock = root.joinpath(*Path(registration.PYTHON_DEPENDENCY_LOCK_RELATIVE_PATH).parts)
+    _write_json(
+        dependency_lock,
+        {
+            "schema_version": registration.DEPENDENCY_LOCK_SCHEMA,
+            "python_version": "3.14.7",
+            "requirements": ["fixture-dependency>=1"],
+            "packages": [
+                {
+                    "name": "fixture-dependency",
+                    "version": "1.2.3",
+                    "metadata_path": dependency_metadata.relative_to(root).as_posix(),
+                }
+            ],
+        },
+    )
+    ffmpeg = root.joinpath(*Path(registration.FFMPEG_RELATIVE_PATH).parts)
+    ffprobe = root.joinpath(*Path(registration.FFPROBE_RELATIVE_PATH).parts)
+    ffmpeg.parent.mkdir(parents=True)
+    ffmpeg.write_bytes(b"fixture-ffmpeg")
+    ffprobe.write_bytes(b"fixture-ffprobe")
+    node = root.joinpath(*Path(registration.NODE_RELATIVE_PATH).parts)
+    npm = root.joinpath(*Path(registration.NPM_RELATIVE_PATH).parts)
+    npx = root.joinpath(*Path(registration.NPX_RELATIVE_PATH).parts)
+    node.parent.mkdir(parents=True)
+    node.write_bytes(b"fixture-node")
+    npm.write_bytes(b"fixture-npm")
+    npx.write_bytes(b"fixture-npx")
 
     lock_files = []
     for relative, path in (
@@ -209,8 +258,23 @@ def _make_candidate(
         _inventory_entry(
             package_python,
             registration.PYTHON_RELATIVE_PATH,
-            "workbuddy_bootstrap_runtime",
+            registration.REQUIRED_TOOLCHAIN_OWNER,
         ),
+        _inventory_entry(
+            dependency_lock,
+            registration.PYTHON_DEPENDENCY_LOCK_RELATIVE_PATH,
+            registration.REQUIRED_TOOLCHAIN_OWNER,
+        ),
+        _inventory_entry(
+            dependency_metadata,
+            dependency_metadata.relative_to(root).as_posix(),
+            registration.REQUIRED_TOOLCHAIN_OWNER,
+        ),
+        _inventory_entry(ffmpeg, registration.FFMPEG_RELATIVE_PATH, registration.REQUIRED_TOOLCHAIN_OWNER),
+        _inventory_entry(ffprobe, registration.FFPROBE_RELATIVE_PATH, registration.REQUIRED_TOOLCHAIN_OWNER),
+        _inventory_entry(node, registration.NODE_RELATIVE_PATH, registration.REQUIRED_TOOLCHAIN_OWNER),
+        _inventory_entry(npm, registration.NPM_RELATIVE_PATH, registration.REQUIRED_TOOLCHAIN_OWNER),
+        _inventory_entry(npx, registration.NPX_RELATIVE_PATH, registration.REQUIRED_TOOLCHAIN_OWNER),
     ]
     manifest = {
         "schema_version": registration.MANIFEST_SCHEMA,
@@ -224,15 +288,44 @@ def _make_candidate(
         },
         "authority": dict(MANIFEST_AUTHORITY),
         "installation": {
-            "runtime_roles": {"python": "bundled_private_interpreter"}
-        },
-        "bootstrap_runtime": {
-            "python": {
-                "version": "3.13.15",
-                "source": "python.org_windows_embeddable_x64",
-                "archive_sha256": "2" * 64,
-                "system_python_required": False,
+            "runtime_roles": {
+                "python": "bundled_private_interpreter",
+                "ffmpeg": "bundled_media_toolchain",
+                "node": "bundled_javascript_toolchain",
             }
+        },
+        "required_toolchain": {
+            "python": {
+                "version": "3.14.7",
+                "source": "python.org_windows_embeddable_x64",
+                "source_archive_sha256": "2" * 64,
+                "source_archive_size": 100,
+                "system_python_required": False,
+                "executable": registration.PYTHON_RELATIVE_PATH,
+                "dependency_lock": registration.PYTHON_DEPENDENCY_LOCK_RELATIVE_PATH,
+            },
+            "ffmpeg": {
+                "version": "9.0.1-essentials_build",
+                "source": "gyan.dev_ffmpeg_release_essentials_x64",
+                "source_archive_sha256": "3" * 64,
+                "source_archive_size": 200,
+                "ffmpeg": registration.FFMPEG_RELATIVE_PATH,
+                "ffprobe": registration.FFPROBE_RELATIVE_PATH,
+            },
+            "node": {
+                "version": "22.23.2",
+                "source": "npmmirror_node_windows_x64",
+                "source_archive_sha256": "4" * 64,
+                "source_archive_size": 300,
+                "node": registration.NODE_RELATIVE_PATH,
+                "npm": registration.NPM_RELATIVE_PATH,
+                "npx": registration.NPX_RELATIVE_PATH,
+            },
+            "managed_files": sorted(
+                entry["path"]
+                for entry in manifest_files
+                if entry["owner"] == registration.REQUIRED_TOOLCHAIN_OWNER
+            ),
         },
         "files": manifest_files,
     }
@@ -245,6 +338,13 @@ def _make_candidate(
         data_root=data,
         package_root=root,
         package_python=package_python,
+        dependency_lock_path=dependency_lock,
+        dependency_metadata_path=dependency_metadata,
+        ffmpeg_path=ffmpeg,
+        ffprobe_path=ffprobe,
+        node_path=node,
+        npm_path=npm,
+        npx_path=npx,
         manifest_path=manifest_path,
         lock_path=lock_path,
         guide_path=guide,
@@ -626,7 +726,7 @@ def test_bundled_python_contract_is_fail_closed(
     elif mutation == "python_size":
         entry["size"] += 1
     elif mutation == "python_metadata_unknown":
-        manifest["bootstrap_runtime"]["python"]["unexpected"] = True
+        manifest["required_toolchain"]["python"]["unexpected"] = True
     else:
         manifest["installation"]["runtime_roles"]["python"] = "required"
     candidate.write_manifest(manifest)
@@ -648,6 +748,105 @@ def test_external_python_is_rejected(tmp_path: Path) -> None:
             external,
         ),
     )
+
+
+@pytest.mark.parametrize(
+    ("target", "mutation", "code"),
+    [
+        ("ffmpeg", "missing", "IDENTITY_MISMATCH"),
+        ("ffprobe", "hash", "HASH_MISMATCH"),
+        ("node", "size", "HASH_MISMATCH"),
+        ("npm", "absolute_path", "PATH_VIOLATION"),
+        ("npx", "escape_path", "PATH_VIOLATION"),
+    ],
+)
+def test_required_toolchain_paths_and_identities_fail_closed(
+    tmp_path: Path, target: str, mutation: str, code: str
+) -> None:
+    candidate = _make_candidate(tmp_path / f"{target}-{mutation}")
+    paths = {
+        "ffmpeg": candidate.ffmpeg_path,
+        "ffprobe": candidate.ffprobe_path,
+        "node": candidate.node_path,
+        "npm": candidate.npm_path,
+        "npx": candidate.npx_path,
+    }
+    path = paths[target]
+    manifest = candidate.manifest()
+    entry = next(item for item in manifest["files"] if item["path"] == path.relative_to(candidate.package_root).as_posix())
+    if mutation == "missing":
+        path.unlink()
+    elif mutation == "hash":
+        entry["sha256"] = "0" * 64
+    elif mutation == "size":
+        entry["size"] += 1
+    elif mutation == "absolute_path":
+        manifest["required_toolchain"]["node"][target] = "C:/Windows/System32/cmd.exe"
+    else:
+        manifest["required_toolchain"]["node"][target] = "../escape.cmd"
+    candidate.write_manifest(manifest)
+    candidate.rebuild_archive()
+    _expect_code(code, candidate.register)
+    assert not _registry(candidate).exists()
+
+
+@pytest.mark.parametrize("tool", ["ffmpeg", "node"])
+def test_required_executable_identity_exchange_is_rejected(
+    tmp_path: Path, tool: str
+) -> None:
+    candidate = _make_candidate(tmp_path / tool)
+    first, second = (
+        (candidate.ffmpeg_path, candidate.ffprobe_path)
+        if tool == "ffmpeg"
+        else (candidate.node_path, candidate.npm_path)
+    )
+    first_bytes = first.read_bytes()
+    first.write_bytes(second.read_bytes())
+    second.write_bytes(first_bytes)
+    _expect_code("HASH_MISMATCH", candidate.register)
+    assert not _registry(candidate).exists()
+
+
+def test_python_dependency_lock_must_match_installed_distribution_metadata(
+    tmp_path: Path,
+) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+    dependency_lock = json.loads(candidate.dependency_lock_path.read_text(encoding="utf-8"))
+    dependency_lock["packages"][0]["version"] = "9.9.9"
+    _write_json(candidate.dependency_lock_path, dependency_lock)
+    manifest = candidate.manifest()
+    entry = next(
+        item
+        for item in manifest["files"]
+        if item["path"] == registration.PYTHON_DEPENDENCY_LOCK_RELATIVE_PATH
+    )
+    entry["sha256"] = _sha256(candidate.dependency_lock_path)
+    entry["size"] = candidate.dependency_lock_path.stat().st_size
+    candidate.write_manifest(manifest)
+    candidate.rebuild_archive()
+    _expect_code("IDENTITY_MISMATCH", candidate.register)
+    assert not _registry(candidate).exists()
+
+
+@pytest.mark.parametrize("mutation", ["duplicate_managed", "unmanaged_extra_file"])
+def test_required_toolchain_managed_file_closure_is_exact(
+    tmp_path: Path, mutation: str
+) -> None:
+    candidate = _make_candidate(tmp_path / mutation)
+    if mutation == "duplicate_managed":
+        manifest = candidate.manifest()
+        manifest["required_toolchain"]["managed_files"].append(
+            manifest["required_toolchain"]["managed_files"][0]
+        )
+        candidate.write_manifest(manifest)
+        candidate.rebuild_archive()
+        expected = "DUPLICATE"
+    else:
+        extra = candidate.package_root / "bootstrap" / "node" / "unexpected.bin"
+        extra.write_bytes(b"not declared")
+        expected = "IDENTITY_MISMATCH"
+    _expect_code(expected, candidate.register)
+    assert not _registry(candidate).exists()
 
 
 @pytest.mark.parametrize("bad_path", ["../escape.txt", "folder\\escape.txt", "C:/escape.txt"])
@@ -937,6 +1136,7 @@ def test_activate_and_locate_exact_registered_package(tmp_path: Path) -> None:
         "release",
         "package_root",
         "package_python",
+        "required_toolchain",
         "manifest",
         "lock",
         "guide",
@@ -1286,7 +1486,7 @@ def test_activate_and_recover_are_mutually_exclusive(
 
 @pytest.mark.parametrize(
     "target",
-    ["manifest", "lock", "guide", "python", "managed"],
+    ["manifest", "lock", "guide", "python", "dependency", "ffmpeg", "ffprobe", "node", "npm", "npx", "managed"],
 )
 def test_locator_revalidates_every_local_identity(tmp_path: Path, target: str) -> None:
     candidate = _make_candidate(tmp_path / target)
@@ -1297,6 +1497,12 @@ def test_locator_revalidates_every_local_identity(tmp_path: Path, target: str) -
         "lock": candidate.lock_path,
         "guide": candidate.guide_path,
         "python": candidate.package_python,
+        "dependency": candidate.dependency_lock_path,
+        "ffmpeg": candidate.ffmpeg_path,
+        "ffprobe": candidate.ffprobe_path,
+        "node": candidate.node_path,
+        "npm": candidate.npm_path,
+        "npx": candidate.npx_path,
         "managed": candidate.managed_path,
     }
     paths[target].write_bytes(paths[target].read_bytes() + b"tampered")
@@ -1366,6 +1572,8 @@ def test_locator_success_is_byte_and_mtime_read_only(tmp_path: Path) -> None:
         ("authority", "missing"),
         ("release", "unknown"),
         ("package_python", "missing"),
+        ("required_toolchain", "unknown"),
+        ("required_toolchain", "missing"),
         ("manifest", "unknown"),
         ("lock", "unknown"),
         ("guide", "unknown"),

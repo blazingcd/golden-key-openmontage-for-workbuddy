@@ -1,51 +1,48 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2_S2_REGISTRATION_AND_TEMP_PACKAGE_PROOF / PASS_ACCEPTED；V2_S3_PRETAKEOVER_REPLAN_DOCS / REVIEW_READY`
+状态：`V2_S2_REGISTRATION_AND_TEMP_PACKAGE_PROOF / PASS_ACCEPTED；V2_S3_PRETAKEOVER_REPLAN / PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD`
 
 更新时间：2026-08-18
 
 ## 当前任务
 
 ```text
-task_id: V2-S3-PRETAKEOVER-REPLAN-DOCS1
-task_status: REVIEW_READY
-task_kind: STAGE_3_PRETAKEOVER_REPLAN_DOCUMENTATION
-user_authorization: 2026-08-18 / 基于阶段二修正成果重新规划阶段三，固化清晰执行路径、边界、交付和后续衔接，并合入项目主线
-planning_authorization: GRANTED_FOR_EXISTING_AUTHORITY_DOCUMENTS_ONLY
+task_id: V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT1
+task_status: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
+task_kind: STAGE_3_PRETAKEOVER_REPLAN_STATE_CLOSEOUT
+user_authorization: 2026-08-18 / 将阶段三重新规划结论固化并合入项目主线
+closeout_authorization: GRANTED_FOR_EXISTING_STATE_DOCUMENTS_ONLY
 implementation_authorization: NOT_GRANTED
-start_commit: 95eeeff175060f06ca2f549737e724160edc9e14
-start_commit_resolution: exact live origin/codex/workbuddy-shell-v2 at task start
+start_commit: 72719c758f092868fc6446e44a803d13eeae44a6
+start_commit_resolution: independently approved planning result after ordinary formal fast-forward
 result_commit: THIS_COMMIT
-branch: codex/v2-s3-pretakeover-replan-docs1
-review_range: 95eeeff175060f06ca2f549737e724160edc9e14..THIS_COMMIT
+branch: codex/v2-s3-pretakeover-replan-closeout1
+review_range: 72719c758f092868fc6446e44a803d13eeae44a6..THIS_COMMIT
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 95eeeff175060f06ca2f549737e724160edc9e14
+formal_target_at_start: 72719c758f092868fc6446e44a803d13eeae44a6
+reviewed_planning_result: 72719c758f092868fc6446e44a803d13eeae44a6
+reviewed_planning_range: 95eeeff175060f06ca2f549737e724160edc9e14..72719c758f092868fc6446e44a803d13eeae44a6
+reviewed_planning_verdict: APPROVE / P0=0 / P1=0 / P2=0
+reviewed_planning_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=72719c758f092868fc6446e44a803d13eeae44a6
 allowed_paths:
-  - AGENT_GUIDE.md
   - PROJECT-STATE.md
-  - PROJECT_CONTEXT.md
   - README.md
   - README_zh-CN.md
   - WORK-LOG.md
   - docs/workbuddy/v2/README.md
   - docs/workbuddy/v2/TASK-REGISTER.md
-  - docs/workbuddy/v2/PROJECT-CHARTER.md
-  - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
-  - docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
-  - docs/workbuddy/v2/DRIFT-GUARD.md
-  - docs/workbuddy/v2/MODULE-DISPOSITION.md
 production_code_changes: 0
 test_changes: 0
 tracked_files_expected: 33
 pytest: NOT_RUN_DOCUMENTATION_ONLY_PROJECT_VENV_MISSING
-next_authorized_task: V2-S3-PRETAKEOVER-REPLAN-DOCS-REVIEW1
+next_authorized_task: V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT-REVIEW1
 next_task_status: READY_AFTER_PUSH
 next_task_authorization: READ_ONLY_REVIEW_ONLY
 next_after_docs_promotion: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1
 next_after_docs_promotion_authorization: NOT_GRANTED_BY_THIS_DOCS_TASK
 ```
 
-本任务只修正文档真相并冻结阶段3最小规划：阶段2已接受Registration/Locator实现和一次真实临时Package证明，但最终Release、生产PackageRoot和生产Registration都不存在；阶段3实现因此仍被阻断。`THIS_COMMIT`只有经独立只读Reviewer `APPROVE`并以普通非force fast-forward进入正式主线后才成为仓库权威。本任务不创建阶段3代码、Lock、测试、Installer、最终Package或生产Registration。
+规划结果`72719c758f092868fc6446e44a803d13eeae44a6`已经独立只读Reviewer最终`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward进入正式主线。本收口只把入口状态从`REVIEW_READY`统一为条件式`PASS_ACCEPTED`；`THIS_COMMIT`仍须独立只读Reviewer批准并普通fast-forward后，该条件才成立。本任务不创建阶段3代码、Lock、测试、Installer、最终Package或生产Registration，也不授权下一交付门禁。
 
 ## 阶段2已完成任务证据
 
@@ -127,7 +124,8 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-formal_handoff_commit: 95eeeff175060f06ca2f549737e724160edc9e14
+formal_handoff_before_closeout: 72719c758f092868fc6446e44a803d13eeae44a6
+formal_handoff_after_closeout: THIS_COMMIT
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED
@@ -148,11 +146,11 @@ installed_production_package_root: NOT_CREATED
 production_package_registration: NOT_CREATED
 production_package_activation: NOT_CREATED
 stage_3_planning_authorization: GRANTED_FOR_CURRENT_DOCS_ONLY
-stage3_planning: REPLANNED_REVIEW_READY
+stage3_planning: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
 stage_3_implementation_authorization: NOT_GRANTED
 stage_3_conditional_authorization: NOT_GRANTED
 stage_3_start_gate: BLOCKED_FINAL_PACKAGE_AND_CONSUMER_CONTRACT
-stage_3_execution_packet: REPLANNED_DOCS_REVIEW_READY / IMPLEMENTATION_NOT_GRANTED
+stage_3_execution_packet: REPLANNED_BOUNDARY_PASS_ACCEPTED / IMPLEMENTATION_NOT_GRANTED
 stage3_implementation: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
@@ -163,7 +161,7 @@ runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 
 `709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了必带Python及47个锁定依赖、FFmpeg/ffprobe、Node/npm/npx的一次真实临时Package组装、Registration/Locator验证、负测、独立审阅和正式推广。临时构建根和task-only DataRoot随后已清理，所以`stage_2_status`只表示登记实现与临时证明通过，不表示最终分发物存在。阶段3规划可收口，实施仍被最终Package和消费者合同阻断。
 
-仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `95eeeff175060f06ca2f549737e724160edc9e14`的祖先。阶段2刷新只修改四个既有白名单文件，没有恢复已清理内容或新增仓库文件。
+仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是已审规划结果`72719c758f092868fc6446e44a803d13eeae44a6`的祖先。阶段2刷新和阶段3规划都没有恢复已清理内容或增加tracked文件。
 
 ## 阶段3至阶段6建设与交付顺序
 

@@ -1,5 +1,12 @@
 # Work Log
 
+## 2026-08-18：V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT1
+
+- 规划累计对象`95eeeff175060f06ca2f549737e724160edc9e14..72719c758f092868fc6446e44a803d13eeae44a6`经独立只读Reviewer三轮审查；前两轮发现并关闭双路线、FFmpeg资产、旧模块状态和结果集歧义，最终结论`APPROVE / P0=0 / P1=0 / P2=0`。
+- 已审规划结果以普通fast-forward进入`origin/codex/workbuddy-shell-v2=72719c758f092868fc6446e44a803d13eeae44a6`；已完全合入的远端临时规划分支随后删除。
+- 本Closeout只把现有入口的阶段3规划状态收口为条件式`PASS_ACCEPTED`并记录审查/推广证据，生产代码、测试和CI变化保持0。Closeout自身仍须独立只读审查和正式fast-forward；否则状态条件不成立。
+- 下一执行项仍是`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`，且未被本Closeout授权；阶段3实现继续`NOT_GRANTED`。
+
 ## 2026-08-18：V2-S3-PRETAKEOVER-REPLAN-DOCS1
 
 ### 重新规划结论

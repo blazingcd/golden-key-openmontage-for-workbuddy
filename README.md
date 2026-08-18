@@ -8,12 +8,12 @@ Current status:
 - Stage 2 Registration/Locator implementation: `PASS_ACCEPTED`
 - Stage 2 real temporary-Package validation: `PASS_ACCEPTED`; retained final Release: `NOT_MATERIALIZED`; production Package Registration: `NOT_CREATED`
 - Repository hygiene: `PASS_ACCEPTED` at `20ddab75825c1b6e7de5a51603afe8b6fd82eceb`, exact 33-file tree
-- Stage 3 planning: `REPLANNED_REVIEW_READY`
+- Stage 3 planning: `PASS_ACCEPTED`
 - Stage 3 implementation: `NOT_GRANTED`
 - Stage 4 Launcher: `NOT_GRANTED`
 - Stage 5 WorkBuddy entry: `NOT_GRANTED`
 - Stage 6 status/result relay: `NOT_GRANTED`
-- Stage 3 pre-takeover plan docs: `REVIEW_READY`
+- Stage 3 pre-takeover plan docs: `PASS_ACCEPTED` after independent review and formal fast-forward
 
 The current task freezes the narrowed Stage 3 pre-takeover plan across existing authorities; it is not implementation authorization. Live status and exact Git objects are recorded only in [`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md).
 

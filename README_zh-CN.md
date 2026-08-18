@@ -8,12 +8,12 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 - 阶段2 Registration/Locator实现：`PASS_ACCEPTED`
 - 阶段2真实临时Package验证：`PASS_ACCEPTED`；最终Release保留：`NOT_MATERIALIZED`；生产Package登记：`NOT_CREATED`
 - 仓库卫生：`PASS_ACCEPTED`，正式对象`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，精确33文件
-- 阶段3规划：`REPLANNED_REVIEW_READY`
+- 阶段3规划：`PASS_ACCEPTED`
 - 阶段3实现：`NOT_GRANTED`
 - 阶段4 Launcher：`NOT_GRANTED`
 - 阶段5 WorkBuddy入口：`NOT_GRANTED`
 - 阶段6状态结果转交：`NOT_GRANTED`
-- 阶段3接管前规划文档：`REVIEW_READY`
+- 阶段3接管前规划文档：独立审查并正式fast-forward后`PASS_ACCEPTED`
 
 当前任务只把缩减后的阶段3接管前规划统一到现有权威中，不构成实现授权。实时状态和精确Git对象只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。
 

@@ -172,6 +172,41 @@ def _approved_url(value: Any) -> str:
     return value
 
 
+def _normalized_definition_digest(
+    *,
+    capability: str,
+    version: str,
+    entrypoint: str,
+    sources: Mapping[str, str],
+    assets: Sequence[Mapping[str, Any]],
+    explicit_paths: Sequence[str],
+    command: str | None,
+) -> str:
+    """Bind the closed definition content; this is not external-source authentication."""
+    body = {
+        "capability": capability,
+        "version": version,
+        "verified_entrypoint": entrypoint,
+        "approved_mainland_sources": [
+            {"filename": filename, "url": sources[filename]}
+            for filename in sorted(sources)
+        ],
+        "assets": [
+            {
+                "filename": asset["filename"],
+                "size": asset["size"],
+                "sha256": asset["sha256"],
+                "license": asset["license"],
+                "managed_target": asset["managed_target"],
+            }
+            for asset in assets
+        ],
+        "explicit_registered_or_configured_candidate_paths": sorted(explicit_paths),
+        "normal_command_name": command,
+    }
+    return _canonical_hash(body)
+
+
 def _validate_definitions(value: Any) -> dict[str, dict[str, Any]]:
     if isinstance(value, (str, bytes)) or not isinstance(value, Sequence):
         _fail("INVALID_DEFINITION", "capability_definitions must be a two-item sequence")
@@ -258,16 +293,33 @@ def _validate_definitions(value: Any) -> dict[str, dict[str, Any]]:
             _fail("INVALID_DEFINITION", "explicit candidate paths must be a sequence")
         explicit: list[str] = []
         for candidate in explicit_raw:
-            if not isinstance(candidate, (str, os.PathLike)):
-                _fail("INVALID_DEFINITION", "explicit candidate path must be path-like")
+            if not isinstance(candidate, str):
+                _fail("INVALID_DEFINITION", "explicit candidate path must be a JSON string")
             path = Path(candidate)
             if not path.is_absolute():
                 _fail("PATH_VIOLATION", "explicit candidate paths must be absolute")
             explicit.append(str(path))
+        if len(set(explicit)) != len(explicit):
+            _fail("INVALID_DEFINITION", "explicit candidate paths must be unique")
+        explicit.sort()
 
         command = None
         if "normal_command_name" in definition:
             command = _approved_command(capability, definition["normal_command_name"])
+        computed_definition_sha256 = _normalized_definition_digest(
+            capability=capability,
+            version=version,
+            entrypoint=entrypoint,
+            sources=sources,
+            assets=assets,
+            explicit_paths=explicit,
+            command=command,
+        )
+        if definition_sha256 != computed_definition_sha256:
+            _fail(
+                "INVALID_DEFINITION",
+                "definition_sha256 does not match the normalized closed definition content",
+            )
         definitions[capability] = {
             "capability": capability,
             "definition_sha256": definition_sha256,
@@ -338,10 +390,85 @@ def _ensure_managed_descendant(data_root: Path, path: Path) -> None:
             _fail("PATH_VIOLATION", "managed path contains a link or reparse point")
 
 
-def _entrypoint_for(candidate: Path, relative_entrypoint: str) -> Path:
-    if candidate.is_file():
-        return candidate
-    return candidate / Path(*PurePosixPath(relative_entrypoint).parts)
+def _is_link_or_reparse(path: Path) -> bool:
+    try:
+        metadata = path.lstat()
+    except OSError:
+        return True
+    attributes = getattr(metadata, "st_file_attributes", 0)
+    return path.is_symlink() or bool(
+        attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+    )
+
+
+def _entrypoint_asset(definition: Mapping[str, Any]) -> Mapping[str, Any]:
+    for asset in definition["assets"]:
+        if asset["managed_target"] == definition["verified_entrypoint"]:
+            return asset
+    _fail("INVALID_DEFINITION", "verified entrypoint asset is missing")
+
+
+def _bounded_file_sha256(path: Path, expected_size: int) -> tuple[int, str | None]:
+    digest = hashlib.sha256()
+    total = 0
+    with path.open("rb") as source:
+        while total <= expected_size:
+            chunk = source.read(min(64 * 1024, expected_size + 1 - total))
+            if not chunk:
+                break
+            total += len(chunk)
+            if total > expected_size:
+                return total, None
+            digest.update(chunk)
+    return total, digest.hexdigest()
+
+
+def _file_identity(path: Path, asset: Mapping[str, Any]) -> tuple[bool, dict[str, Any]]:
+    item: dict[str, Any] = {
+        "managed_target": asset["managed_target"],
+        "expected_size": asset["size"],
+        "expected_sha256": asset["sha256"],
+        "license": asset["license"],
+        "exists": path.is_file(),
+    }
+    if not path.is_file() or _is_link_or_reparse(path):
+        item["reason"] = "MISSING_OR_UNSAFE_FILE"
+        return False, item
+    try:
+        metadata = path.stat()
+        item["size"] = metadata.st_size
+        if metadata.st_size != asset["size"]:
+            item["reason"] = "SIZE_MISMATCH"
+            return False, item
+        size, sha256 = _bounded_file_sha256(path, asset["size"])
+    except OSError as exc:
+        item["reason"] = "READ_FAILED"
+        item["error"] = str(exc)
+        return False, item
+    item["size"] = size
+    item["sha256"] = sha256
+    if size != asset["size"] or sha256 != asset["sha256"]:
+        item["reason"] = "HASH_MISMATCH"
+        return False, item
+    item["reason"] = "IDENTITY_MATCH"
+    return True, item
+
+
+def _safe_path_below(root: Path, path: Path) -> bool:
+    if not root.is_dir() or _is_link_or_reparse(root):
+        return False
+    try:
+        path.resolve(strict=False).relative_to(root.resolve(strict=True))
+        relative = path.relative_to(root)
+    except (OSError, ValueError):
+        return False
+    current = root
+    for component in relative.parts:
+        current = current / component
+        if current.exists() or current.is_symlink():
+            if _is_link_or_reparse(current):
+                return False
+    return True
 
 
 def _probe(entrypoint: Path, expected_version: str) -> tuple[bool, dict[str, Any]]:
@@ -371,16 +498,32 @@ def _probe(entrypoint: Path, expected_version: str) -> tuple[bool, dict[str, Any
     }
 
 
-def _asset_evidence(root: Path, definition: Mapping[str, Any]) -> tuple[bool, list[dict[str, Any]]]:
+def _asset_evidence(
+    root: Path,
+    definition: Mapping[str, Any],
+    *,
+    require_closed_tree: bool,
+    require_safe_root: bool = False,
+) -> tuple[bool, list[dict[str, Any]]]:
     evidence: list[dict[str, Any]] = []
     valid = True
     expected_targets = {asset["managed_target"] for asset in definition["assets"]}
+    expected_directories = {
+        parent.as_posix()
+        for target in expected_targets
+        for parent in PurePosixPath(target).parents
+        if parent.as_posix() != "."
+    }
     actual_targets: set[str] = set()
-    if root.is_dir():
+    actual_directories: set[str] = set()
+    if require_safe_root and (not root.is_dir() or _is_link_or_reparse(root)):
+        valid = False
+    if require_closed_tree and root.is_dir():
         for current_root, child_directories, child_files in os.walk(root, followlinks=False):
             current = Path(current_root)
             for name in list(child_directories):
                 child = current / name
+                actual_directories.add(child.relative_to(root).as_posix())
                 try:
                     metadata = child.lstat()
                 except OSError:
@@ -406,73 +549,168 @@ def _asset_evidence(root: Path, definition: Mapping[str, Any]) -> tuple[bool, li
                     stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0
                 ):
                     valid = False
-    if actual_targets != expected_targets:
+    if require_closed_tree and (
+        actual_targets != expected_targets or actual_directories != expected_directories
+    ):
         valid = False
     for asset in definition["assets"]:
         path = root / Path(*PurePosixPath(asset["managed_target"]).parts)
-        item: dict[str, Any] = {
-            "managed_target": asset["managed_target"],
-            "expected_size": asset["size"],
-            "expected_sha256": asset["sha256"],
-            "license": asset["license"],
-            "exists": path.is_file(),
-        }
-        if path.is_file():
-            try:
-                payload = path.read_bytes()
-            except OSError as exc:
-                item["error"] = str(exc)
-                valid = False
-            else:
-                item["size"] = len(payload)
-                item["sha256"] = hashlib.sha256(payload).hexdigest()
-                if item["size"] != asset["size"] or item["sha256"] != asset["sha256"]:
-                    valid = False
-        else:
+        if require_safe_root and not _safe_path_below(root, path):
+            item = {
+                "managed_target": asset["managed_target"],
+                "expected_size": asset["size"],
+                "expected_sha256": asset["sha256"],
+                "license": asset["license"],
+                "exists": path.is_file(),
+                "reason": "UNSAFE_PATH",
+            }
             valid = False
+        else:
+            identity_valid, item = _file_identity(path, asset)
+            valid = valid and identity_valid
         evidence.append(item)
     return valid, evidence
+
+
+def _candidate_result(
+    *,
+    source: str,
+    root: Path,
+    entrypoint: Path,
+    definition: Mapping[str, Any],
+    identity_valid: bool,
+    asset_evidence: list[dict[str, Any]],
+    identity_reason: str,
+) -> tuple[bool, dict[str, Any]]:
+    if not identity_valid:
+        return False, {
+            "source": source,
+            "runtime_root": str(root.resolve(strict=False)),
+            "identity_reason": identity_reason,
+            "asset_evidence": asset_evidence,
+            "probe": {"reason": "NOT_EXECUTED_IDENTITY_MISMATCH"},
+        }
+    compatible, probe = _probe(entrypoint, definition["version"])
+    if not compatible:
+        return False, {
+            "source": source,
+            "runtime_root": str(root.resolve(strict=False)),
+            "identity_reason": "IDENTITY_MATCH",
+            "asset_evidence": asset_evidence,
+            "probe": probe,
+        }
+    evidence = {
+        "status": "PRESENT",
+        "capability": definition["capability"],
+        "definition_sha256": definition["definition_sha256"],
+        "runtime_root": str(root.resolve(strict=False)),
+        "verified_entrypoint": probe["entrypoint"],
+        "version_evidence": probe,
+        "asset_evidence": asset_evidence,
+        "source": source,
+    }
+    return True, evidence
 
 
 def _detect_one(data_root: Path, definition: Mapping[str, Any]) -> dict[str, Any]:
     managed = _managed_root(data_root, definition)
     _ensure_managed_descendant(data_root, managed)
-    candidates: list[tuple[str, Path, Path]] = [
-        ("managed", managed, _entrypoint_for(managed, definition["verified_entrypoint"]))
-    ]
+    incompatible: list[dict[str, Any]] = []
+    entrypoint_asset = _entrypoint_asset(definition)
+
+    if managed.exists():
+        managed_entrypoint = managed / Path(
+            *PurePosixPath(definition["verified_entrypoint"]).parts
+        )
+        assets_valid, asset_evidence = _asset_evidence(
+            managed,
+            definition,
+            require_closed_tree=True,
+            require_safe_root=True,
+        )
+        present, candidate = _candidate_result(
+            source="managed",
+            root=managed,
+            entrypoint=managed_entrypoint,
+            definition=definition,
+            identity_valid=assets_valid,
+            asset_evidence=asset_evidence,
+            identity_reason="IDENTITY_MATCH" if assets_valid else "MANAGED_ASSET_CLOSURE_MISMATCH",
+        )
+        if present:
+            return {
+                "capability": definition["capability"],
+                "status": "PRESENT",
+                "evidence": candidate,
+            }
+        incompatible.append(candidate)
+
     for candidate_text in definition["explicit_paths"]:
-        candidate = Path(candidate_text)
-        candidates.append(("explicit", candidate, _entrypoint_for(candidate, definition["verified_entrypoint"])))
+        candidate_root = Path(candidate_text)
+        if not candidate_root.exists():
+            continue
+        if not candidate_root.is_dir() or _is_link_or_reparse(candidate_root):
+            incompatible.append(
+                {
+                    "source": "explicit",
+                    "runtime_root": str(candidate_root.resolve(strict=False)),
+                    "identity_reason": "EXPLICIT_DIRECTORY_REQUIRED",
+                    "asset_evidence": [],
+                    "probe": {"reason": "NOT_EXECUTED_IDENTITY_MISMATCH"},
+                }
+            )
+            continue
+        explicit_entrypoint = candidate_root / Path(
+            *PurePosixPath(definition["verified_entrypoint"]).parts
+        )
+        assets_valid, asset_evidence = _asset_evidence(
+            candidate_root,
+            definition,
+            require_closed_tree=False,
+            require_safe_root=True,
+        )
+        present, candidate = _candidate_result(
+            source="explicit",
+            root=candidate_root,
+            entrypoint=explicit_entrypoint,
+            definition=definition,
+            identity_valid=assets_valid,
+            asset_evidence=asset_evidence,
+            identity_reason="IDENTITY_MATCH" if assets_valid else "EXPLICIT_ASSET_IDENTITY_MISMATCH",
+        )
+        if present:
+            return {
+                "capability": definition["capability"],
+                "status": "PRESENT",
+                "evidence": candidate,
+            }
+        incompatible.append(candidate)
+
     if definition["normal_command_name"]:
         resolved = shutil.which(definition["normal_command_name"])
         if resolved:
             command = Path(resolved)
-            candidates.append(("PATH", command, command))
-
-    incompatible: list[dict[str, Any]] = []
-    for source, root, entrypoint in candidates:
-        if not entrypoint.is_file():
-            continue
-        compatible, probe = _probe(entrypoint, definition["version"])
-        assets_valid = True
-        asset_evidence: list[dict[str, Any]] = []
-        if source == "managed":
-            assets_valid, asset_evidence = _asset_evidence(root, definition)
-        if compatible and assets_valid:
-            evidence = {
-                "status": "PRESENT",
-                "capability": definition["capability"],
-                "definition_sha256": definition["definition_sha256"],
-                "runtime_root": str(root.resolve(strict=False)),
-                "verified_entrypoint": probe["entrypoint"],
-                "version_evidence": probe,
-                "asset_evidence": asset_evidence,
-                "source": source,
-            }
-            return {"capability": definition["capability"], "status": "PRESENT", "evidence": evidence}
-        incompatible.append(
-            {"source": source, "runtime_root": str(root.resolve(strict=False)), "probe": probe, "asset_evidence": asset_evidence}
-        )
+            command_valid = command.is_absolute()
+            identity_evidence: list[dict[str, Any]] = []
+            if command_valid:
+                command_valid, item = _file_identity(command, entrypoint_asset)
+                identity_evidence.append(item)
+            present, candidate = _candidate_result(
+                source="PATH",
+                root=command,
+                entrypoint=command,
+                definition=definition,
+                identity_valid=command_valid,
+                asset_evidence=identity_evidence,
+                identity_reason="IDENTITY_MATCH" if command_valid else "PATH_ENTRYPOINT_IDENTITY_MISMATCH",
+            )
+            if present:
+                return {
+                    "capability": definition["capability"],
+                    "status": "PRESENT",
+                    "evidence": candidate,
+                }
+            incompatible.append(candidate)
     if incompatible:
         return {
             "capability": definition["capability"],
@@ -510,14 +748,22 @@ def _make_plan(data_root: Path, definition: Mapping[str, Any], fact: Mapping[str
     return {**body, "plan_sha256": _canonical_hash(body)}
 
 
-def _download_asset(url: str, destination: Path) -> str:
+def _download_asset(url: str, destination: Path, expected_size: int) -> str:
     """Download one exact asset; tests replace this private transport boundary."""
     request = urllib.request.Request(url, headers={"User-Agent": "golden-key-workbuddy-shell-v2"})
     opener = urllib.request.build_opener(_NoRedirect)
     with opener.open(request, timeout=30) as response:
         final_url = response.geturl()
         with destination.open("xb") as output:
-            shutil.copyfileobj(response, output)
+            total = 0
+            while total <= expected_size:
+                chunk = response.read(min(64 * 1024, expected_size + 1 - total))
+                if not chunk:
+                    break
+                total += len(chunk)
+                if total > expected_size:
+                    _fail("SIZE_MISMATCH", "transport exceeded the approved asset size")
+                output.write(chunk)
     return final_url
 
 
@@ -534,11 +780,15 @@ def _acquire_lock(
     token: str,
     data_root: Path,
     definition: Mapping[str, Any],
+    created_directories: list[tuple[Path, int, int]],
 ) -> bool:
     deadline = time.monotonic() + _LOCK_TIMEOUT_SECONDS
     while True:
         try:
             descriptor = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+        except FileNotFoundError:
+            _ensure_owned_directory_chain(data_root, lock_path.parent, created_directories)
+            continue
         except FileExistsError:
             current = _detect_one(data_root, definition)
             if current["status"] == "PRESENT" and current["evidence"]["source"] == "managed":
@@ -555,12 +805,106 @@ def _acquire_lock(
             return True
 
 
-def _cleanup_empty_directories(paths: Sequence[Path]) -> None:
+def _ensure_owned_directory_chain(
+    data_root: Path,
+    target: Path,
+    created_directories: list[tuple[Path, int, int]],
+) -> None:
+    _ensure_managed_descendant(data_root, target)
+    paths: list[Path] = [data_root]
+    current = data_root
+    for component in target.relative_to(data_root).parts:
+        current = current / component
+        paths.append(current)
     for path in paths:
+        if path.exists():
+            if not path.is_dir() or _is_link_or_reparse(path):
+                _fail("PATH_VIOLATION", "managed directory is not a safe directory")
+            continue
+        if not path.parent.is_dir():
+            _fail("PATH_VIOLATION", "managed directory parent does not exist")
         try:
+            path.mkdir()
+        except FileExistsError:
+            if not path.is_dir() or _is_link_or_reparse(path):
+                _fail("PATH_VIOLATION", "concurrent managed path is unsafe")
+        except OSError as exc:
+            _fail("INTEGRATION_FAILED", f"cannot create managed directory: {exc}")
+        else:
+            try:
+                metadata = path.stat()
+            except OSError as exc:
+                try:
+                    path.rmdir()
+                except OSError:
+                    pass
+                _fail("INTEGRATION_FAILED", f"cannot identify created directory: {exc}")
+            created_directories.append((path, metadata.st_dev, metadata.st_ino))
+
+
+def _snapshot_directories(paths: Sequence[Path]) -> dict[Path, dict[str, Any]]:
+    snapshots: dict[Path, dict[str, Any]] = {}
+    for path in paths:
+        if not path.is_dir() or _is_link_or_reparse(path):
+            continue
+        try:
+            metadata = path.stat()
+            children = tuple(sorted(child.name for child in path.iterdir()))
+        except OSError:
+            continue
+        snapshots[path] = {
+            "device": metadata.st_dev,
+            "inode": metadata.st_ino,
+            "atime_ns": metadata.st_atime_ns,
+            "mtime_ns": metadata.st_mtime_ns,
+            "children": children,
+        }
+    return snapshots
+
+
+def _cleanup_owned_empty_directories(
+    paths: Sequence[tuple[Path, int, int]]
+) -> None:
+    for path, expected_device, expected_inode in reversed(paths):
+        try:
+            metadata = path.stat()
+            if (
+                metadata.st_dev != expected_device
+                or metadata.st_ino != expected_inode
+            ):
+                continue
             path.rmdir()
         except OSError:
             pass
+
+
+def _restore_unchanged_directory_metadata(
+    snapshots: Mapping[Path, Mapping[str, Any]]
+) -> None:
+    for path, snapshot in snapshots.items():
+        try:
+            metadata = path.stat()
+            children = tuple(sorted(child.name for child in path.iterdir()))
+        except OSError:
+            continue
+        if (
+            metadata.st_dev == snapshot["device"]
+            and metadata.st_ino == snapshot["inode"]
+            and children == snapshot["children"]
+        ):
+            try:
+                os.utime(
+                    path,
+                    ns=(snapshot["atime_ns"], snapshot["mtime_ns"]),
+                    follow_symlinks=False,
+                )
+            except NotImplementedError:
+                try:
+                    os.utime(path, ns=(snapshot["atime_ns"], snapshot["mtime_ns"]))
+                except OSError:
+                    pass
+            except OSError:
+                pass
 
 
 def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -572,14 +916,26 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
     token = uuid.uuid4().hex
     staging: Path | None = None
     lock_owned = False
-    created_cleanup = [
+    created_directories: list[tuple[Path, int, int]] = []
+    structural_directories = [
+        data_root,
+        data_root / "Runtime",
+        data_root / "Runtime" / "Composition",
         target.parent,
         target.parent.parent,
-        target.parent.parent.parent,
+        data_root / "Caches",
+        cache_root,
     ]
+    directory_snapshots = _snapshot_directories(structural_directories)
     try:
-        cache_root.mkdir(parents=True, exist_ok=True)
-        lock_owned = _acquire_lock(lock_path, token, data_root, definition)
+        _ensure_owned_directory_chain(data_root, cache_root, created_directories)
+        lock_owned = _acquire_lock(
+            lock_path,
+            token,
+            data_root,
+            definition,
+            created_directories,
+        )
         current = _detect_one(data_root, definition)
         if current["status"] == "PRESENT" and current["evidence"]["source"] == "managed":
             evidence = dict(current["evidence"])
@@ -596,13 +952,15 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
         for asset in definition["assets"]:
             destination = staging / Path(*PurePosixPath(asset["managed_target"]).parts)
             destination.parent.mkdir(parents=True, exist_ok=True)
-            final_url = _download_asset(asset["source_url"], destination)
+            final_url = _download_asset(
+                asset["source_url"], destination, asset["size"]
+            )
             if final_url != asset["source_url"]:
                 _fail("UNAPPROVED_SOURCE", "transport redirected outside the exact approved source")
-            payload = destination.read_bytes()
-            if len(payload) != asset["size"]:
+            identity_valid, _ = _file_identity(destination, asset)
+            if not identity_valid and destination.stat().st_size != asset["size"]:
                 _fail("SIZE_MISMATCH", f"size mismatch for {asset['filename']}")
-            if hashlib.sha256(payload).hexdigest() != asset["sha256"]:
+            if not identity_valid:
                 _fail("HASH_MISMATCH", f"hash mismatch for {asset['filename']}")
 
         entrypoint = staging / Path(*PurePosixPath(definition["verified_entrypoint"]).parts)
@@ -610,12 +968,17 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
             entrypoint.chmod(entrypoint.stat().st_mode | 0o111)
         except OSError as exc:
             _fail("INTEGRATION_FAILED", f"cannot make entrypoint executable: {exc}")
-        assets_valid, _ = _asset_evidence(staging, definition)
+        assets_valid, _ = _asset_evidence(
+            staging,
+            definition,
+            require_closed_tree=True,
+            require_safe_root=True,
+        )
         compatible, probe = _probe(entrypoint, definition["version"])
         if not assets_valid or not compatible:
             _fail("PROBE_FAILED", f"staged capability probe failed: {probe['reason']}")
 
-        target.parent.mkdir(parents=True, exist_ok=True)
+        _ensure_owned_directory_chain(data_root, target.parent, created_directories)
         if os.stat(staging).st_dev != os.stat(target.parent).st_dev:
             _fail("PATH_VIOLATION", "staging and managed target are not on the same volume")
         try:
@@ -646,7 +1009,8 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
             shutil.rmtree(staging, ignore_errors=True)
         if lock_owned:
             _remove_owned_lock(lock_path, token)
-        _cleanup_empty_directories(created_cleanup)
+        _cleanup_owned_empty_directories(created_directories)
+        _restore_unchanged_directory_metadata(directory_snapshots)
 
 
 def prepare_optional_capabilities(

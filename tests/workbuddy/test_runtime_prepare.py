@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import importlib
+import json
 import os
 import threading
 import time
@@ -26,13 +27,53 @@ def _payload(capability: str, version: str) -> bytes:
     return f"#!/bin/sh\necho {capability} {version}\n".encode()
 
 
-def _definition(capability: str, marker: str, version: str) -> tuple[dict, bytes]:
+def _forged_same_size_payload(capability: str, version: str) -> bytes:
+    original = _payload(capability, version)
+    if os.name == "nt":
+        forged = original.replace(b"@echo off", b"@ECHO OFF")
+    else:
+        forged = original.replace(b"\necho ", b"\n echo ").removesuffix(b"\n")
+    assert len(forged) == len(original)
+    assert hashlib.sha256(forged).digest() != hashlib.sha256(original).digest()
+    return forged
+
+
+def _seal_definition(definition: dict) -> None:
+    sources = sorted(
+        (dict(source) for source in definition["approved_mainland_sources"]),
+        key=lambda source: source["filename"],
+    )
+    assets = sorted(
+        (dict(asset) for asset in definition["assets"]),
+        key=lambda asset: (asset["managed_target"], asset["filename"]),
+    )
+    body = {
+        "capability": definition["capability"],
+        "version": definition["version"],
+        "verified_entrypoint": definition["verified_entrypoint"],
+        "approved_mainland_sources": sources,
+        "assets": assets,
+        "explicit_registered_or_configured_candidate_paths": sorted(
+            definition.get("explicit_registered_or_configured_candidate_paths", [])
+        ),
+        "normal_command_name": definition.get("normal_command_name"),
+    }
+    encoded = json.dumps(
+        body,
+        allow_nan=False,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    definition["definition_sha256"] = hashlib.sha256(encoded).hexdigest()
+
+
+def _definition(capability: str, version: str) -> tuple[dict, bytes]:
     payload = _payload(capability, version)
     filename = f"{capability}-{version}.bin"
-    return (
-        {
+    definition = {
             "capability": capability,
-            "definition_sha256": marker * 64,
+            "definition_sha256": "0" * 64,
             "version": version,
             "verified_entrypoint": _entrypoint_name(capability),
             "approved_mainland_sources": [
@@ -50,15 +91,15 @@ def _definition(capability: str, marker: str, version: str) -> tuple[dict, bytes
                     "managed_target": _entrypoint_name(capability),
                 }
             ],
-        },
-        payload,
-    )
+        }
+    _seal_definition(definition)
+    return definition, payload
 
 
 @pytest.fixture
 def definitions() -> tuple[list[dict], dict[str, bytes]]:
-    remotion, remotion_payload = _definition("remotion", "a", "4.0.1")
-    hyperframes, hyperframes_payload = _definition("hyperframes", "b", "1.3.0")
+    remotion, remotion_payload = _definition("remotion", "4.0.1")
+    hyperframes, hyperframes_payload = _definition("hyperframes", "1.3.0")
     payloads = {
         remotion["approved_mainland_sources"][0]["url"]: remotion_payload,
         hyperframes["approved_mainland_sources"][0]["url"]: hyperframes_payload,
@@ -98,8 +139,9 @@ def _decision(definition: dict, plan: dict, action: str) -> dict:
 
 
 def _install_transport(monkeypatch: pytest.MonkeyPatch, payloads: dict[str, bytes], calls: list[str]):
-    def transport(url: str, destination: Path) -> str:
+    def transport(url: str, destination: Path, expected_size: int) -> str:
         calls.append(url)
+        assert len(payloads[url]) == expected_size
         destination.write_bytes(payloads[url])
         return url
 
@@ -170,10 +212,45 @@ def test_explicit_candidate_is_bounded_and_verified(tmp_path: Path, definitions)
         payloads[catalog[0]["approved_mainland_sources"][0]["url"]],
     )
     catalog[0]["explicit_registered_or_configured_candidate_paths"] = [str(explicit)]
+    _seal_definition(catalog[0])
     result = prepare_optional_capabilities(tmp_path / "data", catalog)
     remotion = result["capabilities"][0]
     assert remotion["status"] == "PRESENT"
     assert remotion["evidence"]["source"] == "explicit"
+
+
+def test_explicit_candidate_rejects_a_direct_file_without_executing_it(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, payloads = definitions
+    direct_file = _write_capability(
+        tmp_path / "registered-remotion",
+        catalog[0],
+        payloads[catalog[0]["approved_mainland_sources"][0]["url"]],
+    )
+    catalog[0]["explicit_registered_or_configured_candidate_paths"] = [str(direct_file)]
+    _seal_definition(catalog[0])
+    monkeypatch.setattr(runtime_prepare, "_probe", lambda *_a: pytest.fail("probe executed"))
+    result = prepare_optional_capabilities(tmp_path / "data", catalog)
+    remotion = result["capabilities"][0]
+    assert remotion["status"] == "INCOMPATIBLE"
+    assert remotion["candidates"][0]["identity_reason"] == "EXPLICIT_DIRECTORY_REQUIRED"
+
+
+def test_explicit_spoofed_version_program_is_rejected_by_hash_before_probe(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, _ = definitions
+    explicit = tmp_path / "registered-remotion"
+    forged = _forged_same_size_payload("remotion", catalog[0]["version"])
+    _write_capability(explicit, catalog[0], forged)
+    catalog[0]["explicit_registered_or_configured_candidate_paths"] = [str(explicit)]
+    _seal_definition(catalog[0])
+    monkeypatch.setattr(runtime_prepare, "_probe", lambda *_a: pytest.fail("probe executed"))
+    result = prepare_optional_capabilities(tmp_path / "data", catalog)
+    remotion = result["capabilities"][0]
+    assert remotion["status"] == "INCOMPATIBLE"
+    assert remotion["candidates"][0]["asset_evidence"][0]["reason"] == "HASH_MISMATCH"
 
 
 def test_path_candidate_uses_only_normal_resolution(tmp_path: Path, definitions, monkeypatch) -> None:
@@ -184,14 +261,35 @@ def test_path_candidate_uses_only_normal_resolution(tmp_path: Path, definitions,
         payloads[catalog[0]["approved_mainland_sources"][0]["url"]],
     )
     catalog[0]["normal_command_name"] = command.name
+    _seal_definition(catalog[0])
     monkeypatch.setattr(runtime_prepare.shutil, "which", lambda name: str(command) if name == command.name else None)
     result = prepare_optional_capabilities(tmp_path / "data", catalog)
     assert result["capabilities"][0]["evidence"]["source"] == "PATH"
 
 
+def test_path_spoofed_version_program_is_rejected_by_hash_before_probe(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, _ = definitions
+    command = _write_capability(
+        tmp_path / "path-candidate",
+        catalog[0],
+        _forged_same_size_payload("remotion", catalog[0]["version"]),
+    )
+    catalog[0]["normal_command_name"] = command.name
+    _seal_definition(catalog[0])
+    monkeypatch.setattr(runtime_prepare.shutil, "which", lambda name: str(command))
+    monkeypatch.setattr(runtime_prepare, "_probe", lambda *_a: pytest.fail("probe executed"))
+    result = prepare_optional_capabilities(tmp_path / "data", catalog)
+    remotion = result["capabilities"][0]
+    assert remotion["status"] == "INCOMPATIBLE"
+    assert remotion["candidates"][0]["identity_reason"] == "PATH_ENTRYPOINT_IDENTITY_MISMATCH"
+
+
 def test_missing_detection_does_not_probe_or_enumerate(tmp_path: Path, definitions, monkeypatch) -> None:
     catalog, _ = definitions
     catalog[0]["normal_command_name"] = "remotion.cmd" if os.name == "nt" else "remotion"
+    _seal_definition(catalog[0])
     monkeypatch.setattr(runtime_prepare.shutil, "which", lambda _name: None)
     monkeypatch.setattr(runtime_prepare.subprocess, "run", lambda *_a, **_k: pytest.fail("probe called"))
     monkeypatch.setattr(runtime_prepare.os, "walk", lambda *_a, **_k: pytest.fail("disk scan called"))
@@ -261,7 +359,7 @@ def test_approved_integration_is_idempotently_reused(tmp_path: Path, definitions
     calls: list[str] = []
     _install_transport(monkeypatch, payloads, calls)
     integrated = prepare_optional_capabilities(data_root, catalog, decisions)
-    assert integrated["result"] == "INTEGRATED"
+    assert integrated["result"] == "INTEGRATED", integrated
     mtimes = {path: path.stat().st_mtime_ns for path in data_root.rglob("*")}
     detected = prepare_optional_capabilities(data_root, catalog, decisions)
     assert detected["result"] == "DETECTION_REPORT"
@@ -280,6 +378,51 @@ def test_stale_or_missing_approval_never_downloads(tmp_path: Path, definitions, 
     assert result["result"] == "BLOCKED"
     assert result["reason_code"] == "STALE_DECISION"
     assert not (tmp_path / "data").exists()
+
+
+def test_definition_digest_must_match_normalized_closed_content(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, _ = definitions
+    catalog[0]["definition_sha256"] = "f" * 64
+    monkeypatch.setattr(runtime_prepare, "_detect_one", lambda *_a: pytest.fail("detection called"))
+    result = prepare_optional_capabilities(tmp_path / "data", catalog)
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "INVALID_DEFINITION"
+    assert "normalized closed definition" in result["message"]
+
+
+@pytest.mark.parametrize("changed_field", ["version", "url", "asset", "license", "target"])
+def test_any_definition_content_change_invalidates_old_approval(
+    tmp_path: Path, definitions, monkeypatch, changed_field: str
+) -> None:
+    catalog, _ = definitions
+    data_root = tmp_path / "data"
+    first = prepare_optional_capabilities(data_root, catalog)
+    old_plan = _plans_by_capability(first)["remotion"]
+    old_decision = _decision(catalog[0], old_plan, "approve")
+    old_definition_sha = catalog[0]["definition_sha256"]
+
+    if changed_field == "version":
+        catalog[0]["version"] = "4.0.2"
+    elif changed_field == "url":
+        catalog[0]["approved_mainland_sources"][0]["url"] = (
+            "https://registry.npmmirror.com/remotion/-/alternate-remotion.bin"
+        )
+    elif changed_field == "asset":
+        catalog[0]["assets"][0]["sha256"] = "c" * 64
+    elif changed_field == "license":
+        catalog[0]["assets"][0]["license"] = "Apache-2.0"
+    else:
+        catalog[0]["verified_entrypoint"] = "bin/remotion-alt"
+        catalog[0]["assets"][0]["managed_target"] = "bin/remotion-alt"
+    _seal_definition(catalog[0])
+    assert catalog[0]["definition_sha256"] != old_definition_sha
+    monkeypatch.setattr(runtime_prepare, "_download_asset", lambda *_a: pytest.fail("download called"))
+    result = prepare_optional_capabilities(data_root, catalog, [old_decision])
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "STALE_DECISION"
+    assert not data_root.exists()
 
 
 @pytest.mark.parametrize(
@@ -335,11 +478,12 @@ def test_integration_failures_cleanup_owned_temporary_objects(
         catalog[0]["assets"][0]["size"] = len(probe_payload)
         catalog[0]["assets"][0]["sha256"] = hashlib.sha256(probe_payload).hexdigest()
         payloads[url] = probe_payload
+        _seal_definition(catalog[0])
         first = prepare_optional_capabilities(data_root, catalog)
         plans = _plans_by_capability(first)
         decision = [_decision(catalog[0], plans["remotion"], "approve")]
 
-    def transport(source: str, destination: Path) -> str:
+    def transport(source: str, destination: Path, expected_size: int) -> str:
         if failure == "download":
             raise OSError("offline")
         payload = payloads[source]
@@ -347,6 +491,7 @@ def test_integration_failures_cleanup_owned_temporary_objects(
             payload += b"x"
         if failure == "hash":
             payload = b"x" * len(payload)
+        assert expected_size == catalog[0]["assets"][0]["size"]
         destination.write_bytes(payload)
         return "https://registry.npmmirror.com/redirected/file" if failure == "redirect" else source
 
@@ -356,6 +501,47 @@ def test_integration_failures_cleanup_owned_temporary_objects(
     assert not _managed_root(data_root, catalog[0]).exists()
     cache = data_root / "Caches" / "optional-runtime"
     assert not cache.exists() or list(cache.iterdir()) == []
+
+
+def test_transport_reads_at_most_expected_size_plus_one(
+    tmp_path: Path, monkeypatch
+) -> None:
+    expected_size = 8
+
+    class EndlessResponse:
+        def __init__(self) -> None:
+            self.bytes_returned = 0
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def geturl(self) -> str:
+            return "https://registry.npmmirror.com/remotion/-/asset.bin"
+
+        def read(self, size: int) -> bytes:
+            self.bytes_returned += size
+            return b"x" * size
+
+    response = EndlessResponse()
+
+    class FakeOpener:
+        def open(self, *_args, **_kwargs):
+            return response
+
+    monkeypatch.setattr(runtime_prepare.urllib.request, "build_opener", lambda *_a: FakeOpener())
+    destination = tmp_path / "asset.bin"
+    with pytest.raises(runtime_prepare._ContractError) as failure:
+        runtime_prepare._download_asset(
+            "https://registry.npmmirror.com/remotion/-/asset.bin",
+            destination,
+            expected_size,
+        )
+    assert failure.value.code == "SIZE_MISMATCH"
+    assert response.bytes_returned == expected_size + 1
+    assert destination.stat().st_size <= expected_size
 
 
 def test_foreign_target_is_preserved(tmp_path: Path, definitions, monkeypatch) -> None:
@@ -371,7 +557,7 @@ def test_foreign_target_is_preserved(tmp_path: Path, definitions, monkeypatch) -
     monkeypatch.setattr(runtime_prepare, "_download_asset", lambda *_a: pytest.fail("download called"))
     result = prepare_optional_capabilities(data_root, catalog, decision)
     assert result["result"] == "BLOCKED"
-    assert result["reason_code"] == "FOREIGN_TARGET"
+    assert result["reason_code"] == "FOREIGN_TARGET", result
     assert foreign.read_text(encoding="utf-8") == "keep"
 
 
@@ -385,6 +571,7 @@ def test_extra_file_makes_otherwise_valid_managed_target_foreign(
     _write_capability(target, catalog[0], payloads[url])
     foreign = target / "foreign.txt"
     foreign.write_text("keep", encoding="utf-8")
+    monkeypatch.setattr(runtime_prepare, "_probe", lambda *_a: pytest.fail("probe executed"))
     first = prepare_optional_capabilities(data_root, catalog)
     assert first["capabilities"][0]["status"] == "INCOMPATIBLE"
     plans = _plans_by_capability(first)
@@ -394,6 +581,40 @@ def test_extra_file_makes_otherwise_valid_managed_target_foreign(
     assert result["result"] == "BLOCKED"
     assert result["reason_code"] == "FOREIGN_TARGET"
     assert foreign.read_text(encoding="utf-8") == "keep"
+
+
+def test_missing_approved_managed_asset_blocks_probe(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, payloads = definitions
+    support = b"approved-support-asset"
+    support_filename = "remotion-support.bin"
+    support_url = f"https://registry.npmmirror.com/remotion/-/{support_filename}"
+    catalog[0]["approved_mainland_sources"].append(
+        {"filename": support_filename, "url": support_url}
+    )
+    catalog[0]["assets"].append(
+        {
+            "filename": support_filename,
+            "size": len(support),
+            "sha256": hashlib.sha256(support).hexdigest(),
+            "license": "MIT",
+            "managed_target": "lib/support.bin",
+        }
+    )
+    _seal_definition(catalog[0])
+    target = _managed_root(tmp_path / "data", catalog[0])
+    entry_url = catalog[0]["approved_mainland_sources"][0]["url"]
+    _write_capability(target, catalog[0], payloads[entry_url])
+    monkeypatch.setattr(runtime_prepare, "_probe", lambda *_a: pytest.fail("probe executed"))
+    result = prepare_optional_capabilities(tmp_path / "data", catalog)
+    remotion = result["capabilities"][0]
+    assert remotion["status"] == "INCOMPATIBLE"
+    support_evidence = next(
+        item for item in remotion["candidates"][0]["asset_evidence"]
+        if item["managed_target"] == "lib/support.bin"
+    )
+    assert support_evidence["reason"] == "MISSING_OR_UNSAFE_FILE"
 
 
 def test_publish_failure_cleans_staging_and_does_not_publish(
@@ -413,6 +634,60 @@ def test_publish_failure_cleans_staging_and_does_not_publish(
     assert not _managed_root(data_root, catalog[0]).exists()
     cache = data_root / "Caches" / "optional-runtime"
     assert not cache.exists() or list(cache.iterdir()) == []
+
+
+def test_failure_preserves_preexisting_empty_directory_identity_and_mtime(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, payloads = definitions
+    data_root = tmp_path / "data"
+    preexisting = [
+        data_root,
+        data_root / "Runtime",
+        data_root / "Runtime" / "Composition",
+        data_root / "Caches",
+        data_root / "Caches" / "optional-runtime",
+    ]
+    for path in preexisting:
+        path.mkdir(exist_ok=True)
+    first = prepare_optional_capabilities(data_root, catalog)
+    plans = _plans_by_capability(first)
+    decision = [_decision(catalog[0], plans["remotion"], "approve")]
+    snapshots = {
+        path: (path.stat().st_dev, path.stat().st_ino, path.stat().st_mtime_ns)
+        for path in preexisting
+    }
+    calls: list[str] = []
+    _install_transport(monkeypatch, payloads, calls)
+    monkeypatch.setattr(
+        runtime_prepare.os,
+        "replace",
+        lambda *_a: (_ for _ in ()).throw(OSError("denied")),
+    )
+    result = prepare_optional_capabilities(data_root, catalog, decision)
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "PUBLISH_FAILED"
+    assert all(path.is_dir() for path in preexisting)
+    assert {
+        path: (path.stat().st_dev, path.stat().st_ino, path.stat().st_mtime_ns)
+        for path in preexisting
+    } == snapshots
+    assert list((data_root / "Caches" / "optional-runtime").iterdir()) == []
+
+
+def test_owned_directory_cleanup_does_not_remove_a_replacement(tmp_path: Path) -> None:
+    path = tmp_path / "owned-once"
+    path.mkdir()
+    original = path.stat()
+    path.rmdir()
+    path.mkdir()
+    replacement = path.stat()
+    if (replacement.st_dev, replacement.st_ino) == (original.st_dev, original.st_ino):
+        pytest.skip("filesystem immediately reused the same directory identity")
+    runtime_prepare._cleanup_owned_empty_directories(
+        [(path, original.st_dev, original.st_ino)]
+    )
+    assert path.is_dir()
 
 
 def test_managed_path_link_escape_is_rejected_without_following_it(
@@ -448,10 +723,11 @@ def test_concurrent_approval_publishes_no_half_product(tmp_path: Path, definitio
     calls: list[str] = []
     call_lock = threading.Lock()
 
-    def transport(url: str, destination: Path) -> str:
+    def transport(url: str, destination: Path, expected_size: int) -> str:
         with call_lock:
             calls.append(url)
         time.sleep(0.1)
+        assert len(payloads[url]) == expected_size
         destination.write_bytes(payloads[url])
         return url
 

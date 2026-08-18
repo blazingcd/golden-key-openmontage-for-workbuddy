@@ -907,6 +907,59 @@ def _restore_unchanged_directory_metadata(
                 pass
 
 
+def _directory_identity(path: Path) -> tuple[int, int]:
+    if not path.is_dir() or _is_link_or_reparse(path):
+        _fail("INTEGRATION_FAILED", "published target is not a safe directory")
+    try:
+        metadata = path.stat()
+    except OSError as exc:
+        _fail("INTEGRATION_FAILED", f"cannot identify published target: {exc}")
+    return metadata.st_dev, metadata.st_ino
+
+
+def _published_object_matches(
+    target: Path,
+    definition: Mapping[str, Any],
+    expected_identity: tuple[int, int],
+) -> bool:
+    try:
+        if _directory_identity(target) != expected_identity:
+            return False
+        assets_valid, _ = _asset_evidence(
+            target,
+            definition,
+            require_closed_tree=True,
+            require_safe_root=True,
+        )
+    except _ContractError:
+        return False
+    return assets_valid
+
+
+def _withdraw_owned_publication(
+    target: Path,
+    cache_root: Path,
+    definition: Mapping[str, Any],
+    expected_identity: tuple[int, int],
+) -> bool:
+    if not _published_object_matches(target, definition, expected_identity):
+        return False
+    withdrawn = cache_root / f"withdrawn-{uuid.uuid4().hex}"
+    try:
+        os.replace(target, withdrawn)
+    except OSError as exc:
+        _fail("INTEGRATION_FAILED", f"cannot withdraw failed publication: {exc}")
+    if not _published_object_matches(withdrawn, definition, expected_identity):
+        if not target.exists():
+            try:
+                os.replace(withdrawn, target)
+            except OSError:
+                pass
+        return False
+    shutil.rmtree(withdrawn, ignore_errors=False)
+    return True
+
+
 def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str, Any]:
     target = _managed_root(data_root, definition)
     cache_root = data_root / "Caches" / "optional-runtime"
@@ -916,6 +969,7 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
     token = uuid.uuid4().hex
     staging: Path | None = None
     lock_owned = False
+    published_identity: tuple[int, int] | None = None
     created_directories: list[tuple[Path, int, int]] = []
     structural_directories = [
         data_root,
@@ -957,10 +1011,15 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
             )
             if final_url != asset["source_url"]:
                 _fail("UNAPPROVED_SOURCE", "transport redirected outside the exact approved source")
-            identity_valid, _ = _file_identity(destination, asset)
-            if not identity_valid and destination.stat().st_size != asset["size"]:
+            identity_valid, identity_evidence = _file_identity(destination, asset)
+            if not identity_valid and identity_evidence["reason"] == "SIZE_MISMATCH":
                 _fail("SIZE_MISMATCH", f"size mismatch for {asset['filename']}")
             if not identity_valid:
+                if identity_evidence["reason"] == "MISSING_OR_UNSAFE_FILE":
+                    _fail(
+                        "INTEGRATION_FAILED",
+                        f"missing or unsafe staged asset: {asset['filename']}",
+                    )
                 _fail("HASH_MISMATCH", f"hash mismatch for {asset['filename']}")
 
         entrypoint = staging / Path(*PurePosixPath(definition["verified_entrypoint"]).parts)
@@ -974,8 +1033,13 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
             require_closed_tree=True,
             require_safe_root=True,
         )
+        if not assets_valid:
+            _fail(
+                "INTEGRATION_FAILED",
+                "staged capability does not match the approved asset closure",
+            )
         compatible, probe = _probe(entrypoint, definition["version"])
-        if not assets_valid or not compatible:
+        if not compatible:
             _fail("PROBE_FAILED", f"staged capability probe failed: {probe['reason']}")
 
         _ensure_owned_directory_chain(data_root, target.parent, created_directories)
@@ -994,11 +1058,31 @@ def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping
             else:
                 _fail("PUBLISH_FAILED", f"atomic publication failed: {exc}")
         else:
+            published_identity = _directory_identity(target)
             staging = None
 
-        final = _detect_one(data_root, definition)
+        try:
+            final = _detect_one(data_root, definition)
+        except (_ContractError, OSError, ValueError, UnicodeError):
+            if published_identity is not None and _withdraw_owned_publication(
+                target, cache_root, definition, published_identity
+            ):
+                published_identity = None
+                _fail("PROBE_FAILED", "published capability failed final verification")
+            _fail(
+                "FOREIGN_TARGET",
+                "published target changed before final verification and was preserved",
+            )
         if final["status"] != "PRESENT" or final["evidence"]["source"] != "managed":
-            _fail("PROBE_FAILED", "published capability did not pass final managed probe")
+            if published_identity is not None and _withdraw_owned_publication(
+                target, cache_root, definition, published_identity
+            ):
+                published_identity = None
+                _fail("PROBE_FAILED", "published capability did not pass final managed probe")
+            _fail(
+                "FOREIGN_TARGET",
+                "published target changed before final probe and was preserved",
+            )
         evidence = dict(final["evidence"])
         evidence["status"] = "INTEGRATED"
         evidence["plan_sha256"] = plan["plan_sha256"]

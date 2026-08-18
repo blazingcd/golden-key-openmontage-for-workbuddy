@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import copy
+import errno
 import hashlib
 import importlib
 import json
 import os
+import shutil
 import threading
 import time
 from pathlib import Path
@@ -615,6 +617,220 @@ def test_missing_approved_managed_asset_blocks_probe(
         if item["managed_target"] == "lib/support.bin"
     )
     assert support_evidence["reason"] == "MISSING_OR_UNSAFE_FILE"
+
+
+@pytest.mark.parametrize(
+    "staging_mutation",
+    ["missing_asset", "extra_file", "extra_directory", "unsafe_directory"],
+)
+def test_invalid_staging_closure_blocks_before_probe_and_cleans_owned_objects(
+    tmp_path: Path, definitions, monkeypatch, staging_mutation: str
+) -> None:
+    catalog, payloads = definitions
+    data_root = tmp_path / "data"
+    first = prepare_optional_capabilities(data_root, catalog)
+    plans = _plans_by_capability(first)
+    decisions = [
+        _decision(catalog[0], plans["remotion"], "approve"),
+        _decision(catalog[1], plans["hyperframes"], "defer"),
+    ]
+    original_is_symlink = Path.is_symlink
+    probe_calls: list[Path] = []
+
+    def transport(url: str, destination: Path, expected_size: int) -> str:
+        assert len(payloads[url]) == expected_size
+        staging = destination.parents[1]
+        if staging_mutation != "missing_asset":
+            destination.write_bytes(payloads[url])
+        if staging_mutation == "extra_file":
+            (staging / "extra.bin").write_bytes(b"foreign")
+        elif staging_mutation == "extra_directory":
+            (staging / "extra").mkdir()
+        return url
+
+    def is_symlink(path: Path) -> bool:
+        if staging_mutation == "unsafe_directory" and path.name == "bin":
+            return True
+        return original_is_symlink(path)
+
+    def probe(entrypoint: Path, _version: str):
+        probe_calls.append(entrypoint)
+        return True, {"reason": "unexpected"}
+
+    monkeypatch.setattr(runtime_prepare, "_download_asset", transport)
+    monkeypatch.setattr(Path, "is_symlink", is_symlink)
+    monkeypatch.setattr(runtime_prepare, "_probe", probe)
+    result = prepare_optional_capabilities(data_root, catalog, decisions)
+
+    assert result["result"] == "BLOCKED"
+    assert probe_calls == []
+    assert not _managed_root(data_root, catalog[0]).exists()
+    cache = data_root / "Caches" / "optional-runtime"
+    assert not cache.exists() or list(cache.iterdir()) == []
+
+
+def test_final_probe_failure_withdraws_own_publication_and_allows_retry(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, payloads = definitions
+    data_root = tmp_path / "data"
+    first = prepare_optional_capabilities(data_root, catalog)
+    plans = _plans_by_capability(first)
+    decisions = [
+        _decision(catalog[0], plans["remotion"], "approve"),
+        _decision(catalog[1], plans["hyperframes"], "defer"),
+    ]
+    calls: list[str] = []
+    _install_transport(monkeypatch, payloads, calls)
+    original_probe = runtime_prepare._probe
+    probe_calls = 0
+
+    def fail_final_probe(entrypoint: Path, version: str):
+        nonlocal probe_calls
+        probe_calls += 1
+        if probe_calls == 2:
+            return False, {"reason": "FINAL_PROBE_FAILED"}
+        return original_probe(entrypoint, version)
+
+    monkeypatch.setattr(runtime_prepare, "_probe", fail_final_probe)
+    result = prepare_optional_capabilities(data_root, catalog, decisions)
+
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "PROBE_FAILED"
+    assert probe_calls == 2
+    assert not _managed_root(data_root, catalog[0]).exists()
+    cache = data_root / "Caches" / "optional-runtime"
+    assert not cache.exists() or list(cache.iterdir()) == []
+
+    monkeypatch.setattr(runtime_prepare, "_probe", original_probe)
+    retry = prepare_optional_capabilities(data_root, catalog, decisions)
+    assert retry["result"] == "INTEGRATED"
+
+
+def test_final_probe_preserves_target_replaced_by_foreign_object(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, payloads = definitions
+    data_root = tmp_path / "data"
+    first = prepare_optional_capabilities(data_root, catalog)
+    plans = _plans_by_capability(first)
+    decisions = [
+        _decision(catalog[0], plans["remotion"], "approve"),
+        _decision(catalog[1], plans["hyperframes"], "defer"),
+    ]
+    calls: list[str] = []
+    _install_transport(monkeypatch, payloads, calls)
+    original_probe = runtime_prepare._probe
+    probe_calls = 0
+    foreign_payload = b"preserve-concurrent-owner"
+
+    def replace_during_final_probe(entrypoint: Path, version: str):
+        nonlocal probe_calls
+        probe_calls += 1
+        if probe_calls == 2:
+            target = entrypoint.parents[1]
+            shutil.rmtree(target)
+            target.mkdir(parents=True)
+            (target / "foreign.txt").write_bytes(foreign_payload)
+            return False, {"reason": "FINAL_PROBE_FAILED"}
+        return original_probe(entrypoint, version)
+
+    monkeypatch.setattr(runtime_prepare, "_probe", replace_during_final_probe)
+    result = prepare_optional_capabilities(data_root, catalog, decisions)
+
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "FOREIGN_TARGET"
+    target = _managed_root(data_root, catalog[0])
+    assert (target / "foreign.txt").read_bytes() == foreign_payload
+    cache = data_root / "Caches" / "optional-runtime"
+    assert not cache.exists() or list(cache.iterdir()) == []
+
+
+def test_public_transport_overflow_blocks_and_cleans_owned_objects(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, _ = definitions
+    data_root = tmp_path / "data"
+    first = prepare_optional_capabilities(data_root, catalog)
+    plans = _plans_by_capability(first)
+    decision = [_decision(catalog[0], plans["remotion"], "approve")]
+
+    def overflow_transport(url: str, destination: Path, expected_size: int) -> str:
+        destination.write_bytes(b"x" * (expected_size + 1))
+        return url
+
+    monkeypatch.setattr(runtime_prepare, "_download_asset", overflow_transport)
+    result = prepare_optional_capabilities(data_root, catalog, decision)
+
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "SIZE_MISMATCH"
+    assert not _managed_root(data_root, catalog[0]).exists()
+    cache = data_root / "Caches" / "optional-runtime"
+    assert not cache.exists() or list(cache.iterdir()) == []
+
+
+def test_enospc_blocks_without_half_product_or_preexisting_directory_loss(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, _ = definitions
+    data_root = tmp_path / "data"
+    cache = data_root / "Caches" / "optional-runtime"
+    cache.mkdir(parents=True)
+    foreign = data_root / "foreign.txt"
+    foreign.write_text("keep", encoding="utf-8")
+    snapshots = {path: (path.stat().st_dev, path.stat().st_ino) for path in (data_root, cache)}
+    first = prepare_optional_capabilities(data_root, catalog)
+    plans = _plans_by_capability(first)
+    decision = [_decision(catalog[0], plans["remotion"], "approve")]
+
+    def no_space(_url: str, destination: Path, _expected_size: int) -> str:
+        destination.write_bytes(b"partial")
+        raise OSError(errno.ENOSPC, "simulated full volume")
+
+    monkeypatch.setattr(runtime_prepare, "_download_asset", no_space)
+    result = prepare_optional_capabilities(data_root, catalog, decision)
+
+    assert result["result"] == "BLOCKED"
+    assert not _managed_root(data_root, catalog[0]).exists()
+    assert foreign.read_text(encoding="utf-8") == "keep"
+    assert {path: (path.stat().st_dev, path.stat().st_ino) for path in (data_root, cache)} == snapshots
+    assert list(cache.iterdir()) == []
+
+
+def test_directory_permission_error_preserves_preexisting_objects(
+    tmp_path: Path, definitions, monkeypatch
+) -> None:
+    catalog, _ = definitions
+    data_root = tmp_path / "data"
+    caches = data_root / "Caches"
+    caches.mkdir(parents=True)
+    foreign = data_root / "foreign.txt"
+    foreign.write_text("keep", encoding="utf-8")
+    snapshots = {path: (path.stat().st_dev, path.stat().st_ino) for path in (data_root, caches)}
+    first = prepare_optional_capabilities(data_root, catalog)
+    plans = _plans_by_capability(first)
+    decision = [_decision(catalog[0], plans["remotion"], "approve")]
+    original_mkdir = Path.mkdir
+
+    def deny_cache_root(path: Path, *args, **kwargs):
+        if path == data_root / "Caches" / "optional-runtime":
+            raise PermissionError(errno.EACCES, "simulated permission denial")
+        return original_mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", deny_cache_root)
+    monkeypatch.setattr(
+        runtime_prepare,
+        "_download_asset",
+        lambda *_args: pytest.fail("transport called after mkdir failure"),
+    )
+    result = prepare_optional_capabilities(data_root, catalog, decision)
+
+    assert result["result"] == "BLOCKED"
+    assert foreign.read_text(encoding="utf-8") == "keep"
+    assert caches.is_dir()
+    assert {path: (path.stat().st_dev, path.stat().st_ino) for path in (data_root, caches)} == snapshots
+    assert not (caches / "optional-runtime").exists()
+    assert not _managed_root(data_root, catalog[0]).exists()
 
 
 def test_publish_failure_cleans_staging_and_does_not_publish(

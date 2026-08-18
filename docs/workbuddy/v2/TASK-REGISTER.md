@@ -1,53 +1,79 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`ACTIVE AUTHORITY / V2_S2_S3_REQUIRED_TOOLCHAIN_CORRECTION_REVIEW_READY`
+状态：`CONDITIONAL AUTHORITY / V2_S2_REQUIRED_TOOLCHAIN_REFRESH_AUTHORITY_REVIEW_READY`
 
 更新时间：2026-08-18
 
 ## 当前任务
 
 ```text
-task_id: V2-S2-S3-REQUIRED-TOOLCHAIN-CORRECTION-DOCS1
-task_status: REVIEW_READY
-task_kind: DOCUMENTATION_CONTRACT_CORRECTION
-user_authorization: 2026-08-18 / 金钥匙Package必须自带Python、FFmpeg、Node三项官方Prerequisites；其他渲染能力按需可选安装
-start_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
-result_commit: THIS_COMMIT
-branch: codex/v2-s3-s6-scope-docs1
-review_range: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb..THIS_COMMIT
+authority_task_id: V2-S2-REQUIRED-TOOLCHAIN-REFRESH-AUTHORITY1
+authority_task_status: REVIEW_READY
+authority_start_commit: 29a890db22181db9532263a168dcbe5f708b7149
+authority_result_commit: THIS_COMMIT
+authority_branch: codex/v2-s2-toolchain-refresh-authority1
+authority_review_range: 29a890db22181db9532263a168dcbe5f708b7149..THIS_COMMIT
+authority_activation_condition: independent_reviewer == APPROVE AND THIS_COMMIT fast-forwarded to origin/codex/workbuddy-shell-v2
+authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
+authority_production_code_changes: 0
+authority_test_changes: 0
+task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
+task_status: READY_NOT_STARTED
+task_kind: STAGE_2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH
+user_authorization: 2026-08-18 / 尽快把这个阻塞完成
+implementation_authorization: GRANTED_FOR_REQUIRED_TOOLCHAIN_REFRESH_ONLY
+start_commit: THIS_COMMIT
+start_commit_resolution: Authority1经独立APPROVE并fast-forward推广后的精确40位result SHA；绝不从29a890旧对象启动
+result_commit: NOT_CREATED
+branch: codex/v2-s2-required-toolchain-package-refresh-b1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
+formal_target_at_authority_start: 29a890db22181db9532263a168dcbe5f708b7149
+previous_contract_correction_status: PASS_ACCEPTED
+previous_contract_correction_formal_commit: 29a890db22181db9532263a168dcbe5f708b7149
+previous_contract_correction_review: INDEPENDENT_APPROVE_AND_FAST_FORWARD_PROMOTED
 allowed_paths:
-  - PROJECT-STATE.md
-  - PROJECT_CONTEXT.md
-  - README.md
-  - README_zh-CN.md
-  - WORK-LOG.md
-  - AGENT_GUIDE.md
-  - docs/workbuddy/v2/README.md
-  - docs/workbuddy/v2/TASK-REGISTER.md
-  - docs/workbuddy/v2/PROJECT-CHARTER.md
-  - docs/workbuddy/v2/MODULE-DISPOSITION.md
-  - docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
-  - docs/workbuddy/v2/DRIFT-GUARD.md
+  - golden_key_openmontage_workbuddy/package_registration.py
+  - tests/workbuddy/test_package_registration.py
   - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
-production_code_changes: 0
-test_changes: 0
-tracked_files_expected: 33
-verification: STATIC_CONSISTENCY_PASS
-pytest: NOT_RUN_PROJECT_VENV_MISSING
-next_authorized_task: V2-S2-S3-REQUIRED-TOOLCHAIN-CORRECTION-DOCS-REVIEW1
+  - docs/workbuddy/v2/TASK-REGISTER.md
+production_code_limit: 1 file
+test_change_limit: 1 file
+documentation_change_limit: 2 files
+source_repository: D:\BlazingCD\Personal\golden_key_short_video_agent-openmontage-agent-cleanroom
+source_commit: 8395e578165e802990d53fef5a166f8b4cf0461a
+source_package_tree_path: packages/golden-key-openmontage
+source_package_tree: 0464861c5985c7c9072e789b94889d29cf9a937a
+source_export_rule: 只允许从上述Git对象导出；不得触碰、修改或清理source repository当前dirty worktree
+python_archive: D:\Downloads\Working\python-3.14.7-embed-amd64.zip
+python_archive_size: 12673227
+python_archive_sha256: d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15
+node_version: v22.23.2-win-x64
+node_archive_url: https://npmmirror.com/mirrors/node/v22.23.2/node-v22.23.2-win-x64.zip
+node_archive_size: 35683585
+node_archive_sha256: 1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97
+ffmpeg_version: 9.0 essentials
+ffmpeg_archive_url: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z
+ffmpeg_archive_size: 34372199
+ffmpeg_archive_sha256: 49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85
+rejected_ffmpeg_archive: D:\Downloads\Working\ffmpeg-9.0-essentials_build.7z / SHA256 prefix ffb866 / MUST_NOT_USE
+temporary_build_root: D:\BlazingCD\Personal\Temp\workbuddy-v2-s2-toolchain-refresh-b1
+project_venv_rule: 必须使用该任务在D盘的独立.venv；不得混用系统或其他项目Python包
+package_build_scope: 一次真实临时Package；源树+干净私有Python及锁定核心依赖+FFmpeg/ffprobe+Node/npm/npx
+registration_scope: Stage2必须验证并返回全部必带工具身份与固定路径；负面测试fail closed
+forbidden_scope: external source repo、官方OpenMontage、Installer、Runtime、Launcher、Stage3、Skill、config、其他测试、生产DataRoot激活、WorkBuddy、Provider、媒体
+exit_evidence: commit+push+REVIEW_READY；真实构建和注册证据；production=1/test=1/docs<=2；临时构建根清理
+next_authorized_task: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
 ```
 
-本任务纠正Required与Optional边界：金钥匙版Package自带完整必带私有工具链，阶段2登记Python、FFmpeg和Node；阶段3只准备WorkBuddy/OpenMontage已经选定的可选渲染能力。它不新增治理文档，不实现Runtime、Launcher、WorkBuddy入口或状态结果转交。`THIS_COMMIT`由独立Reviewer解析为结果分支的精确40位SHA；只有Reviewer `APPROVE`且同一结果fast-forward进入正式分支后，本次文档收口才算仓库完成。
+`THIS_COMMIT`由Authority1 Reviewer解析为本分支精确40位结果SHA。只有该结果获独立`APPROVE`并fast-forward进入正式分支后，Builder才从同一精确SHA启动；未推广前不得启动。Builder只刷新阶段2必带工具链Package及其Registration合同和测试，不授权阶段3或其他Shell模块。
 
 ## 当前正式状态
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-formal_handoff_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
+formal_handoff_commit: 29a890db22181db9532263a168dcbe5f708b7149
 stage_1_status: PASS_ACCEPTED
-stage_2_status: REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH
+stage_2_status: REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / READY_NOT_STARTED
 stage_2_previous_package_status: PASS_ACCEPTED_HISTORICAL
 stage_2_integration_commit: ca6e93b7da108732f2034239da340a986ba3da3a
 repository_hygiene_status: PASS_ACCEPTED
@@ -55,7 +81,7 @@ repository_final_tree_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 repository_final_audit: APPROVE
 repository_final_audit_source: USER_ACCEPTED_HANDOFF_2026_08_17
 repository_tracked_files: 33
-stage_3_planning_authorization: GRANTED_FOR_CORRECTION_ONLY
+stage_3_planning_authorization: NOT_GRANTED_PENDING_STAGE_2_REFRESH
 stage3_planning: REOPENED_OPTIONAL_CAPABILITY_RECLASSIFICATION_REQUIRED
 stage_3_implementation_authorization: NOT_GRANTED
 stage_3_conditional_authorization: SUSPENDED_PENDING_REPLAN
@@ -71,7 +97,7 @@ runtime_correction: REOPENED_REQUIRED_TOOLCHAIN_CORRECTION
 
 阶段2此前通过的是旧金钥匙版Package登记合同和实现，不是更新后的当前Package。官方当前Quick Start明确列出Python 3.10+、FFmpeg和Node.js 18+三项基础Prerequisites；当前HyperFrames合同进一步要求Node.js 22+。金钥匙Package必须因此自带可用私有Python环境及核心依赖、FFmpeg/ffprobe、满足最高要求的Node/npm/npx，并在Manifest/Lock与Registration中逐项锁定。只登记Python的旧阶段2合同不足，必须修订、重新组装、独立审阅和推广；完成前阶段3不得启动。
 
-仓库卫生最终树的可重复本地事实是：正式本地分支、origin tracking、实时远端与D盘工作区均为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，工作树clean，tracked精确33且等于固定白名单。`repository_final_audit`来自用户提供并再次确认的正式交接身份；本次Reviewer仍须核对当前文档是否忠实记录该交接且无前后冲突。
+仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `29a890db22181db9532263a168dcbe5f708b7149`的祖先。后续文档修订没有恢复已清理内容，也没有生产代码或测试变化。
 
 ## 阶段3至阶段6建设与交付顺序
 

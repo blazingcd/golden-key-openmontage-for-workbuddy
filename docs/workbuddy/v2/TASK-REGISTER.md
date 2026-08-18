@@ -1,36 +1,54 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2_S2_REQUIRED_TOOLCHAIN_REFRESH / PASS_ACCEPTED；V2_S3_PRETAKEOVER_REPLAN / READY_NOT_STARTED`
+状态：`V2_S2_REGISTRATION_AND_TEMP_PACKAGE_PROOF / PASS_ACCEPTED；V2_S3_PRETAKEOVER_REPLAN_DOCS / REVIEW_READY`
 
 更新时间：2026-08-18
 
 ## 当前任务
 
 ```text
-authority_task_id: V2-S2-REQUIRED-TOOLCHAIN-REFRESH-AUTHORITY1
-authority_task_status: PASS_ACCEPTED
-authority_start_commit: 29a890db22181db9532263a168dcbe5f708b7149
-authority_result_commit: 55781b45ac9217693843f2c73cec994805e4024c
-authority_branch: codex/v2-s2-toolchain-refresh-authority1
-authority_review_range: 29a890db22181db9532263a168dcbe5f708b7149..55781b45ac9217693843f2c73cec994805e4024c
-authority_activation_condition: SATISFIED / independent APPROVE and fast-forward promotion
-authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
-authority_production_code_changes: 0
-authority_test_changes: 0
-task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-CLOSEOUT1
+task_id: V2-S3-PRETAKEOVER-REPLAN-DOCS1
 task_status: REVIEW_READY
-task_kind: STAGE_2_REQUIRED_TOOLCHAIN_STATE_CLOSEOUT
-user_authorization: 2026-08-18 / 先解决前置阻塞，之后开始阶段三前置任务
-closeout_authorization: GRANTED_FOR_TASK_REGISTER_ONLY
-start_commit: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
-start_commit_resolution: reviewed Stage2 refresh result after ordinary fast-forward promotion
+task_kind: STAGE_3_PRETAKEOVER_REPLAN_DOCUMENTATION
+user_authorization: 2026-08-18 / 基于阶段二修正成果重新规划阶段三，固化清晰执行路径、边界、交付和后续衔接，并合入项目主线
+planning_authorization: GRANTED_FOR_EXISTING_AUTHORITY_DOCUMENTS_ONLY
+implementation_authorization: NOT_GRANTED
+start_commit: 95eeeff175060f06ca2f549737e724160edc9e14
+start_commit_resolution: exact live origin/codex/workbuddy-shell-v2 at task start
 result_commit: THIS_COMMIT
-branch: codex/v2-s2-toolchain-refresh-closeout1
+branch: codex/v2-s3-pretakeover-replan-docs1
+review_range: 95eeeff175060f06ca2f549737e724160edc9e14..THIS_COMMIT
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_closeout_start: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
-closeout_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
-closeout_production_code_changes: 0
-closeout_test_changes: 0
+formal_target_at_start: 95eeeff175060f06ca2f549737e724160edc9e14
+allowed_paths:
+  - AGENT_GUIDE.md
+  - PROJECT-STATE.md
+  - PROJECT_CONTEXT.md
+  - README.md
+  - README_zh-CN.md
+  - WORK-LOG.md
+  - docs/workbuddy/v2/README.md
+  - docs/workbuddy/v2/TASK-REGISTER.md
+  - docs/workbuddy/v2/PROJECT-CHARTER.md
+  - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
+  - docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+  - docs/workbuddy/v2/DRIFT-GUARD.md
+production_code_changes: 0
+test_changes: 0
+tracked_files_expected: 33
+pytest: NOT_RUN_DOCUMENTATION_ONLY_PROJECT_VENV_MISSING
+next_authorized_task: V2-S3-PRETAKEOVER-REPLAN-DOCS-REVIEW1
+next_task_status: READY_AFTER_PUSH
+next_task_authorization: READ_ONLY_REVIEW_ONLY
+next_after_docs_promotion: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1
+next_after_docs_promotion_authorization: NOT_GRANTED_BY_THIS_DOCS_TASK
+```
+
+本任务只修正文档真相并冻结阶段3最小规划：阶段2已接受Registration/Locator实现和一次真实临时Package证明，但最终Release、生产PackageRoot和生产Registration都不存在；阶段3实现因此仍被阻断。`THIS_COMMIT`只有经独立只读Reviewer `APPROVE`并以普通非force fast-forward进入正式主线后才成为仓库权威。本任务不创建阶段3代码、Lock、测试、Installer、最终Package或生产Registration。
+
+## 阶段2已完成任务证据
+
+```text
 completed_task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
 completed_task_start_commit: 55781b45ac9217693843f2c73cec994805e4024c
 completed_task_initial_result_commit: 62a47afa2301eb187a8b63e33ad08f1b5476c318
@@ -43,7 +61,7 @@ review1_initial_verdict_history: REQUEST_CHANGES / P0=0 / P1=1 / P2=1 / resolved
 previous_contract_correction_status: PASS_ACCEPTED
 previous_contract_correction_formal_commit: 29a890db22181db9532263a168dcbe5f708b7149
 previous_contract_correction_review: INDEPENDENT_APPROVE_AND_FAST_FORWARD_PROMOTED
-allowed_paths:
+stage_2_completed_allowed_paths:
   - golden_key_openmontage_workbuddy/package_registration.py
   - tests/workbuddy/test_package_registration.py
   - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
@@ -97,22 +115,22 @@ real_registration_command: PYTHONPATH=<ShellRepo>; D:\BlazingCD\Personal\Temp\wo
 real_registration_result: register + task-only activate + locate / final exit 0 / registration SHA-256 unchanged
 real_tool_commands: bootstrap/python/python.exe -B -c <core imports + SSL + same-interpreter subprocess>; bootstrap/ffmpeg/bin/ffmpeg.exe -version; bootstrap/ffmpeg/bin/ffprobe.exe -version; bootstrap/node/node.exe --version; bootstrap/node/npm.cmd --version; bootstrap/node/npx.cmd --version
 real_tool_results: Python 3.14.7/OpenSSL 3.5.7; FFmpeg+ffprobe 9.0.1; Node 22.23.2; npm+npx 10.9.8 / every command final exit 0
-exit_evidence: TASK-REGISTER-only commit+push+REVIEW_READY；production=0；test=0；worktree clean
-next_authorized_task: V2-S3-PRETAKEOVER-PLAN1
-next_task_status: READY_NOT_STARTED
-next_task_authorization: GRANTED_FOR_PRETAKEOVER_REPLAN_ONLY
-next_task_start_commit: THIS_COMMIT after independent APPROVE and ordinary fast-forward promotion; resolve to exact 40-hex from origin/codex/workbuddy-shell-v2
+exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidence capture; no retained final Release, installed production PackageRoot, or production Registration
 ```
 
-`THIS_COMMIT`由Closeout1独立Reviewer解析为本分支精确40位结果SHA，只读确认本次相对`709c8e880b144fa9e9be26e9feb5d776dd6025e2`仅修改任务账本且生产/测试均为0。只有该结果获`APPROVE`并普通fast-forward进入`origin/codex/workbuddy-shell-v2`后，`V2-S3-PRETAKEOVER-PLAN1`才从同一最新正式40位SHA接管。该授权只允许回顾目标和重新冻结阶段3前置规划，不授权阶段3实现。
+上述证据证明完整工具链组装和登记能力，不证明最终交付Package仍存在。阶段2生产实现边界不因本次规划而扩张；最终Package持久构建、安装、生产登记和激活属于阶段3实现前的交付门禁，不得塞入阶段3Runtime代码。
+
+本文档任务正式推广后，执行顺序上的下一项是`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`，不是阶段3Builder。它只负责持久最终Release、生产安装/登记/激活和新进程Locator证据；本任务没有自动授予该门禁的Builder权限。门禁完成后，还必须由Package提供Manifest覆盖的可选能力Lock，并由真实WorkBuddy冻结消费者合同，阶段3实现任务才可另行授权。
 
 ## 当前正式状态
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-formal_handoff_commit: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
+formal_handoff_commit: 95eeeff175060f06ca2f549737e724160edc9e14
 stage_1_status: PASS_ACCEPTED
-stage_2_status: PASS_ACCEPTED
+stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
+stage_2_registration_implementation: PASS_ACCEPTED
+stage_2_temporary_package_validation: PASS_ACCEPTED
 stage_2_required_toolchain_refresh: PASS_ACCEPTED
 stage_2_required_toolchain_refresh_result: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
 stage_2_required_toolchain_refresh_review: APPROVE / P0=0 / P1=0 / P2=0
@@ -124,23 +142,27 @@ repository_final_tree_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 repository_final_audit: APPROVE
 repository_final_audit_source: USER_ACCEPTED_HANDOFF_2026_08_17
 repository_tracked_files: 33
-stage_3_planning_authorization: GRANTED_FOR_PRETAKEOVER_REPLAN_ONLY
-stage3_planning: READY_NOT_STARTED / PRETAKEOVER_REPLAN_ONLY
+final_package_artifact: NOT_MATERIALIZED
+installed_production_package_root: NOT_CREATED
+production_package_registration: NOT_CREATED
+production_package_activation: NOT_CREATED
+stage_3_planning_authorization: GRANTED_FOR_CURRENT_DOCS_ONLY
+stage3_planning: REPLANNED_REVIEW_READY
 stage_3_implementation_authorization: NOT_GRANTED
 stage_3_conditional_authorization: NOT_GRANTED
-stage_3_start_gate: ELIGIBLE_FOR_REPLAN
-stage_3_execution_packet: SUPERSEDED_BY_REQUIRED_TOOLCHAIN_CORRECTION
+stage_3_start_gate: BLOCKED_FINAL_PACKAGE_AND_CONSUMER_CONTRACT
+stage_3_execution_packet: REPLANNED_DOCS_REVIEW_READY / IMPLEMENTATION_NOT_GRANTED
 stage3_implementation: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
-stage_3_to_6_scope_reduction: SUPERSEDED_BY_REQUIRED_TOOLCHAIN_CORRECTION
+stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
 
-阶段2旧结果只覆盖Python身份，现已由`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成当前Package必带Python及锁定核心依赖、FFmpeg/ffprobe、Node/npm/npx的重新组装、Registration/Locator验证、负测、独立审阅和正式推广。阶段2前置阻塞已关闭；阶段3现在只具备前置重新规划资格，实施仍未授权。
+`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了必带Python及47个锁定依赖、FFmpeg/ffprobe、Node/npm/npx的一次真实临时Package组装、Registration/Locator验证、负测、独立审阅和正式推广。临时构建根和task-only DataRoot随后已清理，所以`stage_2_status`只表示登记实现与临时证明通过，不表示最终分发物存在。阶段3规划可收口，实施仍被最终Package和消费者合同阻断。
 
-仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `709c8e880b144fa9e9be26e9feb5d776dd6025e2`的祖先。阶段2刷新只修改四个既有白名单文件，没有恢复已清理内容或新增仓库文件。
+仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `95eeeff175060f06ca2f549737e724160edc9e14`的祖先。阶段2刷新只修改四个既有白名单文件，没有恢复已清理内容或新增仓库文件。
 
 ## 阶段3至阶段6建设与交付顺序
 
@@ -153,7 +175,7 @@ Stage 6: Status and Result Relay
 
 该顺序只表示建设、审阅和正式交付顺序，不是最终用户运行时的调用顺序。每个阶段都从当时最新的`origin/codex/workbuddy-shell-v2`精确提交开始，经单一有界Builder、独立只读Reviewer、普通非force fast-forward推广、远端临时分支清理和本地worktree关闭后，下一阶段才可接管。规划接受、Builder提交或Reviewer批准均不等于正式交付。
 
-上一版`阶段5 -> 阶段2 -> 阶段3全闭集检查 -> 阶段4`运行链路已失效，因为阶段3不再负责启动前必带工具链。新的最低关系是：阶段5触发阶段2对必带Python/FFmpeg/Node重验，阶段4据此启动固定工具；WorkBuddy/OpenMontage形成并锁定Remotion或HyperFrames能力要求后，才调用阶段3准备对应可选能力。阶段3与阶段4在真实会话中的精确调用/暂停合同必须等待WorkBuddy消费者证据后重新冻结，不能由Shell预先猜测。
+上一版`阶段5 -> 阶段2 -> 阶段3全闭集检查 -> 阶段4`运行链路已失效。新的固定关系是：阶段5触发阶段2 Locator重验最终生产Package；阶段4的基础固定工具调用只依赖阶段2必带工具链；WorkBuddy/OpenMontage形成并锁定Remotion或HyperFrames能力要求后，只有执行该可选能力时才额外要求阶段3就绪回执。WorkBuddy拥有暂停、用户确认和继续；Shell不选渲染器、不自动重放原业务请求。若真实WorkBuddy不能在同一会话继续，阶段6只报告准备完成并要求一次新的显式WorkBuddy调用，不能由Shell伪造无缝继续。
 
 阶段3至阶段6共同约束：每阶段最多一个公共入口；没有可验证输入或直接下游消费者时必须零代码退出；不得预建通用Runtime管理器、CLI/MCP镜像、任务平台、后台服务、第二Agent Host、生产FSM或状态数据库。WorkBuddy是唯一运行中的Agent；所谓OpenMontage Agent只能指WorkBuddy读取已验证Package Guide后承担的逻辑生产角色。
 
@@ -161,9 +183,13 @@ Stage 6: Status and Result Relay
 
 ```text
 stage_3_scope: 仅对WorkBuddy/OpenMontage已经锁定的可选Remotion或HyperFrames能力及其锁声明附属资产执行按需发现和用户确认后的准备；不得处理必带Python/FFmpeg/Node工具链。
-stage_3_zero_code_exit: STAGE_3_NO_OPTIONAL_CAPABILITY_REQUIRED
+stage_3_public_entry: prepare_optional_capability(data_root, capability_request, authorization_receipt=None)
+stage_3_result_set: NO_OPTIONAL_CAPABILITY_REQUIRED / READY_REUSED / CONSENT_REQUIRED / READY_PREPARED / BLOCKED
+stage_3_zero_write_exit: NO_OPTIONAL_CAPABILITY_REQUIRED / READY_REUSED / CONSENT_REQUIRED / BLOCKED_BEFORE_PUBLISH
 stage_3_download_policy: OPTIONAL_CAPABILITY_APPROVED_MAINLAND_CHINA_MIRRORS / NO_AUTOMATIC_OVERSEAS_FALLBACK
-stage_4_scope: 启动固定工具时必须接受阶段2必带工具链就绪事实；执行已选可选能力前还必须接受该能力对应的阶段3就绪事实；缺少相应事实返回RUNTIME_NOT_READY；不启动第二Agent，无任意Shell、无自动重试。
+stage_3_lock_authority: VERIFIED_PACKAGE_OWNED / SHELL_MUST_NOT_DUPLICATE
+stage_3_maximum_code_paths: golden_key_openmontage_workbuddy/runtime_prepare.py + export-only golden_key_openmontage_workbuddy/__init__.py + tests/workbuddy/test_runtime_prepare.py
+stage_4_scope: 基础固定工具调用接受阶段2必带工具链事实；执行已选Remotion/HyperFrames前还必须接受同一registration_sha256和capability_lock_sha256的阶段3就绪回执；缺少相应事实返回RUNTIME_NOT_READY；不启动第二Agent，无任意Shell、无自动重试。
 stage_5_scope: 用户实际运行起点；只保留一种真实WorkBuddy显式入口，literal user_message不变，技术控制独立。
 stage_6_scope: 直接转交Runtime计划/准备事实与Launcher回执；仅有真实格式转换缺口时才允许独立实现；不解释、不安装、不重试。
 stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
@@ -171,17 +197,58 @@ stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 
 上述范围是规划边界，不是实现授权。任何需要阶段3扫描盘符、发现/下载/替换包内Python/FFmpeg/Node、一次安装全部可选能力、选择渲染引擎/版本、使用未批准海外默认源或覆盖外来目录，阶段4启动第二Agent、解析意图或调度任务，阶段5建立第二聊天Agent，阶段6解释Artifact或自动重试的方案，必须停止并返回`STOPPED_SCOPE_EXPANSION`。
 
-## 阶段3重新规划前置
+## 阶段3重新规划合同
 
-上一版阶段3执行包、`prepare_runtime_on_demand(...)`签名和`WORKBUDDY-PRODUCTION-RUNTIME.lock.json`全闭集形状全部标记为`SUPERSEDED`，不得交给Builder。阶段3重新冻结必须先得到：
+上一版阶段3执行包、`prepare_runtime_on_demand(...)`签名和Shell-owned `WORKBUDDY-PRODUCTION-RUNTIME.lock.json`全闭集形状全部`SUPERSEDED`，不得交给Builder。新阶段3只把一个已验证Package和一个WorkBuddy/OpenMontage已选能力请求转换为可供阶段4消费的能力就绪回执。
 
-1. 阶段2已审Package Registration，明确返回必带Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx的精确身份和路径；
-2. 当前Package提供的WorkBuddy/OpenMontage消费者合同，明确何时产生已锁定的`remotion`或`hyperframes`能力要求；
-3. 对应可选能力的版本、npm锁、批准大陆镜像、hash、大小、许可证、目标和必要附属资产；
-4. 阶段3与阶段4同一WorkBuddy会话中的调用、暂停、用户确认和继续边界；Shell不得自动重放原业务请求；
-5. 最新正式Git对象、允许路径、一个公共入口、一个生产模块、一个Optional Runtime Lock和一个直接测试文件的精确任务包。
+### 实现启动Gate
 
-`V2-S3-PRETAKEOVER-PLAN1`只被授权回顾并冻结上述输入；输入未齐全时必须以零代码结果退出。阶段3实现保持`NOT_GRANTED`。可以确定的边界只有：Remotion与HyperFrames不预装全部；只准备已选能力；浏览器仅在该能力锁明确要求时准备；Python/FFmpeg/Node及核心Python依赖绝不由阶段3扫描、下载或替换；阶段3不选择渲染器、不启动第二Agent、不执行视频生产。
+以下全部满足前，阶段3生产代码变化必须为0：
+
+1. 最终Release ZIP及SHA sidecar持久保留，安装后的生产PackageRoot存在；
+2. 生产DataRoot已有Registration和显式Activation，新进程`locate_active_package()`成功；
+3. Locator返回的Python及47个锁定依赖、FFmpeg/ffprobe、Node/npm/npx身份和路径全部有效；
+4. Package内存在被Manifest管理且hash锁定的Remotion/HyperFrames可选能力Lock；Shell不复制另一份版本权威；
+5. 真实WorkBuddy/OpenMontage消费者合同明确何时选择能力、怎样传入请求、怎样暂停确认以及准备后怎样继续；
+6. 最新正式Git对象、精确允许路径、直接测试和独立Reviewer范围写入新的实现任务包。
+
+任一输入缺失时返回`INCOMPLETE_STAGE_3_INPUT`，不得创建占位实现、通用Runtime框架或测试假合同。
+
+### 唯一输入合同
+
+`capability_request`最少固定为：
+
+```text
+registration_sha256
+capability: none | remotion | hyperframes
+capability_lock_relative_path
+capability_lock_sha256
+explicit_candidate_path: optional
+```
+
+调用方不能提供任意下载URL、任意命令或任意安装目录。`capability_lock_relative_path`必须位于当前已验证PackageRoot内且对应文件被Manifest覆盖。`authorization_receipt`只有在精确绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`时有效；任一身份变化使旧确认失效。literal `user_message`永远不进入本接口。
+
+### 固定执行步骤
+
+1. **Locator重验**：只从生产DataRoot读取活动Registration；缺失、漂移或必带工具链无效即`BLOCKED`，零修复、零下载。
+2. **请求与Lock验证**：只接受`none/remotion/hyperframes`；验证Package-owned Lock、版本、入口、批准镜像、大小、SHA-256、许可证、目标和附属资产。
+3. **只读发现**：按受管目标、明确候选路径、Lock明确允许的正常命令解析顺序核验；不扫盘、不枚举全局npm、不因PATH命中直接通过。
+4. **零写入裁决**：不需可选能力返回`NO_OPTIONAL_CAPABILITY_REQUIRED`；精确能力已存在返回`READY_REUSED`。
+5. **missing-only计划**：只列所选能力及Lock声明资产，返回版本、镜像、hash、大小、总下载量、许可证、目标和`plan_sha256`，状态`CONSENT_REQUIRED`；不得下载。
+6. **授权复核与准备**：仅在授权回执仍匹配时，使用Package自带Node/npm/npx，从批准大陆镜像下载到同卷staging，核验后原子发布到`<DataRoot>/Runtime/Composition/<capability>/<capability_lock_sha256>/`；缓存只在`<DataRoot>/Caches/optional-runtime/`。
+7. **失败处理**：外来目标保留并fail closed；hash、大小、许可、来源、命令或能力探针失败即回滚，清除staging和任务临时文件，不修改系统PATH、注册表或全局npm。
+8. **回执**：重新核验所选能力、另一渲染器零触碰和必带Package零变化后，返回绑定`registration_sha256`、`capability`、`capability_lock_sha256`、`runtime_root`、验证入口、版本证据和`plan_sha256`的`READY_PREPARED`回执。
+
+### 后续阶段交接
+
+- 阶段4基础调用只消费阶段2Locator事实；执行Remotion/HyperFrames时额外校验阶段3回执，不能自行安装或接受跨Package回执。
+- 阶段5拥有用户对话、计划展示、明确同意和真实WorkBuddy继续动作；技术控制与用户原话分离。
+- 阶段6优先原样转交`CONSENT_REQUIRED`、`READY_*`、`BLOCKED`和Launcher事实；不安装、不解释Artifact、不自动重试。
+- Shell不得声称已无缝继续，除非真实WorkBuddy消费者测试证明同一会话可恢复；否则要求新的显式WorkBuddy调用。
+
+### 最小文件和交付
+
+未来实现最多新增`golden_key_openmontage_workbuddy/runtime_prepare.py`，最小编辑`golden_key_openmontage_workbuddy/__init__.py`导出唯一入口，并新增`tests/workbuddy/test_runtime_prepare.py`。不新增Shell Runtime Lock、`host_tools.py`、CLI/MCP、服务、数据库、后台进程、UI或通用下载器。交付为单一入口、稳定结果集、绑定身份的计划/就绪回执、直接测试证据和阶段4可消费合同；不是Installer、最终Package、WorkBuddy入口、Launcher或视频E2E。
 
 ## 已接受对象与证据边界
 
@@ -209,6 +276,6 @@ repository_hygiene_final_ci_freeze: 2e4858bdd5142a8f041d708bdb385a197c4436a9
 repository_hygiene_wave_c_result: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 ```
 
-旧Stage2只证明旧金钥匙版Package的Registration与Locator：明确路径输入、不可变登记对象、活动指针CAS、破损指针显式恢复和只读Locator。它不证明当前新版Package、Installer、Runtime、Launcher、真实WorkBuddy、Provider、SaaS、网络或媒体E2E。阶段3至阶段6不得读取未验证Package Guide、扫描磁盘猜测对象，或把技术控制词写入literal `user_message`。
+刷新前的旧Stage2对象只证明早期Package的Python登记合同；当前已接受对象另行证明完整必带工具链Registration/Locator实现及一次真实临时Package验证。两代证据都不证明最终Release仍然存在，也不证明生产安装/登记、Installer、Runtime、Launcher、真实WorkBuddy、Provider、SaaS、网络或媒体E2E。阶段3至阶段6不得读取未验证Package Guide、扫描磁盘猜测对象，或把技术控制词写入literal `user_message`。
 
 老项目可迁移证据：`347272c`固定包内便携Python；`899592d`固定完整Runtime、hash、许可、DataRoot和大陆PyPI/npm/Node/浏览器镜像；`639978d`增加`managed`、`registered_host`、`PATH_host`、`missing`发现与missing-only准备。旧锁中的“FFmpeg 9.0 essentials”只提供候选来源标签；本次冻结URL与hash对应二进制实际报告`9.0.1-essentials_build`。它不形成阶段3下载授权，也不得扩展为其他可选能力的海外回退权。

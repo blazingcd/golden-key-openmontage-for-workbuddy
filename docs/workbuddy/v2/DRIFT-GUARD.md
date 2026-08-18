@@ -11,7 +11,7 @@
 - 需要Shell选择或运行Pipeline、Stage、Provider、模型、媒体或创意；
 - 需要实现未授权的Runtime、Launcher、WorkBuddy入口、状态结果转交或其他阶段；
 - 需要扫描磁盘、猜测“最新”执行包、读取未验证Package Guide或修改外部执行包；正常PATH命令解析不等于扫盘，但只能产生待核验候选；
-- 阶段2试图把只登记Python的旧Package重新标记为当前PASS，或接受缺少FFmpeg/ffprobe、Node/npm/npx任一必带项的Package；
+- 把阶段2的Registration/Locator实现和一次真实临时Package验证误报为“最终Release已保留”“生产Package已安装/登记”，或接受缺少Python私有环境、FFmpeg/ffprobe、Node/npm/npx任一必带项的最终Package；
 - 需要把PackageRoot、Python、cwd、测试编号、重试或证据控制拼入literal `user_message`；
 - 命令超时、输出截断、没有最终退出、证据缺失，或文档与任务账本冲突；
 - 需要reset、stash、merge、rebase或改写已审对象。
@@ -23,23 +23,24 @@
 - 阶段3同时安装Remotion与HyperFrames、替WorkBuddy/OpenMontage选择渲染器，或准备所选能力锁未声明的浏览器/附属资产；
 - 阶段3从默认Git/GitHub、Google、npmjs或其他未批准海外源下载，在批准大陆镜像失败后静默回退；
 - 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，扫描盘符，或覆盖未知/外来目录；
-- 阶段3在新版阶段2完整工具链尚未审阅推广、当前Package身份未重验、真实WorkBuddy/OpenMontage可选能力输入合同不完整或正式Git对象漂移时提前编码；
+- 阶段3在最终Release未保留、生产Package未登记、Locator未在新进程重验、Package自有能力Lock未冻结、真实WorkBuddy/OpenMontage暂停/同意/继续合同不完整或正式Git对象漂移时提前编码；
+- 阶段3在Shell仓库复制、维护或猜测可选能力Lock，而不是核验当前Registration所绑定Package内的能力Lock；
 - 阶段3实现已标记`SUPERSEDED`的旧`prepare_runtime_on_demand(...)`签名、旧全闭集Runtime Lock或旧任务包，或恢复`host_tools.py`、通用下载器、CLI/MCP、服务、数据库等第二入口；
 - 阶段3把可选能力写入Package、系统目录或必带工具链目录，修改系统PATH/注册表，要求管理员权限，或在失败后遗留staging/cache临时对象；
 - 阶段4接受任意Shell、启动多个Agent、自动重试、建立队列/调度/常驻服务或进入Agent业务内部；
-- 阶段4在没有有效Runtime就绪回执时仍调用工具，而不是返回`RUNTIME_NOT_READY`；
+- 阶段4基础固定工具调用未绑定有效Registration和必带工具链，或可选Remotion/HyperFrames执行在没有同一Registration、同一Package能力Lock的阶段3就绪回执时仍继续；
 - 阶段5并存多套生产入口、全局截获用户意图或成为第二聊天Agent；
 - 阶段6在Runtime计划/准备事实或Launcher回执可直接消费时仍建立独立服务、数据库、轮询/流式平台，或自行安装Runtime、解释Artifact业务语义；
 - 把建设顺序`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`误写成最终用户调用顺序，或在阶段3准备后自动重试原生产请求；
-- 任一阶段超过一个公共入口、一个生产模块和一个直接测试文件，且没有单独的新授权与消费者证据。
+- 阶段3超过一个公共入口、一个新增生产模块、对`__init__.py`的导出式修改和一个直接测试文件，或其他阶段超过其任务包明示的最小文件范围，且没有单独的新授权与消费者证据。
 
 ## 产品边界
 
 腾讯WorkBuddy是唯一运行中的Agent，读取已验证Package Guide后承担OpenMontage生产角色；不存在由Shell另行启动的OpenMontage Agent进程。Shell只负责六模块。仓库Agent不得运行视频Pipeline、Provider或媒体生产。SaaS Core不是Package Registration对象，也不在Shell V2当前实现范围。
 
-金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2负责验证和登记这些Package自有字节。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
+金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2已经接受Registration/Locator实现，并以一次随后清理的真实临时Package验证这些字节；这不等于最终Release、已安装生产PackageRoot或生产Registration已经存在。最终Package的持久组装、安装与生产登记必须在阶段3实现前单独过Gate。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
 
-阶段3只准备经验证WorkBuddy/OpenMontage决定并锁定的一个可选能力，当前为Remotion或HyperFrames，以及该能力锁明确声明的附属资产。普通用户只确认精确missing-only计划，不选择技术组件；终端用户可选下载必须使用批准的中国大陆镜像且不得自动海外回退。旧阶段3条件授权、入口签名、全闭集Lock和执行包均已暂停并标记`SUPERSEDED`；只有完整阶段2和真实消费者合同完成后重新冻结任务包，`TASK-REGISTER.md`再明确写为`GRANTED`，Builder才可开始。
+阶段3只准备经验证WorkBuddy/OpenMontage决定并锁定的一个可选能力，当前为Remotion或HyperFrames，以及Package自有能力Lock明确声明的附属资产。普通用户只确认精确missing-only计划，不选择技术组件；终端用户可选下载必须使用批准的中国大陆镜像且不得自动海外回退。阶段3建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`，最大代码面为一个新增生产模块、一次仅导出修改和一个直接测试文件。旧阶段3条件授权、入口签名、全闭集Lock和执行包均已暂停并标记`SUPERSEDED`；只有最终Package、生产登记、真实消费者合同和精确任务包全部满足Start Gate，`TASK-REGISTER.md`再明确写为`GRANTED`，Builder才可开始。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

@@ -36,7 +36,7 @@
 |---|---|---|---|
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、完整必带私有工具链和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、Python/FFmpeg/ffprobe/Node/npm/npx身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖任何系统Python/FFmpeg/Node；登记/实现SaaS Core |
-| Runtime按需准备 | 只读发现已由WorkBuddy/OpenMontage锁定的可选渲染能力，并对用户确认计划中的缺失项进行受控准备 | 输入：活动Package Registration、经验证的可选能力要求、Optional Runtime Lock、受管/登记宿主/PATH候选及用户对计划的明确授权；输出：所选能力来源与状态、`READY_REUSED`、`READY_PREPARED`或失败事实 | 扫盘；发现/下载/替换必带Python/FFmpeg/Node工具链；一次安装所有可选能力；由Shell或普通用户替OpenMontage选择Remotion/HyperFrames；通用包管理器；未授权下载；海外默认源回退；修改系统PATH/注册表 |
+| Runtime按需准备 | 只读发现已由WorkBuddy/OpenMontage锁定的可选渲染能力，并对用户确认计划中的缺失项进行受控准备 | 输入：活动Package Registration、经验证的可选能力要求、Package自有能力Lock、受管/明确候选/PATH候选及用户对计划的明确授权；输出：所选能力来源与状态、`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`或`BLOCKED`事实 | 扫盘；发现/下载/替换必带Python/FFmpeg/Node工具链；一次安装所有可选能力；由Shell或普通用户替OpenMontage选择Remotion/HyperFrames；通用包管理器；未授权下载；海外默认源回退；修改系统PATH/注册表 |
 | 会话Launcher | 为一次WorkBuddy拥有的会话绑定精确Package、完整必带工具链和当前实际需要的已验证可选能力，并调用一个固定工具入口 | 输入：有效Package Registration、阶段2必带工具链就绪事实、执行所选可选能力时对应的阶段3就绪事实、分离的用户消息与执行控制；输出：一次调用回执、真实退出码、结果指针和残留事实 | 启动第二Agent/模型进程；解析用户意图；接受任意Shell；自动重试；调度多任务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
 | 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
@@ -45,36 +45,40 @@
 
 ### 4.1 阶段3至阶段6最小实现规则
 
-阶段编号表示建设、审阅和正式交付顺序，固定为`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`。这不是最终用户的一次运行调用顺序。最终用户实际运行从阶段5的WorkBuddy入口开始：
+阶段编号表示建设、审阅和正式交付顺序，固定为`阶段3 -> 阶段4 -> 阶段5 -> 阶段6`。这不是最终用户的一次运行调用顺序。阶段2当前只证明登记实现和一次已清理的临时Package，最终Release、生产PackageRoot和生产Registration必须先通过交付门禁。最终用户实际运行从阶段5的WorkBuddy入口开始：
+
+这个交付门禁是阶段3之外的`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`：它持久生成最终Release、安装PackageRoot、建立生产Registration/Activation并用新进程Locator验明身份。不得把这些动作塞入阶段3Runtime模块，也不得因规划已完成而自动视为已授权。
 
 ```text
 User
 -> Stage 5: one explicit WorkBuddy entry
--> Stage 2: revalidate required private Python / FFmpeg / Node toolchain
--> Stage 4: one WorkBuddy-owned bound tool call with required toolchain
+-> Stage 2: revalidate retained production Package and required toolchain
+-> Stage 4: one base fixed-tool call with required toolchain
 -> WorkBuddy/OpenMontage: lock the actual render capability
    -> package FFmpeg capability: continue with bundled FFmpeg
-   -> Remotion or HyperFrames capability missing
-      -> Stage 3: relay one capability-specific missing-only plan
+   -> Remotion or HyperFrames selected
+      -> Stage 3: validate the Package-owned capability Lock and exact installed state
+      -> ready: return a receipt bound to Registration and capability Lock
+      -> missing: return one capability-specific missing-only plan
       -> separate explicit user consent
       -> Stage 3: prepare only the locked optional capability
-      -> continue only through the future verified session contract
+      -> WorkBuddy continues only through its verified consumer contract
 -> Stage 6: unchanged preparation, exit, error and result facts
 ```
 
 - 每阶段最多一个公共入口、一个生产模块和一个直接测试文件；不能为了阶段编号制造文件。
 - 没有已验证输入或直接下游消费者时必须零代码退出，不得用通用框架替代缺失合同。
-- Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是阶段2登记前置，不属于阶段3发现或下载对象。阶段3只处理经WorkBuddy/OpenMontage实际选择的Remotion或HyperFrames能力，以及该能力锁精确声明的浏览器等附属资产；没有可选能力要求时返回`STAGE_3_NO_OPTIONAL_CAPABILITY_REQUIRED`。
+- Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是Package交付及阶段2登记前置，不属于阶段3发现或下载对象。阶段3只处理经WorkBuddy/OpenMontage实际选择的Remotion或HyperFrames能力，以及Package-owned能力Lock精确声明的浏览器等附属资产；没有可选能力要求时返回`NO_OPTIONAL_CAPABILITY_REQUIRED`。
 - 阶段3只有一个按需准备接口，不是“扫描所有可选能力后全部安装”。Shell不决定Remotion或HyperFrames，普通用户也不承担技术选型；WorkBuddy依据已验证Package合同形成能力要求，用户只确认对应下载量、目标和许可证。
-- 阶段3面向最终用户的可选能力下载只使用Optional Runtime Lock批准的中国大陆镜像，不得在失败后自动选择海外源。FFmpeg `gyan.dev`不再是阶段3终端用户下载源；它属于必带Package组装供应链并由阶段2核验。
-- 阶段4启动固定工具前必须接受阶段2的完整必带工具链就绪事实；所选可选渲染能力在实际执行前还必须接受对应阶段3就绪事实。缺少相应事实时返回`RUNTIME_NOT_READY`。它不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
+- 阶段3面向最终用户的可选能力下载只使用Package自有能力Lock批准的中国大陆镜像，不得在失败后自动选择海外源。FFmpeg `gyan.dev`不再是阶段3终端用户下载源；它属于必带Package组装供应链并由阶段2核验。
+- 阶段4基础固定工具调用必须接受阶段2生产Locator事实；所选可选渲染能力在实际执行前还必须接受与同一`registration_sha256`及`capability_lock_sha256`绑定的阶段3就绪回执。缺少相应事实时返回`RUNTIME_NOT_READY`。它不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
 - 阶段5只保留一种经真实WorkBuddy合同确认的入口形式，是用户实际运行的起点；在格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
 - 阶段6直接转交Runtime计划/准备事实和Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。它不得解释、安装或自动重试。
 - 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
 
 ### 4.2 中国大陆镜像合同
 
-老项目已经验证的大陆镜像先例只用于冻结渠道类别；新版Runtime Lock仍必须给出精确版本URL、大小和SHA-256：
+老项目已经验证的大陆镜像先例只用于冻结渠道类别；新版Package自有能力Lock仍必须给出精确版本URL、大小和SHA-256：
 
 | 组件 | 终端用户下载渠道 |
 |---|---|
@@ -85,15 +89,17 @@ User
 | HyperFrames可选依赖 | `https://registry.npmmirror.com`，仅在已选HyperFrames能力缺失时按锁准备 |
 | 可选浏览器资产 | 只有所选能力的当前锁明确要求时，才使用批准大陆镜像的精确资产；不得预设为所有用户必装 |
 
-不得把“大陆镜像失败”解释为可以回退海外官方源。可选能力仍须以Optional Runtime Lock中的版本、文件名、大小和SHA-256校验。必带FFmpeg和Node在Package组装时解决来源与分发，不能转嫁为终端用户阶段3下载。
+不得把“大陆镜像失败”解释为可以回退海外官方源。可选能力仍须以Package自有能力Lock中的版本、文件名、大小和SHA-256校验。必带FFmpeg和Node在Package组装时解决来源与分发，不能转嫁为终端用户阶段3下载。
 
 ### 4.3 阶段3重新规划边界
 
-上一版`prepare_runtime_on_demand(...)`及其把Python依赖、FFmpeg、Node列为阶段3目标的Runtime Lock已失效，不得实施。新版阶段3入口必须等待两个真实输入：阶段2返回完整必带工具链身份，以及WorkBuddy/OpenMontage返回已经锁定的可选能力要求。届时仍限制为一个生产模块、一个公共入口、一个Optional Runtime Lock和一个直接测试文件。
+上一版`prepare_runtime_on_demand(...)`、Shell-owned全组件Runtime Lock以及把Python依赖、FFmpeg、Node列为阶段3目标的形状已失效。新阶段3唯一建议入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`；结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。
 
-Remotion的受管目标可位于`<DataRoot>/Runtime/Composition/Remotion`，HyperFrames可位于`<DataRoot>/Runtime/Composition/HyperFrames`；浏览器只有被当前能力锁要求时才位于`<DataRoot>/Runtime/Browsers/<capability>`，缓存为`<DataRoot>/Caches`。阶段3不得创建`Runtime/Python`、`Runtime/FFmpeg`或`Runtime/Node`作为Package必带工具链的替代品。
+`capability_request`只允许当前Registration SHA、`none/remotion/hyperframes`、Package内能力Lock相对路径及SHA，以及可选的一个明确候选路径。下载URL、命令、目标和资产必须来自已验证Package-owned Lock，Shell不维护另一份Lock。用户授权只在绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`时有效；身份变化后重新确认。
 
-每个可选准备动作仍必须使用同卷staging、来源与SHA-256核验、产品所有权标记、原子发布、失败回滚和临时文件清理。现有目标不属于本产品或身份不匹配时必须保留原物并fail closed。
+实现顺序固定为Locator重验、请求与Lock验证、只读发现、零写入裁决、missing-only计划、授权复核、同卷staging与hash/许可核验、原子发布、失败回滚、重新探针和就绪回执。Remotion或HyperFrames受管目标为`<DataRoot>/Runtime/Composition/<capability>/<capability_lock_sha256>/`，缓存为`<DataRoot>/Caches/optional-runtime/`；浏览器只有当前Lock要求时才位于`<DataRoot>/Runtime/Browsers/<capability>/`。阶段3不得创建`Runtime/Python`、`Runtime/FFmpeg`或`Runtime/Node`。
+
+未来实现最多一个新`runtime_prepare.py`生产模块、`__init__.py`的一次导出编辑和一个`test_runtime_prepare.py`直接测试。没有持久最终Package、生产Registration/Activation、新进程Locator、Package-owned能力Lock或真实WorkBuddy消费者合同时，生产代码必须保持0。现有目标不属于本产品或身份不匹配时保留原物并fail closed。
 
 ## 5. 消息与授权边界
 

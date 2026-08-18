@@ -8,6 +8,8 @@
 |---|---|---|
 | `SHELL_INSTALLED` | Shell和Skill进入受支持安装位置 | ZIP构建成功 |
 | `OBJECT_IDENTITY_VERIFIED` | Shell/OpenMontage 执行包/Release/Manifest/Lock/SHA/安装实例一致 | 文件名、目录名、最新时间 |
+| `FINAL_PACKAGE_MATERIALIZED` | 最终Release、SHA sidecar和生产PackageRoot在任务清理后仍持久存在 | 一次临时Package组装成功 |
+| `PRODUCTION_PACKAGE_REGISTERED` | 生产DataRoot有活动Registration，且新进程Locator返回同一Package和完整工具链 | task-only DataRoot中的临时登记 |
 | `RUNTIME_BOUND` | 实际PackageRoot、完整必带工具链、cwd、DataRoot以及当前已选可选能力（如有）的来源/路径被锁定 | 单个Python包存在、系统PATH命中或doctor文字说明 |
 | `REAL_WORKBUDDY` | 真实WorkBuddy客户端在新会话执行 | Codex、CLI、fixture或历史会话 |
 | `PROCESS_CORRECT` | WorkBuddy依据已验证Package执行原生Pipeline/Skill/Artifact/Reviewer/Checkpoint合同 | 产生项目目录或MP4 |
@@ -35,7 +37,7 @@
 |---|---|---|
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration同时锁定Package、可用私有Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx的身份、hash、版本、能力和规范化路径 | 只登记Python；依赖系统Python/FFmpeg/Node；扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
-| Runtime按需准备 | 只消费WorkBuddy/OpenMontage已锁定的Remotion或HyperFrames能力要求；discover/plan零写入；用户确认后从批准大陆镜像只准备该能力及其锁声明附属资产；二次调用零下载复用 | 扫盘；发现/下载/替换必带Python/FFmpeg/Node；同时安装全部可选能力；通用下载/包管理/repair；自动海外源回退；修改系统PATH/注册表；Shell或普通用户替OpenMontage选择渲染器 |
+| Runtime按需准备 | 只消费绑定生产Registration和Package-owned Lock的已选Remotion或HyperFrames要求；discover/plan零写入；用户确认后从批准大陆镜像只准备该能力及其锁声明附属资产；二次调用零下载复用；向阶段4返回身份绑定回执 | 最终Package/生产Registration不存在仍实现；扫盘；Shell-owned重复Lock；发现/下载/替换必带Python/FFmpeg/Node；同时安装全部可选能力；通用下载/包管理/repair；自动海外源回退；修改系统PATH/注册表；Shell或普通用户替OpenMontage选择渲染器 |
 | 会话Launcher | 用阶段2必带工具链事实启动固定入口；所选可选能力执行前另有对应阶段3就绪事实；返回真实退出码、结果指针和残留事实 | 绕过相应就绪检查；启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
 | 状态与结果转交 | 直接转交Runtime计划/准备事实与Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；安装Runtime；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
@@ -44,7 +46,7 @@
 
 阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户运行顺序。旧“阶段3先检查所有Runtime再进入阶段4”的链路已失效：阶段4可依据阶段2必带工具链事实启动固定工具；WorkBuddy/OpenMontage锁定可选渲染能力后，只有该能力缺失时才调用阶段3。
 
-阶段3只有两个合法结果类别：没有可选能力要求或所选能力已就绪时记录`STAGE_3_NO_OPTIONAL_CAPABILITY_REQUIRED`/`READY_REUSED`并零下载；所选Remotion或HyperFrames缺失时形成只针对该能力及锁声明附属资产的计划，用户确认后按锁准备。不得把另一渲染器或未声明浏览器顺带安装。
+阶段3结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。没有可选能力要求或所选能力已就绪时零下载；所选Remotion或HyperFrames缺失时形成只针对该能力及Package-owned Lock声明附属资产的计划，用户确认后按锁准备。不得把另一渲染器或未声明浏览器顺带安装。
 
 Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具链。阶段2缺少任何一项时是`FAIL`，阶段3不得以宿主PATH、下载或受管目录补救。Node虽然官方Quick Start最低为18+，但当前HyperFrames要求22+，Package锁定值必须满足最高当前要求。
 
@@ -56,9 +58,24 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 ### 3.2 阶段3重新规划Gate
 
-上一版阶段3入口、全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`，不能实施。重新规划前必须得到阶段2完整工具链Locator输出、真实WorkBuddy/OpenMontage可选能力要求、能力锁和同一会话的暂停/继续消费者合同。
+上一版阶段3入口、Shell-owned全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`。新实现Gate必须同时证明：`FINAL_PACKAGE_MATERIALIZED`、`PRODUCTION_PACKAGE_REGISTERED`、新进程Locator成功、Package-owned能力Lock被Manifest覆盖、真实WorkBuddy消费者合同已冻结、最新正式Git对象和精确Builder白名单获授权。缺一项必须以`INCOMPLETE_STAGE_3_INPUT`零代码退出。
 
-新阶段3仍最多一个公共入口、一个生产模块、一个Optional Runtime Lock和一个直接测试文件。直接验收必须覆盖：无能力要求零代码/零下载；只检查已选能力；另一渲染器零触碰；锁未声明浏览器时浏览器零触碰；无确认零写入；身份变化使确认失效；只使用批准大陆镜像；外来目标保留；失败回滚和清理；二次调用零下载复用；必带Package工具链零修改；Shell选择渲染器和自动重放业务请求均为零。
+新阶段3最多一个公共入口`prepare_optional_capability(...)`、一个新生产模块、一个导出编辑和一个直接测试文件；不得新增Shell Runtime Lock。直接验收必须覆盖：
+
+1. 无能力要求返回`NO_OPTIONAL_CAPABILITY_REQUIRED`，零下载/零写入；
+2. 只检查已选能力，另一渲染器零触碰；
+3. Lock未声明浏览器时浏览器零触碰；
+4. 无确认只返回绑定版本、镜像、hash、大小、许可证、目标和`plan_sha256`的`CONSENT_REQUIRED`，零写入；
+5. Registration、Lock或计划身份变化使旧确认失效；
+6. 只使用批准大陆镜像，禁止自动海外回退；
+7. 外来目标保留，hash/大小/许可/来源/能力失败全部回滚并清理；
+8. 二次调用返回`READY_REUSED`且零下载；
+9. 必带Package工具链、Manifest、Registration和另一能力零修改；
+10. `READY_PREPARED`回执精确绑定Registration、能力Lock、runtime root、入口和版本证据；
+11. 阶段4拒绝过期、跨Package或能力不匹配回执；
+12. Shell选择渲染器、自动重放业务请求、扫描盘符、全局npm修改均为零。
+
+证据必须分层：单元/负面测试、本地真实准备、大陆镜像网络验证、真实WorkBuddy消费和视频E2E分别报告；前一层PASS不能替代后一层。
 
 ## 4. Gate A：对象与环境
 

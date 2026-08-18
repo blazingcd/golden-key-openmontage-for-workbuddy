@@ -1,6 +1,6 @@
 # OpenMontage Package Registration and Locator Contract
 
-状态：`REQUIRED_TOOLCHAIN_REFRESH / REVIEW_READY`
+状态：`PASS_ACCEPTED / REGISTRATION_LOCATOR_AND_TEMPORARY_PACKAGE_PROOF_ONLY`
 
 ## 1. Object and boundary
 
@@ -72,7 +72,7 @@ Stable errors remain `INPUT_INVALID`, `PATH_VIOLATION`, `OBJECT_MISSING`, `DUPLI
 
 Registration never activates. Activation remains explicit CAS. Recovery remains explicit hash-locked replacement of a broken pointer. Locator remains read-only and never repairs, scans, downloads, launches, or chooses a fallback.
 
-## 5. Exact refresh evidence
+## 5. Exact accepted refresh evidence
 
 ```text
 source package commit: 8395e578165e802990d53fef5a166f8b4cf0461a
@@ -93,4 +93,4 @@ real temporary registration: aa5aba5ff543258d58acf944a0f4e87d80b9f38e62205268ae2
 
 The dependency reconstruction uses the frozen Aliyun-resolved wheelhouse twice with `--no-compile`. Location-dependent console wrappers and pip `RECORD` installation receipts are excluded from both reconstructions; the remaining runtime dependency trees are byte-identical. The final private Python successfully imports every requirement and passes SSL plus same-interpreter subprocess checks. FFmpeg, ffprobe, Node, npm, and npx version commands pass. Real register, temporary activation, and read-only locate pass in a task-only DataRoot.
 
-This evidence does not prove Installer, Stage 3 optional capabilities, Launcher, real WorkBuddy, Provider, media, SaaS, network production, or business E2E.
+The Release, PackageRoot, and DataRoot used for this proof were task-only temporary objects and were deleted after evidence capture. This accepted evidence proves Registration/Locator behavior and repeatable complete-toolchain assembly, but does not prove a retained final Release, installed production PackageRoot, production Registration/Activation, Installer, Stage 3 optional capabilities, Launcher, real WorkBuddy, Provider, media, SaaS, network production, or business E2E.

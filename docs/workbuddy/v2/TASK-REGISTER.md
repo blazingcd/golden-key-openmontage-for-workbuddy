@@ -143,7 +143,7 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 上述证据证明完整工具链组装能力、Stage 2 Registration/Locator实现，以及一次真实register、task-only activate和new-process locate已经完成并正式接受；临时实例清理不重开、不重做阶段2。它仍不证明最终交付Package持续存在。最终Package持久构建、安装、生产登记和激活仍是强制交付要求，但只属于后续最终交付或Installer收口门禁，最迟在Stage 5真实WorkBuddy入口和生产验收前完成；它绝不是Stage 3编码前置，也不得塞入Stage 3 Runtime代码。
 
-纠偏后的Stage 3编码顺序只剩：本五文档纠偏完成独立审阅和正式推广，然后由live authority给出精确Builder基线、五路径白名单和Reviewer范围。不得增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate。持久最终Package与生产Registration仍在后续最终交付或Installer Gate收口，但不阻塞Stage 3编码。当前任务不授权生产实现、外部对象或DataRoot写入。
+纠偏后的Stage 3编码顺序只剩：本五文档纠偏完成独立审阅和正式推广，然后由live authority给出精确Builder基线、五路径白名单和Reviewer范围。不得增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate。持久最终Package与生产Registration仍在后续最终交付或Installer Gate收口，但不阻塞Stage 3编码。本授权提交正式推广前不得实施Stage 3；推广后只允许精确五路径生产实现。开发或测试任务不得随意写入外部对象或DataRoot；未来产品运行时只有在用户对具体能力明确`approve`后，才允许Stage 3在受管DataRoot执行合同规定的staging和集成，这不授权Builder现在进行任何真实第三方下载。
 
 ## 当前正式状态
 

@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S3-TO-S4-DOCS-SYNC1 / WORKTREE_RESULT_READY_FOR_REVIEW`
+状态：`V2-S3-TO-S4-DOCS-SYNC1 / PASS_ACCEPTED`
 
 更新时间：2026-08-18
 
@@ -8,17 +8,17 @@
 
 ```text
 task_id: V2-S3-TO-S4-DOCS-SYNC1
-task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+task_status: PASS_ACCEPTED
 task_kind: STAGE3_TO_STAGE4_DOCUMENT_SYNC / DOCS_ONLY / NO_IMPLEMENTATION
 user_authorization: 2026-08-18 / 同步Stage3完成事实；后续要求归回相关阶段；只判断推广后Stage4规划接管条件；严禁阶段越界
 start_commit: 7c15aae4e77c579309312b21c79076f930970214
-result_commit: THIS_COMMIT
-branch: codex/v2-s3-to-s4-docs-sync1
+result_commit: 513e5ca10d1ba04878295be110096b013f47974a / REVIEWED_NINE_DOCUMENT_RESULT
+historical_builder_branch: codex/v2-s3-to-s4-docs-sync1
 formal_target_branch: origin/codex/workbuddy-shell-v2
 formal_target_at_start: 7c15aae4e77c579309312b21c79076f930970214
-review_range: 7c15aae4e77c579309312b21c79076f930970214..THIS_COMMIT
-independent_review: NOT_STARTED / REQUIRED_ZERO_WRITE
-formal_promotion: NOT_STARTED / DOCS_SYNC_CANDIDATE_ONLY
+review_range: 7c15aae4e77c579309312b21c79076f930970214..513e5ca10d1ba04878295be110096b013f47974a
+independent_review: APPROVE / P0=0 / P1=0 / P2=0 / ZERO_WRITE
+formal_promotion: PASS / ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=513e5ca10d1ba04878295be110096b013f47974a
 repository_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; WORK-LOG.md; docs/workbuddy/v2/README.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/MODULE-DISPOSITION.md
 production_code_changes: 0
 test_changes: 0
@@ -58,11 +58,11 @@ consent_binding: capability + definition_sha256 + plan_sha256 / explicit per-cap
 real_workbuddy_evidence_stage: STAGE_5_ACCEPTANCE_ONLY
 same_task_continuation_rule: verify in Stage5; if unsupported ask user to reply 继续刚才的任务; Shell never auto-replays
 validation_diff_check: PASS / exact 9 existing docs / untracked 0 / git diff --check exit 0 / active stale Stage3 model tokens 0
-validation_full_test: NOT_RUN_DOCS_ONLY / Reviewer must inspect content and exact objects zero-write
+validation_full_test: NOT_RUN_DOCS_ONLY / independent Reviewer inspected content and exact objects zero-write
 validation_scope: exact 9 existing docs / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
 future_final_package_gate_rule: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1 is a later final-delivery or Installer task due before Stage5 real WorkBuddy production acceptance; it is not a Stage3 or Stage4 coding/planning prerequisite
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
-stage_4_takeover_boundary: planning_eligible_after_this_docs_promotion / implementation_authorization=NOT_GRANTED
+stage_4_takeover_boundary: PLANNING_ELIGIBLE / implementation_authorization=NOT_GRANTED
 stage_4_registration_audit: locate_active_package returns revalidated Registration, PackageRoot, required toolchain, Guide, Manifest and Lock identities; it does not return an authoritative fixed Package tool entry identity
 stage_4_contract_gap: exact public entry and immutable process receipt field names are not frozen; fixed Package tool identity source/path/hash/owner/fixed argv shape is not present in current Registration output
 stage_4_gap_owner_package_tool_identity: approved OpenMontage Package definition plus later final-delivery or Installer owner / must provide a verifiable fixed tool identity without reopening Stage2 or making final Package a Stage4 planning prerequisite
@@ -71,7 +71,7 @@ stage_5_deferred_scope: real new WorkBuddy session, single entry, unchanged lite
 stage_6_deferred_rule: evaluate only after Stage4 receipt and Stage5 real consumer exist; direct consumption means STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE and production code 0
 forbidden_scope: Stage4/5/6 implementation; final Package generation; Installer; WorkBuddy run; Provider; media/video E2E; production DataRoot; code/tests/CI/pyproject; new files; any tenth path
 next_authorized_task: NONE
-stage_4_planning: ELIGIBLE_AFTER_THIS_DOCS_PROMOTION
+stage_4_planning: ELIGIBLE
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -201,7 +201,7 @@ real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
 stage_3_execution_packet: CONSUMED_COMPLETE / EXACT_5_PATHS
 stage3_implementation: PASS_ACCEPTED
 stage_3_status: PASS_ACCEPTED
-stage_4_planning: ELIGIBLE_AFTER_THIS_DOCS_PROMOTION
+stage_4_planning: ELIGIBLE
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED

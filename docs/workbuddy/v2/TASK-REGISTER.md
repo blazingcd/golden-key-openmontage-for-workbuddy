@@ -138,7 +138,8 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-formal_handoff_commit: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
+accepted_authority_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
+formal_handoff_after_closeout: THIS_COMMIT
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED

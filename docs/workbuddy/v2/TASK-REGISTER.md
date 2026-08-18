@@ -1,77 +1,60 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2_FINAL_PACKAGE_MATERIALIZATION_AND_PRODUCTION_REGISTRATION_GATE1 / AUTHORITY_REVIEW_READY`
+状态：`V2_FINAL_PACKAGE_GATE_ORDER_CORRECTION / REVIEW_READY；FINAL_PACKAGE_GATE / BLOCKED_PACKAGE_CAPABILITY_LOCK`
 
 更新时间：2026-08-18
 
 ## 当前任务
 
 ```text
-authority_task_id: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1-AUTHORITY1
-authority_status: REVIEW_READY
+authority_task_id: V2-FINAL-PACKAGE-GATE-ORDER-CORRECTION1
+authority_status: REVIEW_READY_AFTER_REQUEST_CHANGES
 authority_start_commit: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
+authority_initial_result_commit: 037ed38e1fb1e04af241d99ddf5a8a07592ae85c
+authority_initial_review: REQUEST_CHANGES / P0=0 / P1=3 / P2=1
 authority_result_commit: THIS_COMMIT
 authority_branch: codex/v2-final-package-gate-authority1
 authority_review_range: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2..THIS_COMMIT
 authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
 authority_activation_condition: independent APPROVE and ordinary fast-forward to formal branch
-task_id: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1
-task_status: READY_AFTER_AUTHORITY_PROMOTION
-task_kind: EXTERNAL_FINAL_PACKAGE_MATERIALIZATION_INSTALL_AND_PRODUCTION_REGISTRATION
+task_id: V2-PACKAGE-OWNED-OPTIONAL-CAPABILITY-LOCK-INPUT-GATE1
+task_status: BLOCKED_EXTERNAL_PACKAGE_INPUT_REQUIRED
+task_kind: EXTERNAL_PACKAGE_INPUT_GATE / NO_SHELL_IMPLEMENTATION
 user_authorization: 2026-08-18 / 开始并尽快收尾，以便尽快启动阶段三；不得扩充边界或膨胀功能
-implementation_authorization: GRANTED_FOR_EXACT_GATE_AFTER_AUTHORITY_PROMOTION
-start_commit: THIS_COMMIT
-start_commit_resolution: Authority1经独立APPROVE并正式fast-forward后的精确40位SHA
+implementation_authorization: NOT_GRANTED_IN_SHELL_REPOSITORY
+start_commit: NOT_CREATED
+start_commit_resolution: final Package gate cannot start before Package-owned capability Locks exist
 result_commit: NOT_CREATED
-branch: codex/v2-final-package-materialization-registration-gate1
+branch: NOT_CREATED
 formal_target_branch: origin/codex/workbuddy-shell-v2
 formal_target_at_authority_start: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
-repository_allowed_paths:
-  - PROJECT-STATE.md
-  - README.md
-  - README_zh-CN.md
-  - WORK-LOG.md
-  - docs/workbuddy/v2/README.md
-  - docs/workbuddy/v2/TASK-REGISTER.md
-  - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
-  - docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+repository_allowed_paths: none until a separately authorized external-Package result is accepted
 production_code_changes: 0
 test_changes: 0
 tracked_files_expected: 33
-task_temp_root: D:\BlazingCD\Personal\Temp\workbuddy-v2-final-package-gate1
+external_writes_performed: 0
+task_temp_root_status: NOT_CREATED
 source_repository: D:\BlazingCD\Personal\golden_key_short_video_agent-openmontage-agent-cleanroom
 source_commit: 8395e578165e802990d53fef5a166f8b4cf0461a
 source_package_tree_path: packages/golden-key-openmontage
 source_package_tree: 0464861c5985c7c9072e789b94889d29cf9a937a
 source_rule: git-object export only; source dirty worktree read/write/cleanup forbidden
-python_archive: D:\Downloads\Working\python-3.14.7-embed-amd64.zip
-python_archive_size: 12673227
-python_archive_sha256: d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15
-python_dependency_resolution: exact previously accepted 47 versions; Aliyun PyPI download only; offline install with no compile; remove RECORD and bin wrappers
-python_dependency_versions: Pillow==12.3.0; annotated-doc==0.0.5; annotated-types==0.8.0; anyio==4.14.2; attrs==26.1.0; certifi==2026.7.22; cffi==2.1.1; charset-normalizer==3.5.1; click==8.4.2; colorama==0.4.6; cryptography==50.0.0; distro==1.9.0; fastapi==0.141.1; google-auth==2.56.3; google-genai==2.18.1; h11==0.16.0; httpcore==1.0.9; httpcore2==2.10.0; httpx==0.28.1; httpx2==2.10.0; idna==3.18; jiter==0.16.0; jsonschema==4.26.0; jsonschema-specifications==2025.9.1; numpy==2.5.2; openai==3.1.0; pyasn1==0.6.4; pyasn1-modules==0.4.2; pycparser==3.0; pydantic==2.13.4; pydantic-core==2.46.4; python-dotenv==1.2.3; pyyaml==6.0.3; referencing==0.37.0; requests==2.34.2; rpds-py==2026.6.3; sniffio==1.3.1; starlette==1.6.0; tenacity==9.1.4; tqdm==4.70.0; truststore==0.10.4; typing-extensions==4.16.0; typing-inspection==0.4.4; urllib3==2.7.0; uvicorn==0.52.3; watchfiles==1.2.0; websockets==16.1.1
-node_archive_url: https://npmmirror.com/mirrors/node/v22.23.2/node-v22.23.2-win-x64.zip
-node_archive_size: 35683585
-node_archive_sha256: 1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97
-ffmpeg_archive_url: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z
-ffmpeg_archive_size: 34372199
-ffmpeg_archive_sha256: 49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85
-release_archive: D:\WorkBuddyDistributions\GoldenKeyOpenMontageForWorkBuddy\Releases\0.3.24\golden-key-openmontage-workbuddy-0.3.24.zip
-release_sidecar: D:\WorkBuddyDistributions\GoldenKeyOpenMontageForWorkBuddy\Releases\0.3.24\golden-key-openmontage-workbuddy-0.3.24.zip.sha256
-expected_release_size: 223112435
-expected_release_sha256: f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03
-installed_package_root: D:\WorkBuddyApps\GoldenKeyOpenMontageForWorkBuddy\Packages\0.3.24\f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03
-production_data_root: D:\WorkBuddyData\GoldenKeyOpenMontageForWorkBuddy
-external_write_policy: exact new paths only; same-volume staging; hash verification before publish; never overwrite or delete foreign objects
-registration_action: register exact Release + installed PackageRoot; explicit activate from MISSING; new-process locate
-acceptance: retained Release and sidecar + installed PackageRoot + production Registration/Activation + new-process Locator + complete private Python/FFmpeg/Node tool probes
-forbidden_scope: production code/tests/CI; Installer feature; Stage3 code; optional capability installation; capability Lock invention; WorkBuddy/Launcher/Provider/media; source-repo mutation; disk scan; system PATH/registry/global npm
-stage_3_effect: closes final-Package and production-Registration blockers only
-remaining_stage_3_inputs: Package-owned Manifest-covered capability Lock + real WorkBuddy pause/consent/continue consumer contract + exact Stage3 Builder packet
-next_authorized_task: V2-FINAL-PACKAGE-GATE-AUTHORITY-REVIEW1
+candidate_release_f00e83_status: STAGE2_TEMPORARY_PROOF_ONLY / MUST_NOT_PUBLISH_AS_FINAL
+ordering_correction: Package-owned capability Locks must be accepted before one-time final Package materialization and production Registration
+remotion_existing_package_lock: remotion-composer/package-lock.json / Manifest-covered but NOT_ELIGIBLE_AS_STAGE3_CAPABILITY_LOCK
+remotion_blockers: resolved host registry.npmjs.org; no package size fields; 8 entries without license; no approved-mainland plan schema or Stage3 target/probe contract
+hyperframes_existing_package_lock: MISSING
+hyperframes_blockers: runtime package/version not frozen; current Package text includes unpinned npx behavior and conflicting public package-name guidance; no mirror/hash/size/license/browser/target/probe contract
+required_external_package_result: new immutable Package commit/tree/version containing Manifest-covered Remotion and HyperFrames capability Locks with exact package closure, approved mainland mirrors, hashes, sizes, licenses, targets, probes and browser assets only where required
+required_consumer_result: real WorkBuddy/OpenMontage pause/consent/continue request contract bound to capability and Lock identity
+future_final_package_gate_rule: run once only after both inputs; freeze exact wheel filenames/sizes/SHA-256 and a hash-locked deterministic assembly procedure; publish/install/register only the resulting new Package identity
+future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
+forbidden_scope: Shell production code/tests/CI; ad-hoc modification of external dirty worktree; Shell-owned capability Lock; publishing f00e83 as final; Stage3 code; optional installation; WorkBuddy/Launcher/Provider/media
+next_authorized_task: V2-FINAL-PACKAGE-GATE-ORDER-CORRECTION-REVIEW1
 next_task_authorization: READ_ONLY_REVIEW_ONLY
 ```
 
-本Authority只授权复现阶段二已经接受的精确Package对象，并把它持久发布、安装、生产登记、显式激活和新进程重验；不是重新设计Package或实现Installer。任何输出hash不是`f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`、需要修改生产代码/测试、需要覆盖既有目录，或试图顺带实现阶段3时，必须在发布写入前停止。Authority未经独立`APPROVE`和正式fast-forward不得执行外部写入。
+Reviewer确认直接发布`f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`会造成必然返工：阶段3要求的Package-owned能力Lock尚不存在或不合格，一旦补入就会改变Manifest、Release SHA、PackageRoot和Registration。因此本次没有创建临时根、下载、Release、PackageRoot或生产Registration。Shell仓库只记录正确顺序，不替外部Package发明Lock，也不以旧npm lock冒充阶段3合同。
 
 ## 阶段2已完成任务证据
 
@@ -147,14 +130,13 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 上述证据证明完整工具链组装和登记能力，不证明最终交付Package仍存在。阶段2生产实现边界不因本次规划而扩张；最终Package持久构建、安装、生产登记和激活属于阶段3实现前的交付门禁，不得塞入阶段3Runtime代码。
 
-本文档任务正式推广后，执行顺序上的下一项是`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`，不是阶段3Builder。它只负责持久最终Release、生产安装/登记/激活和新进程Locator证据；本任务没有自动授予该门禁的Builder权限。门禁完成后，还必须由Package提供Manifest覆盖的可选能力Lock，并由真实WorkBuddy冻结消费者合同，阶段3实现任务才可另行授权。
+正确顺序已改为：先由外部Golden Key OpenMontage Package产出Manifest覆盖的Remotion/HyperFrames能力Lock，并由真实WorkBuddy冻结消费者合同；再只生成一次最终Package、安装、生产登记/激活并做新进程Locator；最后才冻结阶段3 Builder任务包。当前Shell任务不授权修改外部Package，也不授权最终Package门禁或阶段3实现。
 
 ## 当前正式状态
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-formal_handoff_before_closeout: 72719c758f092868fc6446e44a803d13eeae44a6
-formal_handoff_after_closeout: THIS_COMMIT
+formal_handoff_commit: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED
@@ -179,6 +161,9 @@ stage3_planning: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
 stage_3_implementation_authorization: NOT_GRANTED
 stage_3_conditional_authorization: NOT_GRANTED
 stage_3_start_gate: BLOCKED_FINAL_PACKAGE_AND_CONSUMER_CONTRACT
+final_package_gate: BLOCKED_PACKAGE_CAPABILITY_LOCK
+package_owned_capability_lock: MISSING_OR_INELIGIBLE
+real_workbuddy_consumer_contract: NOT_FROZEN
 stage_3_execution_packet: REPLANNED_BOUNDARY_PASS_ACCEPTED / IMPLEMENTATION_NOT_GRANTED
 stage3_implementation: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED

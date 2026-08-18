@@ -58,7 +58,7 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 ### 3.2 阶段3重新规划Gate
 
-上一版阶段3入口、Shell-owned全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`。新实现Gate必须同时证明：`FINAL_PACKAGE_MATERIALIZED`、`PRODUCTION_PACKAGE_REGISTERED`、新进程Locator成功、Package-owned能力Lock被Manifest覆盖、真实WorkBuddy消费者合同已冻结、最新正式Git对象和精确Builder白名单获授权。缺一项必须以`INCOMPLETE_STAGE_3_INPUT`零代码退出。
+上一版阶段3入口、Shell-owned全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`。新实现Gate必须同时证明：`FINAL_PACKAGE_MATERIALIZED`、`PRODUCTION_PACKAGE_REGISTERED`、新进程Locator成功、Package-owned能力Lock被Manifest覆盖、真实WorkBuddy消费者合同已冻结、最新正式Git对象和精确Builder白名单获授权。实现授权前缺一项时，任务治理裁决为`INCOMPLETE_STAGE_3_INPUT`并零代码停止；它不增加公共结果。未来运行期同类输入问题只能表示为五种结果之一的`BLOCKED(reason_code=INCOMPLETE_STAGE_3_INPUT)`，`BLOCKED_BEFORE_PUBLISH`同样只能是`BLOCKED`的原因码。
 
 新阶段3最多一个公共入口`prepare_optional_capability(...)`、一个新生产模块、一个导出编辑和一个直接测试文件；不得新增Shell Runtime Lock。直接验收必须覆盖：
 

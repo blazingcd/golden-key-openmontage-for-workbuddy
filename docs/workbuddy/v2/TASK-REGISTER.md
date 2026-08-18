@@ -186,7 +186,7 @@ Stage 6: Status and Result Relay
 stage_3_scope: 仅对WorkBuddy/OpenMontage已经锁定的可选Remotion或HyperFrames能力及其锁声明附属资产执行按需发现和用户确认后的准备；不得处理必带Python/FFmpeg/Node工具链。
 stage_3_public_entry: prepare_optional_capability(data_root, capability_request, authorization_receipt=None)
 stage_3_result_set: NO_OPTIONAL_CAPABILITY_REQUIRED / READY_REUSED / CONSENT_REQUIRED / READY_PREPARED / BLOCKED
-stage_3_zero_write_exit: NO_OPTIONAL_CAPABILITY_REQUIRED / READY_REUSED / CONSENT_REQUIRED / BLOCKED_BEFORE_PUBLISH
+stage_3_zero_write_result: NO_OPTIONAL_CAPABILITY_REQUIRED / READY_REUSED / CONSENT_REQUIRED / BLOCKED(reason_code=BLOCKED_BEFORE_PUBLISH)
 stage_3_download_policy: OPTIONAL_CAPABILITY_APPROVED_MAINLAND_CHINA_MIRRORS / NO_AUTOMATIC_OVERSEAS_FALLBACK
 stage_3_lock_authority: VERIFIED_PACKAGE_OWNED / SHELL_MUST_NOT_DUPLICATE
 stage_3_maximum_code_paths: golden_key_openmontage_workbuddy/runtime_prepare.py + export-only golden_key_openmontage_workbuddy/__init__.py + tests/workbuddy/test_runtime_prepare.py
@@ -213,7 +213,7 @@ stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 5. 真实WorkBuddy/OpenMontage消费者合同明确何时选择能力、怎样传入请求、怎样暂停确认以及准备后怎样继续；
 6. 最新正式Git对象、精确允许路径、直接测试和独立Reviewer范围写入新的实现任务包。
 
-任一输入缺失时返回`INCOMPLETE_STAGE_3_INPUT`，不得创建占位实现、通用Runtime框架或测试假合同。
+实现授权前任一Gate输入缺失，任务治理裁决为`INCOMPLETE_STAGE_3_INPUT`并零代码停止；它不是公共接口的第六种结果。未来接口存在后，运行期输入缺失统一返回`BLOCKED(reason_code=INCOMPLETE_STAGE_3_INPUT)`。不得创建占位实现、通用Runtime框架或测试假合同。
 
 ### 唯一输入合同
 

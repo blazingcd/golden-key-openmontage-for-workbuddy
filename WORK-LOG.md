@@ -25,6 +25,7 @@
 
 - Reviewer1在`85eb55c75a5988baded734a0c9a135df477b8026`发现`P0=0 / P1=2 / P2=1`，结论`REQUEST_CHANGES`：已有可选能力是否仍经阶段3核验存在双路线；FFmpeg旧ZIP字样与`.7z / 9.0.1-essentials_build`证据冲突；旧模块处置仍写等待重规划。
 - 修正后统一为：选择Remotion/HyperFrames后必经阶段3核验；已有能力返回`READY_REUSED`，只有缺失项下载/准备需要同意；FFmpeg精确资产只引用任务账本和Registration合同；旧模块处置改为“已重规划、实现未授权”。
+- Reviewer1复审确认上述三项关闭后，又发现`INCOMPLETE_STAGE_3_INPUT`和`BLOCKED_BEFORE_PUBLISH`可能被误读为第六/第七种公共结果。现统一为：前者在实现授权前是任务治理裁决；未来运行期两者都只能作为`BLOCKED(reason_code=...)`原因码，公共结果仍精确为五种。
 
 ## 2026-08-18：V2必带工具链重新分类纠偏
 

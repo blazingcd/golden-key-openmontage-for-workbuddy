@@ -36,7 +36,7 @@
 |---|---|---|---|
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、完整必带私有工具链和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、Python/FFmpeg/ffprobe/Node/npm/npx身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖任何系统Python/FFmpeg/Node；登记/实现SaaS Core |
-| Runtime按需准备 | 只读发现已由WorkBuddy/OpenMontage锁定的可选渲染能力，并对用户确认计划中的缺失项进行受控准备 | 输入：活动Package Registration、经验证的可选能力要求、Package自有能力Lock、受管/明确候选/PATH候选及用户对计划的明确授权；输出：所选能力来源与状态、`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`或`BLOCKED`事实 | 扫盘；发现/下载/替换必带Python/FFmpeg/Node工具链；一次安装所有可选能力；由Shell或普通用户替OpenMontage选择Remotion/HyperFrames；通用包管理器；未授权下载；海外默认源回退；修改系统PATH/注册表 |
+| Runtime按需准备 | 只读发现已由WorkBuddy/OpenMontage选择且当前Package版本声明支持的一个可选渲染能力，并对用户确认计划中的缺失项进行受控准备 | 输入：活动Package Registration、当前Release可选能力声明、经验证的单一能力要求、该能力Package自有Lock、受管/明确候选/PATH候选及用户对计划的明确授权；输出：所选能力来源与状态、`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`或`BLOCKED`事实 | 扫盘；把Remotion/HyperFrames当必带Runtime；处理本Release未声明的能力；发现/下载/替换必带Python/FFmpeg/Node工具链；一次安装所有可选能力；由Shell或普通用户替OpenMontage选择Remotion/HyperFrames；通用包管理器；未授权下载；海外默认源回退；修改系统PATH/注册表 |
 | 会话Launcher | 为一次WorkBuddy拥有的会话绑定精确Package、完整必带工具链和当前实际需要的已验证可选能力，并调用一个固定工具入口 | 输入：有效Package Registration、阶段2必带工具链就绪事实、执行所选可选能力时对应的阶段3就绪事实、分离的用户消息与执行控制；输出：一次调用回执、真实退出码、结果指针和残留事实 | 启动第二Agent/模型进程；解析用户意图；接受任意Shell；自动重试；调度多任务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
 | 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
@@ -57,22 +57,23 @@ User
 -> WorkBuddy/OpenMontage: lock the actual render capability
    -> package FFmpeg capability: continue with bundled FFmpeg
    -> Remotion or HyperFrames selected
-      -> Stage 3: validate the Package-owned capability Lock and exact installed state
+      -> undeclared by this Package Release: BLOCKED
+      -> declared by this Package Release: Stage 3 validates that capability's Package-owned Lock and exact installed state
       -> ready: return a receipt bound to Registration and capability Lock
       -> missing: return one capability-specific missing-only plan
       -> separate explicit user consent
       -> Stage 3: prepare only the locked optional capability
-      -> WorkBuddy continues only through its verified consumer contract
+      -> WorkBuddy follows the frozen result-to-action interface; real continuation is accepted at Stage 5
 -> Stage 6: unchanged preparation, exit, error and result facts
 ```
 
 - 每阶段最多一个公共入口、一个生产模块和一个直接测试文件；不能为了阶段编号制造文件。
 - 没有已验证输入或直接下游消费者时必须零代码退出，不得用通用框架替代缺失合同。
-- Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是Package交付及阶段2登记前置，不属于阶段3发现或下载对象。阶段3只处理经WorkBuddy/OpenMontage实际选择的Remotion或HyperFrames能力，以及Package-owned能力Lock精确声明的浏览器等附属资产；没有可选能力要求时返回`NO_OPTIONAL_CAPABILITY_REQUIRED`。
+- Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是Package交付及阶段2登记前置，不属于阶段3发现或下载对象。Remotion和HyperFrames只是允许的可选能力目录；每个不可变Package Release可声明支持零个、一个或两个，并只为声明支持者携带Lock。阶段3只处理经WorkBuddy/OpenMontage实际选择且本Release声明支持的一个能力，以及该能力Lock精确声明的浏览器等附属资产；没有可选能力要求时返回`NO_OPTIONAL_CAPABILITY_REQUIRED`，选择未声明能力时返回`BLOCKED`且零下载。Release声明零能力不阻塞最终Package，但不给阶段3提供正向消费者输入，因此该Release不得为阶段3制造通用框架或生产代码。
 - 阶段3只有一个按需准备接口，不是“扫描所有可选能力后全部安装”。Shell不决定Remotion或HyperFrames，普通用户也不承担技术选型；WorkBuddy依据已验证Package合同形成能力要求，用户只确认对应下载量、目标和许可证。
 - 阶段3面向最终用户的可选能力下载只使用Package自有能力Lock批准的中国大陆镜像，不得在失败后自动选择海外源。FFmpeg `gyan.dev`不再是阶段3终端用户下载源；它属于必带Package组装供应链并由阶段2核验。
 - 阶段4基础固定工具调用必须接受阶段2生产Locator事实；所选可选渲染能力在实际执行前还必须接受与同一`registration_sha256`及`capability_lock_sha256`绑定的阶段3就绪回执。缺少相应事实时返回`RUNTIME_NOT_READY`。它不启动第二Agent，不提供任意命令、常驻服务、队列、调度、自动重试或Checkpoint恢复。
-- 阶段5只保留一种经真实WorkBuddy合同确认的入口形式，是用户实际运行的起点；在格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
+- 阶段3前只冻结最小结果到WorkBuddy动作接口，不要求真实WorkBuddy已经跑通。阶段5只保留一种真实WorkBuddy Skill入口，是用户实际运行的起点；在阶段5验收中证明新会话命中、明确同意与同任务继续，不能继续时固定提示用户回复“继续刚才的任务”。在入口格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
 - 阶段6直接转交Runtime计划/准备事实和Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。它不得解释、安装或自动重试。
 - 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
 
@@ -95,11 +96,25 @@ User
 
 上一版`prepare_runtime_on_demand(...)`、Shell-owned全组件Runtime Lock以及把Python依赖、FFmpeg、Node列为阶段3目标的形状已失效。新阶段3唯一建议入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`；结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。
 
-`capability_request`只允许当前Registration SHA、`none/remotion/hyperframes`、Package内能力Lock相对路径及SHA，以及可选的一个明确候选路径。下载URL、命令、目标和资产必须来自已验证Package-owned Lock，Shell不维护另一份Lock。用户授权只在绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`时有效；身份变化后重新确认。
+`capability_request`只允许当前Registration SHA、`none/remotion/hyperframes`、当前Release的可选能力声明，以及非`none`时Package内对应能力Lock相对路径及SHA，再加可选的一个明确候选路径。`none`不要求能力Lock；非`none`但未被当前Release声明支持或缺少对应Lock时返回`BLOCKED`。下载URL、命令、目标和资产必须来自已验证Package-owned Lock，Shell不维护另一份Lock。用户授权只在绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`时有效；身份变化后重新确认。
 
 实现顺序固定为Locator重验、请求与Lock验证、只读发现、零写入裁决、missing-only计划、授权复核、同卷staging与hash/许可核验、原子发布、失败回滚、重新探针和就绪回执。Remotion或HyperFrames受管目标为`<DataRoot>/Runtime/Composition/<capability>/<capability_lock_sha256>/`，缓存为`<DataRoot>/Caches/optional-runtime/`；浏览器只有当前Lock要求时才位于`<DataRoot>/Runtime/Browsers/<capability>/`。阶段3不得创建`Runtime/Python`、`Runtime/FFmpeg`或`Runtime/Node`。
 
-未来实现最多一个新`runtime_prepare.py`生产模块、`__init__.py`的一次导出编辑和一个`test_runtime_prepare.py`直接测试。没有持久最终Package、生产Registration/Activation、新进程Locator、Package-owned能力Lock或真实WorkBuddy消费者合同时，生产代码必须保持0。现有目标不属于本产品或身份不匹配时保留原物并fail closed。
+未来实现最多一个新`runtime_prepare.py`生产模块、`__init__.py`的一次导出编辑和一个`test_runtime_prepare.py`直接测试。没有持久最终Package、生产Registration/Activation、新进程Locator、Release可选能力声明、声明能力对应的Package-owned Lock或下述最小消费者接口合同时，生产代码必须保持0。真实WorkBuddy运行证据在阶段5验收，不是此处前置。现有目标不属于本产品或身份不匹配时保留原物并fail closed。
+
+### 4.4 最小WorkBuddy消费者接口
+
+阶段3前冻结的是结果与动作映射，不是提前实现阶段5，也不是真实客户端PASS：
+
+| 阶段3结果 | 唯一WorkBuddy动作 |
+|---|---|
+| `NO_OPTIONAL_CAPABILITY_REQUIRED` | 直接继续原任务 |
+| `READY_REUSED` | 使用已验证的现有能力继续 |
+| `CONSENT_REQUIRED` | 展示所选能力的来源、大小、许可证和目标并询问用户；本次调用零下载 |
+| `READY_PREPARED` | 继续原任务；不得重新选择能力 |
+| `BLOCKED` | 原样报告原因并停止相应可选能力执行 |
+
+WorkBuddy只在用户明确同意后回传绑定`registration_sha256 + capability_lock_sha256 + plan_sha256`的批准事实；任一身份变化都必须重新询问。阶段5用唯一Skill在真实新会话验证上述两次调用。优先在同一任务上下文继续；若真实客户端不能自动继续，则只提示用户回复“继续刚才的任务”，Shell不得保存或自动重放原始业务消息。
 
 ## 5. 消息与授权边界
 

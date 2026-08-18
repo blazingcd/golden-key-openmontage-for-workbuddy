@@ -21,9 +21,10 @@
 - 没有已验证上游输入或直接下游消费者仍新增生产代码；
 - 阶段3发现、下载、替换或回退到系统Python/FFmpeg/Node，借此补偿阶段2必带工具链不完整；
 - 阶段3同时安装Remotion与HyperFrames、替WorkBuddy/OpenMontage选择渲染器，或准备所选能力锁未声明的浏览器/附属资产；
+- 把Remotion或HyperFrames写成所有Package Release必带Runtime，要求未声明支持的能力也必须有Lock，或因未声明能力缺Lock而阻塞最终Package；
 - 阶段3从默认Git/GitHub、Google、npmjs或其他未批准海外源下载，在批准大陆镜像失败后静默回退；
 - 阶段3把PATH命中直接判为可用而不核验版本、路径、能力和登记身份，扫描盘符，或覆盖未知/外来目录；
-- 阶段3在最终Release未保留、生产Package未登记、Locator未在新进程重验、Package自有能力Lock未冻结、真实WorkBuddy/OpenMontage暂停/同意/继续合同不完整或正式Git对象漂移时提前编码；
+- 阶段3在最终Release未保留、生产Package未登记、Locator未在新进程重验、Release可选能力声明未冻结、声明支持的能力缺少Package自有Lock、最小结果到WorkBuddy动作接口不完整或正式Git对象漂移时提前编码；
 - 阶段3在Shell仓库复制、维护或猜测可选能力Lock，而不是核验当前Registration所绑定Package内的能力Lock；
 - 阶段3实现已标记`SUPERSEDED`的旧`prepare_runtime_on_demand(...)`签名、旧全闭集Runtime Lock或旧任务包，或恢复`host_tools.py`、通用下载器、CLI/MCP、服务、数据库等第二入口；
 - 阶段3把可选能力写入Package、系统目录或必带工具链目录，修改系统PATH/注册表，要求管理员权限，或在失败后遗留staging/cache临时对象；
@@ -40,7 +41,7 @@
 
 金钥匙版交付包必须自带Manifest/Lock锁定的完整必带私有工具链：可用Python 3.10+环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx；Node满足当前Package最高要求，当前不得低于HyperFrames所需的22。阶段2已经接受Registration/Locator实现，并以一次随后清理的真实临时Package验证这些字节；这不等于最终Release、已安装生产PackageRoot或生产Registration已经存在。最终Package的持久组装、安装与生产登记必须在阶段3实现前单独过Gate。FFmpeg `gyan.dev`候选只属于Package组装供应链、hash、许可和分发审查，不再是阶段3面向终端用户的下载例外。
 
-阶段3只准备经验证WorkBuddy/OpenMontage决定并锁定的一个可选能力，当前为Remotion或HyperFrames，以及Package自有能力Lock明确声明的附属资产。普通用户只确认精确missing-only计划，不选择技术组件；终端用户可选下载必须使用批准的中国大陆镜像且不得自动海外回退。阶段3建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`，最大代码面为一个新增生产模块、一次仅导出修改和一个直接测试文件。旧阶段3条件授权、入口签名、全闭集Lock和执行包均已暂停并标记`SUPERSEDED`；只有最终Package、生产登记、真实消费者合同和精确任务包全部满足Start Gate，`TASK-REGISTER.md`再明确写为`GRANTED`，Builder才可开始。
+阶段3只准备经验证WorkBuddy/OpenMontage决定且当前Package Release声明支持的一个可选能力，允许目录当前为Remotion或HyperFrames，以及该能力Package自有Lock明确声明的附属资产。每个Release可声明零个、一个或两个；未声明能力不需要Lock且不是安装目标。普通用户只确认精确missing-only计划，不选择技术组件；终端用户可选下载必须使用批准的中国大陆镜像且不得自动海外回退。阶段3建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`，最大代码面为一个新增生产模块、一次仅导出修改和一个直接测试文件。旧阶段3条件授权、入口签名、全闭集Lock和执行包均已暂停并标记`SUPERSEDED`；只有最终Package、生产登记、Release声明及对应Locks、最小结果到WorkBuddy动作接口和精确任务包全部满足Start Gate，`TASK-REGISTER.md`再明确写为`GRANTED`，Builder才可开始。真实WorkBuddy新会话和继续验证属于阶段5验收，不得反向阻塞阶段3。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

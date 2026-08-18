@@ -23,8 +23,8 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 
 金钥匙版交付包必须自带并登记完整的私有必带工具链：可用Python 3.10+环境及锁定核心依赖、FFmpeg/ffprobe、Node.js及npm/npx。Node必须满足当前Package内最高要求；因为当前HyperFrames要求Node 22+，不能只锁官方通用README的18+下限。精确`gyan.dev` FFmpeg资产归Package组装供应链候选，接受来源、hash、许可和分发审查，不作为阶段3面向终端用户的下载项。
 
-阶段3只负责WorkBuddy/OpenMontage已经选择并锁定的一个可选能力：无需可选能力、Remotion或HyperFrames，以及Package自有能力Lock明确声明的附属资产。建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`；未来最大代码面为一个新增模块、一次仅导出修改和一个直接测试文件。阶段3不选择渲染器，不预装两种渲染器，不发现、下载或替换Python/FFmpeg/Node，不扫描盘符，也不运行视频。终端用户可选下载必须先形成精确missing-only计划、取得明确同意并使用批准的中国大陆镜像，不得自动海外回退。
+阶段3只负责WorkBuddy/OpenMontage已经选择的一个可选能力：无需可选能力、Remotion或HyperFrames，以及该能力Package自有Lock明确声明的附属资产。Remotion和HyperFrames只是允许的可选能力目录，不是必带Runtime；每个Package版本可以声明支持零个、一个或两个，只需为本版本声明支持者携带Lock。建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`；未来最大代码面为一个新增模块、一次仅导出修改和一个直接测试文件。阶段3不选择渲染器，不预装两种渲染器，不发现、下载或替换Python/FFmpeg/Node，不扫描盘符，也不运行视频。终端用户可选下载必须先形成精确missing-only计划、取得明确同意并使用批准的中国大陆镜像，不得自动海外回退。
 
 最终用户从阶段5进入：阶段5先通过阶段2重验生产Package；阶段4可以使用必带工具链发起基础固定工具调用，只有可选Remotion/HyperFrames执行才额外需要绑定同一Registration和能力Lock的阶段3回执。暂停、同意与继续由WorkBuddy负责，阶段6只转交事实，Shell不得自动重放原业务请求。
 
-旧阶段3任务包、公共入口签名和Shell自有全组件Runtime Lock均已标记`SUPERSEDED`。只有最终Release已保留并完成安装和生产登记、Locator在新进程验证成功、Package自有能力Lock与真实WorkBuddy暂停/同意/继续合同已经冻结、精确Builder任务包获得明确授权后，阶段3才能启动；当前仍为`NOT_GRANTED`。
+旧阶段3任务包、公共入口签名和Shell自有全组件Runtime Lock均已标记`SUPERSEDED`。只有最终Release已保留并完成安装和生产登记、Locator在新进程验证成功、本版本声明支持的每项可选能力都有Manifest覆盖的Package自有Lock、最小“结果→WorkBuddy动作”接口合同已经冻结、精确Builder任务包获得明确授权后，阶段3才能启动；当前仍为`NOT_GRANTED`。真实WorkBuddy新会话与继续能力验证属于阶段5验收，不再反向阻塞阶段3。

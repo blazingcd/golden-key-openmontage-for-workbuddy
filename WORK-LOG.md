@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-08-18：V2-S3-OPTIONAL-CAPABILITY-AND-CONSUMER-CONTRACT-CORRECTION1
+
+- 用户确认Remotion与HyperFrames始终是可选能力。本次撤销“两份Lock一律阻塞最终Package”的过度前置：每个不可变Package Release可声明支持零个、一个或两个，只为声明支持者携带Manifest覆盖的能力Lock；未声明能力不需要Lock、不是安装目标，也不阻塞最终Package。
+- 阶段3前只冻结五种结果到WorkBuddy动作的最小接口：直接继续、复用继续、展示计划并询问且零下载、准备后继续、报告阻断并停止。用户同意绑定Registration、能力Lock与计划身份。
+- 真实WorkBuddy新会话、用户确认和同任务继续证据改回阶段5验收，不再反向阻塞阶段3。若真实客户端不能自动继续，WorkBuddy固定提示用户回复“继续刚才的任务”；Shell不保存或自动重放原业务请求。
+- 本任务只更新现有文档，不新增文件，不修改生产代码、测试或CI，不生成最终Package，不安装可选能力，不实现阶段3至阶段6。
+- 本节是2026-08-18早先“Remotion/HyperFrames两份Lock + 真实WorkBuddy合同先于最终Package/阶段3”结论的活动纠偏；早先记录只保留历史，不得作为当前执行依据。
+- 静态范围与全文旧结论检查通过，tracked仍为33；使用D盘任务独立`.venv`执行全量测试`144 passed in 26.33s`、最终退出0，随后已清理该任务临时目录。候选仍须独立只读Reviewer批准并普通fast-forward后才生效。
+
 ## 2026-08-18：V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT1
 
 - 规划累计对象`95eeeff175060f06ca2f549737e724160edc9e14..72719c758f092868fc6446e44a803d13eeae44a6`经独立只读Reviewer三轮审查；前两轮发现并关闭双路线、FFmpeg资产、旧模块状态和结果集歧义，最终结论`APPROVE / P0=0 / P1=0 / P2=0`。
@@ -20,7 +29,7 @@
 
 - 八步路径固定为：Locator重验生产Registration；核验选择和Package能力Lock；只读有限发现；无可选或已就绪直接返回；缺失时生成精确missing-only计划；取得绑定Registration/Lock/plan的授权后用必带Node工具准备；同卷staging、hash/license核验、原子发布与失败清理；复探测并返回身份绑定回执。
 - 阶段5是最终用户入口，先调用阶段2；阶段4基础固定工具调用可直接使用必带工具链，只有可选Remotion/HyperFrames执行才额外要求阶段3回执；阶段6只转交事实。WorkBuddy负责暂停、同意和继续，Shell不自动重放业务请求。
-- 阶段3实现仍为`NOT_GRANTED`。Start Gate要求最终Release保留、生产安装与登记、新进程Locator成功、Manifest覆盖的Package能力Lock、真实WorkBuddy消费者合同、最新正式Git对象和精确Builder任务包全部成立。
+- 当时记录的Start Gate要求真实WorkBuddy消费者合同先行；该前置已被本文件最上方当前纠偏取代，不得继续执行。活动Gate只要求Release声明及声明能力Locks、最小结果到动作接口和精确Builder任务包；真实WorkBuddy证据属于阶段5。
 - 本文档任务推广后的下一执行项固定为独立的`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`，不是阶段3Builder；它不得被阶段3吸收，本任务也没有自动授予其实现权限。
 
 ### 本文档任务边界

@@ -37,7 +37,7 @@
 |---|---|---|
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration同时锁定Package、可用私有Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx的身份、hash、版本、能力和规范化路径 | 只登记Python；依赖系统Python/FFmpeg/Node；扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
-| Runtime按需准备 | 只消费绑定生产Registration和Package-owned Lock的已选Remotion或HyperFrames要求；discover/plan零写入；用户确认后从批准大陆镜像只准备该能力及其锁声明附属资产；二次调用零下载复用；向阶段4返回身份绑定回执 | 最终Package/生产Registration不存在仍实现；扫盘；Shell-owned重复Lock；发现/下载/替换必带Python/FFmpeg/Node；同时安装全部可选能力；通用下载/包管理/repair；自动海外源回退；修改系统PATH/注册表；Shell或普通用户替OpenMontage选择渲染器 |
+| Runtime按需准备 | 只消费绑定生产Registration、当前Release能力声明及对应Package-owned Lock的一个已选Remotion或HyperFrames要求；`none`或未声明能力不要求Lock且零下载；discover/plan零写入；用户确认后从批准大陆镜像只准备声明支持的所选能力及其锁声明附属资产；二次调用零下载复用；向阶段4返回身份绑定回执 | 最终Package/生产Registration不存在仍实现；把Remotion/HyperFrames当必带Runtime；为未声明能力下载；扫盘；Shell-owned重复Lock；发现/下载/替换必带Python/FFmpeg/Node；同时安装全部可选能力；通用下载/包管理/repair；自动海外源回退；修改系统PATH/注册表；Shell或普通用户替OpenMontage选择渲染器 |
 | 会话Launcher | 用阶段2必带工具链事实启动固定入口；所选可选能力执行前另有对应阶段3就绪事实；返回真实退出码、结果指针和残留事实 | 绕过相应就绪检查；启动第二Agent；接受任意Shell；多进程调度；自动重试；进入Package生产业务；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
 | 状态与结果转交 | 直接转交Runtime计划/准备事实与Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；安装Runtime；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
@@ -46,19 +46,19 @@
 
 阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户运行顺序。旧“阶段3先检查所有Runtime再进入阶段4”的链路已失效：阶段4可依据阶段2必带工具链事实启动基础固定工具；WorkBuddy/OpenMontage锁定Remotion或HyperFrames后必须调用阶段3核验同一Registration和Package-owned Lock。能力精确存在时返回`READY_REUSED`，只有下载/准备动作限于能力缺失并取得用户同意时。
 
-阶段3结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。没有可选能力要求或所选能力已就绪时零下载；所选Remotion或HyperFrames缺失时形成只针对该能力及Package-owned Lock声明附属资产的计划，用户确认后按锁准备。不得把另一渲染器或未声明浏览器顺带安装。
+阶段3结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。每个Package Release可声明支持零个、一个或两个允许的可选能力，只要求声明能力的Lock。没有可选能力要求或所选能力已就绪时零下载；选择未声明能力返回`BLOCKED`且零下载；声明支持的所选能力缺失时形成只针对该能力及Package-owned Lock声明附属资产的计划，用户确认后按锁准备。不得把另一渲染器或未声明浏览器顺带安装。
 
 Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具链。阶段2缺少任何一项时是`FAIL`，阶段3不得以宿主PATH、下载或受管目录补救。Node虽然官方Quick Start最低为18+，但当前HyperFrames要求22+，Package锁定值必须满足最高当前要求。
 
 阶段4 `PASS`要求在启动时消费阶段2必带工具链就绪事实，并在执行已选可选能力前消费对应阶段3就绪事实。缺少相应事实必须返回`RUNTIME_NOT_READY`；任何第二Agent启动、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
 
-阶段5是用户实际运行起点。`PASS`要求真实WorkBuddy合同确认的一种显式入口、新会话命中、literal `user_message`不变、授权与`executor_controls`分离。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
+阶段5是用户实际运行起点。`PASS`要求唯一Skill在真实WorkBuddy新会话命中，按已冻结映射消费阶段3五种结果，literal `user_message`不变，授权与`executor_controls`分离，并验证用户同意后的同任务继续；若不能自动继续，必须验证固定“继续刚才的任务”提示。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
 
 阶段6先验证WorkBuddy能否直接消费Runtime计划/准备事实和Launcher回执：能则记录`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0；不能则必须有精确字段差异和真实消费者证据，只允许一次确定性转换。非零退出、超时、缺少结果指针和残留进程必须保持原事实；阶段6不得安装、解释或重试。
 
 ### 3.2 阶段3重新规划Gate
 
-上一版阶段3入口、Shell-owned全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`。新实现Gate必须同时证明：`FINAL_PACKAGE_MATERIALIZED`、`PRODUCTION_PACKAGE_REGISTERED`、新进程Locator成功、Package-owned能力Lock被Manifest覆盖、真实WorkBuddy消费者合同已冻结、最新正式Git对象和精确Builder白名单获授权。实现授权前缺一项时，任务治理裁决为`INCOMPLETE_STAGE_3_INPUT`并零代码停止；它不增加公共结果。未来运行期同类输入问题只能表示为五种结果之一的`BLOCKED(reason_code=INCOMPLETE_STAGE_3_INPUT)`，`BLOCKED_BEFORE_PUBLISH`同样只能是`BLOCKED`的原因码。
+上一版阶段3入口、Shell-owned全闭集Runtime Lock、实现文件白名单和直接验收矩阵均为`SUPERSEDED`。新实现Gate必须同时证明：`FINAL_PACKAGE_MATERIALIZED`、`PRODUCTION_PACKAGE_REGISTERED`、新进程Locator成功、当前Release已声明其可选能力集合、每个声明支持的能力Lock被Manifest覆盖、至少一个声明能力形成正向实现输入、最小结果到WorkBuddy动作接口已冻结、最新正式Git对象和精确Builder白名单获授权。Release声明零能力不阻塞最终Package，但阶段3应记`NO_IMPLEMENTATION_REQUIRED_FOR_THIS_RELEASE`并保持零代码。真实WorkBuddy新会话与继续证据属于阶段5验收。实现授权前缺一项时，任务治理裁决为`INCOMPLETE_STAGE_3_INPUT`并零代码停止；它不增加公共结果。未来运行期同类输入问题只能表示为五种结果之一的`BLOCKED(reason_code=INCOMPLETE_STAGE_3_INPUT)`，`BLOCKED_BEFORE_PUBLISH`同样只能是`BLOCKED`的原因码。
 
 新阶段3最多一个公共入口`prepare_optional_capability(...)`、一个新生产模块、一个导出编辑和一个直接测试文件；不得新增Shell Runtime Lock。直接验收必须覆盖：
 
@@ -74,8 +74,9 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 10. `READY_PREPARED`回执精确绑定Registration、能力Lock、runtime root、入口和版本证据；
 11. 阶段4拒绝过期、跨Package或能力不匹配回执；
 12. Shell选择渲染器、自动重放业务请求、扫描盘符、全局npm修改均为零。
+13. 当前Release声明零能力时，`none`路径不要求Lock且零下载；声明子集时只验证该子集，未声明能力返回`BLOCKED`且零写入。
 
-证据必须分层：单元/负面测试、本地真实准备、大陆镜像网络验证、真实WorkBuddy消费和视频E2E分别报告；前一层PASS不能替代后一层。
+证据必须分层：阶段3单元/负面测试、本地真实准备、大陆镜像网络验证、阶段5真实WorkBuddy消费和视频E2E分别报告；前一层PASS不能替代后一层，阶段5证据不得反向作为阶段3实现前置。
 
 ## 4. Gate A：对象与环境
 

@@ -7,8 +7,8 @@
 ```text
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
-formal_baseline_before_closeout: 72719c758f092868fc6446e44a803d13eeae44a6
-formal_head_after_closeout: THIS_COMMIT
+formal_baseline_before_authority: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2
+formal_head_after_authority: THIS_COMMIT
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -20,17 +20,20 @@ repository_tracked_files: 33
 stage_3_planning: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
 stage_3_implementation: NOT_GRANTED
 stage_3_conditional_authorization: NOT_GRANTED
-stage_3_start_gate: BLOCKED_FINAL_PACKAGE_AND_CONSUMER_CONTRACT
+stage_3_start_gate: BLOCKED_PACKAGE_CAPABILITY_LOCK_FINAL_PACKAGE_AND_CONSUMER_CONTRACT
 stage_3_execution_packet: REPLANNED_BOUNDARY_PASS_ACCEPTED / IMPLEMENTATION_NOT_GRANTED
 stage_4_launcher: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S3-PRETAKEOVER-REPLAN-CLOSEOUT1
-current_task_status: PASS_ACCEPTED_AFTER_CLOSEOUT_REVIEW_AND_FORMAL_FAST_FORWARD
+current_task: V2-FINAL-PACKAGE-GATE-ORDER-CORRECTION1
+current_task_status: REVIEW_READY_AFTER_REQUEST_CHANGES
 current_result: THIS_COMMIT
 reviewed_planning_result: 72719c758f092868fc6446e44a803d13eeae44a6
 reviewed_planning_verdict: APPROVE / P0=0 / P1=0 / P2=0
-next: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1 / NOT_GRANTED_BY_CLOSEOUT
+final_package_gate: BLOCKED_PACKAGE_CAPABILITY_LOCK
+package_owned_capability_lock: MISSING_OR_INELIGIBLE
+real_workbuddy_consumer_contract: NOT_FROZEN
+next: EXTERNAL_GOLDEN_KEY_PACKAGE_CAPABILITY_LOCK_RESULT + REAL_WORKBUDDY_CONSUMER_CONTRACT / NOT_GRANTED_IN_SHELL_REPOSITORY
 ```
 
 腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色。阶段2已经接受完整必带工具链的登记实现和一次真实临时Package验证，但临时Package已清理，最终Release、生产PackageRoot和生产Registration都不存在。阶段3只准备WorkBuddy/OpenMontage已经锁定的一个可选Remotion或HyperFrames能力及其Package-owned Lock声明附属资产；当前只完成重新规划，实施仍未授权。
@@ -71,4 +74,4 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 阶段3实现启动前必须同时证明：最终Package持久落盘；生产Registration/Activation存在；新进程Locator成功；Package-owned可选能力Lock存在且被Manifest绑定；真实WorkBuddy/OpenMontage消费者合同冻结；正式Git对象和精确Builder白名单获授权。完整实时状态只以`TASK-REGISTER.md`为准。
 
-文档推广后的下一项不是阶段3编码，而是独立的`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`：持久生成最终Release、安装生产PackageRoot、建立生产Registration/Activation并做新进程Locator核验。该门禁不得塞入阶段3Runtime模块；完成后仍须补齐Package能力Lock和真实WorkBuddy消费者合同，才能发出阶段3 Builder任务包。
+当前下一项不是阶段3编码，也不是立即生成最终Package。必须先由外部Golden Key OpenMontage Package产出Manifest覆盖且合格的Remotion/HyperFrames能力Lock，并冻结真实WorkBuddy消费者合同；随后才可独立授权`V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1`，一次性持久生成最终Release、安装生产PackageRoot、建立生产Registration/Activation并做新进程Locator核验；最后才可发出阶段3 Builder任务包。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`不得作为最终Package发布；上述门禁也不得塞入阶段3Runtime模块。

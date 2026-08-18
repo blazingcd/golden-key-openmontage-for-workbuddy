@@ -15,7 +15,7 @@ authority_initial_review: REQUEST_CHANGES / P0=0 / P1=3 / P2=1
 authority_result_commit: THIS_COMMIT
 authority_branch: codex/v2-final-package-gate-authority1
 authority_review_range: d2a2aa5ce9a0b4c8735ec81da8fb1723bfb0e9e2..THIS_COMMIT
-authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
+authority_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
 authority_activation_condition: independent APPROVE and ordinary fast-forward to formal branch
 task_id: V2-PACKAGE-OWNED-OPTIONAL-CAPABILITY-LOCK-INPUT-GATE1
 task_status: BLOCKED_EXTERNAL_PACKAGE_INPUT_REQUIRED

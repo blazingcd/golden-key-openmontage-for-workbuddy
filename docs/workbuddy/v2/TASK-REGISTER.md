@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2_S2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH_FIX1 / REVIEW_READY`
+状态：`V2_S2_REQUIRED_TOOLCHAIN_REFRESH / PASS_ACCEPTED；V2_S3_PRETAKEOVER_REPLAN / READY_NOT_STARTED`
 
 更新时间：2026-08-18
 
@@ -17,24 +17,29 @@ authority_activation_condition: SATISFIED / independent APPROVE and fast-forward
 authority_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
 authority_production_code_changes: 0
 authority_test_changes: 0
-task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
-task_status: REVIEW_READY_FIX1
-task_kind: STAGE_2_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH
-user_authorization: 2026-08-18 / 尽快把这个阻塞完成
-implementation_authorization: GRANTED_FOR_REQUIRED_TOOLCHAIN_REFRESH_ONLY
-start_commit: 55781b45ac9217693843f2c73cec994805e4024c
-start_commit_resolution: Authority1经独立APPROVE并fast-forward推广后的精确40位result SHA
-initial_result_commit: 62a47afa2301eb187a8b63e33ad08f1b5476c318
-review1_initial_verdict: REQUEST_CHANGES / P0=0 / P1=1 / P2=1
-fix1_scope: reject every required-toolchain symlink/junction/reparse and stabilize traversal/resolve failures; add exact command evidence
-fix1_allowed_paths:
-  - golden_key_openmontage_workbuddy/package_registration.py
-  - tests/workbuddy/test_package_registration.py
-  - docs/workbuddy/v2/TASK-REGISTER.md
+task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-CLOSEOUT1
+task_status: REVIEW_READY
+task_kind: STAGE_2_REQUIRED_TOOLCHAIN_STATE_CLOSEOUT
+user_authorization: 2026-08-18 / 先解决前置阻塞，之后开始阶段三前置任务
+closeout_authorization: GRANTED_FOR_TASK_REGISTER_ONLY
+start_commit: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
+start_commit_resolution: reviewed Stage2 refresh result after ordinary fast-forward promotion
 result_commit: THIS_COMMIT
-branch: codex/v2-s2-toolchain-package-refresh-b1
+branch: codex/v2-s2-toolchain-refresh-closeout1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_builder_start: 55781b45ac9217693843f2c73cec994805e4024c
+formal_target_at_closeout_start: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
+closeout_allowed_path: docs/workbuddy/v2/TASK-REGISTER.md
+closeout_production_code_changes: 0
+closeout_test_changes: 0
+completed_task_id: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-BUILDER1
+completed_task_start_commit: 55781b45ac9217693843f2c73cec994805e4024c
+completed_task_initial_result_commit: 62a47afa2301eb187a8b63e33ad08f1b5476c318
+completed_task_final_result_commit: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
+completed_task_review_range: 55781b45ac9217693843f2c73cec994805e4024c..709c8e880b144fa9e9be26e9feb5d776dd6025e2
+completed_task_reviewer_verdict: APPROVE / P0=0 / P1=0 / P2=0
+completed_task_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=709c8e880b144fa9e9be26e9feb5d776dd6025e2
+completed_task_authorization: CONSUMED_COMPLETE
+review1_initial_verdict_history: REQUEST_CHANGES / P0=0 / P1=1 / P2=1 / resolved by 709c8e880b144fa9e9be26e9feb5d776dd6025e2
 previous_contract_correction_status: PASS_ACCEPTED
 previous_contract_correction_formal_commit: 29a890db22181db9532263a168dcbe5f708b7149
 previous_contract_correction_review: INDEPENDENT_APPROVE_AND_FAST_FORWARD_PROMOTED
@@ -92,19 +97,26 @@ real_registration_command: PYTHONPATH=<ShellRepo>; D:\BlazingCD\Personal\Temp\wo
 real_registration_result: register + task-only activate + locate / final exit 0 / registration SHA-256 unchanged
 real_tool_commands: bootstrap/python/python.exe -B -c <core imports + SSL + same-interpreter subprocess>; bootstrap/ffmpeg/bin/ffmpeg.exe -version; bootstrap/ffmpeg/bin/ffprobe.exe -version; bootstrap/node/node.exe --version; bootstrap/node/npm.cmd --version; bootstrap/node/npx.cmd --version
 real_tool_results: Python 3.14.7/OpenSSL 3.5.7; FFmpeg+ffprobe 9.0.1; Node 22.23.2; npm+npx 10.9.8 / every command final exit 0
-exit_evidence: commit+push+REVIEW_READY；真实构建和注册证据；临时构建根及任务venv清理；用户下载Python源保留
-next_authorized_task: V2-S2-REQUIRED-TOOLCHAIN-PACKAGE-REFRESH-REVIEW1
+exit_evidence: TASK-REGISTER-only commit+push+REVIEW_READY；production=0；test=0；worktree clean
+next_authorized_task: V2-S3-PRETAKEOVER-PLAN1
+next_task_status: READY_NOT_STARTED
+next_task_authorization: GRANTED_FOR_PRETAKEOVER_REPLAN_ONLY
+next_task_start_commit: THIS_COMMIT after independent APPROVE and ordinary fast-forward promotion; resolve to exact 40-hex from origin/codex/workbuddy-shell-v2
 ```
 
-`THIS_COMMIT`由独立Reviewer解析为本Builder分支精确40位结果SHA。Reviewer只读比较`55781b45ac9217693843f2c73cec994805e4024c..THIS_COMMIT`，确认四文件白名单、真实Package证据、生产1/测试1/文档2、全部测试最终exit 0、生产DataRoot零写入、阶段3零实现。Builder结果获`APPROVE`并fast-forward进入正式分支前，阶段2仍未完成，阶段3仍未授权。
+`THIS_COMMIT`由Closeout1独立Reviewer解析为本分支精确40位结果SHA，只读确认本次相对`709c8e880b144fa9e9be26e9feb5d776dd6025e2`仅修改任务账本且生产/测试均为0。只有该结果获`APPROVE`并普通fast-forward进入`origin/codex/workbuddy-shell-v2`后，`V2-S3-PRETAKEOVER-PLAN1`才从同一最新正式40位SHA接管。该授权只允许回顾目标和重新冻结阶段3前置规划，不授权阶段3实现。
 
 ## 当前正式状态
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-formal_handoff_commit: 55781b45ac9217693843f2c73cec994805e4024c
+formal_handoff_commit: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
 stage_1_status: PASS_ACCEPTED
-stage_2_status: REOPENED_REQUIRED_TOOLCHAIN_PACKAGE_REFRESH / FIX1_REVIEW_READY_NOT_PROMOTED
+stage_2_status: PASS_ACCEPTED
+stage_2_required_toolchain_refresh: PASS_ACCEPTED
+stage_2_required_toolchain_refresh_result: 709c8e880b144fa9e9be26e9feb5d776dd6025e2
+stage_2_required_toolchain_refresh_review: APPROVE / P0=0 / P1=0 / P2=0
+stage_2_required_toolchain_refresh_promotion: origin/codex/workbuddy-shell-v2=709c8e880b144fa9e9be26e9feb5d776dd6025e2
 stage_2_previous_package_status: PASS_ACCEPTED_HISTORICAL
 stage_2_integration_commit: ca6e93b7da108732f2034239da340a986ba3da3a
 repository_hygiene_status: PASS_ACCEPTED
@@ -112,23 +124,23 @@ repository_final_tree_commit: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 repository_final_audit: APPROVE
 repository_final_audit_source: USER_ACCEPTED_HANDOFF_2026_08_17
 repository_tracked_files: 33
-stage_3_planning_authorization: NOT_GRANTED_PENDING_STAGE_2_REFRESH
-stage3_planning: REOPENED_OPTIONAL_CAPABILITY_RECLASSIFICATION_REQUIRED
+stage_3_planning_authorization: GRANTED_FOR_PRETAKEOVER_REPLAN_ONLY
+stage3_planning: READY_NOT_STARTED / PRETAKEOVER_REPLAN_ONLY
 stage_3_implementation_authorization: NOT_GRANTED
-stage_3_conditional_authorization: SUSPENDED_PENDING_REPLAN
-stage_3_start_gate: BLOCKED_STAGE_2_REQUIRED_TOOLCHAIN
+stage_3_conditional_authorization: NOT_GRANTED
+stage_3_start_gate: ELIGIBLE_FOR_REPLAN
 stage_3_execution_packet: SUPERSEDED_BY_REQUIRED_TOOLCHAIN_CORRECTION
 stage3_implementation: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 stage_3_to_6_scope_reduction: SUPERSEDED_BY_REQUIRED_TOOLCHAIN_CORRECTION
-runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_FIX1_REVIEW_READY
+runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
 
-阶段2此前通过的是旧金钥匙版Package登记合同和实现，不是更新后的当前Package。官方当前Quick Start明确列出Python 3.10+、FFmpeg和Node.js 18+三项基础Prerequisites；当前HyperFrames合同进一步要求Node.js 22+。金钥匙Package必须因此自带可用私有Python环境及核心依赖、FFmpeg/ffprobe、满足最高要求的Node/npm/npx，并在Manifest/Lock与Registration中逐项锁定。只登记Python的旧阶段2合同不足，必须修订、重新组装、独立审阅和推广；完成前阶段3不得启动。
+阶段2旧结果只覆盖Python身份，现已由`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成当前Package必带Python及锁定核心依赖、FFmpeg/ffprobe、Node/npm/npx的重新组装、Registration/Locator验证、负测、独立审阅和正式推广。阶段2前置阻塞已关闭；阶段3现在只具备前置重新规划资格，实施仍未授权。
 
-仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `55781b45ac9217693843f2c73cec994805e4024c`的祖先。本Builder只修改四个既有白名单文件，没有恢复已清理内容或新增仓库文件。
+仓库卫生最终树基线仍为`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，tracked精确33且等于固定白名单；该对象是当前正式handoff `709c8e880b144fa9e9be26e9feb5d776dd6025e2`的祖先。阶段2刷新只修改四个既有白名单文件，没有恢复已清理内容或新增仓库文件。
 
 ## 阶段3至阶段6建设与交付顺序
 
@@ -169,7 +181,7 @@ stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 4. 阶段3与阶段4同一WorkBuddy会话中的调用、暂停、用户确认和继续边界；Shell不得自动重放原业务请求；
 5. 最新正式Git对象、允许路径、一个公共入口、一个生产模块、一个Optional Runtime Lock和一个直接测试文件的精确任务包。
 
-在这些输入齐全前，阶段3保持`REOPENED_OPTIONAL_CAPABILITY_RECLASSIFICATION_REQUIRED / NOT_GRANTED`。可以确定的边界只有：Remotion与HyperFrames不预装全部；只准备已选能力；浏览器仅在该能力锁明确要求时准备；Python/FFmpeg/Node及核心Python依赖绝不由阶段3扫描、下载或替换；阶段3不选择渲染器、不启动第二Agent、不执行视频生产。
+`V2-S3-PRETAKEOVER-PLAN1`只被授权回顾并冻结上述输入；输入未齐全时必须以零代码结果退出。阶段3实现保持`NOT_GRANTED`。可以确定的边界只有：Remotion与HyperFrames不预装全部；只准备已选能力；浏览器仅在该能力锁明确要求时准备；Python/FFmpeg/Node及核心Python依赖绝不由阶段3扫描、下载或替换；阶段3不选择渲染器、不启动第二Agent、不执行视频生产。
 
 ## 已接受对象与证据边界
 

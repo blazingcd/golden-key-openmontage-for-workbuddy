@@ -21,6 +21,11 @@
 - 只更新现有权威和入口文档，不新增规划文档，不修改生产代码、测试或CI，不运行安装、下载、WorkBuddy、Provider或媒体生产。
 - 当前结果等待静态检查、独立只读Reviewer和正式分支fast-forward；完成这些步骤前，不得把本节当作阶段3实现授权。
 
+### Reviewer1修正
+
+- Reviewer1在`85eb55c75a5988baded734a0c9a135df477b8026`发现`P0=0 / P1=2 / P2=1`，结论`REQUEST_CHANGES`：已有可选能力是否仍经阶段3核验存在双路线；FFmpeg旧ZIP字样与`.7z / 9.0.1-essentials_build`证据冲突；旧模块处置仍写等待重规划。
+- 修正后统一为：选择Remotion/HyperFrames后必经阶段3核验；已有能力返回`READY_REUSED`，只有缺失项下载/准备需要同意；FFmpeg精确资产只引用任务账本和Registration合同；旧模块处置改为“已重规划、实现未授权”。
+
 ## 2026-08-18：V2必带工具链重新分类纠偏
 
 ### 最新用户裁决

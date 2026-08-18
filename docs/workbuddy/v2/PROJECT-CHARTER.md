@@ -83,7 +83,7 @@ User
 | 组件 | 终端用户下载渠道 |
 |---|---|
 | Python解释器及核心依赖 | 终端用户不下载；随金钥匙版Package交付并由阶段2登记 |
-| FFmpeg/ffprobe | 终端用户不下载；随Package交付。当前候选组装资产仍为精确锁定的`gyan.dev` FFmpeg 9.0 ZIP，必须在Package构建、许可证和分发证据中核验 |
+| FFmpeg/ffprobe | 终端用户不下载；随Package交付。当前已接受临时证明使用`gyan.dev`的`.7z`资产，二进制实际报告`9.0.1-essentials_build`；下一交付门禁必须以任务账本和Registration合同中的精确URL、大小、SHA-256及许可证为权威，不得凭“9.0”标签或ZIP字样猜测 |
 | Node/npm/npx | 终端用户不下载；随Package交付。锁定版本必须至少满足OpenMontage 18+且满足当前HyperFrames 22+，因此当前下限取22+ |
 | Remotion可选依赖 | `https://registry.npmmirror.com`，仅在已选Remotion能力缺失时按锁准备 |
 | HyperFrames可选依赖 | `https://registry.npmmirror.com`，仅在已选HyperFrames能力缺失时按锁准备 |

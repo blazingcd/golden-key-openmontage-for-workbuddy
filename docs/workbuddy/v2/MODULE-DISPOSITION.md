@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 旧资产处置
 
-状态：`STAGE_1_PASS_ACCEPTED / MAPPING_ONLY / NOT_IMPLEMENTED`
+状态：`STAGE_1_PASS_ACCEPTED / MAPPING_ONLY / STAGE_3_REPLANNED_IMPLEMENTATION_NOT_GRANTED`
 
 固定来源：`2a2bf09832d558388dc2816c54b32a2dce4aa607`
 
@@ -21,7 +21,7 @@
 |---|---|---|---|---|---|---|
 | `__init__.py`、`__main__.py`、`cli.py` | 包导入、`python -m`、控制台入口、Launcher、两个Skill | 会话Launcher / `REWRITE` | 一个固定入口为WorkBuddy会话调用一个已验证工具进程并返回真实退出事实 | 恢复CLI平台；启动第二Agent；Project/Stage/Tool/Artifact/Checkpoint命令；任意Shell；自动重试；生产任务FSM | 正式入口只调用六模块合同，WorkBuddy直接读取Package Guide并承担生产角色 | 一次调用、退出码、结果指针、残留事实和未知入口拒绝 |
 | `doctor.py`、`paths.py`、`gate.py` | CLI/MCP/Skill与维护者CI | OpenMontage 执行包登记与定位 / `REWRITE`；静态gate仅`HISTORICAL`参考 | 只读Package Registration、完整必带工具链身份和规范化路径报告 | 硬编码版本/Pipeline、扫盘、隐式准备、把doctor/gate当产品PASS | Locator与Launcher消费唯一活动Package Registration | Python/核心依赖、FFmpeg/ffprobe、Node/npm/npx任一未登记或漂移即fail closed，零写入 |
-| `runtime_prepare.py`、`host_tools.py`、Runtime locks、`subprocess_guard/**` | doctor、CLI runtime、安装repair、宿主工具发现、missing-only准备、运行时/离线测试 | Runtime按需准备 / `HISTORICAL_REFERENCE_PENDING_REPLAN` | 只保留可选能力的missing-only、锁定来源/hash/许可、同卷staging、所有权、回滚和幂等模式；未来单一入口只处理WorkBuddy/OpenMontage已经锁定的Remotion或HyperFrames及其Lock声明附属资产 | 迁移Python核心依赖、FFmpeg或Node准备逻辑；恢复旧全闭集Lock、旧入口签名、大型文件、独立`host_tools.py`/`subprocess_guard`框架；扫盘；通用下载/包管理/公共resume/repair；同时安装两种渲染器；准备未声明浏览器；Shell选择渲染引擎/版本；修改系统Python/PATH/注册表 | 已审完整Package Registration以及真实WorkBuddy/OpenMontage消费者给出的单一可选能力锁定请求 | 未选择能力时零代码/零下载；仅准备已选能力的确认缺失项；源/hash/许可/目标不全fail closed；大陆镜像；失败清理和幂等复用；必带工具链零修改 |
+| `runtime_prepare.py`、`host_tools.py`、Runtime locks、`subprocess_guard/**` | doctor、CLI runtime、安装repair、宿主工具发现、missing-only准备、运行时/离线测试 | Runtime按需准备 / `HISTORICAL_REFERENCE_REPLANNED_IMPLEMENTATION_NOT_GRANTED` | 只保留可选能力的missing-only、锁定来源/hash/许可、同卷staging、所有权、回滚和幂等模式；未来唯一入口只核验WorkBuddy/OpenMontage已经锁定的Remotion或HyperFrames及Package-owned Lock声明附属资产，精确存在时返回`READY_REUSED`，缺失且获授权时才准备 | 迁移Python核心依赖、FFmpeg或Node准备逻辑；恢复旧全闭集Lock、旧入口签名、大型文件、Shell-owned Lock、独立`host_tools.py`/`subprocess_guard`框架；扫盘；通用下载/包管理/公共resume/repair；同时安装两种渲染器；准备未声明浏览器；Shell选择渲染引擎/版本；修改系统Python/PATH/注册表 | 生产Package Registration、Manifest覆盖的Package-owned能力Lock，以及真实WorkBuddy/OpenMontage消费者给出的单一可选能力锁定请求 | 未选择能力时零下载；已存在能力仍经阶段3核验并返回`READY_REUSED`；仅准备已选能力的确认缺失项；源/hash/许可/目标不全fail closed；大陆镜像；失败清理和幂等复用；必带工具链零修改 |
 | `security.py` | CLI/MCP/runtime/tasks 输出 | 六模块横切 / `KEEP` | 纯函数脱敏 | 读取或记录明文凭据；用脱敏掩盖对象或退出状态 | 安装、Launcher 与状态回执共同消费同一边界 | 明文 canary 不出现在输出 |
 | `tasks.py` | CLI task、MCP、生产Skill，并调用`runtime.py` | 状态与结果转交 / `REWRITE` | 优先直接转交Runtime计划/准备事实与Launcher回执；仅保留真实需要的一次确定性格式转换 | Runtime安装、任务数据库、轮询/流式平台、Stage/Tool校验、生产FSM、自动重试、强杀Agent、伪称Checkpoint | 真实WorkBuddy证明不能直接消费Runtime或Launcher事实后才允许独立实现 | 可直用时零代码；否则计划、准备、退出、死亡、错误与结果指针原样可审计 |
 | `runtime.py` | CLI、MCP、tasks；直连执行包内业务模块 | `DROP` | 无 | 导入执行包内业务实现、创建Project、操作Stage/Tool/Artifact/Checkpoint及写生产状态 | WorkBuddy读取已验证Guide后自行形成原生调用链 | Shell对Package业务内部导入和Artifact/Checkpoint写入为零 |
@@ -34,4 +34,4 @@
 
 ## 3. 收口
 
-全部旧资产已映射到六个模块、`DROP`或`HISTORICAL`，无`UNKNOWN`。CLI/MCP不是独立MVP模块；其中只允许受控入口适配，其生产编排能力一律`DROP`。`347272c`的包内Python结论和`899592d`中Python核心依赖、FFmpeg、Node的锁定/组装模式移交阶段1/2，不再进入阶段3；`639978d`的发现/missing-only模式仅可在真实可选能力合同证明需要后选择性迁移。旧阶段3全闭集入口与Lock已`SUPERSEDED`。没有已选可选能力时阶段3零代码，阶段6可直接复用Launcher回执时同样允许零代码退出。
+全部旧资产已映射到六个模块、`DROP`或`HISTORICAL`，无`UNKNOWN`。CLI/MCP不是独立MVP模块；其中只允许受控入口适配，其生产编排能力一律`DROP`。`347272c`的包内Python结论和`899592d`中Python核心依赖、FFmpeg、Node的锁定/组装模式移交Package交付与阶段2登记，不再进入阶段3；`639978d`的发现/missing-only模式仅可在真实可选能力合同证明需要后选择性迁移。阶段3已完成接管前重新规划，但实现仍为`NOT_GRANTED`；旧全闭集入口、Shell-owned Lock和第二框架已`SUPERSEDED`。没有已选可选能力时阶段3零下载，已有能力必须经阶段3身份核验后返回`READY_REUSED`，阶段6可直接复用Launcher回执时同样允许零代码退出。

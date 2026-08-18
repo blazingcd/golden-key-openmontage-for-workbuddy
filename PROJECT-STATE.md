@@ -49,7 +49,9 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
      -> Stage 4 base fixed-tool call with bundled required toolchain
      -> WorkBuddy/OpenMontage locks render capability
         -> bundled FFmpeg path: continue
-        -> missing selected Remotion/HyperFrames: Stage 3 optional preparation
+       -> selected Remotion/HyperFrames: Stage 3 verifies Registration + Package Lock
+          -> exact existing capability: READY_REUSED
+          -> missing capability: consented optional preparation -> READY_PREPARED
      -> Stage 6 fact relay
 ```
 

@@ -33,6 +33,7 @@ allowed_paths:
   - docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
   - docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
   - docs/workbuddy/v2/DRIFT-GUARD.md
+  - docs/workbuddy/v2/MODULE-DISPOSITION.md
 production_code_changes: 0
 test_changes: 0
 tracked_files_expected: 33

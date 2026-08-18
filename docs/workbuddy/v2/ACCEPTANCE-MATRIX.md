@@ -44,7 +44,7 @@
 
 ### 3.1 阶段3至阶段6缩减Gate
 
-阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户运行顺序。旧“阶段3先检查所有Runtime再进入阶段4”的链路已失效：阶段4可依据阶段2必带工具链事实启动固定工具；WorkBuddy/OpenMontage锁定可选渲染能力后，只有该能力缺失时才调用阶段3。
+阶段编号是建设与验收顺序`3 -> 4 -> 5 -> 6`，不是最终用户运行顺序。旧“阶段3先检查所有Runtime再进入阶段4”的链路已失效：阶段4可依据阶段2必带工具链事实启动基础固定工具；WorkBuddy/OpenMontage锁定Remotion或HyperFrames后必须调用阶段3核验同一Registration和Package-owned Lock。能力精确存在时返回`READY_REUSED`，只有下载/准备动作限于能力缺失并取得用户同意时。
 
 阶段3结果闭集为`NO_OPTIONAL_CAPABILITY_REQUIRED`、`READY_REUSED`、`CONSENT_REQUIRED`、`READY_PREPARED`和`BLOCKED`。没有可选能力要求或所选能力已就绪时零下载；所选Remotion或HyperFrames缺失时形成只针对该能力及Package-owned Lock声明附属资产的计划，用户确认后按锁准备。不得把另一渲染器或未声明浏览器顺带安装。
 

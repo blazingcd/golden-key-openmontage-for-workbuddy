@@ -1,25 +1,25 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S3-TO-S4-DOCS-SYNC1 / PASS_ACCEPTED`
+状态：`V2-CI-STAGE3-STATE-ASSERTION-AUTH1 / AUTHORIZED_PENDING_REVIEW_AND_FORMAL_PROMOTION`
 
-更新时间：2026-08-18
+更新时间：2026-08-19
 
 ## 当前任务
 
 ```text
-task_id: V2-S3-TO-S4-DOCS-SYNC1
-task_status: PASS_ACCEPTED
-task_kind: STAGE3_TO_STAGE4_DOCUMENT_SYNC / DOCS_ONLY / NO_IMPLEMENTATION
-user_authorization: 2026-08-18 / 同步Stage3完成事实；后续要求归回相关阶段；只判断推广后Stage4规划接管条件；严禁阶段越界
-start_commit: 7c15aae4e77c579309312b21c79076f930970214
-result_commit: 513e5ca10d1ba04878295be110096b013f47974a / REVIEWED_NINE_DOCUMENT_RESULT
-historical_builder_branch: codex/v2-s3-to-s4-docs-sync1
+task_id: V2-CI-STAGE3-STATE-ASSERTION-AUTH1
+task_status: AUTHORIZED_PENDING_REVIEW_AND_FORMAL_PROMOTION
+task_kind: CI_MAINTENANCE_AUTHORIZATION / DOCS_ONLY
+user_authorization: 2026-08-19 / 修复GitHub Actions过期Stage3状态断言
+start_commit: a8d024ca9001184e9c2a5a995598d64024eef51b
+result_commit: THIS_COMMIT
+branch: codex/v2-ci-stage3-state-assertion-authorize1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 7c15aae4e77c579309312b21c79076f930970214
-review_range: 7c15aae4e77c579309312b21c79076f930970214..513e5ca10d1ba04878295be110096b013f47974a
-independent_review: APPROVE / P0=0 / P1=0 / P2=0 / ZERO_WRITE
-formal_promotion: PASS / ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=513e5ca10d1ba04878295be110096b013f47974a
-repository_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; WORK-LOG.md; docs/workbuddy/v2/README.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/MODULE-DISPOSITION.md
+formal_target_at_start: a8d024ca9001184e9c2a5a995598d64024eef51b
+review_range: a8d024ca9001184e9c2a5a995598d64024eef51b..THIS_COMMIT
+independent_review: NOT_STARTED / REQUIRED_ZERO_WRITE
+formal_promotion: NOT_STARTED / AUTHORIZATION_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md
 production_code_changes: 0
 test_changes: 0
 ci_changes: 0
@@ -27,6 +27,19 @@ new_tracked_files: 0
 tracked_files_expected: 35
 external_writes_performed: NONE
 task_temp_root_status: NOT_CREATED
+ci_evidence_run: 32154859370 / latest formal run
+ci_evidence_only_failure: test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented
+ci_evidence_stale_assertions: stage3_implementation=AUTHORIZED_NOT_STARTED; stage_3_implementation_authorization=GRANTED
+ci_evidence_current_authority: stage3_implementation=PASS_ACCEPTED; stage_3_implementation_authorization=CONSUMED_COMPLETE
+root_cause: accepted state advanced but fixed repository-hygiene state assertion was not updated in the later closeout/docs-only tasks
+ci_fix_implementation_authorization: GRANTED_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_FORMAL_PROMOTION
+future_builder_base_rule: after this authorization candidate is formally promoted, Builder must use the then-live exact SHA of origin/codex/workbuddy-shell-v2 / prohibited_stale_builder_base=a8d024ca9001184e9c2a5a995598d64024eef51b
+ci_fix_exact_implementation_allowlist: tests/workbuddy/test_repository_hygiene.py only
+ci_fix_exact_change: lines/state assertions only / stage3_implementation PASS_ACCEPTED / stage_3_implementation_authorization CONSUMED_COMPLETE
+ci_fix_required_direct_test: python -m pytest -p no:cacheprovider tests/workbuddy/test_repository_hygiene.py -q
+ci_fix_required_workflow_equivalent: python -m pytest -p no:cacheprovider tests/workbuddy/test_package_registration.py tests/workbuddy/test_runtime_prepare.py tests/workbuddy/test_repository_hygiene.py -q
+ci_fix_lifecycle: one bounded Builder -> independent zero-write Reviewer -> ordinary non-force formal fast-forward after APPROVE
+known_ci_transition: this docs-only authorization commit is expected to trigger the same failure before the assertion fix; do not treat it as a different root cause and do not expand scope
 stage_3_builder_base: 1c18edf9910e57541c37614c3e7cedf2fb11e372
 stage_3_reviewed_implementation: a3f8959682d296301dc573c2835f8c705a52e8b2 / APPROVE / P0=0 / P1=0 / P2=0
 stage_3_implementation_tree: eca057c3643c36248cccbfb9606d9aea12b3dc42
@@ -57,9 +70,9 @@ consumer_mapping: DETECTION_REPORT=display_facts; CONSENT_REQUIRED=display_plan_
 consent_binding: capability + definition_sha256 + plan_sha256 / explicit per-capability approve only
 real_workbuddy_evidence_stage: STAGE_5_ACCEPTANCE_ONLY
 same_task_continuation_rule: verify in Stage5; if unsupported ask user to reply 继续刚才的任务; Shell never auto-replays
-validation_diff_check: PASS / exact 9 existing docs / untracked 0 / git diff --check exit 0 / active stale Stage3 model tokens 0
-validation_full_test: NOT_RUN_DOCS_ONLY / independent Reviewer inspected content and exact objects zero-write
-validation_scope: exact 9 existing docs / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
+validation_diff_check: PASS / exact one-file scope / untracked 0 / git diff --check exit 0 / authorization and preserved stage states consistent
+validation_full_test: NOT_RUN_DOCS_ONLY / current task authorizes no test execution
+validation_scope: docs/workbuddy/v2/TASK-REGISTER.md only / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
 future_final_package_gate_rule: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1 is a later final-delivery or Installer task due before Stage5 real WorkBuddy production acceptance; it is not a Stage3 or Stage4 coding/planning prerequisite
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
 stage_4_takeover_boundary: PLANNING_ELIGIBLE / implementation_authorization=NOT_GRANTED
@@ -69,9 +82,10 @@ stage_4_gap_owner_package_tool_identity: approved OpenMontage Package definition
 stage_4_gap_owner_launcher_api_and_receipt: future separately authorized Stage4 planning task / must freeze one public entry and exact immutable receipt fields before any implementation grant
 stage_5_deferred_scope: real new WorkBuddy session, single entry, unchanged literal user_message, per-capability authorization question and same-task continuation / implementation and acceptance only
 stage_6_deferred_rule: evaluate only after Stage4 receipt and Stage5 real consumer exist; direct consumption means STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE and production code 0
-forbidden_scope: Stage4/5/6 implementation; final Package generation; Installer; WorkBuddy run; Provider; media/video E2E; production DataRoot; code/tests/CI/pyproject; new files; any tenth path
-next_authorized_task: NONE
+forbidden_scope: production code; docs other than this ledger; workflow; pyproject; Stage4/5/6 implementation; final Package; old main historical red runs; Node deprecation warning; any second implementation path
+next_authorized_task: V2-CI-STAGE3-STATE-ASSERTION-FIX1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_FORMAL_PROMOTION
 stage_4_planning: ELIGIBLE
+stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -163,9 +177,11 @@ formal_branch: codex/workbuddy-shell-v2
 accepted_authority_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
 formal_handoff_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
 accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head: 7c15aae4e77c579309312b21c79076f930970214
+formal_head: a8d024ca9001184e9c2a5a995598d64024eef51b
 stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout_formal_result: 7c15aae4e77c579309312b21c79076f930970214
+stage_3_to_stage_4_docs_sync_formal_result: 513e5ca10d1ba04878295be110096b013f47974a
+stage_3_to_stage_4_docs_closeout_formal_result: a8d024ca9001184e9c2a5a995598d64024eef51b
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED

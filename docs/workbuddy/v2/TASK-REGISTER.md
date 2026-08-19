@@ -225,7 +225,7 @@ stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
 
-`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了Stage 2必带工具链和Registration/Locator的真实临时证明；该历史事实不重开，也不再作为Stage 3输入。Stage 3实现已经独立审阅并正式推广为`a3f8959682d296301dc573c2835f8c705a52e8b2`，closeout `7c15aae4e77c579309312b21c79076f930970214`也已正式推广，因此Stage 3现为`PASS_ACCEPTED`。本docs sync推广后只具备启动Stage 4规划/接管判断的条件；下一授权任务仍为`NONE`，Stage 4、5、6及最终Package Gate均未获实现授权。
+`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了Stage 2必带工具链和Registration/Locator的真实临时证明；该历史事实不重开，也不再作为Stage 3输入。Stage 3实现已经独立审阅并正式推广为`a3f8959682d296301dc573c2835f8c705a52e8b2`，closeout `7c15aae4e77c579309312b21c79076f930970214`也已正式推广，因此Stage 3现为`PASS_ACCEPTED`。本docs sync推广后只具备启动Stage 4规划/接管判断的条件；在本次CI维护授权候选正式推广前，历史状态是下一授权任务`NONE`。本授权经独立`APPROVE`并正式推广后，唯一下一任务切换为`V2-CI-STAGE3-STATE-ASSERTION-FIX1`；Stage 4、5、6及最终Package Gate仍未获实现授权。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35。没有恢复任何已清理内容。
 

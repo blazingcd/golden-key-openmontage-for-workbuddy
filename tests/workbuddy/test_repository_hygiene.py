@@ -299,8 +299,8 @@ def test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented() 
     task_register = (
         REPO_ROOT / "docs" / "workbuddy" / "v2" / "TASK-REGISTER.md"
     ).read_text(encoding="utf-8")
-    assert "stage3_implementation: AUTHORIZED_NOT_STARTED" in task_register
-    assert "stage_3_implementation_authorization: GRANTED" in task_register
+    assert "stage3_implementation: PASS_ACCEPTED" in task_register
+    assert "stage_3_implementation_authorization: CONSUMED_COMPLETE" in task_register
 
     init_source = (
         REPO_ROOT / "golden_key_openmontage_workbuddy" / "__init__.py"

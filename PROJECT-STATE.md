@@ -7,8 +7,8 @@
 ```text
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
-formal_head: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
-formal_tree: a4d8034f6cf76c6eedd2f4bbe3c30dbe1b4e382a
+formal_head: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+formal_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -24,15 +24,29 @@ ci_stage3_state_assertion_fix: FORMAL / e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
 ci_stage3_state_assertion_evidence: run 32218904419 / completed / success / 198 passed / 1 skipped / final exit 0
 ci_stage3_state_assertion_review_history: first independent review INCOMPLETE / P0=0 / P1=0 / P2=0 / authority mismatch only / code diff no finding
 ci_stage3_state_assertion_governance_deviation: formal advanced before authority closeout / history retained / current mirrors only are being repaired
-stage_4_planning: ELIGIBLE / V2-S4-PLAN-BUILDER1_START_ONLY_AFTER_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
+stage_4_plan_formal_result: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df / tree 144df76b3a307fa8944ccd7bd384bddb1b340516
+stage_4_plan_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+stage_4_plan_review: V2-S4-PLAN-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_plan_review_history: two REQUEST_CHANGES rounds closed definition hash-cycle, receipt outcome/priority/invalid-input, forged-summary evidence, and managed/explicit/PATH handoff findings
+stage_4_plan_ci: run 32337744225 / completed / success
+embedded_plan_candidate_labels: HISTORICAL_CONDITIONAL_TEXT / review-and-promotion conditions satisfied by V2-S4-PLAN-REVIEW1 APPROVE and formal result 5cb3f585a0cddffbd823c785b1d39ebd1834c1df / not live authorization
+stage_4_planning: FORMAL_PLAN_PROMOTED / PASS_ACCEPTED_ONLY_AFTER_V2-S4-PLAN-CLOSEOUT1_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / CURRENT_CANDIDATE_NOT_YET_EFFECTIVE
 stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1
+current_task: V2-S4-PLAN-CLOSEOUT1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-stage_4_contract_gap: fixed Package tool-entry identity absent from current Locator output; exact Stage4 public entry and immutable receipt field names not frozen
-next_authorized_task: V2-S4-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CURRENT_CLOSEOUT_INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FORMAL_FAST_FORWARD
+stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
+next_authorized_task: V2-S4-PLAN-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
+closeout_effective_only_if: V2-S4-PLAN-CLOSEOUT-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND closeout candidate ordinary-fast-forwarded as formal head
+effective_stage_4_planning: PASS_ACCEPTED
+effective_stage_4_implementation_authorization: NOT_GRANTED
+effective_stage_4_launcher_authorization: NOT_GRANTED
+effective_next_authorized_task: NONE
+effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
+effective_stage_6_status_result_relay_authorization: NOT_GRANTED
+effective_final_package_gate_authorization: NOT_GRANTED
 final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
 ```
 
@@ -44,6 +58,7 @@ final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_B
 - 阶段2完整工具链登记实现：`709c8e880b144fa9e9be26e9feb5d776dd6025e2`；状态收口：`95eeeff175060f06ca2f549737e724160edc9e14`。它证明登记能力、负面测试和一次临时Package组装/登记，不证明最终Package已经保留。
 - 阶段3实现：`a3f8959682d296301dc573c2835f8c705a52e8b2`，独立`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；closeout：`7c15aae4e77c579309312b21c79076f930970214`，已正式推广。
 - 阶段3证据：55 direct、10 hygiene、199 full，全部最终退出0且无skip；未证明真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E。
+- 阶段4规划：`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`，`V2-S4-PLAN-REVIEW1`最终`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；正式CI run `32337744225`为`completed/success`。两轮历史`REQUEST_CHANGES`已经闭合定义hash环、receipt结果/优先级/非法输入、可伪造摘要证据及Stage3 `managed/explicit/PATH`交接问题。
 - 当前正式树tracked精确35。最终Release、生产PackageRoot和生产Registration仍属于后续最终交付/Installer任务，最迟在Stage5真实WorkBuddy生产验收前完成；它不是Stage4规划或编码前置。
 
 ## 阶段3至阶段6建设顺序与实际运行链路
@@ -53,9 +68,9 @@ final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_B
 ```text
 User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
      -> Stage 4 one fixed Package-tool call with bundled required toolchain
-     -> WorkBuddy/OpenMontage locks render capability
-        -> bundled FFmpeg path: continue
-       -> explicit Remotion/HyperFrames execution: require matching Stage 3 PRESENT or INTEGRATED evidence
+        -> no declared local requirement: continue without Stage 3 evidence
+        -> declared opaque local requirement: require the matching complete approved definition and original Stage 3 fact, then source-aware revalidate
+     -> WorkBuddy/OpenMontage owns Provider/runtime routing and production decisions
      -> Stage 6 fact relay
 ```
 
@@ -69,8 +84,6 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 ## Stage 4接管审计摘要
 
-当前`locate_active_package(data_root)`会重验并返回Registration、PackageRoot、完整必带工具链、Guide、Manifest和Lock身份，但没有给出固定Package工具入口的权威身份。现有权威也没有冻结Stage4精确公共入口和不可改写进程回执字段。Stage4规划负责闭合这两项，Stage4实现仍未获授权。
+规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-未来单独授权的Stage4规划任务必须冻结：固定工具入口身份来自何种经验证Package定义、相对路径/hash/owner和固定argv形状；唯一公共入口；一次不可改写真实进程回执的精确字段。工具身份由批准OpenMontage Package定义及后续最终交付/Installer所有者提供，Launcher API和回执字段由Stage4规划所有者冻结；不得重开Stage2、猜测未验证Guide，或把最终Package/真实WorkBuddy变成Stage4规划前置。
-
-Stage4最小边界只允许一次WorkBuddy拥有的会话调用一个固定Package工具并返回真实回执；禁止任意shell/命令、意图解析、第二Agent、Runtime安装、渲染器选择、自动重试/重放、队列/服务/数据库/多进程调度、媒体生产、Artifact创建和Checkpoint推进。当前closeout候选仍须独立只读审查和普通fast-forward；两者完成后唯一下一任务才是`V2-S4-PLAN-BUILDER1`。这不授权Stage4实现、Launcher实现、Stage5、Stage6或最终Package Gate。
+本状态closeout候选仍须独立只读审查和普通fast-forward后才能把`stage_4_planning`记为`PASS_ACCEPTED`。生效后的固定状态只能是：Stage4 planning `PASS_ACCEPTED`；Stage4 implementation与Launcher `NOT_GRANTED`；`next_authorized_task: NONE`；Stage5、Stage6及最终Package Gate均`NOT_GRANTED`。本closeout不授权任何实现Builder。

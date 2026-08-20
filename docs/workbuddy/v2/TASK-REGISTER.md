@@ -1,43 +1,60 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S4-PLAN-BUILDER1 / WORKTREE_RESULT_READY_FOR_REVIEW`
+状态：`V2-S4-PLAN-CLOSEOUT1 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
 更新时间：2026-08-20
 
 ## 当前任务
 
 ```text
-task_id: V2-S4-PLAN-BUILDER1
+task_id: V2-S4-PLAN-CLOSEOUT1
 task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-task_kind: STAGE4_SESSION_LAUNCHER_CONTRACT_PLANNING / DOCS_ONLY
-user_authorization: 2026-08-20 / 详细规划Stage4并安排闭合两个Stage4合同缺口；不得实施Launcher
-start_commit: 26bfe60ab9da62797559eb9a459b8daa345f8d80
-start_tree: 940d24a4ddeaa22c52d7c872358d90ede46154ed
+task_kind: STAGE4_PLANNING_STATE_CLOSEOUT / DOCS_ONLY
+user_authorization: 2026-08-20 / 尽快收口Stage4规划状态；不得扩大边界
+start_commit: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+start_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
 result_commit: THIS_COMMIT
-branch: codex/v2-s4-plan-builder1
+branch: codex/v2-s4-plan-closeout1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 26bfe60ab9da62797559eb9a459b8daa345f8d80
-review_range: 26bfe60ab9da62797559eb9a459b8daa345f8d80..THIS_COMMIT
-independent_review: NOT_STARTED / V2-S4-PLAN-REVIEW1 / REQUIRED_ZERO_WRITE
-formal_promotion: NOT_STARTED / ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
-repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+formal_target_at_start: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+review_range: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df..THIS_COMMIT
+independent_review: NOT_STARTED / V2-S4-PLAN-CLOSEOUT-REVIEW1 / REQUIRED_ZERO_WRITE
+formal_promotion: NOT_STARTED / CLOSEOUT_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+repository_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
 production_code_changes: 0
 test_changes: 0
 ci_changes: 0
 new_tracked_files: 0
 tracked_files_expected: 35
-package_tool_definition_contract: FROZEN_IN_THIS_CANDIDATE / EFFECTIVE_ONLY_AFTER_REVIEW_AND_FORMAL_PROMOTION
-launcher_public_api_and_receipt_contract: FROZEN_IN_THIS_CANDIDATE / EFFECTIVE_ONLY_AFTER_REVIEW_AND_FORMAL_PROMOTION
+stage_4_plan_formal_result: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+stage_4_plan_formal_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
+stage_4_plan_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+stage_4_plan_reviewer: V2-S4-PLAN-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_plan_review_history_1: REQUEST_CHANGES / CLOSED / definition hash-cycle + receipt outcome/priority/invalid-input
+stage_4_plan_review_history_2: REQUEST_CHANGES / CLOSED / forged-summary evidence + Stage3 managed/explicit/PATH handoff
+stage_4_plan_ci: run 32337744225 / completed / success
+embedded_plan_candidate_labels: HISTORICAL_CONDITIONAL_TEXT / review-and-promotion conditions satisfied by V2-S4-PLAN-REVIEW1 APPROVE and formal result 5cb3f585a0cddffbd823c785b1d39ebd1834c1df / not live authorization
+package_tool_definition_contract: FORMALLY_PROMOTED / PackageToolDefinitionV1
+launcher_public_api_and_receipt_contract: FORMALLY_PROMOTED / launch_session_tool + nine-outcome recursively immutable LauncherReceiptV1
 official_model_correction: dynamic capability/provider registry / Provider and local runtime are opaque to Shell / no hard-coded Provider or renderer routing in Stage4
 stage_3_evidence_boundary: current implementation supplies local Remotion/HyperFrames evidence only; Stage4 accepts the complete approved definition plus the unmodified original Stage3 fact only when PackageToolDefinition declares a requirement, then independently applies the accepted managed/explicit/PATH source semantics and revalidates actual bytes
 provider_boundary: image/video/TTS/music/stock/local-GPU and future Providers are optional external configuration selected by WorkBuddy/OpenMontage; Stage4 only passes allowlisted environment names and secret values to the fixed child process
-stage_4_planning: REVIEW_READY_CANDIDATE
+stage_4_planning: FORMAL_PLAN_PROMOTED / PASS_ACCEPTED_ONLY_AFTER_THIS_CLOSEOUT_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / CURRENT_CANDIDATE_NOT_YET_EFFECTIVE
 stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-next_authorized_task: V2-S4-PLAN-REVIEW1 / ZERO_WRITE_ONLY
+next_authorized_task: V2-S4-PLAN-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
+
+closeout_effective_only_if: V2-S4-PLAN-CLOSEOUT-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND THIS_COMMIT ordinary-fast-forwarded as formal head
+effective_stage_4_planning: PASS_ACCEPTED
+effective_stage_4_implementation_authorization: NOT_GRANTED
+effective_stage_4_launcher_authorization: NOT_GRANTED
+effective_next_authorized_task: NONE
+effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
+effective_stage_6_status_result_relay_authorization: NOT_GRANTED
+effective_final_package_gate_authorization: NOT_GRANTED
 ```
 
 ## 已完成的前置收口（历史证据）
@@ -128,9 +145,9 @@ historical_stage_6_status_result_relay_authorization: NOT_GRANTED
 historical_final_package_gate_authorization: NOT_GRANTED
 ```
 
-历史产品模型纠偏已撤销膨胀模型：真实Package、Registration和Package绑定能力元数据都不是Stage 3输入。Stage 3只对Remotion和HyperFrames做有界探测与事实报告，对缺失/不兼容项生成零下载计划，并在WorkBuddy取得用户逐能力明确同意后集成批准项；拒绝或暂缓返回`SKIPPED/NOT_INTEGRATED`。已接受实现严格落在三个产品路径加两个验收基础设施路径；本closeout没有新增生产代码、测试、CI、Package字节或外部写入。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`只保留历史证据边界，不是Stage 3输入。
+历史产品模型纠偏已撤销膨胀模型：真实Package、Registration和Package绑定能力元数据都不是Stage 3输入。Stage 3只对Remotion和HyperFrames做有界探测与事实报告，对缺失/不兼容项生成零下载计划，并在WorkBuddy取得用户逐能力明确同意后集成批准项；拒绝或暂缓返回`SKIPPED/NOT_INTEGRATED`。已接受实现严格落在三个产品路径加两个验收基础设施路径；该历史closeout没有新增生产代码、测试、CI、Package字节或外部写入。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`只保留历史证据边界，不是Stage 3输入。
 
-## Stage 4执行任务包（规划候选）
+## Stage 4执行任务包（已审并正式推广的规划合同）
 
 ### 产品目标与官方模型纠正
 
@@ -384,7 +401,7 @@ tests/workbuddy/test_repository_hygiene.py                  # 固定树/API/sour
 
 ### V2-S4-T7：Builder、Reviewer与推广
 
-规划候选正式推广后，用户仍需另行明确说“启动阶段四实现”。届时live authority必须从最新`origin/codex/workbuddy-shell-v2`冻结精确base/tree/37目标文件合同，创建一个临时Builder分支，只允许上述5路径。Builder必须使用项目D盘独立`.venv`，运行Stage4直接测试、repository hygiene和完整仓库测试，保留未截断输出和最终exit 0；检查精确diff、37文件等值、clean/untracked0/stash0后提交并非force推送。独立Reviewer零写，只审精确base..candidate，核对公共合同最小性、fail-closed反例、secret为0和真实测试定义；`REQUEST_CHANGES`只返回原Builder。只有`APPROVE/P0=0/P1=0/P2=0`、formal仍等于base、对象一致时才允许普通fast-forward推广。推广完成也不得自动启动Stage 5、Stage 6或最终Package Gate。
+规划已正式推广，但用户仍需另行明确说“启动阶段四实现”。届时live authority必须从最新`origin/codex/workbuddy-shell-v2`冻结精确base/tree/37目标文件合同，创建一个临时Builder分支，只允许上述5路径。Builder必须使用项目D盘独立`.venv`，运行Stage4直接测试、repository hygiene和完整仓库测试，保留未截断输出和最终exit 0；检查精确diff、37文件等值、clean/untracked0/stash0后提交并非force推送。独立Reviewer零写，只审精确base..candidate，核对公共合同最小性、fail-closed反例、secret为0和真实测试定义；`REQUEST_CHANGES`只回原Builder。只有`APPROVE/P0=0/P1=0/P2=0`、formal仍等于base、对象一致时才允许普通fast-forward推广。推广完成也不得自动启动Stage 5、Stage 6或最终Package Gate。
 
 任务执行顺序、输入、交付与退出条件固定为：
 
@@ -400,7 +417,7 @@ tests/workbuddy/test_repository_hygiene.py                  # 固定树/API/sour
 
 T1到T4是同一个单生产模块内的私有实现职责，不得为了任务编号拆成新模块。T5/T6只提供直接证据和固定仓库门禁。T7完成后Stage4仓库实现才可收口，但Stage5/6仍保持未授权。
 
-本规划经Reviewer APPROVE并正式推广后的closeout目标字段必须精确为：
+本规划已获Reviewer APPROVE并正式推广；本closeout仍须独立APPROVE并普通fast-forward后，以下字段才生效：
 
 ```text
 stage_4_planning: PASS_ACCEPTED
@@ -498,11 +515,11 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-accepted_authority_result: 26bfe60ab9da62797559eb9a459b8daa345f8d80
+accepted_authority_result: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
 formal_handoff_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
 accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head: 26bfe60ab9da62797559eb9a459b8daa345f8d80
-formal_tree: 940d24a4ddeaa22c52d7c872358d90ede46154ed
+formal_head: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+formal_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
 stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout_formal_result: 7c15aae4e77c579309312b21c79076f930970214
 stage_3_to_stage_4_docs_sync_formal_result: 513e5ca10d1ba04878295be110096b013f47974a
@@ -546,15 +563,20 @@ real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
 stage_3_execution_packet: CONSUMED_COMPLETE / EXACT_5_PATHS
 stage3_implementation: PASS_ACCEPTED
 stage_3_status: PASS_ACCEPTED
-stage_4_planning: REVIEW_READY_CANDIDATE / CONTRACTS_EFFECTIVE_ONLY_AFTER_V2-S4-PLAN-REVIEW1_APPROVE_AND_FORMAL_FAST_FORWARD
+stage_4_plan_formal_result: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+stage_4_plan_formal_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
+stage_4_plan_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=5cb3f585a0cddffbd823c785b1d39ebd1834c1df
+stage_4_plan_review: V2-S4-PLAN-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_plan_ci: run 32337744225 / completed / success
+stage_4_planning: FORMAL_PLAN_PROMOTED / PASS_ACCEPTED_ONLY_AFTER_V2-S4-PLAN-CLOSEOUT1_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / CURRENT_CANDIDATE_NOT_YET_EFFECTIVE
 stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-current_task: V2-S4-PLAN-BUILDER1
+current_task: V2-S4-PLAN-CLOSEOUT1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-next_authorized_task: V2-S4-PLAN-REVIEW1 / ZERO_WRITE_ONLY
+next_authorized_task: V2-S4-PLAN-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
 stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
@@ -563,7 +585,7 @@ runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 
 CI状态断言修复`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`已经位于正式分支，精确代码差异仅为`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言；正式CI run `32218904419`为`completed/success`，输出`198 passed / 1 skipped`。第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`，原因只有当时authority mismatch，代码差异无finding。正式分支在账本收口前前移属于治理偏差，本closeout只同步实时权威，不改写审查或Git历史。
 
-CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。本Stage4规划候选仍是`WORKTREE_RESULT_READY_FOR_REVIEW`，不是已接受规划；下一步只能由`V2-S4-PLAN-REVIEW1`零写审阅精确`26bfe60..THIS_COMMIT`。APPROVE与普通fast-forward也只完成规划，不授予Stage4实现或Launcher实现，不授予Stage5、Stage6或最终Package Gate。
+CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`已经`V2-S4-PLAN-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`、正式CI run `32337744225 completed/success`并普通fast-forward进入正式分支；两轮历史`REQUEST_CHANGES`已经关闭。本状态closeout候选尚未生效，下一步只能由`V2-S4-PLAN-CLOSEOUT-REVIEW1`零写审阅精确`5cb3f58..THIS_COMMIT`。只有其APPROVE并普通fast-forward后，`stage_4_planning`才记为`PASS_ACCEPTED`；Stage4实现与Launcher、Stage5、Stage6及最终Package Gate仍不授权，且`next_authorized_task=NONE`。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35。没有恢复任何已清理内容。
 

@@ -135,11 +135,11 @@ def _fixture(
             | stat.S_IXGRP
             | stat.S_IXOTH
         )
-    pyvenv = candidate.package_python.parent / "pyvenv.cfg"
+    pyvenv = candidate.package_python.parent.parent / "pyvenv.cfg"
     _materialize_fixture_pyvenv_cfg(pyvenv, source=pyvenv_source)
     _add_package_file(
         candidate, pyvenv, pyvenv.relative_to(candidate.package_root).as_posix(),
-        registration.REQUIRED_TOOLCHAIN_OWNER, locked=False,
+        "managed_core", locked=True,
     )
     if execution_kind == "PACKAGE_PYTHON_SCRIPT":
         tool = candidate.package_root / "tools" / "session_tool.py"
@@ -152,7 +152,7 @@ def _fixture(
         tool = candidate.package_root / "tools" / "direct" / "python.exe"
         tool.parent.mkdir(parents=True)
         shutil.copy2(sys.executable, tool)
-        tool_config = tool.parent / "pyvenv.cfg"
+        tool_config = tool.parent.parent / "pyvenv.cfg"
         _materialize_fixture_pyvenv_cfg(tool_config, source=pyvenv_source)
         _add_package_file(candidate, tool_config, tool_config.relative_to(candidate.package_root).as_posix(), "managed_core", locked=True)
         template = ["-c", code]
@@ -508,16 +508,25 @@ def test_fixture_launches_when_setup_python_has_no_pyvenv_cfg(
         pyvenv_source=tmp_path / "standalone-python" / "missing-pyvenv.cfg",
     )
 
-    package_config = fixture["candidate"].package_python.parent / "pyvenv.cfg"
+    package_python = fixture["candidate"].package_python
+    package_config = package_python.parent.parent / "pyvenv.cfg"
     config_text = package_config.read_text(encoding="utf-8")
     assert "include-system-site-packages = false\n" in config_text
     assert f"version = {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}\n" in config_text
+    assert not (package_python.parent / "pyvenv.cfg").exists()
     if execution_kind == "DIRECT_EXECUTABLE":
-        direct_config = fixture["candidate"].package_root / "tools" / "direct" / "pyvenv.cfg"
+        direct_root = fixture["candidate"].package_root / "tools"
+        direct_config = direct_root / "pyvenv.cfg"
         assert direct_config.read_bytes() == package_config.read_bytes()
+        assert not (direct_root / "direct" / "pyvenv.cfg").exists()
 
     receipt = _launch(fixture)
     _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    # Python 3.14 validates venv prefix layout during startup.  A zero-byte
+    # child stderr proves both real execution kinds start without that warning.
+    assert receipt["stderr"]["size"] == 0
+    assert receipt["stderr"]["sha256"] == hashlib.sha256(b"").hexdigest()
+    assert receipt["stderr"]["truncated"] is False
 
 
 def test_37_real_stage2_roundtrip_and_priority_level_11_success(tmp_path: Path) -> None:

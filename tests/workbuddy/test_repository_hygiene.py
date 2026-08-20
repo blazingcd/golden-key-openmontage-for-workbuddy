@@ -371,7 +371,7 @@ def test_ci_targets_only_the_formal_branch_and_the_four_final_tests() -> None:
     assert extract_top_level_on(ci) == expected_trigger_block
     assert ci.count("python -m pytest") == 1
     assert ci.count(command) == 1
-    assert "python-version: \"3.11\"" in ci
+    assert "python-version: \"3.14.7\"" in ci
     assert "cache-dependency-path: pyproject.toml" in ci
     assert "workflow_dispatch" not in ci
     assert not any(

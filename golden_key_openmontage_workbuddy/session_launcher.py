@@ -1716,13 +1716,31 @@ def _request_payload(first: Mapping[str, Any]) -> bytes:
     return _canonical_json(request, newline=True)
 
 
+def _canonical_output_json(value: Any) -> bytes:
+    """Canonicalize child output without using preflight error semantics."""
+
+    try:
+        return (
+            json.dumps(
+                value,
+                allow_nan=False,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+            + b"\n"
+        )
+    except (TypeError, ValueError, UnicodeEncodeError):
+        _fail("OUTPUT_INVALID", "OUTPUT")
+
+
 def _parse_result(raw: bytes, first: Mapping[str, Any]) -> Mapping[str, Any]:
     if len(raw) > _MAX_RESULT_OUTPUT:
         _fail("OUTPUT_INVALID", "OUTPUT")
+    pair_secret_found = False
     try:
         text = raw.decode("utf-8")
         duplicates: list[str] = []
-        pair_secret_found = False
 
         def object_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
             nonlocal pair_secret_found
@@ -1746,13 +1764,15 @@ def _parse_result(raw: bytes, first: Mapping[str, Any]) -> Mapping[str, Any]:
                 raise ValueError
             return parsed
 
-        value = json.loads(
-            text,
+        decoder = json.JSONDecoder(
             object_pairs_hook=object_pairs,
             parse_constant=lambda _x: (_ for _ in ()).throw(ValueError()),
             parse_float=finite_float,
         )
+        value, end = decoder.raw_decode(text)
     except (UnicodeError, ValueError, TypeError, json.JSONDecodeError):
+        if pair_secret_found:
+            _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
         _fail("OUTPUT_INVALID", "OUTPUT")
     # The complete decoded child object is untrusted dynamic data.  Scan it
     # before canonical-shape or closed-schema rejection so an escaped secret in
@@ -1761,7 +1781,13 @@ def _parse_result(raw: bytes, first: Mapping[str, Any]) -> Mapping[str, Any]:
         value, first["secret_text"]
     ):
         _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
-    if duplicates or not isinstance(value, Mapping) or _canonical_json(value, newline=True) != raw:
+    if text[end:].strip():
+        _fail("OUTPUT_INVALID", "OUTPUT")
+    if (
+        duplicates
+        or not isinstance(value, Mapping)
+        or _canonical_output_json(value) != raw
+    ):
         _fail("OUTPUT_INVALID", "OUTPUT")
     result = _mapping(value, _RESULT_FIELDS, "OUTPUT_INVALID")
     controls = first["controls"]

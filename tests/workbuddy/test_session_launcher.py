@@ -926,6 +926,112 @@ sys.stdout.write(raw+"\n")'''
     assert receipt["stdout"]["truncated"] is False
 
 
+def test_52_complete_secret_object_beats_trailing_data(
+    tmp_path: Path,
+) -> None:
+    code = r'''import json,os,sys
+r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"SAFE","origin":"SAFE","message":"ordinary"},"unknown":s}
+sys.stdout.write(json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":"))+" trailing\n")'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "尾随前秘密"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+@pytest.mark.parametrize("later_token", ["NaN}", "]}", "1e999}"])
+def test_52_nested_secret_pair_beats_later_parse_failure(
+    tmp_path: Path, later_token: str
+) -> None:
+    code = f'''import json,os,sys
+sys.stdin.buffer.read(); s=os.environ["OPAQUE_PROVIDER_VALUE"]; escaped=json.dumps(s,ensure_ascii=True,separators=(",",":"))
+sys.stdout.write('{{"captured":{{"value":'+escaped+'}},"later":{later_token}\\n')'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "解析失败前秘密"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+def test_17_safe_complete_object_with_trailing_data_remains_output_invalid(
+    tmp_path: Path,
+) -> None:
+    code = r'''import json,sys
+r=json.load(sys.stdin)
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"SAFE","origin":"SAFE","message":"ordinary"}}
+sys.stdout.write(json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+" trailing\n")'''
+    receipt = _launch(_fixture(tmp_path, code=code))
+    _assert(receipt, "INCOMPLETE", "OUTPUT_INVALID", 1)
+    assert receipt["stdout"]["size"] > 0
+    assert receipt["stdout"]["truncated"] is False
+
+
+def test_17_escaped_lone_surrogate_is_output_invalid_with_output_origin(
+    tmp_path: Path,
+) -> None:
+    code = r'''import json,sys
+r=json.load(sys.stdin)
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"SAFE","origin":"SAFE","message":"\ud800"}}
+sys.stdout.write(json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":"))+"\n")'''
+    receipt = _launch(_fixture(tmp_path, code=code))
+    _assert(receipt, "INCOMPLETE", "OUTPUT_INVALID", 1)
+    assert receipt["error"]["origin"] == "OUTPUT"
+
+
+def test_52_secret_flag_beats_lone_surrogate_serialization_failure(
+    tmp_path: Path,
+) -> None:
+    code = r'''import json,os,sys
+r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"SAFE","origin":"SAFE","message":"\ud800"},"unknown":s}
+sys.stdout.write(json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":"))+"\n")'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "代理项前秘密"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
 @pytest.mark.parametrize("numeric_token", ["NaN", "Infinity", "-Infinity", "1e999"])
 def test_17_nonfinite_child_number_remains_output_invalid(
     tmp_path: Path, numeric_token: str

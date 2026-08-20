@@ -204,7 +204,7 @@ def _assert_secret_safe_receipt_types(receipt: Any, canary: str) -> None:
         "stderr": receipt["stderr"],
         "result_pointer": receipt["result_pointer"],
     }
-    assert not launcher_module._value_contains_secret_text(dynamic_domains, (canary,))
+    assert not launcher_module._dynamic_value_contains_secret(dynamic_domains, (canary,))
     assert canary not in repr(receipt)
 
 
@@ -375,8 +375,8 @@ def _local_evidence(
     source: str,
     status: str = "PRESENT",
     add_extra: bool = False,
+    capability: str = "opaque-capability",
 ) -> tuple[dict[str, Any], dict[str, Any], Path]:
-    capability = "opaque-capability"
     provisional_root = fixture["candidate"].data_root / "external"
     definition, payload = _capability_definition(capability, provisional_root, source)
     if source == "managed":
@@ -793,6 +793,42 @@ sys.stdout.buffer.write((json.dumps(o,ensure_ascii=True,sort_keys=True,separator
     )
     canary = "秘密动态值"
     fixture["controls"]["provider_environment"] = {"OPAQUE_PROVIDER_VALUE": canary}
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+@pytest.mark.parametrize(
+    "dynamic_location",
+    ["unknown_value", "invalid_schema", "invalid_outcome", "dynamic_key"],
+)
+def test_52_complete_decoded_child_object_is_scanned_before_schema_rejection(
+    tmp_path: Path, dynamic_location: str
+) -> None:
+    code = f'''import json,os,sys
+r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]
+o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{{"code":"FIXTURE","origin":"FIXTURE","message":"ordinary"}}}}
+location={dynamic_location!r}
+if location=="unknown_value": o["unknown_dynamic_field"]=s
+elif location=="invalid_schema": o["schema_version"]=s
+elif location=="invalid_outcome": o["outcome"]=s
+else: o[s]="ordinary"
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":"))+"\\n").encode())'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "秘密子对象值"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
     receipt = _launch(fixture)
     _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
     _assert_secret_safe_receipt_types(receipt, canary)
@@ -1244,6 +1280,80 @@ def test_55_managed_fact_identity_is_wholly_dynamic_for_secret_propagation(
     _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
     assert receipt["local_capability_evidence_identities"] == ()
     _assert_secret_safe_receipt_types(receipt, canary)
+
+
+@pytest.mark.parametrize(
+    ("status", "canary", "capability", "reused"),
+    [
+        pytest.param("PRESENT", "14", "capabxyz", None, id="integer-14"),
+        pytest.param("PRESENT", "15", "capabxyzz", None, id="integer-15"),
+        pytest.param("INTEGRATED", "true", "opaque-capability", True, id="boolean-true"),
+        pytest.param("INTEGRATED", "false", "opaque-capability", False, id="boolean-false"),
+    ],
+)
+def test_55_canonical_json_scalars_in_local_fact_are_dynamic_secret_propagation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    status: str,
+    canary: str,
+    capability: str,
+    reused: bool | None,
+) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, _root = _local_evidence(
+        seed,
+        source="managed",
+        status=status,
+        capability=capability,
+    )
+    fixture = _fixture(
+        tmp_path / "bound",
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+        requirements=(requirement,),
+    )
+    definition = evidence["approved_capability_definition"]
+    root = (
+        fixture["candidate"].data_root
+        / "Runtime"
+        / "Composition"
+        / definition["capability"]
+        / definition["definition_sha256"]
+    )
+    root.mkdir(parents=True)
+    entrypoint = root / "tool.exe"
+    payload = f"{definition['capability']}-asset".encode()
+    entrypoint.write_bytes(payload)
+    fact = evidence["original_stage3_fact"]
+    fact_fields = fact["evidence"] if status == "PRESENT" else fact
+    fact_fields["runtime_root"] = str(root.resolve())
+    fact_fields["verified_entrypoint"] = str(entrypoint.resolve())
+    fact_fields["version_evidence"]["entrypoint"] = str(entrypoint.resolve())
+    if status == "INTEGRATED":
+        fact["reused"] = reused
+        scalar: Any = reused
+    else:
+        assert len(payload) == int(canary)
+        assert fact_fields["asset_evidence"][0]["size"] == int(canary)
+        scalar = fact_fields["asset_evidence"][0]["size"]
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(fact, newline=False)
+    ).hexdigest()
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    assert launcher_module._dynamic_value_contains_secret(
+        {"canonical_scalar": scalar}, (canary,)
+    )
+    monkeypatch.setattr(
+        launcher_module,
+        "_request_payload",
+        lambda _first: pytest.fail("canonical stdin must not be constructed"),
+    )
+    receipt = _launch(fixture, evidence=(evidence,))
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
+    assert receipt["local_capability_evidence_identities"] == ()
+    assert receipt["provider_environment_names"] == ("OPAQUE_PROVIDER_VALUE",)
 
 
 def test_47_unknown_source_is_rejected(tmp_path: Path) -> None:

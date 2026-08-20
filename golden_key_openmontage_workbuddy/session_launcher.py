@@ -1069,7 +1069,7 @@ def _validate_local_evidence(
         original_digest = _sha256(item["original_stage3_fact_sha256"], "LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
         if not isinstance(original, Mapping):
             _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-        if _value_contains_secret_text(
+        if _dynamic_value_contains_secret(
             {
                 "original_stage3_fact": original,
                 "original_stage3_fact_sha256": original_digest,
@@ -1102,7 +1102,7 @@ def _validate_local_evidence(
         # facts, so it is one dynamic object rather than a field-level Package
         # authority.  A Provider value in either the fact or the reconstructed
         # identity invalidates the whole item before stdin construction.
-        if _value_contains_secret_text(identity, provider_canaries):
+        if _dynamic_value_contains_secret(identity, provider_canaries):
             _fail("INVALID_INPUT")
         result.append(identity)
     if seen != set(by_requirement):
@@ -1212,14 +1212,33 @@ def _contains_secret(secrets: Sequence[bytes], *materials: bytes) -> bool:
     return any(secret in material for secret in secrets for material in materials)
 
 
-def _value_contains_secret_text(value: Any, secrets: Sequence[str]) -> bool:
+def _dynamic_value_contains_secret(value: Any, secrets: Sequence[str]) -> bool:
+    """Scan a dynamic value using the scalar spelling canonical JSON emits.
+
+    Mapping keys are data too.  Strings are inspected after JSON decoding, so
+    ``ensure_ascii`` escapes cannot conceal a Provider value.  Boolean handling
+    must precede integer handling because ``bool`` subclasses ``int``.
+    """
+
     if isinstance(value, str):
-        return any(secret and secret in value for secret in secrets)
-    if isinstance(value, Mapping):
-        return any(_value_contains_secret_text(item, secrets) for item in value.values())
-    if isinstance(value, (list, tuple)):
-        return any(_value_contains_secret_text(item, secrets) for item in value)
-    return False
+        scalar = value
+    elif value is True:
+        scalar = "true"
+    elif value is False:
+        scalar = "false"
+    elif type(value) is int:
+        scalar = str(value)
+    elif isinstance(value, Mapping):
+        return any(
+            _dynamic_value_contains_secret(key, secrets)
+            or _dynamic_value_contains_secret(item, secrets)
+            for key, item in value.items()
+        )
+    elif isinstance(value, (list, tuple)):
+        return any(_dynamic_value_contains_secret(item, secrets) for item in value)
+    else:
+        return False
+    return any(secret and secret in scalar for secret in secrets)
 
 
 def _suppressed_stream_facts() -> dict[str, Any]:
@@ -1240,22 +1259,22 @@ def _sanitize_dynamic_receipt_fields(
         return False
     propagated = False
     for section_name, field in (("session", "session_id"), ("request", "request_id")):
-        if _value_contains_secret_text(receipt[section_name][field], canaries):
+        if _dynamic_value_contains_secret(receipt[section_name][field], canaries):
             receipt[section_name][field] = None
             propagated = True
-    if _value_contains_secret_text(receipt["user_message"], canaries):
+    if _dynamic_value_contains_secret(receipt["user_message"], canaries):
         receipt["user_message"] = {"sha256": None, "byte_length": None}
         propagated = True
-    if _value_contains_secret_text(receipt["local_capability_evidence_identities"], canaries):
+    if _dynamic_value_contains_secret(receipt["local_capability_evidence_identities"], canaries):
         receipt["local_capability_evidence_identities"] = ()
         propagated = True
-    if _value_contains_secret_text(receipt["result_pointer"], canaries):
+    if _dynamic_value_contains_secret(receipt["result_pointer"], canaries):
         receipt["result_pointer"] = {
             "path": None, "sha256": None, "size": None, "valid": False,
         }
         propagated = True
     for stream_name in ("stdout", "stderr"):
-        if _value_contains_secret_text(receipt[stream_name], canaries):
+        if _dynamic_value_contains_secret(receipt[stream_name], canaries):
             receipt[stream_name] = _suppressed_stream_facts()
             propagated = True
     return propagated
@@ -1265,7 +1284,7 @@ def _reject_dynamic_secret_values(
     provider_canaries: Sequence[str], *dynamic_values: Any
 ) -> None:
     if any(
-        _value_contains_secret_text(value, provider_canaries)
+        _dynamic_value_contains_secret(value, provider_canaries)
         for value in dynamic_values
     ):
         _fail("INVALID_INPUT")
@@ -1331,6 +1350,7 @@ def _preflight(
         message,
         controls["session_id"],
         controls["request_id"],
+        controls["timeout_seconds"],
         str(controls["result_root"]),
     )
     message_identity = {
@@ -1702,15 +1722,10 @@ def _parse_result(raw: bytes, first: Mapping[str, Any]) -> Mapping[str, Any]:
         value = json.loads(text, object_pairs_hook=object_pairs, parse_constant=lambda _x: (_ for _ in ()).throw(ValueError()))
     except (UnicodeError, ValueError, TypeError, json.JSONDecodeError):
         _fail("OUTPUT_INVALID", "OUTPUT")
-    if isinstance(value, Mapping) and _value_contains_secret_text(
-        {
-            "session_id": value.get("session_id"),
-            "request_id": value.get("request_id"),
-            "result_pointer": value.get("result_pointer"),
-            "error": value.get("error"),
-        },
-        first["secret_text"],
-    ):
+    # The complete decoded child object is untrusted dynamic data.  Scan it
+    # before canonical-shape or closed-schema rejection so an escaped secret in
+    # an unknown key/value or invalid protocol field still suppresses stdout.
+    if _dynamic_value_contains_secret(value, first["secret_text"]):
         _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
     if duplicates or not isinstance(value, Mapping) or _canonical_json(value, newline=True) != raw:
         _fail("OUTPUT_INVALID", "OUTPUT")
@@ -1804,13 +1819,13 @@ def launch_session_tool(
             if (
                 isinstance(session_hint, str)
                 and _IDENTIFIER_RE.fullmatch(session_hint)
-                and not _value_contains_secret_text(session_hint, raw_secret_text)
+                and not _dynamic_value_contains_secret(session_hint, raw_secret_text)
             ):
                 receipt["session"] = {"session_id": session_hint}
             if (
                 isinstance(request_hint, str)
                 and _IDENTIFIER_RE.fullmatch(request_hint)
-                and not _value_contains_secret_text(request_hint, raw_secret_text)
+                and not _dynamic_value_contains_secret(request_hint, raw_secret_text)
             ):
                 receipt["request"] = {"request_id": request_hint}
         if raw_secret_complete and isinstance(user_message, str):
@@ -1849,6 +1864,7 @@ def launch_session_tool(
             first["message"],
             first["controls"]["session_id"],
             first["controls"]["request_id"],
+            first["controls"]["timeout_seconds"],
             str(first["controls"]["result_root"]),
             first["local_identities"],
         )

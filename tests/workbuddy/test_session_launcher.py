@@ -805,7 +805,7 @@ sys.stdout.buffer.write((json.dumps(o,ensure_ascii=True,sort_keys=True,separator
 
 @pytest.mark.parametrize(
     "dynamic_location",
-    ["unknown_value", "invalid_schema", "invalid_outcome", "dynamic_key"],
+    ["unknown_value", "nested_array", "invalid_schema", "invalid_outcome", "dynamic_key"],
 )
 def test_52_complete_decoded_child_object_is_scanned_before_schema_rejection(
     tmp_path: Path, dynamic_location: str
@@ -815,6 +815,7 @@ r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]
 o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{{"code":"FIXTURE","origin":"FIXTURE","message":"ordinary"}}}}
 location={dynamic_location!r}
 if location=="unknown_value": o["unknown_dynamic_field"]=s
+elif location=="nested_array": o["unknown_dynamic_field"]=["ordinary",{{"deep":[s]}}]
 elif location=="invalid_schema": o["schema_version"]=s
 elif location=="invalid_outcome": o["outcome"]=s
 else: o[s]="ordinary"
@@ -837,6 +838,104 @@ sys.stdout.buffer.write((json.dumps(o,ensure_ascii=True,sort_keys=True,separator
         "sha256": hashlib.sha256(b"").hexdigest(),
         "truncated": True,
     }
+
+
+@pytest.mark.parametrize("dynamic_location", ["unknown_value", "invalid_outcome"])
+def test_52_child_float_uses_canonical_json_spelling_before_schema_rejection(
+    tmp_path: Path, dynamic_location: str
+) -> None:
+    code = f'''import json,sys
+r=json.load(sys.stdin)
+o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{{"code":"FIXTURE","origin":"FIXTURE","message":"ordinary"}}}}
+if {dynamic_location!r}=="unknown_value": o["unknown_dynamic_field"]=1.0
+else: o["outcome"]=1.0
+raw=json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))
+sys.stdout.write(raw.replace("1.0","1e0",1)+"\\n")'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "1.0"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+@pytest.mark.parametrize(
+    ("value", "canary"),
+    [(1.0, "1.0"), (-0.0, "-0.0"), (1e20, "1e+20")],
+)
+def test_55_finite_float_scanner_matches_project_canonical_json_spelling(
+    value: float, canary: str
+) -> None:
+    assert launcher_module._dynamic_value_contains_secret(
+        {"nested": [value]}, (canary,)
+    )
+
+
+@pytest.mark.parametrize("duplicate_location", ["root", "nested"])
+def test_52_duplicate_first_value_is_scanned_before_overwrite(
+    tmp_path: Path, duplicate_location: str
+) -> None:
+    code = f'''import json,os,sys
+r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]
+o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{{"code":"SAFE","origin":"SAFE","message":"ordinary"}}}}
+raw=json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":")); escaped=json.dumps(s,ensure_ascii=True,separators=(",",":"))
+if {duplicate_location!r}=="root": raw=raw.replace('"outcome":"FAILED"','"outcome":'+escaped+',"outcome":"FAILED"',1)
+else: raw=raw.replace('"code":"SAFE"','"code":'+escaped+',"code":"SAFE"',1)
+sys.stdout.write(raw+"\\n")'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "重复首值秘密"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+def test_17_safe_duplicate_remains_output_invalid(tmp_path: Path) -> None:
+    code = r'''import json,sys
+r=json.load(sys.stdin)
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"SAFE","origin":"SAFE","message":"ordinary"}}
+raw=json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":")); raw=raw.replace('"outcome":"FAILED"','"outcome":"SAFE_FIRST","outcome":"FAILED"',1)
+sys.stdout.write(raw+"\n")'''
+    receipt = _launch(_fixture(tmp_path, code=code))
+    _assert(receipt, "INCOMPLETE", "OUTPUT_INVALID", 1)
+    assert receipt["stdout"]["size"] > 0
+    assert receipt["stdout"]["truncated"] is False
+
+
+@pytest.mark.parametrize("numeric_token", ["NaN", "Infinity", "-Infinity", "1e999"])
+def test_17_nonfinite_child_number_remains_output_invalid(
+    tmp_path: Path, numeric_token: str
+) -> None:
+    code = f'''import json,sys
+r=json.load(sys.stdin)
+raw='{{"error":null,"outcome":"FAILED","request_id":'+json.dumps(r["request_id"])+',"result_pointer":null,"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":'+json.dumps(r["session_id"])+',"unknown":{numeric_token}}}'
+sys.stdout.write(raw+"\\n")'''
+    receipt = _launch(_fixture(tmp_path, code=code))
+    _assert(receipt, "INCOMPLETE", "OUTPUT_INVALID", 1)
 
 
 @pytest.mark.parametrize(
@@ -1283,12 +1382,13 @@ def test_55_managed_fact_identity_is_wholly_dynamic_for_secret_propagation(
 
 
 @pytest.mark.parametrize(
-    ("status", "canary", "capability", "reused"),
+    ("status", "canary", "capability", "reused", "scalar_kind"),
     [
-        pytest.param("PRESENT", "14", "capabxyz", None, id="integer-14"),
-        pytest.param("PRESENT", "15", "capabxyzz", None, id="integer-15"),
-        pytest.param("INTEGRATED", "true", "opaque-capability", True, id="boolean-true"),
-        pytest.param("INTEGRATED", "false", "opaque-capability", False, id="boolean-false"),
+        pytest.param("PRESENT", "14", "capabxyz", None, "size", id="integer-14"),
+        pytest.param("PRESENT", "15", "capabxyzz", None, "size", id="integer-15"),
+        pytest.param("PRESENT", "null", "opaque-capability", None, "plan", id="null-plan"),
+        pytest.param("INTEGRATED", "true", "opaque-capability", True, "reused", id="boolean-true"),
+        pytest.param("INTEGRATED", "false", "opaque-capability", False, "reused", id="boolean-false"),
     ],
 )
 def test_55_canonical_json_scalars_in_local_fact_are_dynamic_secret_propagation(
@@ -1298,6 +1398,7 @@ def test_55_canonical_json_scalars_in_local_fact_are_dynamic_secret_propagation(
     canary: str,
     capability: str,
     reused: bool | None,
+    scalar_kind: str,
 ) -> None:
     seed = _fixture(tmp_path / "seed")
     requirement, evidence, _root = _local_evidence(
@@ -1329,16 +1430,25 @@ def test_55_canonical_json_scalars_in_local_fact_are_dynamic_secret_propagation(
     fact_fields["runtime_root"] = str(root.resolve())
     fact_fields["verified_entrypoint"] = str(entrypoint.resolve())
     fact_fields["version_evidence"]["entrypoint"] = str(entrypoint.resolve())
-    if status == "INTEGRATED":
+    if scalar_kind == "reused":
         fact["reused"] = reused
         scalar: Any = reused
-    else:
+    elif scalar_kind == "size":
         assert len(payload) == int(canary)
         assert fact_fields["asset_evidence"][0]["size"] == int(canary)
         scalar = fact_fields["asset_evidence"][0]["size"]
+    else:
+        assert status == "PRESENT"
+        scalar = None
     evidence["original_stage3_fact_sha256"] = hashlib.sha256(
         _canonical(fact, newline=False)
     ).hexdigest()
+    if scalar_kind == "plan":
+        control = _launch(fixture, evidence=(evidence,))
+        _assert(control, "EXITED_SUCCESS", "NONE", 1)
+        assert control["local_capability_evidence_identities"][0][
+            "plan_sha256"
+        ] is None
     fixture["controls"]["provider_environment"] = {
         "OPAQUE_PROVIDER_VALUE": canary
     }

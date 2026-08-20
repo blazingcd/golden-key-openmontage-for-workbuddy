@@ -10,6 +10,7 @@ from __future__ import annotations
 import ctypes
 import hashlib
 import json
+import math
 import os
 import re
 import signal
@@ -1228,6 +1229,17 @@ def _dynamic_value_contains_secret(value: Any, secrets: Sequence[str]) -> bool:
         scalar = "false"
     elif type(value) is int:
         scalar = str(value)
+    elif value is None:
+        scalar = "null"
+    elif type(value) is float:
+        if not math.isfinite(value):
+            return False
+        scalar = json.dumps(
+            value,
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
     elif isinstance(value, Mapping):
         return any(
             _dynamic_value_contains_secret(key, secrets)
@@ -1710,22 +1722,44 @@ def _parse_result(raw: bytes, first: Mapping[str, Any]) -> Mapping[str, Any]:
     try:
         text = raw.decode("utf-8")
         duplicates: list[str] = []
+        pair_secret_found = False
 
         def object_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+            nonlocal pair_secret_found
             result: dict[str, Any] = {}
             for key, value in pairs:
+                # Inspect every original pair before dictionary assignment can
+                # overwrite a duplicate.  Nested objects pass through this
+                # same hook before their parent receives the reconstructed map.
+                if _dynamic_value_contains_secret(
+                    (key, value), first["secret_text"]
+                ):
+                    pair_secret_found = True
                 if key in result:
                     duplicates.append(key)
                 result[key] = value
             return result
 
-        value = json.loads(text, object_pairs_hook=object_pairs, parse_constant=lambda _x: (_ for _ in ()).throw(ValueError()))
+        def finite_float(value: str) -> float:
+            parsed = float(value)
+            if not math.isfinite(parsed):
+                raise ValueError
+            return parsed
+
+        value = json.loads(
+            text,
+            object_pairs_hook=object_pairs,
+            parse_constant=lambda _x: (_ for _ in ()).throw(ValueError()),
+            parse_float=finite_float,
+        )
     except (UnicodeError, ValueError, TypeError, json.JSONDecodeError):
         _fail("OUTPUT_INVALID", "OUTPUT")
     # The complete decoded child object is untrusted dynamic data.  Scan it
     # before canonical-shape or closed-schema rejection so an escaped secret in
     # an unknown key/value or invalid protocol field still suppresses stdout.
-    if _dynamic_value_contains_secret(value, first["secret_text"]):
+    if pair_secret_found or _dynamic_value_contains_secret(
+        value, first["secret_text"]
+    ):
         _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
     if duplicates or not isinstance(value, Mapping) or _canonical_json(value, newline=True) != raw:
         _fail("OUTPUT_INVALID", "OUTPUT")

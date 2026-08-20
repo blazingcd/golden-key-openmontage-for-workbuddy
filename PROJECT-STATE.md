@@ -6,9 +6,9 @@
 
 ```text
 product: WorkBuddy Shell V2
-formal_branch: origin/codex/workbuddy-shell-v2
-formal_head: 13a3227b0c55bbe9039b46d7e92eba822b48f57e
-formal_tree: d3ac89ec89b66789cabe92d94c3e827f9c2cc22f
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+formal_head_resolution: LIVE_REMOTE_REF_REQUIRED
+formal_tree_resolution: LIVE_REMOTE_REF_TREE_REQUIRED
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -45,19 +45,20 @@ stage_4_ci_fixture_fix_formal_result: 13a3227b0c55bbe9039b46d7e92eba822b48f57e /
 stage_4_ci_fixture_fix_review: APPROVE / P0=0 / P1=0 / P2=0
 stage_4_formal_ci: run 32369588814 / Ubuntu 24.04 / Python 3.11.16 / success / 357 passed / 1 skipped / exit 0
 stage_4_windows_evidence: 158 direct / 11 hygiene / 358 combined / all exit 0 / no skip
-stage_4_implementation: FORMAL_RESULT_READY_FOR_CLOSEOUT / EFFECTIVE_PASS_ACCEPTED_PENDING_INDEPENDENT_CLOSEOUT_REVIEW_AND_ORDINARY_FAST_FORWARD
+stage_4_implementation: PASS_ACCEPTED
+stage_4_closeout_formal_result: b63d8c2bc2214bc39f18378dbe47057ef538301e / tree 02814c6a4a483913e7b1abe3e9ee6d025236c951
+stage_4_closeout_review: V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_closeout_ci: run 32371507874 / Ubuntu 24.04 / Python 3.11.16 / success / 357 passed / 1 skipped
 stage_4_wsl_boundary: NO_RUNTIME_DEPENDENCY / temporary Linux-equivalence validation only / cleaned and shut down after testing
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S4-IMPLEMENTATION-CLOSEOUT-BUILDER1
-current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+current_task: NONE
+current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
-closeout_effective_only_if: V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND six-authority closeout candidate ordinary-fast-forwarded as formal head
-effective_stage_4_implementation_status_after_closeout: PASS_ACCEPTED
+next_authorized_task: NONE
+mirror_finalization: MECHANICAL_MIRROR_ONLY / ZERO_PRODUCT_STATE_CHANGE / candidate still requires independent review and ordinary fast-forward for repository delivery
 effective_stage_4_launcher_authorization: NOT_GRANTED
-effective_next_authorized_task_after_closeout: NONE
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
 effective_final_package_gate_authorization: NOT_GRANTED
@@ -75,6 +76,7 @@ final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_B
 - 阶段4规划：`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`，`V2-S4-PLAN-REVIEW1`最终`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；正式CI run `32337744225`为`completed/success`。两轮历史`REQUEST_CHANGES`已经闭合定义hash环、receipt结果/优先级/非法输入、可伪造摘要证据及Stage3 `managed/explicit/PATH`交接问题。
 - 阶段4实现结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立只读审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward；随后仅修复GitHub `setup-python`无`pyvenv.cfg`时的测试夹具，修复结果`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward。正式树tracked精确37。
 - 官方Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`；Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。WSL仅用于临时Linux等价验证，测试后已清理并关闭，不是Stage4运行依赖。
+- 阶段4closeout固定历史锚点为`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`；closeout独立审查为`APPROVE / P0=0 / P1=0 / P2=0`，正式CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`。因此阶段4实现已是`PASS_ACCEPTED`，当前无活动产品任务和下一授权任务。
 - 最终Release、生产PackageRoot和生产Registration仍属于后续最终交付/Installer任务，最迟在Stage5真实WorkBuddy生产验收前完成；它们不是Stage4规划或编码前置，也未被Stage4证据证明。
 
 ## 阶段3至阶段6建设顺序与实际运行链路
@@ -102,4 +104,4 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-Stage 4规划及状态closeout已经独立审查、普通fast-forward并由正式CI验证，`stage_4_planning`为`PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现和单文件CI夹具修复都已完成独立审查并进入formal；首个正式CI失败只暴露测试夹具对`pyvenv.cfg`的错误假设，不是生产Launcher缺陷，修复后的正式CI成功。当前唯一剩余治理动作是本六权威closeout候选的独立只读审查和普通fast-forward；两者都完成后Stage4实现才有效记为`PASS_ACCEPTED`，且`next_authorized_task=NONE`。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+Stage 4规划、实现、closeout均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复和closeout都已进入历史；当前`current_task=NONE`、`current_task_status=NO_ACTIVE_TASK`、`next_authorized_task=NONE`。本镜像终结只同步这一既有事实，不改变产品状态；其候选仍须独立审查并普通fast-forward才算仓库交付。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。

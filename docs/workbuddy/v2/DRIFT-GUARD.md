@@ -2,6 +2,12 @@
 
 状态：`ACTIVE / FAIL_CLOSED`
 
+```text
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+formal_head_resolution: LIVE_REMOTE_REF_REQUIRED
+formal_tree_resolution: LIVE_REMOTE_REF_TREE_REQUIRED
+```
+
 ## 立即停止
 
 出现以下任一情况时停止并报告`INCOMPLETE`或明确的范围冲突，不得顺手修复：
@@ -46,7 +52,7 @@
 
 阶段3已接受Builder只编辑三个产品路径及`tests/workbuddy/test_repository_hygiene.py`、`.github/workflows/ci.yml`两项验收基础设施，当时正式树tracked精确35；Stage4随后严格按其五路径新增一个生产模块和一个直接测试并同步两项验收基础设施，当前正式树tracked精确37。这不改变每阶段“一个生产模块、一个公共入口”的产品边界。
 
-Stage4规划已`PASS_ACCEPTED`，`PackageToolDefinitionV1`固定工具身份合同及唯一`launch_session_tool(...)`和九值递归不可改写`LauncherReceiptV1`合同均已冻结。Stage4实现结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立零写审查`APPROVE / P0=0 / P1=0 / P2=0`，严格在既定五路径内将tracked从35迁移到37并普通fast-forward；首个正式CI run `32367792637`仅暴露测试夹具错误假定GitHub `setup-python`包含`pyvenv.cfg`，不是生产Launcher finding。单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，正式Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`；Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。当前只允许`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`零写审查本六权威closeout候选；只有审查`APPROVE / P0=0 / P1=0 / P2=0`且候选普通fast-forward后，Stage4实现才有效记为`PASS_ACCEPTED`，随后`next_authorized_task=NONE`。当前Locator仍只重验Registration、PackageRoot、必带工具链、Guide、Manifest和Lock；Stage4从批准Package定义及最终交付/Installer owner提供的release-specific定义取得工具身份，不得猜Guide、重开Stage2、选择Provider/Runtime或扩大路径。缺具体Release定义实例时必须fail closed且spawn 0。WSL只用于临时Linux等价验证并已清理关闭，不是运行依赖。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+Stage4规划和实现均已`PASS_ACCEPTED`，`PackageToolDefinitionV1`固定工具身份合同及唯一`launch_session_tool(...)`和九值递归不可改写`LauncherReceiptV1`合同均已冻结。Stage4实现结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立零写审查`APPROVE / P0=0 / P1=0 / P2=0`，严格在既定五路径内将tracked从35迁移到37并普通fast-forward；首个正式CI run `32367792637`仅暴露测试夹具错误假定GitHub `setup-python`包含`pyvenv.cfg`，不是生产Launcher finding。单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，正式Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`；Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。Stage4 closeout固定历史锚点`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`已经独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，closeout CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`；当前`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`。机械镜像候选的审查和普通fast-forward只决定仓库交付，不改变既有Stage4 `PASS_ACCEPTED`。当前Locator仍只重验Registration、PackageRoot、必带工具链、Guide、Manifest和Lock；Stage4从批准Package定义及最终交付/Installer owner提供的release-specific定义取得工具身份，不得猜Guide、重开Stage2、选择Provider/Runtime或扩大路径。缺具体Release定义实例时必须fail closed且spawn 0。WSL只用于临时Linux等价验证并已清理关闭，不是运行依赖。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

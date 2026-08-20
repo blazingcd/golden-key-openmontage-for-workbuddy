@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 项目章程
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLAN_REVIEW_READY_CANDIDATE / STAGE_4_IMPLEMENTATION_NOT_GRANTED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_BUILDER_AUTHORIZED / SIX_MODULE_MVP`
 
 ## 1. 产品目标
 
@@ -194,13 +194,13 @@ plan_sha256: INTEGRATED only
 
 产品运行衔接固定为：阶段5接收用户原话并触发阶段2重验；阶段4可先用必带工具链执行基础固定工具；阶段3有界探测并按用户逐能力批准集成；OpenMontage从实际可用能力中决定生产选择；阶段6原样转交探测、计划、用户决定、集成、退出和错误事实。建设顺序仍是`3 -> 4 -> 5 -> 6`，不得把它误写成用户运行顺序。
 
-### 4.9 Stage 4规划接管边界与缺口闭合状态
+### 4.9 Stage 4规划接受与实现授权边界
 
-Stage 4实现授权仍为`NOT_GRANTED`。当前Stage 2 `locate_active_package(data_root)`继续只负责返回并重验Registration SHA、PackageRoot、Python/FFmpeg/ffprobe/Node/npm/npx、Guide、Manifest和Lock身份，不新增工具入口字段、不重开Registration。
+Stage 4规划为`PASS_ACCEPTED`，两个合同缺口已经冻结。用户已经授权`V2-S4-IMPLEMENTATION-BUILDER1`执行仓库实现和测试；该授权不等于真实生产Launcher运行授权。当前Stage 2 `locate_active_package(data_root)`继续只负责返回并重验Registration SHA、PackageRoot、Python/FFmpeg/ffprobe/Node/npm/npx、Guide、Manifest和Lock身份，不新增工具入口字段、不重开Registration。
 
-本规划候选已用`PackageToolDefinitionV1`闭合固定工具身份来源、release-specific相对路径/hash/size/owner、解释器、固定argv、Manifest/Lock绑定和路径防替换规则；已用`launch_session_tool(...)`及`LauncherReceiptV1`闭合唯一公共入口、单进程生命周期、输入/输出、结果闭集和不可改写回执。具体Release实例仍由批准Package定义/最终交付Installer owner提供；缺实例时真实调用preflight阻断，不要求规划或编码前先物化最终Package。
+已接受规划用`PackageToolDefinitionV1`闭合固定工具身份来源、release-specific相对路径/hash/size/owner、解释器、固定argv、Manifest/Lock绑定和路径防替换规则；用`launch_session_tool(...)`及`LauncherReceiptV1`闭合唯一公共入口、单进程生命周期、输入/输出、结果闭集和不可改写回执。具体Release实例仍由批准Package定义/最终交付Installer owner提供；缺实例时真实调用preflight阻断，不要求编码前先物化最终Package。
 
-这些合同只有经`V2-S4-PLAN-REVIEW1`独立APPROVE并普通fast-forward进入正式分支后才成为实现权威；当前下一任务只可为该零写Reviewer，不能创建Stage4实现Builder。真实WorkBuddy新会话、唯一入口、literal `user_message`不变、授权询问和同任务继续仍归Stage5实现/验收；Stage6只在Stage4回执和Stage5真实消费者存在后判断，直接消费必须走`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0。
+这些合同已经`V2-S4-PLAN-REVIEW1`独立APPROVE、规划closeout审查并普通fast-forward，现为实现权威。live task仅为`V2-S4-IMPLEMENTATION-BUILDER1`：从本权威同步推广后的最新formal精确SHA/tree接管，只能编辑已冻结五路径并把tracked从35精确变为37；第六路径或修改`package_registration.py`、`runtime_prepare.py`、`pyproject.toml`立即停止。真实生产Launcher运行、WorkBuddy新会话/入口/授权询问和同任务继续、Stage6及最终Package仍未授权；Stage6只在Stage4回执和Stage5真实消费者存在后判断，直接消费必须走`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0。
 
 ### 4.10 Stage 4冻结公共合同
 

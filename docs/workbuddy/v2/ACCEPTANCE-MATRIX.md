@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLAN_REVIEW_READY_CANDIDATE / STAGE_4_IMPLEMENTATION_NOT_GRANTED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_BUILDER_AUTHORIZED / SIX_MODULE_MVP`
 
 ## 1. 状态必须独立报告
 
@@ -100,17 +100,17 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 阶段3直接测试和完整仓库测试都必须有未截断输出和最终退出0。真实大陆镜像下载证据、真实WorkBuddy继续、阶段4真实执行和视频E2E仍是后续独立证据层，不能塞入阶段3直接测试或用mock冒充。
 
-### 3.4 Stage 3完成证据与Stage 4规划Gate
+### 3.4 Stage 3完成证据与Stage 4已接受规划
 
 Stage 3已接受证据为：direct 55 passed、repository hygiene 10 passed、CI-equivalent full 199 passed，全部最终退出0且无skip；独立Reviewer只读核验精确对象、代码、测试定义和Builder原始输出，没有重跑测试。该证据不证明真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E，也不需要这些后续证据来维持Stage3 `PASS_ACCEPTED`。
 
-Stage4规划已由本候选接管，但实现仍`NOT_GRANTED`。本候选用release-specific immutable `PackageToolDefinitionV1`闭合当前Locator不提供固定工具入口身份的问题，并冻结`launch_session_tool(...)`及`LauncherReceiptV1`精确字段。最终Package物化和真实WorkBuddy都不是规划或编码前置；具体Release缺工具定义实例时，真实调用必须preflight阻断。
+Stage4规划已经独立审查、普通fast-forward并记为`PASS_ACCEPTED`。已接受的release-specific immutable `PackageToolDefinitionV1`闭合当前Locator不提供固定工具入口身份的问题，并冻结`launch_session_tool(...)`及`LauncherReceiptV1`精确字段。用户已授权`V2-S4-IMPLEMENTATION-BUILDER1`执行既定仓库实现与测试；最终Package物化和真实WorkBuddy都不是编码前置，具体Release缺工具定义实例时，真实调用必须preflight阻断。
 
-合同只有在`V2-S4-PLAN-REVIEW1`独立零写APPROVE并普通fast-forward后生效。当前`next_authorized_task=V2-S4-PLAN-REVIEW1 / ZERO_WRITE_ONLY`；不得自动创建实现Builder。
+规划合同已经`V2-S4-PLAN-REVIEW1`独立零写APPROVE、规划closeout审查并普通fast-forward，现已生效。live task为`V2-S4-IMPLEMENTATION-BUILDER1`，必须从本权威同步推广后的最新formal精确SHA/tree接管；授权只覆盖既定五路径和35到37的固定树迁移，不授权真实生产Launcher运行、Stage5、Stage6或最终Package。
 
 ### 3.5 Stage 4规划完成合同与未来实现验收
 
-本规划候选已把两个已知缺口闭合为可实现合同，但只有独立Reviewer批准并普通fast-forward进入正式分支后才生效；规划推广仍不授予Stage4实现。固定工具身份不等于编造上游入口：`PackageToolDefinitionV1`冻结authority、closed schema、release绑定和缺实例fail-closed规则，具体Release实例由批准Golden Key Package定义/最终交付Installer owner提供。
+已接受规划已把两个已知缺口闭合为可实现合同；仓库实现授权只授予`V2-S4-IMPLEMENTATION-BUILDER1`，并不授权真实生产Launcher运行。固定工具身份不等于编造上游入口：`PackageToolDefinitionV1`冻结authority、closed schema、release绑定和缺实例fail-closed规则，具体Release实例由批准Golden Key Package定义/最终交付Installer owner提供。
 
 未来实现的Gate按以下顺序裁决：
 

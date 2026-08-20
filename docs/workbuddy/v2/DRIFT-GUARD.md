@@ -46,7 +46,7 @@
 
 阶段3已接受Builder只编辑三个产品路径及`tests/workbuddy/test_repository_hygiene.py`、`.github/workflows/ci.yml`两项验收基础设施，正式树tracked精确35；这不改变“一个生产模块、一个公共入口”的产品边界。
 
-本九文档同步正式推广后，Stage4仅为`planning_eligible`，实现仍`NOT_GRANTED`。当前Locator会重验Registration、PackageRoot、必带工具链、Guide、Manifest和Lock，但不提供固定Package工具入口身份；Stage4精确公共入口和不可改写回执字段也未冻结。未来单独授权的Stage4规划必须由批准OpenMontage Package定义及后续最终交付/Installer所有者取得可验证固定工具身份，并自行冻结唯一Launcher API与回执字段；不得猜Guide、重开Stage2、预写代码，或把最终Package和真实WorkBuddy变成规划前置。Stage5拥有真实WorkBuddy会话/入口/询问/继续；Stage6须等待Stage4回执及Stage5真实消费者，直接消费时生产代码为0。
+Stage4规划已`PASS_ACCEPTED`，`PackageToolDefinitionV1`固定工具身份合同及唯一`launch_session_tool(...)`和九值递归不可改写`LauncherReceiptV1`合同均已冻结。用户已经授权Stage4仓库实现，live task为`V2-S4-IMPLEMENTATION-BUILDER1`；该授权只允许从本权威同步正式推广后的最新formal精确对象，在既定五路径内完成实现、直接测试、repository hygiene及CI接线，使tracked从35精确变为37。当前Locator仍只重验Registration、PackageRoot、必带工具链、Guide、Manifest和Lock；Stage4从批准Package定义及最终交付/Installer owner提供的release-specific定义取得工具身份，不得猜Guide、重开Stage2、选择Provider/Runtime或扩大路径。缺具体Release定义实例时必须fail closed且spawn 0。真实生产Launcher运行、Stage5、Stage6及最终Package仍未授权；最终Package和真实WorkBuddy不是Stage4编码前置，但真实生产启动必须具备对应已验证对象。
 
 外部Package Guide只有在Registration身份完整验证、Locator返回已验证身份后，才可由对应下游消费者读取。本仓库根`AGENT_GUIDE.md`只治理Shell V2，不能替代或预先信任外部Guide。
 

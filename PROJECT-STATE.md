@@ -9,6 +9,9 @@ product: WorkBuddy Shell V2
 formal_ref: refs/heads/codex/workbuddy-shell-v2
 formal_head_resolution: LIVE_REMOTE_REF_REQUIRED
 formal_tree_resolution: LIVE_REMOTE_REF_TREE_REQUIRED
+mirror_result: THIS_COMMIT
+mirror_effect: ZERO_PRODUCT_STATE_CHANGE
+mirror_repository_delivery_resolution: zero-write APPROVE exists AND LIVE_REMOTE_REF contains THIS_COMMIT
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -57,7 +60,6 @@ current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
 next_authorized_task: NONE
-mirror_finalization: MECHANICAL_MIRROR_ONLY / ZERO_PRODUCT_STATE_CHANGE / candidate still requires independent review and ordinary fast-forward for repository delivery
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -104,4 +106,4 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-Stage 4规划、实现、closeout均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复和closeout都已进入历史；当前`current_task=NONE`、`current_task_status=NO_ACTIVE_TASK`、`next_authorized_task=NONE`。本镜像终结只同步这一既有事实，不改变产品状态；其候选仍须独立审查并普通fast-forward才算仓库交付。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+Stage 4规划、实现、closeout均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复和closeout都已进入历史；当前`current_task=NONE`、`current_task_status=NO_ACTIVE_TASK`、`next_authorized_task=NONE`。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`只自解析镜像仓库交付，不形成当前任务、不改变或重新门禁产品状态。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。

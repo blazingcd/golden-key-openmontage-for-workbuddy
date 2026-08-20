@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-08-20：V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1
+
+- 接管基线与实时正式远端精确同为`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`，tree为`a4d8034f6cf76c6eedd2f4bbe3c30dbe1b4e382a`，tracked精确35，起始工作树clean、untracked 0、stash 0。
+- `e5ae6f8`已经位于`origin/codex/workbuddy-shell-v2`；其精确代码差异只有`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言，分别改为`stage3_implementation: PASS_ACCEPTED`与`stage_3_implementation_authorization: CONSUMED_COMPLETE`，没有生产代码或CI workflow变化。
+- 正式CI run `32218904419`已实时核验为`completed/success`，head SHA精确为`e5ae6f8`，执行合同测试得到`198 passed / 1 skipped`并最终退出0。本docs-only closeout不重复运行项目测试。
+- 第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`：唯一原因是当时authority mismatch，精确代码差异没有finding。正式分支在任务账本收口前前移，记录为治理偏差；本任务不改写Git历史或把该次审查虚报为`APPROVE`。
+- 本任务只同步`docs/workbuddy/v2/TASK-REGISTER.md`、`PROJECT-STATE.md`和`WORK-LOG.md`三份现有文档。Stage3继续`PASS_ACCEPTED`；Stage4 planning继续`ELIGIBLE`，但当前候选未独立审查、未正式推广，所以尚不允许启动规划Builder。
+- 只有独立零写Reviewer对`e5ae6f8..THIS_COMMIT`给出`APPROVE`且本候选以普通fast-forward进入正式分支后，唯一下一任务才是`V2-S4-PLAN-BUILDER1`。Stage4实现与Launcher实现仍`NOT_GRANTED`，Stage5、Stage6及最终Package Gate也均`NOT_GRANTED`。
+
 ## 2026-08-18：V2-S3-TO-S4-DOCS-SYNC1
 
 - Stage 3实现`a3f8959682d296301dc573c2835f8c705a52e8b2`经独立只读Reviewer批准`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；closeout `7c15aae4e77c579309312b21c79076f930970214`也已正式推广，现行状态直接为`PASS_ACCEPTED`。

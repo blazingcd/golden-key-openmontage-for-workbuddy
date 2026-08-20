@@ -1,45 +1,45 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-CI-STAGE3-STATE-ASSERTION-AUTH1 / AUTHORIZED_PENDING_REVIEW_AND_FORMAL_PROMOTION`
+状态：`V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
-更新时间：2026-08-19
+更新时间：2026-08-20
 
 ## 当前任务
 
 ```text
-task_id: V2-CI-STAGE3-STATE-ASSERTION-AUTH1
-task_status: AUTHORIZED_PENDING_REVIEW_AND_FORMAL_PROMOTION
-task_kind: CI_MAINTENANCE_AUTHORIZATION / DOCS_ONLY
-user_authorization: 2026-08-19 / 修复GitHub Actions过期Stage3状态断言
-start_commit: a8d024ca9001184e9c2a5a995598d64024eef51b
+task_id: V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1
+task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+task_kind: CI_MAINTENANCE_STATE_CLOSEOUT / DOCS_ONLY
+user_authorization: 2026-08-20 / 收口已进入正式分支的Stage3状态断言修复，并在独立审查与正式推广后衔接Stage4规划
+start_commit: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
 result_commit: THIS_COMMIT
-branch: codex/v2-ci-stage3-state-assertion-authorize1
+branch: codex/v2-ci-stage3-state-assertion-closeout1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: a8d024ca9001184e9c2a5a995598d64024eef51b
-review_range: a8d024ca9001184e9c2a5a995598d64024eef51b..THIS_COMMIT
+formal_target_at_start: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
+formal_tree_at_start: a4d8034f6cf76c6eedd2f4bbe3c30dbe1b4e382a
+review_range: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3..THIS_COMMIT
 independent_review: NOT_STARTED / REQUIRED_ZERO_WRITE
-formal_promotion: NOT_STARTED / AUTHORIZATION_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
-repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md
+formal_promotion: NOT_STARTED / CLOSEOUT_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; PROJECT-STATE.md; WORK-LOG.md
 production_code_changes: 0
 test_changes: 0
 ci_changes: 0
 new_tracked_files: 0
 tracked_files_expected: 35
-external_writes_performed: NONE
+external_writes_performed: NON_FORCE_PUSH_OF_TEMPORARY_BRANCH_ONLY
 task_temp_root_status: NOT_CREATED
-ci_evidence_run: 32154859370 / latest formal run
-ci_evidence_only_failure: test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented
-ci_evidence_stale_assertions: stage3_implementation=AUTHORIZED_NOT_STARTED; stage_3_implementation_authorization=GRANTED
-ci_evidence_current_authority: stage3_implementation=PASS_ACCEPTED; stage_3_implementation_authorization=CONSUMED_COMPLETE
-root_cause: accepted state advanced but fixed repository-hygiene state assertion was not updated in the later closeout/docs-only tasks
-ci_fix_implementation_authorization: GRANTED_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_FORMAL_PROMOTION
-future_builder_base_rule: after this authorization candidate is formally promoted, Builder must use the then-live exact SHA of origin/codex/workbuddy-shell-v2 / prohibited_stale_builder_base=a8d024ca9001184e9c2a5a995598d64024eef51b
+ci_fix_authorization_commits: c258da0; ca27ae0
+ci_fix_formal_result: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3 / ALREADY_AT_FORMAL_HEAD
 ci_fix_exact_implementation_allowlist: tests/workbuddy/test_repository_hygiene.py only
-ci_fix_exact_change: lines/state assertions only / stage3_implementation PASS_ACCEPTED / stage_3_implementation_authorization CONSUMED_COMPLETE
-ci_fix_required_direct_test: python -m pytest -p no:cacheprovider tests/workbuddy/test_repository_hygiene.py -q
-ci_fix_required_workflow_equivalent: python -m pytest -p no:cacheprovider tests/workbuddy/test_package_registration.py tests/workbuddy/test_runtime_prepare.py tests/workbuddy/test_repository_hygiene.py -q
-ci_fix_lifecycle: one bounded Builder -> independent zero-write Reviewer -> ordinary non-force formal fast-forward after APPROVE
-known_ci_transition: this docs-only authorization commit is expected to trigger the same failure before the assertion fix; do not treat it as a different root cause and do not expand scope
+ci_fix_exact_change: exactly two Stage3 state assertions / stage3_implementation PASS_ACCEPTED / stage_3_implementation_authorization CONSUMED_COMPLETE
+ci_fix_exact_diff: 1 changed path / 2 insertions / 2 deletions / no production or workflow change
+ci_evidence_run: 32218904419 / codex/workbuddy-shell-v2 / head_sha=e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
+ci_evidence_result: completed / success / 198 passed / 1 skipped / final exit 0
+ci_evidence_command: python -m pytest -p no:cacheprovider tests/workbuddy/test_package_registration.py tests/workbuddy/test_runtime_prepare.py tests/workbuddy/test_repository_hygiene.py -q
+first_independent_review: INCOMPLETE / P0=0 / P1=0 / P2=0 / authority mismatch only / exact code diff had no finding
+governance_deviation: formal branch advanced to e5ae6f8 before the live authority and state mirrors were closed out
+governance_deviation_handling: retain Git and review history unchanged; close only the current authority mirrors; do not retroactively claim the first review was APPROVE
+closeout_test_execution: NOT_RUN_DOCS_ONLY / official CI run 32218904419 is the retained execution evidence
 stage_3_builder_base: 1c18edf9910e57541c37614c3e7cedf2fb11e372
 stage_3_reviewed_implementation: a3f8959682d296301dc573c2835f8c705a52e8b2 / APPROVE / P0=0 / P1=0 / P2=0
 stage_3_implementation_tree: eca057c3643c36248cccbfb9606d9aea12b3dc42
@@ -70,9 +70,9 @@ consumer_mapping: DETECTION_REPORT=display_facts; CONSENT_REQUIRED=display_plan_
 consent_binding: capability + definition_sha256 + plan_sha256 / explicit per-capability approve only
 real_workbuddy_evidence_stage: STAGE_5_ACCEPTANCE_ONLY
 same_task_continuation_rule: verify in Stage5; if unsupported ask user to reply 继续刚才的任务; Shell never auto-replays
-validation_diff_check: PASS / exact one-file scope / untracked 0 / git diff --check exit 0 / authorization and preserved stage states consistent
-validation_full_test: NOT_RUN_DOCS_ONLY / current task authorizes no test execution
-validation_scope: docs/workbuddy/v2/TASK-REGISTER.md only / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
+validation_diff_check: PASS / exact three-path allowlist / tracked 35 / untracked 0 / git diff --check exit 0 / state mirrors consistent
+validation_full_test: NOT_RUN_DOCS_ONLY / official CI run 32218904419 already supplies the execution evidence
+validation_scope: docs/workbuddy/v2/TASK-REGISTER.md; PROJECT-STATE.md; WORK-LOG.md / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
 future_final_package_gate_rule: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1 is a later final-delivery or Installer task due before Stage5 real WorkBuddy production acceptance; it is not a Stage3 or Stage4 coding/planning prerequisite
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
 stage_4_takeover_boundary: PLANNING_ELIGIBLE / implementation_authorization=NOT_GRANTED
@@ -83,8 +83,8 @@ stage_4_gap_owner_launcher_api_and_receipt: future separately authorized Stage4 
 stage_5_deferred_scope: real new WorkBuddy session, single entry, unchanged literal user_message, per-capability authorization question and same-task continuation / implementation and acceptance only
 stage_6_deferred_rule: evaluate only after Stage4 receipt and Stage5 real consumer exist; direct consumption means STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE and production code 0
 forbidden_scope: production code; docs other than this ledger; workflow; pyproject; Stage4/5/6 implementation; final Package; old main historical red runs; Node deprecation warning; any second implementation path
-next_authorized_task: V2-CI-STAGE3-STATE-ASSERTION-FIX1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_FORMAL_PROMOTION
-stage_4_planning: ELIGIBLE
+next_authorized_task: V2-S4-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_THIS_CLOSEOUT_INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FORMAL_FAST_FORWARD
+stage_4_planning: ELIGIBLE / START_NOT_PERMITTED_UNTIL_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
 stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
@@ -177,11 +177,16 @@ formal_branch: codex/workbuddy-shell-v2
 accepted_authority_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
 formal_handoff_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
 accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head: a8d024ca9001184e9c2a5a995598d64024eef51b
+formal_head: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
+formal_tree: a4d8034f6cf76c6eedd2f4bbe3c30dbe1b4e382a
 stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout_formal_result: 7c15aae4e77c579309312b21c79076f930970214
 stage_3_to_stage_4_docs_sync_formal_result: 513e5ca10d1ba04878295be110096b013f47974a
 stage_3_to_stage_4_docs_closeout_formal_result: a8d024ca9001184e9c2a5a995598d64024eef51b
+ci_stage3_state_assertion_fix_formal_result: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
+ci_stage3_state_assertion_fix_review_history: first independent review INCOMPLETE / P0=0 / P1=0 / P2=0 / authority mismatch only / code diff no finding
+ci_stage3_state_assertion_fix_ci: run 32218904419 / completed / success / 198 passed / 1 skipped / final exit 0
+ci_stage3_state_assertion_closeout: WORKTREE_RESULT_READY_FOR_REVIEW / THIS_COMMIT / NOT_FORMALLY_PROMOTED
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED
@@ -217,15 +222,24 @@ real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
 stage_3_execution_packet: CONSUMED_COMPLETE / EXACT_5_PATHS
 stage3_implementation: PASS_ACCEPTED
 stage_3_status: PASS_ACCEPTED
-stage_4_planning: ELIGIBLE
+stage_4_planning: ELIGIBLE / V2-S4-PLAN-BUILDER1_START_ONLY_AFTER_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
+stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
+final_package_gate_authorization: NOT_GRANTED
+current_task: V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1
+current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+next_authorized_task: V2-S4-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
 stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
 
-`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了Stage 2必带工具链和Registration/Locator的真实临时证明；该历史事实不重开，也不再作为Stage 3输入。Stage 3实现已经独立审阅并正式推广为`a3f8959682d296301dc573c2835f8c705a52e8b2`，closeout `7c15aae4e77c579309312b21c79076f930970214`也已正式推广，因此Stage 3现为`PASS_ACCEPTED`。本docs sync推广后只具备启动Stage 4规划/接管判断的条件；在本次CI维护授权候选正式推广前，历史状态是下一授权任务`NONE`。本授权经独立`APPROVE`并正式推广后，唯一下一任务切换为`V2-CI-STAGE3-STATE-ASSERTION-FIX1`；Stage 4、5、6及最终Package Gate仍未获实现授权。
+`709c8e880b144fa9e9be26e9feb5d776dd6025e2`完成了Stage 2必带工具链和Registration/Locator的真实临时证明；该历史事实不重开，也不再作为Stage 3输入。Stage 3实现已经独立审阅并正式推广为`a3f8959682d296301dc573c2835f8c705a52e8b2`，closeout `7c15aae4e77c579309312b21c79076f930970214`也已正式推广，因此Stage 3继续为`PASS_ACCEPTED`。
+
+CI状态断言修复`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`已经位于正式分支，精确代码差异仅为`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言；正式CI run `32218904419`为`completed/success`，输出`198 passed / 1 skipped`。第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`，原因只有当时authority mismatch，代码差异无finding。正式分支在账本收口前前移属于治理偏差，本closeout只同步实时权威，不改写审查或Git历史。
+
+本closeout候选自身仍是`WORKTREE_RESULT_READY_FOR_REVIEW`，不是已接受结果。只有独立Reviewer对`e5ae6f8..THIS_COMMIT`给出`APPROVE`且候选以普通fast-forward进入正式分支后，才允许启动`V2-S4-PLAN-BUILDER1`；这不授予Stage4实现或Launcher实现，也不授予Stage5、Stage6或最终Package Gate。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35。没有恢复任何已清理内容。
 

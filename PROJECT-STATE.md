@@ -1,13 +1,14 @@
 # Project State
 
-更新时间：2026-08-18
+更新时间：2026-08-20
 
 ## 当前状态
 
 ```text
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
-formal_head: 7c15aae4e77c579309312b21c79076f930970214
+formal_head: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
+formal_tree: a4d8034f6cf76c6eedd2f4bbe3c30dbe1b4e382a
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -19,15 +20,20 @@ stage_3_implementation: PASS_ACCEPTED / a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout: PASS_ACCEPTED / 7c15aae4e77c579309312b21c79076f930970214
 stage_3_evidence: 55 direct / 10 hygiene / 199 full / all exit 0 / no skip
 stage_3_evidence_boundary: no real third-party or mainland-mirror download, production DataRoot, WorkBuddy, Stage4, Provider, media or video E2E proof
-stage_4_planning: ELIGIBLE_AFTER_CURRENT_DOCS_PROMOTION
+ci_stage3_state_assertion_fix: FORMAL / e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3 / exactly two assertions in tests/workbuddy/test_repository_hygiene.py
+ci_stage3_state_assertion_evidence: run 32218904419 / completed / success / 198 passed / 1 skipped / final exit 0
+ci_stage3_state_assertion_review_history: first independent review INCOMPLETE / P0=0 / P1=0 / P2=0 / authority mismatch only / code diff no finding
+ci_stage3_state_assertion_governance_deviation: formal advanced before authority closeout / history retained / current mirrors only are being repaired
+stage_4_planning: ELIGIBLE / V2-S4-PLAN-BUILDER1_START_ONLY_AFTER_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
 stage_4_implementation_authorization: NOT_GRANTED
+stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S3-TO-S4-DOCS-SYNC1
+current_task: V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
 stage_4_contract_gap: fixed Package tool-entry identity absent from current Locator output; exact Stage4 public entry and immutable receipt field names not frozen
-next_authorized_task: NONE
-final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_AUTHORIZED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
+next_authorized_task: V2-S4-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CURRENT_CLOSEOUT_INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FORMAL_FAST_FORWARD
+final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
 ```
 
 腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色。阶段2已经接受完整必带工具链的Registration/Locator实现和一次真实临时Package验证。阶段3已完成Remotion与HyperFrames的有界探测、报告、逐能力授权集成合同实现并正式收口；两项始终是OpenMontage候选能力，Shell不选择渲染器，缺失、拒绝或延期不阻塞基础工具链路径。
@@ -63,8 +69,8 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 ## Stage 4接管审计摘要
 
-当前`locate_active_package(data_root)`会重验并返回Registration、PackageRoot、完整必带工具链、Guide、Manifest和Lock身份，但没有给出固定Package工具入口的权威身份。现有权威也没有冻结Stage4精确公共入口和不可改写进程回执字段。因此本docs sync推广后具备启动Stage4规划的条件，不具备直接实施条件。
+当前`locate_active_package(data_root)`会重验并返回Registration、PackageRoot、完整必带工具链、Guide、Manifest和Lock身份，但没有给出固定Package工具入口的权威身份。现有权威也没有冻结Stage4精确公共入口和不可改写进程回执字段。Stage4规划负责闭合这两项，Stage4实现仍未获授权。
 
 未来单独授权的Stage4规划任务必须冻结：固定工具入口身份来自何种经验证Package定义、相对路径/hash/owner和固定argv形状；唯一公共入口；一次不可改写真实进程回执的精确字段。工具身份由批准OpenMontage Package定义及后续最终交付/Installer所有者提供，Launcher API和回执字段由Stage4规划所有者冻结；不得重开Stage2、猜测未验证Guide，或把最终Package/真实WorkBuddy变成Stage4规划前置。
 
-Stage4最小边界只允许一次WorkBuddy拥有的会话调用一个固定Package工具并返回真实回执；禁止任意shell/命令、意图解析、第二Agent、Runtime安装、渲染器选择、自动重试/重放、队列/服务/数据库/多进程调度、媒体生产、Artifact创建和Checkpoint推进。当前`next_authorized_task=NONE`，Stage4实现仍`NOT_GRANTED`。
+Stage4最小边界只允许一次WorkBuddy拥有的会话调用一个固定Package工具并返回真实回执；禁止任意shell/命令、意图解析、第二Agent、Runtime安装、渲染器选择、自动重试/重放、队列/服务/数据库/多进程调度、媒体生产、Artifact创建和Checkpoint推进。当前closeout候选仍须独立只读审查和普通fast-forward；两者完成后唯一下一任务才是`V2-S4-PLAN-BUILDER1`。这不授权Stage4实现、Launcher实现、Stage5、Stage6或最终Package Gate。

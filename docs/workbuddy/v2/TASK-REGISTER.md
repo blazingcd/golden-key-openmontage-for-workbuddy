@@ -1,27 +1,27 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1 / WORKTREE_RESULT_READY_FOR_REVIEW`
+状态：`V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-FIX1 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
 更新时间：2026-08-20
 
 ## 当前任务
 
 ```text
-task_id: V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1
+task_id: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-FIX1
 task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-task_kind: STAGE4_IMPLEMENTATION_AUTHORIZATION / DOCS_ONLY
-user_authorization: 2026-08-20 / 明确要求本协调者作为Stage4实施执行统筹安排相应执行与独立审查工作
-start_commit: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
-start_tree: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
+task_kind: STAGE4_IMPLEMENTATION_AUTHORITY_SYNC / DOCS_ONLY
+user_authorization: 2026-08-20 / Stage4实施与审查执行授权已正式固化；在实现前一次性同步六权威，不扩大边界
+start_commit: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
+start_tree: c196dbf6b094cad05076d01ac2496f7425cf6fac
 result_commit: THIS_COMMIT
 branch: codex/v2-s4-impl-auth1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
-formal_tree_at_start: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
-review_range: dfd97f3d2e05a4c448448fc14514d1cfe76836e8..THIS_COMMIT
-independent_review: NOT_STARTED / V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / REQUIRED_ZERO_WRITE
-formal_promotion: NOT_STARTED / AUTHORIZATION_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
-repository_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+formal_target_at_start: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
+formal_tree_at_start: c196dbf6b094cad05076d01ac2496f7425cf6fac
+review_range: 2c3d87bedfa4a3cef3cfd952641199300f2715dc..THIS_COMMIT
+independent_review: NOT_STARTED / V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 / REQUIRED_ZERO_WRITE
+formal_promotion: NOT_STARTED / BUILDER_START_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+repository_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/PROJECT-CHARTER.md
 production_code_changes: 0
 test_changes: 0
 ci_changes: 0
@@ -44,14 +44,19 @@ official_model_correction: dynamic capability/provider registry / Provider and l
 stage_3_evidence_boundary: current implementation supplies local Remotion/HyperFrames evidence only; Stage4 accepts the complete approved definition plus the unmodified original Stage3 fact only when PackageToolDefinition declares a requirement, then independently applies the accepted managed/explicit/PATH source semantics and revalidates actual bytes
 provider_boundary: image/video/TTS/music/stock/local-GPU and future Providers are optional external configuration selected by WorkBuddy/OpenMontage; Stage4 only passes allowlisted environment names and secret values to the fixed child process
 stage_4_planning: PASS_ACCEPTED
-stage_4_implementation_authorization: GRANT_PENDING_V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_4_implementation_authorization_formal_result: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
+stage_4_implementation_authorization_formal_tree: c196dbf6b094cad05076d01ac2496f7425cf6fac
+stage_4_implementation_authorization_review: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_implementation_authorization_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=2c3d87bedfa4a3cef3cfd952641199300f2715dc
+stage_4_implementation_authorization_ci: run 32340096961 / completed / success / head_sha=2c3d87bedfa4a3cef3cfd952641199300f2715dc
+stage_4_implementation_authorization: FORMALLY_GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1 / START_BLOCKED_UNTIL_SIX_AUTHORITY_SYNC_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / ZERO_WRITE_ONLY
+next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 / ZERO_WRITE_ONLY
 
-authorization_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND THIS_COMMIT ordinary-fast-forwarded as formal head
+authority_sync_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND THIS_COMMIT ordinary-fast-forwarded as formal head
 effective_stage_4_implementation_authorization: GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1_ONLY
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_next_authorized_task: V2-S4-IMPLEMENTATION-BUILDER1
@@ -59,7 +64,7 @@ effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
 effective_final_package_gate_authorization: NOT_GRANTED
 implementation_builder_branch: codex/v2-s4-implementation-builder1
-implementation_builder_base_rule: exact latest origin/codex/workbuddy-shell-v2 commit and tree after this authorization candidate is approved and ordinary-fast-forwarded; never use this temporary authorization branch as implementation base
+implementation_builder_base_rule: exact latest origin/codex/workbuddy-shell-v2 commit and tree after this six-authority sync candidate is approved and ordinary-fast-forwarded; never use this temporary sync branch as implementation base
 implementation_exact_allowed_paths: golden_key_openmontage_workbuddy/session_launcher.py; golden_key_openmontage_workbuddy/__init__.py; tests/workbuddy/test_session_launcher.py; tests/workbuddy/test_repository_hygiene.py; .github/workflows/ci.yml
 implementation_tracked_files_transition: 35 -> 37
 implementation_stop_scope_expansion: any sixth path; any edit to golden_key_openmontage_workbuddy/package_registration.py; golden_key_openmontage_workbuddy/runtime_prepare.py; pyproject.toml; any dynamic relaxation of the fixed tree contract
@@ -413,7 +418,7 @@ tests/workbuddy/test_repository_hygiene.py                  # 固定树/API/sour
 
 ### V2-S4-T7：Builder、Reviewer与推广
 
-规划已正式推广，但用户仍需另行明确说“启动阶段四实现”。届时live authority必须从最新`origin/codex/workbuddy-shell-v2`冻结精确base/tree/37目标文件合同，创建一个临时Builder分支，只允许上述5路径。Builder必须使用项目D盘独立`.venv`，运行Stage4直接测试、repository hygiene和完整仓库测试，保留未截断输出和最终exit 0；检查精确diff、37文件等值、clean/untracked0/stash0后提交并非force推送。独立Reviewer零写，只审精确base..candidate，核对公共合同最小性、fail-closed反例、secret为0和真实测试定义；`REQUEST_CHANGES`只回原Builder。只有`APPROVE/P0=0/P1=0/P2=0`、formal仍等于base、对象一致时才允许普通fast-forward推广。推广完成也不得自动启动Stage 5、Stage 6或最终Package Gate。
+规划推广时要求用户另行明确说“启动阶段四实现”；该历史条件已由用户2026-08-20指令满足，并由正式授权结果`2c3d87bedfa4a3cef3cfd952641199300f2715dc`固化。实施Builder接管时live authority必须从最新`origin/codex/workbuddy-shell-v2`冻结精确base/tree/37目标文件合同，创建一个临时Builder分支，只允许上述5路径。Builder必须使用项目D盘独立`.venv`，运行Stage4直接测试、repository hygiene和完整仓库测试，保留未截断输出和最终exit 0；检查精确diff、37文件等值、clean/untracked0/stash0后提交并非force推送。独立Reviewer零写，只审精确base..candidate，核对公共合同最小性、fail-closed反例、secret为0和真实测试定义；`REQUEST_CHANGES`只回原Builder。只有`APPROVE/P0=0/P1=0/P2=0`、formal仍等于base、对象一致时才允许普通fast-forward推广。推广完成也不得自动启动Stage 5、Stage 6或最终Package Gate。
 
 任务执行顺序、输入、交付与退出条件固定为：
 
@@ -441,7 +446,7 @@ historical_closeout_target_stage_6_status_result_relay_authorization: NOT_GRANTE
 historical_closeout_target_final_package_gate_authorization: NOT_GRANTED
 ```
 
-这些字段只记录当时的历史目标，不得覆盖文件顶部的当前授权候选和条件生效字段。
+这些字段只记录当时的历史目标，不得覆盖文件顶部的当前六权威同步候选和条件生效字段。
 
 ### 与Stage 5/6不断档
 
@@ -527,11 +532,11 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-accepted_authority_result: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+accepted_authority_result: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
 historical_formal_handoff_before_stage3_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
 historical_accepted_stage3_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
-formal_tree: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
+formal_head: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
+formal_tree: c196dbf6b094cad05076d01ac2496f7425cf6fac
 stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout_formal_result: 7c15aae4e77c579309312b21c79076f930970214
 stage_3_to_stage_4_docs_sync_formal_result: 513e5ca10d1ba04878295be110096b013f47974a
@@ -584,15 +589,19 @@ stage_4_plan_closeout: PASS_ACCEPTED / dfd97f3d2e05a4c448448fc14514d1cfe76836e8 
 stage_4_plan_closeout_review: V2-S4-PLAN-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
 stage_4_plan_closeout_ci: run 32338998075 / completed / success / head_sha=dfd97f3d2e05a4c448448fc14514d1cfe76836e8
 stage_4_planning: PASS_ACCEPTED
-stage_4_implementation_authorization: GRANT_PENDING_V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_4_implementation_authorization_formal_result: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
+stage_4_implementation_authorization_formal_tree: c196dbf6b094cad05076d01ac2496f7425cf6fac
+stage_4_implementation_authorization_review: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_implementation_authorization_ci: run 32340096961 / completed / success / head_sha=2c3d87bedfa4a3cef3cfd952641199300f2715dc
+stage_4_implementation_authorization: FORMALLY_GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1 / START_BLOCKED_UNTIL_SIX_AUTHORITY_SYNC_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-current_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1
+current_task: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-FIX1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / ZERO_WRITE_ONLY
-authorization_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND authorization candidate ordinary-fast-forwarded as formal head
+next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 / ZERO_WRITE_ONLY
+authority_sync_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND six-authority sync candidate ordinary-fast-forwarded as formal head
 effective_stage_4_implementation_authorization: GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1_ONLY
 effective_next_authorized_task: V2-S4-IMPLEMENTATION-BUILDER1
 effective_stage_4_launcher_authorization: NOT_GRANTED
@@ -607,7 +616,7 @@ runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 
 CI状态断言修复`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`已经位于正式分支，精确代码差异仅为`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言；正式CI run `32218904419`为`completed/success`，输出`198 passed / 1 skipped`。第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`，原因只有当时authority mismatch，代码差异无finding。正式分支在账本收口前前移属于治理偏差，本closeout只同步实时权威，不改写审查或Git历史。
 
-CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`已经`V2-S4-PLAN-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`、正式CI run `32337744225 completed/success`并普通fast-forward；两轮历史`REQUEST_CHANGES`已经关闭。规划状态closeout也已由`V2-S4-PLAN-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`，并以`dfd97f3d2e05a4c448448fc14514d1cfe76836e8`、tree `5eeb8a9337c5b38be60d3b0cef184b8898f2fedc`正式推广，正式CI run `32338998075 completed/success`，因此`stage_4_planning=PASS_ACCEPTED`。当前只允许`V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1`零写审查本授权候选；只有其最终`APPROVE / P0=0 / P1=0 / P2=0`且候选普通fast-forward后，实施授权才条件生效，下一任务仅为`V2-S4-IMPLEMENTATION-BUILDER1`。真实生产Launcher运行、Stage5、Stage6及最终Package Gate仍为`NOT_GRANTED`。
+CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`已经`V2-S4-PLAN-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`、正式CI run `32337744225 completed/success`并普通fast-forward；两轮历史`REQUEST_CHANGES`已经关闭。规划状态closeout也已由`V2-S4-PLAN-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`，并以`dfd97f3d2e05a4c448448fc14514d1cfe76836e8`、tree `5eeb8a9337c5b38be60d3b0cef184b8898f2fedc`正式推广，正式CI run `32338998075 completed/success`，因此`stage_4_planning=PASS_ACCEPTED`。实施授权已经`V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`，并以`2c3d87bedfa4a3cef3cfd952641199300f2715dc`、tree `c196dbf6b094cad05076d01ac2496f7425cf6fac`普通fast-forward正式推广，正式CI run `32340096961 completed/success`。当前只允许`V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1`零写审查六权威同步候选；只有其最终`APPROVE / P0=0 / P1=0 / P2=0`且候选普通fast-forward后，下一任务才为`V2-S4-IMPLEMENTATION-BUILDER1`。真实生产Launcher运行、Stage5、Stage6及最终Package Gate仍为`NOT_GRANTED`。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35。没有恢复任何已清理内容。
 
@@ -645,7 +654,7 @@ stage_6_scope: 直接转交Runtime计划/准备事实与Launcher回执；仅有�
 stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
 ```
 
-上述范围是规划边界，不是实现授权。任何需要阶段3扫描盘符、发现/下载/替换包内Python/FFmpeg/Node、一次安装全部可选能力、选择渲染引擎/版本、使用未批准海外默认源或覆盖外来目录，阶段4启动第二Agent、解析意图或调度任务，阶段5建立第二聊天Agent，阶段6解释Artifact或自动重试的方案，必须停止并返回`STOPPED_SCOPE_EXPANSION`。
+上述范围定义产品边界，本身不单独产生实现授权；当前实施授权及接管条件只以文件顶部live authority为准。任何需要阶段3扫描盘符、发现/下载/替换包内Python/FFmpeg/Node、一次安装全部可选能力、选择渲染引擎/版本、使用未批准海外默认源或覆盖外来目录，阶段4启动第二Agent、解析意图或调度任务，阶段5建立第二聊天Agent，阶段6解释Artifact或自动重试的方案，必须停止并返回`STOPPED_SCOPE_EXPANSION`。
 
 ## 阶段3重新规划合同
 

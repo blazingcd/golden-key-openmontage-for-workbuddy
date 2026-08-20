@@ -7,8 +7,8 @@
 ```text
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
-formal_head: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
-formal_tree: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
+formal_head: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
+formal_tree: c196dbf6b094cad05076d01ac2496f7425cf6fac
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -34,15 +34,18 @@ stage_4_plan_closeout: PASS_ACCEPTED / dfd97f3d2e05a4c448448fc14514d1cfe76836e8 
 stage_4_plan_closeout_review: V2-S4-PLAN-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
 stage_4_plan_closeout_ci: run 32338998075 / completed / success / head_sha=dfd97f3d2e05a4c448448fc14514d1cfe76836e8
 stage_4_planning: PASS_ACCEPTED
-stage_4_implementation_authorization: GRANT_PENDING_V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_4_implementation_authorization_formal_result: 2c3d87bedfa4a3cef3cfd952641199300f2715dc / tree c196dbf6b094cad05076d01ac2496f7425cf6fac
+stage_4_implementation_authorization_review: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_implementation_authorization_ci: run 32340096961 / completed / success / head_sha=2c3d87bedfa4a3cef3cfd952641199300f2715dc
+stage_4_implementation_authorization: FORMALLY_GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1 / START_BLOCKED_UNTIL_SIX_AUTHORITY_SYNC_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1
+current_task: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-FIX1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / ZERO_WRITE_ONLY
-authorization_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND authorization candidate ordinary-fast-forwarded as formal head
+next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 / ZERO_WRITE_ONLY
+authority_sync_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND six-authority sync candidate ordinary-fast-forwarded as formal head
 effective_stage_4_implementation_authorization: GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1_ONLY
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_next_authorized_task: V2-S4-IMPLEMENTATION-BUILDER1
@@ -88,4 +91,4 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-Stage 4规划及状态closeout已经独立审查、普通fast-forward并由正式CI验证，`stage_4_planning`为`PASS_ACCEPTED`。用户已明确要求本阶段执行统筹安排实现和审查，满足规划中的另行明确启动条件；当前候选只把该授权固化到live authority，不包含生产、测试或CI改动。只有本授权候选经独立只读审查并普通fast-forward后，`V2-S4-IMPLEMENTATION-BUILDER1`才可从届时最新formal精确对象接管既定五路径；真实生产Launcher运行、Stage5、Stage6及最终Package Gate仍未授权。
+Stage 4规划及状态closeout已经独立审查、普通fast-forward并由正式CI验证，`stage_4_planning`为`PASS_ACCEPTED`。用户明确启动条件已经由正式授权结果`2c3d87bedfa4a3cef3cfd952641199300f2715dc`固化，独立授权Reviewer为`APPROVE / P0=0 / P1=0 / P2=0`，正式CI run `32340096961`成功。当前唯一剩余治理动作是六权威同步候选的独立只读审查和普通fast-forward；完成前不允许生产编辑，完成后`V2-S4-IMPLEMENTATION-BUILDER1`才从届时最新formal精确对象接管既定五路径。真实生产Launcher运行、Stage5、Stage6及最终Package Gate仍未授权。

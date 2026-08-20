@@ -80,6 +80,39 @@ def _add_package_file(candidate: Any, path: Path, relative: str, owner: str, *, 
         candidate.write_lock(lock)
 
 
+def _materialize_fixture_pyvenv_cfg(
+    destination: Path,
+    *,
+    source: Path | None = None,
+    base_executable: Path | None = None,
+    version: tuple[int, int, int] | None = None,
+) -> None:
+    source = source if source is not None else Path(sys.prefix) / "pyvenv.cfg"
+    if source.is_file():
+        shutil.copy2(source, destination)
+        return
+
+    if base_executable is None:
+        base_executable = Path(getattr(sys, "_base_executable", None) or sys.executable)
+        if not base_executable.is_file():
+            base_executable = Path(sys.executable)
+    base_executable = base_executable.resolve(strict=True)
+    if not base_executable.is_file():
+        raise FileNotFoundError(base_executable)
+    base_home = base_executable.parent
+    if not base_home.is_dir():
+        raise FileNotFoundError(base_home)
+    if version is None:
+        version = (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
+    contents = (
+        f"home = {base_home}\n"
+        "include-system-site-packages = false\n"
+        f"version = {'.'.join(str(part) for part in version)}\n"
+        f"executable = {base_executable}\n"
+    )
+    destination.write_text(contents, encoding="utf-8", newline="\n")
+
+
 def _fixture(
     tmp_path: Path,
     *,
@@ -92,6 +125,7 @@ def _fixture(
     declared_tool_size: int | None = None,
     tool_locked: bool = True,
     definition_owner: str = "managed_core",
+    pyvenv_source: Path | None = None,
 ) -> dict[str, Any]:
     candidate = _make_candidate(tmp_path / "candidate", python_payload=Path(sys.executable).read_bytes())
     if os.name != "nt":
@@ -102,7 +136,7 @@ def _fixture(
             | stat.S_IXOTH
         )
     pyvenv = candidate.package_python.parent / "pyvenv.cfg"
-    shutil.copy2(Path(sys.prefix) / "pyvenv.cfg", pyvenv)
+    _materialize_fixture_pyvenv_cfg(pyvenv, source=pyvenv_source)
     _add_package_file(
         candidate, pyvenv, pyvenv.relative_to(candidate.package_root).as_posix(),
         registration.REQUIRED_TOOLCHAIN_OWNER, locked=False,
@@ -119,7 +153,7 @@ def _fixture(
         tool.parent.mkdir(parents=True)
         shutil.copy2(sys.executable, tool)
         tool_config = tool.parent / "pyvenv.cfg"
-        shutil.copy2(Path(sys.prefix) / "pyvenv.cfg", tool_config)
+        _materialize_fixture_pyvenv_cfg(tool_config, source=pyvenv_source)
         _add_package_file(candidate, tool_config, tool_config.relative_to(candidate.package_root).as_posix(), "managed_core", locked=True)
         template = ["-c", code]
         placeholders = []
@@ -436,6 +470,54 @@ def _local_evidence(
         "compatibility_basis": "EXACT_ASSET_IDENTITY",
     }
     return requirement, evidence, root
+
+
+def test_fixture_pyvenv_cfg_is_generated_when_source_is_missing(tmp_path: Path) -> None:
+    base_home = tmp_path / "standalone-python" / "bin"
+    base_home.mkdir(parents=True)
+    base_executable = base_home / "python"
+    base_executable.write_bytes(b"fixture executable identity")
+    destination = tmp_path / "generated" / "pyvenv.cfg"
+    destination.parent.mkdir()
+
+    _materialize_fixture_pyvenv_cfg(
+        destination,
+        source=tmp_path / "standalone-python" / "missing-pyvenv.cfg",
+        base_executable=base_executable,
+        version=(3, 11, 16),
+    )
+
+    assert destination.read_bytes() == (
+        f"home = {base_home.resolve()}\n"
+        "include-system-site-packages = false\n"
+        "version = 3.11.16\n"
+        f"executable = {base_executable.resolve()}\n"
+    ).encode("utf-8")
+    assert base_home.is_dir()
+    assert base_executable.is_file()
+
+
+@pytest.mark.parametrize("execution_kind", ["DIRECT_EXECUTABLE", "PACKAGE_PYTHON_SCRIPT"])
+def test_fixture_launches_when_setup_python_has_no_pyvenv_cfg(
+    tmp_path: Path,
+    execution_kind: str,
+) -> None:
+    fixture = _fixture(
+        tmp_path,
+        execution_kind=execution_kind,
+        pyvenv_source=tmp_path / "standalone-python" / "missing-pyvenv.cfg",
+    )
+
+    package_config = fixture["candidate"].package_python.parent / "pyvenv.cfg"
+    config_text = package_config.read_text(encoding="utf-8")
+    assert "include-system-site-packages = false\n" in config_text
+    assert f"version = {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}\n" in config_text
+    if execution_kind == "DIRECT_EXECUTABLE":
+        direct_config = fixture["candidate"].package_root / "tools" / "direct" / "pyvenv.cfg"
+        assert direct_config.read_bytes() == package_config.read_bytes()
+
+    receipt = _launch(fixture)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
 
 
 def test_37_real_stage2_roundtrip_and_priority_level_11_success(tmp_path: Path) -> None:

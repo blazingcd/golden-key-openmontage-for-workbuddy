@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 项目章程
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_ELIGIBLE_AFTER_DOCS_PROMOTION / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLAN_REVIEW_READY_CANDIDATE / STAGE_4_IMPLEMENTATION_NOT_GRANTED / SIX_MODULE_MVP`
 
 ## 1. 产品目标
 
@@ -37,7 +37,7 @@
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、完整必带私有工具链和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、Python/FFmpeg/ffprobe/Node/npm/npx身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖任何系统Python/FFmpeg/Node；登记/实现SaaS Core |
 | Runtime按需准备 | 有界探测Remotion和HyperFrames，报告存在、缺失或不兼容；仅按用户逐能力授权集成批准的缺失项 | 输入：DataRoot、经批准的OpenMontage能力定义、受管/明确登记或配置/正常命令候选及逐能力用户决定；输出：`DETECTION_REPORT`、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`或`BLOCKED`事实，以及每项能力的`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`状态 | 扫盘或枚举系统软件；把Remotion/HyperFrames当必带Runtime；发现/下载/替换必带Python/FFmpeg/Node；未授权或全局安装；由Shell或用户替OpenMontage选择渲染器；通用包管理器；海外默认源回退；修改系统PATH/注册表 |
-| 会话Launcher | 对一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`重验活动Package和完整必带工具链；只在明确执行某可选能力时核对同一capability+definition的阶段3`PRESENT`或`INTEGRATED`证据；随后调用一个固定Package工具入口并返回一次不可改写真实进程回执 | 输入：DataRoot、分离的literal `user_message`与`executor_controls`、固定工具请求，以及可选能力调用时的对应阶段3证据；输出：绑定Registration和工具身份的一次真实退出、结果指针及残留事实 | 改写用户原话；读取未验证Package Guide；启动第二Agent；解析意图；接受任意Shell/命令；安装Runtime；选择渲染器；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产；创建Artifact或推进Checkpoint |
+| 会话Launcher | 对一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`重验活动Package和完整必带工具链；验证release-specific不可变固定工具定义；仅在该定义声明本地能力要求时核对通用能力证据；随后启动恰好一个固定Package工具并返回递归不可改写真实进程回执 | 输入：DataRoot、分离的literal `user_message`与closed `executor_controls`、`PackageToolDefinitionV1`、通用本地能力证据和取消事件；输出：绑定Registration/Package/Manifest/Lock/tool/interpreter身份的一次真实退出、结果指针、错误及残留事实 | 改写用户原话；读取未验证Package Guide；硬编码或选择Provider/Runtime；查询/执行registry routing；启动第二Agent；解析意图；接受任意Shell/命令/调用者argv；安装Runtime；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
 | 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
 
@@ -70,7 +70,7 @@ User
 - Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是Package交付及阶段2登记前置，不属于阶段3探测或下载对象。Remotion和HyperFrames是OpenMontage候选能力，可存在、缺失、稍后集成或一直不集成；缺失、拒绝或暂缓不阻塞Package、项目或其他已有/基础能力。
 - 阶段3只有一个按需准备接口。所谓“扫描”仅指受管DataRoot路径、明确登记或配置的候选路径、正常命令解析三类有界探测；禁止遍历盘符、枚举系统软件清单、全局npm状态或猜目录。
 - 阶段3只使用经批准OpenMontage能力定义给出的大陆来源、版本、大小、hash、许可证和目标事实生成计划；失败时不得自动回退海外源。用户同意只授权下载/集成逐项列明的能力，不构成渲染器选择。
-- 阶段4基础固定工具调用继续接受阶段2必带工具链事实；执行Remotion或HyperFrames前只需阶段3对该能力给出的`PRESENT`或`INTEGRATED`证据。缺少能力时OpenMontage可以使用其他已有/基础能力；阶段4不得自行安装。
+- 阶段4基础固定工具调用继续接受阶段2必带工具链事实。Stage4接口不硬编码Remotion、HyperFrames或任何Provider/Runtime；只有release-specific固定工具定义的`required_local_capabilities`非空时，才核对同一opaque capability+definition的通用本地能力证据。Provider API key或外部服务配置不属于Stage3证据；缺少可选配置时由固定工具保留真实退出，Stage4不得自行安装或选择替代项。
 - 阶段3前只冻结最小结果到WorkBuddy动作接口，不要求真实WorkBuddy已经跑通。阶段5只保留一种真实WorkBuddy Skill入口，是用户实际运行的起点；在阶段5验收中证明新会话命中、明确同意与同任务继续，不能继续时固定提示用户回复“继续刚才的任务”。在入口格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
 - 阶段6直接转交Runtime计划/准备事实和Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。它不得解释、安装或自动重试。
 - 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
@@ -194,17 +194,42 @@ plan_sha256: INTEGRATED only
 
 产品运行衔接固定为：阶段5接收用户原话并触发阶段2重验；阶段4可先用必带工具链执行基础固定工具；阶段3有界探测并按用户逐能力批准集成；OpenMontage从实际可用能力中决定生产选择；阶段6原样转交探测、计划、用户决定、集成、退出和错误事实。建设顺序仍是`3 -> 4 -> 5 -> 6`，不得把它误写成用户运行顺序。
 
-### 4.9 Stage 4规划接管边界与已知缺口
+### 4.9 Stage 4规划接管边界与缺口闭合状态
 
-本九文档同步经审阅并正式推广后，Stage 4只获得`planning_eligible`，实现授权仍为`NOT_GRANTED`，下一授权任务仍为`NONE`。规划目标仅是冻结一次WorkBuddy拥有会话中的固定Package工具调用和不可改写真实进程回执；不得创建Stage5/6 Task Packet或预建Launcher实现。
+Stage 4实现授权仍为`NOT_GRANTED`。当前Stage 2 `locate_active_package(data_root)`继续只负责返回并重验Registration SHA、PackageRoot、Python/FFmpeg/ffprobe/Node/npm/npx、Guide、Manifest和Lock身份，不新增工具入口字段、不重开Registration。
 
-当前Stage 2 `locate_active_package(data_root)`已权威返回并重验Registration SHA、PackageRoot、Python/FFmpeg/ffprobe/Node/npm/npx、Guide、Manifest和Lock身份，但没有返回固定Package工具入口身份。现有权威也没有唯一确定Stage4公共入口签名及回执字段。后续单独授权的Stage4规划必须精确闭合：
+本规划候选已用`PackageToolDefinitionV1`闭合固定工具身份来源、release-specific相对路径/hash/size/owner、解释器、固定argv、Manifest/Lock绑定和路径防替换规则；已用`launch_session_tool(...)`及`LauncherReceiptV1`闭合唯一公共入口、单进程生命周期、输入/输出、结果闭集和不可改写回执。具体Release实例仍由批准Package定义/最终交付Installer owner提供；缺实例时真实调用preflight阻断，不要求规划或编码前先物化最终Package。
 
-1. 由批准OpenMontage Package定义及后续最终交付/Installer所有者提供可验证的固定工具身份来源、Package内相对路径、hash/owner和固定argv形状；不得重开Stage2，也不得把最终Package物化变成规划前置。
-2. 由Stage4规划所有者冻结唯一公共入口，以及至少绑定Registration、Package/tool identity、进程启动事实、真实退出码、结果指针、错误和残留事实的不可改写回执精确字段。
-3. 基础固定工具调用只依赖阶段2必带工具链；可选能力证据仅在本次明确执行该能力时适用，且必须匹配同一capability+definition。
+这些合同只有经`V2-S4-PLAN-REVIEW1`独立APPROVE并普通fast-forward进入正式分支后才成为实现权威；当前下一任务只可为该零写Reviewer，不能创建Stage4实现Builder。真实WorkBuddy新会话、唯一入口、literal `user_message`不变、授权询问和同任务继续仍归Stage5实现/验收；Stage6只在Stage4回执和Stage5真实消费者存在后判断，直接消费必须走`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0。
 
-真实WorkBuddy新会话、唯一入口、literal `user_message`不变、逐能力询问和同任务继续归Stage5实现/验收。Stage6只在Stage4回执和Stage5真实消费者存在后判断；直接消费必须走`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0。
+### 4.10 Stage 4冻结公共合同
+
+Stage 4唯一公共入口固定为：
+
+```python
+launch_session_tool(
+    data_root: str | os.PathLike[str],
+    user_message: str,
+    executor_controls: Mapping[str, Any],
+    package_tool_definition: Mapping[str, Any],
+    local_capability_evidence: Sequence[Mapping[str, Any]] = (),
+    cancel_event: threading.Event | None = None,
+) -> Mapping[str, Any]
+```
+
+`user_message`是原样业务文本；`executor_controls`只含`schema_version/session_id/request_id/timeout_seconds/termination_grace_seconds/result_root/provider_environment`七个closed字段。两者在函数参数和stdin envelope内保持不同字段，Provider secret只进入子进程环境。返回值及后代全部递归冻结。
+
+固定工具身份只来自批准Golden Key OpenMontage Package定义与最终交付/Installer owner提供的release-specific immutable `PackageToolDefinitionV1`。其closed字段固定为`schema_version/definition_id/definition_sha256/definition_relative_path/authority_owner/package_release/package_commit/registration_sha256/manifest_sha256/lock_sha256/tool_id/relative_path/sha256/size/owner/execution_kind/interpreter_binding/fixed_argv_template/fixed_argv_placeholders/request_schema_sha256/result_schema_sha256/allowed_environment_names/secret_environment_names/required_local_capabilities`。定义文件自身必须位于PackageRoot并由Manifest与Lock唯一覆盖，传入Mapping的规范JSON字节必须与该文件完全相同，Manifest owner必须等于`authority_owner`；因此调用者不能自造定义。Release实例中的relative path/hash/size/owner/fixed argv都是必填事实；它们不要求最终Package先物化才能规划或编码，但真实调用缺实例时必须preflight阻断，绝不从Guide、registry、目录或调用者命令推断。
+
+`execution_kind`只取`PACKAGE_PYTHON_SCRIPT/DIRECT_EXECUTABLE`，并分别绑定`LOCATOR_PACKAGE_PYTHON/SELF`。固定argv只允许Package定义中的literal token；Python脚本唯一占位符为恰好一次`{verified_tool_path}`，直接可执行文件没有占位符。所有业务数据走单个规范JSON stdin envelope；不存在任意argv、shell解释或命令字符串。
+
+OpenMontage的capability/provider registry是动态业务权威。Stage 4不查询、不缓存、不复制该registry，不枚举Provider或合成运行时，不负责生图、生视频、TTS、音乐、stock、local GPU、FFmpeg、Remotion或HyperFrames的选择。`allowed_environment_names`只控制哪些已解析Provider配置可传入；secret值不进入receipt/log。`required_local_capabilities`使用opaque `capability_id+definition_sha256`，只有固定工具定义声明时才要求通用`golden-key-workbuddy-local-capability-evidence-v1`；当前Stage3的Remotion/HyperFrames事实只是该通用形状的一个现有来源，Provider配置不是本地能力证据。
+
+进程合同固定为：调用Locator并重验、核对定义与Manifest/Lock、逐路径组件拒绝symlink/junction/reparse/逃逸、spawn前再次复核全部身份、`cwd=verified PackageRoot`、最小环境白名单、`shell=False`、恰好一次spawn、无重试。timeout或取消只终止Launcher自有进程树并报告残留；stdout/stderr只返回真实size/hash/truncated，不返回原文。exit 0还必须得到与session/request匹配的单个规范结果envelope和位于受控result root内的有效hash/size指针，才可成功。
+
+不可改写receipt schema固定为`golden-key-workbuddy-launcher-receipt-v1`；根字段固定为`schema_version/outcome/reason_code/session/request/registration/package/manifest/lock/tool_definition/tool_file/interpreter/user_message/provider_environment_names/local_capability_evidence_identities/launched/spawn_count/pid/started_at_utc/ended_at_utc/duration_ms/exit_code/timed_out/cancelled/retry_count/stdout/stderr/result_pointer/error/residual_process`。结果闭集为`PRELAUNCH_BLOCKED/SPAWN_FAILED/EXITED_SUCCESS/EXITED_NONZERO/TIMED_OUT/CANCELLED/INCOMPLETE/RESIDUAL_PROCESS`；`retry_count`恒为0。完整字段类型、reason闭集、stdin/result envelope及测试矩阵以`TASK-REGISTER.md`的Stage4执行任务包为live implementation authority。
+
+Stage 5保留用户原话、形成controls并提供经授权Provider配置和Package工具定义；Stage 4只启动固定工具并返回receipt；Stage 6优先原样复用receipt，能直接消费时生产代码为0。该接口不预建Stage5/6，也不使Stage4实现自动获权。
 
 ## 5. 消息与授权边界
 

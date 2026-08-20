@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_ELIGIBLE_AFTER_DOCS_PROMOTION / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLAN_REVIEW_READY_CANDIDATE / STAGE_4_IMPLEMENTATION_NOT_GRANTED / SIX_MODULE_MVP`
 
 ## 1. 状态必须独立报告
 
@@ -38,7 +38,7 @@
 | 安装与生命周期 | 锁定对象可安装/修复/升级/回滚/卸载，所有权正确且用户数据保留 | 运行生产、覆盖外来对象、静默下载/降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 唯一活动Package Registration同时锁定Package、可用私有Python环境及核心依赖、FFmpeg/ffprobe、Node/npm/npx的身份、hash、版本、能力和规范化路径 | 只登记Python；依赖系统Python/FFmpeg/Node；扫盘猜测对象、身份漂移仍继续、修改执行包或执行生产；登记/实现SaaS Core |
 | Runtime按需准备 | 有界探测Remotion和HyperFrames并逐项报告`PRESENT/MISSING/INCOMPATIBLE`；对缺失/不兼容项零下载展示批准OpenMontage能力定义中的来源、版本、大小、许可证和目标；用户逐能力同意后只集成批准项并验证；拒绝/暂缓返回`SKIPPED/NOT_INTEGRATED`，其他已有/基础能力继续可用 | 扫盘、枚举系统软件或猜目录；把Remotion/HyperFrames当必带Runtime；发现/下载/替换Python/FFmpeg/Node；Shell选择渲染器；未授权、全局或全部自动安装；自动海外回退；修改PATH/注册表；把能力缺失或用户拒绝当Package/项目失败 |
-| 会话Launcher | 一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`；基础固定工具调用只需重验后的Package/必带工具链，明确执行某可选能力时另需同一capability+definition的阶段3`PRESENT`或`INTEGRATED`证据；只调用一个固定Package工具入口并返回绑定身份、真实退出码、结果指针、错误和残留事实的不可改写回执 | 改写literal `user_message`；读取未验证Guide；绕过对应就绪检查；启动第二Agent；接受任意Shell/命令；安装Runtime；选择渲染器；多进程调度/队列/服务/数据库；自动重试/重放；媒体生产；创建Artifact或推进Checkpoint |
+| 会话Launcher | 一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`；验证release-specific不可变`PackageToolDefinitionV1`及Manifest/Lock覆盖；仅在定义声明时验证通用本地能力证据；`shell=False`恰好一次启动固定工具，并返回绑定全部身份、真实退出、结果指针、错误、泄密与残留事实的递归不可改写receipt | 改写literal `user_message`；读取未验证Guide；硬编码或选择Provider/Runtime；查询registry routing；绕过就绪检查；启动第二Agent；接受任意Shell/命令/调用者argv；安装Runtime；多进程调度/队列/服务/数据库；自动重试/重放；媒体生产；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 真实新会话显式命中唯一入口，literal用户消息不变，并绑定活动执行包与Runtime | 多套生产入口；全局截获；第二聊天Agent；技术控制词进入用户消息或Shell作生产选择 |
 | 状态与结果转交 | 直接转交Runtime计划/准备事实与Launcher回执并零代码退出，或只做一次有消费者证明的确定性格式转换；事实可追溯且不改写WorkBuddy语义 | 无格式缺口仍造模块；安装Runtime；建立数据库/轮询/流式平台或Stage/FSM；解释Artifact；自动重试或伪造成功 |
 
@@ -50,7 +50,7 @@
 
 Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具链。阶段2缺少任何一项时是`FAIL`，阶段3不得以宿主PATH、下载或受管目录补救。Node虽然官方Quick Start最低为18+，但当前HyperFrames要求22+，Package锁定值必须满足最高当前要求。
 
-阶段4 `PASS`要求在启动时消费阶段2必带工具链就绪事实，并在执行已选可选能力前消费对应阶段3就绪事实。缺少相应事实必须返回`RUNTIME_NOT_READY`；任何第二Agent启动、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
+阶段4 `PASS`要求在启动时消费阶段2必带工具链就绪事实，并只在固定工具定义的`required_local_capabilities`声明要求时消费同一opaque capability+definition的通用本地证据。定义未声明时不得硬编码要求Remotion/HyperFrames；Provider API key、外部服务配置或动态registry状态不得被误作Stage3证据。缺少定义所需事实必须preflight阻断且spawn 0；任何第二Agent、Provider/Runtime选择、registry routing、自动重试、队列、调度、常驻服务、多Agent或Package业务内部导入均为越界`FAIL`。
 
 阶段5是用户实际运行起点。`PASS`要求唯一Skill在真实WorkBuddy新会话命中，按已冻结映射消费阶段3五种结果，literal `user_message`不变，授权与`executor_controls`分离，并验证用户同意后的同任务继续；若不能自动继续，必须验证固定“继续刚才的任务”提示。入口格式未确认时应记`BLOCKED`，不得同时实现CLI/MCP/多个Skill兜底。
 
@@ -104,9 +104,44 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 Stage 3已接受证据为：direct 55 passed、repository hygiene 10 passed、CI-equivalent full 199 passed，全部最终退出0且无skip；独立Reviewer只读核验精确对象、代码、测试定义和Builder原始输出，没有重跑测试。该证据不证明真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E，也不需要这些后续证据来维持Stage3 `PASS_ACCEPTED`。
 
-本九文档同步推广后，Stage4规划可接管，但实现仍`NOT_GRANTED`。规划前已知合同缺口为：当前Locator输出没有固定Package工具入口权威身份；Stage4唯一公共入口和不可改写回执的精确字段未冻结。前者由批准OpenMontage Package定义及后续最终交付/Installer所有者提供可验证身份，后者由未来单独授权的Stage4规划所有者冻结。最终Package物化与真实WorkBuddy都不得被当作弥补规划缺口的前置。
+Stage4规划已由本候选接管，但实现仍`NOT_GRANTED`。本候选用release-specific immutable `PackageToolDefinitionV1`闭合当前Locator不提供固定工具入口身份的问题，并冻结`launch_session_tool(...)`及`LauncherReceiptV1`精确字段。最终Package物化和真实WorkBuddy都不是规划或编码前置；具体Release缺工具定义实例时，真实调用必须preflight阻断。
 
-Stage4规划只有在以下输出被唯一冻结后，才可提交实现授权判断：固定工具身份来源/相对路径/hash/owner/固定argv；唯一Launcher入口；绑定Registration和工具身份、进程事实、真实退出、结果指针、错误及残留事实的精确不可改写回执。当前`next_authorized_task=NONE`。
+合同只有在`V2-S4-PLAN-REVIEW1`独立零写APPROVE并普通fast-forward后生效。当前`next_authorized_task=V2-S4-PLAN-REVIEW1 / ZERO_WRITE_ONLY`；不得自动创建实现Builder。
+
+### 3.5 Stage 4规划完成合同与未来实现验收
+
+本规划候选已把两个已知缺口闭合为可实现合同，但只有独立Reviewer批准并普通fast-forward进入正式分支后才生效；规划推广仍不授予Stage4实现。固定工具身份不等于编造上游入口：`PackageToolDefinitionV1`冻结authority、closed schema、release绑定和缺实例fail-closed规则，具体Release实例由批准Golden Key Package定义/最终交付Installer owner提供。
+
+未来实现的Gate按以下顺序裁决：
+
+1. **输入PASS**：唯一入口精确为`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`；inputs closed，user message字节不变，返回递归冻结。
+2. **身份PASS**：同次Locator事实与定义的Registration/Release/commit/Manifest/Lock完全相同；定义文件本身和工具文件均在Manifest与Lock中唯一覆盖，传入定义字节与Package内文件相同，authority owner及工具relative path/hash/size/owner一致；定义、工具和解释器每个路径组件无link/reparse且在PackageRoot内；spawn前复核不漂移。
+3. **opaque capability PASS**：代码中无Provider、renderer或runtime catalog；环境变量名只来自定义allowlist，secret值只进入子进程环境；本地证据只按定义声明的opaque capability+definition验证。Provider缺失不触发Stage3。
+4. **进程PASS**：`cwd`为verified PackageRoot，环境为固定最小基线加allowlisted provider环境，stdin为单一closed JSON envelope，`shell=False`，spawn恰好一次，retry恒为0；timeout/cancel终止自有进程树并检测残留。
+5. **回执PASS**：返回`golden-key-workbuddy-launcher-receipt-v1`全部固定字段，outcome只取8值闭集；真实exit code、timeout/cancel、stdout/stderr size/hash/truncated、result pointer、sanitized error和residual事实不改写；任何secret原文回传/日志为0。
+6. **结果PASS**：只有exit 0、单个有效结果envelope、受控result root内hash/size匹配指针、无泄密且无残留可为`EXITED_SUCCESS`。exit 0但结果无效为`INCOMPLETE`；非零、timeout、cancel、残留分别保真。
+
+以下任一项为实现`FAIL`：从Guide/registry/目录/调用者推断工具；修改Stage2 Registration；任意shell/argv/env注入；硬编码Remotion/HyperFrames或Provider；把Provider配置缺失当Stage3证据缺失；secret出现在receipt/log/异常或回传原文；多次spawn/retry；工具/解释器替换后继续；结果路径逃逸或reparse；残留未报告；第二Agent、服务、数据库、调度、媒体、Artifact或Checkpoint逻辑存在。
+
+以下为`PRELAUNCH_BLOCKED`而非实现失败：没有活动Registration；Release尚未提供具体`PackageToolDefinitionV1`实例；定义与当前Registration/Manifest/Lock不绑定；定义声明的本地能力证据缺失/漂移；环境变量名不在allowlist。最终Package物化与真实WorkBuddy都不是规划或编码前置，但是真实生产启动必须具备其当前Release实例。
+
+直接测试最低矩阵精确覆盖：Registration/Package/tool/interpreter全部漂移；定义closed schema/self-hash/authority/Manifest+Lock覆盖；路径逃逸、ADS、alias、symlink/junction/reparse；命令/argv/env注入；user message不变与controls分离；通用能力证据声明/不声明、缺失和错配；动态Provider名不硬编码、任意env名拒绝、secret泄漏为0、Provider缺失不错误要求Stage3；Python-script/direct-executable两种成功；spawn一次/no retry；非零/timeout/cancel/残留；输出上限；结果envelope和pointer全部失败分支；递归不可修改receipt。每项必须断言spawn count、最终outcome/reason、路径和临时残留。
+
+未来实现路径只允许：
+
+```text
+golden_key_openmontage_workbuddy/session_launcher.py
+golden_key_openmontage_workbuddy/__init__.py
+tests/workbuddy/test_session_launcher.py
+tests/workbuddy/test_repository_hygiene.py
+.github/workflows/ci.yml
+```
+
+新增一个生产模块和一个直接测试后，固定tracked树从35精确变为37。hygiene必须显式更新37文件等值、4个Python源文件和API闭集；CI必须在现有唯一pytest命令中显式加入Stage4直接测试；不得用glob或动态计数放宽。`package_registration.py`、`runtime_prepare.py`、`pyproject.toml`及任何第6路径默认禁止。
+
+Builder证据必须分别给出Stage4 direct、repository hygiene、full suite的未截断输出和最终exit 0，以及base/candidate/tree/5路径/37 tracked/clean/untracked0/stash0。Reviewer独立零写比较精确base..candidate，除了绿测还必须核对公共合同最小性、fail-closed反例、secret边界和无Scope扩张；`REQUEST_CHANGES`只回原Builder。普通fast-forward正式推广后也不得自动启动Stage5/6。
+
+Stage5的消费者合同只需提供literal message、closed controls、approved PackageToolDefinition、经单独授权的Provider环境和定义声明时的通用本地证据；Stage6优先直接使用同一receipt，格式无缺口时必须`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。真实WorkBuddy、Provider和媒体E2E仍分别验收，不得用Stage4单元测试冒充。
 
 ## 4. Gate A：对象与环境
 

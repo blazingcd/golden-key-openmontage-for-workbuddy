@@ -1,10 +1,46 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1 / WORKTREE_RESULT_READY_FOR_REVIEW`
+状态：`V2-S4-PLAN-BUILDER1 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
 更新时间：2026-08-20
 
 ## 当前任务
+
+```text
+task_id: V2-S4-PLAN-BUILDER1
+task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+task_kind: STAGE4_SESSION_LAUNCHER_CONTRACT_PLANNING / DOCS_ONLY
+user_authorization: 2026-08-20 / 详细规划Stage4并安排闭合两个Stage4合同缺口；不得实施Launcher
+start_commit: 26bfe60ab9da62797559eb9a459b8daa345f8d80
+start_tree: 940d24a4ddeaa22c52d7c872358d90ede46154ed
+result_commit: THIS_COMMIT
+branch: codex/v2-s4-plan-builder1
+formal_target_branch: origin/codex/workbuddy-shell-v2
+formal_target_at_start: 26bfe60ab9da62797559eb9a459b8daa345f8d80
+review_range: 26bfe60ab9da62797559eb9a459b8daa345f8d80..THIS_COMMIT
+independent_review: NOT_STARTED / V2-S4-PLAN-REVIEW1 / REQUIRED_ZERO_WRITE
+formal_promotion: NOT_STARTED / ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+production_code_changes: 0
+test_changes: 0
+ci_changes: 0
+new_tracked_files: 0
+tracked_files_expected: 35
+package_tool_definition_contract: FROZEN_IN_THIS_CANDIDATE / EFFECTIVE_ONLY_AFTER_REVIEW_AND_FORMAL_PROMOTION
+launcher_public_api_and_receipt_contract: FROZEN_IN_THIS_CANDIDATE / EFFECTIVE_ONLY_AFTER_REVIEW_AND_FORMAL_PROMOTION
+official_model_correction: dynamic capability/provider registry / Provider and local runtime are opaque to Shell / no hard-coded Provider or renderer routing in Stage4
+stage_3_evidence_boundary: current implementation supplies local Remotion/HyperFrames evidence only; Stage4 consumes a generic local-capability envelope only when the fixed PackageToolDefinition declares a requirement
+provider_boundary: image/video/TTS/music/stock/local-GPU and future Providers are optional external configuration selected by WorkBuddy/OpenMontage; Stage4 only passes allowlisted environment names and secret values to the fixed child process
+stage_4_planning: REVIEW_READY_CANDIDATE
+stage_4_implementation_authorization: NOT_GRANTED
+stage_4_launcher_authorization: NOT_GRANTED
+stage_5_workbuddy_entry_authorization: NOT_GRANTED
+stage_6_status_result_relay_authorization: NOT_GRANTED
+final_package_gate_authorization: NOT_GRANTED
+next_authorized_task: V2-S4-PLAN-REVIEW1 / ZERO_WRITE_ONLY
+```
+
+## 已完成的前置收口（历史证据）
 
 ```text
 task_id: V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1
@@ -75,24 +111,284 @@ validation_full_test: NOT_RUN_DOCS_ONLY / official CI run 32218904419 already su
 validation_scope: docs/workbuddy/v2/TASK-REGISTER.md; PROJECT-STATE.md; WORK-LOG.md / production=0 / tests=0 / CI=0 / new tracked=0 / tracked total=35
 future_final_package_gate_rule: V2-FINAL-PACKAGE-MATERIALIZATION-AND-PRODUCTION-REGISTRATION-GATE1 is a later final-delivery or Installer task due before Stage5 real WorkBuddy production acceptance; it is not a Stage3 or Stage4 coding/planning prerequisite
 future_cleanup_rule: always remove task-owned temp/staging on success or failure; never touch foreign objects; explicitly report any partial Release/PackageRoot/Registration state
-stage_4_takeover_boundary: PLANNING_ELIGIBLE / implementation_authorization=NOT_GRANTED
-stage_4_registration_audit: locate_active_package returns revalidated Registration, PackageRoot, required toolchain, Guide, Manifest and Lock identities; it does not return an authoritative fixed Package tool entry identity
-stage_4_contract_gap: exact public entry and immutable process receipt field names are not frozen; fixed Package tool identity source/path/hash/owner/fixed argv shape is not present in current Registration output
-stage_4_gap_owner_package_tool_identity: approved OpenMontage Package definition plus later final-delivery or Installer owner / must provide a verifiable fixed tool identity without reopening Stage2 or making final Package a Stage4 planning prerequisite
-stage_4_gap_owner_launcher_api_and_receipt: future separately authorized Stage4 planning task / must freeze one public entry and exact immutable receipt fields before any implementation grant
-stage_5_deferred_scope: real new WorkBuddy session, single entry, unchanged literal user_message, per-capability authorization question and same-task continuation / implementation and acceptance only
-stage_6_deferred_rule: evaluate only after Stage4 receipt and Stage5 real consumer exist; direct consumption means STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE and production code 0
+historical_stage_4_takeover_boundary: PLANNING_ELIGIBLE / implementation_authorization=NOT_GRANTED
+historical_stage_4_registration_audit: locate_active_package returns revalidated Registration, PackageRoot, required toolchain, Guide, Manifest and Lock identities; it does not return an authoritative fixed Package tool entry identity
+historical_stage_4_contract_gap: exact public entry and immutable process receipt field names were not frozen; fixed Package tool identity source/path/hash/owner/fixed argv shape was not present in Registration output
+historical_stage_4_gap_owner_package_tool_identity: approved OpenMontage Package definition plus later final-delivery or Installer owner / must provide a verifiable fixed tool identity without reopening Stage2 or making final Package a Stage4 planning prerequisite
+historical_stage_4_gap_owner_launcher_api_and_receipt: separately authorized Stage4 planning task / freeze one public entry and exact immutable receipt fields before any implementation grant
+historical_stage_5_deferred_scope: real new WorkBuddy session, single entry, unchanged literal user_message, per-capability authorization question and same-task continuation / implementation and acceptance only
+historical_stage_6_deferred_rule: evaluate only after Stage4 receipt and Stage5 real consumer exist; direct consumption means STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE and production code 0
 forbidden_scope: production code; docs other than this ledger; workflow; pyproject; Stage4/5/6 implementation; final Package; old main historical red runs; Node deprecation warning; any second implementation path
-next_authorized_task: V2-S4-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_THIS_CLOSEOUT_INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FORMAL_FAST_FORWARD
-stage_4_planning: ELIGIBLE / START_NOT_PERMITTED_UNTIL_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
+historical_next_authorized_task: V2-S4-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_THIS_CLOSEOUT_INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FORMAL_FAST_FORWARD
+historical_stage_4_planning: ELIGIBLE / START_NOT_PERMITTED_UNTIL_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
+historical_stage_4_implementation_authorization: NOT_GRANTED
+historical_stage_4_launcher_authorization: NOT_GRANTED
+historical_stage_5_workbuddy_entry_authorization: NOT_GRANTED
+historical_stage_6_status_result_relay_authorization: NOT_GRANTED
+historical_final_package_gate_authorization: NOT_GRANTED
+```
+
+历史产品模型纠偏已撤销膨胀模型：真实Package、Registration和Package绑定能力元数据都不是Stage 3输入。Stage 3只对Remotion和HyperFrames做有界探测与事实报告，对缺失/不兼容项生成零下载计划，并在WorkBuddy取得用户逐能力明确同意后集成批准项；拒绝或暂缓返回`SKIPPED/NOT_INTEGRATED`。已接受实现严格落在三个产品路径加两个验收基础设施路径；本closeout没有新增生产代码、测试、CI、Package字节或外部写入。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`只保留历史证据边界，不是Stage 3输入。
+
+## Stage 4执行任务包（规划候选）
+
+### 产品目标与官方模型纠正
+
+Stage 4只把一次WorkBuddy拥有的会话安全地交给一个经Release锁定的Package工具进程，并返回一次不可改写的真实进程回执。上游OpenMontage是instruction-driven、Agent-first且运行时查询动态capability/provider registry；生图、生视频、TTS、音乐、stock、local GPU及未来Provider都是可选外部配置，FFmpeg/Remotion/HyperFrames只是合成运行时类别，不是能力全集。上游没有可直接充当Golden Key固定Launcher身份的通用standalone入口，因此Stage 4不得从上游Guide、目录、registry或调用者命令猜工具入口。
+
+Stage 4对Provider和Runtime保持opaque：不硬编码Provider、Remotion或HyperFrames，不配置、选择或执行registry routing。它只把`executor_controls.provider_environment`中已经由Stage 5/WorkBuddy解析的配置，按固定工具定义允许的环境变量名传给唯一子进程。Provider API key存在、缺失或错误永远不是Stage 3能力证据。当前Stage 3的Remotion/HyperFrames回执只属于已实现的本地可选运行时证据；Stage 4公共接口只接受通用本地能力证据，且只有固定工具定义声明要求时才验证。
+
+### V2-S4-T1：PackageToolDefinitionV1固定工具身份合同
+
+权威来源冻结为：批准的Golden Key OpenMontage Package定义与最终交付/Installer owner为每个Package Release提供一个release-specific immutable `PackageToolDefinitionV1`实例。Stage 4只能消费该实例并与Locator事实交叉验证；调用者、未验证Guide、目录名、动态registry及系统PATH均无权生成或补全它。最终Package物化不是规划或编码前置，但真实启动前实例的每个release-specific字段都必须存在；缺实例或无法绑定时返回`PRELAUNCH_BLOCKED/TOOL_DEFINITION_UNBOUND`，spawn为0。
+
+定义根对象必须是closed Mapping，字段、类型和规则精确如下：
+
+```text
+schema_version: Literal["golden-key-workbuddy-package-tool-definition-v1"]
+definition_id: str                         # 1..128 NFC非空标识
+definition_sha256: str                     # 64位小写hex；规范JSON排除本字段后计算
+definition_relative_path: str              # 定义文件本身的规范Package内相对路径
+authority_owner: str                       # 必须等于定义文件的精确Manifest owner
+package_release: str                       # 必须等于Locator.openmontage_release
+package_commit: str                        # 40位小写hex；等于Locator.openmontage_commit
+registration_sha256: str                   # 等于本次Locator.registration_sha256
+manifest_sha256: str                       # 等于Locator.manifest.sha256
+lock_sha256: str                           # 等于Locator.lock.sha256
+tool_id: str                               # 1..128 NFC非空；Release内唯一
+relative_path: str                         # 规范POSIX相对路径；Release实例必填
+sha256: str                                # 工具文件64位小写hex；Release实例必填
+size: int                                  # 工具文件正整数；Release实例必填
+owner: str                                 # 精确Manifest owner；Release实例必填
+execution_kind: Literal["PACKAGE_PYTHON_SCRIPT", "DIRECT_EXECUTABLE"]
+interpreter_binding: Literal["LOCATOR_PACKAGE_PYTHON", "SELF"]
+fixed_argv_template: tuple[str, ...]        # 每个token非空、无NUL；调用者不得追加
+fixed_argv_placeholders: tuple[str, ...]    # 只能是()或("{verified_tool_path}",)
+request_schema_sha256: Literal["c5b196bfe69c6a6db7073fb7fa7503a58837907e939fceeb5436fa7d19f80ce1"]
+result_schema_sha256: Literal["8a96aceb463da2ea39549de44b06a765a3ac859260001ae277b99dbf2a8ca1b3"]
+allowed_environment_names: tuple[str, ...] # ASCII env名，大小写折叠后唯一、规范排序
+secret_environment_names: tuple[str, ...]  # allowed子集，规范排序
+required_local_capabilities: tuple[Mapping, ...]
+  each exact Mapping:
+    evidence_schema_version: Literal["golden-key-workbuddy-local-capability-evidence-v1"]
+    capability_id: str                     # opaque NFC非空，不设枚举
+    definition_sha256: str                 # 64位小写hex
+```
+
+`PACKAGE_PYTHON_SCRIPT`必须使用`LOCATOR_PACKAGE_PYTHON`，且`fixed_argv_placeholders`精确为`("{verified_tool_path}",)`、模板中该占位符恰好一次；进程executable只能是Locator返回的私有Python。`DIRECT_EXECUTABLE`必须使用`SELF`且占位符闭集为空；进程executable只能是工具本身。所有业务数据均走stdin envelope，模板不得出现`user_message`、DataRoot、Provider值、shell元字符解释、会话命令或任意argv占位符。
+
+两个schema hash的输入字节也已冻结，均为下列单行UTF-8、无BOM、无LF文本；不得由实现Builder重算另一种shape：
+
+```text
+request: {"fields":["schema_version","session_id","request_id","user_message","executor_controls","package","tool_definition_sha256","local_capability_evidence_identities"],"schema_version":"golden-key-workbuddy-package-tool-request-v1"}
+result: {"fields":["schema_version","session_id","request_id","outcome","result_pointer","error"],"schema_version":"golden-key-workbuddy-package-tool-result-v1"}
+```
+
+规范JSON固定为UTF-8、NFC、`ensure_ascii=False/allow_nan=False/sort_keys=True/separators=(",", ":")`并以一个LF结尾；`definition_sha256`对同规则但排除自身字段的对象计算。验证顺序固定为：先调用`locate_active_package(data_root)`；定义closed-schema与自hash；Registration/Release/commit/Manifest/Lock绑定；`definition_relative_path`对应文件必须位于PackageRoot内、在Manifest与Lock中各唯一覆盖、Manifest owner等于`authority_owner`，且其字节与传入Mapping的完整规范JSON字节完全相同；再从Manifest与Lock分别找到唯一工具条目并核对owner/hash/size；逐组件lstat并拒绝symlink/junction/reparse/ADS/保留名/别名/`..`；resolved路径必须在PackageRoot内且为regular file；核对工具hash/size；按execution kind核对解释器身份。spawn前再次调用Locator并逐字节复核Registration、Manifest、Lock、定义文件、工具、解释器及所有路径组件；任何替换或漂移均拒绝，spawn为0。不得修改Stage 2 Registration schema或实现。
+
+### V2-S4-T2：唯一公共入口与输入合同
+
+唯一公共入口冻结为：
+
+```python
+launch_session_tool(
+    data_root: str | os.PathLike[str],
+    user_message: str,
+    executor_controls: Mapping[str, Any],
+    package_tool_definition: Mapping[str, Any],
+    local_capability_evidence: Sequence[Mapping[str, Any]] = (),
+    cancel_event: threading.Event | None = None,
+) -> Mapping[str, Any]
+```
+
+返回对象及所有后代Mapping/List必须递归冻结为`MappingProxyType`/tuple。`user_message`必须是原样UTF-8可编码、NFC、无surrogate的字符串；允许空白和业务文本，不解析、不规范化、不追加技术词。Launcher只记录UTF-8字节SHA-256和字节长度，不在receipt/log返回原文。
+
+`executor_controls`为closed Mapping：
+
+```text
+schema_version: Literal["golden-key-workbuddy-launcher-executor-controls-v1"]
+session_id: str                 # 1..128 ASCII [A-Za-z0-9._-]
+request_id: str                 # 1..128 ASCII [A-Za-z0-9._-]
+timeout_seconds: int            # 1..3600，bool拒绝
+termination_grace_seconds: int  # 1..30，bool拒绝
+result_root: str                # 已存在绝对非根目录，canonical且位于DataRoot内，无reparse
+provider_environment: Mapping[str, str]
+```
+
+`provider_environment`的name必须为ASCII环境变量名、大小写折叠后唯一，并属于定义的`allowed_environment_names`；value必须是UTF-8可编码字符串且绝不进入argv、stdin、receipt、stdout/stderr回传或日志。Receipt只记录规范排序后的name。未提供Provider配置、Provider配置错误或Package动态registry未找到Provider，不触发Stage 3；若固定工具启动后因其业务配置退出，则保留真实非零退出。
+
+定义中的allowed/secret环境名不得与`SystemRoot/WINDIR/COMSPEC/PATHEXT/TEMP/TMP/PATH/PYTHONNOUSERSITE/PYTHONUTF8/PYTHONUNBUFFERED`大小写折叠后相交。所有`provider_environment`非空value都按secret处理并用于泄漏canary检查，不因某name遗漏在`secret_environment_names`中而允许输出。
+
+通用`local_capability_evidence`每项为closed Mapping：
+
+```text
+schema_version: Literal["golden-key-workbuddy-local-capability-evidence-v1"]
+status: Literal["PRESENT", "INTEGRATED"]
+capability_id: str
+definition_sha256: str
+runtime_root: str
+verified_entrypoint: str
+entrypoint_sha256: str
+entrypoint_size: int
+version_evidence_sha256: str
+asset_evidence_sha256: str
+plan_sha256: str | None           # INTEGRATED必填64hex；PRESENT必须为None
+```
+
+Launcher只按`required_local_capabilities`的opaque `capability_id+definition_sha256`逐项精确匹配，并重新核对runtime root/entrypoint containment、无reparse、regular file、hash/size和证据身份；定义要求为空时，额外证据可以被拒绝为`INVALID_INPUT`以避免隐式路由。Stage 3现有结果需由未来Stage 5按此通用envelope映射；Provider环境绝不映射成能力证据。
+
+stdin只发送一个UTF-8规范JSON对象并立即关闭，closed shape为：
+
+```text
+schema_version: Literal["golden-key-workbuddy-package-tool-request-v1"]
+session_id: str
+request_id: str
+user_message: str                         # 与入参逐字节相同
+executor_controls:
+  timeout_seconds: int
+  result_root: str
+  provider_environment_names: tuple[str, ...]
+package:
+  registration_sha256: str
+  openmontage_release: str
+  openmontage_commit: str
+tool_definition_sha256: str
+local_capability_evidence_identities: tuple[Mapping, ...]
+  each: capability_id + definition_sha256 + status + entrypoint_sha256 + entrypoint_size
+```
+
+Provider secret值只进入子进程环境，不进入stdin。
+
+### V2-S4-T3：单进程生命周期
+
+1. 完成全部preflight后构造executable与不可追加的固定argv；`shell=False`，不调用`cmd.exe /c`、PowerShell、PATH工具发现或用户命令。
+2. `cwd`精确为已重验PackageRoot。环境不继承整份宿主环境：Windows只复制启动所需`SystemRoot/WINDIR/COMSPEC/PATHEXT/TEMP/TMP`的安全值，PATH由Package内Python/FFmpeg/Node固定目录构造，并设置`PYTHONNOUSERSITE=1/PYTHONUTF8=1/PYTHONUNBUFFERED=1`；之后只注入定义allowlist内的Provider环境。保留名不得被Provider覆盖。
+3. 为唯一子进程建立可终止的独立进程组/Windows Job Object；恰好一次spawn，`spawn_count`只可0或1，`retry_count`恒为0。
+4. stdin只写上述单一envelope。stdout/stderr分别流式计数和SHA-256，内存保留上限各1 MiB；receipt仅返回size/hash/truncated，不返回原文。仅stdout前64 KiB可用于解析单个结果envelope，超限或额外非空字节视为无效。
+5. 正常退出保留真实exit code。timeout或`cancel_event.is_set()`后终止整个自有进程树，等待`termination_grace_seconds`，随后检测残留；不重试、不重放user message。
+6. timeout、取消、进程退出、输出读取、结果校验或终止证据不完整时不得伪造成功；任务自有临时缓冲必须清理，不删除Package、result或外来对象。
+
+固定工具stdout成功协议为单个UTF-8规范JSON对象：
+
+```text
+schema_version: Literal["golden-key-workbuddy-package-tool-result-v1"]
+session_id: str                 # 与请求相同
+request_id: str                 # 与请求相同
+outcome: Literal["SUCCEEDED", "FAILED"]
+result_pointer: null | Mapping
+  exact Mapping: relative_path: str; sha256: str; size: int
+error: null | Mapping
+  exact Mapping: code: str; origin: str; message: str
+```
+
+`SUCCEEDED`要求exit 0、`error=null`和非空result pointer；`FAILED`要求`result_pointer=null`和非空error。pointer相对路径必须规范、安全，解析后位于`executor_controls.result_root`内，逐组件无reparse，目标为regular file且hash/size匹配。非零退出事实优先保留，不因stdout内容改写为成功。
+
+### V2-S4-T4：不可改写LauncherReceiptV1
+
+结果闭集精确为`PRELAUNCH_BLOCKED`、`SPAWN_FAILED`、`EXITED_SUCCESS`、`EXITED_NONZERO`、`TIMED_OUT`、`CANCELLED`、`INCOMPLETE`、`RESIDUAL_PROCESS`。若终止后仍有自有进程残留，最终outcome必须为`RESIDUAL_PROCESS`并保留timeout/cancel事实；exit 0但结果envelope或pointer无效为`INCOMPLETE`；只有exit 0、无泄密、无残留且有效pointer才可`EXITED_SUCCESS`。
+
+Receipt为closed、递归冻结Mapping，根字段和嵌套类型精确如下：
+
+```text
+schema_version: Literal["golden-key-workbuddy-launcher-receipt-v1"]
+outcome: 上述8值之一
+reason_code: Literal[
+  "NONE", "INVALID_INPUT", "LOCATOR_FAILED", "REGISTRATION_DRIFT",
+  "TOOL_DEFINITION_INVALID", "TOOL_DEFINITION_UNBOUND", "TOOL_PATH_VIOLATION",
+  "TOOL_IDENTITY_MISMATCH", "INTERPRETER_IDENTITY_MISMATCH",
+  "LOCAL_CAPABILITY_EVIDENCE_REQUIRED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH",
+  "ENVIRONMENT_NOT_ALLOWED", "SPAWN_OS_ERROR", "EXITED_NONZERO", "TIMEOUT",
+  "CANCELLED", "OUTPUT_INVALID", "RESULT_POINTER_INVALID",
+  "SECRET_DISCLOSURE_DETECTED", "EVIDENCE_INCOMPLETE", "RESIDUAL_PROCESS_DETECTED"]
+session: {session_id: str}
+request: {request_id: str}
+registration: {registration_sha256: str | None}
+package: {openmontage_release: str | None; openmontage_commit: str | None; package_root: str | None}
+manifest: {sha256: str | None; size: int | None}
+lock: {sha256: str | None; size: int | None; bundle_sha256: str | None}
+tool_definition: {definition_id: str | None; definition_sha256: str | None; authority_owner: str | None}
+tool_file: {tool_id: str | None; relative_path: str | None; path: str | None; sha256: str | None; size: int | None; owner: str | None}
+interpreter: {binding: str | None; path: str | None; sha256: str | None; size: int | None}
+user_message: {sha256: str; byte_length: int}
+provider_environment_names: tuple[str, ...]
+local_capability_evidence_identities: tuple[Mapping, ...]
+  each: {capability_id: str; definition_sha256: str; status: str; entrypoint_sha256: str; entrypoint_size: int}
+launched: bool
+spawn_count: int                 # 0|1
+pid: int | None
+started_at_utc: str | None       # RFC3339 UTC
+ended_at_utc: str                # RFC3339 UTC
+duration_ms: int                 # >=0
+exit_code: int | None
+timed_out: bool
+cancelled: bool
+retry_count: Literal[0]
+stdout: {size: int; sha256: str; truncated: bool}
+stderr: {size: int; sha256: str; truncated: bool}
+result_pointer: {path: str | None; sha256: str | None; size: int | None; valid: bool}
+error: null | {code: str; origin: Literal["PREFLIGHT", "SPAWN", "CHILD", "TIMEOUT", "CANCEL", "OUTPUT", "RESULT", "RESIDUAL"]; sanitized_message: str}
+residual_process: {detected: bool; termination_attempted: bool; termination_succeeded: bool | None; observed_pids: tuple[int, ...]}
+```
+
+未到达的身份字段保持`None`，不得删除字段。任何secret值在receipt、异常文本、日志及回传stdout/stderr原文中出现次数必须为0；若子进程输出命中任一非空secret值，丢弃原文、outcome=`INCOMPLETE`、reason=`SECRET_DISCLOSURE_DETECTED`。
+
+### V2-S4-T5：直接与负面测试矩阵
+
+未来直接测试必须至少覆盖原21项，并增加动态registry/Provider边界：
+
+1. 无活动Registration；2. Registration损坏/漂移；3. PackageRoot或任一必带工具链漂移；4. 定义缺字段/未知字段/自hash错误；5. 工具未被Manifest或Lock唯一覆盖；6. 工具hash/size/owner不匹配；7. 路径逃逸/ADS/别名；8. 任一路径组件symlink/junction/reparse；9. 任意命令/额外argv/placeholder注入；10. user_message字节被改写；11. controls拼入user_message；12. 定义要求的本地证据缺失；13. capability/definition/entrypoint身份不匹配；14. 定义不要求本地能力时不得要求Remotion/HyperFrames；15. 真实非零退出保真；16. timeout；17. result envelope/pointer缺失、越界、漂移或hash/size错误；18. stdout/stderr含secret时原文回传与日志为0；19. 残留子进程；20. spawn<=1且retry=0；21. 第二Agent/调度/服务/数据库/媒体/Artifact/Checkpoint代码为0；22. Provider和capability名无硬编码枚举；23. 未allowlist的任意env名拒绝且spawn=0；24. secret值不进入argv/stdin/receipt/hash前日志/异常；25. Provider配置缺失不会被映射为Stage3证据缺失；26. 只有定义明确声明的本地能力才校验证据；27. spawn前Registration/tool/interpreter替换漂移；28. cancel前/后及终止宽限；29. 输出截断仍保留真实size/hash且不产生成功；30. 所有返回Mapping递归不可修改。
+
+成功测试至少覆盖`PACKAGE_PYTHON_SCRIPT`与`DIRECT_EXECUTABLE`各一次、空Provider环境、allowlisted动态Provider环境、required_local_capabilities为空和非空、exit 0有效pointer、Stage 6直接消费同一receipt shape。测试只用任务fixture进程，不运行真实WorkBuddy、Provider、媒体生产或未验证Package Guide。
+
+### V2-S4-T6：未来实现精确文件白名单
+
+未来实现只能评估并授权以下5个路径：
+
+```text
+golden_key_openmontage_workbuddy/session_launcher.py       # 唯一新增生产模块
+golden_key_openmontage_workbuddy/__init__.py               # 只导出launch_session_tool
+tests/workbuddy/test_session_launcher.py                    # 唯一新增直接测试
+tests/workbuddy/test_repository_hygiene.py                  # 固定树/API/source断言35->37
+.github/workflows/ci.yml                                    # 唯一pytest命令加入直接测试
+```
+
+新增生产文件与直接测试使tracked从35精确变为37；hygiene必须同步固定37文件白名单、4个Python源文件和唯一Stage4 API，否则新增合法文件会被现有固定35合同拒绝；CI必须把唯一Stage4直接测试加入现有唯一pytest命令，否则正式门禁不执行新合同。不得动态放宽树断言或使用glob接受未来文件。`package_registration.py`、`runtime_prepare.py`、`pyproject.toml`原则上禁止修改；任何需要它们或第6个路径的方案立即`STOPPED_SCOPE_EXPANSION`并回到用户重新授权。
+
+### V2-S4-T7：Builder、Reviewer与推广
+
+规划候选正式推广后，用户仍需另行明确说“启动阶段四实现”。届时live authority必须从最新`origin/codex/workbuddy-shell-v2`冻结精确base/tree/37目标文件合同，创建一个临时Builder分支，只允许上述5路径。Builder必须使用项目D盘独立`.venv`，运行Stage4直接测试、repository hygiene和完整仓库测试，保留未截断输出和最终exit 0；检查精确diff、37文件等值、clean/untracked0/stash0后提交并非force推送。独立Reviewer零写，只审精确base..candidate，核对公共合同最小性、fail-closed反例、secret为0和真实测试定义；`REQUEST_CHANGES`只返回原Builder。只有`APPROVE/P0=0/P1=0/P2=0`、formal仍等于base、对象一致时才允许普通fast-forward推广。推广完成也不得自动启动Stage 5、Stage 6或最终Package Gate。
+
+任务执行顺序、输入、交付与退出条件固定为：
+
+| 任务 | 输入 | 交付输出 | PASS退出条件 / fail-closed停止 |
+|---|---|---|---|
+| T1 工具身份 | Locator当前返回合同、批准Package/Installer authority边界 | `PackageToolDefinitionV1` closed schema与双重Manifest/Lock验证规则 | schema/authority/path/hash/size/owner/interpreter/argv全部唯一；具体Release缺实例时记录`TOOL_DEFINITION_UNBOUND`，不猜入口 |
+| T2 公共入口 | T1定义、Stage2 Locator、Stage3现有证据边界 | 唯一`launch_session_tool(...)`、closed controls、通用证据与stdin envelope | user message/controls/provider secret三者分离；Provider缺失不转成Stage3缺失 |
+| T3 生命周期 | T1/T2验证后对象 | cwd/env/stdin/output/timeout/cancel/termination/residual规则 | shell=false、spawn=1、retry=0；身份漂移或环境越权则spawn=0 |
+| T4 回执 | T1身份、T3真实进程事实、结果envelope | 全字段`LauncherReceiptV1`与8值outcome闭集 | exit/result/error/residual均保真、递归冻结、secret原文为0；证据不完整不得成功 |
+| T5 测试矩阵 | T1-T4合同及原21项反例 | 30类直接/负面测试与成功夹具要求 | 所有反例断言spawn/outcome/reason/残留；不运行真实Provider/媒体/WorkBuddy |
+| T6 文件范围 | 当前35文件固定树与现有hygiene/CI | 精确5路径、37文件终态 | 只新增生产+直接测试两文件；第6路径或动态放宽立即停止 |
+| T7 交付治理 | 最新formal精确对象、T1-T6 | Builder证据、零写Reviewer、普通FF推广路径 | REVIEW APPROVE且P0/P1/P2=0、对象/路径/测试/clean全匹配；否则只回原Builder |
+
+T1到T4是同一个单生产模块内的私有实现职责，不得为了任务编号拆成新模块。T5/T6只提供直接证据和固定仓库门禁。T7完成后Stage4仓库实现才可收口，但Stage5/6仍保持未授权。
+
+本规划经Reviewer APPROVE并正式推广后的closeout目标字段必须精确为：
+
+```text
+stage_4_planning: PASS_ACCEPTED
 stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
+next_authorized_task: NONE
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
 ```
 
-历史产品模型纠偏已撤销膨胀模型：真实Package、Registration和Package绑定能力元数据都不是Stage 3输入。Stage 3只对Remotion和HyperFrames做有界探测与事实报告，对缺失/不兼容项生成零下载计划，并在WorkBuddy取得用户逐能力明确同意后集成批准项；拒绝或暂缓返回`SKIPPED/NOT_INTEGRATED`。已接受实现严格落在三个产品路径加两个验收基础设施路径；本closeout没有新增生产代码、测试、CI、Package字节或外部写入。阶段2临时ZIP `f00e83d6154e7593b765a3d6c863b6653fc642818133acd7924f3fd91aab5d03`只保留历史证据边界，不是Stage 3输入。
+这些是推广后由单独docs-only closeout记录的目标状态，不得在本Builder候选或Reviewer结论中提前冒充已正式接受。
+
+### 与Stage 5/6不断档
+
+Stage 5只保留literal `user_message`，形成closed `executor_controls`、从已批准Package/Installer对象取得`PackageToolDefinitionV1`、按用户单独授权解析Provider环境，并在固定定义确有本地要求时把Stage 3当前证据映射为通用envelope；它不生成命令或argv。Stage 4只验证、启动一次并返回`LauncherReceiptV1`。Stage 6优先原样复用该receipt；若真实Stage 5消费者不需要转换，则以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`和生产代码0完成。该规划不预建Stage 5/6。
 
 ## 阶段2已完成任务证据
 
@@ -174,11 +470,11 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-accepted_authority_result: ba0a84d93a4b26c09eaf7e2469d09c064c27710e
+accepted_authority_result: 26bfe60ab9da62797559eb9a459b8daa345f8d80
 formal_handoff_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
 accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
-formal_tree: a4d8034f6cf76c6eedd2f4bbe3c30dbe1b4e382a
+formal_head: 26bfe60ab9da62797559eb9a459b8daa345f8d80
+formal_tree: 940d24a4ddeaa22c52d7c872358d90ede46154ed
 stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout_formal_result: 7c15aae4e77c579309312b21c79076f930970214
 stage_3_to_stage_4_docs_sync_formal_result: 513e5ca10d1ba04878295be110096b013f47974a
@@ -186,7 +482,7 @@ stage_3_to_stage_4_docs_closeout_formal_result: a8d024ca9001184e9c2a5a995598d640
 ci_stage3_state_assertion_fix_formal_result: e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3
 ci_stage3_state_assertion_fix_review_history: first independent review INCOMPLETE / P0=0 / P1=0 / P2=0 / authority mismatch only / code diff no finding
 ci_stage3_state_assertion_fix_ci: run 32218904419 / completed / success / 198 passed / 1 skipped / final exit 0
-ci_stage3_state_assertion_closeout: WORKTREE_RESULT_READY_FOR_REVIEW / THIS_COMMIT / NOT_FORMALLY_PROMOTED
+ci_stage3_state_assertion_closeout: PASS_ACCEPTED / 26bfe60ab9da62797559eb9a459b8daa345f8d80 / FORMALLY_PROMOTED
 stage_1_status: PASS_ACCEPTED
 stage_2_status: PASS_ACCEPTED_REGISTRATION_AND_TEMPORARY_PACKAGE_PROOF_ONLY
 stage_2_registration_implementation: PASS_ACCEPTED
@@ -222,15 +518,15 @@ real_workbuddy_validation: DEFERRED_TO_STAGE_5_ACCEPTANCE
 stage_3_execution_packet: CONSUMED_COMPLETE / EXACT_5_PATHS
 stage3_implementation: PASS_ACCEPTED
 stage_3_status: PASS_ACCEPTED
-stage_4_planning: ELIGIBLE / V2-S4-PLAN-BUILDER1_START_ONLY_AFTER_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
+stage_4_planning: REVIEW_READY_CANDIDATE / CONTRACTS_EFFECTIVE_ONLY_AFTER_V2-S4-PLAN-REVIEW1_APPROVE_AND_FORMAL_FAST_FORWARD
 stage_4_implementation_authorization: NOT_GRANTED
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-current_task: V2-CI-STAGE3-STATE-ASSERTION-CLOSEOUT-BUILDER1
+current_task: V2-S4-PLAN-BUILDER1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-next_authorized_task: V2-S4-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CURRENT_CLOSEOUT_APPROVE_AND_FORMAL_FAST_FORWARD
+next_authorized_task: V2-S4-PLAN-REVIEW1 / ZERO_WRITE_ONLY
 stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
@@ -239,7 +535,7 @@ runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 
 CI状态断言修复`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`已经位于正式分支，精确代码差异仅为`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言；正式CI run `32218904419`为`completed/success`，输出`198 passed / 1 skipped`。第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`，原因只有当时authority mismatch，代码差异无finding。正式分支在账本收口前前移属于治理偏差，本closeout只同步实时权威，不改写审查或Git历史。
 
-本closeout候选自身仍是`WORKTREE_RESULT_READY_FOR_REVIEW`，不是已接受结果。只有独立Reviewer对`e5ae6f8..THIS_COMMIT`给出`APPROVE`且候选以普通fast-forward进入正式分支后，才允许启动`V2-S4-PLAN-BUILDER1`；这不授予Stage4实现或Launcher实现，也不授予Stage5、Stage6或最终Package Gate。
+CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。本Stage4规划候选仍是`WORKTREE_RESULT_READY_FOR_REVIEW`，不是已接受规划；下一步只能由`V2-S4-PLAN-REVIEW1`零写审阅精确`26bfe60..THIS_COMMIT`。APPROVE与普通fast-forward也只完成规划，不授予Stage4实现或Launcher实现，不授予Stage5、Stage6或最终Package Gate。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35。没有恢复任何已清理内容。
 
@@ -271,7 +567,7 @@ stage_3_definition_authority: APPROVED_OPENMONTAGE_CAPABILITY_DEFINITION / INDEP
 stage_3_product_code_paths: golden_key_openmontage_workbuddy/runtime_prepare.py + export-only golden_key_openmontage_workbuddy/__init__.py + tests/workbuddy/test_runtime_prepare.py
 stage_3_acceptance_infrastructure_paths: tests/workbuddy/test_repository_hygiene.py + .github/workflows/ci.yml
 stage_3_accepted_builder_exact_allowlist_rule: exactly the 3 product paths plus the 2 acceptance-infrastructure paths; no other path; the latter only updates fixed tracked/API/source assertions and the one CI pytest command
-stage_4_scope: 基础固定工具调用接受阶段2必带工具链事实；执行Remotion/HyperFrames前接受阶段3对该能力的PRESENT或INTEGRATED证据；缺失时可由OpenMontage选择其他已有/基础能力；阶段4不自行安装、不启动第二Agent、无任意Shell、无自动重试。
+stage_4_scope: 基础固定工具调用接受阶段2必带工具链事实；只在PackageToolDefinitionV1声明required_local_capabilities时接受匹配的通用本地能力证据；Provider配置与本地能力证据分离；阶段4不硬编码Provider/Runtime、不查询registry、不自行安装、不启动第二Agent、无任意Shell、无自动重试。
 stage_5_scope: 用户实际运行起点；只保留一种真实WorkBuddy显式入口，literal user_message不变，技术控制独立。
 stage_6_scope: 直接转交Runtime计划/准备事实与Launcher回执；仅有真实格式转换缺口时才允许独立实现；不解释、不安装、不重试。
 stage_6_zero_code_exit: STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE
@@ -322,7 +618,7 @@ normal_command_name: optional
 
 ### 后续阶段交接
 
-- 阶段4基础调用只消费阶段2必带工具链事实；执行Remotion/HyperFrames时校验阶段3的`PRESENT`或`INTEGRATED`能力证据，不能自行安装。
+- 阶段4基础调用只消费阶段2必带工具链事实；只有固定工具定义声明本地能力要求时才校验匹配的通用能力证据。当前Stage3的Remotion/HyperFrames事实只是一个证据来源；Provider配置不是Stage3能力证据，Launcher不能自行安装或路由。
 - 阶段5拥有用户对话、计划展示、明确同意和真实WorkBuddy继续动作；真实验收优先同任务继续，不能时固定提示“继续刚才的任务”；技术控制与用户原话分离。
 - 阶段6优先原样转交探测、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`、`BLOCKED`和Launcher事实；不安装、不解释Artifact、不自动重试。
 - Shell不得声称已无缝继续；阶段5真实WorkBuddy测试证明同一任务可继续后才允许该说法，否则由WorkBuddy要求用户回复“继续刚才的任务”。

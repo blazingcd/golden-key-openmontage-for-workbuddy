@@ -37,7 +37,7 @@
 | 安装与生命周期 | 安装、同版本修复、升级、失败回滚和默认保留数据的卸载；维护对象所有权 | 输入：锁定的Shell包、OpenMontage 执行包、清单及用户动作；输出：已安装对象、所有权记录和原子活动执行包指针 | 运行生产流程；覆盖外来对象；静默下载、降级或删除用户数据 |
 | OpenMontage 执行包登记与定位 | 登记并核验唯一活动金钥匙版执行包及其Release、commit、Manifest、Lock、SHA、PackageRoot、完整必带私有工具链和Guide | 输入：已安装执行包身份；输出：规范化Package Registration、Python/FFmpeg/ffprobe/Node/npm/npx身份核验和确定路径 | 扫盘、猜“最新”、按目录名推断身份、修改执行包或执行生产；依赖任何系统Python/FFmpeg/Node；登记/实现SaaS Core |
 | Runtime按需准备 | 有界探测Remotion和HyperFrames，报告存在、缺失或不兼容；仅按用户逐能力授权集成批准的缺失项 | 输入：DataRoot、经批准的OpenMontage能力定义、受管/明确登记或配置/正常命令候选及逐能力用户决定；输出：`DETECTION_REPORT`、`CONSENT_REQUIRED`、`INTEGRATED`、`SKIPPED`或`BLOCKED`事实，以及每项能力的`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`状态 | 扫盘或枚举系统软件；把Remotion/HyperFrames当必带Runtime；发现/下载/替换必带Python/FFmpeg/Node；未授权或全局安装；由Shell或用户替OpenMontage选择渲染器；通用包管理器；海外默认源回退；修改系统PATH/注册表 |
-| 会话Launcher | 对一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`重验活动Package和完整必带工具链；验证release-specific不可变固定工具定义；仅在该定义声明本地能力要求时接收完整批准能力定义与未改写Stage3原始fact并独立重验实际资产；随后启动恰好一个固定Package工具并返回递归不可改写真实进程回执 | 输入：DataRoot、分离的literal `user_message`与closed `executor_controls`、`PackageToolDefinitionV1`、完整approved capability definition+original Stage3 fact和取消事件；输出：绑定Registration/Package/Manifest/Lock/tool/interpreter身份的一次真实退出、结果指针、错误及残留事实 | 改写用户原话；读取未验证Package Guide；硬编码或选择Provider/Runtime；查询/执行registry routing；启动第二Agent；解析意图；接受任意Shell/命令/调用者argv；安装Runtime；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产；创建Artifact或推进Checkpoint |
+| 会话Launcher | 对一次WorkBuddy拥有的会话先调用`locate_active_package(data_root)`重验活动Package和完整必带工具链；验证release-specific不可变固定工具定义；仅在该定义声明本地能力要求时接收完整批准能力定义与未改写Stage3原始fact，并按fact的managed/explicit/PATH来源语义独立重验实际资产；随后启动恰好一个固定Package工具并返回递归不可改写真实进程回执 | 输入：DataRoot、分离的literal `user_message`与closed `executor_controls`、`PackageToolDefinitionV1`、完整approved capability definition+original Stage3 fact和取消事件；输出：绑定Registration/Package/Manifest/Lock/tool/interpreter身份的一次真实退出、结果指针、错误及残留事实 | 改写用户原话；读取未验证Package Guide；硬编码或选择Provider/Runtime；查询/执行registry routing；绕过source-aware验证；启动第二Agent；解析意图；接受任意Shell/命令/调用者argv；安装Runtime；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产；创建Artifact或推进Checkpoint |
 | WorkBuddy入口 | 只提供一种真实WorkBuddy显式入口，收集当前必要授权并保持用户原话不变 | 输入：用户显式请求、素材和独立授权；输出：经Locator/Launcher绑定到活动执行包的原话及面向用户的回执 | 多套生产入口；全局截获；第二聊天Agent；由Shell选择Pipeline/Stage/Provider/模型/媒体/创意；把技术控制词写入用户消息 |
 | 状态与结果转交 | 优先直接转交Runtime计划/准备事实、Launcher的会话/进程/退出/错误和WorkBuddy结果指针；只有真实格式缺口时才做一次确定性转换 | 输入：生命周期/Runtime/Launcher事实与WorkBuddy公开结果指针；输出：不改写语义的可审计回执 | 独立任务数据库/轮询/流式平台；解释Artifact业务语义；复制OpenMontage Stage/FSM；自动重试或伪造成功 |
 
@@ -70,7 +70,7 @@ User
 - Python及核心依赖、FFmpeg/ffprobe、Node/npm/npx是Package交付及阶段2登记前置，不属于阶段3探测或下载对象。Remotion和HyperFrames是OpenMontage候选能力，可存在、缺失、稍后集成或一直不集成；缺失、拒绝或暂缓不阻塞Package、项目或其他已有/基础能力。
 - 阶段3只有一个按需准备接口。所谓“扫描”仅指受管DataRoot路径、明确登记或配置的候选路径、正常命令解析三类有界探测；禁止遍历盘符、枚举系统软件清单、全局npm状态或猜目录。
 - 阶段3只使用经批准OpenMontage能力定义给出的大陆来源、版本、大小、hash、许可证和目标事实生成计划；失败时不得自动回退海外源。用户同意只授权下载/集成逐项列明的能力，不构成渲染器选择。
-- 阶段4基础固定工具调用继续接受阶段2必带工具链事实。Stage4接口不硬编码Remotion、HyperFrames或任何Provider/Runtime；只有release-specific固定工具定义的`required_local_capabilities`非空时，才接收同一opaque capability的完整批准定义与未改写Stage3原始fact，并独立重验实际asset identity与closed-tree。Provider API key或外部服务配置不属于Stage3证据；缺少可选配置时由固定工具保留真实退出，Stage4不得自行安装或选择替代项。
+- 阶段4基础固定工具调用继续接受阶段2必带工具链事实。Stage4接口不硬编码Remotion、HyperFrames或任何Provider/Runtime；只有release-specific固定工具定义的`required_local_capabilities`非空时，才接收同一opaque capability的完整批准定义与未改写Stage3原始fact。复核严格按fact source：managed要求受管root和全部定义资产closed-tree，explicit要求定义候选root和全部定义资产但允许且保留额外外来文件，PATH要求绝对regular command且只核对entrypoint asset；未知source拒绝。Provider API key或外部服务配置不属于Stage3证据；缺少可选配置时由固定工具保留真实退出，Stage4不得自行安装或选择替代项。
 - 阶段3前只冻结最小结果到WorkBuddy动作接口，不要求真实WorkBuddy已经跑通。阶段5只保留一种真实WorkBuddy Skill入口，是用户实际运行的起点；在阶段5验收中证明新会话命中、明确同意与同任务继续，不能继续时固定提示用户回复“继续刚才的任务”。在入口格式确认前不得猜测Skill目录或同时建立CLI/MCP入口。
 - 阶段6直接转交Runtime计划/准备事实和Launcher回执；可直接消费时返回`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且不新增生产代码。它不得解释、安装或自动重试。
 - 新能力必须同时有当前上游输入、当前下游消费者和直接验收；“以后可能需要”不是实现理由。
@@ -172,7 +172,7 @@ asset_evidence
 plan_sha256: INTEGRATED only
 ```
 
-该证据不是布尔值，不能跨能力或跨定义复用。Stage4只有在固定工具定义声明要求时才接收完整批准能力定义和该未改写原始事实，并独立重验实际runtime root、entrypoint、全部asset hash/size和closed-tree；`version_evidence`只作审计，精确asset identity不能证明相容性时fail closed。缺失或不匹配时不得自行安装，OpenMontage可选择其他已有/基础能力。
+该证据不是布尔值，不能跨能力或跨定义复用。Stage4只有在固定工具定义声明要求时才接收完整批准能力定义和该未改写原始事实，并按原始source独立重验：managed为DataRoot受管安全目录、全部asset和closed-tree；explicit为定义明确候选安全绝对目录、全部定义asset但允许额外外来文件；PATH为`runtime_root == verified_entrypoint`的绝对安全regular command、只核对entrypoint asset。未知source拒绝；`INTEGRATED`只允许managed并保留plan identity。`version_evidence`只作审计，source profile的精确asset identity不能证明相容性时fail closed。缺失或不匹配时不得自行安装，OpenMontage可选择其他已有/基础能力。
 
 ### 4.7 阶段3受管数据和原子性
 
@@ -223,13 +223,13 @@ launch_session_tool(
 
 `execution_kind`只取`PACKAGE_PYTHON_SCRIPT/DIRECT_EXECUTABLE`，并分别绑定`LOCATOR_PACKAGE_PYTHON/SELF`。固定argv只允许Package定义中的literal token；Python脚本唯一占位符为恰好一次`{verified_tool_path}`，直接可执行文件没有占位符。所有业务数据走单个规范JSON stdin envelope；不存在任意argv、shell解释或命令字符串。
 
-OpenMontage的capability/provider registry是动态业务权威。Stage 4不查询、不缓存、不复制该registry，不枚举Provider或合成运行时，不负责生图、生视频、TTS、音乐、stock、local GPU、FFmpeg、Remotion或HyperFrames的选择。`allowed_environment_names`只控制哪些已解析Provider配置可传入；secret值不进入receipt/log。`required_local_capabilities`使用opaque `capability_id+definition_sha256`，只有固定工具定义声明时才要求`golden-key-workbuddy-local-capability-evidence-v1`。每项证据必须携带完整批准capability definition、其canonical SHA、未改写的Stage3原始`PRESENT/INTEGRATED` fact及其canonical SHA；Stage4独立重算closed definition/fact hash，并从实际runtime root重验entrypoint、全部asset hash/size、逐组件无reparse与closed-tree。原始fact只作来源审计，调用者或fact的version_evidence不受信；若精确asset identity不足以唯一证明相容性则fail closed。当前Stage3的Remotion/HyperFrames定义与事实只是现有来源，未来能力扩展需另行授权；Provider配置不是本地能力证据，Stage5只能原样传递上述定义与原始fact，不得重包装摘要。
+OpenMontage的capability/provider registry是动态业务权威。Stage 4不查询、不缓存、不复制该registry，不枚举Provider或合成运行时，不负责生图、生视频、TTS、音乐、stock、local GPU、FFmpeg、Remotion或HyperFrames的选择。`allowed_environment_names`只控制哪些已解析Provider配置可传入；secret值不进入receipt/log。`required_local_capabilities`使用opaque `capability_id+definition_sha256`，只有固定工具定义声明时才要求`golden-key-workbuddy-local-capability-evidence-v1`。每项证据必须携带完整批准capability definition、其canonical SHA、未改写的Stage3原始`PRESENT/INTEGRATED` fact及其canonical SHA；Stage4独立重算closed definition/fact hash，并source-aware重验实际字节：managed受管root核对全部assets和closed-tree；explicit定义候选root核对全部定义assets、允许且不改动额外文件；PATH要求runtime root等于绝对regular entrypoint并只核对entrypoint asset。未知source拒绝，`INTEGRATED`必须managed并保留`plan_sha256/reused`及完整fact identity。原始fact只作来源审计，调用者或fact的version_evidence不受信；若对应source profile的精确asset identity不足以唯一证明相容性则fail closed。当前Stage3的Remotion/HyperFrames定义与事实只是现有来源，未来能力扩展需另行授权；Provider配置不是本地能力证据，Stage5只能原样传递上述定义与原始fact，不得重包装摘要。
 
 进程合同固定为：调用Locator并重验、核对定义与Manifest/Lock、逐路径组件拒绝symlink/junction/reparse/逃逸、spawn前再次复核全部身份、`cwd=verified PackageRoot`、最小环境白名单、`shell=False`、恰好一次spawn、无重试。timeout或取消只终止Launcher自有进程树并报告残留；stdout/stderr只返回真实size/hash/truncated，不返回原文。exit 0还必须得到与session/request匹配的单个规范结果envelope和位于受控result root内的有效hash/size指针，才可成功。
 
 不可改写receipt schema固定为`golden-key-workbuddy-launcher-receipt-v1`；根字段固定为`schema_version/outcome/reason_code/session/request/registration/package/manifest/lock/tool_definition/tool_file/interpreter/user_message/provider_environment_names/local_capability_evidence_identities/launched/spawn_count/pid/started_at_utc/ended_at_utc/duration_ms/exit_code/timed_out/cancelled/retry_count/stdout/stderr/result_pointer/error/residual_process`，任何输入/preflight/spawn/运行结果都总是返回该全字段递归冻结receipt。结果闭集为`PRELAUNCH_BLOCKED/SPAWN_FAILED/EXITED_SUCCESS/EXITED_NONZERO/CHILD_REPORTED_FAILURE/TIMED_OUT/CANCELLED/INCOMPLETE/RESIDUAL_PROCESS`；invalid input时无法安全读取的session/request/message摘要及未验证身份为`None`，入口已取消精确为`CANCELLED/CANCELLED_BEFORE_SPAWN`且spawn为0，exit 0+child `FAILED`精确为`CHILD_REPORTED_FAILURE/CHILD_REPORTED_FAILURE`，`retry_count`恒为0。裁决优先级固定为invalid cancel/input、pre-cancel、preflight、spawn fail、residual、secret disclosure、timeout/cancel首次monotonic观察、nonzero、invalid output/result、child FAILED、success；不得由Builder重排。完整字段类型、reason闭集、stdin/result envelope及测试矩阵以`TASK-REGISTER.md`的Stage4执行任务包为live implementation authority。
 
-Stage 5保留用户原话、形成controls并提供经授权Provider配置和Package工具定义；固定定义声明本地要求时，Stage5原样传递完整approved capability definition与original Stage3 fact。Stage 4独立复核实际资产，只启动固定工具并返回receipt；Stage 6优先原样复用receipt，能直接消费时生产代码为0。该接口不预建Stage5/6，也不使Stage4实现自动获权。
+Stage 5保留用户原话、形成controls并提供经授权Provider配置和Package工具定义；固定定义声明本地要求时，Stage5原样传递完整approved capability definition与original Stage3 fact。Stage 4按原始managed/explicit/PATH source语义独立复核实际资产，只启动固定工具并返回receipt；Stage 6优先原样复用receipt，能直接消费时生产代码为0。该接口不预建Stage5/6，也不使Stage4实现自动获权。
 
 ## 5. 消息与授权边界
 

@@ -1,10 +1,46 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-FIX1 / WORKTREE_RESULT_READY_FOR_REVIEW`
+状态：`V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-BUILDER1 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
 更新时间：2026-08-20
 
 ## 当前任务
+
+```text
+task_id: V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-BUILDER1
+task_status: WORKTREE_RESULT_READY_FOR_REVIEW
+task_kind: STAGE4_SECRET_NONDISCLOSURE_CONTRACT_CLARIFICATION / DOCS_ONLY
+user_authorization: 2026-08-20 / 修正Implementation Reviewer发现的secret nondisclosure合同不可表示P1；不是重新规划或扩大边界
+start_commit: 3a64a0b4c103ea3cbe254fce60889396cd18ff30
+start_tree: 77011e73c2f1dcca86e4290035018af6c06ef7dd
+result_commit: THIS_COMMIT
+branch: codex/v2-s4-secret-contract1
+formal_target_branch: origin/codex/workbuddy-shell-v2
+formal_target_at_start: 3a64a0b4c103ea3cbe254fce60889396cd18ff30
+formal_tree_at_start: 77011e73c2f1dcca86e4290035018af6c06ef7dd
+review_range: 3a64a0b4c103ea3cbe254fce60889396cd18ff30..THIS_COMMIT
+independent_review: NOT_STARTED / V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1 / REQUIRED_ZERO_WRITE
+formal_promotion: NOT_STARTED / CLARIFICATION_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+production_code_changes: 0
+test_changes: 0
+ci_changes: 0
+new_tracked_files: 0
+tracked_files_expected: 35
+clarification_scope: distinguish Provider-secret propagation from accidental equality with fixed secret-independent protocol constants; freeze dynamic-field safe substitution and cross-chunk child-output detection
+contract_invariants_retained: Provider/runtime opaque; receipt outcomes=9; reason codes=23; priority levels=11; implementation paths=5; tracked transition=35->37; Stage5/6 and production Launcher remain unauthorized
+implementation_candidate_promotion: BLOCKED / existing code candidate must not be promoted before this clarification is independently approved and ordinary-fast-forwarded, then must be revised and re-reviewed through the original implementation Builder
+clarification_effective_only_if: V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND THIS_COMMIT ordinary-fast-forwarded as formal head
+next_authorized_task: V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1 / ZERO_WRITE_ONLY
+stage_4_planning: PASS_ACCEPTED / CONTRACT_CLARIFICATION_PENDING
+stage_4_implementation_authorization: FORMALLY_GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1 / CANDIDATE_PROMOTION_HELD_FOR_THIS_CLARIFICATION
+stage_4_launcher_authorization: NOT_GRANTED
+stage_5_workbuddy_entry_authorization: NOT_GRANTED
+stage_6_status_result_relay_authorization: NOT_GRANTED
+final_package_gate_authorization: NOT_GRANTED
+```
+
+## 已完成的Stage 4实现权威同步（历史证据）
 
 ```text
 task_id: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-FIX1
@@ -249,9 +285,17 @@ result_root: str                # 已存在绝对非根目录，canonical且位�
 provider_environment: Mapping[str, str]
 ```
 
-`provider_environment`的name必须为ASCII环境变量名、大小写折叠后唯一，并属于定义的`allowed_environment_names`；value必须是UTF-8可编码字符串且绝不进入argv、stdin、receipt、stdout/stderr回传或日志。Receipt只记录规范排序后的name。未提供Provider配置、Provider配置错误或Package动态registry未找到Provider，不触发Stage 3；若固定工具启动后因其业务配置退出，则保留真实非零退出。
+`provider_environment`的name必须为ASCII环境变量名、大小写折叠后唯一，并属于定义的`allowed_environment_names`；value必须是UTF-8可编码字符串。所有非空value无条件成为Provider-secret来源，不因name未列入`secret_environment_names`而降级；它们的唯一授权sink是固定child的环境。Receipt只记录经定义allowlist独立验证并规范排序的name。未提供Provider配置、Provider配置错误或Package动态registry未找到Provider，不触发Stage 3；若固定工具启动后因其业务配置退出，则保留真实非零退出。
 
-定义中的allowed/secret环境名不得与`SystemRoot/WINDIR/COMSPEC/PATHEXT/TEMP/TMP/PATH/PYTHONNOUSERSITE/PYTHONUTF8/PYTHONUNBUFFERED`大小写折叠后相交。所有`provider_environment`非空value都按secret处理并用于泄漏canary检查，不因某name遗漏在`secret_environment_names`中而允许输出。
+定义中的allowed/secret环境名不得与`SystemRoot/WINDIR/COMSPEC/PATHEXT/TEMP/TMP/PATH/PYTHONNOUSERSITE/PYTHONUTF8/PYTHONUNBUFFERED`大小写折叠后相交。实现必须在函数入口保守提取raw `provider_environment`中所有可安全读取的非空字符串值及其完整UTF-8 bytes，先建立secret source set，再生成session/request/user-message hints、异常或日志；读取raw controls/value失败时不得回显对象，且对应未证实动态hints一律使用安全空值。Provider-secret来源不得经复制、切片、拼接、插值、编码、hash、长度或其他派生进入argv、canonical stdin、任何不可信动态receipt字段、log或exception；只有child环境可以持有原值。
+
+non-disclosure按provenance而不是对最终receipt做无差别substring禁令：
+
+1. 固定且不读取secret source构造的协议常量——`schema_version`、九值outcome、23个reason、receipt/result/request字段名、固定error origin和预冻结sanitized identifier text——即使与某个secret完整字节或子串偶然相同，也不构成Provider值回显/传播，不得因此改写闭集token或字段类型。
+2. 经独立权威重建并验证的环境变量name、Registration/Package/Manifest/Lock、PackageToolDefinition、工具/解释器和本地能力身份同理；允许偶然字节相同的前提是实现的数据流能证明该值来自对应权威对象而非Provider value。固定argv也只能从已验证PackageToolDefinition构造，绝不能读取Provider value。
+3. caller/child提供或从其内容计算的session、request、user-message hints、result root/pointer、child error/message、stdout/stderr摘要及其他不可信动态域必须在进入canonical stdin或最终递归freeze前执行secret-source non-propagation检查。无法证明独立来源且包含任一完整非空secret bytes，或由secret-tainted值派生时，必须fail closed并清除该动态值；不得因为静态常量恰好相同而失败，也不得让动态泄漏借“常量例外”通过。
+
+非cancel调用在session/request/user_message/result_root或其他待写stdin动态值中发现上述潜在传播时，固定为`PRELAUNCH_BLOCKED/INVALID_INPUT`、spawn 0。安全替换必须保持receipt全字段与原类型：schema允许nullable的str/int使用`None`，tuple字段使用空tuple而不是插入`None`，result pointer使用全`None`且`valid=false`，动态sanitized message使用预冻结secret-independent文本。若某个stdout/stderr流或由其解析出的动态字段受污染，该流的公开摘要固定为`size=0`、`sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`、`truncated=true`作为“已抑制”安全事实；不受污染的独立进程事实仍保留。最终freeze前必须再递归断言所有非固定、非独立权威动态域对secret source零传播。
 
 `local_capability_evidence`不是Stage 5重包装的摘要。每项必须原样携带完整批准定义和Stage 3原始事实，root为closed Mapping：
 
@@ -297,14 +341,14 @@ local_capability_evidence_identities: tuple[Mapping, ...]
   each: capability_id + definition_sha256 + approved_capability_definition_sha256 + original_stage3_fact_sha256 + status + source + plan_sha256 + entrypoint_sha256 + entrypoint_size
 ```
 
-Provider secret值只进入子进程环境，不进入stdin。
+Provider secret值只进入子进程环境，不进入canonical stdin；`provider_environment_names`仅因其逐项来自已验证definition allowlist而可保留，绝不能从value生成。
 
 ### V2-S4-T3：单进程生命周期
 
 1. 完成全部preflight后构造executable与不可追加的固定argv；`shell=False`，不调用`cmd.exe /c`、PowerShell、PATH工具发现或用户命令。
 2. `cwd`精确为已重验PackageRoot。环境不继承整份宿主环境：Windows只复制启动所需`SystemRoot/WINDIR/COMSPEC/PATHEXT/TEMP/TMP`的安全值，PATH由Package内Python/FFmpeg/Node固定目录构造，并设置`PYTHONNOUSERSITE=1/PYTHONUTF8=1/PYTHONUNBUFFERED=1`；之后只注入定义allowlist内的Provider环境。保留名不得被Provider覆盖。
 3. 为唯一子进程建立可终止的独立进程组/Windows Job Object；恰好一次spawn，`spawn_count`只可0或1，`retry_count`恒为0。
-4. stdin只写上述单一envelope。stdout/stderr分别流式计数和SHA-256，内存保留上限各1 MiB；receipt仅返回size/hash/truncated，不返回原文。仅stdout前64 KiB可用于解析单个结果envelope，超限或额外非空字节视为无效。
+4. stdin只写上述单一envelope。stdout/stderr是不可信child输出，分别流式计数和SHA-256，内存保留上限各1 MiB；对每个非空secret的完整UTF-8 bytes做跨chunk匹配，匹配器必须保留足以发现边界命中的overlap。任一流任一位置命中都精确裁决`SECRET_DISCLOSURE_DETECTED`，固定协议常量偶然碰撞例外绝不适用于child输出。receipt不返回原文；受污染流只返回上述安全抑制摘要。仅stdout前64 KiB可用于解析单个结果envelope，超限或额外非空字节视为无效；即使raw bytes因JSON escape未直接命中，解析后的result pointer/error等动态字段重建出secret也必须同样阻断。
 5. 正常退出保留真实exit code。timeout或`cancel_event.is_set()`后终止整个自有进程树，等待`termination_grace_seconds`，随后检测残留；不重试、不重放user message。
 6. timeout、取消、进程退出、输出读取、结果校验或终止证据不完整时不得伪造成功；任务自有临时缓冲必须清理，不删除Package、result或外来对象。
 
@@ -370,7 +414,7 @@ error: null | {code: str; origin: Literal["PREFLIGHT", "SPAWN", "CHILD", "TIMEOU
 residual_process: {detected: bool; termination_attempted: bool; termination_succeeded: bool | None; observed_pids: tuple[int, ...]}
 ```
 
-所有字段始终存在。`PRELAUNCH_BLOCKED/INVALID_INPUT`以及无法安全解析对应输入时，`session.session_id`、`request.request_id`、`user_message.sha256/byte_length`允许为`None`；已成功验证的字段必须填真实值，未到达的身份字段保持`None`，不得删除字段。任何secret值在receipt、异常文本、日志及回传stdout/stderr原文中出现次数必须为0；若子进程输出命中任一非空secret值，丢弃原文、outcome=`INCOMPLETE`、reason=`SECRET_DISCLOSURE_DETECTED`。
+所有字段始终存在。`PRELAUNCH_BLOCKED/INVALID_INPUT`以及无法安全解析对应输入时，`session.session_id`、`request.request_id`、`user_message.sha256/byte_length`允许为`None`；已成功验证且可证明不来自secret source的动态字段填真实值，未到达或受污染字段按上述类型安全值替换，不得删除字段或改变tuple元素类型。固定协议常量与独立权威身份的偶然字节相同不算泄漏；Provider value从来源传播到任何不可信动态receipt字段、异常文本、日志或回传原文的次数必须为0。若child stdout/stderr完整secret bytes跨chunk命中，或解析动态字段重建出secret，丢弃原文并安全替换受污染动态域，outcome=`INCOMPLETE`、reason=`SECRET_DISCLOSURE_DETECTED`。
 
 结果裁决优先级精确如下，命中后不得被较低项覆盖；真实`exit_code/timed_out/cancelled/residual_process`字段始终保留：
 
@@ -381,26 +425,28 @@ residual_process: {detected: bool; termination_attempted: bool; termination_succ
 | 3 | 输入/Locator/定义/路径/环境/本地证据任一preflight失败 | `PRELAUNCH_BLOCKED /`对应精确reason | 0 |
 | 4 | OS创建唯一进程失败 | `SPAWN_FAILED / SPAWN_OS_ERROR` | 0 |
 | 5 | spawn后终止宽限结束仍检测到自有残留进程 | `RESIDUAL_PROCESS / RESIDUAL_PROCESS_DETECTED` | 1 |
-| 6 | 任一非空Provider secret出现在子进程输出 | `INCOMPLETE / SECRET_DISCLOSURE_DETECTED` | 1 |
+| 6 | 任一非空Provider secret完整UTF-8 bytes出现在不可信child stdout/stderr（含跨chunk），或解析动态字段重建出secret；无固定常量例外 | `INCOMPLETE / SECRET_DISCLOSURE_DETECTED` | 1 |
 | 7 | timeout与cancel中先发生/先被monotonic观察者记录者；同一tick同时观察时cancel优先 | `TIMED_OUT / TIMEOUT`或`CANCELLED / CANCELLED` | 1 |
 | 8 | child真实exit code非0 | `EXITED_NONZERO / EXITED_NONZERO` | 1 |
 | 9 | 输出捕获、JSON envelope、session/request或result pointer无效/证据不完整 | `INCOMPLETE / OUTPUT_INVALID|RESULT_POINTER_INVALID|EVIDENCE_INCOMPLETE` | 1 |
 | 10 | exit 0且有效result envelope明确`outcome=FAILED` | `CHILD_REPORTED_FAILURE / CHILD_REPORTED_FAILURE` | 1 |
 | 11 | exit 0且有效`SUCCEEDED` envelope、有效pointer、无泄密和残留 | `EXITED_SUCCESS / NONE` | 1 |
 
-preflight reason不得合并或留给Builder选择：closed input/type/range/未知字段错误=`INVALID_INPUT`；Locator无活动Registration或首次读取失败=`LOCATOR_FAILED`；首次快照后Registration/Manifest/Lock身份变化=`REGISTRATION_DRIFT`；release-specific定义实例缺失、定义文件不在当前Manifest+Lock中各唯一覆盖、传入定义字节不等于Package文件、authority owner不绑定或release/commit不属于当前Locator=`TOOL_DEFINITION_UNBOUND`；定义closed shape/self-hash/execution kind/interpreter binding/argv/schema hash/env/local requirement非法=`TOOL_DEFINITION_INVALID`；工具路径逃逸或组件不安全=`TOOL_PATH_VIOLATION`；工具Manifest/Lock覆盖、hash/size/owner不匹配=`TOOL_IDENTITY_MISMATCH`；解释器路径或身份不匹配=`INTERPRETER_IDENTITY_MISMATCH`；声明能力但缺项=`LOCAL_CAPABILITY_EVIDENCE_REQUIRED`；能力完整定义、原始fact、实际asset或closed-tree任一不匹配=`LOCAL_CAPABILITY_EVIDENCE_MISMATCH`；环境名越权=`ENVIRONMENT_NOT_ALLOWED`；其余无法完成的preflight事实=`EVIDENCE_INCOMPLETE`。
+preflight reason不得合并或留给Builder选择：closed input/type/range/未知字段错误，或Provider-secret潜在传播进入非cancel动态input/canonical stdin=`INVALID_INPUT`；Locator无活动Registration或首次读取失败=`LOCATOR_FAILED`；首次快照后Registration/Manifest/Lock身份变化=`REGISTRATION_DRIFT`；release-specific定义实例缺失、定义文件不在当前Manifest+Lock中各唯一覆盖、传入定义字节不等于Package文件、authority owner不绑定或release/commit不属于当前Locator=`TOOL_DEFINITION_UNBOUND`；定义closed shape/self-hash/execution kind/interpreter binding/argv/schema hash/env/local requirement非法=`TOOL_DEFINITION_INVALID`；工具路径逃逸或组件不安全=`TOOL_PATH_VIOLATION`；工具Manifest/Lock覆盖、hash/size/owner不匹配=`TOOL_IDENTITY_MISMATCH`；解释器路径或身份不匹配=`INTERPRETER_IDENTITY_MISMATCH`；声明能力但缺项=`LOCAL_CAPABILITY_EVIDENCE_REQUIRED`；能力完整定义、原始fact、实际asset或closed-tree任一不匹配=`LOCAL_CAPABILITY_EVIDENCE_MISMATCH`；环境名越权=`ENVIRONMENT_NOT_ALLOWED`；其余无法完成的preflight事实=`EVIDENCE_INCOMPLETE`。
 
 非成功receipt的`error`必须非空且与最终reason同源：全部preflight=`PREFLIGHT`，spawn失败=`SPAWN`，残留=`RESIDUAL`，泄密/输出无效=`OUTPUT`，timeout=`TIMEOUT`，取消=`CANCEL`，非零和child FAILED=`CHILD`，pointer无效=`RESULT`；只有`EXITED_SUCCESS/NONE`的`error=null`。spawn=0时`launched=false/pid=None/started_at_utc=None/exit_code=None/timed_out=false/retry_count=0`，stdout/stderr固定为空字节的size/SHA-256/truncated事实，result pointer全`None`且`valid=false`，residual固定未检测/未终止/空PID；provider名称和local evidence identities只保留已完整验证项，否则为空tuple。
 
-函数入口cancel不启动Locator、不访问Package、不spawn；receipt除可安全提取的session/request/message摘要外其余身份均为`None`。spawn后timeout/cancel的“先发生”使用首次记录的`time.monotonic_ns()`；不得由线程调度顺序或Builder自行选择。任何未分类内部错误：spawn前映射`PRELAUNCH_BLOCKED/EVIDENCE_INCOMPLETE`，spawn后映射`INCOMPLETE/EVIDENCE_INCOMPLETE`。
+函数入口cancel不启动Locator、不访问Package、不spawn，但必须先从raw controls保守提取可安全读取的Provider secret source，再决定哪些session/request/message hints可公开；任何hint包含完整secret bytes、由secret派生或来源无法安全判断时，对应nullable字段为`None`，未验证的provider name tuple为空。即使secret value恰好等于session/request，最终仍必须是`CANCELLED/CANCELLED_BEFORE_SPAWN`、Locator 0、spawn 0，只是相关hints安全清空；固定schema/outcome/reason常量保持不变。spawn后timeout/cancel的“先发生”使用首次记录的`time.monotonic_ns()`；不得由线程调度顺序或Builder自行选择。任何未分类内部错误：spawn前映射`PRELAUNCH_BLOCKED/EVIDENCE_INCOMPLETE`，spawn后映射`INCOMPLETE/EVIDENCE_INCOMPLETE`。
 
 ### V2-S4-T5：直接与负面测试矩阵
 
 未来直接测试必须至少覆盖原21项，并增加动态registry/Provider、定义可实例化和结果裁决边界：
 
-1. 无活动Registration；2. Registration损坏/漂移；3. PackageRoot或任一必带工具链漂移；4. 定义缺字段/未知字段/自hash错误；5. 工具未被Manifest或Lock唯一覆盖；6. 工具hash/size/owner不匹配；7. 路径逃逸/ADS/别名；8. 任一路径组件symlink/junction/reparse；9. 任意命令/额外argv/placeholder注入；10. user_message字节被改写；11. controls拼入user_message；12. 定义要求的本地证据缺失；13. capability/definition/entrypoint身份不匹配；14. 定义不要求本地能力时不得要求Remotion/HyperFrames；15. 真实非零退出保真；16. timeout；17. result envelope/pointer缺失、越界、漂移或hash/size错误；18. stdout/stderr含secret时原文回传与日志为0；19. 残留子进程；20. spawn<=1且retry=0；21. 第二Agent/调度/服务/数据库/媒体/Artifact/Checkpoint代码为0；22. Provider和capability名无硬编码枚举；23. 未allowlist的任意env名拒绝且spawn=0；24. secret值不进入argv/stdin/receipt/hash前日志/异常；25. Provider配置缺失不会被映射为Stage3证据缺失；26. 只有定义明确声明的本地能力才校验证据；27. spawn前Registration/tool/interpreter替换漂移；28. cancel前/后及终止宽限；29. 输出截断仍保留真实size/hash且不产生成功；30. 所有返回Mapping递归不可修改；31. invalid input也总是返回全字段receipt，无法安全读取的session/request/message字段为`None`；32. 入口已取消为`CANCELLED/CANCELLED_BEFORE_SPAWN`、Locator访问0、spawn=0；33. OS spawn失败为`SPAWN_FAILED/SPAWN_OS_ERROR`、spawn_count=0；34. residual、secret、timeout/cancel先发生、nonzero、invalid output、child FAILED和success严格按优先级裁决；35. exit 0且child `FAILED`精确映射`CHILD_REPORTED_FAILURE/CHILD_REPORTED_FAILURE`；36. 定义closed字段不含Registration/Manifest/Lock hash，避免hash环；37. 使用真实Stage2 fixture组装含定义文件和工具文件的Package，完成`register -> locate -> Stage4 definition/tool validate`往返；38. Stage5摘要envelope或只给摘要hash必须拒绝，输入必须含完整批准定义和未改写Stage3原始fact；39. Stage4独立重验runtime root、entrypoint与source-specific asset identity，fact证据不得替代字节验证；40. caller/fact的version_evidence不受信，精确asset identity不足以证明相容性时fail closed；41. `managed/explicit/PATH`三种合法`PRESENT`原始交接分别成功且receipt保留source；42. managed root存在任一额外文件或目录时拒绝；43. explicit定义资产漂移时拒绝，但定义外额外文件/目录始终保留且零写入；44. PATH命令文件被替换、非绝对、非regular或任一组件不安全时拒绝；45. `INTEGRATED`使用explicit/PATH或缺失plan identity时拒绝；46. 合法managed `INTEGRATED`的receipt保留原始`plan_sha256`，`original_stage3_fact_sha256`绑定未改写`reused`；47. 未知source拒绝且spawn=0。
+1. 无活动Registration；2. Registration损坏/漂移；3. PackageRoot或任一必带工具链漂移；4. 定义缺字段/未知字段/自hash错误；5. 工具未被Manifest或Lock唯一覆盖；6. 工具hash/size/owner不匹配；7. 路径逃逸/ADS/别名；8. 任一路径组件symlink/junction/reparse；9. 任意命令/额外argv/placeholder注入；10. user_message字节被改写；11. controls拼入user_message；12. 定义要求的本地证据缺失；13. capability/definition/entrypoint身份不匹配；14. 定义不要求本地能力时不得要求Remotion/HyperFrames；15. 真实非零退出保真；16. timeout；17. result envelope/pointer缺失、越界、漂移或hash/size错误；18. stdout/stderr含secret时原文回传与日志为0；19. 残留子进程；20. spawn<=1且retry=0；21. 第二Agent/调度/服务/数据库/媒体/Artifact/Checkpoint代码为0；22. Provider和capability名无硬编码枚举；23. 未allowlist的任意env名拒绝且spawn=0；24. secret值不进入argv/stdin/receipt/hash前日志/异常；25. Provider配置缺失不会被映射为Stage3证据缺失；26. 只有定义明确声明的本地能力才校验证据；27. spawn前Registration/tool/interpreter替换漂移；28. cancel前/后及终止宽限；29. 输出截断仍保留真实size/hash且不产生成功；30. 所有返回Mapping递归不可修改；31. invalid input也总是返回全字段receipt，无法安全读取的session/request/message字段为`None`；32. 入口已取消为`CANCELLED/CANCELLED_BEFORE_SPAWN`、Locator访问0、spawn=0；33. OS spawn失败为`SPAWN_FAILED/SPAWN_OS_ERROR`、spawn_count=0；34. residual、secret、timeout/cancel先发生、nonzero、invalid output、child FAILED和success严格按优先级裁决；35. exit 0且child `FAILED`精确映射`CHILD_REPORTED_FAILURE/CHILD_REPORTED_FAILURE`；36. 定义closed字段不含Registration/Manifest/Lock hash，避免hash环；37. 使用真实Stage2 fixture组装含定义文件和工具文件的Package，完成`register -> locate -> Stage4 definition/tool validate`往返；38. Stage5摘要envelope或只给摘要hash必须拒绝，输入必须含完整批准定义和未改写Stage3原始fact；39. Stage4独立重验runtime root、entrypoint与source-specific asset identity，fact证据不得替代字节验证；40. caller/fact的version_evidence不受信，精确asset identity不足以证明相容性时fail closed；41. `managed/explicit/PATH`三种合法`PRESENT`原始交接分别成功且receipt保留source；42. managed root存在任一额外文件或目录时拒绝；43. explicit定义资产漂移时拒绝，但定义外额外文件/目录始终保留且零写入；44. PATH命令文件被替换、非绝对、非regular或任一组件不安全时拒绝；45. `INTEGRATED`使用explicit/PATH或缺失plan identity时拒绝；46. 合法managed `INTEGRATED`的receipt保留原始`plan_sha256`，`original_stage3_fact_sha256`绑定未改写`reused`；47. 未知source拒绝且spawn=0；48. secret为`-`或`I`并只与固定schema/outcome/reason/field name偶然碰撞时仍返回全字段、类型合法receipt；49. pre-cancel时secret完整值等于session/request，仍为`CANCELLED/CANCELLED_BEFORE_SPAWN`、Locator 0、spawn 0且相关hints为`None`；50. secret被复制/派生到user_message/session/request/result_root或其他canonical-stdin动态域时preflight阻断且安全替换；51. child stdout与stderr分别在单chunk和跨chunk出现完整secret bytes时均为`SECRET_DISCLOSURE_DETECTED`且受污染流只返回安全抑制摘要；52. child JSON escape后解析出的result pointer/error重建secret时同样阻断，动态pointer/message不传播；53. 经definition allowlist验证的env name或独立Package/definition identity与secret偶然相同不误报，并证明无value数据流；54. 动态域清除使用`None`/空tuple/固定文本且不向`tuple[str]`插入`None`、不删除receipt字段、不改变九值/23 reason/字段类型；55. argv、canonical stdin、最终动态receipt、log和exception对Provider-secret来源复制/派生均为0，最终递归non-propagation断言命中时fail closed。
 
 成功测试至少覆盖`PACKAGE_PYTHON_SCRIPT`与`DIRECT_EXECUTABLE`各一次、空Provider环境、allowlisted动态Provider环境、required_local_capabilities为空和非空、exit 0有效pointer、Stage 6直接消费同一receipt shape。真实Stage2 fixture往返必须在临时DataRoot内创建由Manifest/Lock覆盖的定义文件与固定工具，调用现有registration API登记、激活并由Locator读取，再由Stage4完成定义/工具验证；它证明合同可实例化，但不要求最终交付Package成为实现前置。测试只用任务fixture进程，不运行真实WorkBuddy、Provider、媒体生产或未验证Package Guide。
+
+第24项“secret值不进入”精确指Provider-secret source不得被Launcher复制/派生，不是禁止secret-independent固定常量或独立权威身份偶然字节相同。第29项“输出截断保留真实size/hash”只适用于未受secret污染的流；命中secret的流必须使用T2/T4冻结的安全抑制摘要，不能为保留真实digest而派生或传播secret。上述clarification在`V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward为formal head前不是implementation authority；现有实现candidate保持禁止推广，批准后仍须返回原Implementation Builder修订并独立复审。
 
 ### V2-S4-T6：未来实现精确文件白名单
 
@@ -427,8 +473,8 @@ tests/workbuddy/test_repository_hygiene.py                  # 固定树/API/sour
 | T1 工具身份 | Locator当前返回合同、批准Package/Installer authority边界 | 不含Locator hash环的`PackageToolDefinitionV1`、外部Registration/Manifest/Lock绑定与真实fixture往返 | schema/authority/path/hash/size/owner/interpreter/argv全部唯一；`register -> locate -> validate`可实例化；具体Release缺实例时记录`TOOL_DEFINITION_UNBOUND`，不猜入口 |
 | T2 公共入口 | T1定义、Stage2 Locator、Stage3现有证据边界 | 唯一`launch_session_tool(...)`、closed controls、完整批准能力定义+原始Stage3 fact、source-aware复核与stdin envelope | user message/controls/provider secret三者分离；managed/explicit/PATH按已接受语义独立重验；Provider缺失不转成Stage3缺失 |
 | T3 生命周期 | T1/T2验证后对象 | cwd/env/stdin/output/timeout/cancel/termination/residual规则 | shell=false、spawn=1、retry=0；身份漂移或环境越权则spawn=0 |
-| T4 回执 | T1身份、T3真实进程事实、结果envelope | 总是返回的全字段`LauncherReceiptV1`、9值outcome闭集与11级裁决优先级 | exit/result/error/residual均保真、递归冻结、secret原文为0；证据不完整不得成功 |
-| T5 测试矩阵 | T1-T4合同及原21项反例 | 47类直接/负面测试、三类source交接、真实Stage2 fixture往返与成功夹具 | 所有反例断言spawn/outcome/reason/残留；外来explicit文件零改写；不运行真实Provider/媒体/WorkBuddy |
+| T4 回执 | T1身份、T3真实进程事实、结果envelope | 总是返回的全字段`LauncherReceiptV1`、9值outcome闭集、23 reason与11级裁决优先级 | provenance-aware动态域零传播、静态常量偶撞可表示、递归冻结；证据不完整不得成功 |
+| T5 测试矩阵 | T1-T4合同及原21项反例 | 55类直接/负面测试、secret碰撞/传播、三类source交接、真实Stage2 fixture往返与成功夹具 | 所有反例断言spawn/outcome/reason/残留；外来explicit文件零改写；不运行真实Provider/媒体/WorkBuddy |
 | T6 文件范围 | 当前35文件固定树与现有hygiene/CI | 精确5路径、37文件终态 | 只新增生产+直接测试两文件；第6路径或动态放宽立即停止 |
 | T7 交付治理 | 最新formal精确对象、T1-T6 | Builder证据、零写Reviewer、普通FF推广路径 | REVIEW APPROVE且P0/P1/P2=0、对象/路径/测试/clean全匹配；否则只回原Builder |
 

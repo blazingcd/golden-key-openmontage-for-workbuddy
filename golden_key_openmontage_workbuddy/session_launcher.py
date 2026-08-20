@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from types import MappingProxyType
 from typing import Any, Mapping, Sequence
+from urllib.parse import urlsplit
 
 from .package_registration import PackageRegistrationError, locate_active_package
 
@@ -224,22 +225,64 @@ def _is_reparse(path: Path) -> bool:
     return path.is_symlink() or junction or bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
 
 
+def _lexical_component_paths(path: Path) -> tuple[Path, ...]:
+    if not path.is_absolute() or path == Path(path.anchor) or "~" in path.parts:
+        _fail("TOOL_PATH_VIOLATION")
+    paths: list[Path] = [Path(path.anchor)]
+    current = Path(path.anchor)
+    for component in path.parts[1:]:
+        if (
+            component in {"", ".", ".."}
+            or component.endswith((".", " "))
+            or any(
+                ord(character) < 32 or character in _WINDOWS_INVALID_COMPONENT_CHARS
+                for character in component
+            )
+            or component.split(".", 1)[0].rstrip(" .").casefold() in _WINDOWS_RESERVED_STEMS
+        ):
+            _fail("TOOL_PATH_VIOLATION")
+        current = current / component
+        paths.append(current)
+    return tuple(paths)
+
+
+def _path_object_identity(metadata: os.stat_result) -> tuple[int, int, int]:
+    return metadata.st_dev, metadata.st_ino, stat.S_IFMT(metadata.st_mode)
+
+
+def _path_stable_identity(metadata: os.stat_result) -> tuple[int, int, int, int, int]:
+    return (
+        metadata.st_dev,
+        metadata.st_ino,
+        metadata.st_size,
+        metadata.st_mtime_ns,
+        getattr(metadata, "st_ctime_ns", 0),
+    )
+
+
+def _regular_unaliased(metadata: os.stat_result) -> bool:
+    attributes = getattr(metadata, "st_file_attributes", 0)
+    return (
+        stat.S_ISREG(metadata.st_mode)
+        and not bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
+        and getattr(metadata, "st_nlink", 1) == 1
+    )
+
+
 def _safe_existing_absolute_directory(value: Any, *, within: Path | None = None) -> Path:
     if not isinstance(value, (str, os.PathLike)):
         _fail("INVALID_INPUT")
     try:
         path = Path(value)
-        if not path.is_absolute() or path == Path(path.anchor) or "~" in path.parts:
+        try:
+            _validate_components(path, stop=within)
+        except _LaunchError:
             _fail("INVALID_INPUT")
         resolved = path.resolve(strict=True)
         if not resolved.is_dir():
             _fail("INVALID_INPUT")
         if within is not None:
-            resolved.relative_to(within)
-        try:
-            _validate_components(resolved, stop=within)
-        except _LaunchError:
-            _fail("INVALID_INPUT")
+            resolved.relative_to(within.resolve(strict=True))
         return resolved
     except _LaunchError:
         raise
@@ -248,28 +291,21 @@ def _safe_existing_absolute_directory(value: Any, *, within: Path | None = None)
 
 
 def _validate_components(path: Path, *, stop: Path | None = None) -> None:
-    path = path.resolve(strict=True)
+    raw_paths = _lexical_component_paths(path)
+    stop_paths: tuple[Path, ...] = ()
     if stop is not None:
-        stop = stop.resolve(strict=True)
-        try:
-            relative = path.relative_to(stop)
-        except ValueError:
-            _fail("TOOL_PATH_VIOLATION")
-        current = stop
-        paths = [current]
-        for component in relative.parts:
-            current = current / component
-            paths.append(current)
-    else:
-        paths = [Path(path.anchor)]
-        current = Path(path.anchor)
-        for component in path.parts[1:]:
-            current = current / component
-            paths.append(current)
+        stop_paths = _lexical_component_paths(stop)
     try:
-        if any(_is_reparse(item) for item in paths):
+        # This intentionally runs before resolve(): resolving first erases the
+        # symlink/junction component that the contract requires us to reject.
+        if any(_is_reparse(item) for item in (*stop_paths, *raw_paths)):
             _fail("TOOL_PATH_VIOLATION")
+        resolved = path.resolve(strict=True)
+        if stop is not None:
+            resolved.relative_to(stop.resolve(strict=True))
     except (OSError, RuntimeError):
+        _fail("TOOL_PATH_VIOLATION")
+    except ValueError:
         _fail("TOOL_PATH_VIOLATION")
 
 
@@ -279,29 +315,143 @@ def _bound_file(root: Path, relative: str, reason: str) -> Path:
         _validate_components(candidate, stop=root)
         resolved = candidate.resolve(strict=True)
         resolved.relative_to(root)
-        if not resolved.is_file():
+        metadata = os.stat(candidate, follow_symlinks=False)
+        if not resolved.is_file() or not _regular_unaliased(metadata):
             _fail(reason)
-        return resolved
+        return candidate
     except _LaunchError:
         raise
     except (OSError, RuntimeError, ValueError):
         _fail(reason)
 
 
-def _hash_file(path: Path) -> tuple[str, int]:
+def _hash_file(
+    path: Path,
+    *,
+    reason: str = "EVIDENCE_INCOMPLETE",
+    stop: Path | None = None,
+) -> tuple[str, int]:
     digest = hashlib.sha256()
     total = 0
+    handle: Any = None
     try:
-        with path.open("rb") as handle:
-            while True:
-                chunk = handle.read(1024 * 1024)
-                if not chunk:
-                    break
-                digest.update(chunk)
-                total += len(chunk)
-    except OSError:
-        _fail("EVIDENCE_INCOMPLETE")
+        _validate_components(path, stop=stop)
+        canonical_before = path.resolve(strict=True)
+        stop_canonical_before: Path | None = None
+        stop_identity_before: tuple[int, int, int] | None = None
+        if stop is not None:
+            stop_canonical_before = stop.resolve(strict=True)
+            canonical_before.relative_to(stop_canonical_before)
+            stop_identity_before = _path_object_identity(os.stat(stop, follow_symlinks=False))
+        pathname_before = os.stat(path, follow_symlinks=False)
+        if not _regular_unaliased(pathname_before):
+            _fail(reason)
+        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOINHERIT", 0) | getattr(os, "O_NOFOLLOW", 0)
+        descriptor = os.open(path, flags)
+        handle = os.fdopen(descriptor, "rb", closefd=True)
+        handle_before = os.fstat(handle.fileno())
+        if (
+            not _regular_unaliased(handle_before)
+            or _path_object_identity(pathname_before) != _path_object_identity(handle_before)
+        ):
+            _fail(reason)
+        while True:
+            chunk = handle.read(1024 * 1024)
+            if not chunk:
+                break
+            digest.update(chunk)
+            total += len(chunk)
+        handle_after = os.fstat(handle.fileno())
+        _validate_components(path, stop=stop)
+        pathname_after = os.stat(path, follow_symlinks=False)
+        canonical_after = path.resolve(strict=True)
+        if stop is not None:
+            stop_canonical_after = stop.resolve(strict=True)
+            canonical_after.relative_to(stop_canonical_after)
+            if (
+                stop_canonical_after != stop_canonical_before
+                or _path_object_identity(os.stat(stop, follow_symlinks=False)) != stop_identity_before
+            ):
+                _fail(reason)
+        if (
+            canonical_after != canonical_before
+            or not _regular_unaliased(pathname_after)
+            or _path_object_identity(handle_after) != _path_object_identity(pathname_after)
+            or _path_stable_identity(handle_before) != _path_stable_identity(handle_after)
+            or total != handle_after.st_size
+        ):
+            _fail(reason)
+    except _LaunchError:
+        raise
+    except (OSError, RuntimeError, ValueError):
+        _fail(reason)
+    finally:
+        if handle is not None:
+            try:
+                handle.close()
+            except OSError:
+                _fail(reason)
     return digest.hexdigest(), total
+
+
+def _read_file_bytes(path: Path, *, reason: str, stop: Path | None = None) -> bytes:
+    chunks: list[bytes] = []
+    handle: Any = None
+    try:
+        _validate_components(path, stop=stop)
+        canonical_before = path.resolve(strict=True)
+        stop_canonical_before: Path | None = None
+        stop_identity_before: tuple[int, int, int] | None = None
+        if stop is not None:
+            stop_canonical_before = stop.resolve(strict=True)
+            canonical_before.relative_to(stop_canonical_before)
+            stop_identity_before = _path_object_identity(os.stat(stop, follow_symlinks=False))
+        pathname_before = os.stat(path, follow_symlinks=False)
+        if not _regular_unaliased(pathname_before):
+            _fail(reason)
+        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOINHERIT", 0) | getattr(os, "O_NOFOLLOW", 0)
+        descriptor = os.open(path, flags)
+        handle = os.fdopen(descriptor, "rb", closefd=True)
+        handle_before = os.fstat(handle.fileno())
+        if _path_object_identity(pathname_before) != _path_object_identity(handle_before):
+            _fail(reason)
+        while True:
+            chunk = handle.read(1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        handle_after = os.fstat(handle.fileno())
+        _validate_components(path, stop=stop)
+        pathname_after = os.stat(path, follow_symlinks=False)
+        canonical_after = path.resolve(strict=True)
+        if stop is not None:
+            stop_canonical_after = stop.resolve(strict=True)
+            canonical_after.relative_to(stop_canonical_after)
+            if (
+                stop_canonical_after != stop_canonical_before
+                or _path_object_identity(os.stat(stop, follow_symlinks=False)) != stop_identity_before
+            ):
+                _fail(reason)
+        if (
+            canonical_after != canonical_before
+            or not _regular_unaliased(pathname_after)
+            or not _regular_unaliased(handle_after)
+            or _path_object_identity(handle_after) != _path_object_identity(pathname_after)
+            or _path_stable_identity(handle_before) != _path_stable_identity(handle_after)
+            or sum(map(len, chunks)) != handle_after.st_size
+        ):
+            _fail(reason)
+        return b"".join(chunks)
+    except _LaunchError:
+        raise
+    except (OSError, RuntimeError, ValueError):
+        _fail(reason)
+    finally:
+        if handle is not None:
+            try:
+                handle.close()
+            except OSError:
+                _fail(reason)
 
 
 def _utc_now() -> str:
@@ -357,9 +507,11 @@ def _finish(receipt: dict[str, Any], start_ns: int) -> Mapping[str, Any]:
     return _freeze(receipt)
 
 
-def _strict_json_file(path: Path, reason: str) -> Mapping[str, Any]:
+def _strict_json_file(
+    path: Path, reason: str, *, stop: Path | None = None
+) -> Mapping[str, Any]:
     try:
-        raw = path.read_bytes()
+        raw = _read_file_bytes(path, reason=reason, stop=stop)
         text = raw.decode("utf-8")
         seen_error: list[str] = []
 
@@ -388,8 +540,8 @@ def _strict_json_file(path: Path, reason: str) -> Mapping[str, Any]:
 def _inventory(package_root: Path, located: Mapping[str, Any]) -> tuple[dict[str, Mapping[str, Any]], dict[str, Mapping[str, Any]]]:
     manifest_path = _bound_file(package_root, located["manifest"]["relative_path"], "REGISTRATION_DRIFT")
     lock_path = _bound_file(package_root, located["lock"]["relative_path"], "REGISTRATION_DRIFT")
-    manifest = _strict_json_file(manifest_path, "REGISTRATION_DRIFT")
-    lock = _strict_json_file(lock_path, "REGISTRATION_DRIFT")
+    manifest = _strict_json_file(manifest_path, "REGISTRATION_DRIFT", stop=package_root)
+    lock = _strict_json_file(lock_path, "REGISTRATION_DRIFT", stop=package_root)
     manifest_entries = manifest.get("files")
     lock_entries = lock.get("files")
     if not isinstance(manifest_entries, list) or not isinstance(lock_entries, list):
@@ -521,10 +673,9 @@ def _validate_definition(
     ):
         _fail("TOOL_DEFINITION_UNBOUND")
     definition_path = _bound_file(package_root, definition_relative, "TOOL_PATH_VIOLATION")
-    try:
-        definition_bytes = definition_path.read_bytes()
-    except OSError:
-        _fail("TOOL_DEFINITION_UNBOUND")
+    definition_bytes = _read_file_bytes(
+        definition_path, reason="TOOL_DEFINITION_UNBOUND", stop=package_root
+    )
     if definition_bytes != _canonical_json(_thaw(definition), newline=True):
         _fail("TOOL_DEFINITION_UNBOUND")
     if hashlib.sha256(definition_bytes).hexdigest() != definition_entry.get("sha256") or len(definition_bytes) != definition_entry.get("size"):
@@ -543,7 +694,7 @@ def _validate_definition(
     ):
         _fail("TOOL_IDENTITY_MISMATCH")
     tool_path = _bound_file(package_root, relative_path, "TOOL_PATH_VIOLATION")
-    if _hash_file(tool_path) != (tool_sha256, size):
+    if _hash_file(tool_path, reason="TOOL_IDENTITY_MISMATCH", stop=package_root) != (tool_sha256, size):
         _fail("TOOL_IDENTITY_MISMATCH")
 
     interpreter: dict[str, Any]
@@ -554,7 +705,11 @@ def _validate_definition(
             _validate_components(interpreter_path, stop=package_root)
         except _LaunchError:
             _fail("INTERPRETER_IDENTITY_MISMATCH")
-        if _hash_file(interpreter_path) != (package_python["sha256"], package_python["size"]):
+        if _hash_file(
+            interpreter_path,
+            reason="INTERPRETER_IDENTITY_MISMATCH",
+            stop=package_root,
+        ) != (package_python["sha256"], package_python["size"]):
             _fail("INTERPRETER_IDENTITY_MISMATCH")
         interpreter = {
             "binding": binding,
@@ -609,9 +764,28 @@ def _validate_capability_definition(value: Any, expected_capability: str, expect
     for raw_source in raw_sources:
         source = _mapping(raw_source, _SOURCE_FIELDS, "LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
         filename = _safe_relative(source["filename"], "LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-        if "/" in filename or filename in sources or not isinstance(source["url"], str):
+        if "/" in filename or filename in sources:
             _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-        sources[filename] = source["url"]
+        source_url = source["url"]
+        if not isinstance(source_url, str):
+            _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
+        parsed = urlsplit(source_url)
+        try:
+            port = parsed.port
+        except ValueError:
+            _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
+        if (
+            parsed.scheme != "https"
+            or parsed.hostname != "registry.npmmirror.com"
+            or port not in {None, 443}
+            or parsed.username is not None
+            or parsed.password is not None
+            or not parsed.path.startswith("/")
+            or parsed.query
+            or parsed.fragment
+        ):
+            _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
+        sources[filename] = source_url
     raw_assets = _sequence(value.get("assets"), "LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
     assets: list[dict[str, Any]] = []
     targets: set[str] = set()
@@ -659,11 +833,15 @@ def _validate_capability_definition(value: Any, expected_capability: str, expect
     return {"mapping": _thaw(value), "capability": capability, "definition_sha256": definition_digest, "version": version, "entrypoint": entrypoint, "assets": assets, "explicit": explicit, "command": command}
 
 
-def _asset_file(path: Path, asset: Mapping[str, Any]) -> bool:
+def _asset_file(path: Path, asset: Mapping[str, Any], *, stop: Path | None = None) -> bool:
     try:
         if not path.is_file() or _is_reparse(path):
             return False
-        return _hash_file(path) == (asset["sha256"], asset["size"])
+        return _hash_file(
+            path, reason="LOCAL_CAPABILITY_EVIDENCE_MISMATCH", stop=stop
+        ) == (
+            asset["sha256"], asset["size"]
+        )
     except (_LaunchError, OSError, RuntimeError):
         return False
 
@@ -755,9 +933,9 @@ def _validate_source_assets(
     try:
         if source == "managed":
             expected_root = data_root / "Runtime" / "Composition" / definition["capability"] / definition["definition_sha256"]
+            _validate_components(runtime_root, stop=data_root)
             if runtime_root.resolve(strict=True) != expected_root.resolve(strict=True):
                 _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-            _validate_components(runtime_root, stop=data_root)
             if not runtime_root.is_dir():
                 _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
             expected_files = {asset["managed_target"] for asset in definition["assets"]}
@@ -786,37 +964,51 @@ def _validate_source_assets(
             for asset in definition["assets"]:
                 asset_path = runtime_root.joinpath(*PurePosixPath(asset["managed_target"]).parts)
                 _validate_components(asset_path, stop=runtime_root)
-                if not _asset_file(asset_path, asset):
+                if not _asset_file(asset_path, asset, stop=runtime_root):
                     _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-            expected_entrypoint = runtime_root.joinpath(*PurePosixPath(definition["entrypoint"]).parts).resolve(strict=True)
+            entrypoint_candidate = runtime_root.joinpath(*PurePosixPath(definition["entrypoint"]).parts)
+            _validate_components(entrypoint_candidate, stop=runtime_root)
+            expected_entrypoint = entrypoint_candidate.resolve(strict=True)
         elif source == "explicit":
+            _validate_components(runtime_root)
             resolved_root = runtime_root.resolve(strict=True)
-            if str(resolved_root) not in {str(Path(item).resolve(strict=True)) for item in definition["explicit"]}:
+            approved_roots: set[str] = set()
+            for item in definition["explicit"]:
+                configured = Path(item)
+                _validate_components(configured)
+                approved_roots.add(str(configured.resolve(strict=True)))
+            if str(resolved_root) not in approved_roots:
                 _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-            _validate_components(resolved_root)
-            if not resolved_root.is_dir():
+            if not runtime_root.is_dir():
                 _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
             for asset in definition["assets"]:
-                asset_path = resolved_root.joinpath(*PurePosixPath(asset["managed_target"]).parts)
-                _validate_components(asset_path, stop=resolved_root)
-                if not _asset_file(asset_path, asset):
+                asset_path = runtime_root.joinpath(*PurePosixPath(asset["managed_target"]).parts)
+                _validate_components(asset_path, stop=runtime_root)
+                if not _asset_file(asset_path, asset, stop=runtime_root):
                     _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-            expected_entrypoint = resolved_root.joinpath(*PurePosixPath(definition["entrypoint"]).parts).resolve(strict=True)
+            entrypoint_candidate = runtime_root.joinpath(*PurePosixPath(definition["entrypoint"]).parts)
+            _validate_components(entrypoint_candidate, stop=runtime_root)
+            expected_entrypoint = entrypoint_candidate.resolve(strict=True)
         else:
-            if not definition["command"] or runtime_root.resolve(strict=True) != Path(entrypoint_text).resolve(strict=True):
+            entrypoint_candidate = Path(entrypoint_text)
+            _validate_components(runtime_root)
+            _validate_components(entrypoint_candidate)
+            if not definition["command"] or runtime_root.resolve(strict=True) != entrypoint_candidate.resolve(strict=True):
                 _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-            command = runtime_root.resolve(strict=True)
-            _validate_components(command)
+            command = runtime_root
             if not command.is_file():
                 _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
             matches = [asset for asset in definition["assets"] if asset["managed_target"] == definition["entrypoint"]]
             if len(matches) != 1 or not _asset_file(command, matches[0]):
                 _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-            expected_entrypoint = command
+            expected_entrypoint = command.resolve(strict=True)
+        _validate_components(Path(entrypoint_text))
         if expected_entrypoint != Path(entrypoint_text).resolve(strict=True):
             _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
         entrypoint_asset = next(asset for asset in definition["assets"] if asset["managed_target"] == definition["entrypoint"])
-        if not _asset_file(expected_entrypoint, entrypoint_asset):
+        identity_root = runtime_root if source in {"managed", "explicit"} else None
+        identity_path = entrypoint_candidate if source in {"managed", "explicit"} else runtime_root
+        if not _asset_file(identity_path, entrypoint_asset, stop=identity_root):
             _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
         return entrypoint_asset["sha256"], entrypoint_asset["size"]
     except _LaunchError as exc:
@@ -928,9 +1120,68 @@ def _validate_controls(value: Any, definition: Mapping[str, Any], data_root: Pat
         "timeout_seconds": timeout,
         "termination_grace_seconds": grace,
         "result_root": result_root,
+        "result_root_input": Path(controls["result_root"]),
         "provider_environment": validated_provider,
         "provider_environment_names": tuple(sorted(validated_provider)),
     }
+
+
+def _provider_secrets(
+    definition: Mapping[str, Any], controls: Mapping[str, Any]
+) -> tuple[tuple[str, ...], tuple[bytes, ...]]:
+    secret_names = {name.casefold() for name in definition["secret_environment_names"]}
+    secret_text = tuple(
+        value
+        for name, value in controls["provider_environment"].items()
+        if name.casefold() in secret_names and value
+    )
+    return secret_text, tuple(value.encode("utf-8") for value in secret_text)
+
+
+def _contains_secret(secrets: Sequence[bytes], *materials: bytes) -> bool:
+    return any(secret in material for secret in secrets for material in materials)
+
+
+def _redact_receipt_value(value: Any, secrets: Sequence[str]) -> Any:
+    if isinstance(value, str):
+        return None if any(secret and secret in value for secret in secrets) else value
+    if isinstance(value, dict):
+        for key in tuple(value):
+            value[key] = _redact_receipt_value(value[key], secrets)
+        return value
+    if isinstance(value, tuple):
+        return tuple(_redact_receipt_value(item, secrets) for item in value)
+    if isinstance(value, list):
+        return [_redact_receipt_value(item, secrets) for item in value]
+    return value
+
+
+def _value_contains_secret_text(value: Any, secrets: Sequence[str]) -> bool:
+    if isinstance(value, str):
+        return any(secret and secret in value for secret in secrets)
+    if isinstance(value, Mapping):
+        return any(
+            _value_contains_secret_text(key, secrets)
+            or _value_contains_secret_text(item, secrets)
+            for key, item in value.items()
+        )
+    if isinstance(value, (list, tuple)):
+        return any(_value_contains_secret_text(item, secrets) for item in value)
+    return False
+
+
+def _reject_secret_collision(
+    receipt: dict[str, Any],
+    secret_text: Sequence[str],
+    secret_bytes: Sequence[bytes],
+    *materials: bytes,
+) -> None:
+    receipt_bytes = _canonical_json(_thaw(receipt), newline=False)
+    if _value_contains_secret_text(receipt, secret_text) or _contains_secret(
+        secret_bytes, receipt_bytes, *materials
+    ):
+        _redact_receipt_value(receipt, secret_text)
+        _fail("ENVIRONMENT_NOT_ALLOWED")
 
 
 def _located_snapshot(located: Mapping[str, Any]) -> bytes:
@@ -984,26 +1235,47 @@ def _preflight(
     }
     receipt["interpreter"] = dict(definition["interpreter"])
     controls = _validate_controls(executor_controls, definition, data_path)
-    if any(
-        secret and any(secret in token for token in definition["argv"])
-        for secret in controls["provider_environment"].values()
-    ):
+    secret_text, secret_bytes = _provider_secrets(definition, controls)
+    if _value_contains_secret_text(definition["argv"], secret_text):
+        _redact_receipt_value(receipt, secret_text)
         _fail("ENVIRONMENT_NOT_ALLOWED")
+    _reject_secret_collision(
+        receipt,
+        secret_text,
+        secret_bytes,
+        message_bytes,
+        controls["session_id"].encode("utf-8"),
+        controls["request_id"].encode("utf-8"),
+        str(controls["result_root"]).encode("utf-8"),
+        _canonical_json({"argv": definition["argv"]}, newline=False),
+        _located_snapshot(located),
+    )
     receipt["session"] = {"session_id": controls["session_id"]}
     receipt["request"] = {"request_id": controls["request_id"]}
     receipt["provider_environment_names"] = controls["provider_environment_names"]
     local_identities = _validate_local_evidence(local_capability_evidence, definition["requirements"], data_path)
     receipt["local_capability_evidence_identities"] = local_identities
+    _reject_secret_collision(
+        receipt,
+        secret_text,
+        secret_bytes,
+        _canonical_json({"local_capability_evidence_identities": local_identities}, newline=False),
+    )
     return {
-        "data_root": data_path, "message": message, "message_bytes": message_bytes,
+        "data_root": data_path, "data_root_input": Path(data_root),
+        "message": message, "message_bytes": message_bytes,
         "located": located, "located_snapshot": _located_snapshot(located),
         "package_root": package_root, "definition": definition, "controls": controls,
         "local_identities": local_identities, "local_evidence_input": _thaw(local_capability_evidence),
+        "secret_text": secret_text, "secret_bytes": secret_bytes,
     }
 
 
 def _second_preflight(first: Mapping[str, Any]) -> None:
     try:
+        second_data_root = _safe_existing_absolute_directory(first["data_root_input"])
+        if second_data_root != first["data_root"]:
+            _fail("REGISTRATION_DRIFT")
         second = locate_active_package(first["data_root"])
     except Exception:
         _fail("REGISTRATION_DRIFT")
@@ -1011,15 +1283,22 @@ def _second_preflight(first: Mapping[str, Any]) -> None:
         _fail("REGISTRATION_DRIFT")
     definition = first["definition"]
     try:
-        if definition["definition_path"].read_bytes() != _canonical_json(definition["mapping"], newline=True):
+        definition_bytes = _read_file_bytes(
+            definition["definition_path"], reason="REGISTRATION_DRIFT", stop=first["package_root"]
+        )
+        if definition_bytes != _canonical_json(definition["mapping"], newline=True):
             _fail("REGISTRATION_DRIFT")
-        if _hash_file(definition["tool_path"]) != (definition["tool_sha256"], definition["tool_size"]):
+        if _hash_file(
+            definition["tool_path"], reason="REGISTRATION_DRIFT", stop=first["package_root"]
+        ) != (definition["tool_sha256"], definition["tool_size"]):
             _fail("REGISTRATION_DRIFT")
         interpreter = definition["interpreter"]
-        if _hash_file(Path(interpreter["path"])) != (interpreter["sha256"], interpreter["size"]):
+        if _hash_file(
+            Path(interpreter["path"]), reason="REGISTRATION_DRIFT", stop=first["package_root"]
+        ) != (interpreter["sha256"], interpreter["size"]):
             _fail("REGISTRATION_DRIFT")
         result_root = _safe_existing_absolute_directory(
-            str(first["controls"]["result_root"]), within=first["data_root"]
+            first["controls"]["result_root_input"], within=first["data_root"]
         )
         if result_root != first["controls"]["result_root"]:
             _fail("REGISTRATION_DRIFT")
@@ -1029,7 +1308,7 @@ def _second_preflight(first: Mapping[str, Any]) -> None:
         if local_identities != first["local_identities"]:
             _fail("REGISTRATION_DRIFT")
     except _LaunchError:
-        raise
+        _fail("REGISTRATION_DRIFT")
     except (OSError, RuntimeError):
         _fail("REGISTRATION_DRIFT")
 
@@ -1141,23 +1420,28 @@ class _WindowsJob:
             raise OSError(error, "SetInformationJobObject")
         self.handle = int(handle)
 
-    def assign(self, pid: int) -> None:
+    def assign(self, process: subprocess.Popen[bytes]) -> None:
         if os.name != "nt":
             return
         kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-        kernel32.OpenProcess.restype = ctypes.c_void_p
-        kernel32.OpenProcess.argtypes = (ctypes.c_uint32, ctypes.c_int, ctypes.c_uint32)
         kernel32.AssignProcessToJobObject.restype = ctypes.c_int
         kernel32.AssignProcessToJobObject.argtypes = (ctypes.c_void_p, ctypes.c_void_p)
-        kernel32.CloseHandle.argtypes = (ctypes.c_void_p,)
-        process = kernel32.OpenProcess(0x0001 | 0x0100 | 0x0400, False, pid)
-        if not process:
-            raise OSError(ctypes.get_last_error(), "OpenProcess")
-        try:
-            if not kernel32.AssignProcessToJobObject(self.handle, process):
-                raise OSError(ctypes.get_last_error(), "AssignProcessToJobObject")
-        finally:
-            kernel32.CloseHandle(process)
+        process_handle = ctypes.c_void_p(int(getattr(process, "_handle")))
+        if not kernel32.AssignProcessToJobObject(self.handle, process_handle):
+            raise OSError(ctypes.get_last_error(), "AssignProcessToJobObject")
+
+    def resume(self, process: subprocess.Popen[bytes]) -> None:
+        if os.name != "nt":
+            return
+        # subprocess closes the primary-thread handle after CreateProcess.  The
+        # process handle remains owned by Popen, so NtResumeProcess is the only
+        # bounded resume operation here and requires no system thread scan.
+        ntdll = ctypes.WinDLL("ntdll", use_last_error=True)
+        ntdll.NtResumeProcess.restype = ctypes.c_long
+        ntdll.NtResumeProcess.argtypes = (ctypes.c_void_p,)
+        status = int(ntdll.NtResumeProcess(ctypes.c_void_p(int(getattr(process, "_handle")))))
+        if status != 0:
+            raise OSError(status, "NtResumeProcess")
 
     def active_count(self) -> int:
         if os.name != "nt" or self.handle is None:
@@ -1216,6 +1500,38 @@ def _terminate_group(process: subprocess.Popen[bytes], job: _WindowsJob, *, forc
         os.killpg(process.pid, signal.SIGKILL if force else signal.SIGTERM)
     except ProcessLookupError:
         return
+
+
+def _terminate_setup_failure(
+    process: subprocess.Popen[bytes],
+    job: _WindowsJob,
+    *,
+    assigned: bool,
+    seconds: int,
+) -> tuple[bool, int | None]:
+    if assigned:
+        try:
+            job.terminate()
+        except Exception:
+            pass
+    # Assign may have failed, so the Job can be empty.  Always terminate the
+    # actual Popen handle as well; never claim cleanup from an unbound Job.
+    if process.poll() is None:
+        try:
+            process.kill()
+        except OSError:
+            pass
+    try:
+        process.wait(timeout=seconds)
+    except subprocess.TimeoutExpired:
+        pass
+    residual = process.poll() is None
+    if assigned:
+        try:
+            residual = residual or job.active_count() > 0
+        except OSError:
+            residual = True
+    return not residual, process.poll()
 
 
 def _wait_group_gone(pid: int, job: _WindowsJob, seconds: int) -> bool:
@@ -1327,23 +1643,21 @@ def _validate_result_pointer(value: Any, result_root: Path) -> dict[str, Any]:
         path = result_root.joinpath(*PurePosixPath(relative).parts)
         _validate_components(path, stop=result_root)
         resolved = path.resolve(strict=True)
-        resolved.relative_to(result_root)
-        if not resolved.is_file():
+        resolved.relative_to(result_root.resolve(strict=True))
+        pathname = os.stat(path, follow_symlinks=False)
+        if not _regular_unaliased(pathname):
             _fail("RESULT_POINTER_INVALID", "RESULT")
-        digest = hashlib.sha256()
-        total = 0
-        with resolved.open("rb") as handle:
-            before = os.fstat(handle.fileno())
-            while True:
-                chunk = handle.read(1024 * 1024)
-                if not chunk:
-                    break
-                digest.update(chunk)
-                total += len(chunk)
-            after = os.fstat(handle.fileno())
-        before_identity = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
-        after_identity = (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)
-        if before_identity != after_identity or total != expected_size or digest.hexdigest() != expected_digest:
+        digest, total = _hash_file(
+            path, reason="RESULT_POINTER_INVALID", stop=result_root
+        )
+        # Revalidate the lexical path once more after the same-handle hash
+        # checks.  The receipt path is emitted only for the still-current name.
+        _validate_components(path, stop=result_root)
+        if (
+            path.resolve(strict=True) != resolved
+            or total != expected_size
+            or digest != expected_digest
+        ):
             _fail("RESULT_POINTER_INVALID", "RESULT")
         return {"path": str(resolved), "sha256": expected_digest, "size": expected_size, "valid": True}
     except _LaunchError:
@@ -1366,6 +1680,7 @@ def launch_session_tool(
     receipt = _empty_receipt(start_ns)
     process: subprocess.Popen[bytes] | None = None
     job: _WindowsJob | None = None
+    job_assigned = False
     first: dict[str, Any] | None = None
     try:
         if cancel_event is not None and not isinstance(cancel_event, threading.Event):
@@ -1406,13 +1721,15 @@ def launch_session_tool(
         )
         _second_preflight(first)
         request_bytes = _request_payload(first)
-        provider_values = tuple(
-            value.encode("utf-8")
-            for value in first["controls"]["provider_environment"].values()
-            if value
+        _reject_secret_collision(
+            receipt,
+            first["secret_text"],
+            first["secret_bytes"],
+            request_bytes,
+            _canonical_json({"argv": first["definition"]["argv"]}, newline=False),
         )
-        stdout_capture = _StreamCapture(provider_values, parse_output=True)
-        stderr_capture = _StreamCapture(provider_values, parse_output=False)
+        stdout_capture = _StreamCapture(first["secret_bytes"], parse_output=True)
+        stderr_capture = _StreamCapture(first["secret_bytes"], parse_output=False)
         stdin_state = {"error": False}
 
         popen_kwargs: dict[str, Any] = {
@@ -1426,7 +1743,10 @@ def launch_session_tool(
             "bufsize": 0,
         }
         if os.name == "nt":
-            popen_kwargs["creationflags"] = getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200)
+            popen_kwargs["creationflags"] = (
+                getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200)
+                | getattr(subprocess, "CREATE_SUSPENDED", 0x00000004)
+            )
         else:
             popen_kwargs["start_new_session"] = True
         try:
@@ -1443,17 +1763,29 @@ def launch_session_tool(
         receipt["pid"] = process.pid
         receipt["started_at_utc"] = _utc_now()
         try:
-            job.assign(process.pid)
-        except OSError:
+            job.assign(process)
+            job_assigned = os.name == "nt"
+            job.resume(process)
+        except Exception:
             receipt["residual_process"]["termination_attempted"] = True
-            try:
-                _terminate_group(process, job, force=True)
-                process.wait(timeout=first["controls"]["termination_grace_seconds"])
-                receipt["residual_process"]["termination_succeeded"] = True
-            except Exception:
-                receipt["residual_process"]["termination_succeeded"] = False
-            receipt["exit_code"] = process.poll()
-            _set_failure(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", "RESIDUAL")
+            succeeded, exit_code = _terminate_setup_failure(
+                process,
+                job,
+                assigned=job_assigned,
+                seconds=first["controls"]["termination_grace_seconds"],
+            )
+            receipt["residual_process"]["termination_succeeded"] = succeeded
+            receipt["residual_process"]["detected"] = not succeeded
+            receipt["exit_code"] = exit_code
+            if succeeded:
+                _set_failure(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", "RESIDUAL")
+            else:
+                _set_failure(
+                    receipt,
+                    "RESIDUAL_PROCESS",
+                    "RESIDUAL_PROCESS_DETECTED",
+                    "RESIDUAL",
+                )
             return _finish(receipt, start_ns)
 
         assert process.stdin is not None and process.stdout is not None and process.stderr is not None
@@ -1577,13 +1909,18 @@ def launch_session_tool(
     finally:
         if process is not None and process.poll() is None:
             try:
-                if job is not None:
+                if os.name == "nt" and not job_assigned:
+                    process.kill()
+                elif job is not None:
                     _terminate_group(process, job, force=True)
                 process.wait(timeout=1)
             except Exception:
                 pass
         if job is not None:
-            job.close()
+            try:
+                job.close()
+            except Exception:
+                pass
 
 
 __all__ = ["launch_session_tool"]

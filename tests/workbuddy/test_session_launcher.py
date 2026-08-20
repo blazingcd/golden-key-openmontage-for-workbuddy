@@ -4,8 +4,10 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
 import sys
 import threading
+import time
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
@@ -38,26 +40,6 @@ FAILED_CODE = r'''import json,sys
 r=json.load(sys.stdin)
 o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"FIXTURE","origin":"FIXTURE","message":"fixture failure"}}
 sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n").encode())'''
-
-
-MATRIX = {
-    1: "no active registration", 2: "registration damage or drift", 3: "required toolchain drift",
-    4: "definition closed shape and self hash", 5: "manifest and lock coverage", 6: "tool identity",
-    7: "unsafe relative path", 8: "reparse component", 9: "argv injection", 10: "literal message bytes",
-    11: "controls separate from message", 12: "required local evidence", 13: "local identity mismatch",
-    14: "base path has no named runtime requirement", 15: "nonzero exit", 16: "timeout",
-    17: "result envelope and pointer", 18: "secret disclosure", 19: "residual process",
-    20: "single spawn no retry", 21: "no control plane", 22: "opaque provider and capability",
-    23: "environment allowlist", 24: "secret absent from request and receipt", 25: "provider absence is not local evidence",
-    26: "only declared local requirements", 27: "second preflight drift", 28: "cancel lifecycle",
-    29: "stream size hash truncation", 30: "recursive freeze", 31: "invalid input full receipt",
-    32: "entry cancel before locator", 33: "OS spawn failure", 34: "outcome priority",
-    35: "child reported failure", 36: "definition excludes registration hashes", 37: "real Stage2 roundtrip",
-    38: "reject summary-only evidence", 39: "source asset revalidation", 40: "version evidence not trusted",
-    41: "managed explicit PATH success", 42: "managed closed tree", 43: "explicit foreign files retained",
-    44: "PATH command identity", 45: "integrated is managed only", 46: "integrated plan identity",
-    47: "unknown source",
-}
 
 
 def _canonical(value: dict[str, Any], *, newline: bool = True) -> bytes:
@@ -105,6 +87,9 @@ def _fixture(
     secrets: tuple[str, ...] = (),
     requirements: tuple[dict[str, Any], ...] = (),
     declared_tool_sha256: str | None = None,
+    declared_tool_size: int | None = None,
+    tool_locked: bool = True,
+    definition_owner: str = "managed_core",
 ) -> dict[str, Any]:
     candidate = _make_candidate(tmp_path / "candidate", python_payload=Path(sys.executable).read_bytes())
     pyvenv = candidate.package_python.parent / "pyvenv.cfg"
@@ -131,7 +116,7 @@ def _fixture(
         placeholders = []
         binding = "SELF"
     relative_tool = tool.relative_to(candidate.package_root).as_posix()
-    _add_package_file(candidate, tool, relative_tool, "managed_core", locked=True)
+    _add_package_file(candidate, tool, relative_tool, "managed_core", locked=tool_locked)
     definition_path = candidate.package_root / "definitions" / "session-tool.json"
     definition_path.parent.mkdir(parents=True)
     definition = {
@@ -140,7 +125,8 @@ def _fixture(
         "definition_relative_path": definition_path.relative_to(candidate.package_root).as_posix(),
         "authority_owner": "managed_core", "package_release": RELEASE, "package_commit": COMMIT,
         "tool_id": "fixture-tool", "relative_path": relative_tool, "sha256": declared_tool_sha256 or _sha256(tool),
-        "size": tool.stat().st_size, "owner": "managed_core", "execution_kind": execution_kind,
+        "size": declared_tool_size if declared_tool_size is not None else tool.stat().st_size,
+        "owner": definition_owner, "execution_kind": execution_kind,
         "interpreter_binding": binding, "fixed_argv_template": template,
         "fixed_argv_placeholders": placeholders, "request_schema_sha256": REQUEST_HASH,
         "result_schema_sha256": RESULT_HASH, "allowed_environment_names": list(allowed),
@@ -168,13 +154,58 @@ def _launch(fixture: dict[str, Any], *, message: str = "原样业务请求", evi
     )
 
 
-def _assert(receipt: Any, case_ids: tuple[int, ...], outcome: str, reason: str, spawn: int, residual: bool = False) -> None:
-    assert set(case_ids) <= set(MATRIX)
+def _assert(receipt: Any, outcome: str, reason: str, spawn: int, residual: bool = False) -> None:
     assert receipt["outcome"] == outcome, dict(receipt)
     assert receipt["reason_code"] == reason, dict(receipt)
     assert receipt["spawn_count"] == spawn
     assert receipt["residual_process"]["detected"] is residual
     assert receipt["retry_count"] == 0
+
+
+def _rehash_stage3_evidence(evidence: dict[str, Any]) -> dict[str, Any]:
+    definition = evidence["approved_capability_definition"]
+    body = {key: value for key, value in definition.items() if key != "definition_sha256"}
+    digest = hashlib.sha256(_canonical(body, newline=False)).hexdigest()
+    definition["definition_sha256"] = digest
+    evidence["approved_capability_definition_sha256"] = digest
+    fact = evidence["original_stage3_fact"]
+    if fact["status"] == "PRESENT":
+        fact["evidence"]["definition_sha256"] = digest
+    else:
+        fact["definition_sha256"] = digest
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(fact, newline=False)
+    ).hexdigest()
+    return {
+        "evidence_schema_version": "golden-key-workbuddy-local-capability-evidence-v1",
+        "capability_id": definition["capability"],
+        "definition_sha256": digest,
+        "compatibility_basis": "EXACT_ASSET_IDENTITY",
+    }
+
+
+def _make_directory_reparse(link: Path, target: Path) -> None:
+    if os.name == "nt":
+        completed = subprocess.run(
+            [
+                os.environ.get("COMSPEC", "cmd.exe"),
+                "/d", "/c", "mklink", "/J", str(link), str(target),
+            ],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        assert completed.returncode == 0, (completed.stdout, completed.stderr)
+    else:
+        link.symlink_to(target, target_is_directory=True)
+
+
+def _remove_directory_reparse(link: Path) -> None:
+    if os.name == "nt":
+        os.rmdir(link)
+    else:
+        link.unlink()
 
 
 def _capability_definition(capability: str, asset_root: Path, source: str) -> tuple[dict[str, Any], bytes]:
@@ -231,6 +262,8 @@ def _local_evidence(
         runtime_root = root
         if add_extra:
             (root / "foreign.txt").write_text("preserve", encoding="utf-8")
+            (root / "foreign-directory").mkdir()
+            (root / "foreign-directory" / "keep.txt").write_text("keep", encoding="utf-8")
     evidence_fields = {
         "status": "PRESENT" if status == "PRESENT" else "INTEGRATED",
         "capability": capability,
@@ -271,97 +304,271 @@ def _local_evidence(
     return requirement, evidence, root
 
 
-def test_37_real_stage2_roundtrip_and_direct_success_covers_base_boundaries(tmp_path: Path) -> None:
+def test_37_real_stage2_roundtrip_and_priority_level_11_success(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path)
     receipt = _launch(fixture)
-    _assert(receipt, (10, 11, 14, 20, 21, 22, 25, 26, 36, 37), "EXITED_SUCCESS", "NONE", 1)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
     assert receipt["result_pointer"]["valid"] is True
     assert receipt["user_message"]["sha256"] == hashlib.sha256("原样业务请求".encode()).hexdigest()
     assert receipt["provider_environment_names"] == ()
 
 
-def test_python_script_execution_kind_succeeds(tmp_path: Path) -> None:
+def test_10_literal_user_message_bytes_reach_child_unchanged(tmp_path: Path) -> None:
+    message = "  原样\r\n业务请求：A/B + ①  "
+    expected = message.encode("utf-8")
+    code = f'''import hashlib,json,pathlib,sys
+r=json.load(sys.stdin)
+assert r["user_message"].encode("utf-8") == {expected!r}
+p=pathlib.Path(r["executor_controls"]["result_root"])/"result.bin"; p.write_bytes(b"ok")
+o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"SUCCEEDED","result_pointer":{{"relative_path":"result.bin","sha256":hashlib.sha256(b"ok").hexdigest(),"size":2}},"error":None}}
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\\n").encode())'''
+    receipt = _launch(_fixture(tmp_path, code=code), message=message)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert receipt["user_message"]["sha256"] == hashlib.sha256(expected).hexdigest()
+
+
+def test_11_executor_controls_remain_separate_from_literal_message(tmp_path: Path) -> None:
+    message = "只处理这条业务原话"
+    code = r'''import hashlib,json,pathlib,sys
+r=json.load(sys.stdin)
+assert r["user_message"] == "只处理这条业务原话"
+assert "timeout_seconds" not in r["user_message"] and r["executor_controls"]["timeout_seconds"] == 10
+p=pathlib.Path(r["executor_controls"]["result_root"])/"result.bin"; p.write_bytes(b"ok")
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"SUCCEEDED","result_pointer":{"relative_path":"result.bin","sha256":hashlib.sha256(b"ok").hexdigest(),"size":2},"error":None}
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n").encode())'''
+    receipt = _launch(_fixture(tmp_path, code=code), message=message)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+
+
+def test_14_base_tool_requires_no_named_optional_capability(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path, requirements=())
+    assert fixture["definition"]["required_local_capabilities"] == []
+    receipt = _launch(fixture)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert receipt["local_capability_evidence_identities"] == ()
+
+
+def test_20_real_popen_occurs_exactly_once_and_retry_is_zero(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fixture = _fixture(tmp_path)
+    real_popen = launcher_module.subprocess.Popen
+    calls = 0
+
+    def counted_popen(*args: Any, **kwargs: Any):
+        nonlocal calls
+        calls += 1
+        return real_popen(*args, **kwargs)
+
+    monkeypatch.setattr(launcher_module.subprocess, "Popen", counted_popen)
+    receipt = _launch(fixture)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert calls == 1
+
+
+def test_21_launcher_exposes_no_second_agent_or_control_plane(tmp_path: Path) -> None:
+    receipt = _launch(_fixture(tmp_path))
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert launcher_module.__all__ == ["launch_session_tool"]
+    assert not any(
+        hasattr(launcher_module, name)
+        for name in ("Agent", "Director", "Scheduler", "Pipeline", "Checkpoint", "ArtifactStore")
+    )
+
+
+def test_25_absent_provider_is_not_local_capability_failure(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path, allowed=("FUTURE_PROVIDER_KEY",), requirements=())
+    receipt = _launch(fixture)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert receipt["provider_environment_names"] == ()
+
+
+def test_26_undeclared_local_evidence_is_rejected_without_spawn(tmp_path: Path) -> None:
+    seed = _fixture(tmp_path / "seed")
+    _requirement, evidence, _root = _local_evidence(seed, source="explicit")
+    receipt = _launch(_fixture(tmp_path / "actual", requirements=()), evidence=(evidence,))
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
+
+
+def test_36_definition_has_no_registration_manifest_or_lock_hash_cycle(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path)
+    forbidden = {
+        "registration_sha256", "manifest_sha256", "manifest_size",
+        "lock_sha256", "lock_size", "bundle_sha256",
+    }
+    assert not (forbidden & set(fixture["definition"]))
+    receipt = _launch(fixture)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+
+
+def test_09_python_script_execution_kind_succeeds_without_caller_argv(tmp_path: Path) -> None:
     receipt = _launch(_fixture(tmp_path, execution_kind="PACKAGE_PYTHON_SCRIPT"))
-    _assert(receipt, (9,), "EXITED_SUCCESS", "NONE", 1)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
 
 
 def test_1_no_active_registration_returns_full_receipt(tmp_path: Path) -> None:
     data = tmp_path / "data"
     data.mkdir()
     receipt = launch_session_tool(data, "x", {}, {})
-    _assert(receipt, (1, 31), "PRELAUNCH_BLOCKED", "LOCATOR_FAILED", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCATOR_FAILED", 0)
     assert len(receipt) == 30
 
 
-def test_32_entry_cancel_precedes_locator(tmp_path: Path) -> None:
+def test_32_entry_cancel_precedes_locator_and_priority_level_02(tmp_path: Path) -> None:
     event = threading.Event()
     event.set()
     receipt = launch_session_tool(tmp_path / "missing", "x", {"session_id": "s", "request_id": "r"}, {}, cancel_event=event)
-    _assert(receipt, (28, 32), "CANCELLED", "CANCELLED_BEFORE_SPAWN", 0)
+    _assert(receipt, "CANCELLED", "CANCELLED_BEFORE_SPAWN", 0)
     assert receipt["cancelled"] is True
 
 
 @pytest.mark.parametrize(
-    ("mutation", "reason", "case_ids"),
+    ("mutation", "reason"),
     [
-        (lambda d: d.pop("tool_id"), "TOOL_DEFINITION_INVALID", (4,)),
-        (lambda d: d.__setitem__("definition_sha256", "f" * 64), "TOOL_DEFINITION_INVALID", (4,)),
-        (lambda d: d.__setitem__("fixed_argv_template", ["--bad"]), "TOOL_DEFINITION_INVALID", (9,)),
-        (lambda d: d.__setitem__("relative_path", "../bad"), "TOOL_PATH_VIOLATION", (7,)),
-        (lambda d: d.__setitem__("sha256", "f" * 64), "TOOL_DEFINITION_INVALID", (5, 6)),
+        pytest.param(lambda d: d.pop("tool_id"), "TOOL_DEFINITION_INVALID", id="missing-field"),
+        pytest.param(lambda d: d.__setitem__("unknown", True), "TOOL_DEFINITION_INVALID", id="unknown-field"),
+        pytest.param(lambda d: d.__setitem__("definition_sha256", "f" * 64), "TOOL_DEFINITION_INVALID", id="self-hash"),
     ],
 )
-def test_definition_and_tool_fail_closed(tmp_path: Path, mutation, reason: str, case_ids: tuple[int, ...]) -> None:
+def test_04_definition_closed_shape_and_self_hash_fail_closed(tmp_path: Path, mutation, reason: str) -> None:
     fixture = _fixture(tmp_path)
     mutation(fixture["definition"])
     receipt = _launch(fixture)
-    _assert(receipt, case_ids, "PRELAUNCH_BLOCKED", reason, 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", reason, 0)
 
 
-def test_15_nonzero_exit_is_preserved(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        pytest.param(lambda d: d.__setitem__("fixed_argv_placeholders", []), id="drop-python-placeholder"),
+        pytest.param(lambda d: d.__setitem__("fixed_argv_template", ["{verified_tool_path}", "--extra"]), id="extra-fixed-argv"),
+        pytest.param(lambda d: d.__setitem__("interpreter_binding", "SELF"), id="wrong-binding"),
+    ],
+)
+def test_09_placeholder_binding_or_argv_injection_is_rejected(tmp_path: Path, mutation) -> None:
+    fixture = _fixture(tmp_path, execution_kind="PACKAGE_PYTHON_SCRIPT")
+    mutation(fixture["definition"])
+    receipt = _launch(fixture)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "TOOL_DEFINITION_INVALID", 0)
+
+
+def test_15_nonzero_exit_is_preserved_at_priority_level_08(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path, code="import sys; sys.stdin.buffer.read(); sys.exit(7)")
     receipt = _launch(fixture)
-    _assert(receipt, (15, 34), "EXITED_NONZERO", "EXITED_NONZERO", 1)
+    _assert(receipt, "EXITED_NONZERO", "EXITED_NONZERO", 1)
     assert receipt["exit_code"] == 7
 
 
-def test_16_timeout_terminates_owned_tree(tmp_path: Path) -> None:
+def test_16_timeout_terminates_owned_tree_at_priority_level_07(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path, code="import sys,time; sys.stdin.buffer.read(); time.sleep(30)")
     fixture["controls"]["timeout_seconds"] = 1
     receipt = _launch(fixture)
-    _assert(receipt, (16,), "TIMED_OUT", "TIMEOUT", 1)
+    _assert(receipt, "TIMED_OUT", "TIMEOUT", 1)
     assert receipt["timed_out"] is True
     assert receipt["residual_process"]["termination_attempted"] is True
 
 
-def test_35_child_reported_failure(tmp_path: Path) -> None:
+def test_35_child_reported_failure_is_priority_level_10(tmp_path: Path) -> None:
     receipt = _launch(_fixture(tmp_path, code=FAILED_CODE))
-    _assert(receipt, (35,), "CHILD_REPORTED_FAILURE", "CHILD_REPORTED_FAILURE", 1)
+    _assert(receipt, "CHILD_REPORTED_FAILURE", "CHILD_REPORTED_FAILURE", 1)
 
 
-def test_17_invalid_output_and_pointer_are_incomplete(tmp_path: Path) -> None:
+def test_17_invalid_output_is_priority_level_09(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path, code="import sys; sys.stdin.buffer.read(); print('not-json')")
     receipt = _launch(fixture)
-    _assert(receipt, (17, 34), "INCOMPLETE", "OUTPUT_INVALID", 1)
+    _assert(receipt, "INCOMPLETE", "OUTPUT_INVALID", 1)
 
 
-def test_18_secret_disclosure_wins_over_nonzero(tmp_path: Path) -> None:
+def test_18_secret_disclosure_is_priority_level_06_and_wins_over_nonzero(tmp_path: Path) -> None:
     code = "import os,sys; sys.stdin.buffer.read(); print(os.environ['DYNAMIC_TOKEN']); sys.exit(9)"
     fixture = _fixture(tmp_path, code=code, allowed=("DYNAMIC_TOKEN",), secrets=("DYNAMIC_TOKEN",))
     fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN": "split-canary-secret"}
     receipt = _launch(fixture)
-    _assert(receipt, (18, 24, 34), "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
     assert "split-canary-secret" not in repr(receipt)
+
+
+@pytest.mark.parametrize("stream", ["stdout", "stderr"])
+def test_18_secret_is_detected_across_real_pipe_chunks(tmp_path: Path, stream: str) -> None:
+    code = f'''import os,sys,time
+sys.stdin.buffer.read()
+s=os.environ["DYNAMIC_TOKEN"].encode(); target=sys.{stream}.buffer
+target.write(s[:11]); target.flush(); time.sleep(0.1); target.write(s[11:]); target.flush(); sys.exit(9)'''
+    fixture = _fixture(
+        tmp_path, code=code, allowed=("DYNAMIC_TOKEN",), secrets=("DYNAMIC_TOKEN",)
+    )
+    secret = "cross-chunk-canary-value"
+    fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN": secret}
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    assert secret not in repr(receipt)
+
+
+@pytest.mark.parametrize(
+    "collision",
+    ["user_message", "session_id", "request_id", "result_root", "package_release", "registration", "tool_path", "argv"],
+)
+def test_24_secret_input_collisions_fail_closed_before_spawn(
+    tmp_path: Path, collision: str
+) -> None:
+    fixture = _fixture(
+        tmp_path, allowed=("DYNAMIC_TOKEN",), secrets=("DYNAMIC_TOKEN",)
+    )
+    message = "ordinary-message"
+    if collision == "user_message":
+        secret = "user-message-secret-canary"
+        message = secret
+    elif collision == "session_id":
+        secret = fixture["controls"]["session_id"]
+    elif collision == "request_id":
+        secret = fixture["controls"]["request_id"]
+    elif collision == "result_root":
+        secret = fixture["controls"]["result_root"]
+    elif collision == "package_release":
+        secret = RELEASE
+    elif collision == "registration":
+        located = registration.locate_active_package(fixture["candidate"].data_root)
+        secret = located["registration_sha256"]
+    elif collision == "tool_path":
+        secret = str(
+            fixture["candidate"].package_root.joinpath(
+                *Path(fixture["definition"]["relative_path"]).parts
+            ).resolve()
+        )
+    else:
+        secret = "-c"
+    fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN": secret}
+    receipt = _launch(fixture, message=message)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
+    assert secret not in repr(receipt)
 
 
 def test_23_environment_allowlist_rejects_before_spawn(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path)
     fixture["controls"]["provider_environment"] = {"UNLISTED_PROVIDER": "x"}
     receipt = _launch(fixture)
-    _assert(receipt, (23,), "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
 
 
-def test_dynamic_allowlisted_provider_is_passed_without_entering_request(tmp_path: Path) -> None:
+def test_34_priority_level_03_preflight_failure_beats_spawn_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fixture = _fixture(tmp_path)
+    fixture["controls"]["provider_environment"] = {"UNLISTED_PROVIDER": "x"}
+    calls = 0
+
+    def should_not_spawn(*_args: Any, **_kwargs: Any):
+        nonlocal calls
+        calls += 1
+        raise OSError("lower-priority spawn failure")
+
+    monkeypatch.setattr(launcher_module.subprocess, "Popen", should_not_spawn)
+    receipt = _launch(fixture)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
+    assert calls == 0
+
+
+def test_22_dynamic_allowlisted_provider_is_opaque_and_passed_only_in_environment(tmp_path: Path) -> None:
     code = r'''import hashlib,json,os,pathlib,sys
 r=json.load(sys.stdin); assert os.environ["FUTURE_IMAGE_PROVIDER_KEY"] not in json.dumps(r)
 p=pathlib.Path(r["executor_controls"]["result_root"])/"result.bin"; p.write_bytes(b"ok")
@@ -370,24 +577,20 @@ sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separato
     fixture = _fixture(tmp_path, code=code, allowed=("FUTURE_IMAGE_PROVIDER_KEY",), secrets=())
     fixture["controls"]["provider_environment"] = {"FUTURE_IMAGE_PROVIDER_KEY": "dynamic-secret"}
     receipt = _launch(fixture)
-    _assert(receipt, (22, 24, 25), "EXITED_SUCCESS", "NONE", 1)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
     assert receipt["provider_environment_names"] == ("FUTURE_IMAGE_PROVIDER_KEY",)
     assert "dynamic-secret" not in repr(receipt)
 
 
 def test_30_receipt_is_recursively_frozen_and_stage6_can_consume_shape(tmp_path: Path) -> None:
     receipt = _launch(_fixture(tmp_path))
-    _assert(receipt, (30,), "EXITED_SUCCESS", "NONE", 1)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
     assert isinstance(receipt, MappingProxyType)
     assert isinstance(receipt["package"], MappingProxyType)
     with pytest.raises(TypeError):
         receipt["outcome"] = "FAILED"
     stage6_view = (receipt["schema_version"], receipt["outcome"], receipt["result_pointer"]["valid"])
     assert stage6_view == ("golden-key-workbuddy-launcher-receipt-v1", "EXITED_SUCCESS", True)
-
-
-def test_matrix_has_exactly_47_traceable_categories() -> None:
-    assert set(MATRIX) == set(range(1, 48))
 
 
 @pytest.mark.parametrize("source", ["managed", "explicit", "PATH"])
@@ -419,7 +622,7 @@ def test_41_three_original_present_source_profiles_succeed(tmp_path: Path, sourc
         evidence["original_stage3_fact"]["evidence"]["version_evidence"]["entrypoint"] = str(entrypoint.resolve())
     evidence["original_stage3_fact_sha256"] = hashlib.sha256(_canonical(evidence["original_stage3_fact"], newline=False)).hexdigest()
     receipt = _launch(fixture, evidence=(evidence,))
-    _assert(receipt, (39, 40, 41), "EXITED_SUCCESS", "NONE", 1)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
     assert receipt["local_capability_evidence_identities"][0]["source"] == source
 
 
@@ -427,7 +630,7 @@ def test_12_required_local_evidence_missing(tmp_path: Path) -> None:
     seed = _fixture(tmp_path / "seed")
     requirement, _evidence, _root = _local_evidence(seed, source="managed")
     receipt = _launch(_fixture(tmp_path / "actual", requirements=(requirement,)))
-    _assert(receipt, (12,), "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_REQUIRED", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_REQUIRED", 0)
 
 
 def test_38_summary_only_or_mismatched_evidence_is_rejected(tmp_path: Path) -> None:
@@ -435,7 +638,86 @@ def test_38_summary_only_or_mismatched_evidence_is_rejected(tmp_path: Path) -> N
     requirement, _evidence, _root = _local_evidence(seed, source="managed")
     fixture = _fixture(tmp_path / "actual", requirements=(requirement,))
     receipt = _launch(fixture, evidence=({"schema_version": "golden-key-workbuddy-local-capability-evidence-v1"},))
-    _assert(receipt, (13, 38), "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+def test_13_capability_entrypoint_identity_mismatch_is_rejected(tmp_path: Path) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, _root = _local_evidence(seed, source="explicit")
+    wrong = tmp_path / "wrong-tool.exe"
+    wrong.write_bytes(b"opaque-capability-asset")
+    fact = evidence["original_stage3_fact"]["evidence"]
+    fact["verified_entrypoint"] = str(wrong.resolve())
+    fact["version_evidence"]["entrypoint"] = str(wrong.resolve())
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(evidence["original_stage3_fact"], newline=False)
+    ).hexdigest()
+    receipt = _launch(
+        _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+    )
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("reason", "CALLER_ASSERTED_ONLY"),
+        ("exit_code", 1),
+        ("entrypoint", "relative-tool.exe"),
+    ],
+)
+def test_40_untrusted_version_evidence_cannot_override_identity_rules(
+    tmp_path: Path, field: str, value: Any
+) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, _root = _local_evidence(seed, source="explicit")
+    evidence["original_stage3_fact"]["evidence"]["version_evidence"][field] = value
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(evidence["original_stage3_fact"], newline=False)
+    ).hexdigest()
+    receipt = _launch(
+        _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+    )
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://registry.npmmirror.com/pkg/-/tool.bin",
+        "https://registry.npmmirror.com.evil.example/pkg/-/tool.bin",
+        "https://registry.npmmirror.com:444/pkg/-/tool.bin",
+        "https://user:password@registry.npmmirror.com/pkg/-/tool.bin",
+        "https://registry.npmmirror.com/pkg/-/tool.bin?query=1",
+        "https://registry.npmmirror.com/pkg/-/tool.bin#fragment",
+        "https://registry.npmmirror.com:invalid/pkg/-/tool.bin",
+        "https://registry.npmmirror.com",
+    ],
+)
+def test_39_unapproved_mainland_source_url_variants_are_rejected(
+    tmp_path: Path, url: str
+) -> None:
+    seed = _fixture(tmp_path / "seed")
+    _old_requirement, evidence, _root = _local_evidence(seed, source="explicit")
+    evidence["approved_capability_definition"]["approved_mainland_sources"][0]["url"] = url
+    requirement = _rehash_stage3_evidence(evidence)
+    receipt = _launch(
+        _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+    )
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+def test_39_exact_npmmirror_https_port_443_source_remains_approved(tmp_path: Path) -> None:
+    seed = _fixture(tmp_path / "seed")
+    _old_requirement, evidence, _root = _local_evidence(seed, source="explicit")
+    evidence["approved_capability_definition"]["approved_mainland_sources"][0]["url"] = (
+        "https://registry.npmmirror.com:443/opaque-capability/-/tool.bin"
+    )
+    requirement = _rehash_stage3_evidence(evidence)
+    receipt = _launch(
+        _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+    )
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
 
 
 def test_42_managed_extra_file_breaks_closed_tree(tmp_path: Path) -> None:
@@ -452,7 +734,7 @@ def test_42_managed_extra_file_breaks_closed_tree(tmp_path: Path) -> None:
     evidence["original_stage3_fact"]["evidence"]["version_evidence"]["entrypoint"] = str((root / "tool.exe").resolve())
     evidence["original_stage3_fact_sha256"] = hashlib.sha256(_canonical(evidence["original_stage3_fact"], newline=False)).hexdigest()
     receipt = _launch(fixture, evidence=(evidence,))
-    _assert(receipt, (42,), "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
 
 
 def test_43_explicit_drift_rejected_and_foreign_file_preserved(tmp_path: Path) -> None:
@@ -461,8 +743,9 @@ def test_43_explicit_drift_rejected_and_foreign_file_preserved(tmp_path: Path) -
     fixture = _fixture(tmp_path / "bound", requirements=(requirement,))
     (root / "tool.exe").write_bytes(b"drifted-but-same-path")
     receipt = _launch(fixture, evidence=(evidence,))
-    _assert(receipt, (43,), "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
     assert (root / "foreign.txt").read_text(encoding="utf-8") == "preserve"
+    assert (root / "foreign-directory" / "keep.txt").read_text(encoding="utf-8") == "keep"
 
 
 def test_44_path_identity_drift_is_rejected(tmp_path: Path) -> None:
@@ -471,7 +754,60 @@ def test_44_path_identity_drift_is_rejected(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path / "bound", requirements=(requirement,))
     root.write_bytes(b"replacement")
     receipt = _launch(fixture, evidence=(evidence,))
-    _assert(receipt, (44,), "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+def test_44_path_command_nonabsolute_is_rejected(tmp_path: Path) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, _root = _local_evidence(seed, source="PATH")
+    fact = evidence["original_stage3_fact"]["evidence"]
+    fact["runtime_root"] = "relative-command.exe"
+    fact["verified_entrypoint"] = "relative-command.exe"
+    fact["version_evidence"]["entrypoint"] = "relative-command.exe"
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(evidence["original_stage3_fact"], newline=False)
+    ).hexdigest()
+    receipt = _launch(
+        _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+    )
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+def test_44_path_command_nonregular_is_rejected(tmp_path: Path) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, root = _local_evidence(seed, source="PATH")
+    root.unlink()
+    root.mkdir()
+    receipt = _launch(
+        _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+    )
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+def test_44_path_command_reparse_component_is_rejected(tmp_path: Path) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, _root = _local_evidence(seed, source="PATH")
+    real_dir = tmp_path / "path-real"
+    real_dir.mkdir()
+    command = real_dir / "opaque-capability.exe"
+    command.write_bytes(b"opaque-capability-asset")
+    alias_dir = tmp_path / "path-alias"
+    _make_directory_reparse(alias_dir, real_dir)
+    alias_command = alias_dir / command.name
+    fact = evidence["original_stage3_fact"]["evidence"]
+    fact["runtime_root"] = str(alias_command)
+    fact["verified_entrypoint"] = str(alias_command)
+    fact["version_evidence"]["entrypoint"] = str(alias_command)
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(evidence["original_stage3_fact"], newline=False)
+    ).hexdigest()
+    try:
+        receipt = _launch(
+            _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+        )
+    finally:
+        _remove_directory_reparse(alias_dir)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
 
 
 def test_45_integrated_nonmanaged_rejected(tmp_path: Path) -> None:
@@ -479,7 +815,20 @@ def test_45_integrated_nonmanaged_rejected(tmp_path: Path) -> None:
     requirement, evidence, _root = _local_evidence(fixture, source="explicit", status="INTEGRATED")
     fixture = _fixture(tmp_path / "bound", requirements=(requirement,))
     receipt = _launch(fixture, evidence=(evidence,))
-    _assert(receipt, (45,), "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+
+
+def test_45_integrated_missing_plan_identity_is_rejected(tmp_path: Path) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, _root = _local_evidence(seed, source="managed", status="INTEGRATED")
+    evidence["original_stage3_fact"].pop("plan_sha256")
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(evidence["original_stage3_fact"], newline=False)
+    ).hexdigest()
+    receipt = _launch(
+        _fixture(tmp_path / "actual", requirements=(requirement,)), evidence=(evidence,)
+    )
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
 
 
 def test_46_managed_integrated_preserves_plan_and_reused_binding(tmp_path: Path) -> None:
@@ -496,7 +845,7 @@ def test_46_managed_integrated_preserves_plan_and_reused_binding(tmp_path: Path)
     evidence["original_stage3_fact"]["version_evidence"]["entrypoint"] = str(entrypoint.resolve())
     evidence["original_stage3_fact_sha256"] = hashlib.sha256(_canonical(evidence["original_stage3_fact"], newline=False)).hexdigest()
     receipt = _launch(fixture, evidence=(evidence,))
-    _assert(receipt, (46,), "EXITED_SUCCESS", "NONE", 1)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
     assert receipt["local_capability_evidence_identities"][0]["plan_sha256"] == "a" * 64
 
 
@@ -507,7 +856,7 @@ def test_47_unknown_source_is_rejected(tmp_path: Path) -> None:
     evidence["original_stage3_fact"]["evidence"]["source"] = "unknown"
     evidence["original_stage3_fact_sha256"] = hashlib.sha256(_canonical(evidence["original_stage3_fact"], newline=False)).hexdigest()
     receipt = _launch(fixture, evidence=(evidence,))
-    _assert(receipt, (47,), "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH", 0)
 
 
 def test_2_damaged_active_registration_fails_locator(tmp_path: Path) -> None:
@@ -515,40 +864,83 @@ def test_2_damaged_active_registration_fails_locator(tmp_path: Path) -> None:
     active = fixture["candidate"].data_root / "State" / "PackageRegistration" / "v1" / "active.json"
     active.write_bytes(b"damaged")
     receipt = _launch(fixture)
-    _assert(receipt, (2,), "PRELAUNCH_BLOCKED", "LOCATOR_FAILED", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCATOR_FAILED", 0)
 
 
 def test_3_required_toolchain_drift_fails_locator(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path)
     fixture["candidate"].ffmpeg_path.write_bytes(b"drift")
     receipt = _launch(fixture)
-    _assert(receipt, (3,), "PRELAUNCH_BLOCKED", "LOCATOR_FAILED", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "LOCATOR_FAILED", 0)
 
 
-def test_8_reparse_component_is_rejected_before_spawn(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_08_real_tool_directory_junction_or_symlink_is_rejected_before_spawn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     fixture = _fixture(tmp_path)
-    real = launcher_module._is_reparse
-    tool_parent = Path(fixture["definition"]["relative_path"]).parent.as_posix()
+    real_locator = launcher_module.locate_active_package
+    tool_parent = fixture["candidate"].package_root / Path(fixture["definition"]["relative_path"]).parent
+    real_parent = tool_parent.with_name(tool_parent.name + "-real")
+    changed = False
 
-    def selected(path: Path) -> bool:
-        if path.as_posix().endswith(tool_parent):
-            return True
-        return real(path)
+    def link_after_real_locator(data_root: Any):
+        nonlocal changed
+        value = real_locator(data_root)
+        if not changed:
+            tool_parent.rename(real_parent)
+            _make_directory_reparse(tool_parent, real_parent)
+            changed = True
+        return value
 
-    monkeypatch.setattr(launcher_module, "_is_reparse", selected)
+    monkeypatch.setattr(launcher_module, "locate_active_package", link_after_real_locator)
+    try:
+        receipt = _launch(fixture)
+    finally:
+        if tool_parent.exists() or tool_parent.is_symlink():
+            _remove_directory_reparse(tool_parent)
+        if real_parent.exists():
+            real_parent.rename(tool_parent)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "TOOL_PATH_VIOLATION", 0)
+
+
+def test_08_real_data_root_junction_or_symlink_alias_is_invalid_input(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path / "real")
+    alias = tmp_path / "data-alias"
+    _make_directory_reparse(alias, fixture["candidate"].data_root)
+    try:
+        receipt = launch_session_tool(
+            alias, "x", fixture["controls"], fixture["definition"]
+        )
+    finally:
+        _remove_directory_reparse(alias)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
+
+
+def test_07_real_hardlink_alias_for_tool_is_rejected(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path)
+    tool = fixture["candidate"].package_root.joinpath(
+        *Path(fixture["definition"]["relative_path"]).parts
+    )
+    alias = tool.with_name("tool-hardlink-alias.exe")
+    os.link(tool, alias)
     receipt = _launch(fixture)
-    _assert(receipt, (8,), "PRELAUNCH_BLOCKED", "TOOL_PATH_VIOLATION", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "TOOL_PATH_VIOLATION", 0)
 
 
-def test_19_background_descendant_is_residual_and_is_terminated(tmp_path: Path) -> None:
-    code = r'''import hashlib,json,pathlib,subprocess,sys
+def test_19_residual_is_priority_level_05_and_wins_over_secret_and_nonzero(tmp_path: Path) -> None:
+    code = r'''import hashlib,json,os,pathlib,subprocess,sys
 r=json.load(sys.stdin)
 subprocess.Popen([sys.executable,"-c","import time; time.sleep(30)"])
 p=pathlib.Path(r["executor_controls"]["result_root"])/"result.bin"; p.write_bytes(b"ok")
 o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"SUCCEEDED","result_pointer":{"relative_path":"result.bin","sha256":hashlib.sha256(b"ok").hexdigest(),"size":2},"error":None}
-sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n").encode())'''
-    receipt = _launch(_fixture(tmp_path, code=code))
-    _assert(receipt, (19,), "RESIDUAL_PROCESS", "RESIDUAL_PROCESS_DETECTED", 1, residual=True)
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n").encode()); sys.stdout.flush()
+sys.stderr.write(os.environ["DYNAMIC_TOKEN"]); sys.stderr.flush(); sys.exit(9)'''
+    fixture = _fixture(
+        tmp_path, code=code, allowed=("DYNAMIC_TOKEN",), secrets=("DYNAMIC_TOKEN",)
+    )
+    fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN": "residual-secret-canary"}
+    receipt = _launch(fixture)
+    _assert(receipt, "RESIDUAL_PROCESS", "RESIDUAL_PROCESS_DETECTED", 1, residual=True)
     assert receipt["residual_process"]["termination_attempted"] is True
 
 
@@ -567,7 +959,67 @@ def test_27_second_locator_identity_drift_blocks_spawn(tmp_path: Path, monkeypat
 
     monkeypatch.setattr(launcher_module, "locate_active_package", drifting)
     receipt = _launch(fixture)
-    _assert(receipt, (27,), "PRELAUNCH_BLOCKED", "REGISTRATION_DRIFT", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "REGISTRATION_DRIFT", 0)
+    assert calls == 2
+
+
+@pytest.mark.parametrize("execution_kind", ["DIRECT_EXECUTABLE", "PACKAGE_PYTHON_SCRIPT"])
+def test_27_actual_tool_or_interpreter_replacement_after_second_locator_blocks_spawn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, execution_kind: str
+) -> None:
+    fixture = _fixture(tmp_path, execution_kind=execution_kind)
+    real_locator = launcher_module.locate_active_package
+    calls = 0
+
+    def replace_after_second_locator(data_root: Any):
+        nonlocal calls
+        calls += 1
+        located = real_locator(data_root)
+        if calls == 2:
+            if execution_kind == "DIRECT_EXECUTABLE":
+                target = fixture["candidate"].package_root.joinpath(
+                    *Path(fixture["definition"]["relative_path"]).parts
+                )
+            else:
+                target = Path(located["package_python"]["path"])
+            target.write_bytes(b"X" * target.stat().st_size)
+        return located
+
+    monkeypatch.setattr(launcher_module, "locate_active_package", replace_after_second_locator)
+    receipt = _launch(fixture)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "REGISTRATION_DRIFT", 0)
+    assert calls == 2
+
+
+def test_27_actual_result_root_reparse_after_second_locator_blocks_spawn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fixture = _fixture(tmp_path)
+    real_locator = launcher_module.locate_active_package
+    result_root = fixture["result_root"]
+    real_root = result_root.with_name("Results-real")
+    calls = 0
+
+    def replace_result_root_after_second_locator(data_root: Any):
+        nonlocal calls
+        calls += 1
+        located = real_locator(data_root)
+        if calls == 2:
+            result_root.rename(real_root)
+            _make_directory_reparse(result_root, real_root)
+        return located
+
+    monkeypatch.setattr(
+        launcher_module, "locate_active_package", replace_result_root_after_second_locator
+    )
+    try:
+        receipt = _launch(fixture)
+    finally:
+        if result_root.exists() or result_root.is_symlink():
+            _remove_directory_reparse(result_root)
+        if real_root.exists():
+            real_root.rename(result_root)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "REGISTRATION_DRIFT", 0)
     assert calls == 2
 
 
@@ -575,13 +1027,13 @@ def test_29_large_stream_is_fully_hashed_and_truncated_without_success(tmp_path:
     size = 1024 * 1024 + 17
     code = f"import sys; sys.stdin.buffer.read(); sys.stderr.buffer.write(b'x'*{size}); sys.exit(4)"
     receipt = _launch(_fixture(tmp_path, code=code))
-    _assert(receipt, (29,), "EXITED_NONZERO", "EXITED_NONZERO", 1)
+    _assert(receipt, "EXITED_NONZERO", "EXITED_NONZERO", 1)
     assert receipt["stderr"]["size"] == size
     assert receipt["stderr"]["sha256"] == hashlib.sha256(b"x" * size).hexdigest()
     assert receipt["stderr"]["truncated"] is True
 
 
-def test_33_os_spawn_failure_reports_zero_spawn(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_33_os_spawn_failure_is_priority_level_04_and_reports_zero_spawn(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fixture = _fixture(tmp_path)
 
     def denied(**_kwargs: Any):
@@ -589,10 +1041,10 @@ def test_33_os_spawn_failure_reports_zero_spawn(tmp_path: Path, monkeypatch: pyt
 
     monkeypatch.setattr(launcher_module.subprocess, "Popen", denied)
     receipt = _launch(fixture)
-    _assert(receipt, (33,), "SPAWN_FAILED", "SPAWN_OS_ERROR", 0)
+    _assert(receipt, "SPAWN_FAILED", "SPAWN_OS_ERROR", 0)
 
 
-def test_cancel_after_spawn_terminates_without_retry(tmp_path: Path) -> None:
+def test_28_cancel_after_spawn_terminates_without_retry_at_priority_level_07(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path, code="import sys,time; sys.stdin.buffer.read(); time.sleep(30)")
     event = threading.Event()
     timer = threading.Timer(0.2, event.set)
@@ -601,11 +1053,56 @@ def test_cancel_after_spawn_terminates_without_retry(tmp_path: Path) -> None:
         receipt = _launch(fixture, event=event)
     finally:
         timer.cancel()
-    _assert(receipt, (28, 34), "CANCELLED", "CANCELLED", 1)
+    _assert(receipt, "CANCELLED", "CANCELLED", 1)
     assert receipt["cancelled"] is True
 
 
-def test_nine_outcomes_and_twenty_three_reasons_are_closed() -> None:
+def test_28_windows_job_assign_failure_terminates_the_real_suspended_process(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert os.name == "nt"
+    fixture = _fixture(tmp_path, code="import sys,time; sys.stdin.buffer.read(); time.sleep(30)")
+    real_popen = launcher_module.subprocess.Popen
+    popen_calls = 0
+
+    def counted_popen(*args: Any, **kwargs: Any):
+        nonlocal popen_calls
+        popen_calls += 1
+        assert kwargs["creationflags"] & getattr(subprocess, "CREATE_SUSPENDED", 0x00000004)
+        return real_popen(*args, **kwargs)
+
+    def assign_failure(self: Any, process: Any) -> None:
+        assert process.poll() is None
+        raise OSError("injected AssignProcessToJobObject failure")
+
+    monkeypatch.setattr(launcher_module.subprocess, "Popen", counted_popen)
+    monkeypatch.setattr(launcher_module._WindowsJob, "assign", assign_failure)
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", 1)
+    assert popen_calls == 1
+    assert receipt["residual_process"]["termination_attempted"] is True
+    assert receipt["residual_process"]["termination_succeeded"] is True
+    assert receipt["exit_code"] is not None
+
+
+def test_28_windows_resume_failure_terminates_the_bound_suspended_process(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert os.name == "nt"
+    fixture = _fixture(tmp_path, code="import sys,time; sys.stdin.buffer.read(); time.sleep(30)")
+
+    def resume_failure(self: Any, process: Any) -> None:
+        assert process.poll() is None
+        raise OSError("injected NtResumeProcess failure")
+
+    monkeypatch.setattr(launcher_module._WindowsJob, "resume", resume_failure)
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", 1)
+    assert receipt["residual_process"]["termination_succeeded"] is True
+    assert receipt["exit_code"] is not None
+
+
+def test_34_nine_outcomes_and_twenty_three_reasons_are_closed() -> None:
     assert launcher_module._OUTCOMES == {
         "PRELAUNCH_BLOCKED", "SPAWN_FAILED", "EXITED_SUCCESS", "EXITED_NONZERO",
         "CHILD_REPORTED_FAILURE", "TIMED_OUT", "CANCELLED", "INCOMPLETE", "RESIDUAL_PROCESS",
@@ -621,19 +1118,35 @@ def test_nine_outcomes_and_twenty_three_reasons_are_closed() -> None:
     }
 
 
-def test_unbound_definition_and_declared_tool_mismatch_have_distinct_reasons(tmp_path: Path) -> None:
-    mismatch = _fixture(tmp_path / "mismatch", declared_tool_sha256="f" * 64)
-    receipt = _launch(mismatch)
-    _assert(receipt, (5, 6), "PRELAUNCH_BLOCKED", "TOOL_IDENTITY_MISMATCH", 0)
+def test_05_tool_requires_unique_manifest_and_lock_coverage(tmp_path: Path) -> None:
+    receipt = _launch(_fixture(tmp_path, tool_locked=False))
+    _assert(receipt, "PRELAUNCH_BLOCKED", "TOOL_IDENTITY_MISMATCH", 0)
 
+
+@pytest.mark.parametrize(
+    "fixture_kwargs",
+    [
+        pytest.param({"declared_tool_sha256": "f" * 64}, id="hash"),
+        pytest.param({"declared_tool_size": 1}, id="size"),
+        pytest.param({"definition_owner": "foreign_owner"}, id="owner"),
+    ],
+)
+def test_06_tool_hash_size_or_owner_mismatch_is_distinct(
+    tmp_path: Path, fixture_kwargs: dict[str, Any]
+) -> None:
+    receipt = _launch(_fixture(tmp_path, **fixture_kwargs))
+    _assert(receipt, "PRELAUNCH_BLOCKED", "TOOL_IDENTITY_MISMATCH", 0)
+
+
+def test_04_release_unbound_definition_has_distinct_reason(tmp_path: Path) -> None:
     unbound = _fixture(tmp_path / "unbound")
     unbound["definition"]["package_release"] = "different-release"
     _seal_definition(unbound["definition"])
     receipt = _launch(unbound)
-    _assert(receipt, (4,), "PRELAUNCH_BLOCKED", "TOOL_DEFINITION_UNBOUND", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "TOOL_DEFINITION_UNBOUND", 0)
 
 
-def test_interpreter_identity_mismatch_is_distinct(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_03_interpreter_identity_mismatch_is_distinct(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fixture = _fixture(tmp_path, execution_kind="PACKAGE_PYTHON_SCRIPT")
     real = launcher_module.locate_active_package
 
@@ -644,19 +1157,77 @@ def test_interpreter_identity_mismatch_is_distinct(tmp_path: Path, monkeypatch: 
 
     monkeypatch.setattr(launcher_module, "locate_active_package", wrong_interpreter)
     receipt = _launch(fixture)
-    _assert(receipt, (3,), "PRELAUNCH_BLOCKED", "INTERPRETER_IDENTITY_MISMATCH", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INTERPRETER_IDENTITY_MISMATCH", 0)
 
 
-def test_result_pointer_hash_mismatch_is_incomplete(tmp_path: Path) -> None:
+def test_17_result_pointer_hash_mismatch_is_incomplete(tmp_path: Path) -> None:
     code = r'''import json,pathlib,sys
 r=json.load(sys.stdin); p=pathlib.Path(r["executor_controls"]["result_root"])/"result.bin"; p.write_bytes(b"ok")
 o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"SUCCEEDED","result_pointer":{"relative_path":"result.bin","sha256":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff","size":2},"error":None}
 sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n").encode())'''
     receipt = _launch(_fixture(tmp_path, code=code))
-    _assert(receipt, (17,), "INCOMPLETE", "RESULT_POINTER_INVALID", 1)
+    _assert(receipt, "INCOMPLETE", "RESULT_POINTER_INVALID", 1)
 
 
-def test_unclassified_preflight_error_is_evidence_incomplete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_17_result_pointer_replacement_between_lstat_and_open_is_detected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fixture = _fixture(tmp_path)
+    pointer = fixture["result_root"] / "result.bin"
+    replacement = fixture["result_root"] / "replacement.bin"
+    real_open = launcher_module.os.open
+    replaced = False
+    opened: list[str] = []
+
+    def replace_before_real_open(path: Any, *args: Any, **kwargs: Any):
+        nonlocal replaced
+        opened.append(str(path))
+        try:
+            same_path = os.path.normcase(os.path.abspath(os.fspath(path))) == os.path.normcase(
+                os.path.abspath(os.fspath(pointer))
+            )
+        except (OSError, RuntimeError, ValueError):
+            same_path = False
+        if same_path and pointer.exists() and not replaced:
+            replacement.write_bytes(b"fixture-result")
+            os.replace(replacement, pointer)
+            replaced = True
+        return real_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(launcher_module.os, "open", replace_before_real_open)
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "RESULT_POINTER_INVALID", 1)
+    assert replaced is True, (opened, pointer, dict(receipt))
+
+
+def test_17_result_pointer_reparse_parent_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    code = r'''import hashlib,json,pathlib,sys
+r=json.load(sys.stdin); root=pathlib.Path(r["executor_controls"]["result_root"])
+p=root/"real"/"result.bin"; p.parent.mkdir(); p.write_bytes(b"ok")
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"SUCCEEDED","result_pointer":{"relative_path":"alias/result.bin","sha256":hashlib.sha256(b"ok").hexdigest(),"size":2},"error":None}
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n").encode())'''
+    fixture = _fixture(tmp_path, code=code)
+    alias = fixture["result_root"] / "alias"
+    real = fixture["result_root"] / "real"
+    original_parse = launcher_module._parse_result
+
+    def add_actual_reparse(raw: bytes, first: Any):
+        result = original_parse(raw, first)
+        _make_directory_reparse(alias, real)
+        return result
+
+    monkeypatch.setattr(launcher_module, "_parse_result", add_actual_reparse)
+    try:
+        receipt = _launch(fixture)
+    finally:
+        if alias.exists() or alias.is_symlink():
+            _remove_directory_reparse(alias)
+    _assert(receipt, "INCOMPLETE", "RESULT_POINTER_INVALID", 1)
+
+
+def test_31_unclassified_preflight_error_is_evidence_incomplete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fixture = _fixture(tmp_path)
 
     def broken_inventory(*_args: Any, **_kwargs: Any):
@@ -664,16 +1235,37 @@ def test_unclassified_preflight_error_is_evidence_incomplete(tmp_path: Path, mon
 
     monkeypatch.setattr(launcher_module, "_inventory", broken_inventory)
     receipt = _launch(fixture)
-    _assert(receipt, (31,), "PRELAUNCH_BLOCKED", "EVIDENCE_INCOMPLETE", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "EVIDENCE_INCOMPLETE", 0)
 
 
-def test_invalid_cancel_event_has_highest_precedence(tmp_path: Path) -> None:
+def test_31_unreadable_input_still_returns_full_receipt_with_none_hints(tmp_path: Path) -> None:
+    receipt = launch_session_tool(
+        tmp_path / "missing",
+        "\ud800",
+        {"session_id": object(), "request_id": object()},
+        {},
+    )
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
+    assert len(receipt) == 30
+    assert receipt["session"]["session_id"] is None
+    assert receipt["request"]["request_id"] is None
+    assert receipt["user_message"]["sha256"] is None
+    assert receipt["user_message"]["byte_length"] is None
+
+
+def test_34_priority_level_01_invalid_cancel_event_has_highest_precedence(tmp_path: Path) -> None:
     receipt = launch_session_tool(tmp_path / "missing", "x", {}, {}, cancel_event=object())  # type: ignore[arg-type]
-    _assert(receipt, (31, 34), "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
 
 
-def test_7_unsafe_tool_relative_path_is_a_path_violation(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "relative_path",
+    ["../escape", "tools/file:stream", "tools/CON.txt", "tools/trailing."],
+)
+def test_07_escape_ads_or_windows_alias_is_a_path_violation(
+    tmp_path: Path, relative_path: str
+) -> None:
     fixture = _fixture(tmp_path)
-    fixture["definition"]["relative_path"] = "../escape"
+    fixture["definition"]["relative_path"] = relative_path
     receipt = _launch(fixture)
-    _assert(receipt, (7,), "PRELAUNCH_BLOCKED", "TOOL_PATH_VIOLATION", 0)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "TOOL_PATH_VIOLATION", 0)

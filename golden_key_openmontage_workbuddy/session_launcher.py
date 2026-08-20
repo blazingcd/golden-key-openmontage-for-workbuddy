@@ -39,7 +39,10 @@ _RESULT_SCHEMA_SHA256 = "8a96aceb463da2ea39549de44b06a765a3ac859260001ae277b99db
 _EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
 _MAX_CAPTURE = 1024 * 1024
 _MAX_RESULT_OUTPUT = 64 * 1024
+_MAX_DYNAMIC_SCAN_NODES = _MAX_RESULT_OUTPUT * 4
+_MAX_DYNAMIC_SCAN_DEPTH = 2048
 _WINDOWS_PROCESS_PLATFORM = os.name == "nt"
+_JSON_WHITESPACE = frozenset(" \t\r\n")
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -128,6 +131,10 @@ class _LaunchError(Exception):
         self.reason_code = reason_code
         self.origin = origin
         super().__init__(reason_code)
+
+
+class _DynamicScanIncomplete(RuntimeError):
+    """The bounded provenance walk could not inspect every reachable value."""
 
 
 def _fail(reason_code: str, origin: str = "PREFLIGHT") -> None:
@@ -1221,36 +1228,61 @@ def _dynamic_value_contains_secret(value: Any, secrets: Sequence[str]) -> bool:
     must precede integer handling because ``bool`` subclasses ``int``.
     """
 
-    if isinstance(value, str):
-        scalar = value
-    elif value is True:
-        scalar = "true"
-    elif value is False:
-        scalar = "false"
-    elif type(value) is int:
-        scalar = str(value)
-    elif value is None:
-        scalar = "null"
-    elif type(value) is float:
-        if not math.isfinite(value):
-            return False
-        scalar = json.dumps(
-            value,
-            allow_nan=False,
-            ensure_ascii=False,
-            separators=(",", ":"),
-        )
-    elif isinstance(value, Mapping):
-        return any(
-            _dynamic_value_contains_secret(key, secrets)
-            or _dynamic_value_contains_secret(item, secrets)
-            for key, item in value.items()
-        )
-    elif isinstance(value, (list, tuple)):
-        return any(_dynamic_value_contains_secret(item, secrets) for item in value)
-    else:
-        return False
-    return any(secret and secret in scalar for secret in secrets)
+    stack: list[tuple[Any, int]] = [(value, 0)]
+    visited: set[int] = set()
+    scheduled = 1
+    try:
+        while stack:
+            current, depth = stack.pop()
+            if isinstance(current, str):
+                scalar = current
+            elif current is True:
+                scalar = "true"
+            elif current is False:
+                scalar = "false"
+            elif type(current) is int:
+                scalar = str(current)
+            elif current is None:
+                scalar = "null"
+            elif type(current) is float:
+                if not math.isfinite(current):
+                    continue
+                scalar = json.dumps(
+                    current,
+                    allow_nan=False,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                )
+            elif isinstance(current, (Mapping, list, tuple)):
+                identity = id(current)
+                if identity in visited:
+                    continue
+                visited.add(identity)
+                if depth >= _MAX_DYNAMIC_SCAN_DEPTH:
+                    raise _DynamicScanIncomplete
+                if isinstance(current, Mapping):
+                    children = (
+                        child
+                        for key, item in current.items()
+                        for child in (key, item)
+                    )
+                else:
+                    children = iter(current)
+                for child in children:
+                    scheduled += 1
+                    if scheduled > _MAX_DYNAMIC_SCAN_NODES:
+                        raise _DynamicScanIncomplete
+                    stack.append((child, depth + 1))
+                continue
+            else:
+                continue
+            if any(secret and secret in scalar for secret in secrets):
+                return True
+    except _DynamicScanIncomplete:
+        raise
+    except (Exception, MemoryError, RecursionError):
+        raise _DynamicScanIncomplete from None
+    return False
 
 
 def _suppressed_stream_facts() -> dict[str, Any]:
@@ -1730,7 +1762,14 @@ def _canonical_output_json(value: Any) -> bytes:
             ).encode("utf-8")
             + b"\n"
         )
-    except (TypeError, ValueError, UnicodeEncodeError):
+    except (
+        TypeError,
+        ValueError,
+        OverflowError,
+        RecursionError,
+        MemoryError,
+        UnicodeEncodeError,
+    ):
         _fail("OUTPUT_INVALID", "OUTPUT")
 
 
@@ -1769,19 +1808,37 @@ def _parse_result(raw: bytes, first: Mapping[str, Any]) -> Mapping[str, Any]:
             parse_constant=lambda _x: (_ for _ in ()).throw(ValueError()),
             parse_float=finite_float,
         )
-        value, end = decoder.raw_decode(text)
-    except (UnicodeError, ValueError, TypeError, json.JSONDecodeError):
+        start = 0
+        while start < len(text) and text[start] in _JSON_WHITESPACE:
+            start += 1
+        value, end = decoder.raw_decode(text, start)
+    except (
+        UnicodeError,
+        ValueError,
+        TypeError,
+        OverflowError,
+        RecursionError,
+        MemoryError,
+        json.JSONDecodeError,
+        _DynamicScanIncomplete,
+    ):
         if pair_secret_found:
             _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
         _fail("OUTPUT_INVALID", "OUTPUT")
     # The complete decoded child object is untrusted dynamic data.  Scan it
     # before canonical-shape or closed-schema rejection so an escaped secret in
     # an unknown key/value or invalid protocol field still suppresses stdout.
-    if pair_secret_found or _dynamic_value_contains_secret(
-        value, first["secret_text"]
-    ):
+    try:
+        decoded_secret_found = _dynamic_value_contains_secret(
+            value, first["secret_text"]
+        )
+    except (_DynamicScanIncomplete, RecursionError, MemoryError):
+        if pair_secret_found:
+            _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
+        _fail("OUTPUT_INVALID", "OUTPUT")
+    if pair_secret_found or decoded_secret_found:
         _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
-    if text[end:].strip():
+    if any(character not in _JSON_WHITESPACE for character in text[end:]):
         _fail("OUTPUT_INVALID", "OUTPUT")
     if (
         duplicates

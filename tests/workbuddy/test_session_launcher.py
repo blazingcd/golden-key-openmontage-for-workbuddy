@@ -953,6 +953,117 @@ sys.stdout.write(json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",","
     }
 
 
+@pytest.mark.parametrize("leading", [" ", "\t", "\r", "\n"])
+def test_52_escaped_secret_after_json_leading_whitespace_is_detected(
+    tmp_path: Path, leading: str
+) -> None:
+    code = f'''import json,os,sys
+r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]
+o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{{"code":"SAFE","origin":"SAFE","message":"ordinary"}},"unknown":s}}
+sys.stdout.write({leading!r}+json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":"))+"\\n")'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "前导空白后秘密"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+@pytest.mark.parametrize("prefix", [" ", "\ufeff"])
+def test_17_safe_leading_space_or_bom_is_output_invalid(
+    tmp_path: Path, prefix: str
+) -> None:
+    code = f'''import json,sys
+r=json.load(sys.stdin)
+o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{{"code":"SAFE","origin":"SAFE","message":"ordinary"}}}}
+sys.stdout.write({prefix!r}+json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\\n")'''
+    receipt = _launch(_fixture(tmp_path, code=code))
+    _assert(receipt, "INCOMPLETE", "OUTPUT_INVALID", 1)
+    assert receipt["error"]["origin"] == "OUTPUT"
+
+
+def test_52_completed_secret_pair_beats_later_decoder_recursion_error(
+    tmp_path: Path,
+) -> None:
+    code = r'''import json,os,sys
+sys.stdin.buffer.read(); s=os.environ["OPAQUE_PROVIDER_VALUE"]; escaped=json.dumps(s,ensure_ascii=True,separators=(",",":"))
+deep="["*3000+"0"+"]"*3000
+sys.stdout.write('{"captured":{"value":'+escaped+'},"later":'+deep+'}\n')'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "递归错误前秘密"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+def test_52_deep_decodable_secret_is_found_without_recursive_scan(
+    tmp_path: Path,
+) -> None:
+    code = r'''import json,os,sys
+sys.stdin.buffer.read(); s=os.environ["OPAQUE_PROVIDER_VALUE"]; escaped=json.dumps(s,ensure_ascii=True,separators=(",",":"))
+deep="["*700+escaped+"]"*700
+sys.stdout.write('{"deep":'+deep+'}\n')'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "深层秘密"
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+
+
+def test_17_secret_free_decoder_recursion_is_output_invalid_not_a_crash(
+    tmp_path: Path,
+) -> None:
+    code = r'''import sys
+sys.stdin.buffer.read(); sys.stdout.write("["*3000+"0"+"]"*3000+"\n")'''
+    receipt = _launch(_fixture(tmp_path, code=code))
+    _assert(receipt, "INCOMPLETE", "OUTPUT_INVALID", 1)
+    assert receipt["error"]["origin"] == "OUTPUT"
+
+
+def test_55_bounded_dynamic_scan_handles_cycles_and_fails_closed_on_depth() -> None:
+    cyclic: list[Any] = []
+    cyclic.append(cyclic)
+    assert not launcher_module._dynamic_value_contains_secret(cyclic, ("absent",))
+    deep: Any = "ordinary"
+    for _ in range(launcher_module._MAX_DYNAMIC_SCAN_DEPTH + 1):
+        deep = [deep]
+    with pytest.raises(launcher_module._DynamicScanIncomplete):
+        launcher_module._dynamic_value_contains_secret(deep, ("absent",))
+
+
 @pytest.mark.parametrize("later_token", ["NaN}", "]}", "1e999}"])
 def test_52_nested_secret_pair_beats_later_parse_failure(
     tmp_path: Path, later_token: str

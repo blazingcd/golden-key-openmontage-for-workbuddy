@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 import shutil
+import stat
 import subprocess
 import sys
 import threading
@@ -92,6 +94,13 @@ def _fixture(
     definition_owner: str = "managed_core",
 ) -> dict[str, Any]:
     candidate = _make_candidate(tmp_path / "candidate", python_payload=Path(sys.executable).read_bytes())
+    if os.name != "nt":
+        candidate.package_python.chmod(
+            candidate.package_python.stat().st_mode
+            | stat.S_IXUSR
+            | stat.S_IXGRP
+            | stat.S_IXOTH
+        )
     pyvenv = candidate.package_python.parent / "pyvenv.cfg"
     shutil.copy2(Path(sys.prefix) / "pyvenv.cfg", pyvenv)
     _add_package_file(
@@ -162,6 +171,31 @@ def _assert(receipt: Any, outcome: str, reason: str, spawn: int, residual: bool 
     assert receipt["retry_count"] == 0
 
 
+def _assert_secret_safe_receipt_types(receipt: Any, canary: str) -> None:
+    assert isinstance(receipt["schema_version"], str)
+    assert isinstance(receipt["outcome"], str)
+    assert isinstance(receipt["reason_code"], str)
+    assert isinstance(receipt["provider_environment_names"], tuple)
+    assert all(isinstance(name, str) for name in receipt["provider_environment_names"])
+    assert isinstance(receipt["local_capability_evidence_identities"], tuple)
+    assert isinstance(receipt["result_pointer"]["valid"], bool)
+    assert receipt["result_pointer"]["path"] is None or isinstance(
+        receipt["result_pointer"]["path"], str
+    )
+    assert receipt["result_pointer"]["sha256"] is None or isinstance(
+        receipt["result_pointer"]["sha256"], str
+    )
+    assert receipt["result_pointer"]["size"] is None or isinstance(
+        receipt["result_pointer"]["size"], int
+    )
+    assert receipt["error"] is not None
+    assert all(
+        isinstance(receipt["error"][field], str)
+        for field in ("code", "origin", "sanitized_message")
+    )
+    assert not launcher_module._value_contains_secret_text(receipt, (canary,))
+
+
 def _rehash_stage3_evidence(evidence: dict[str, Any]) -> dict[str, Any]:
     definition = evidence["approved_capability_definition"]
     body = {key: value for key, value in definition.items() if key != "definition_sha256"}
@@ -206,6 +240,94 @@ def _remove_directory_reparse(link: Path) -> None:
         os.rmdir(link)
     else:
         link.unlink()
+
+
+def _install_simulated_windows_lifecycle(
+    monkeypatch: pytest.MonkeyPatch,
+    fixture: dict[str, Any],
+    *,
+    fail_at: str | None,
+) -> tuple[list[str], list[dict[str, Any]]]:
+    events: list[str] = []
+    popen_kwargs: list[dict[str, Any]] = []
+    result = {
+        "schema_version": "golden-key-workbuddy-package-tool-result-v1",
+        "session_id": fixture["controls"]["session_id"],
+        "request_id": fixture["controls"]["request_id"],
+        "outcome": "SUCCEEDED",
+        "result_pointer": {
+            "relative_path": "result.bin",
+            "sha256": hashlib.sha256(b"fixture-result").hexdigest(),
+            "size": 14,
+        },
+        "error": None,
+    }
+
+    class SimulatedProcess:
+        def __init__(self) -> None:
+            self.pid = 4242
+            self._handle = 4242
+            self.stdin = io.BytesIO()
+            self.stdout = io.BytesIO(_canonical(result))
+            self.stderr = io.BytesIO()
+            self.returncode: int | None = None
+
+        def poll(self) -> int | None:
+            return self.returncode
+
+        def kill(self) -> None:
+            events.append("kill")
+            self.returncode = 1
+
+        def wait(self, timeout: int | None = None) -> int:
+            events.append("wait")
+            if self.returncode is None:
+                raise subprocess.TimeoutExpired("simulated", timeout)
+            return self.returncode
+
+    process = SimulatedProcess()
+
+    class SimulatedJob:
+        def __init__(self) -> None:
+            self.handle = 1
+            self.assigned = False
+
+        def assign(self, child: Any) -> None:
+            assert child is process
+            events.append("assign")
+            if fail_at == "assign":
+                raise OSError("simulated assign failure")
+            self.assigned = True
+
+        def resume(self, child: Any) -> None:
+            assert child is process and self.assigned
+            events.append("resume")
+            if fail_at == "resume":
+                raise OSError("simulated resume failure")
+            (fixture["result_root"] / "result.bin").write_bytes(b"fixture-result")
+            process.returncode = 0
+
+        def active_count(self) -> int:
+            return int(self.assigned and process.returncode is None)
+
+        def terminate(self) -> None:
+            events.append("terminate")
+            # Model TerminateJobObject as an asynchronous kill request.  The
+            # launcher must still kill/wait the concrete Popen object and
+            # prove that no process remains before returning its receipt.
+
+        def close(self) -> None:
+            events.append("close")
+
+    def fake_popen(*_args: Any, **kwargs: Any) -> SimulatedProcess:
+        events.append("popen")
+        popen_kwargs.append(kwargs)
+        return process
+
+    monkeypatch.setattr(launcher_module, "_WINDOWS_PROCESS_PLATFORM", True)
+    monkeypatch.setattr(launcher_module, "_WindowsJob", SimulatedJob)
+    monkeypatch.setattr(launcher_module.subprocess, "Popen", fake_popen)
+    return events, popen_kwargs
 
 
 def _capability_definition(capability: str, asset_root: Path, source: str) -> tuple[dict[str, Any], bytes]:
@@ -504,6 +626,25 @@ target.write(s[:11]); target.flush(); time.sleep(0.1); target.write(s[11:]); tar
     assert secret not in repr(receipt)
 
 
+@pytest.mark.parametrize("stream", ["stdout", "stderr"])
+def test_18_every_allowlisted_provider_value_is_a_secret_canary_even_when_unmarked(
+    tmp_path: Path, stream: str
+) -> None:
+    code = f'''import os,sys
+sys.stdin.buffer.read(); sys.{stream}.write(os.environ["OPAQUE_PROVIDER_VALUE"]); sys.{stream}.flush(); sys.exit(9)'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "unmarked-provider-canary-value"
+    fixture["controls"]["provider_environment"] = {"OPAQUE_PROVIDER_VALUE": canary}
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+
+
 @pytest.mark.parametrize(
     "collision",
     ["user_message", "session_id", "request_id", "result_root", "package_release", "registration", "tool_path", "argv"],
@@ -541,6 +682,43 @@ def test_24_secret_input_collisions_fail_closed_before_spawn(
     receipt = _launch(fixture, message=message)
     _assert(receipt, "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
     assert secret not in repr(receipt)
+
+
+@pytest.mark.parametrize("canary_kind", ["success_reason", "success_outcome", "result_path"])
+def test_24_final_receipt_scan_blocks_values_written_only_at_success_exit(
+    tmp_path: Path, canary_kind: str
+) -> None:
+    fixture = _fixture(
+        tmp_path, allowed=("OPAQUE_PROVIDER_VALUE",), secrets=()
+    )
+    if canary_kind == "success_reason":
+        canary = "NONE"
+    elif canary_kind == "success_outcome":
+        canary = "EXITED_SUCCESS"
+    else:
+        canary = str((fixture["result_root"] / "result.bin").resolve())
+    fixture["controls"]["provider_environment"] = {"OPAQUE_PROVIDER_VALUE": canary}
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    if canary_kind == "result_path":
+        assert receipt["result_pointer"] == {
+            "path": None, "sha256": None, "size": None, "valid": False,
+        }
+
+
+def test_24_provider_name_containing_its_value_is_removed_without_breaking_tuple_schema(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(
+        tmp_path, allowed=("DYNAMIC_TOKEN_SLOT",), secrets=()
+    )
+    canary = "TOKEN"
+    fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN_SLOT": canary}
+    receipt = _launch(fixture)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["provider_environment_names"] == ()
 
 
 def test_23_environment_allowlist_rejects_before_spawn(tmp_path: Path) -> None:
@@ -1060,25 +1238,38 @@ def test_28_cancel_after_spawn_terminates_without_retry_at_priority_level_07(tmp
 def test_28_windows_job_assign_failure_terminates_the_real_suspended_process(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    assert os.name == "nt"
     fixture = _fixture(tmp_path, code="import sys,time; sys.stdin.buffer.read(); time.sleep(30)")
-    real_popen = launcher_module.subprocess.Popen
-    popen_calls = 0
+    if os.name == "nt":
+        real_popen = launcher_module.subprocess.Popen
+        popen_calls = 0
 
-    def counted_popen(*args: Any, **kwargs: Any):
-        nonlocal popen_calls
-        popen_calls += 1
-        assert kwargs["creationflags"] & getattr(subprocess, "CREATE_SUSPENDED", 0x00000004)
-        return real_popen(*args, **kwargs)
+        def counted_popen(*args: Any, **kwargs: Any):
+            nonlocal popen_calls
+            popen_calls += 1
+            assert kwargs["creationflags"] & getattr(
+                subprocess, "CREATE_SUSPENDED", 0x00000004
+            )
+            return real_popen(*args, **kwargs)
 
-    def assign_failure(self: Any, process: Any) -> None:
-        assert process.poll() is None
-        raise OSError("injected AssignProcessToJobObject failure")
+        def assign_failure(self: Any, process: Any) -> None:
+            assert process.poll() is None
+            raise OSError("injected AssignProcessToJobObject failure")
 
-    monkeypatch.setattr(launcher_module.subprocess, "Popen", counted_popen)
-    monkeypatch.setattr(launcher_module._WindowsJob, "assign", assign_failure)
+        monkeypatch.setattr(launcher_module.subprocess, "Popen", counted_popen)
+        monkeypatch.setattr(launcher_module._WindowsJob, "assign", assign_failure)
+        events: list[str] | None = None
+    else:
+        events, popen_kwargs = _install_simulated_windows_lifecycle(
+            monkeypatch, fixture, fail_at="assign"
+        )
+        popen_calls = len(popen_kwargs)
     receipt = _launch(fixture)
     _assert(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", 1)
+    if events is not None:
+        assert events[:2] == ["popen", "assign"]
+        assert "resume" not in events
+        assert "kill" in events and "wait" in events
+        popen_calls = 1
     assert popen_calls == 1
     assert receipt["residual_process"]["termination_attempted"] is True
     assert receipt["residual_process"]["termination_succeeded"] is True
@@ -1088,18 +1279,88 @@ def test_28_windows_job_assign_failure_terminates_the_real_suspended_process(
 def test_28_windows_resume_failure_terminates_the_bound_suspended_process(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    assert os.name == "nt"
     fixture = _fixture(tmp_path, code="import sys,time; sys.stdin.buffer.read(); time.sleep(30)")
+    if os.name == "nt":
+        def resume_failure(self: Any, process: Any) -> None:
+            assert process.poll() is None
+            raise OSError("injected NtResumeProcess failure")
 
-    def resume_failure(self: Any, process: Any) -> None:
-        assert process.poll() is None
-        raise OSError("injected NtResumeProcess failure")
-
-    monkeypatch.setattr(launcher_module._WindowsJob, "resume", resume_failure)
+        monkeypatch.setattr(launcher_module._WindowsJob, "resume", resume_failure)
+        events: list[str] | None = None
+    else:
+        events, _ = _install_simulated_windows_lifecycle(
+            monkeypatch, fixture, fail_at="resume"
+        )
     receipt = _launch(fixture)
     _assert(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", 1)
+    if events is not None:
+        assert events[:3] == ["popen", "assign", "resume"]
+        assert "terminate" in events and "kill" in events and "wait" in events
     assert receipt["residual_process"]["termination_succeeded"] is True
     assert receipt["exit_code"] is not None
+
+
+def test_28_windows_real_suspended_assign_resume_order_succeeds(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fixture = _fixture(tmp_path)
+    if os.name == "nt":
+        events: list[str] = []
+        popen_kwargs: list[dict[str, Any]] = []
+        real_popen = launcher_module.subprocess.Popen
+        real_assign = launcher_module._WindowsJob.assign
+        real_resume = launcher_module._WindowsJob.resume
+
+        def ordered_popen(*args: Any, **kwargs: Any):
+            events.append("popen")
+            popen_kwargs.append(kwargs)
+            return real_popen(*args, **kwargs)
+
+        def ordered_assign(self: Any, process: Any) -> None:
+            events.append("assign")
+            real_assign(self, process)
+
+        def ordered_resume(self: Any, process: Any) -> None:
+            events.append("resume")
+            real_resume(self, process)
+
+        monkeypatch.setattr(launcher_module.subprocess, "Popen", ordered_popen)
+        monkeypatch.setattr(launcher_module._WindowsJob, "assign", ordered_assign)
+        monkeypatch.setattr(launcher_module._WindowsJob, "resume", ordered_resume)
+    else:
+        events, popen_kwargs = _install_simulated_windows_lifecycle(
+            monkeypatch, fixture, fail_at=None
+        )
+    receipt = _launch(fixture)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert events[:3] == ["popen", "assign", "resume"]
+    assert len(popen_kwargs) == 1
+    assert popen_kwargs[0]["creationflags"] & getattr(
+        subprocess, "CREATE_SUSPENDED", 0x00000004
+    )
+
+
+@pytest.mark.parametrize("fail_at", [None, "assign", "resume"])
+def test_28_portable_windows_lifecycle_abstraction_has_no_skip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, fail_at: str | None
+) -> None:
+    fixture = _fixture(tmp_path)
+    events, popen_kwargs = _install_simulated_windows_lifecycle(
+        monkeypatch, fixture, fail_at=fail_at
+    )
+    receipt = _launch(fixture)
+    assert len(popen_kwargs) == 1
+    assert popen_kwargs[0]["creationflags"] & getattr(
+        subprocess, "CREATE_SUSPENDED", 0x00000004
+    )
+    if fail_at is None:
+        _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+        assert events[:3] == ["popen", "assign", "resume"]
+    else:
+        _assert(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", 1)
+        assert events[:2] == ["popen", "assign"]
+        assert "kill" in events and "wait" in events
+        assert receipt["residual_process"]["termination_succeeded"] is True
 
 
 def test_34_nine_outcomes_and_twenty_three_reasons_are_closed() -> None:

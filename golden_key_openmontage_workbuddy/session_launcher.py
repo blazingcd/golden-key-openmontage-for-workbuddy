@@ -38,6 +38,7 @@ _RESULT_SCHEMA_SHA256 = "8a96aceb463da2ea39549de44b06a765a3ac859260001ae277b99db
 _EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
 _MAX_CAPTURE = 1024 * 1024
 _MAX_RESULT_OUTPUT = 64 * 1024
+_WINDOWS_PROCESS_PLATFORM = os.name == "nt"
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -501,9 +502,12 @@ def _set_failure(receipt: dict[str, Any], outcome: str, reason: str, origin: str
     receipt["error"] = {"code": reason, "origin": origin, "sanitized_message": reason}
 
 
-def _finish(receipt: dict[str, Any], start_ns: int) -> Mapping[str, Any]:
+def _finish(
+    receipt: dict[str, Any], start_ns: int, provider_canaries: Sequence[str] = ()
+) -> Mapping[str, Any]:
     receipt["ended_at_utc"] = _utc_now()
     receipt["duration_ms"] = max(0, (time.monotonic_ns() - start_ns) // 1_000_000)
+    _finalize_secret_safe_receipt(receipt, provider_canaries)
     return _freeze(receipt)
 
 
@@ -1126,48 +1130,113 @@ def _validate_controls(value: Any, definition: Mapping[str, Any], data_root: Pat
     }
 
 
-def _provider_secrets(
-    definition: Mapping[str, Any], controls: Mapping[str, Any]
+def _provider_canaries(
+    controls: Mapping[str, Any]
 ) -> tuple[tuple[str, ...], tuple[bytes, ...]]:
-    secret_names = {name.casefold() for name in definition["secret_environment_names"]}
-    secret_text = tuple(
-        value
-        for name, value in controls["provider_environment"].items()
-        if name.casefold() in secret_names and value
+    # Every provider value is confidential regardless of the optional
+    # secret_environment_names metadata.  That field controls Package intent;
+    # it never narrows the Launcher's disclosure boundary.
+    canary_text = tuple(
+        value for value in controls["provider_environment"].values() if value
     )
-    return secret_text, tuple(value.encode("utf-8") for value in secret_text)
+    return canary_text, tuple(value.encode("utf-8") for value in canary_text)
 
 
 def _contains_secret(secrets: Sequence[bytes], *materials: bytes) -> bool:
     return any(secret in material for secret in secrets for material in materials)
 
 
-def _redact_receipt_value(value: Any, secrets: Sequence[str]) -> Any:
-    if isinstance(value, str):
-        return None if any(secret and secret in value for secret in secrets) else value
-    if isinstance(value, dict):
-        for key in tuple(value):
-            value[key] = _redact_receipt_value(value[key], secrets)
-        return value
-    if isinstance(value, tuple):
-        return tuple(_redact_receipt_value(item, secrets) for item in value)
-    if isinstance(value, list):
-        return [_redact_receipt_value(item, secrets) for item in value]
-    return value
-
-
 def _value_contains_secret_text(value: Any, secrets: Sequence[str]) -> bool:
     if isinstance(value, str):
         return any(secret and secret in value for secret in secrets)
     if isinstance(value, Mapping):
-        return any(
-            _value_contains_secret_text(key, secrets)
-            or _value_contains_secret_text(item, secrets)
-            for key, item in value.items()
-        )
+        return any(_value_contains_secret_text(item, secrets) for item in value.values())
     if isinstance(value, (list, tuple)):
         return any(_value_contains_secret_text(item, secrets) for item in value)
     return False
+
+
+def _safe_fixed_text(candidates: Sequence[str], secrets: Sequence[str]) -> str:
+    for candidate in candidates:
+        if not _value_contains_secret_text(candidate, secrets):
+            return candidate
+    # A provider value colliding with every closed token is not a representable
+    # receipt.  The first closed token retains schema validity; ordinary canary
+    # values are handled by the preceding alternatives.
+    return candidates[0]
+
+
+def _finalize_secret_safe_receipt(
+    receipt: dict[str, Any], provider_canaries: Sequence[str]
+) -> None:
+    canaries = tuple(value for value in provider_canaries if value)
+    if not canaries or not _value_contains_secret_text(receipt, canaries):
+        return
+
+    optional_sections = (
+        "session", "request", "registration", "package", "manifest", "lock",
+        "tool_definition", "tool_file", "interpreter",
+    )
+    for section_name in optional_sections:
+        section = receipt[section_name]
+        for field, value in tuple(section.items()):
+            if isinstance(value, str) and _value_contains_secret_text(value, canaries):
+                section[field] = None
+
+    if _value_contains_secret_text(receipt["user_message"], canaries):
+        receipt["user_message"] = {"sha256": None, "byte_length": None}
+    receipt["provider_environment_names"] = tuple(
+        name
+        for name in receipt["provider_environment_names"]
+        if not _value_contains_secret_text(name, canaries)
+    )
+    receipt["local_capability_evidence_identities"] = tuple(
+        identity
+        for identity in receipt["local_capability_evidence_identities"]
+        if not _value_contains_secret_text(identity, canaries)
+    )
+    if _value_contains_secret_text(receipt["result_pointer"], canaries):
+        receipt["result_pointer"] = {
+            "path": None, "sha256": None, "size": None, "valid": False,
+        }
+    if isinstance(receipt["started_at_utc"], str) and _value_contains_secret_text(
+        receipt["started_at_utc"], canaries
+    ):
+        receipt["started_at_utc"] = None
+    if _value_contains_secret_text(receipt["ended_at_utc"], canaries):
+        receipt["ended_at_utc"] = _safe_fixed_text(
+            ("1970-01-01T00:00:00.000Z", "2000-01-01T00:00:00.000Z"), canaries
+        )
+    for stream_name in ("stdout", "stderr"):
+        stream = receipt[stream_name]
+        if _value_contains_secret_text(stream["sha256"], canaries):
+            stream["sha256"] = _safe_fixed_text(
+                (_EMPTY_SHA256, hashlib.sha256(b"redacted-output").hexdigest()), canaries
+            )
+
+    if receipt["spawn_count"] == 0:
+        pairs = (
+            ("PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", "PREFLIGHT"),
+            ("PRELAUNCH_BLOCKED", "INVALID_INPUT", "PREFLIGHT"),
+        )
+    else:
+        pairs = (
+            ("INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", "OUTPUT"),
+            ("INCOMPLETE", "EVIDENCE_INCOMPLETE", "OUTPUT"),
+            ("EXITED_NONZERO", "EXITED_NONZERO", "CHILD"),
+        )
+    outcome, reason, origin = next(
+        (
+            pair for pair in pairs
+            if not _value_contains_secret_text(pair, canaries)
+        ),
+        pairs[0],
+    )
+    receipt["outcome"] = outcome
+    receipt["reason_code"] = reason
+    receipt["error"] = {
+        "code": reason, "origin": origin, "sanitized_message": reason,
+    }
 
 
 def _reject_secret_collision(
@@ -1180,7 +1249,6 @@ def _reject_secret_collision(
     if _value_contains_secret_text(receipt, secret_text) or _contains_secret(
         secret_bytes, receipt_bytes, *materials
     ):
-        _redact_receipt_value(receipt, secret_text)
         _fail("ENVIRONMENT_NOT_ALLOWED")
 
 
@@ -1196,6 +1264,7 @@ def _preflight(
     package_tool_definition: Any,
     local_capability_evidence: Any,
     receipt: dict[str, Any],
+    canary_state: dict[str, Any],
 ) -> dict[str, Any]:
     message = _scalar_text(user_message, nonempty=False, reason="INVALID_INPUT")
     message_bytes = message.encode("utf-8")
@@ -1235,9 +1304,10 @@ def _preflight(
     }
     receipt["interpreter"] = dict(definition["interpreter"])
     controls = _validate_controls(executor_controls, definition, data_path)
-    secret_text, secret_bytes = _provider_secrets(definition, controls)
+    secret_text, secret_bytes = _provider_canaries(controls)
+    canary_state["text"] = secret_text
+    canary_state["bytes"] = secret_bytes
     if _value_contains_secret_text(definition["argv"], secret_text):
-        _redact_receipt_value(receipt, secret_text)
         _fail("ENVIRONMENT_NOT_ALLOWED")
     _reject_secret_collision(
         receipt,
@@ -1481,7 +1551,7 @@ class _WindowsJob:
 
 
 def _group_exists(pid: int, job: _WindowsJob) -> bool:
-    if os.name == "nt":
+    if _WINDOWS_PROCESS_PLATFORM:
         return job.active_count() > 0
     try:
         os.killpg(pid, 0)
@@ -1493,7 +1563,7 @@ def _group_exists(pid: int, job: _WindowsJob) -> bool:
 
 
 def _terminate_group(process: subprocess.Popen[bytes], job: _WindowsJob, *, force: bool) -> None:
-    if os.name == "nt":
+    if _WINDOWS_PROCESS_PLATFORM:
         job.terminate()
         return
     try:
@@ -1682,6 +1752,7 @@ def launch_session_tool(
     job: _WindowsJob | None = None
     job_assigned = False
     first: dict[str, Any] | None = None
+    canary_state: dict[str, Any] = {"text": (), "bytes": ()}
     try:
         if cancel_event is not None and not isinstance(cancel_event, threading.Event):
             _fail("INVALID_INPUT")
@@ -1709,7 +1780,7 @@ def launch_session_tool(
         if cancel_event is not None and cancel_event.is_set():
             receipt["cancelled"] = True
             _set_failure(receipt, "CANCELLED", "CANCELLED_BEFORE_SPAWN", "CANCEL")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
 
         first = _preflight(
             data_root=data_root,
@@ -1718,6 +1789,7 @@ def launch_session_tool(
             package_tool_definition=package_tool_definition,
             local_capability_evidence=local_capability_evidence,
             receipt=receipt,
+            canary_state=canary_state,
         )
         _second_preflight(first)
         request_bytes = _request_payload(first)
@@ -1742,7 +1814,7 @@ def launch_session_tool(
             "shell": False,
             "bufsize": 0,
         }
-        if os.name == "nt":
+        if _WINDOWS_PROCESS_PLATFORM:
             popen_kwargs["creationflags"] = (
                 getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200)
                 | getattr(subprocess, "CREATE_SUSPENDED", 0x00000004)
@@ -1757,14 +1829,14 @@ def launch_session_tool(
             process = subprocess.Popen(**popen_kwargs)
         except OSError:
             _set_failure(receipt, "SPAWN_FAILED", "SPAWN_OS_ERROR", "SPAWN")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         receipt["launched"] = True
         receipt["spawn_count"] = 1
         receipt["pid"] = process.pid
         receipt["started_at_utc"] = _utc_now()
         try:
             job.assign(process)
-            job_assigned = os.name == "nt"
+            job_assigned = _WINDOWS_PROCESS_PLATFORM
             job.resume(process)
         except Exception:
             receipt["residual_process"]["termination_attempted"] = True
@@ -1786,7 +1858,7 @@ def launch_session_tool(
                     "RESIDUAL_PROCESS_DETECTED",
                     "RESIDUAL",
                 )
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
 
         assert process.stdin is not None and process.stdout is not None and process.stderr is not None
         stdout_thread = threading.Thread(target=_read_pipe, args=(process.stdout, stdout_capture), daemon=True)
@@ -1854,22 +1926,22 @@ def launch_session_tool(
             gone = _wait_group_gone(process.pid, job, first["controls"]["termination_grace_seconds"])
             receipt["residual_process"]["termination_succeeded"] = gone
             _set_failure(receipt, "RESIDUAL_PROCESS", "RESIDUAL_PROCESS_DETECTED", "RESIDUAL")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         if stdout_capture.secret_found or stderr_capture.secret_found:
             stdout_capture.retained.clear()
             stdout_capture.parse_bytes.clear()
             stderr_capture.retained.clear()
             _set_failure(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", "OUTPUT")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         if event_kind == "cancel":
             _set_failure(receipt, "CANCELLED", "CANCELLED", "CANCEL")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         if event_kind == "timeout":
             _set_failure(receipt, "TIMED_OUT", "TIMEOUT", "TIMEOUT")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         if receipt["exit_code"] is not None and receipt["exit_code"] != 0:
             _set_failure(receipt, "EXITED_NONZERO", "EXITED_NONZERO", "CHILD")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         if (
             receipt["exit_code"] is None
             or stdin_state["error"]
@@ -1880,36 +1952,36 @@ def launch_session_tool(
             or stdin_thread.is_alive()
         ):
             _set_failure(receipt, "INCOMPLETE", "EVIDENCE_INCOMPLETE", "OUTPUT")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         try:
             child_result = _parse_result(bytes(stdout_capture.parse_bytes), first)
         except _LaunchError as exc:
             _set_failure(receipt, "INCOMPLETE", exc.reason_code, exc.origin)
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         if child_result["outcome"] == "FAILED":
             _set_failure(receipt, "CHILD_REPORTED_FAILURE", "CHILD_REPORTED_FAILURE", "CHILD")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         try:
             receipt["result_pointer"] = _validate_result_pointer(
                 child_result["result_pointer"], first["controls"]["result_root"]
             )
         except _LaunchError:
             _set_failure(receipt, "INCOMPLETE", "RESULT_POINTER_INVALID", "RESULT")
-            return _finish(receipt, start_ns)
+            return _finish(receipt, start_ns, canary_state["text"])
         receipt["outcome"] = "EXITED_SUCCESS"
         receipt["reason_code"] = "NONE"
         receipt["error"] = None
-        return _finish(receipt, start_ns)
+        return _finish(receipt, start_ns, canary_state["text"])
     except _LaunchError as exc:
         _set_failure(receipt, "PRELAUNCH_BLOCKED" if process is None else "INCOMPLETE", exc.reason_code, exc.origin)
-        return _finish(receipt, start_ns)
+        return _finish(receipt, start_ns, canary_state["text"])
     except Exception:
         _set_failure(receipt, "PRELAUNCH_BLOCKED" if process is None else "INCOMPLETE", "EVIDENCE_INCOMPLETE", "PREFLIGHT" if process is None else "OUTPUT")
-        return _finish(receipt, start_ns)
+        return _finish(receipt, start_ns, canary_state["text"])
     finally:
         if process is not None and process.poll() is None:
             try:
-                if os.name == "nt" and not job_assigned:
+                if _WINDOWS_PROCESS_PLATFORM and not job_assigned:
                     process.kill()
                 elif job is not None:
                     _terminate_group(process, job, force=True)

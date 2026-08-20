@@ -9,6 +9,7 @@ from pathlib import Path
 import golden_key_openmontage_workbuddy as package_api
 from golden_key_openmontage_workbuddy import package_registration
 from golden_key_openmontage_workbuddy import runtime_prepare
+from golden_key_openmontage_workbuddy import session_launcher
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -46,10 +47,12 @@ EXPECTED_TRACKED_FILES = frozenset(
         "golden_key_openmontage_workbuddy/__init__.py",
         "golden_key_openmontage_workbuddy/package_registration.py",
         "golden_key_openmontage_workbuddy/runtime_prepare.py",
+        "golden_key_openmontage_workbuddy/session_launcher.py",
         "pyproject.toml",
         "tests/workbuddy/test_package_registration.py",
         "tests/workbuddy/test_repository_hygiene.py",
         "tests/workbuddy/test_runtime_prepare.py",
+        "tests/workbuddy/test_session_launcher.py",
     }
 )
 
@@ -66,7 +69,7 @@ EXPECTED_SOURCE_DIRECTORIES = frozenset(
     }
 )
 
-GENERATED_DIRECTORY_NAMES = frozenset({".pytest_cache", "__pycache__"})
+GENERATED_DIRECTORY_NAMES = frozenset({".pytest_cache", ".venv", "__pycache__"})
 
 REMOVED_TOP_LEVEL_DIRECTORIES = (
     ".agents",
@@ -196,10 +199,10 @@ def _source_inventory() -> tuple[frozenset[str], frozenset[str]]:
     return frozenset(files), frozenset(directories)
 
 
-def test_final_git_index_is_the_fixed_35_file_contract() -> None:
+def test_final_git_index_is_the_fixed_37_file_contract() -> None:
     actual = _git_index_files()
-    assert len(EXPECTED_TRACKED_FILES) == 35
-    assert len(actual) == 35
+    assert len(EXPECTED_TRACKED_FILES) == 37
+    assert len(actual) == 37
     assert actual == EXPECTED_TRACKED_FILES
 
 
@@ -260,7 +263,7 @@ def test_pyproject_keeps_one_dependency_free_shell_package() -> None:
     assert "console_scripts" not in source
 
 
-def test_stage2_registration_and_stage3_runtime_prepare_are_the_only_apis() -> None:
+def test_stage2_stage3_and_stage4_are_the_only_public_apis() -> None:
     registration_path = (
         REPO_ROOT / "golden_key_openmontage_workbuddy" / "package_registration.py"
     )
@@ -275,6 +278,7 @@ def test_stage2_registration_and_stage3_runtime_prepare_are_the_only_apis() -> N
         "recover_active_package",
         "locate_active_package",
         "prepare_optional_capabilities",
+        "launch_session_tool",
         "__version__",
     ]
     assert package_api.__version__ == "0.1.0a0"
@@ -282,12 +286,15 @@ def test_stage2_registration_and_stage3_runtime_prepare_are_the_only_apis() -> N
     for name in expected_exports[:5]:
         assert getattr(package_api, name) is getattr(package_registration, name)
     assert package_api.prepare_optional_capabilities is runtime_prepare.prepare_optional_capabilities
+    assert package_api.launch_session_tool is session_launcher.launch_session_tool
 
     package_sources = {
         path.name
         for path in (REPO_ROOT / "golden_key_openmontage_workbuddy").glob("*.py")
     }
-    assert package_sources == {"__init__.py", "package_registration.py", "runtime_prepare.py"}
+    assert package_sources == {
+        "__init__.py", "package_registration.py", "runtime_prepare.py", "session_launcher.py"
+    }
 
 
 def test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented() -> None:
@@ -305,10 +312,19 @@ def test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented() 
     init_source = (
         REPO_ROOT / "golden_key_openmontage_workbuddy" / "__init__.py"
     ).read_text(encoding="utf-8")
-    assert not any(
-        forbidden in init_source.casefold()
-        for forbidden in ("launcher", "mcp", "relay", "task", "workbuddy_entry")
-    )
+    assert "from .session_launcher import launch_session_tool" in init_source
+    assert not any(forbidden in init_source.casefold() for forbidden in ("mcp", "relay", "task", "workbuddy_entry"))
+
+
+def test_stage4_is_one_provider_opaque_fixed_tool_launcher() -> None:
+    source = (REPO_ROOT / "golden_key_openmontage_workbuddy/session_launcher.py").read_text(encoding="utf-8")
+    assert source.count("def launch_session_tool(") == 1
+    assert "shell\": False" in source
+    assert "retry_count\": 0" in source
+    assert "locate_active_package" in source
+    assert "PackageToolDefinitionV1" not in source  # implementation uses the frozen wire schema, not a second class/API
+    assert not any(name in source.casefold() for name in ("remotion", "hyperframes", "openai", "runway"))
+    assert not any(token in source for token in ("subprocess.run(", "shutil.which(", "os.walk(Path('/'))"))
 
 
 def test_agent_guide_preserves_the_shell_and_verified_package_boundaries() -> None:
@@ -323,7 +339,7 @@ def test_agent_guide_preserves_the_shell_and_verified_package_boundaries() -> No
     ) in guide
 
 
-def test_ci_targets_only_the_formal_branch_and_the_three_final_tests() -> None:
+def test_ci_targets_only_the_formal_branch_and_the_four_final_tests() -> None:
     ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     expected_trigger_block = (
         "pull_request:\n"
@@ -337,6 +353,7 @@ def test_ci_targets_only_the_formal_branch_and_the_three_final_tests() -> None:
         "python -m pytest -p no:cacheprovider "
         "tests/workbuddy/test_package_registration.py "
         "tests/workbuddy/test_runtime_prepare.py "
+        "tests/workbuddy/test_session_launcher.py "
         "tests/workbuddy/test_repository_hygiene.py -q"
     )
 

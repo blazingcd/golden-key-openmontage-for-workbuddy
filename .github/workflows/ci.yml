@@ -31,4 +31,4 @@ jobs:
         run: python -m pip install -e ".[test]"
 
       - name: Run Shell contract tests
-        run: python -m pytest -p no:cacheprovider tests/workbuddy/test_package_registration.py tests/workbuddy/test_runtime_prepare.py tests/workbuddy/test_repository_hygiene.py -q
+        run: python -m pytest -p no:cacheprovider tests/workbuddy/test_package_registration.py tests/workbuddy/test_runtime_prepare.py tests/workbuddy/test_session_launcher.py tests/workbuddy/test_repository_hygiene.py -q

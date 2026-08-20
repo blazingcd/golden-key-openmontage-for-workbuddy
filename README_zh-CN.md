@@ -7,24 +7,25 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 - 阶段1：`PASS_ACCEPTED`
 - 阶段2 Registration/Locator实现：`PASS_ACCEPTED`
 - 阶段2真实临时Package验证：`PASS_ACCEPTED`；最终Release保留：`NOT_MATERIALIZED`；生产Package登记：`NOT_CREATED`
-- 仓库卫生：`PASS_ACCEPTED`，正式对象`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`，精确33文件
-- 阶段3规划：`PASS_ACCEPTED`
-- 阶段3实现：`NOT_GRANTED`
-- 阶段4 Launcher：`NOT_GRANTED`
+- 仓库卫生：`PASS_ACCEPTED`；历史Wave C对象`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为33文件，当前已接受Stage3/4正式树tracked精确37
+- 阶段3规划与实现：`PASS_ACCEPTED`
+- 阶段4规划与实现：`PASS_ACCEPTED`
 - 阶段5 WorkBuddy入口：`NOT_GRANTED`
 - 阶段6状态结果转交：`NOT_GRANTED`
-- 阶段3接管前规划文档：独立审查并正式fast-forward后`PASS_ACCEPTED`
+- 最终Package物化与生产登记：`NOT_MATERIALIZED / NOT_CREATED`
 
-当前任务只把缩减后的阶段3接管前规划统一到现有权威中，不构成实现授权。实时状态和精确Git对象只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。
+实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。当前维护只同步入口文档和CI action版本，不授权阶段5、阶段6或最终Package工作。
 
-当前唯一生产实现是阶段2 Registration与Locator。该实现和一次包含Python、FFmpeg、Node的真实临时Package验证已经接受，但临时Package随后已删除；这不能证明最终Release已经保留、生产PackageRoot已经安装登记，也不能证明Installer或最终分发。合同边界见[`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md)。
+阶段2 Registration/Locator、阶段3 Runtime按需准备和阶段4会话Launcher实现均已接受。阶段2还证明过一次包含Python、FFmpeg、Node的真实临时Package，但临时Package随后已删除；这不能证明最终Release已经保留、生产PackageRoot已经安装登记，也不能证明Installer或最终分发。阶段2合同边界见[`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md)。
 
 本仓库不得运行或指挥视频Pipeline、Provider或媒体生产；这些能力由WorkBuddy依据已验证执行包合同执行，不存在第二个OpenMontage Agent进程。
 
 金钥匙版交付包必须自带并登记完整的私有必带工具链：可用Python 3.10+环境及锁定核心依赖、FFmpeg/ffprobe、Node.js及npm/npx。Node必须满足当前Package内最高要求；因为当前HyperFrames要求Node 22+，不能只锁官方通用README的18+下限。精确`gyan.dev` FFmpeg资产归Package组装供应链候选，接受来源、hash、许可和分发审查，不作为阶段3面向终端用户的下载项。
 
-阶段3只负责WorkBuddy/OpenMontage已经选择的一个可选能力：无需可选能力、Remotion或HyperFrames，以及该能力Package自有Lock明确声明的附属资产。Remotion和HyperFrames只是允许的可选能力目录，不是必带Runtime；每个Package版本可以声明支持零个、一个或两个，只需为本版本声明支持者携带Lock。建议唯一入口为`prepare_optional_capability(data_root, capability_request, authorization_receipt=None)`；未来最大代码面为一个新增模块、一次仅导出修改和一个直接测试文件。阶段3不选择渲染器，不预装两种渲染器，不发现、下载或替换Python/FFmpeg/Node，不扫描盘符，也不运行视频。终端用户可选下载必须先形成精确missing-only计划、取得明确同意并使用批准的中国大陆镜像，不得自动海外回退。
+阶段3已接受的唯一公共入口为`prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`，结果闭集精确为`DETECTION_REPORT / CONSENT_REQUIRED / INTEGRATED / SKIPPED / BLOCKED`。它只对可选Remotion和HyperFrames做有界探测，为缺失或不兼容项生成零下载计划，并只集成用户明确批准的单项能力。阶段3不选择渲染器，不发现、下载或替换Python/FFmpeg/Node，不扫描盘符，也不运行视频；可选下载只使用批准的中国大陆镜像，不得自动海外回退。
 
-最终用户从阶段5进入：阶段5先通过阶段2重验生产Package；阶段4可以使用必带工具链发起基础固定工具调用，只有可选Remotion/HyperFrames执行才额外需要绑定同一Registration和能力Lock的阶段3回执。暂停、同意与继续由WorkBuddy负责，阶段6只转交事实，Shell不得自动重放原业务请求。
+阶段4已接受的唯一公共入口为`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`。它只接受批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`，恰好启动一个固定Package工具，并返回九值闭集、递归不可改写的`LauncherReceiptV1`。阶段4对Provider和Runtime保持opaque，不选择Remotion、HyperFrames或任何其他Provider/Runtime。
 
-旧阶段3任务包、公共入口签名和Shell自有全组件Runtime Lock均已标记`SUPERSEDED`。只有最终Release已保留并完成安装和生产登记、Locator在新进程验证成功、本版本声明支持的每项可选能力都有Manifest覆盖的Package自有Lock、最小“结果→WorkBuddy动作”接口合同已经冻结、精确Builder任务包获得明确授权后，阶段3才能启动；当前仍为`NOT_GRANTED`。真实WorkBuddy新会话与继续能力验证属于阶段5验收，不再反向阻塞阶段3。
+阶段5仍是未来最终用户入口，尚未实现或授权；它将通过阶段2重验生产Package，并把literal用户原话与技术控制分离传递。阶段6同样未实现或授权；若不存在真实格式转换缺口，可直接复用阶段4回执。暂停、同意与继续由WorkBuddy负责，Shell不得自动重放原业务请求。真实生产WorkBuddy/Launcher会话、Provider/媒体执行、阶段5/6以及最终Package物化/生产登记仍未证明或为`NOT_GRANTED`。
+
+历史证据可以保留旧阶段3签名、Package绑定能力模型或阶段4实施前Gate，但这些内容只代表historical记录，不覆盖上述当前已接受接口与状态。

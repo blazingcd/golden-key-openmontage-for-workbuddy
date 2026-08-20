@@ -1,25 +1,26 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`V2-S4-PLAN-CLOSEOUT1 / WORKTREE_RESULT_READY_FOR_REVIEW`
+状态：`V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1 / WORKTREE_RESULT_READY_FOR_REVIEW`
 
 更新时间：2026-08-20
 
 ## 当前任务
 
 ```text
-task_id: V2-S4-PLAN-CLOSEOUT1
+task_id: V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1
 task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-task_kind: STAGE4_PLANNING_STATE_CLOSEOUT / DOCS_ONLY
-user_authorization: 2026-08-20 / 尽快收口Stage4规划状态；不得扩大边界
-start_commit: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
-start_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
+task_kind: STAGE4_IMPLEMENTATION_AUTHORIZATION / DOCS_ONLY
+user_authorization: 2026-08-20 / 明确要求本协调者作为Stage4实施执行统筹安排相应执行与独立审查工作
+start_commit: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+start_tree: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
 result_commit: THIS_COMMIT
-branch: codex/v2-s4-plan-closeout1
+branch: codex/v2-s4-impl-auth1
 formal_target_branch: origin/codex/workbuddy-shell-v2
-formal_target_at_start: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
-review_range: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df..THIS_COMMIT
-independent_review: NOT_STARTED / V2-S4-PLAN-CLOSEOUT-REVIEW1 / REQUIRED_ZERO_WRITE
-formal_promotion: NOT_STARTED / CLOSEOUT_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+formal_target_at_start: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+formal_tree_at_start: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
+review_range: dfd97f3d2e05a4c448448fc14514d1cfe76836e8..THIS_COMMIT
+independent_review: NOT_STARTED / V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / REQUIRED_ZERO_WRITE
+formal_promotion: NOT_STARTED / AUTHORIZATION_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
 repository_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
 production_code_changes: 0
 test_changes: 0
@@ -34,27 +35,38 @@ stage_4_plan_review_history_1: REQUEST_CHANGES / CLOSED / definition hash-cycle 
 stage_4_plan_review_history_2: REQUEST_CHANGES / CLOSED / forged-summary evidence + Stage3 managed/explicit/PATH handoff
 stage_4_plan_ci: run 32337744225 / completed / success
 embedded_plan_candidate_labels: HISTORICAL_CONDITIONAL_TEXT / review-and-promotion conditions satisfied by V2-S4-PLAN-REVIEW1 APPROVE and formal result 5cb3f585a0cddffbd823c785b1d39ebd1834c1df / not live authorization
+stage_4_plan_closeout: PASS_ACCEPTED / dfd97f3d2e05a4c448448fc14514d1cfe76836e8 / tree 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
+stage_4_plan_closeout_reviewer: V2-S4-PLAN-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_plan_closeout_ci: run 32338998075 / completed / success / head_sha=dfd97f3d2e05a4c448448fc14514d1cfe76836e8
 package_tool_definition_contract: FORMALLY_PROMOTED / PackageToolDefinitionV1
 launcher_public_api_and_receipt_contract: FORMALLY_PROMOTED / launch_session_tool + nine-outcome recursively immutable LauncherReceiptV1
 official_model_correction: dynamic capability/provider registry / Provider and local runtime are opaque to Shell / no hard-coded Provider or renderer routing in Stage4
 stage_3_evidence_boundary: current implementation supplies local Remotion/HyperFrames evidence only; Stage4 accepts the complete approved definition plus the unmodified original Stage3 fact only when PackageToolDefinition declares a requirement, then independently applies the accepted managed/explicit/PATH source semantics and revalidates actual bytes
 provider_boundary: image/video/TTS/music/stock/local-GPU and future Providers are optional external configuration selected by WorkBuddy/OpenMontage; Stage4 only passes allowlisted environment names and secret values to the fixed child process
-stage_4_planning: FORMAL_PLAN_PROMOTED / PASS_ACCEPTED_ONLY_AFTER_THIS_CLOSEOUT_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / CURRENT_CANDIDATE_NOT_YET_EFFECTIVE
-stage_4_implementation_authorization: NOT_GRANTED
+stage_4_planning: PASS_ACCEPTED
+stage_4_implementation_authorization: GRANT_PENDING_V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-next_authorized_task: V2-S4-PLAN-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
+next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / ZERO_WRITE_ONLY
 
-closeout_effective_only_if: V2-S4-PLAN-CLOSEOUT-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND THIS_COMMIT ordinary-fast-forwarded as formal head
-effective_stage_4_planning: PASS_ACCEPTED
-effective_stage_4_implementation_authorization: NOT_GRANTED
+authorization_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND THIS_COMMIT ordinary-fast-forwarded as formal head
+effective_stage_4_implementation_authorization: GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1_ONLY
 effective_stage_4_launcher_authorization: NOT_GRANTED
-effective_next_authorized_task: NONE
+effective_next_authorized_task: V2-S4-IMPLEMENTATION-BUILDER1
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
 effective_final_package_gate_authorization: NOT_GRANTED
+implementation_builder_branch: codex/v2-s4-implementation-builder1
+implementation_builder_base_rule: exact latest origin/codex/workbuddy-shell-v2 commit and tree after this authorization candidate is approved and ordinary-fast-forwarded; never use this temporary authorization branch as implementation base
+implementation_exact_allowed_paths: golden_key_openmontage_workbuddy/session_launcher.py; golden_key_openmontage_workbuddy/__init__.py; tests/workbuddy/test_session_launcher.py; tests/workbuddy/test_repository_hygiene.py; .github/workflows/ci.yml
+implementation_tracked_files_transition: 35 -> 37
+implementation_stop_scope_expansion: any sixth path; any edit to golden_key_openmontage_workbuddy/package_registration.py; golden_key_openmontage_workbuddy/runtime_prepare.py; pyproject.toml; any dynamic relaxation of the fixed tree contract
+implementation_test_environment: implementation worktree private D-drive .venv only / no global Python packages
+implementation_required_tests: Stage4 direct tests; repository hygiene; complete repository suite / every final exit 0 with untruncated output
+implementation_delivery: one bounded Builder / non-force temporary-branch push / independent zero-write Reviewer / REQUEST_CHANGES only to original Builder / APPROVE P0=0 P1=0 P2=0 then ordinary fast-forward and formal CI
+implementation_product_boundary: implements and tests only the approved Launcher contract / no real production Launcher execution / no WorkBuddy / no Provider or runtime choice / no media / no Stage5 or Stage6 / no final Package materialization
 ```
 
 ## 已完成的前置收口（历史证据）

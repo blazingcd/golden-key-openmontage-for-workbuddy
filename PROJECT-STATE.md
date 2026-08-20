@@ -7,8 +7,8 @@
 ```text
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
-formal_head: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
-formal_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
+formal_head: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+formal_tree: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
@@ -30,20 +30,22 @@ stage_4_plan_review: V2-S4-PLAN-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
 stage_4_plan_review_history: two REQUEST_CHANGES rounds closed definition hash-cycle, receipt outcome/priority/invalid-input, forged-summary evidence, and managed/explicit/PATH handoff findings
 stage_4_plan_ci: run 32337744225 / completed / success
 embedded_plan_candidate_labels: HISTORICAL_CONDITIONAL_TEXT / review-and-promotion conditions satisfied by V2-S4-PLAN-REVIEW1 APPROVE and formal result 5cb3f585a0cddffbd823c785b1d39ebd1834c1df / not live authorization
-stage_4_planning: FORMAL_PLAN_PROMOTED / PASS_ACCEPTED_ONLY_AFTER_V2-S4-PLAN-CLOSEOUT1_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / CURRENT_CANDIDATE_NOT_YET_EFFECTIVE
-stage_4_implementation_authorization: NOT_GRANTED
+stage_4_plan_closeout: PASS_ACCEPTED / dfd97f3d2e05a4c448448fc14514d1cfe76836e8 / tree 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
+stage_4_plan_closeout_review: V2-S4-PLAN-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_plan_closeout_ci: run 32338998075 / completed / success / head_sha=dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+stage_4_planning: PASS_ACCEPTED
+stage_4_implementation_authorization: GRANT_PENDING_V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S4-PLAN-CLOSEOUT1
+current_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S4-PLAN-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
-closeout_effective_only_if: V2-S4-PLAN-CLOSEOUT-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND closeout candidate ordinary-fast-forwarded as formal head
-effective_stage_4_planning: PASS_ACCEPTED
-effective_stage_4_implementation_authorization: NOT_GRANTED
+next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / ZERO_WRITE_ONLY
+authorization_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND authorization candidate ordinary-fast-forwarded as formal head
+effective_stage_4_implementation_authorization: GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1_ONLY
 effective_stage_4_launcher_authorization: NOT_GRANTED
-effective_next_authorized_task: NONE
+effective_next_authorized_task: V2-S4-IMPLEMENTATION-BUILDER1
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
 effective_final_package_gate_authorization: NOT_GRANTED
@@ -86,4 +88,4 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-本状态closeout候选仍须独立只读审查和普通fast-forward后才能把`stage_4_planning`记为`PASS_ACCEPTED`。生效后的固定状态只能是：Stage4 planning `PASS_ACCEPTED`；Stage4 implementation与Launcher `NOT_GRANTED`；`next_authorized_task: NONE`；Stage5、Stage6及最终Package Gate均`NOT_GRANTED`。本closeout不授权任何实现Builder。
+Stage 4规划及状态closeout已经独立审查、普通fast-forward并由正式CI验证，`stage_4_planning`为`PASS_ACCEPTED`。用户已明确要求本阶段执行统筹安排实现和审查，满足规划中的另行明确启动条件；当前候选只把该授权固化到live authority，不包含生产、测试或CI改动。只有本授权候选经独立只读审查并普通fast-forward后，`V2-S4-IMPLEMENTATION-BUILDER1`才可从届时最新formal精确对象接管既定五路径；真实生产Launcher运行、Stage5、Stage6及最终Package Gate仍未授权。

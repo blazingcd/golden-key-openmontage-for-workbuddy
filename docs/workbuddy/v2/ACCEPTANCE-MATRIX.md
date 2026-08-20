@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_BUILDER_AUTHORIZED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_FORMAL_RESULT_READY_FOR_CLOSEOUT / SIX_MODULE_MVP`
 
 ## 1. 状态必须独立报告
 
@@ -100,21 +100,21 @@ Python核心依赖、FFmpeg/ffprobe、Node/npm/npx都属于Package必带工具�
 
 阶段3直接测试和完整仓库测试都必须有未截断输出和最终退出0。真实大陆镜像下载证据、真实WorkBuddy继续、阶段4真实执行和视频E2E仍是后续独立证据层，不能塞入阶段3直接测试或用mock冒充。
 
-### 3.4 Stage 3完成证据与Stage 4已接受规划
+### 3.4 Stage 3完成证据与Stage 4正式实现结果
 
 Stage 3已接受证据为：direct 55 passed、repository hygiene 10 passed、CI-equivalent full 199 passed，全部最终退出0且无skip；独立Reviewer只读核验精确对象、代码、测试定义和Builder原始输出，没有重跑测试。该证据不证明真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E，也不需要这些后续证据来维持Stage3 `PASS_ACCEPTED`。
 
-Stage4规划已经独立审查、普通fast-forward并记为`PASS_ACCEPTED`。已接受的release-specific immutable `PackageToolDefinitionV1`闭合当前Locator不提供固定工具入口身份的问题，并冻结`launch_session_tool(...)`及`LauncherReceiptV1`精确字段。用户已授权`V2-S4-IMPLEMENTATION-BUILDER1`执行既定仓库实现与测试；最终Package物化和真实WorkBuddy都不是编码前置，具体Release缺工具定义实例时，真实调用必须preflight阻断。
+Stage4规划已经独立审查、普通fast-forward并记为`PASS_ACCEPTED`。已接受的release-specific immutable `PackageToolDefinitionV1`闭合当前Locator不提供固定工具入口身份的问题，并冻结`launch_session_tool(...)`及`LauncherReceiptV1`精确字段。既定实施授权已消费完成；最终Package物化和真实WorkBuddy都不是编码前置，具体Release缺工具定义实例时，真实调用必须preflight阻断。
 
-规划合同已经`V2-S4-PLAN-REVIEW1`独立零写APPROVE、规划closeout审查并普通fast-forward，现已生效。live task为`V2-S4-IMPLEMENTATION-BUILDER1`，必须从本权威同步推广后的最新formal精确SHA/tree接管；授权只覆盖既定五路径和35到37的固定树迁移，不授权真实生产Launcher运行、Stage5、Stage6或最终Package。
+实现严格覆盖既定五路径和35到37的固定树迁移。最终实现对象`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`、tree `0809d1c4cccc9838180a016c75320b0d9fbce28a`经第八轮独立零写审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward。首个正式CI run `32367792637`只因测试夹具错误假定GitHub `setup-python`环境有`pyvenv.cfg`而失败，没有生产Launcher finding；单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`、tree `d3ac89ec89b66789cabe92d94c3e827f9c2cc22f`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward。修复后官方Ubuntu 24.04 / Python 3.11.16 CI run `32369588814`为`357 passed / 1 skipped / exit 0`；Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。
 
-本次secret nondisclosure合同澄清不是实现PASS证据，也不自动修复现有code candidate。只有`V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`且澄清commit普通fast-forward为formal head后，下列secret验收语义才成为implementation authority；此前code candidate不得推广，之后须回原Implementation Builder修订并重新独立验收。
+secret nondisclosure合同澄清已经独立`APPROVE / P0=0 / P1=0 / P2=0`并进入formal，实现候选也已经据此修订和重新独立验收。当前只剩机械状态closeout：只有`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`且本六权威候选普通fast-forward后，Stage4实现才有效记为`PASS_ACCEPTED`；之后`next_authorized_task=NONE`。
 
-### 3.5 Stage 4规划完成合同与未来实现验收
+### 3.5 Stage 4已实现合同与验收边界
 
-已接受规划已把两个已知缺口闭合为可实现合同；仓库实现授权只授予`V2-S4-IMPLEMENTATION-BUILDER1`，并不授权真实生产Launcher运行。固定工具身份不等于编造上游入口：`PackageToolDefinitionV1`冻结authority、closed schema、release绑定和缺实例fail-closed规则，具体Release实例由批准Golden Key Package定义/最终交付Installer owner提供。
+已接受规划已把两个已知缺口闭合为可实现合同，仓库实现及修复也已正式集成；这些证据仍不授权真实生产Launcher运行。固定工具身份不等于编造上游入口：`PackageToolDefinitionV1`冻结authority、closed schema、release绑定和缺实例fail-closed规则，具体Release实例由批准Golden Key Package定义/最终交付Installer owner提供。
 
-未来实现的Gate按以下顺序裁决：
+已实现合同的Gate继续按以下顺序裁决：
 
 1. **输入PASS**：唯一入口精确为`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`；inputs closed，user message字节不变，返回递归冻结。所有非空Provider value在入口先保守标记为secret source，唯一授权sink为child环境；pre-cancel在Locator 0/spawn 0前完成动态hints保护。
 2. **身份PASS**：同次Locator的Registration/Manifest/Lock身份由preflight外部绑定并进入receipt；定义只绑定稳定Release/commit、定义文件、工具、解释器、argv/env/local requirements，不含Registration/Manifest/Lock hash。定义文件本身和工具文件均在当前Manifest与Lock中唯一覆盖，传入定义字节与Package内文件相同，authority owner及工具relative path/hash/size/owner一致；定义、工具和解释器每个路径组件无link/reparse且在PackageRoot内；spawn前复核不漂移。真实fixture必须完成含定义+工具Package的`register -> locate -> validate`往返。
@@ -131,7 +131,7 @@ Stage4规划已经独立审查、普通fast-forward并记为`PASS_ACCEPTED`。�
 
 上述secret专项中“独立authority name/identity”只指`TASK-REGISTER.md`字段级闭集，不包括任何local capability identity item。必须另有otherwise-valid managed `INTEGRATED`和`PRESENT`反例：其`plan_sha256/original_stage3_fact_sha256/status/source/reused/runtime_root/verified_entrypoint/version_evidence`或同一identity其他字段复制/派生Provider value时，精确为preflight fail closed、spawn 0、receipt原文0，并以空tuple清空整个`local_capability_evidence_identities`；不得保留混合identity的独立子字段。
 
-未来实现路径只允许：
+正式实现路径精确为：
 
 ```text
 golden_key_openmontage_workbuddy/session_launcher.py
@@ -141,11 +141,11 @@ tests/workbuddy/test_repository_hygiene.py
 .github/workflows/ci.yml
 ```
 
-新增一个生产模块和一个直接测试后，固定tracked树从35精确变为37。hygiene必须显式更新37文件等值、4个Python源文件和API闭集；CI必须在现有唯一pytest命令中显式加入Stage4直接测试；不得用glob或动态计数放宽。`package_registration.py`、`runtime_prepare.py`、`pyproject.toml`及任何第6路径默认禁止。
+新增一个生产模块和一个直接测试后，固定tracked树已从35精确变为37。hygiene显式更新37文件等值、4个Python源文件和API闭集；CI在现有唯一pytest命令中显式加入Stage4直接测试，没有用glob或动态计数放宽。`package_registration.py`、`runtime_prepare.py`、`pyproject.toml`及任何第6路径均未进入实现差异。
 
-Builder证据必须分别给出Stage4 direct、repository hygiene、full suite的未截断输出和最终exit 0，以及base/candidate/tree/5路径/37 tracked/clean/untracked0/stash0。Reviewer独立零写比较精确base..candidate，除了绿测还必须核对公共合同最小性、fail-closed反例、secret边界和无Scope扩张；`REQUEST_CHANGES`只回原Builder。普通fast-forward正式推广后也不得自动启动Stage5/6。
+Builder最终给出Stage4 direct 158、repository hygiene 11、full suite 358的未截断Windows输出，全部exit 0且无skip，并报告精确base/candidate/tree/5路径/37 tracked/clean/untracked0/stash0。Reviewer独立零写比较精确base..candidate，核对公共合同最小性、fail-closed反例、secret边界和无Scope扩张，最终为`APPROVE / P0=0 / P1=0 / P2=0`；单文件CI夹具修复也独立`APPROVE / P0=0 / P1=0 / P2=0`。WSL只作临时Linux等价验证，已清理关闭，不是运行依赖。普通fast-forward正式推广后仍不得自动启动Stage5/6。
 
-Stage5的消费者合同只需提供literal message、closed controls、approved PackageToolDefinition、经单独授权的Provider环境，并在定义声明时原样传递完整approved capability definition与未改写original Stage3 fact；不得重包装摘要。Stage4按原始managed/explicit/PATH source语义独立验证实际资产；Stage6优先直接使用同一receipt，格式无缺口时必须`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。真实WorkBuddy、Provider和媒体E2E仍分别验收，不得用Stage4单元测试冒充。
+Stage5的消费者合同只需提供literal message、closed controls、approved PackageToolDefinition、经单独授权的Provider环境，并在定义声明时原样传递完整approved capability definition与未改写original Stage3 fact；不得重包装摘要。Stage4按原始managed/explicit/PATH source语义独立验证实际资产；Stage6优先直接使用同一receipt，格式无缺口时必须`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明，不得用Stage4单元测试冒充。
 
 ## 4. Gate A：对象与环境
 

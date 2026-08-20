@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 项目章程
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_BUILDER_AUTHORIZED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_FORMAL_RESULT_READY_FOR_CLOSEOUT / SIX_MODULE_MVP`
 
 ## 1. 产品目标
 
@@ -194,15 +194,15 @@ plan_sha256: INTEGRATED only
 
 产品运行衔接固定为：阶段5接收用户原话并触发阶段2重验；阶段4可先用必带工具链执行基础固定工具；阶段3有界探测并按用户逐能力批准集成；OpenMontage从实际可用能力中决定生产选择；阶段6原样转交探测、计划、用户决定、集成、退出和错误事实。建设顺序仍是`3 -> 4 -> 5 -> 6`，不得把它误写成用户运行顺序。
 
-### 4.9 Stage 4规划接受与实现授权边界
+### 4.9 Stage 4规划接受、实现结果与收口边界
 
-Stage 4规划为`PASS_ACCEPTED`，两个合同缺口已经冻结。用户已经授权`V2-S4-IMPLEMENTATION-BUILDER1`执行仓库实现和测试；该授权不等于真实生产Launcher运行授权。当前Stage 2 `locate_active_package(data_root)`继续只负责返回并重验Registration SHA、PackageRoot、Python/FFmpeg/ffprobe/Node/npm/npx、Guide、Manifest和Lock身份，不新增工具入口字段、不重开Registration。
+Stage 4规划为`PASS_ACCEPTED`，两个合同缺口已经冻结。Stage4实施授权已经消费完成，但始终不等于真实生产Launcher运行授权。当前Stage 2 `locate_active_package(data_root)`继续只负责返回并重验Registration SHA、PackageRoot、Python/FFmpeg/ffprobe/Node/npm/npx、Guide、Manifest和Lock身份，不新增工具入口字段、不重开Registration。
 
 已接受规划用`PackageToolDefinitionV1`闭合固定工具身份来源、release-specific相对路径/hash/size/owner、解释器、固定argv、Manifest/Lock绑定和路径防替换规则；用`launch_session_tool(...)`及`LauncherReceiptV1`闭合唯一公共入口、单进程生命周期、输入/输出、结果闭集和不可改写回执。具体Release实例仍由批准Package定义/最终交付Installer owner提供；缺实例时真实调用preflight阻断，不要求编码前先物化最终Package。
 
-这些合同已经`V2-S4-PLAN-REVIEW1`独立APPROVE、规划closeout审查并普通fast-forward，现为实现权威。live task仅为`V2-S4-IMPLEMENTATION-BUILDER1`：从本权威同步推广后的最新formal精确SHA/tree接管，只能编辑已冻结五路径并把tracked从35精确变为37；第六路径或修改`package_registration.py`、`runtime_prepare.py`、`pyproject.toml`立即停止。真实生产Launcher运行、WorkBuddy新会话/入口/授权询问和同任务继续、Stage6及最终Package仍未授权；Stage6只在Stage4回执和Stage5真实消费者存在后判断，直接消费必须走`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码变化为0。
+这些合同已经`V2-S4-PLAN-REVIEW1`独立APPROVE、规划closeout审查并普通fast-forward。实现严格限定在已冻结五路径，将tracked从35精确迁移到37；最终实现对象`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`、tree `0809d1c4cccc9838180a016c75320b0d9fbce28a`经第八轮独立零写审查`APPROVE / P0=0 / P1=0 / P2=0`后普通fast-forward。首个正式CI run `32367792637`失败只因测试夹具错误假定GitHub `setup-python`环境存在`pyvenv.cfg`，不是生产Launcher缺陷；单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`、tree `d3ac89ec89b66789cabe92d94c3e827f9c2cc22f`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，正式Ubuntu 24.04 / Python 3.11.16 CI run `32369588814`为`357 passed / 1 skipped / exit 0`。Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。
 
-Implementation Reviewer发现的secret nondisclosure不可表示P1只由`V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-BUILDER1`澄清，不重开其他规划合同。该澄清只有经`V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward成为formal head后才是implementation authority；此前现有实现candidate不得推广，之后仍回原Implementation Builder修订并复审。
+Implementation Reviewer发现的secret nondisclosure不可表示P1已经由`V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-BUILDER1`有界澄清，并在独立`APPROVE / P0=0 / P1=0 / P2=0`后普通fast-forward；该历史问题已关闭，没有重开其他规划合同。当前live task仅为六权威机械closeout：只有`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`且closeout候选普通fast-forward成为formal head后，Stage4实现才有效记为`PASS_ACCEPTED`；之后`next_authorized_task=NONE`。真实生产WorkBuddy/Launcher会话、WorkBuddy新会话/入口/授权询问和同任务继续、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。WSL只用于临时Linux等价验证，已清理并关闭，不是Stage4运行依赖。
 
 ### 4.10 Stage 4冻结公共合同
 

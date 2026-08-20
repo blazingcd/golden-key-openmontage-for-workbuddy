@@ -7,15 +7,15 @@
 ```text
 product: WorkBuddy Shell V2
 formal_branch: origin/codex/workbuddy-shell-v2
-formal_head: 2c3d87bedfa4a3cef3cfd952641199300f2715dc
-formal_tree: c196dbf6b094cad05076d01ac2496f7425cf6fac
+formal_head: 13a3227b0c55bbe9039b46d7e92eba822b48f57e
+formal_tree: d3ac89ec89b66789cabe92d94c3e827f9c2cc22f
 stage_1: PASS_ACCEPTED
 stage_2_registration_implementation: PASS_ACCEPTED
 stage_2_temporary_package_validation: PASS_ACCEPTED
 final_package_artifact: NOT_MATERIALIZED
 production_package_registration: NOT_CREATED
 repository_hygiene: PASS_ACCEPTED
-repository_tracked_files: 35
+repository_tracked_files: 37
 stage_3_implementation: PASS_ACCEPTED / a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout: PASS_ACCEPTED / 7c15aae4e77c579309312b21c79076f930970214
 stage_3_evidence: 55 direct / 10 hygiene / 199 full / all exit 0 / no skip
@@ -37,18 +37,27 @@ stage_4_planning: PASS_ACCEPTED
 stage_4_implementation_authorization_formal_result: 2c3d87bedfa4a3cef3cfd952641199300f2715dc / tree c196dbf6b094cad05076d01ac2496f7425cf6fac
 stage_4_implementation_authorization_review: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
 stage_4_implementation_authorization_ci: run 32340096961 / completed / success / head_sha=2c3d87bedfa4a3cef3cfd952641199300f2715dc
-stage_4_implementation_authorization: FORMALLY_GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1 / START_BLOCKED_UNTIL_SIX_AUTHORITY_SYNC_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_4_implementation_authorization: CONSUMED_COMPLETE
+stage_4_implementation_formal_result: fa9adb8470ab94b88ec9900ede03cb26f7de0ebd / tree 0809d1c4cccc9838180a016c75320b0d9fbce28a / exact five paths / tracked 35->37
+stage_4_implementation_review: V2-S4-IMPLEMENTATION-REVIEW1 / EIGHTH_ROUND_APPROVE / P0=0 / P1=0 / P2=0
+stage_4_implementation_first_formal_ci: run 32367792637 / failed / test-fixture-only pyvenv.cfg assumption under setup-python / no production Launcher finding
+stage_4_ci_fixture_fix_formal_result: 13a3227b0c55bbe9039b46d7e92eba822b48f57e / tree d3ac89ec89b66789cabe92d94c3e827f9c2cc22f / tests/workbuddy/test_session_launcher.py only
+stage_4_ci_fixture_fix_review: APPROVE / P0=0 / P1=0 / P2=0
+stage_4_formal_ci: run 32369588814 / Ubuntu 24.04 / Python 3.11.16 / success / 357 passed / 1 skipped / exit 0
+stage_4_windows_evidence: 158 direct / 11 hygiene / 358 combined / all exit 0 / no skip
+stage_4_implementation: FORMAL_RESULT_READY_FOR_CLOSEOUT / EFFECTIVE_PASS_ACCEPTED_PENDING_INDEPENDENT_CLOSEOUT_REVIEW_AND_ORDINARY_FAST_FORWARD
+stage_4_wsl_boundary: NO_RUNTIME_DEPENDENCY / temporary Linux-equivalence validation only / cleaned and shut down after testing
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-FIX1
+current_task: V2-S4-IMPLEMENTATION-CLOSEOUT-BUILDER1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 / ZERO_WRITE_ONLY
-authority_sync_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORITY-SYNC-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND six-authority sync candidate ordinary-fast-forwarded as formal head
-effective_stage_4_implementation_authorization: GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1_ONLY
+next_authorized_task: V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
+closeout_effective_only_if: V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND six-authority closeout candidate ordinary-fast-forwarded as formal head
+effective_stage_4_implementation_status_after_closeout: PASS_ACCEPTED
 effective_stage_4_launcher_authorization: NOT_GRANTED
-effective_next_authorized_task: V2-S4-IMPLEMENTATION-BUILDER1
+effective_next_authorized_task_after_closeout: NONE
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
 effective_final_package_gate_authorization: NOT_GRANTED
@@ -64,7 +73,9 @@ final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_B
 - 阶段3实现：`a3f8959682d296301dc573c2835f8c705a52e8b2`，独立`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；closeout：`7c15aae4e77c579309312b21c79076f930970214`，已正式推广。
 - 阶段3证据：55 direct、10 hygiene、199 full，全部最终退出0且无skip；未证明真实第三方/大陆镜像下载、生产DataRoot集成、WorkBuddy、Stage4、Provider或媒体/视频E2E。
 - 阶段4规划：`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`，`V2-S4-PLAN-REVIEW1`最终`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；正式CI run `32337744225`为`completed/success`。两轮历史`REQUEST_CHANGES`已经闭合定义hash环、receipt结果/优先级/非法输入、可伪造摘要证据及Stage3 `managed/explicit/PATH`交接问题。
-- 当前正式树tracked精确35。最终Release、生产PackageRoot和生产Registration仍属于后续最终交付/Installer任务，最迟在Stage5真实WorkBuddy生产验收前完成；它不是Stage4规划或编码前置。
+- 阶段4实现结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立只读审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward；随后仅修复GitHub `setup-python`无`pyvenv.cfg`时的测试夹具，修复结果`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward。正式树tracked精确37。
+- 官方Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`；Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。WSL仅用于临时Linux等价验证，测试后已清理并关闭，不是Stage4运行依赖。
+- 最终Release、生产PackageRoot和生产Registration仍属于后续最终交付/Installer任务，最迟在Stage5真实WorkBuddy生产验收前完成；它们不是Stage4规划或编码前置，也未被Stage4证据证明。
 
 ## 阶段3至阶段6建设顺序与实际运行链路
 
@@ -91,4 +102,4 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-Stage 4规划及状态closeout已经独立审查、普通fast-forward并由正式CI验证，`stage_4_planning`为`PASS_ACCEPTED`。用户明确启动条件已经由正式授权结果`2c3d87bedfa4a3cef3cfd952641199300f2715dc`固化，独立授权Reviewer为`APPROVE / P0=0 / P1=0 / P2=0`，正式CI run `32340096961`成功。当前唯一剩余治理动作是六权威同步候选的独立只读审查和普通fast-forward；完成前不允许生产编辑，完成后`V2-S4-IMPLEMENTATION-BUILDER1`才从届时最新formal精确对象接管既定五路径。真实生产Launcher运行、Stage5、Stage6及最终Package Gate仍未授权。
+Stage 4规划及状态closeout已经独立审查、普通fast-forward并由正式CI验证，`stage_4_planning`为`PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现和单文件CI夹具修复都已完成独立审查并进入formal；首个正式CI失败只暴露测试夹具对`pyvenv.cfg`的错误假设，不是生产Launcher缺陷，修复后的正式CI成功。当前唯一剩余治理动作是本六权威closeout候选的独立只读审查和普通fast-forward；两者都完成后Stage4实现才有效记为`PASS_ACCEPTED`，且`next_authorized_task=NONE`。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。

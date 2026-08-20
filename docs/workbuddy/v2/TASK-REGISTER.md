@@ -19,7 +19,8 @@ formal_target_branch: origin/codex/workbuddy-shell-v2
 formal_target_at_start: 3a64a0b4c103ea3cbe254fce60889396cd18ff30
 formal_tree_at_start: 77011e73c2f1dcca86e4290035018af6c06ef7dd
 review_range: 3a64a0b4c103ea3cbe254fce60889396cd18ff30..THIS_COMMIT
-independent_review: NOT_STARTED / V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1 / REQUIRED_ZERO_WRITE
+independent_review: REQUEST_CHANGES / P0=0 / P1=1 / P2=0 / REVISION_READY_FOR_REREVIEW / V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1 / REQUIRED_ZERO_WRITE
+clarification_review_history_1: REQUEST_CHANGES / CLOSED_IN_THIS_REVISION / local-capability identity authority exception narrowed to exact independently reconstructed fields; fact-derived mixed identity remains dynamic
 formal_promotion: NOT_STARTED / CLARIFICATION_EFFECTIVE_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
 repository_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
 production_code_changes: 0
@@ -292,10 +293,10 @@ provider_environment: Mapping[str, str]
 non-disclosure按provenance而不是对最终receipt做无差别substring禁令：
 
 1. 固定且不读取secret source构造的协议常量——`schema_version`、九值outcome、23个reason、receipt/result/request字段名、固定error origin和预冻结sanitized identifier text——即使与某个secret完整字节或子串偶然相同，也不构成Provider值回显/传播，不得因此改写闭集token或字段类型。
-2. 经独立权威重建并验证的环境变量name、Registration/Package/Manifest/Lock、PackageToolDefinition、工具/解释器和本地能力身份同理；允许偶然字节相同的前提是实现的数据流能证明该值来自对应权威对象而非Provider value。固定argv也只能从已验证PackageToolDefinition构造，绝不能读取Provider value。
-3. caller/child提供或从其内容计算的session、request、user-message hints、result root/pointer、child error/message、stdout/stderr摘要及其他不可信动态域必须在进入canonical stdin或最终递归freeze前执行secret-source non-propagation检查。无法证明独立来源且包含任一完整非空secret bytes，或由secret-tainted值派生时，必须fail closed并清除该动态值；不得因为静态常量恰好相同而失败，也不得让动态泄漏借“常量例外”通过。
+2. 独立authority偶然碰撞例外只覆盖receipt中能从已验证Package/PackageToolDefinition/Manifest+Lock/实际工具与解释器字节重建，且构造时不读取Provider value或caller fact的以下字段：`registration.registration_sha256`；`package.openmontage_release/openmontage_commit/package_root`；`manifest.sha256/size`；`lock.sha256/size/bundle_sha256`；`tool_definition.definition_id/definition_sha256/authority_owner`；`tool_file.tool_id/relative_path/path/sha256/size/owner`；`interpreter.binding/path/sha256/size`。环境变量name仅在能证明它来自raw Mapping key并被PackageToolDefinition allowlist独立验证、且从未读取value构造时可保留。固定argv只能从已验证PackageToolDefinition构造。上述字段闭集以外不存在概括的“本地能力身份”authority例外。
+3. `original_stage3_fact`及caller提供或从其内容计算的全部字段都是动态域，包括`plan_sha256/original_stage3_fact_sha256/status/source/reused/runtime_root/verified_entrypoint/version_evidence`。receipt的每个`local_capability_evidence_identities` item同时混合独立资产事实与fact-derived字段，因此整个item视为动态对象，其任一子字段都不得套authority例外。session、request、user-message hints、result root/pointer、child error/message、stdout/stderr摘要及其他caller/child动态域同理。这些对象必须在进入canonical stdin或最终递归freeze前执行secret-source non-propagation检查；任一字段包含完整非空secret bytes或由secret-tainted值派生时，必须fail closed并清除该动态对象，不得让动态泄漏借“常量/authority例外”通过。
 
-非cancel调用在session/request/user_message/result_root或其他待写stdin动态值中发现上述潜在传播时，固定为`PRELAUNCH_BLOCKED/INVALID_INPUT`、spawn 0。安全替换必须保持receipt全字段与原类型：schema允许nullable的str/int使用`None`，tuple字段使用空tuple而不是插入`None`，result pointer使用全`None`且`valid=false`，动态sanitized message使用预冻结secret-independent文本。若某个stdout/stderr流或由其解析出的动态字段受污染，该流的公开摘要固定为`size=0`、`sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`、`truncated=true`作为“已抑制”安全事实；不受污染的独立进程事实仍保留。最终freeze前必须再递归断言所有非固定、非独立权威动态域对secret source零传播。
+非cancel调用在session/request/user_message/result_root、`original_stage3_fact`、任一local capability identity item或其他待写stdin动态值中发现上述潜在传播时，固定为`PRELAUNCH_BLOCKED/INVALID_INPUT`、spawn 0。安全替换必须保持receipt全字段与原类型：schema允许nullable的str/int使用`None`，tuple字段使用空tuple而不是插入`None`；任一local capability identity item受污染时必须清空整个`local_capability_evidence_identities` tuple，不得保留混合item的部分字段。result pointer使用全`None`且`valid=false`，动态sanitized message使用预冻结secret-independent文本。若某个stdout/stderr流或由其解析出的动态字段受污染，该流的公开摘要固定为`size=0`、`sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`、`truncated=true`作为“已抑制”安全事实；不受污染的独立进程事实仍保留。最终freeze前必须再递归断言所有非固定、非字段级独立authority动态域对secret source零传播。
 
 `local_capability_evidence`不是Stage 5重包装的摘要。每项必须原样携带完整批准定义和Stage 3原始事实，root为closed Mapping：
 
@@ -416,6 +417,8 @@ residual_process: {detected: bool; termination_attempted: bool; termination_succ
 
 所有字段始终存在。`PRELAUNCH_BLOCKED/INVALID_INPUT`以及无法安全解析对应输入时，`session.session_id`、`request.request_id`、`user_message.sha256/byte_length`允许为`None`；已成功验证且可证明不来自secret source的动态字段填真实值，未到达或受污染字段按上述类型安全值替换，不得删除字段或改变tuple元素类型。固定协议常量与独立权威身份的偶然字节相同不算泄漏；Provider value从来源传播到任何不可信动态receipt字段、异常文本、日志或回传原文的次数必须为0。若child stdout/stderr完整secret bytes跨chunk命中，或解析动态字段重建出secret，丢弃原文并安全替换受污染动态域，outcome=`INCOMPLETE`、reason=`SECRET_DISCLOSURE_DETECTED`。
 
+本节的“独立权威身份”精确限于T2列名的字段级闭集，不适用于任何local capability identity item；后者只要任一字段受污染，必须把整个`local_capability_evidence_identities`替换为空tuple。
+
 结果裁决优先级精确如下，命中后不得被较低项覆盖；真实`exit_code/timed_out/cancelled/residual_process`字段始终保留：
 
 | 优先级 | 条件 | outcome / reason | spawn_count |
@@ -447,6 +450,8 @@ preflight reason不得合并或留给Builder选择：closed input/type/range/未
 成功测试至少覆盖`PACKAGE_PYTHON_SCRIPT`与`DIRECT_EXECUTABLE`各一次、空Provider环境、allowlisted动态Provider环境、required_local_capabilities为空和非空、exit 0有效pointer、Stage 6直接消费同一receipt shape。真实Stage2 fixture往返必须在临时DataRoot内创建由Manifest/Lock覆盖的定义文件与固定工具，调用现有registration API登记、激活并由Locator读取，再由Stage4完成定义/工具验证；它证明合同可实例化，但不要求最终交付Package成为实现前置。测试只用任务fixture进程，不运行真实WorkBuddy、Provider、媒体生产或未验证Package Guide。
 
 第24项“secret值不进入”精确指Provider-secret source不得被Launcher复制/派生，不是禁止secret-independent固定常量或独立权威身份偶然字节相同。第29项“输出截断保留真实size/hash”只适用于未受secret污染的流；命中secret的流必须使用T2/T4冻结的安全抑制摘要，不能为保留真实digest而派生或传播secret。上述clarification在`V2-S4-SECRET-NONDISCLOSURE-CONTRACT-CLARIFICATION-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward为formal head前不是implementation authority；现有实现candidate保持禁止推广，批准后仍须返回原Implementation Builder修订并独立复审。
+
+第53项的“独立Package/definition identity”只指T2精确列名的字段级闭集，不包括任何local capability identity item。第55项必须分别使用otherwise-valid managed `INTEGRATED`和`PRESENT` fact反例：`plan_sha256/original_stage3_fact_sha256/status/source/reused/runtime_root/verified_entrypoint/version_evidence`或同一identity其他字段复制/派生Provider value时，必须`PRELAUNCH_BLOCKED/INVALID_INPUT`、spawn 0、receipt/log/exception原文0，并以空tuple清空整个`local_capability_evidence_identities`；不得保留混合identity的独立子字段。
 
 ### V2-S4-T6：未来实现精确文件白名单
 

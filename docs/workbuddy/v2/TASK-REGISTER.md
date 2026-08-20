@@ -429,19 +429,19 @@ tests/workbuddy/test_repository_hygiene.py                  # 固定树/API/sour
 
 T1到T4是同一个单生产模块内的私有实现职责，不得为了任务编号拆成新模块。T5/T6只提供直接证据和固定仓库门禁。T7完成后Stage4仓库实现才可收口，但Stage5/6仍保持未授权。
 
-本规划已获Reviewer APPROVE并正式推广；本closeout仍须独立APPROVE并普通fast-forward后，以下字段才生效：
+以下是规划推广时冻结的历史closeout目标；它已经由`V2-S4-PLAN-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`及`dfd97f3d2e05a4c448448fc14514d1cfe76836e8`普通fast-forward全部满足，不再是当前授权状态：
 
 ```text
-stage_4_planning: PASS_ACCEPTED
-stage_4_implementation_authorization: NOT_GRANTED
-stage_4_launcher_authorization: NOT_GRANTED
-next_authorized_task: NONE
-stage_5_workbuddy_entry_authorization: NOT_GRANTED
-stage_6_status_result_relay_authorization: NOT_GRANTED
-final_package_gate_authorization: NOT_GRANTED
+historical_closeout_target_stage_4_planning: PASS_ACCEPTED
+historical_closeout_target_stage_4_implementation_authorization: NOT_GRANTED
+historical_closeout_target_stage_4_launcher_authorization: NOT_GRANTED
+historical_closeout_target_next_authorized_task: NONE
+historical_closeout_target_stage_5_workbuddy_entry_authorization: NOT_GRANTED
+historical_closeout_target_stage_6_status_result_relay_authorization: NOT_GRANTED
+historical_closeout_target_final_package_gate_authorization: NOT_GRANTED
 ```
 
-这些是推广后由单独docs-only closeout记录的目标状态，不得在本Builder候选或Reviewer结论中提前冒充已正式接受。
+这些字段只记录当时的历史目标，不得覆盖文件顶部的当前授权候选和条件生效字段。
 
 ### 与Stage 5/6不断档
 
@@ -527,11 +527,11 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 ```text
 formal_branch: codex/workbuddy-shell-v2
-accepted_authority_result: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
-formal_handoff_before_current_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
-accepted_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
-formal_head: 5cb3f585a0cddffbd823c785b1d39ebd1834c1df
-formal_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
+accepted_authority_result: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+historical_formal_handoff_before_stage3_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
+historical_accepted_stage3_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
+formal_head: dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+formal_tree: 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
 stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
 stage_3_closeout_formal_result: 7c15aae4e77c579309312b21c79076f930970214
 stage_3_to_stage_4_docs_sync_formal_result: 513e5ca10d1ba04878295be110096b013f47974a
@@ -580,15 +580,25 @@ stage_4_plan_formal_tree: 144df76b3a307fa8944ccd7bd384bddb1b340516
 stage_4_plan_promotion: ORDINARY_FAST_FORWARD / origin/codex/workbuddy-shell-v2=5cb3f585a0cddffbd823c785b1d39ebd1834c1df
 stage_4_plan_review: V2-S4-PLAN-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
 stage_4_plan_ci: run 32337744225 / completed / success
-stage_4_planning: FORMAL_PLAN_PROMOTED / PASS_ACCEPTED_ONLY_AFTER_V2-S4-PLAN-CLOSEOUT1_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / CURRENT_CANDIDATE_NOT_YET_EFFECTIVE
-stage_4_implementation_authorization: NOT_GRANTED
+stage_4_plan_closeout: PASS_ACCEPTED / dfd97f3d2e05a4c448448fc14514d1cfe76836e8 / tree 5eeb8a9337c5b38be60d3b0cef184b8898f2fedc
+stage_4_plan_closeout_review: V2-S4-PLAN-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
+stage_4_plan_closeout_ci: run 32338998075 / completed / success / head_sha=dfd97f3d2e05a4c448448fc14514d1cfe76836e8
+stage_4_planning: PASS_ACCEPTED
+stage_4_implementation_authorization: GRANT_PENDING_V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-current_task: V2-S4-PLAN-CLOSEOUT1
+current_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-BUILDER1
 current_task_status: WORKTREE_RESULT_READY_FOR_REVIEW
-next_authorized_task: V2-S4-PLAN-CLOSEOUT-REVIEW1 / ZERO_WRITE_ONLY
+next_authorized_task: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 / ZERO_WRITE_ONLY
+authorization_effective_only_if: V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1 APPROVE / P0=0 / P1=0 / P2=0 AND authorization candidate ordinary-fast-forwarded as formal head
+effective_stage_4_implementation_authorization: GRANTED_TO_V2-S4-IMPLEMENTATION-BUILDER1_ONLY
+effective_next_authorized_task: V2-S4-IMPLEMENTATION-BUILDER1
+effective_stage_4_launcher_authorization: NOT_GRANTED
+effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
+effective_stage_6_status_result_relay_authorization: NOT_GRANTED
+effective_final_package_gate_authorization: NOT_GRANTED
 stage_3_to_6_scope_reduction: ACTIVE_REPLANNED_BOUNDARY
 runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 ```
@@ -597,7 +607,7 @@ runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 
 CI状态断言修复`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`已经位于正式分支，精确代码差异仅为`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言；正式CI run `32218904419`为`completed/success`，输出`198 passed / 1 skipped`。第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`，原因只有当时authority mismatch，代码差异无finding。正式分支在账本收口前前移属于治理偏差，本closeout只同步实时权威，不改写审查或Git历史。
 
-CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`已经`V2-S4-PLAN-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`、正式CI run `32337744225 completed/success`并普通fast-forward进入正式分支；两轮历史`REQUEST_CHANGES`已经关闭。本状态closeout候选尚未生效，下一步只能由`V2-S4-PLAN-CLOSEOUT-REVIEW1`零写审阅精确`5cb3f58..THIS_COMMIT`。只有其APPROVE并普通fast-forward后，`stage_4_planning`才记为`PASS_ACCEPTED`；Stage4实现与Launcher、Stage5、Stage6及最终Package Gate仍不授权，且`next_authorized_task=NONE`。
+CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`已经`V2-S4-PLAN-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`、正式CI run `32337744225 completed/success`并普通fast-forward；两轮历史`REQUEST_CHANGES`已经关闭。规划状态closeout也已由`V2-S4-PLAN-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`，并以`dfd97f3d2e05a4c448448fc14514d1cfe76836e8`、tree `5eeb8a9337c5b38be60d3b0cef184b8898f2fedc`正式推广，正式CI run `32338998075 completed/success`，因此`stage_4_planning=PASS_ACCEPTED`。当前只允许`V2-S4-IMPLEMENTATION-AUTHORIZATION-REVIEW1`零写审查本授权候选；只有其最终`APPROVE / P0=0 / P1=0 / P2=0`且候选普通fast-forward后，实施授权才条件生效，下一任务仅为`V2-S4-IMPLEMENTATION-BUILDER1`。真实生产Launcher运行、Stage5、Stage6及最终Package Gate仍为`NOT_GRANTED`。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35。没有恢复任何已清理内容。
 

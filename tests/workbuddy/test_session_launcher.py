@@ -193,7 +193,19 @@ def _assert_secret_safe_receipt_types(receipt: Any, canary: str) -> None:
         isinstance(receipt["error"][field], str)
         for field in ("code", "origin", "sanitized_message")
     )
-    assert not launcher_module._value_contains_secret_text(receipt, (canary,))
+    dynamic_domains = {
+        "session": receipt["session"],
+        "request": receipt["request"],
+        "user_message": receipt["user_message"],
+        "local_capability_evidence_identities": receipt[
+            "local_capability_evidence_identities"
+        ],
+        "stdout": receipt["stdout"],
+        "stderr": receipt["stderr"],
+        "result_pointer": receipt["result_pointer"],
+    }
+    assert not launcher_module._value_contains_secret_text(dynamic_domains, (canary,))
+    assert canary not in repr(receipt)
 
 
 def _rehash_stage3_evidence(evidence: dict[str, Any]) -> dict[str, Any]:
@@ -544,6 +556,115 @@ def test_32_entry_cancel_precedes_locator_and_priority_level_02(tmp_path: Path) 
     assert receipt["cancelled"] is True
 
 
+@pytest.mark.parametrize("hint_field", ["session_id", "request_id"])
+def test_49_pre_cancel_extracts_raw_provider_secret_before_hints_or_locator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, hint_field: str
+) -> None:
+    canary = "cancel-secret-value"
+    controls: dict[str, Any] = {
+        "session_id": "safe-session",
+        "request_id": "safe-request",
+        "provider_environment": {"UNVERIFIED_PROVIDER_NAME": canary},
+        "otherwise_invalid": object(),
+    }
+    controls[hint_field] = canary
+    event = threading.Event()
+    event.set()
+    locator_calls = 0
+    popen_calls = 0
+
+    def forbidden_locator(_data_root: Any) -> Any:
+        nonlocal locator_calls
+        locator_calls += 1
+        raise AssertionError("pre-cancel must not access Locator")
+
+    def forbidden_popen(*_args: Any, **_kwargs: Any) -> Any:
+        nonlocal popen_calls
+        popen_calls += 1
+        raise AssertionError("pre-cancel must not spawn")
+
+    monkeypatch.setattr(launcher_module, "locate_active_package", forbidden_locator)
+    monkeypatch.setattr(launcher_module.subprocess, "Popen", forbidden_popen)
+    receipt = launch_session_tool(
+        tmp_path / "missing",
+        "ordinary-message",
+        controls,
+        {},
+        cancel_event=event,
+    )
+    _assert(receipt, "CANCELLED", "CANCELLED_BEFORE_SPAWN", 0)
+    assert locator_calls == 0 and popen_calls == 0
+    assert receipt["cancelled"] is True
+    assert receipt["session" if hint_field == "session_id" else "request"][hint_field] is None
+    assert receipt["provider_environment_names"] == ()
+    _assert_secret_safe_receipt_types(receipt, canary)
+
+
+def test_48_hyphen_secret_can_collide_with_fixed_schema_on_pre_cancel(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    event = threading.Event()
+    event.set()
+    monkeypatch.setattr(
+        launcher_module,
+        "locate_active_package",
+        lambda _root: (_ for _ in ()).throw(AssertionError("Locator must stay at zero")),
+    )
+    receipt = launch_session_tool(
+        tmp_path / "missing",
+        "ordinarymessage",
+        {
+            "session_id": "safesession",
+            "request_id": "saferequest",
+            "provider_environment": {"OPAQUE": "-"},
+        },
+        {},
+        cancel_event=event,
+    )
+    _assert(receipt, "CANCELLED", "CANCELLED_BEFORE_SPAWN", 0)
+    assert receipt["schema_version"] == "golden-key-workbuddy-launcher-receipt-v1"
+    assert receipt["session"]["session_id"] == "safesession"
+    assert receipt["request"]["request_id"] == "saferequest"
+
+
+def test_49_unreadable_raw_controls_suppress_all_unconfirmed_cancel_hints(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    canary = "unreadable-provider-value"
+
+    class UnreadableControls(dict[str, Any]):
+        def get(self, _key: str, _default: Any = None) -> Any:
+            raise RuntimeError("untrusted controls read failure")
+
+    event = threading.Event()
+    event.set()
+    locator_calls = 0
+
+    def forbidden_locator(_root: Any) -> Any:
+        nonlocal locator_calls
+        locator_calls += 1
+        raise AssertionError("Locator must stay at zero")
+
+    monkeypatch.setattr(launcher_module, "locate_active_package", forbidden_locator)
+    receipt = launch_session_tool(
+        tmp_path / "missing",
+        canary,
+        UnreadableControls(
+            session_id=canary,
+            request_id=canary,
+            provider_environment={"OPAQUE": canary},
+        ),
+        {},
+        cancel_event=event,
+    )
+    _assert(receipt, "CANCELLED", "CANCELLED_BEFORE_SPAWN", 0)
+    assert locator_calls == 0
+    assert receipt["session"]["session_id"] is None
+    assert receipt["request"]["request_id"] is None
+    assert receipt["user_message"] == {"sha256": None, "byte_length": None}
+    assert canary not in repr(receipt)
+
+
 @pytest.mark.parametrize(
     ("mutation", "reason"),
     [
@@ -643,11 +764,48 @@ sys.stdin.buffer.read(); sys.{stream}.write(os.environ["OPAQUE_PROVIDER_VALUE"])
     receipt = _launch(fixture)
     _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
     _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt[stream] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
+
+
+@pytest.mark.parametrize("dynamic_kind", ["result_pointer", "error"])
+def test_52_json_escape_cannot_hide_secret_reconstructed_in_child_dynamic_fields(
+    tmp_path: Path, dynamic_kind: str
+) -> None:
+    if dynamic_kind == "result_pointer":
+        code = r'''import hashlib,json,os,pathlib,sys
+r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]; p=pathlib.Path(r["executor_controls"]["result_root"])/(s+".bin"); p.write_bytes(b"ok")
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"SUCCEEDED","result_pointer":{"relative_path":s+".bin","sha256":hashlib.sha256(b"ok").hexdigest(),"size":2},"error":None}
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":"))+"\n").encode())'''
+    else:
+        code = r'''import json,os,sys
+r=json.load(sys.stdin); s=os.environ["OPAQUE_PROVIDER_VALUE"]
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"FIXTURE","origin":"FIXTURE","message":s}}
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=True,sort_keys=True,separators=(",",":"))+"\n").encode())'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+    )
+    canary = "秘密动态值"
+    fixture["controls"]["provider_environment"] = {"OPAQUE_PROVIDER_VALUE": canary}
+    receipt = _launch(fixture)
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    _assert_secret_safe_receipt_types(receipt, canary)
+    assert receipt["stdout"] == {
+        "size": 0,
+        "sha256": hashlib.sha256(b"").hexdigest(),
+        "truncated": True,
+    }
 
 
 @pytest.mark.parametrize(
     "collision",
-    ["user_message", "session_id", "request_id", "result_root", "package_release", "registration", "tool_path", "argv"],
+    ["user_message", "session_id", "request_id", "result_root"],
 )
 def test_24_secret_input_collisions_fail_closed_before_spawn(
     tmp_path: Path, collision: str
@@ -665,7 +823,20 @@ def test_24_secret_input_collisions_fail_closed_before_spawn(
         secret = fixture["controls"]["request_id"]
     elif collision == "result_root":
         secret = fixture["controls"]["result_root"]
-    elif collision == "package_release":
+    fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN": secret}
+    receipt = _launch(fixture, message=message)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
+    _assert_secret_safe_receipt_types(receipt, secret)
+
+
+@pytest.mark.parametrize(
+    "collision", ["package_release", "registration", "tool_path", "argv"]
+)
+def test_53_independent_package_authority_collision_is_not_secret_propagation(
+    tmp_path: Path, collision: str
+) -> None:
+    fixture = _fixture(tmp_path, allowed=("DYNAMIC_TOKEN",), secrets=())
+    if collision == "package_release":
         secret = RELEASE
     elif collision == "registration":
         located = registration.locate_active_package(fixture["candidate"].data_root)
@@ -679,35 +850,37 @@ def test_24_secret_input_collisions_fail_closed_before_spawn(
     else:
         secret = "-c"
     fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN": secret}
-    receipt = _launch(fixture, message=message)
-    _assert(receipt, "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
-    assert secret not in repr(receipt)
+    receipt = _launch(fixture, message="ordinary-message")
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
 
 
-@pytest.mark.parametrize("canary_kind", ["success_reason", "success_outcome", "result_path"])
-def test_24_final_receipt_scan_blocks_values_written_only_at_success_exit(
-    tmp_path: Path, canary_kind: str
+@pytest.mark.parametrize("canary", ["NONE", "EXITED_SUCCESS", "I"])
+def test_48_fixed_protocol_token_collision_does_not_rewrite_closed_schema(
+    tmp_path: Path, canary: str
 ) -> None:
-    fixture = _fixture(
-        tmp_path, allowed=("OPAQUE_PROVIDER_VALUE",), secrets=()
-    )
-    if canary_kind == "success_reason":
-        canary = "NONE"
-    elif canary_kind == "success_outcome":
-        canary = "EXITED_SUCCESS"
-    else:
-        canary = str((fixture["result_root"] / "result.bin").resolve())
+    fixture = _fixture(tmp_path, allowed=("OPAQUE_PROVIDER_VALUE",), secrets=())
+    fixture["controls"]["provider_environment"] = {"OPAQUE_PROVIDER_VALUE": canary}
+    receipt = _launch(fixture)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert receipt["schema_version"] == "golden-key-workbuddy-launcher-receipt-v1"
+    assert receipt["error"] is None
+
+
+def test_52_dynamic_result_path_collision_is_suppressed_after_success_parse(
+    tmp_path: Path,
+) -> None:
+    fixture = _fixture(tmp_path, allowed=("OPAQUE_PROVIDER_VALUE",), secrets=())
+    canary = str((fixture["result_root"] / "result.bin").resolve())
     fixture["controls"]["provider_environment"] = {"OPAQUE_PROVIDER_VALUE": canary}
     receipt = _launch(fixture)
     _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
     _assert_secret_safe_receipt_types(receipt, canary)
-    if canary_kind == "result_path":
-        assert receipt["result_pointer"] == {
-            "path": None, "sha256": None, "size": None, "valid": False,
-        }
+    assert receipt["result_pointer"] == {
+        "path": None, "sha256": None, "size": None, "valid": False,
+    }
 
 
-def test_24_provider_name_containing_its_value_is_removed_without_breaking_tuple_schema(
+def test_53_allowlisted_provider_name_collision_is_not_value_propagation(
     tmp_path: Path,
 ) -> None:
     fixture = _fixture(
@@ -716,9 +889,8 @@ def test_24_provider_name_containing_its_value_is_removed_without_breaking_tuple
     canary = "TOKEN"
     fixture["controls"]["provider_environment"] = {"DYNAMIC_TOKEN_SLOT": canary}
     receipt = _launch(fixture)
-    _assert(receipt, "PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", 0)
-    _assert_secret_safe_receipt_types(receipt, canary)
-    assert receipt["provider_environment_names"] == ()
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert receipt["provider_environment_names"] == ("DYNAMIC_TOKEN_SLOT",)
 
 
 def test_23_environment_allowlist_rejects_before_spawn(tmp_path: Path) -> None:
@@ -1025,6 +1197,53 @@ def test_46_managed_integrated_preserves_plan_and_reused_binding(tmp_path: Path)
     receipt = _launch(fixture, evidence=(evidence,))
     _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
     assert receipt["local_capability_evidence_identities"][0]["plan_sha256"] == "a" * 64
+
+
+@pytest.mark.parametrize("status", ["PRESENT", "INTEGRATED"])
+def test_55_managed_fact_identity_is_wholly_dynamic_for_secret_propagation(
+    tmp_path: Path, status: str
+) -> None:
+    seed = _fixture(tmp_path / "seed")
+    requirement, evidence, _root = _local_evidence(
+        seed, source="managed", status=status
+    )
+    fixture = _fixture(
+        tmp_path / "bound",
+        allowed=("OPAQUE_PROVIDER_VALUE",),
+        secrets=(),
+        requirements=(requirement,),
+    )
+    definition = evidence["approved_capability_definition"]
+    root = (
+        fixture["candidate"].data_root
+        / "Runtime"
+        / "Composition"
+        / definition["capability"]
+        / definition["definition_sha256"]
+    )
+    root.mkdir(parents=True)
+    entrypoint = root / "tool.exe"
+    entrypoint.write_bytes(f"{definition['capability']}-asset".encode())
+    fact = evidence["original_stage3_fact"]
+    fact_fields = fact["evidence"] if status == "PRESENT" else fact
+    fact_fields["runtime_root"] = str(root.resolve())
+    fact_fields["verified_entrypoint"] = str(entrypoint.resolve())
+    fact_fields["version_evidence"]["entrypoint"] = str(entrypoint.resolve())
+    evidence["original_stage3_fact_sha256"] = hashlib.sha256(
+        _canonical(fact, newline=False)
+    ).hexdigest()
+    canary = (
+        evidence["original_stage3_fact_sha256"]
+        if status == "PRESENT"
+        else fact["plan_sha256"]
+    )
+    fixture["controls"]["provider_environment"] = {
+        "OPAQUE_PROVIDER_VALUE": canary
+    }
+    receipt = _launch(fixture, evidence=(evidence,))
+    _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
+    assert receipt["local_capability_evidence_identities"] == ()
+    _assert_secret_safe_receipt_types(receipt, canary)
 
 
 def test_47_unknown_source_is_rejected(tmp_path: Path) -> None:

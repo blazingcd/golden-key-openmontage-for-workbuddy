@@ -507,7 +507,15 @@ def _finish(
 ) -> Mapping[str, Any]:
     receipt["ended_at_utc"] = _utc_now()
     receipt["duration_ms"] = max(0, (time.monotonic_ns() - start_ns) // 1_000_000)
-    _finalize_secret_safe_receipt(receipt, provider_canaries)
+    propagated = _sanitize_dynamic_receipt_fields(receipt, provider_canaries)
+    if propagated and receipt["spawn_count"] == 0:
+        if not (
+            receipt["outcome"] == "CANCELLED"
+            and receipt["reason_code"] == "CANCELLED_BEFORE_SPAWN"
+        ):
+            _set_failure(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", "PREFLIGHT")
+    elif propagated and receipt["outcome"] != "RESIDUAL_PROCESS":
+        _set_failure(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", "OUTPUT")
     return _freeze(receipt)
 
 
@@ -1024,7 +1032,10 @@ def _validate_source_assets(
 
 
 def _validate_local_evidence(
-    value: Any, requirements: Sequence[Mapping[str, Any]], data_root: Path
+    value: Any,
+    requirements: Sequence[Mapping[str, Any]],
+    data_root: Path,
+    provider_canaries: Sequence[str] = (),
 ) -> tuple[dict[str, Any], ...]:
     raw_items = _sequence(value, "INVALID_INPUT")
     if not requirements:
@@ -1056,7 +1067,17 @@ def _validate_local_evidence(
             _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
         original = item["original_stage3_fact"]
         original_digest = _sha256(item["original_stage3_fact_sha256"], "LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
-        if not isinstance(original, Mapping) or _canonical_hash(_thaw(original)) != original_digest:
+        if not isinstance(original, Mapping):
+            _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
+        if _value_contains_secret_text(
+            {
+                "original_stage3_fact": original,
+                "original_stage3_fact_sha256": original_digest,
+            },
+            provider_canaries,
+        ):
+            _fail("INVALID_INPUT")
+        if _canonical_hash(_thaw(original)) != original_digest:
             _fail("LOCAL_CAPABILITY_EVIDENCE_MISMATCH")
         status, source, plan_digest, _runtime_text, entrypoint_text, runtime_root = _fact_identity(original, definition)
         entrypoint_digest, entrypoint_size = _validate_source_assets(
@@ -1066,19 +1087,24 @@ def _validate_local_evidence(
             runtime_root=runtime_root,
             entrypoint_text=entrypoint_text,
         )
-        result.append(
-            {
-                "capability_id": capability,
-                "definition_sha256": definition_digest,
-                "approved_capability_definition_sha256": approved_digest,
-                "original_stage3_fact_sha256": original_digest,
-                "status": status,
-                "source": source,
-                "plan_sha256": plan_digest,
-                "entrypoint_sha256": entrypoint_digest,
-                "entrypoint_size": entrypoint_size,
-            }
-        )
+        identity = {
+            "capability_id": capability,
+            "definition_sha256": definition_digest,
+            "approved_capability_definition_sha256": approved_digest,
+            "original_stage3_fact_sha256": original_digest,
+            "status": status,
+            "source": source,
+            "plan_sha256": plan_digest,
+            "entrypoint_sha256": entrypoint_digest,
+            "entrypoint_size": entrypoint_size,
+        }
+        # Every receipt identity mixes original-fact-derived values with asset
+        # facts, so it is one dynamic object rather than a field-level Package
+        # authority.  A Provider value in either the fact or the reconstructed
+        # identity invalidates the whole item before stdin construction.
+        if _value_contains_secret_text(identity, provider_canaries):
+            _fail("INVALID_INPUT")
+        result.append(identity)
     if seen != set(by_requirement):
         _fail("LOCAL_CAPABILITY_EVIDENCE_REQUIRED")
     return tuple(sorted(result, key=lambda item: (item["capability_id"], item["definition_sha256"])))
@@ -1142,6 +1168,46 @@ def _provider_canaries(
     return canary_text, tuple(value.encode("utf-8") for value in canary_text)
 
 
+def _raw_provider_canaries(
+    executor_controls: Any,
+) -> tuple[tuple[str, ...], tuple[bytes, ...], bool]:
+    """Read raw Provider values before producing any dynamic receipt hint.
+
+    The boolean is false when the raw mapping could not be read completely;
+    callers then suppress all unverified hints.  No exception text or object
+    representation from an untrusted Mapping crosses this boundary.
+    """
+
+    if not isinstance(executor_controls, Mapping):
+        return (), (), False
+    try:
+        provider = executor_controls.get("provider_environment")
+    except Exception:
+        return (), (), False
+    if not isinstance(provider, Mapping):
+        return (), (), provider is None
+    text_values: list[str] = []
+    byte_values: list[bytes] = []
+    complete = True
+    try:
+        items = provider.items()
+        for _name, value in items:
+            if not isinstance(value, str) or not value:
+                continue
+            if value not in text_values:
+                text_values.append(value)
+            try:
+                encoded = value.encode("utf-8")
+            except UnicodeEncodeError:
+                complete = False
+                continue
+            if encoded not in byte_values:
+                byte_values.append(encoded)
+    except Exception:
+        complete = False
+    return tuple(text_values), tuple(byte_values), complete
+
+
 def _contains_secret(secrets: Sequence[bytes], *materials: bytes) -> bool:
     return any(secret in material for secret in secrets for material in materials)
 
@@ -1156,100 +1222,53 @@ def _value_contains_secret_text(value: Any, secrets: Sequence[str]) -> bool:
     return False
 
 
-def _safe_fixed_text(candidates: Sequence[str], secrets: Sequence[str]) -> str:
-    for candidate in candidates:
-        if not _value_contains_secret_text(candidate, secrets):
-            return candidate
-    # A provider value colliding with every closed token is not a representable
-    # receipt.  The first closed token retains schema validity; ordinary canary
-    # values are handled by the preceding alternatives.
-    return candidates[0]
+def _suppressed_stream_facts() -> dict[str, Any]:
+    return {"size": 0, "sha256": _EMPTY_SHA256, "truncated": True}
 
 
-def _finalize_secret_safe_receipt(
+def _sanitize_dynamic_receipt_fields(
     receipt: dict[str, Any], provider_canaries: Sequence[str]
-) -> None:
+) -> bool:
+    """Clear only caller/child-derived receipt domains.
+
+    Fixed protocol tokens and the closed Package/definition authority fields
+    are deliberately absent: accidental substring equality is not data flow.
+    """
+
     canaries = tuple(value for value in provider_canaries if value)
-    if not canaries or not _value_contains_secret_text(receipt, canaries):
-        return
-
-    optional_sections = (
-        "session", "request", "registration", "package", "manifest", "lock",
-        "tool_definition", "tool_file", "interpreter",
-    )
-    for section_name in optional_sections:
-        section = receipt[section_name]
-        for field, value in tuple(section.items()):
-            if isinstance(value, str) and _value_contains_secret_text(value, canaries):
-                section[field] = None
-
+    if not canaries:
+        return False
+    propagated = False
+    for section_name, field in (("session", "session_id"), ("request", "request_id")):
+        if _value_contains_secret_text(receipt[section_name][field], canaries):
+            receipt[section_name][field] = None
+            propagated = True
     if _value_contains_secret_text(receipt["user_message"], canaries):
         receipt["user_message"] = {"sha256": None, "byte_length": None}
-    receipt["provider_environment_names"] = tuple(
-        name
-        for name in receipt["provider_environment_names"]
-        if not _value_contains_secret_text(name, canaries)
-    )
-    receipt["local_capability_evidence_identities"] = tuple(
-        identity
-        for identity in receipt["local_capability_evidence_identities"]
-        if not _value_contains_secret_text(identity, canaries)
-    )
+        propagated = True
+    if _value_contains_secret_text(receipt["local_capability_evidence_identities"], canaries):
+        receipt["local_capability_evidence_identities"] = ()
+        propagated = True
     if _value_contains_secret_text(receipt["result_pointer"], canaries):
         receipt["result_pointer"] = {
             "path": None, "sha256": None, "size": None, "valid": False,
         }
-    if isinstance(receipt["started_at_utc"], str) and _value_contains_secret_text(
-        receipt["started_at_utc"], canaries
-    ):
-        receipt["started_at_utc"] = None
-    if _value_contains_secret_text(receipt["ended_at_utc"], canaries):
-        receipt["ended_at_utc"] = _safe_fixed_text(
-            ("1970-01-01T00:00:00.000Z", "2000-01-01T00:00:00.000Z"), canaries
-        )
+        propagated = True
     for stream_name in ("stdout", "stderr"):
-        stream = receipt[stream_name]
-        if _value_contains_secret_text(stream["sha256"], canaries):
-            stream["sha256"] = _safe_fixed_text(
-                (_EMPTY_SHA256, hashlib.sha256(b"redacted-output").hexdigest()), canaries
-            )
-
-    if receipt["spawn_count"] == 0:
-        pairs = (
-            ("PRELAUNCH_BLOCKED", "ENVIRONMENT_NOT_ALLOWED", "PREFLIGHT"),
-            ("PRELAUNCH_BLOCKED", "INVALID_INPUT", "PREFLIGHT"),
-        )
-    else:
-        pairs = (
-            ("INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", "OUTPUT"),
-            ("INCOMPLETE", "EVIDENCE_INCOMPLETE", "OUTPUT"),
-            ("EXITED_NONZERO", "EXITED_NONZERO", "CHILD"),
-        )
-    outcome, reason, origin = next(
-        (
-            pair for pair in pairs
-            if not _value_contains_secret_text(pair, canaries)
-        ),
-        pairs[0],
-    )
-    receipt["outcome"] = outcome
-    receipt["reason_code"] = reason
-    receipt["error"] = {
-        "code": reason, "origin": origin, "sanitized_message": reason,
-    }
+        if _value_contains_secret_text(receipt[stream_name], canaries):
+            receipt[stream_name] = _suppressed_stream_facts()
+            propagated = True
+    return propagated
 
 
-def _reject_secret_collision(
-    receipt: dict[str, Any],
-    secret_text: Sequence[str],
-    secret_bytes: Sequence[bytes],
-    *materials: bytes,
+def _reject_dynamic_secret_values(
+    provider_canaries: Sequence[str], *dynamic_values: Any
 ) -> None:
-    receipt_bytes = _canonical_json(_thaw(receipt), newline=False)
-    if _value_contains_secret_text(receipt, secret_text) or _contains_secret(
-        secret_bytes, receipt_bytes, *materials
+    if any(
+        _value_contains_secret_text(value, provider_canaries)
+        for value in dynamic_values
     ):
-        _fail("ENVIRONMENT_NOT_ALLOWED")
+        _fail("INVALID_INPUT")
 
 
 def _located_snapshot(located: Mapping[str, Any]) -> bytes:
@@ -1268,7 +1287,6 @@ def _preflight(
 ) -> dict[str, Any]:
     message = _scalar_text(user_message, nonempty=False, reason="INVALID_INPUT")
     message_bytes = message.encode("utf-8")
-    receipt["user_message"] = {"sha256": hashlib.sha256(message_bytes).hexdigest(), "byte_length": len(message_bytes)}
     try:
         data_path = _safe_existing_absolute_directory(data_root)
     except _LaunchError:
@@ -1307,30 +1325,29 @@ def _preflight(
     secret_text, secret_bytes = _provider_canaries(controls)
     canary_state["text"] = secret_text
     canary_state["bytes"] = secret_bytes
-    if _value_contains_secret_text(definition["argv"], secret_text):
-        _fail("ENVIRONMENT_NOT_ALLOWED")
-    _reject_secret_collision(
-        receipt,
+    receipt["provider_environment_names"] = controls["provider_environment_names"]
+    _reject_dynamic_secret_values(
         secret_text,
-        secret_bytes,
-        message_bytes,
-        controls["session_id"].encode("utf-8"),
-        controls["request_id"].encode("utf-8"),
-        str(controls["result_root"]).encode("utf-8"),
-        _canonical_json({"argv": definition["argv"]}, newline=False),
-        _located_snapshot(located),
+        message,
+        controls["session_id"],
+        controls["request_id"],
+        str(controls["result_root"]),
     )
+    message_identity = {
+        "sha256": hashlib.sha256(message_bytes).hexdigest(),
+        "byte_length": len(message_bytes),
+    }
+    _reject_dynamic_secret_values(secret_text, message_identity)
+    receipt["user_message"] = message_identity
     receipt["session"] = {"session_id": controls["session_id"]}
     receipt["request"] = {"request_id": controls["request_id"]}
-    receipt["provider_environment_names"] = controls["provider_environment_names"]
-    local_identities = _validate_local_evidence(local_capability_evidence, definition["requirements"], data_path)
-    receipt["local_capability_evidence_identities"] = local_identities
-    _reject_secret_collision(
-        receipt,
+    local_identities = _validate_local_evidence(
+        local_capability_evidence,
+        definition["requirements"],
+        data_path,
         secret_text,
-        secret_bytes,
-        _canonical_json({"local_capability_evidence_identities": local_identities}, newline=False),
     )
+    receipt["local_capability_evidence_identities"] = local_identities
     return {
         "data_root": data_path, "data_root_input": Path(data_root),
         "message": message, "message_bytes": message_bytes,
@@ -1373,7 +1390,10 @@ def _second_preflight(first: Mapping[str, Any]) -> None:
         if result_root != first["controls"]["result_root"]:
             _fail("REGISTRATION_DRIFT")
         local_identities = _validate_local_evidence(
-            first["local_evidence_input"], definition["requirements"], first["data_root"]
+            first["local_evidence_input"],
+            definition["requirements"],
+            first["data_root"],
+            first["secret_text"],
         )
         if local_identities != first["local_identities"]:
             _fail("REGISTRATION_DRIFT")
@@ -1682,6 +1702,16 @@ def _parse_result(raw: bytes, first: Mapping[str, Any]) -> Mapping[str, Any]:
         value = json.loads(text, object_pairs_hook=object_pairs, parse_constant=lambda _x: (_ for _ in ()).throw(ValueError()))
     except (UnicodeError, ValueError, TypeError, json.JSONDecodeError):
         _fail("OUTPUT_INVALID", "OUTPUT")
+    if isinstance(value, Mapping) and _value_contains_secret_text(
+        {
+            "session_id": value.get("session_id"),
+            "request_id": value.get("request_id"),
+            "result_pointer": value.get("result_pointer"),
+            "error": value.get("error"),
+        },
+        first["secret_text"],
+    ):
+        _fail("SECRET_DISCLOSURE_DETECTED", "OUTPUT")
     if duplicates or not isinstance(value, Mapping) or _canonical_json(value, newline=True) != raw:
         _fail("OUTPUT_INVALID", "OUTPUT")
     result = _mapping(value, _RESULT_FIELDS, "OUTPUT_INVALID")
@@ -1752,26 +1782,47 @@ def launch_session_tool(
     job: _WindowsJob | None = None
     job_assigned = False
     first: dict[str, Any] | None = None
-    canary_state: dict[str, Any] = {"text": (), "bytes": ()}
+    raw_secret_text, raw_secret_bytes, raw_secret_complete = _raw_provider_canaries(
+        executor_controls
+    )
+    canary_state: dict[str, Any] = {
+        "text": raw_secret_text,
+        "bytes": raw_secret_bytes,
+        "raw_complete": raw_secret_complete,
+    }
     try:
         if cancel_event is not None and not isinstance(cancel_event, threading.Event):
             _fail("INVALID_INPUT")
 
         # Safely recover only non-authoritative receipt hints before the entry-cancel gate.
-        if isinstance(executor_controls, Mapping):
-            session_hint = executor_controls.get("session_id")
-            request_hint = executor_controls.get("request_id")
-            if isinstance(session_hint, str) and _IDENTIFIER_RE.fullmatch(session_hint):
+        if raw_secret_complete and isinstance(executor_controls, Mapping):
+            try:
+                session_hint = executor_controls.get("session_id")
+                request_hint = executor_controls.get("request_id")
+            except Exception:
+                session_hint = request_hint = None
+            if (
+                isinstance(session_hint, str)
+                and _IDENTIFIER_RE.fullmatch(session_hint)
+                and not _value_contains_secret_text(session_hint, raw_secret_text)
+            ):
                 receipt["session"] = {"session_id": session_hint}
-            if isinstance(request_hint, str) and _IDENTIFIER_RE.fullmatch(request_hint):
+            if (
+                isinstance(request_hint, str)
+                and _IDENTIFIER_RE.fullmatch(request_hint)
+                and not _value_contains_secret_text(request_hint, raw_secret_text)
+            ):
                 receipt["request"] = {"request_id": request_hint}
-        if isinstance(user_message, str):
+        if raw_secret_complete and isinstance(user_message, str):
             try:
                 message_hint = user_message.encode("utf-8")
             except UnicodeEncodeError:
                 pass
             else:
-                if not any(0xD800 <= ord(character) <= 0xDFFF for character in user_message):
+                if (
+                    not any(0xD800 <= ord(character) <= 0xDFFF for character in user_message)
+                    and not _contains_secret(raw_secret_bytes, message_hint)
+                ):
                     receipt["user_message"] = {
                         "sha256": hashlib.sha256(message_hint).hexdigest(),
                         "byte_length": len(message_hint),
@@ -1793,12 +1844,13 @@ def launch_session_tool(
         )
         _second_preflight(first)
         request_bytes = _request_payload(first)
-        _reject_secret_collision(
-            receipt,
+        _reject_dynamic_secret_values(
             first["secret_text"],
-            first["secret_bytes"],
-            request_bytes,
-            _canonical_json({"argv": first["definition"]["argv"]}, newline=False),
+            first["message"],
+            first["controls"]["session_id"],
+            first["controls"]["request_id"],
+            str(first["controls"]["result_root"]),
+            first["local_identities"],
         )
         stdout_capture = _StreamCapture(first["secret_bytes"], parse_output=True)
         stderr_capture = _StreamCapture(first["secret_bytes"], parse_output=False)
@@ -1907,8 +1959,22 @@ def launch_session_tool(
         stdin_thread.join(timeout=first["controls"]["termination_grace_seconds"])
         stdout_thread.join(timeout=first["controls"]["termination_grace_seconds"])
         stderr_thread.join(timeout=first["controls"]["termination_grace_seconds"])
-        receipt["stdout"] = stdout_capture.facts()
-        receipt["stderr"] = stderr_capture.facts()
+        receipt["stdout"] = (
+            _suppressed_stream_facts()
+            if stdout_capture.secret_found
+            else stdout_capture.facts()
+        )
+        receipt["stderr"] = (
+            _suppressed_stream_facts()
+            if stderr_capture.secret_found
+            else stderr_capture.facts()
+        )
+        if stdout_capture.secret_found:
+            stdout_capture.retained.clear()
+            stdout_capture.parse_bytes.clear()
+        if stderr_capture.secret_found:
+            stderr_capture.retained.clear()
+            stderr_capture.parse_bytes.clear()
 
         residual = False
         try:
@@ -1928,9 +1994,6 @@ def launch_session_tool(
             _set_failure(receipt, "RESIDUAL_PROCESS", "RESIDUAL_PROCESS_DETECTED", "RESIDUAL")
             return _finish(receipt, start_ns, canary_state["text"])
         if stdout_capture.secret_found or stderr_capture.secret_found:
-            stdout_capture.retained.clear()
-            stdout_capture.parse_bytes.clear()
-            stderr_capture.retained.clear()
             _set_failure(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", "OUTPUT")
             return _finish(receipt, start_ns, canary_state["text"])
         if event_kind == "cancel":
@@ -1956,6 +2019,10 @@ def launch_session_tool(
         try:
             child_result = _parse_result(bytes(stdout_capture.parse_bytes), first)
         except _LaunchError as exc:
+            if exc.reason_code == "SECRET_DISCLOSURE_DETECTED":
+                receipt["stdout"] = _suppressed_stream_facts()
+                stdout_capture.retained.clear()
+                stdout_capture.parse_bytes.clear()
             _set_failure(receipt, "INCOMPLETE", exc.reason_code, exc.origin)
             return _finish(receipt, start_ns, canary_state["text"])
         if child_result["outcome"] == "FAILED":

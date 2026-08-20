@@ -53,13 +53,17 @@ stage_4_closeout_formal_result: b63d8c2bc2214bc39f18378dbe47057ef538301e / tree 
 stage_4_closeout_review: V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
 stage_4_closeout_ci: run 32371507874 / Ubuntu 24.04 / Python 3.11.16 / success / 357 passed / 1 skipped
 stage_4_wsl_boundary: NO_RUNTIME_DEPENDENCY / temporary Linux-equivalence validation only / cleaned and shut down after testing
+final_handoff_hygiene_formal_result: 4636e27a62aad9f1b721e6c482e34b44d350503c / tree fdf24f8450ac4bb48e5337cd7aa3477794796d19 / exact six paths / tracked 37
+final_handoff_hygiene_review: independent zero-write Reviewer / APPROVE / P0=0 / P1=0 / P2=0
+final_handoff_hygiene_local_evidence: Python 3.14.7 / 11 hygiene passed / 358 combined passed / all final exit 0
+final_handoff_hygiene_ci: run 32386393634 / completed / success / Python 3.14.7 / 357 passed / 1 skipped / actions v6 / no Node20 deprecation warning
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
-current_task: V2-S4-FINAL-HANDOFF-HYGIENE-AUTH-REVISION1
-current_task_status: AUTHORIZATION_CANDIDATE / WORKTREE_RESULT_READY_FOR_ZERO_WRITE_REVIEW / PASS_ACCEPTED_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+current_task: NONE
+current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1 / EXACT_SIX_PATHS / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_REVISION_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task: NONE
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -67,15 +71,13 @@ effective_final_package_gate_authorization: NOT_GRANTED
 final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
 ```
 
-## Stage 4最终交接卫生收口授权修订候选
+## 已完成的Stage 4最终交接卫生收口
 
-原三路径卫生授权已在`78ee170678f80b71b3a88de95703a522a1f80cbc`正式推广。其实际Builder在创建worktree、修改文件、运行测试或提交推送前发现`README.md`、`README_zh-CN.md`、`PROJECT_CONTEXT.md`也是 materially stale 的当前入口，依第4路径停止规则报告`INCOMPLETE / STOPPED_SCOPE_EXPANSION`；该尝试为零worktree、零修改、零测试、零提交/推送，WSL未启动。
+原三路径卫生授权已在`78ee170678f80b71b3a88de95703a522a1f80cbc`正式推广。其实际Builder在创建worktree、修改文件、运行测试或提交推送前发现`README.md`、`README_zh-CN.md`、`PROJECT_CONTEXT.md`也是 materially stale 的当前入口，依第4路径停止规则报告`INCOMPLETE / STOPPED_SCOPE_EXPANSION`；该尝试为零worktree、零修改、零测试、零提交/推送，WSL未启动。该历史结果已经由后续修订授权和最终六路径结果闭合。
 
-本修订候选从正式对象`78ee170678f80b71b3a88de95703a522a1f80cbc`、tree `b3e0c2d2e2bc660951f6b54868096b1e43751d36`和tracked精确37接管，只修改`PROJECT-STATE.md`与`docs/workbuddy/v2/TASK-REGISTER.md`。它不执行实际卫生修改、不运行项目测试、不启动WSL，也不改变已接受的Stage4产品状态。
+最终卫生Builder从正式授权对象接管，累计只修改`.github/workflows/ci.yml`、`docs/workbuddy/v2/README.md`、`docs/workbuddy/v2/MODULE-DISPOSITION.md`、`README.md`、`README_zh-CN.md`、`PROJECT_CONTEXT.md`六个路径；正式结果为`4636e27a62aad9f1b721e6c482e34b44d350503c`、tree `fdf24f8450ac4bb48e5337cd7aa3477794796d19`、tracked精确37。独立Reviewer最终返回`APPROVE / P0=0 / P1=0 / P2=0`；本地Python 3.14.7证据为11 hygiene、358 combined且全部exit 0；正式CI run `32386393634`为`completed/success`、Python 3.14.7、`357 passed / 1 skipped`、actions v6且没有Node20 deprecation warning。
 
-只有本修订候选经独立零写Reviewer返回`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward进入实时`origin/codex/workbuddy-shell-v2`后，`V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1`才获得执行权。后续Builder必须从届时最新正式对象接管，并且只可修改`.github/workflows/ci.yml`、`docs/workbuddy/v2/README.md`、`docs/workbuddy/v2/MODULE-DISPOSITION.md`、`README.md`、`README_zh-CN.md`、`PROJECT_CONTEXT.md`：CI仅把`actions/checkout@v4`和`actions/setup-python@v5`分别升为`@v6`；五个当前/映射入口文档只机械同步Stage3与Stage4现行事实，包括Stage3已接受公共签名和结果闭集、Stage4 `launch_session_tool`、`PackageToolDefinitionV1`、不可改写`LauncherReceiptV1`、tracked精确37。Stage5、Stage6、最终Package物化和生产登记继续保持`NOT_GRANTED`或未证明。
-
-该后续任务只删除陈旧的现在时Stage3/4未实现、旧Stage3签名/结果/模型及旧Gate展示，保留明确标为historical的证据；禁止修改生产代码、测试、其他权威合同、`WORK-LOG.md`或历史证据，禁止启动或预写Stage5/6，禁止执行真实WorkBuddy、Provider、Runtime或媒体工作。需要第7个实际路径时必须`INCOMPLETE`停止。授权交付后本修订Builder自解析为完成，`effective_current_task=NONE`，唯一下一授权任务为上述精确六路径卫生Builder。
+本收口只把上述已交付事实机械镜像到`PROJECT-STATE.md`与`docs/workbuddy/v2/TASK-REGISTER.md`，采用恒定self-resolving mirror规则，不形成新的产品任务。实时状态为`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`；Stage3/4继续`PASS_ACCEPTED`，Stage5、Stage6、最终Package物化和生产登记继续保持`NOT_GRANTED`或未证明。任何后续任务都必须另行明确授权。
 
 腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色。阶段2已经接受完整必带工具链的Registration/Locator实现和一次真实临时Package验证。阶段3已完成Remotion与HyperFrames的有界探测、报告、逐能力授权集成合同实现并正式收口；两项始终是OpenMontage候选能力，Shell不选择渲染器，缺失、拒绝或延期不阻塞基础工具链路径。
 
@@ -88,7 +90,7 @@ final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_B
 - 阶段4规划：`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`，`V2-S4-PLAN-REVIEW1`最终`APPROVE / P0=0 / P1=0 / P2=0`并正式推广；正式CI run `32337744225`为`completed/success`。两轮历史`REQUEST_CHANGES`已经闭合定义hash环、receipt结果/优先级/非法输入、可伪造摘要证据及Stage3 `managed/explicit/PATH`交接问题。
 - 阶段4实现结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立只读审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward；随后仅修复GitHub `setup-python`无`pyvenv.cfg`时的测试夹具，修复结果`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward。正式树tracked精确37。
 - 官方Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`；Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。WSL仅用于临时Linux等价验证，测试后已清理并关闭，不是Stage4运行依赖。
-- 阶段4closeout固定历史锚点为`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`；closeout独立审查为`APPROVE / P0=0 / P1=0 / P2=0`，正式CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`。因此阶段4实现已是`PASS_ACCEPTED`；当时无活动产品任务和下一授权任务，当前仅新增上述有界最终交接卫生授权候选。
+- 阶段4closeout固定历史锚点为`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`；closeout独立审查为`APPROVE / P0=0 / P1=0 / P2=0`，正式CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`。因此阶段4实现已是`PASS_ACCEPTED`；最终交接卫生结果`4636e27a62aad9f1b721e6c482e34b44d350503c`也已独立批准、正式推广并由CI验证，当前不存在活动任务或下一授权任务。
 - 最终Release、生产PackageRoot和生产Registration仍属于后续最终交付/Installer任务，最迟在Stage5真实WorkBuddy生产验收前完成；它们不是Stage4规划或编码前置，也未被Stage4证据证明。
 
 ## 阶段3至阶段6建设顺序与实际运行链路
@@ -116,4 +118,4 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-Stage 4规划、实现、closeout均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复和closeout都已进入历史；原三路径卫生Builder已按边界安全停止，当前只存在`V2-S4-FINAL-HANDOFF-HYGIENE-AUTH-REVISION1`授权修订候选，后续精确六路径卫生Builder仅在其独立批准并正式推广后生效。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`不改变或重新门禁产品状态。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+Stage 4规划、实现、closeout及最终交接卫生均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复、产品closeout和六路径最终入口卫生都已进入历史；原三路径卫生Builder的安全停止也已闭合。当前没有活动任务或下一授权任务。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`不改变或重新门禁产品状态。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。

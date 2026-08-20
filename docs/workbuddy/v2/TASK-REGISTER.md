@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / NO_ACTIVE_TASK`
+状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_AUTHORIZATION_CANDIDATE`
 
 更新时间：2026-08-20
 
@@ -20,9 +20,9 @@ stage_4_closeout_formal_tree: 02814c6a4a483913e7b1abe3e9ee6d025236c951
 stage_4_closeout_review: V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1 / APPROVE / P0=0 / P1=0 / P2=0
 stage_4_closeout_ci: run 32371507874 / Ubuntu 24.04 / Python 3.11.16 / completed / success / 357 passed / 1 skipped
 stage_4_wsl_boundary: NO_RUNTIME_DEPENDENCY / temporary Linux-equivalence validation only / proof cleaned / WSL shut down after testing
-current_task: NONE
-current_task_status: NO_ACTIVE_TASK
-next_authorized_task: NONE
+current_task: V2-S4-FINAL-HANDOFF-HYGIENE-AUTH-BUILDER1
+current_task_status: AUTHORIZATION_CANDIDATE / WORKTREE_RESULT_READY_FOR_ZERO_WRITE_REVIEW / PASS_ACCEPTED_ONLY_AFTER_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task: V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -30,7 +30,48 @@ final_package_gate_authorization: NOT_GRANTED
 production_evidence_boundary: real WorkBuddy/Launcher session; Provider/media execution; Stage5; Stage6; final Package materialization and production registration remain unproven and NOT_GRANTED
 ```
 
-该自解析记录只判断镜像仓库交付，不形成当前任务，也不重新门禁Stage4 `PASS_ACCEPTED`。`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`保持恒定。
+该自解析记录不重新门禁Stage4 `PASS_ACCEPTED`。本提交只固化用户已经给出的最终交接卫生收口授权；它在独立零写Reviewer返回`APPROVE / P0=0 / P1=0 / P2=0`且本提交普通fast-forward进入实时正式分支前，不产生后续Builder执行权。条件满足后，`V2-S4-FINAL-HANDOFF-HYGIENE-AUTH-BUILDER1`自解析为`PASS_ACCEPTED`，`effective_current_task=NONE`，且仅`V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1`成为下一有权接管任务。
+
+## Stage 4最终交接卫生收口授权候选
+
+```text
+task_id: V2-S4-FINAL-HANDOFF-HYGIENE-AUTH-BUILDER1
+task_kind: FINAL_HANDOFF_HYGIENE_AUTHORIZATION / DOCS_ONLY
+user_authorization: 2026-08-20 / 现在进行相关收口
+start_commit: e2f618da2f25f130a39f2db3f0734f9f39476ab7
+start_tree: 4d4addea7e4ae36d5ed92ef1701fa2903e0c06c4
+tracked_files_at_start: 37
+result_commit: THIS_COMMIT
+formal_target_branch: origin/codex/workbuddy-shell-v2
+authorization_builder_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; PROJECT-STATE.md
+authorization_production_code_changes: 0
+authorization_test_changes: 0
+authorization_ci_changes: 0
+authorization_test_execution: NOT_RUN_DOCS_ONLY
+authorization_wsl_execution: NOT_STARTED
+independent_review: REQUIRED_ZERO_WRITE / APPROVE_P0_0_P1_0_P2_0_REQUIRED
+formal_promotion: ORDINARY_FAST_FORWARD_ONLY / NOT_EFFECTIVE_BEFORE_REVIEW_APPROVE_AND_LIVE_REMOTE_CONTAINS_THIS_COMMIT
+
+subsequent_task_id: V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1
+subsequent_task_base_rule: after this authorization is reviewed and formally promoted, take over from the then-latest exact origin/codex/workbuddy-shell-v2 commit and tree; never use this temporary authorization branch as the implementation base
+subsequent_exact_allowed_path_count: 3
+subsequent_exact_allowed_paths: .github/workflows/ci.yml; docs/workbuddy/v2/README.md; docs/workbuddy/v2/MODULE-DISPOSITION.md
+subsequent_exact_ci_change_1: actions/checkout@v4 -> actions/checkout@v6
+subsequent_exact_ci_change_2: actions/setup-python@v5 -> actions/setup-python@v6
+subsequent_exact_readme_change: mechanically replace stale Stage4 planning-only/implementation-NOT_GRANTED presentation with stage_4_planning=PASS_ACCEPTED; stage_4_implementation=PASS_ACCEPTED; tracked=37; Stage5/Stage6/final Package remain NOT_GRANTED or unproven
+subsequent_exact_module_disposition_change: mechanically replace stale Launcher planning-only/implementation-NOT_GRANTED presentation with the accepted Stage4 Launcher disposition; retain tracked=37 and Stage5/Stage6/final Package NOT_GRANTED boundary
+subsequent_forbidden_paths: every repository path outside the exact three-path allowlist
+subsequent_forbidden_actions: product code or test edits; product-contract changes; historical evidence rewrites; Stage5/Stage6/final Package start or plan; Provider/runtime/media/WorkBuddy execution; WSL start
+subsequent_delivery: one bounded Builder / single commit / non-force temporary-branch push / independent zero-write Reviewer / ordinary fast-forward only after APPROVE P0=0 P1=0 P2=0
+subsequent_validation: exact base and tree; exact three-path diff; tracked 37; git diff --check exit 0; clean and untracked 0; stash 0; WSL 0
+effective_current_task_after_authorization_delivery: NONE
+effective_next_authorized_task_after_authorization_delivery: V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1
+stage_5_workbuddy_entry_authorization: NOT_GRANTED
+stage_6_status_result_relay_authorization: NOT_GRANTED
+final_package_gate_authorization: NOT_GRANTED
+```
+
+该后续任务是最终交接卫生维护，不重开Stage4产品实现。若需要第4个实际路径、生产代码、测试、其他权威合同、Stage5计划或任何真实运行，必须停止并报告`INCOMPLETE`或`STOPPED_SCOPE_EXPANSION`。
 
 ## 已完成的Stage 4实现权威同步（历史证据）
 
@@ -655,9 +696,9 @@ stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-current_task: NONE
-current_task_status: NO_ACTIVE_TASK
-next_authorized_task: NONE
+current_task: V2-S4-FINAL-HANDOFF-HYGIENE-AUTH-BUILDER1
+current_task_status: AUTHORIZATION_CANDIDATE / SELF_RESOLVES_TO_PASS_ACCEPTED_ONLY_AFTER_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task: V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1 / CONDITIONAL_ON_THIS_AUTHORIZATION_REPOSITORY_DELIVERY
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -670,7 +711,7 @@ runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 
 CI状态断言修复`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`已经位于正式分支，精确代码差异仅为`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言；正式CI run `32218904419`为`completed/success`，输出`198 passed / 1 skipped`。第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`，原因只有当时authority mismatch，代码差异无finding。正式分支在账本收口前前移属于治理偏差，本closeout只同步实时权威，不改写审查或Git历史。
 
-CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`及规划closeout `dfd97f3d2e05a4c448448fc14514d1cfe76836e8`均已独立审查、普通fast-forward并由正式CI验证，因此`stage_4_planning=PASS_ACCEPTED`。实施结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立审查`APPROVE / P0=0 / P1=0 / P2=0`进入formal；run `32367792637`随后只暴露测试夹具错误假定GitHub `setup-python`存在`pyvenv.cfg`，不是生产Launcher缺陷。单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，正式Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`。Stage4 closeout固定历史锚点`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`已经`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，closeout CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`，因此Stage4实现已是`PASS_ACCEPTED`，且`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`及规划closeout `dfd97f3d2e05a4c448448fc14514d1cfe76836e8`均已独立审查、普通fast-forward并由正式CI验证，因此`stage_4_planning=PASS_ACCEPTED`。实施结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立审查`APPROVE / P0=0 / P1=0 / P2=0`进入formal；run `32367792637`随后只暴露测试夹具错误假定GitHub `setup-python`存在`pyvenv.cfg`，不是生产Launcher缺陷。单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，正式Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`。Stage4 closeout固定历史锚点`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`已经`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，closeout CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`，因此Stage4实现已是`PASS_ACCEPTED`；该closeout当时的状态为`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`，当前则只新增文件顶部的最终交接卫生授权候选。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35；Stage4又严格按五路径新增一个生产模块和一个直接测试并同步两项验收基础设施，正式结果为tracked精确37。没有恢复任何已清理内容。
 

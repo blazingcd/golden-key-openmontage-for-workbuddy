@@ -32,7 +32,7 @@ STAGE_6_STATUS_RESULT_RELAY_NOT_GRANTED
 - `TASK-REGISTER.md`：实时任务、精确Git对象、授权与下一任务的唯一状态权威。
 - `PROJECT-CHARTER.md`：产品角色、六模块职责和非目标。
 - `PACKAGE-REGISTRATION-CONTRACT.md`：阶段2已接受Registration/Locator合同及其非Installer、非最终分发边界。
-- `ACCEPTANCE-MATRIX.md`：证据、阶段3单一可选能力missing-only准备、阶段6零代码出口与Gate语义。
+- `ACCEPTANCE-MATRIX.md`：证据、阶段3双候选能力有界探测与逐能力批准集成、阶段6零代码出口与Gate语义。
 - `DRIFT-GUARD.md`：停止条件、范围保护和Git生命周期。
 - `MODULE-DISPOSITION.md`：V1能力处置的历史映射，不是当前实现授权。
 

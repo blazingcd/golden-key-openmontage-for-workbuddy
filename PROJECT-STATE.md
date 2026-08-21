@@ -81,14 +81,14 @@ stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: NONE
+next_authorized_task: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2 / CONDITIONAL / ONLY_AFTER_THIS_CANDIDATE_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
 stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
 stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
 stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
-pending_next_authorized_task: NONE
-next_authorized_task_condition: NONE
+pending_next_authorized_task: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2 / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task_condition: ONLY_THIS_CANDIDATE_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -335,3 +335,48 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
 Stage 4规划、实现、closeout及最终交接卫生均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复、产品closeout和六路径最终入口卫生都已进入历史；原三路径卫生Builder的安全停止也已闭合。当前没有活动任务或下一授权任务。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`不改变或重新门禁产品状态。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+
+## Stage 5内部T1 Evidence2授权候选（2026-08-21）
+
+本节是 Stage 5 内部 T1 的极窄 Evidence2 授权候选，不是 Stage 5 的前置阶段或前置任务。它只授权继续闭合 T1 的外部 Skill/入口合同证据，不授权 Stage 5 实现、真实生产流程或任何替代接口设计。用户授权为 2026-08-21 的“那继续吧”。本候选进入 formal 前，顶部 `next_authorized_task` 只表达条件候选；只有本候选经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并以普通 fast-forward 进入 formal，`V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2` 才成为唯一有效下一任务。
+
+```text
+task_id: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2
+task_kind: STAGE5_T1_CONTRACT_CLOSURE_EVIDENCE2_AUTHORIZATION / DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE
+user_authorization: 2026-08-21 / “那继续吧”
+base_commit: e1ce084a2b536daf6c8519af8d183d586ee641b6
+base_tree: 0ab36de0e8d084c8dc0eeec696fad615da40c15e
+tracked_files_at_base: 37
+candidate_branch: codex/v2-s5-t1-evidence2-authorization1
+candidate_worktree: D:\\BlazingCD\\Personal\\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2-s5-t1-evidence2-auth1
+formal_target_branch: origin/codex/workbuddy-shell-v2
+candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+candidate_max_documents: 2
+candidate_production_code_changes: 0
+candidate_test_changes: 0
+candidate_ci_changes: 0
+candidate_package_registration_changes: 0
+candidate_external_writes: NONE
+candidate_test: NOT_RUN_DOCS_ONLY
+candidate_real_workbuddy_execution: READ_ONLY_OBSERVATION_ONLY_IF_SEPARATELY_TAKEN_OVER
+candidate_launcher_provider_media_stage4_python_stage4_spawn_final_package_registration_stage6: NOT_PERMITTED
+stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization: NOT_GRANTED
+current_task: NONE
+next_authorized_task_before_promotion: NONE / HISTORICAL_PRE_AUTHORIZATION
+next_authorized_task_after_promotion: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2 / ONLY_AFTER_THIS_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
+candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+```
+
+Evidence2 的只读核查范围严格限定为：
+
+- 腾讯/WorkBuddy 官方 Skill 创建规范、完整 package/schema、物理安装路径，以及 user/workspace/project 归属与优先级语义；
+- 当前 WorkBuddy 版本可见的 slash 入口、dispatch/选择绑定和唯一消费者/WorkBuddy 唯一 Agent 边界；
+- 官方支持的本地工具/API 机制，重点核查是否存在不生成 CLI、MCP、命令、argv 或 Shell 字符串即可直接调用已接受 `launch_session_tool(...)` 并逐字段返回 `LauncherReceiptV1` 的真实合同；
+- 受控客户端如被正式接管，只能只读查看官方创建指南、Skill 详情或已安装 Skill 的“打开文件夹”内容，不得上传、安装、启用或调用 Skill。
+
+本候选及其后续 Evidence2 均禁止设置变更、敏感数据、代码、测试、CI、Python、Stage 4 真实 spawn、CLI、MCP、命令/argv/Shell 探针、Provider、媒体、final Package、production Registration 和 Stage 6。只能使用既有登录态；遇到登录、权限、安装、写入或收费提示立即 `STOP`，不得接受或绕过。Evidence2 最多修改本节所列两份文档，`test=NOT_RUN_DOCS_ONLY`。
+
+上一轮受控客户端证据继续保留为历史/候选事实：WorkBuddy `5.3.13`、HY3 下临时 no-op Skill 导入和 slash 命中成功，但总裁决仍为 `T1_CLIENT_EVIDENCE_INCOMPLETE`，并已完成卸载/清理；不得把它改写为完整合同或 `PASS_ACCEPTED`。
+
+如果 Evidence2 不能证明零 CLI/MCP/命令/argv/Shell 的 `launch_session_tool(...)` 直调合同，结果必须固定为 `ARCHITECTURE_CONTRACT_UNAVAILABLE`；T1 与 Stage 5 继续阻断，`stage_5_implementation_authorization=NOT_GRANTED`，结果后的 `next_authorized_task=NONE`，不得设计替代接口、第二 Skill、第二 Agent 或旁路入口。Evidence2 结果仍须独立零写审查；本授权候选本身不推进 formal。

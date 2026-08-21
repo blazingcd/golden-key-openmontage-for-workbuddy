@@ -67,7 +67,13 @@ stage_5_planning_authorization_history_scope: DOCS_ONLY / no production code / t
 initial_product_goal_recheck: PASS / WorkBuddy is the only running Agent and the only user entry; after loading the verified Package Guide it assumes the OpenMontage logical production role
 stage_5_t1_cli_boundary: CLI_NOT_A_BLANKET_BAN / forbid a second entry, parallel control plane, fallback, or arbitrary command/argv/Shell generation; a fixed CLI used internally by the one official WorkBuddy Skill remains eligible for controlled contract verification
 stage_5_planning_t1_hard_stop: HISTORICAL_EXTERNAL_CONTRACT_STOP / superseded for the external-mechanism question; never fabricate an interface or use CLI/MCP/second-Skill fallback, and do not treat CLI presence alone as architecture unavailability
-stage_5_planning_t1_current_state: IN_PROGRESS / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_PENDING
+stage_5_planning_t1_current_state: IN_PROGRESS / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING
+stage_5_t1_fixed_cli_bridge_status: FROZEN_FOR_PLANNING / one WorkBuddy-managed Skill -> one non-user-facing fixed transport adapter -> one accepted Stage4 consumer
+stage_5_t1_fixed_cli_bridge_command: LOCATOR_PACKAGE_PYTHON / -I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli / no console-script / no subcommands / shell=false
+stage_5_t1_fixed_cli_bridge_user_message_boundary: wire canonicalization only / no NFC-NFD-trim-newline rewrite / verify Stage4 NFC+UTF-8 precondition / non-NFC exit64 / valid Unicode code-point sequence unchanged
+stage_5_t1_fixed_cli_bridge_secret_boundary: stdin names/source only; values read only from fixed CLI process environment and reconstructed into Stage4 provider_environment; then Stage4 allowlisted child env only
+stage_5_t1_fixed_cli_bridge_cancel_boundary: cancel_requested bool -> local threading.Event before one Stage4 call; runtime cancel/Host termination deferred to T5/implementation
+stage_5_t1_fixed_cli_bridge_exit_codes: 0=one Stage4 call+fully buffered validated receipt output; 64=input/schema/identity/cancel/continuation or user_message NFC/UTF-8 precondition; 78=asset/process-env/provider-name/provenance; 70=bridge-internal or post-call receipt serialization/output validation; no other code
 stage_5_t1_evidence2_result_candidate: HISTORICAL_ARCHITECTURE_CONTRACT_UNAVAILABLE / SUPERSEDED_BY_CLI_BOUNDARY_CORRECTION / OFFICIAL_SOURCES_PLUS_READ_ONLY_CLIENT / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED_WHEN_THIS_COMMIT_IS_FORMAL
 stage_5_t1_evidence2_result_candidate_base: 4515268d1f77211a14f22927a02344b578527c4a / tree 45b351bbf60419dc76833ddfcd61cd2ef52ff24c / tracked 37
 stage_5_t1_evidence2_result_candidate_scope: EXACT_2_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
@@ -78,8 +84,8 @@ stage_5_t1_evidence1_formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED
 stage_5_t1_evidence_candidate: T1_EVIDENCE_INCOMPLETE / OFFICIAL_SOURCES_ONLY / CLIENT_NOT_AUTHORIZED / FORMALLY_PROMOTED
 stage_5_t1_evidence_candidate_base: 44d89625c1fd71d07d1173e18681e64e7459cec2 / tree 10c8c4187299564fc83cef38a3f9ac65f4f9790a / tracked 37
 stage_5_t1_evidence_candidate_scope: EXACT_4_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
-stage_5_planning: IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING
-stage_5_planning_status: T1_EXTERNAL_MECHANISM_CONFIRMED / CLI_BOUNDARY_CORRECTION_SUPERSEDES_OVERBROAD_STOP / CURRENT_LIVE_AUTHORITY_AFTER_CANDIDATE
+stage_5_planning: IN_PROGRESS / T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING
+stage_5_planning_status: T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING / CURRENT_LIVE_AUTHORITY_AFTER_CANDIDATE
 stage_5_planning_candidate_promotion_effect: DOCS_ONLY / independent APPROVE plus ordinary fast-forward only formally fixes the planning documents; it does not make Stage 5 planning PASS_ACCEPTED or authorize implementation
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
@@ -88,14 +94,14 @@ stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1 / ONLY_AFTER_THIS_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
+next_authorized_task: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1 / ONLY_AFTER_FIXED_CLI_BRIDGE_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
 stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
 stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
 stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
-pending_next_authorized_task: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1 / INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD_REQUIRED
-next_authorized_task_condition: freeze the fixed internal CLI identity/envelope/Stage4 mapping in docs only; no client operation, code, implementation or production authorization
+pending_next_authorized_task: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1 / INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD_OF_FIXED_BRIDGE_CANDIDATE_REQUIRED
+next_authorized_task_condition: assess planning closeout and implementation handoff in docs only; no client operation, code, implementation or production authorization
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -103,9 +109,9 @@ effective_final_package_gate_authorization: NOT_GRANTED
 final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
 ```
 
-## Stage 5 T1 CLI边界纠偏与目标回读门禁（2026-08-21）
+## [HISTORICAL / SUPERSEDED_BY_FIXED_CLI_BRIDGE_CONTRACT] Stage 5 T1 CLI边界纠偏与目标回读门禁（2026-08-21）
 
-本节是对上一轮 `V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2` 候选的 **superseding docs-level correction**。历史证据、候选提交和当时的 `ARCHITECTURE_CONTRACT_UNAVAILABLE` 文字均保留，不伪造或重写历史；本节只 supersede 其中把“CLI/MCP 不满足本任务必要条件”误读成“CLI 一概禁止”的解释。
+本节是对上一轮 `V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2` 候选的 **superseding docs-level correction**，现明确为 `HISTORICAL / SUPERSEDED_BY_FIXED_CLI_BRIDGE_CONTRACT`。历史证据、候选提交和当时的 `ARCHITECTURE_CONTRACT_UNAVAILABLE` 文字均保留，不伪造或重写历史；其中的 `IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING`、direct Python 当前候选和下一步固定 CLI 计划只作审计事实，不是 live authority。当前 live 以顶部字段及下方固定 CLI 桥梁镜像为准：`T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING`，下一任务为窄 docs-only `V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1`。
 
 ```text
 initial_product_goal_recheck: PASS
@@ -512,11 +518,11 @@ formal_target_branch: origin/codex/workbuddy-shell-v2
 official_sources_access_date: 2026-08-21
 controlled_client_evidence: EXISTING_ONLY / WorkBuddy 5.3.13 / HY3 no-op Skill record; no new client operation
 stage_4_contract: PASS_ACCEPTED / launch_session_tool(...) + immutable LauncherReceiptV1 / unchanged
-candidate_result: T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_PENDING
-stage_5_planning_after_candidate: IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING
+candidate_result: T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING
+stage_5_planning_after_candidate: IN_PROGRESS / T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING
 stage_5_implementation_authorization_after_candidate: NOT_GRANTED
 current_task_after_candidate: NONE
-next_authorized_task_after_candidate: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1 / ONLY_AFTER_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task_after_candidate: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1 / ONLY_AFTER_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
 test: NOT_RUN_DOCS_ONLY
 push_status: NOT_PUSHED
 candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
@@ -543,9 +549,35 @@ candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
 entry_identity: EXTERNAL_MECHANISM_CONFIRMED / historical PROVED_CLIENT_FOR_5.3.13_SESSION / implementation_package_details_pending
 logical_install_owner: WorkBuddy-managed installed Skill catalog / physical path OPAQUE
 call_subject: EXTERNAL_CALL_CONFIRMED / WorkBuddy conversation selecting one Skill / exact production dispatch pending internal contract
-fixed_cli_bridge: SUPPORTED_FORM_CONFIRMED / INTERNAL_IDENTITY_AND_ENVELOPE_PENDING
+fixed_cli_bridge: SUPPORTED_FORM_CONFIRMED / FROZEN_FOR_PLANNING / LOCATOR_PACKAGE_PYTHON -I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli / secret-safe stdin controls
 unique_consumer: PROJECT_BOUNDARY_FROZEN / GLOBAL_RUNTIME_PROOF_PENDING
-stage4_binding: COMPATIBLE_INTERNAL_CONTRACT / FIXED_CLI_TO_LAUNCH_SESSION_TOOL_MAPPING_PENDING
+stage4_binding: COMPATIBLE_INTERNAL_CONTRACT / FIXED_CLI_TO_LAUNCH_SESSION_TOOL_MAPPING_FROZEN_FOR_PLANNING
 ```
 
-故当前结果为 `T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_PENDING`，不是旧的 `ARCHITECTURE_CONTRACT_UNAVAILABLE`，也不是 `PASS_ACCEPTED`。Stage4既有合同不重开；Stage5规划进入 `IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING`，Stage5实现、真实WorkBuddy、Provider、媒体、最终Package、生产Registration和Stage6继续未授权/未证明。下一任务只条件化为窄 docs-only `V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1`，须在本候选独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 和普通 fast-forward 后生效；本候选不推送、不自动进入代码或生产。
+故当前结果为 `T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING`，不是旧的 `ARCHITECTURE_CONTRACT_UNAVAILABLE`，也不是 `PASS_ACCEPTED`。Stage4既有合同不重开；Stage5规划进入 `IN_PROGRESS / T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING`，Stage5实现、真实WorkBuddy、Provider、媒体、最终Package、生产Registration和Stage6继续未授权/未证明。固定 CLI 仅以 `LOCATOR_PACKAGE_PYTHON -I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli` 作为无子命令 transport adapter；stdin 只含非秘密 controls、完整定义/原始事实和 provider names/source，secret value 只从 CLI 进程环境按 allowlist 重建后进入 Stage4；stdout 只输出完整 `LauncherReceiptV1` mapping，pre-Stage4 错误不伪造 receipt；`cancel_requested` 只传本地 Event，不建后台 IPC。下一任务只条件化为窄 docs-only `V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1`，须在本候选独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 和普通 fast-forward 后生效；下游实现白名单仍待另行授权，本候选不推送、不自动进入代码或生产。
+
+## Stage 5 T1固定 CLI桥梁合同当前候选镜像
+
+```text
+task_id: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1
+base_commit: 3eed285da6ae48e502d5be1f8ca726906d36b7cd
+base_tree: c0b03c4e7d858d5f15c7ce328cf5e2b60b57978b
+tracked_files_at_base: 37
+candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+initial_product_goal_recheck: PASS
+t1_internal_contract_status: FROZEN_FOR_PLANNING
+bridge_contract_id: golden-key-workbuddy-skill-cli-bridge-v1
+fixed_argv: -I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli
+installer_identity: absolute package-private interpreter identity/path + module/schema/argv/environment identities and hashes; WorkBuddy Skill physical path remains opaque
+input_transport: one canonical versioned JSON stdin object; wire-only canonicalization; no user_message Unicode normalization; Stage4 NFC/UTF-8 precondition verified, non-NFC exit64; no provider secret values
+provider_secret_transport: fixed CLI process env names -> reconstructed Stage4 provider_environment -> Stage4 allowlisted child env only
+output_transport: one complete golden-key-workbuddy-launcher-receipt-v1 JSON mapping on stdout; fixed sanitized stderr only
+transport_exit: closed set 0=one Stage4 call+fully buffered validated receipt output (including failure outcome); 64=input/schema/identity/cancel/continuation or user_message NFC/UTF-8 precondition; 78=asset/process-env/provider-name/provenance; 70=bridge-internal or post-call receipt serialization/output validation; errors empty stdout/no fake receipt
+cancel_boundary: cancel_requested bool -> local threading.Event before one call; no runtime IPC/replay
+stage_5_planning: IN_PROGRESS / T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING
+stage_5_implementation_authorization: NOT_GRANTED
+downstream_implementation_allowlist: UNFROZEN / separate docs-only handoff assessment required
+next_authorized_task: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1 / conditional on independent APPROVE and ordinary fast-forward
+candidate_test: NOT_RUN_DOCS_ONLY
+candidate_push: NOT_PUSHED
+```

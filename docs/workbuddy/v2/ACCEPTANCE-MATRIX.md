@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_PLANNING_PASS_ACCEPTED_CANDIDATE / STAGE_5_IMPLEMENTATION_AUTHORIZED_PENDING_BUILDER / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_PLANNING_PASS_ACCEPTED / STAGE_5_IMPLEMENTATION_CLOSEOUT_CANDIDATE / SIX_MODULE_MVP`
 
 ```text
 formal_ref: refs/heads/codex/workbuddy-shell-v2
@@ -156,12 +156,12 @@ Builder最终给出Stage4 direct 158、repository hygiene 11、full suite 358的
 
 Stage5的消费者合同只需提供literal message、closed controls、approved PackageToolDefinition、经单独授权的Provider环境，并在定义声明时原样传递完整approved capability definition与未改写original Stage3 fact；不得重包装摘要。Stage4按原始managed/explicit/PATH source语义独立验证实际资产；Stage6优先直接使用同一receipt，格式无缺口时必须`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明，不得用Stage4单元测试冒充。
 
-### 3.6 阶段5规划验收与实施启动前置
+### 3.6 [历史 / 已被 V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 取代] 阶段5规划验收与实施启动前置
 
-本节裁决Stage 5规划候选，不裁决Stage 5产品实现或真实客户端PASS。当前必须保持：
+本节记录前一轮 Stage 5 planning closeout 候选及其实施启动前置条件；后续 Builder 已完成正式实施结果。当前 Stage5 状态和入口收口以本文末新的六文档 mirror 为准。
 
 ```text
-stage_5_planning: PASS_ACCEPTED_CANDIDATE / EFFECTIVE_ONLY_AFTER_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_5_planning: PASS_ACCEPTED_CANDIDATE / HISTORICAL_PRE_ENTRY_IMPLEMENTATION_CLOSEOUT
 stage_5_implementation_authorization: EXPLICIT_USER_AUTHORIZED / PENDING_FORMAL_CLOSEOUT_AND_BUILDER_TAKEOVER
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -248,7 +248,7 @@ Evidence1 的正式候选基线是 `44d89625c1fd71d07d1173e18681e64e7459cec2`、
 - 不得从用户原话拼接任意 command/argv/Shell，不得启用 MCP 旁路、第二 Skill、全局意图截获、自动重试或自动重放；Stage4 的一次固定 Package-tool spawn 上限不变。
 - WorkBuddy-managed installed Skill catalog 是可冻结的逻辑安装归属；官方未披露的物理路径保持 `opaque`，不得借 CodeBuddy 页面或路径推断 WorkBuddy 目录。
 
-本轮官方能力证据和既有 HY3 exact Skill 命中已足以确认该 WorkBuddy 外部机制可用；本节保留已冻结的固定 CLI identity、固定 argv、secret-safe envelope、唯一消费者和 Stage4 字段映射合同。其 closeout 前状态为 `T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING` / `IN_PROGRESS`；当前 planning closeout 候选已接管 live 状态，规划为 `STAGE5_PLANNING_PASS_ACCEPTED_CANDIDATE`，仅待独立 APPROVE/ordinary FF 生效，下一 Builder 见本文件当前 closeout 段，不得把旧状态或“CLI存在即架构不可用”作为当前裁决。
+本轮官方能力证据和既有 HY3 exact Skill 命中已足以确认该 WorkBuddy 外部机制可用；本段保留已冻结的固定 CLI identity、固定 argv、secret-safe envelope、唯一消费者和 Stage4 字段映射合同。其 `T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING / IN_PROGRESS` 状态属于实施前历史；实施结果和本文末当前入口收口 mirror 已接管 live 状态，不得把旧状态或“CLI存在即架构不可用”作为当前裁决。
 
 #### 当前 T1 固定 CLI 桥梁验收合同（`FROZEN_FOR_PLANNING`）
 
@@ -261,7 +261,7 @@ Evidence1 的正式候选基线是 `44d89625c1fd71d07d1173e18681e64e7459cec2`、
 | 一次 Stage4 调用 | 仅当 bridge preflight 已通过并进入 Stage4 的有效请求，CLI 才必须恰好一次调用 `launch_session_tool(...)`，传原话、重建 controls、完整 definition、完整 local evidence 和本地 cancel Event；Stage4 保持 Locator/preflight/spawn/receipt 唯一控制面 | bridge preflight 通过后 0 次或 2 次调用、并行、后台服务/IPC、Provider选择、Stage4字段重排或新控制面；pre-Stage4 input/identity/env/asset fail-closed 的合法结果是 Stage4 调用0次、无 receipt |
 | 输出与 exit | stdout 只允许一个 `golden-key-workbuddy-launcher-receipt-v1` 完整 JSON mapping，逐字段对应 immutable LauncherReceiptV1；stderr 只允许固定脱敏诊断 token。闭集为 `0`=Stage4 恰好一次且完整 receipt 缓冲/验证/序列化/输出（含失败 outcome），`64`=输入/schema/identity/cancel/continuation 无效，`78`=固定 asset/process-env/provider-name 配置或 secret provenance 无效，`70`=bridge internal 或 Stage4 后 receipt 完整序列化/输出前验证失败；stdout 先完整缓冲验证，错误时为空 | stdout 摘要/包装/多对象/日志、receipt 改写或丢字段；使用非 `0/64/70/78`、伪造 receipt、错误时输出部分 stdout；stderr含secret/路径/异常/动态值 |
 | 取消与继续 | `cancel_requested` 只在入口创建本地 `threading.Event`，true 先 set 后一次调用；运行中取消/Host终止留给 T5/实现，不造后台 IPC。`USER_CONFIRMED_NEW_REQUEST` 必须是新 request/envelope，`prior_request_id` 仅审计关联 | 自动重放旧 message、把 continuation 当 retry、伪造运行中取消 receipt |
-| 实施边界 | 本 closeout 候选仅 docs-only；规划 `PASS_ACCEPTED` 仅在独立 APPROVE 和 ordinary FF 后生效；未来五路径实现白名单、D盘 task-private venv、direct/hygiene/full 命令和`37 -> 40`已冻结；用户“启动阶段五实施”已记录，但 Builder 必须从最新formal接管 | 任何候选代码/测试/CI执行、真实客户端、Python/Stage4 spawn、Provider、媒体、Package、Registration、Stage6 或实施完成/真实生产 `PASS_ACCEPTED` 宣称 |
+| 实施边界 | 前一轮 handoff 仅 docs-only；实施已由 `V2-S5-WORKBUDDY-ENTRY-BUILDER1` 消费并形成正式五路径结果；本轮只做六文档 closeout。该 closeout 候选仅在独立 APPROVE 和 ordinary FF 后使 `stage_5_implementation=PASS_ACCEPTED`，候选不得自称已交付 | 任何本候选代码/测试/CI执行、真实客户端、Python/Stage4 spawn、Provider、媒体、Package、Registration、Stage6 或未审候选冒充生产 `PASS_ACCEPTED` |
 
 transport exit 语义必须保持闭集且只允许 `0/64/70/78`：`0` 表示 Stage4 恰好调用一次且完整 receipt 已先缓冲、验证、序列化并输出，Stage4 返回任何真实 receipt（包括非成功 outcome）均为 `0`；`64` 表示 input/schema/identity/cancel/continuation 或已验证的 Stage4 `user_message` NFC/UTF-8 前置无效；`78` 表示固定 release asset、process-environment、provider-name 配置或 secret provenance 无效；`70` 表示 bridge internal failure，或 Stage4 调用后完整 receipt 序列化/输出前验证失败。所有非 `0` 结果 stdout 为空且不得伪造 receipt；Stage4 原有九值 outcome、23 reason、11级优先级、`spawn_count<=1` 和 `retry_count=0` 不由 CLI 改写。
 
@@ -403,3 +403,13 @@ cost_authorization
 ```
 
 任何字段缺失时，真实验收不得开始。
+
+## 10. Stage 5实施结果与入口收口机械出口
+
+Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 `V2-S5-WORKBUDDY-ENTRY-BUILDER1` 为 `CONSUMED_COMPLETE`，正式结果为 `0e7a0be65877b03fb386e1c6c6bc258c0b27db6c`、tree `85c266edb7349c940e8cd45870cc0538c95726c0`、parent `aa70c2cf9b6b4a29517d7354f0239ea0cdc9a5d3`，精确五路径、tracked `37 -> 40`。独立实施 Reviewer 为 `APPROVE / P0=0 / P1=0 / P2=0`；Windows direct/hygiene/full 为 `19/11/377 passed`、final exit 0；正式 CI run `32489111184` 为 completed/success、headSha 同上、Ubuntu/Python 3.14.7、`376 passed / 1 skipped`。
+
+本轮 `V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1` 是 `DOCS_ONLY / EXACT_6_PATHS / ZERO_PRODUCT_STATE_CHANGE`。候选必须经过独立 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并 ordinary fast-forward 进入 formal；在此之前 `stage_5_implementation` 只能记为 closeout-pending，候选不得自称已交付。推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`，且不自动授权真实 WorkBuddy production acceptance、最终 Installer-stamped Skill、最终 Package materialization/Registration、Provider/media 或 Stage 6。
+
+入口验收合同不变：一个 WorkBuddy-managed Skill 是唯一 Agent/用户入口；Skill 内只调用 package-private fixed `-I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli` transport adapter，并在 bridge preflight 通过后恰好一次调用 `launch_session_tool(...)`，输出完整 immutable `LauncherReceiptV1`。无 console script、subcommands、router、MCP、第二 Agent、retry/replay、动态 command/argv/Shell；literal user message、closed JSON、provider secret、fixed identity、cancel/continuation 和 receipt 边界保持 fail-closed。
+
+精确五个实施路径为：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。静态/direct/hygiene/CI 证据只证明实现与运输合同，不证明真实 WorkBuddy、业务效果或 E2E；最终 Installer/Package/Registration、Provider、媒体和 Stage 6 仍须独立授权与证据。

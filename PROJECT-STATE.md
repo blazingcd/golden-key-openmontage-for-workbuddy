@@ -57,15 +57,17 @@ final_handoff_hygiene_formal_result: 4636e27a62aad9f1b721e6c482e34b44d350503c / 
 final_handoff_hygiene_review: independent zero-write Reviewer / APPROVE / P0=0 / P1=0 / P2=0
 final_handoff_hygiene_local_evidence: Python 3.14.7 / 11 hygiene passed / 358 combined passed / all final exit 0
 final_handoff_hygiene_ci: run 32386393634 / completed / success / Python 3.14.7 / 357 passed / 1 skipped / actions v6 / no Node20 deprecation warning
-stage_5_planning_authorization_candidate: V2-S5-PLANNING-AUTHORIZATION-BUILDER1 / DOCS_ONLY / PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
-stage_5_planning_authorization_candidate_base: 67e39b345df954898a68c9c14645c9c04c380ac3 / tree c6bf74231434850fda07722ab9eed701797e48ff / tracked 37
-stage_5_planning_authorization_candidate_branch: codex/v2-s5-planning-authorization1
-stage_5_planning_authorization_candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
-stage_5_planning_authorization_candidate_result: THIS_COMMIT / ordinary fast-forward not performed here
-stage_5_planning_authorized_next_task: V2-S5-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CANDIDATE_INDEPENDENT_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
-stage_5_planning_next_task_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
-stage_5_planning_next_task_kind: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL
+stage_5_planning_authorization_history: V2-S5-PLANNING-AUTHORIZATION-BUILDER1 / DOCS_ONLY / CONSUMED_COMPLETE / HISTORICAL_FORMALLY_PROMOTED
+stage_5_planning_authorization_history_base: 67e39b345df954898a68c9c14645c9c04c380ac3 / tree c6bf74231434850fda07722ab9eed701797e48ff / tracked 37
+stage_5_planning_authorization_history_branch: codex/v2-s5-planning-authorization1
+stage_5_planning_authorization_history_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+stage_5_planning_authorization_history_result: 042686039386a63866eba2f964f1fa9674bbec4b / tree 6d6f3f0352eeb75c57170f2fe9e854c79564416c / ordinary fast-forward / FORMALLY_PROMOTED
+stage_5_planning_authorization_history_consumption: V2-S5-PLAN-BUILDER1 / CURRENT_PLANNING_DOCUMENT_CANDIDATE / AUTHORIZATION_CONSUMED
+stage_5_planning_authorization_history_scope: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL
 stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT when exact real WorkBuddy Skill/install/entry/call contract is not evidenced; never fabricate interface or use CLI/MCP/second-Skill fallback
+stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_planning_status: T1_EXTERNAL_CONTRACT_UNCLOSED / CURRENT_LIVE_AUTHORITY
+stage_5_planning_candidate_promotion_effect: DOCS_ONLY / independent APPROVE plus ordinary fast-forward only formally fixes the planning documents; it does not make Stage 5 planning PASS_ACCEPTED or authorize implementation
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: NOT_GRANTED
 stage_6_status_result_relay: NOT_GRANTED
@@ -73,7 +75,7 @@ stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S5-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CANDIDATE_INDEPENDENT_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task: NONE
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -81,13 +83,14 @@ effective_final_package_gate_authorization: NOT_GRANTED
 final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
 ```
 
-## Stage 5 规划授权候选（2026-08-21）
+## Stage 5 规划授权历史记录（2026-08-21）
 
-本节只记录用户对 Stage 5 规划文档固化的授权，不授权 Stage 5 实现、真实 WorkBuddy 运行或任何 Package/Provider/媒体工作。候选完成后 `current_task` 必须回到 `NONE`；下一任务只有在本候选经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 且结果以普通 fast-forward 进入 `origin/codex/workbuddy-shell-v2` 后才生效。
+本节只记录用户对 Stage 5 规划文档固化的授权，不授权 Stage 5 实现、真实 WorkBuddy 运行或任何 Package/Provider/媒体工作。该授权已随 `042686039386a63866eba2f964f1fa9674bbec4b` 的普通 fast-forward 正式推广，并由当前 `V2-S5-PLAN-BUILDER1` 规划候选消费完成；以下是历史记录，不是当前任务或下一授权。当前四文档候选即使未来经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并普通 fast-forward，也只正式固化规划文档，不使规划达到 `PASS_ACCEPTED`，不授权 Stage 5 实现；T1 外部合同未闭合时，实时规划仍为 `PLANNING_BLOCKED_EXTERNAL_CONTRACT`。
 
 ```text
 task_id: V2-S5-PLANNING-AUTHORIZATION-BUILDER1
 task_kind: STAGE5_PLANNING_AUTHORIZATION / DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE
+task_status: CONSUMED_COMPLETE / HISTORICAL_FORMALLY_PROMOTED
 user_authorization: 2026-08-21 / 固化 Stage 5 T1-T12 规划执行边界并准备正式开启规划任务
 start_commit: 67e39b345df954898a68c9c14645c9c04c380ac3
 start_tree: c6bf74231434850fda07722ab9eed701797e48ff
@@ -95,6 +98,7 @@ tracked_files_at_start: 37
 candidate_branch: codex/v2-s5-planning-authorization1
 formal_target_branch: origin/codex/workbuddy-shell-v2
 candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+formal_promotion_result: 042686039386a63866eba2f964f1fa9674bbec4b / tree 6d6f3f0352eeb75c57170f2fe9e854c79564416c / ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED
 candidate_production_code_changes: 0
 candidate_test_changes: 0
 candidate_ci_changes: 0
@@ -106,19 +110,19 @@ next_task_base_rule: take over only from the exact latest live formal head/tree/
 next_task_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
 next_task_scope: freeze the approved Stage 5 T1-T12 plan and acceptance boundaries in those three documents only
 next_task_forbidden: production code; tests; CI/workflow; Package bytes or Registration; real WorkBuddy; Launcher; Provider; media; WSL; fourth planning file
-stage_5_planning_status: CANDIDATE_PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+next_task_consumption: CURRENT_PLANNING_DOCUMENT_CANDIDATE / AUTHORIZATION_CONSUMED
+stage_5_planning_status_after_consumption: PLANNING_BLOCKED_EXTERNAL_CONTRACT / T1_EXTERNAL_CONTRACT_UNCLOSED
 stage_5_implementation_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
 current_task_after_candidate: NONE
-next_authorized_task_before_review: NONE
-pending_next_authorized_task: V2-S5-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_INDEPENDENT_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task_after_consumption: NONE
 ```
 
 T1 的外部合同门禁是不可漂移的硬停止：如果官方资料或受控真实客户端证据仍不能证明真实 WorkBuddy Skill 的包结构、安装/导入归属、显式调用主体，以及不生成命令/argv/Shell 字符串即可调用 Stage 4 Python API 的精确协议，T1 必须记录为 `PLANNING_BLOCKED_EXTERNAL_CONTRACT`。不得伪造工具名、参数、Skill 结构或调用接口，不得用 CLI、MCP 或第二 Skill 作为兜底；此时规划停止在合同证据层，不进入实现授权。
 
-该候选自身不得推广 formal、不得启动下一任务。候选最终报告必须给出 base commit/tree/tracked、candidate commit/tree、仅两条 diff path、docs-only 状态、`test=NOT_RUN_DOCS_ONLY` 与临时分支 push 状态；Reviewer 和推广由后续独立治理步骤处理。
+该历史授权自身不构成当前任务，也不得覆盖上方实时字段。当前规划候选仍须由独立 Reviewer 和普通 fast-forward 独立治理；无论治理结果如何，T1 未闭合时不得把规划记为 `PASS_ACCEPTED` 或启动 Stage 5 实现。
 
 ## 已完成的Stage 4最终交接卫生收口
 

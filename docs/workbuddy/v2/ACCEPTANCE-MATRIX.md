@@ -184,13 +184,13 @@ Stage 4 accepted API
   -> Stage6 direct LauncherReceiptV1/fact relay
 ```
 
-规划只允许三条路径：`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`。规划阶段不运行代码、测试、CI、真实WorkBuddy、Launcher、Provider、媒体、WSL，不物化最终Package或创建生产Registration；需要第四条路径即`STOPPED_SCOPE_EXPANSION`。
+Stage 5 规划文档冻结任务只允许三条路径：`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`。本次后续的 T1 Evidence1 是已经单独授权的“官方合同证据核验”任务，最大允许四条文档路径（另含`PROJECT-STATE.md`）；它不等同于规划 Builder，也不授权实现。任一任务超出各自明确白名单即`STOPPED_SCOPE_EXPANSION`。所有规划/Evidence1任务均不运行代码、测试、CI、真实WorkBuddy、Launcher、Provider、媒体、WSL，不物化最终Package或创建生产Registration。
 
 #### T1-T12规划验收表
 
 | 任务 | 验收对象/权威输入 | 必须动作与输出 | 未来物理承载 | 失败裁决与下游 |
 |---|---|---|---|---|
-| T1 真实唯一入口 | 腾讯官方资料、受控真实客户端（另行授权）、本仓库入口边界；旧V1 Skill仅历史证据 | 证明Skill包、安装归属、显式调用主体、唯一消费者和Stage4 Python API协议；当前官方资料只证明本地Skill上传/对话选择，本机5.3.13只证明用户级Skill存在 | 一个入口资产；精确包结构/路径/安装归属`UNFROZEN_PENDING_T1` | 未证明即`PLANNING_BLOCKED_EXTERNAL_CONTRACT`；禁止假Skill/CLI/MCP/第二Skill；未闭合不进入实施 |
+| T1 真实唯一入口 | 腾讯官方资料、受控真实客户端（另行授权）、本仓库入口边界；旧V1 Skill仅历史证据 | Evidence1 已核查官方资料：包结构`UNPROVED_OFFICIAL`、安装归属`PARTIALLY_PROVED_OFFICIAL`、显式调用`PARTIALLY_PROVED_OFFICIAL`、唯一消费者边界`PARTIALLY_PROVED_OFFICIAL`、Stage4 Python直调协议`UNPROVED_OFFICIAL`；总结果`T1_EVIDENCE_INCOMPLETE` | 一个入口资产；精确包结构/路径/安装归属`UNFROZEN_PENDING_T1` | 五项未全为`PROVED_OFFICIAL`即保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`；禁止假Skill/CLI/MCP/第二Skill；未闭合不进入实施 |
 | T2 输入合同 | Stage2/3/4正式合同与用户授权 | 冻结literal `user_message`、素材、closed controls、PackageToolDefinitionV1、Provider env、完整approved definition+original Stage3 fact、cancel/continuation | 唯一入口和受控调用域；不进入日志/平行库 | 跨域、非法字段、摘要重包装即fail closed；下游T3/T4 |
 | T3 验证顺序 | Registration/Locator合同 | 显式入口后先Locator，验证Registration/PackageRoot/Manifest/Lock/Guide/必带工具链，成功后读Guide并取得当前定义 | 复用Stage2 Locator；不复制Guide/Package | 扫盘/猜路径/未验证Guide/漂移即spawn 0；下游T4 |
 | T4 Stage4适配 | 固定`launch_session_tool(...)`与LauncherReceiptV1 | 原样传message；只传完整定义/原始事实；Stage5不生成命令/argv/Shell/摘要；Stage4固定工具最多spawn一次 | 最多一个入口适配生产模块，精确路径待T1 | 违反固定调用或定义契约即停止；下游T5/T6 |
@@ -202,6 +202,26 @@ Stage 4 accepted API
 | T10 证据分层 | 本矩阵状态定义和真实测试卡 | 独立报告10层：静态合同、单元负面、Stage2/3/4集成、WorkBuddy新会话、唯一入口、原话不变、授权/继续、生产Package身份、Provider/媒体、业务效果 | 各自证据对象，不在代码伪造 | 前层PASS不得替代后层；缺证据`NOT_PROVED/INCOMPLETE` |
 | T11 Stage6交接 | Stage4 LauncherReceiptV1、Stage3 facts、真实Stage5消费者（尚未证明） | 先直接复用；无真实字段缺口则`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`、生产代码0；有缺口才另行授权 | 当前零Stage6文件/模块 | 无消费者/无缺口不预建；下游独立Stage6授权 |
 | T12 实施任务包 | T1-T11、届时latest formal、用户明确“启动阶段五实施” | 固定Builder `V2-S5-WORKBUDDY-ENTRY-BUILDER1`；入口1、生产模块≤1、直接测试1；Reviewer、P0/P1/P2、普通FF、清理和N+1停止规则 | 精确入口路径、37->N、CI命令均`UNFROZEN_PENDING_T1`；第N+1路径停止 | 无T1/授权/对象一致性/独立APPROVE不得实施或推广 |
+
+#### T1 Evidence1 官方证据门禁（候选）
+
+Evidence1 的正式候选基线是 `44d89625c1fd71d07d1173e18681e64e7459cec2`、tree `10c8c4187299564fc83cef38a3f9ac65f4f9790a`、tracked 37；候选分支为 `codex/v2-s5-t1-official-contract-evidence1`，最大白名单为 `PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`。证据只来自腾讯/WorkBuddy官方公开页面和仓库既有静态记录，访问日期为 `2026-08-21`；真实客户端固定为`NOT_AUTHORIZED_IN_THIS_TASK`；测试固定为`NOT_RUN_DOCS_ONLY`。
+
+官方页面已证明的是高层产品事实：WorkBuddy可导入/安装 Skill，在对话框选择已安装 Skill 后自动调用对应能力；产品更新记录存在 Desktop Skills/SkillHub/Marketplace、导入安全检查、项目级 Skill和企业自建 Skill能力；WorkBuddy在权限边界内可执行脚本/命令/外部程序。页面没有证明精确 Skill 包结构/schema、安装物理位置/用户级与工作区级归属、当前版本固定 dispatch、唯一消费者/单Agent边界，或不生成命令/argv/Shell 字符串即可加载本地 Python 模块并传递 `launch_session_tool(...)`、返回 `LauncherReceiptV1` 的协议。完整 URL、标题、页面更新时间、精确 claim/gap和逐项状态以`TASK-REGISTER.md` Evidence1章节为任务级权威。
+
+五项逐项状态必须按以下闭集裁决：
+
+| T1 项目 | Evidence1候选状态 | 通过条件 |
+|---|---|---|
+| Skill 包结构/必需文件/schema | `UNPROVED_OFFICIAL` | 官方资料或另行授权受控客户端给出可复核的完整包树、必需文件和schema |
+| 安装/导入归属与物理位置 | `PARTIALLY_PROVED_OFFICIAL` | 必须证明导入后的物理位置、所有权及用户级/workspace级语义，不能由项目级功能名推断 |
+| 显式调用主体/入口/触发 | `PARTIALLY_PROVED_OFFICIAL` | 必须证明当前固定入口名、选择绑定、dispatch和会话边界 |
+| 唯一消费者/WorkBuddy唯一Agent边界 | `PARTIALLY_PROVED_OFFICIAL` | 必须证明唯一消费者且无第二Agent/CLI/MCP/并行入口 |
+| Stage4 Python直调协议 | `UNPROVED_OFFICIAL` | 必须证明模块加载、完整参数承载、literal message/controls分离和receipt逐字段回传，且命令/argv/Shell生成次数为0 |
+
+因五项未全部`PROVED_OFFICIAL`，Evidence1总结果为`T1_EVIDENCE_INCOMPLETE`；当前候选完成后的状态固定为`stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`、`current_task=NONE`、`next_authorized_task=NONE`。这不是 Stage 5 实现授权，也不改变最终Package、生产Registration、Provider、媒体和Stage6的未授权/未证明状态。
+
+未来若要继续，只能另行授权最小受控客户端证据卡：全新会话和隔离工作区；无生产副作用的candidate Skill；包树/schema、导入归属、显式命中、唯一消费者；不生成 CLI/MCP/命令/argv/Shell 的 Python 直调探针；完整 `LauncherReceiptV1` 对照；Provider/媒体/Package/Stage4真实spawn为0；以及另行授权的证据保存和清理。该卡本任务不执行，不创建任何 Skill 或物理路径。
 
 #### T8失败矩阵的机械要求
 

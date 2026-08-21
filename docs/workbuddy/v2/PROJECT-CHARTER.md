@@ -252,13 +252,13 @@ Stage 4 accepted contract -> Stage 5 one WorkBuddy entry -> Stage 6 direct fact/
                                       +-> WorkBuddy/OpenMontage owns Guide, Pipeline, Provider, media and creative decisions
 ```
 
-规划状态固定为`stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`：现有官方资料只证明WorkBuddy支持上传本地Skill并在对话中选择/召唤，本机5.3.13只证明用户级Skill存在；现有两个Golden Key Skill是V1双入口/旧CLI形态，不能复用。真实Skill包结构、安装归属、显式调用主体、唯一消费者以及不生成命令/argv/Shell字符串即可调用Stage 4 Python API的精确协议尚未证明。不得以假Skill、CLI、MCP或第二Skill填补缺口。Stage 5实现、真实WorkBuddy、Provider/媒体、Stage 6、最终Package和生产Registration均继续`NOT_GRANTED`或未证明。
+规划状态固定为`stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`。Evidence1 官方资料候选只形成以下初步边界：T1-1 Skill 包结构为`UNPROVED_OFFICIAL`；T1-2 安装/导入归属为`PARTIALLY_PROVED_OFFICIAL`；T1-3 显式调用主体/机制为`PARTIALLY_PROVED_OFFICIAL`；T1-4 唯一消费者与 WorkBuddy 唯一 Agent 边界为`PARTIALLY_PROVED_OFFICIAL`；T1-5 不生成 CLI/MCP/命令/argv/Shell 字符串直调 Stage 4 Python API 为`UNPROVED_OFFICIAL`。因此总裁决为`T1_EVIDENCE_INCOMPLETE`，本机5.3.13的既有用户级Skill记录只能作为仓库静态历史，不替代当前官方或受控客户端证据。现有两个Golden Key Skill是V1双入口/旧CLI形态，不能复用。不得以假Skill、CLI、MCP或第二Skill填补缺口。Stage 5实现、真实WorkBuddy、Provider/媒体、Stage 6、最终Package和生产Registration均继续`NOT_GRANTED`或未证明。
 
 T1-T12的详细执行合同以`TASK-REGISTER.md`同名章节为唯一任务级权威；本章程冻结其产品裁决如下：
 
 | 任务 | 产品裁决 | 物理承载/实施边界 | 通过或停止 |
 |---|---|---|---|
-| T1 入口身份 | 证明唯一真实Skill的包、安装、调用主体和消费者 | 一个真实入口资产；路径/包形态待T1 | 未证明即`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不编造 |
+| T1 入口身份 | 证明唯一真实Skill的包、安装、调用主体和消费者 | 一个真实入口资产；路径/包形态待T1 | Evidence1=`T1_EVIDENCE_INCOMPLETE`；五项未全为`PROVED_OFFICIAL`即保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不编造 |
 | T2 输入合同 | 原话、素材、controls、工具定义、Provider环境、完整Stage3事实、取消/继续分离 | 只进入唯一入口和受控调用域，不落平行服务 | 跨域/摘要重包装即停止 |
 | T3 验证顺序 | Locator及全部身份成功后才读Guide和取得工具定义 | 不扫盘、不猜路径、不复制Guide | 身份/Guide/必带工具链失败则spawn 0 |
 | T4 Stage4适配 | 只调用固定`launch_session_tool(...)`，原话/完整事实原样传递 | 不生成命令、argv、Shell或第二Launcher | 违反一次固定调用或摘要替代即停止 |
@@ -272,6 +272,14 @@ T1-T12的详细执行合同以`TASK-REGISTER.md`同名章节为唯一任务级�
 | T12 实施任务包 | Builder=`V2-S5-WORKBUDDY-ENTRY-BUILDER1`；入口1、生产模块≤1、直接测试1 | 精确路径、37->N、CI命令均`UNFROZEN_PENDING_T1`；第N+1路径停止 | 另有“启动阶段五实施”授权、独立APPROVE和普通FF后才可实施 |
 
 规划候选只能修改任务账本、章程和验收矩阵三条路径；不改代码、测试、CI、Package或外部对象，不运行WorkBuddy/Launcher/Provider/媒体/WSL。候选审查是文档准确性审查，不把`PLANNING_BLOCKED_EXTERNAL_CONTRACT`改成产品PASS；正式推广前`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`。未来实施必须从届时最新formal精确对象新建D盘临时Builder现场，经独立零写Reviewer `APPROVE/P0=0/P1=0/P2=0`后普通fast-forward，不能由规划候选自动启动。
+
+#### T1官方证据候选的固化边界
+
+Evidence1 只使用腾讯/WorkBuddy官方公开资料和仓库已有静态证据，访问日期为 `2026-08-21`；受控真实客户端在本任务中固定为 `NOT_AUTHORIZED_IN_THIS_TASK`。官方资料能确认 WorkBuddy 有 Skill 导入/安装、对话选择和自动调用能力，也确认存在项目级 Skill 功能及脚本/外部程序权限控制；但没有给出真实 Skill 包目录/必需文件/schema、安装后物理路径和用户/工作区归属、当前固定入口分派、唯一消费者边界，或在不生成 CLI/MCP/命令/argv/Shell 字符串的情况下加载本仓库 Python 模块、传参并返回 `LauncherReceiptV1` 的合同。
+
+任务级来源、精确 URL、页面更新时间、claim/gap 和五项裁决以 `TASK-REGISTER.md` 的 Evidence1 章节为唯一权威。本章程只冻结以下不可漂移规则：五项必须全部 `PROVED_OFFICIAL` 才可能建议 T1 闭合；只要有 `PARTIALLY_PROVED_OFFICIAL` 或 `UNPROVED_OFFICIAL`，总结果必须为 `T1_EVIDENCE_INCOMPLETE`，规划保持阻断；不得从相邻腾讯产品 Skill 规范、旧V1 Skill、CLI/MCP或自然语言/脚本能力推导本项目的直调接口。
+
+未来受控客户端验证必须另行授权，使用全新会话、隔离工作区和最小无生产副作用 candidate Skill，记录包树/schema、安装归属、显式命中、唯一消费者、无命令/argv/Shell 的 Python 直调探针和完整 receipt 对照；本阶段不创建、不安装、不上传、不调用 Skill，也不运行 Provider、媒体、Package 或 Stage4 真实 spawn。
 
 ## 5. 消息与授权边界
 

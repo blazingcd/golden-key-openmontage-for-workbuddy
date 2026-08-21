@@ -65,6 +65,9 @@ stage_5_planning_authorization_history_result: 042686039386a63866eba2f964f1fa967
 stage_5_planning_authorization_history_consumption: V2-S5-PLAN-BUILDER1 / CURRENT_PLANNING_DOCUMENT_CANDIDATE / AUTHORIZATION_CONSUMED
 stage_5_planning_authorization_history_scope: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL
 stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT when exact real WorkBuddy Skill/install/entry/call contract is not evidenced; never fabricate interface or use CLI/MCP/second-Skill fallback
+stage_5_t1_evidence_candidate: T1_EVIDENCE_INCOMPLETE / OFFICIAL_SOURCES_ONLY / CLIENT_NOT_AUTHORIZED / READY_FOR_INDEPENDENT_REVIEW
+stage_5_t1_evidence_candidate_base: 44d89625c1fd71d07d1173e18681e64e7459cec2 / tree 10c8c4187299564fc83cef38a3f9ac65f4f9790a / tracked 37
+stage_5_t1_evidence_candidate_scope: EXACT_4_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
 stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
 stage_5_planning_status: T1_EXTERNAL_CONTRACT_UNCLOSED / CURRENT_LIVE_AUTHORITY
 stage_5_planning_candidate_promotion_effect: DOCS_ONLY / independent APPROVE plus ordinary fast-forward only formally fixes the planning documents; it does not make Stage 5 planning PASS_ACCEPTED or authorize implementation
@@ -75,9 +78,9 @@ stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1 / EFFECTIVE_ONLY_WHEN_THIS_AUTHORIZATION_COMMIT_IS_FORMAL
+next_authorized_task: NONE
 stage_5_t1_evidence_authorization_candidate: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1 / DOCS_ONLY / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMAL_AUTHORITY_WHEN_THIS_COMMIT_IS_FORMAL
-pending_next_authorized_task: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD
+pending_next_authorized_task: NONE / EVIDENCE1_COMPLETED_WITH_T1_EVIDENCE_INCOMPLETE
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -174,6 +177,27 @@ T1 只核查以下五项，不得扩展为实现设计或客户端生产验证�
 若官方资料不能同时证明五项，Evidence Builder 在 `AFTER_EVIDENCE1_COMPLETES_WITH_T1_EVIDENCE_INCOMPLETE` 时必须保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`；这不是当前 live 值，不得填造路径、接口、参数，不得授权实施。即使官方资料足以形成五项证据，仍只能记为证据候选/待独立审查，随后另行进行权威状态收口；不得从 Evidence1 自动推导 Stage 5 实现授权。
 
 本授权候选及其后续 Evidence1 均禁止：生产代码、测试、CI、pyproject、Package 字节、Registration/Activation、真实 WorkBuddy、Launcher、Provider、Runtime 下载、媒体、WSL、Stage 6、final Package、production Registration，以及 CLI/MCP/第二 Skill/第二 Agent/并行入口。
+
+## Stage 5 T1官方合同证据核验候选结果（2026-08-21）
+
+本候选只固化 T1 官方资料核验结果，不宣称真实客户端证据，不授权 Stage 5 实现或生产流程。Evidence Builder 从实时 formal `44d89625c1fd71d07d1173e18681e64e7459cec2`、tree `10c8c4187299564fc83cef38a3f9ac65f4f9790a`、tracked 37 接管；受控真实客户端在本任务中为 `NOT_AUTHORIZED_IN_THIS_TASK`。
+
+```text
+task_id: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1
+candidate_branch: codex/v2-s5-t1-official-contract-evidence1
+candidate_worktree: D:\\BlazingCD\\Personal\\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2-s5-t1-evidence1
+candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+candidate_result: T1_EVIDENCE_INCOMPLETE
+stage_5_planning_after_candidate: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization_after_candidate: NOT_GRANTED
+current_task_after_candidate: NONE
+next_authorized_task_after_candidate: NONE
+test: NOT_RUN_DOCS_ONLY
+```
+
+官方来源及五项矩阵的完整记录以 `docs/workbuddy/v2/TASK-REGISTER.md` 的同名 Evidence1 章节为任务级权威；本状态文件只镜像最终裁决。官方资料截至 2026-08-21 仅能证明 WorkBuddy 存在 Skill 导入/安装、对话选择和自动调用能力，不能证明包结构/schema、安装物理归属、当前精确入口分派、唯一消费者边界或直接调用 Stage 4 Python API 的参数/receipt 协议。五项未全部 `PROVED_OFFICIAL`，因此不得填造任何路径、文件、入口名、参数或返回值，也不得使用 CLI/MCP/旧 V1 Skill 补缺。
+
+未来若要继续，只能另行授权最小受控客户端验证卡：全新会话和隔离工作区、最小无生产副作用 candidate Skill、显式导入/命中、可观察安装归属、唯一消费者、无命令/argv/Shell 的 Python 直调探针、完整 receipt 对照、Provider/媒体/Package/Stage4真实spawn为0，以及另行授权的证据保存/清理。该验证卡本候选只记录不执行。
 
 ## 已完成的Stage 4最终交接卫生收口
 

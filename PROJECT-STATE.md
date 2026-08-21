@@ -171,7 +171,7 @@ T1 只核查以下五项，不得扩展为实现设计或客户端生产验证�
 
 后续唯一 Evidence Builder `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1` 的最大文档白名单冻结为：`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`；不得新增平行证据或规划文档，实际结果可以少改文件。Evidence Builder 只能提交 docs-only 证据候选和建议状态，必须经独立零写 Reviewer 与普通 fast-forward；即使五项均被官方资料证明，也不得自行标记 Stage 5 实现 PASS 或启动实现。
 
-若官方资料不能同时证明五项，Evidence Builder 完成时必须保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`，最终结果记为 `T1_EVIDENCE_INCOMPLETE`，并将 `next_authorized_task=NONE`；不得填造路径、接口、参数，不得授权实施。即使官方资料足以形成五项证据，仍只能记为证据候选/待独立审查，随后另行进行权威状态收口；不得从 Evidence1 自动推导 Stage 5 实现授权。
+若官方资料不能同时证明五项，Evidence Builder 在 `AFTER_EVIDENCE1_COMPLETES_WITH_T1_EVIDENCE_INCOMPLETE` 时必须保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`；这不是当前 live 值，不得填造路径、接口、参数，不得授权实施。即使官方资料足以形成五项证据，仍只能记为证据候选/待独立审查，随后另行进行权威状态收口；不得从 Evidence1 自动推导 Stage 5 实现授权。
 
 本授权候选及其后续 Evidence1 均禁止：生产代码、测试、CI、pyproject、Package 字节、Registration/Activation、真实 WorkBuddy、Launcher、Provider、Runtime 下载、媒体、WSL、Stage 6、final Package、production Registration，以及 CLI/MCP/第二 Skill/第二 Agent/并行入口。
 
@@ -181,7 +181,7 @@ T1 只核查以下五项，不得扩展为实现设计或客户端生产验证�
 
 最终卫生Builder从正式授权对象接管，累计只修改`.github/workflows/ci.yml`、`docs/workbuddy/v2/README.md`、`docs/workbuddy/v2/MODULE-DISPOSITION.md`、`README.md`、`README_zh-CN.md`、`PROJECT_CONTEXT.md`六个路径；正式结果为`4636e27a62aad9f1b721e6c482e34b44d350503c`、tree `fdf24f8450ac4bb48e5337cd7aa3477794796d19`、tracked精确37。独立Reviewer最终返回`APPROVE / P0=0 / P1=0 / P2=0`；本地Python 3.14.7证据为11 hygiene、358 combined且全部exit 0；正式CI run `32386393634`为`completed/success`、Python 3.14.7、`357 passed / 1 skipped`、actions v6且没有Node20 deprecation warning。
 
-本收口只把上述已交付事实机械镜像到`PROJECT-STATE.md`与`docs/workbuddy/v2/TASK-REGISTER.md`，采用恒定self-resolving mirror规则，不形成新的产品任务。实时状态为`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`；Stage3/4继续`PASS_ACCEPTED`，Stage5、Stage6、最终Package物化和生产登记继续保持`NOT_GRANTED`或未证明。任何后续任务都必须另行明确授权。
+本收口只把上述已交付事实机械镜像到`PROJECT-STATE.md`与`docs/workbuddy/v2/TASK-REGISTER.md`，采用恒定self-resolving mirror规则，不形成新的产品任务。该收口的历史状态（`HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1`）为`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`；它不覆盖本提交进入formal后的顶部 live direct authority。Stage3/4继续`PASS_ACCEPTED`，Stage5、Stage6、最终Package物化和生产登记继续保持`NOT_GRANTED`或未证明。任何后续任务都必须另行明确授权。
 
 腾讯WorkBuddy是唯一运行中的Agent；它读取已验证金钥匙版OpenMontage Package Guide后承担生产角色。阶段2已经接受完整必带工具链的Registration/Locator实现和一次真实临时Package验证。阶段3已完成Remotion与HyperFrames的有界探测、报告、逐能力授权集成合同实现并正式收口；两项始终是OpenMontage候选能力，Shell不选择渲染器，缺失、拒绝或延期不阻塞基础工具链路径。
 

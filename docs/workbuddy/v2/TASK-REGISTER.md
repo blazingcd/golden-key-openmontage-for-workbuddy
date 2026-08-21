@@ -48,7 +48,7 @@ final_package_gate_authorization: NOT_GRANTED
 production_evidence_boundary: real WorkBuddy/Launcher session; Provider/media execution; Stage5; Stage6; final Package materialization and production registration remain unproven and NOT_GRANTED
 ```
 
-该自解析记录不重新门禁Stage4 `PASS_ACCEPTED`，也不形成新的产品任务。六路径最终交接卫生结果`4636e27a62aad9f1b721e6c482e34b44d350503c`已经独立Reviewer最终`APPROVE / P0=0 / P1=0 / P2=0`、普通fast-forward和正式CI验证；该收口自身的历史状态是`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`。2026-08-21的Stage5规划授权候选及其生效条件见下节；任何Stage5实现、Stage6或最终Package权限仍不得从本收口推导。
+该自解析记录不重新门禁Stage4 `PASS_ACCEPTED`，也不形成新的产品任务。六路径最终交接卫生结果`4636e27a62aad9f1b721e6c482e34b44d350503c`已经独立Reviewer最终`APPROVE / P0=0 / P1=0 / P2=0`、普通fast-forward和正式CI验证；该收口的历史状态（`HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1`）是`current_task=NONE / current_task_status=NO_ACTIVE_TASK / historical_next_authorized_task=NONE`。2026-08-21的Stage5规划授权候选及其生效条件见下节；任何Stage5实现、Stage6或最终Package权限仍不得从本收口推导。
 
 ## Stage 5 规划授权候选（2026-08-21）
 
@@ -122,9 +122,10 @@ original_exact_three_path_attempt: V2-S4-FINAL-HANDOFF-HYGIENE-BUILDER1 / INCOMP
 original_exact_three_path_root_cause: three additional current-entry documents were materially stale: README.md; README_zh-CN.md; PROJECT_CONTEXT.md
 original_exact_three_path_effect: zero worktree / zero file changes / zero tests / zero commit or push / WSL not started
 
+state_record_scope: HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
-next_authorized_task: NONE
+historical_next_authorized_task: NONE
 stage_3_status: PASS_ACCEPTED
 stage_4_planning: PASS_ACCEPTED
 stage_4_implementation: PASS_ACCEPTED
@@ -673,7 +674,7 @@ exit_evidence: Stage2 task-only Package build and DataRoot cleaned after evidenc
 
 历史Stage 3授权顺序要求五文档纠偏先完成独立审阅和正式推广，再由live authority给出精确Builder基线、五路径白名单和Reviewer范围；该顺序已完成并由上述正式实施结果消费。不得增加Package、Registration、Package绑定能力元数据、task-only登记验证或Stage 5输入Gate。持久最终Package与生产Registration仍在后续最终交付或Installer Gate收口，但不属于Stage 3失败或编码前置。开发或测试任务不得随意写入外部对象或DataRoot；未来产品运行时只有在用户对具体能力明确`approve`后，才允许Stage 3在受管DataRoot执行合同规定的staging和集成。已接受Builder没有进行真实第三方下载。
 
-## 当前正式状态
+## 历史正式状态快照（HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1）
 
 ```text
 formal_ref: refs/heads/codex/workbuddy-shell-v2
@@ -682,6 +683,7 @@ formal_tree_resolution: LIVE_REMOTE_REF_TREE_REQUIRED
 mirror_result: THIS_COMMIT
 mirror_effect: ZERO_PRODUCT_STATE_CHANGE
 mirror_repository_delivery_resolution: zero-write APPROVE exists AND LIVE_REMOTE_REF contains THIS_COMMIT
+state_record_scope: HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1
 historical_formal_handoff_before_stage3_correction: 068408f02c87a1eabeda58ea1ebce3df606c0a0c
 historical_accepted_stage3_correction_result: 7ba6ad64270c7ccdd7500e2a59b05cf55c73d7ed
 stage_3_implementation_formal_result: a3f8959682d296301dc573c2835f8c705a52e8b2
@@ -764,7 +766,7 @@ final_handoff_hygiene_review: independent zero-write Reviewer / APPROVE / P0=0 /
 final_handoff_hygiene_ci: run 32386393634 / completed / success / Python 3.14.7 / 357 passed / 1 skipped / actions v6 / no Node20 deprecation warning
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
-next_authorized_task: NONE
+historical_next_authorized_task: NONE
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -777,7 +779,7 @@ runtime_correction: REQUIRED_TOOLCHAIN_REFRESH_PASS_ACCEPTED
 
 CI状态断言修复`e5ae6f8cec3bc9829072a71f4acd9cc6c50ad8b3`已经位于正式分支，精确代码差异仅为`tests/workbuddy/test_repository_hygiene.py`中的两条Stage3状态断言；正式CI run `32218904419`为`completed/success`，输出`198 passed / 1 skipped`。第一次独立Reviewer结论保持为`INCOMPLETE / P0=0 / P1=0 / P2=0`，原因只有当时authority mismatch，代码差异无finding。正式分支在账本收口前前移属于治理偏差，本closeout只同步实时权威，不改写审查或Git历史。
 
-CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`及规划closeout `dfd97f3d2e05a4c448448fc14514d1cfe76836e8`均已独立审查、普通fast-forward并由正式CI验证，因此`stage_4_planning=PASS_ACCEPTED`。实施结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立审查`APPROVE / P0=0 / P1=0 / P2=0`进入formal；run `32367792637`随后只暴露测试夹具错误假定GitHub `setup-python`存在`pyvenv.cfg`，不是生产Launcher缺陷。单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，正式Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`。Stage4 closeout固定历史锚点`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`已经`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，closeout CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`，因此Stage4实现已是`PASS_ACCEPTED`。原三路径卫生尝试因发现三个额外陈旧当前入口文档而在零worktree、零修改、零测试、零提交/推送且WSL未启动的安全节点停止；该历史`INCOMPLETE`已由修订授权和正式六路径结果`4636e27a62aad9f1b721e6c482e34b44d350503c`闭合。最终卫生结果经独立`APPROVE / P0=0 / P1=0 / P2=0`及正式CI run `32386393634`验证；当前为`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+CI状态断言closeout已在`26bfe60ab9da62797559eb9a459b8daa345f8d80`正式收口。Stage4规划最终结果`5cb3f585a0cddffbd823c785b1d39ebd1834c1df`及规划closeout `dfd97f3d2e05a4c448448fc14514d1cfe76836e8`均已独立审查、普通fast-forward并由正式CI验证，因此`stage_4_planning=PASS_ACCEPTED`。实施结果`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`经第八轮独立审查`APPROVE / P0=0 / P1=0 / P2=0`进入formal；run `32367792637`随后只暴露测试夹具错误假定GitHub `setup-python`存在`pyvenv.cfg`，不是生产Launcher缺陷。单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，正式Ubuntu CI run `32369588814`为`357 passed / 1 skipped / exit 0`。Stage4 closeout固定历史锚点`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`已经`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward，closeout CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`，因此Stage4实现已是`PASS_ACCEPTED`。原三路径卫生尝试因发现三个额外陈旧当前入口文档而在零worktree、零修改、零测试、零提交/推送且WSL未启动的安全节点停止；该历史`INCOMPLETE`已由修订授权和正式六路径结果`4636e27a62aad9f1b721e6c482e34b44d350503c`闭合。最终卫生结果经独立`APPROVE / P0=0 / P1=0 / P2=0`及正式CI run `32386393634`验证；该历史快照为`current_task=NONE / current_task_status=NO_ACTIVE_TASK / historical_next_authorized_task=NONE`，不覆盖本提交进入formal后的顶部live direct authority。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
 
 仓库卫生历史基线`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为tracked精确33且等于当时固定白名单；Stage 3按已审五路径新增两个受控文件并同步更新卫生断言后，正式结果`a3f8959682d296301dc573c2835f8c705a52e8b2`为tracked精确35；Stage4又严格按五路径新增一个生产模块和一个直接测试并同步两项验收基础设施，正式结果为tracked精确37。没有恢复任何已清理内容。
 
@@ -903,7 +905,7 @@ repository_hygiene_wave_c_result: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 
 本节是本任务的唯一Stage 5规划蓝图。它冻结产品目标、T1-T12执行顺序、输入/输出、物理承载和验收边界；它不授权Stage 5实现、真实WorkBuddy、Stage 4真实Launcher、Provider、媒体、最终Package或Stage 6。若本节与旧历史Prompt、旧任务包或聊天内容冲突，以本节、`PROJECT-CHARTER.md`、`ACCEPTANCE-MATRIX.md`和顶部live字段为准；不能确认时停止，不自行解释。
 
-上方继承的“Stage 5规划授权候选”块是`0426860`进入formal前的授权候选历史记录；当前formal对象已在本任务接管前核验为本节的`base_commit/tree`。该历史块不覆盖本节当前规划状态，也不形成Stage 5实现或真实WorkBuddy授权。
+上方继承的“Stage 5规划授权候选”块是`0426860`进入formal前、且早于`V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1`的授权候选历史记录；其状态只适用于`HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1`。当前formal对象已在本任务接管前核验为本节的`base_commit/tree`；该历史块不覆盖本节顶部live direct authority，也不形成Stage 5实现或真实WorkBuddy授权。
 
 ```text
 task_id: V2-S5-PLAN-BUILDER1
@@ -921,10 +923,11 @@ stage_5_implementation_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
-candidate_status: READY_FOR_INDEPENDENT_ZERO_WRITE_REVIEW / NOT_FORMALLY_PROMOTED
+state_record_scope: HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1
+candidate_status: HISTORICAL_CANDIDATE / NOT_FORMALLY_PROMOTED_AT_THAT_TIME
 test: NOT_RUN_DOCS_ONLY
 current_task_after_candidate: NONE
-next_authorized_task: NONE
+historical_next_authorized_task: NONE
 ```
 
 ### 1. Stage 5产品目标与唯一运行链路
@@ -1118,7 +1121,7 @@ Stage 4已接受的11级优先级（invalid input、pre-cancel、preflight、spa
 
 Reviewer至少核对：WorkBuddy是否仍是唯一Agent；是否只有一个真实入口；是否错误预建CLI/MCP/第二Agent；是否硬编码Provider/Runtime；是否保持literal message与controls分离；是否完整消费Stage 2/3/4合同；是否区分最终Package与生产验收；是否含T1-T12和15类失败矩阵；是否保持Stage 6零代码出口；是否存在产品或文档范围膨胀。P0为架构/安全/权限/身份绕过或泄密；P1为可执行合同、映射、证据或边界缺口；P2为不影响合同的表述问题。只有`APPROVE / P0=0 / P1=0 / P2=0`才允许后续治理普通fast-forward；REQUEST_CHANGES只能回原Builder。
 
-候选经Reviewer批准和普通fast-forward后，只正式固化这三份规划文档，不因此把Stage 5规划记为`PASS_ACCEPTED`；只要T1合同证据未闭合，当前状态仍必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。只有未来T1合同证据闭合、完成独立审查并经过另行权威状态收口后，才能评估Stage 5规划是否达到`PASS_ACCEPTED`；该评估仍不授权Stage 5实现。当前仍须保持`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`。下一步不是自动写代码，而是先完成独立零写文档审查、普通FF和临时现场清理；之后若要进入实施，用户必须另行明确“启动阶段五实施”，再按T12重新接管实时formal对象。
+候选经Reviewer批准和普通fast-forward后，只正式固化这三份规划文档，不因此把Stage 5规划记为`PASS_ACCEPTED`；T1合同证据未闭合时，Evidence1完成后的裁决必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。只有未来T1合同证据闭合、完成独立审查并经过另行权威状态收口后，才能评估Stage 5规划是否达到`PASS_ACCEPTED`；该评估仍不授权Stage 5实现。`next_authorized_task=NONE`只适用于`AFTER_EVIDENCE1_COMPLETES_WITH_T1_EVIDENCE_INCOMPLETE`，不是本候选进入formal后的当前live值；当前live direct authority只由顶部条件化Evidence1字段表达。下一步不是自动写代码，而是先完成独立零写文档审查、普通FF和临时现场清理；之后若要进入实施，用户必须另行明确“启动阶段五实施”，再按T12重新接管实时formal对象。
 
 ## Stage 5 T1真实WorkBuddy入口合同证据核验授权候选（2026-08-21）
 
@@ -1169,7 +1172,7 @@ T1 只核查以下五项，不得扩展为实现设计或客户端生产验证�
 
 后续唯一 Evidence Builder `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1` 的最大文档白名单冻结为：`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`；不得新增平行证据或规划文档，实际结果可以少改文件。Evidence Builder 只能提交 docs-only 证据候选和建议状态，必须经独立零写 Reviewer 与普通 fast-forward；即使五项均被官方资料证明，也不得自行标记 Stage 5 实现 PASS 或启动实现。
 
-若官方资料不能同时证明五项，Evidence Builder 完成时必须保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`，最终结果记为 `T1_EVIDENCE_INCOMPLETE`，并将 `next_authorized_task=NONE`；不得填造路径、接口、参数，不得授权实施。即使官方资料足以形成五项证据，仍只能记为证据候选/待独立审查，随后另行进行权威状态收口；不得从 Evidence1 自动推导 Stage 5 实现授权。
+若官方资料不能同时证明五项，Evidence Builder 在 `AFTER_EVIDENCE1_COMPLETES_WITH_T1_EVIDENCE_INCOMPLETE` 时必须保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`；这不是本候选进入formal后的当前live值，不得填造路径、接口、参数，不得授权实施。即使官方资料足以形成五项证据，仍只能记为证据候选/待独立审查，随后另行进行权威状态收口；不得从 Evidence1 自动推导 Stage 5 实现授权。
 
 本授权候选及其后续 Evidence1 均禁止：生产代码、测试、CI、pyproject、Package 字节、Registration/Activation、真实 WorkBuddy、Launcher、Provider、Runtime 下载、媒体、WSL、Stage 6、final Package、production Registration，以及 CLI/MCP/第二 Skill/第二 Agent/并行入口。
 

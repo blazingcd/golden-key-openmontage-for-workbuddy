@@ -258,7 +258,7 @@ T1-T12的详细执行合同以`TASK-REGISTER.md`同名章节为唯一任务级�
 
 | 任务 | 产品裁决 | 物理承载/实施边界 | 通过或停止 |
 |---|---|---|---|
-| T1 入口身份 | 证明唯一真实Skill的包、安装、调用主体和消费者 | 一个真实入口资产；路径/包形态待T1 | Evidence1=`T1_EVIDENCE_INCOMPLETE`；五项未全为`PROVED_OFFICIAL`即保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不编造 |
+| T1 入口身份 | 证明唯一真实Skill的包、安装、调用主体和消费者 | 一个真实入口资产；路径/完整包形态待T1 | 官方Evidence1与WorkBuddy 5.3.13受控客户端证据合并后仍为`T1_CLIENT_EVIDENCE_INCOMPLETE`；五项未闭合即保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不编造 |
 | T2 输入合同 | 原话、素材、controls、工具定义、Provider环境、完整Stage3事实、取消/继续分离 | 只进入唯一入口和受控调用域，不落平行服务 | 跨域/摘要重包装即停止 |
 | T3 验证顺序 | Locator及全部身份成功后才读Guide和取得工具定义 | 不扫盘、不猜路径、不复制Guide | 身份/Guide/必带工具链失败则spawn 0 |
 | T4 Stage4适配 | 只调用固定`launch_session_tool(...)`，原话/完整事实原样传递 | 不生成命令、argv、Shell或第二Launcher | 违反一次固定调用或摘要替代即停止 |
@@ -279,7 +279,7 @@ Evidence1 只使用腾讯/WorkBuddy官方公开资料和仓库已有静态证据
 
 任务级来源、精确 URL、页面更新时间、claim/gap 和五项裁决以 `TASK-REGISTER.md` 的 Evidence1 章节为唯一权威。本章程只冻结以下不可漂移规则：五项必须全部 `PROVED_OFFICIAL` 才可能建议 T1 闭合；只要有 `PARTIALLY_PROVED_OFFICIAL` 或 `UNPROVED_OFFICIAL`，总结果必须为 `T1_EVIDENCE_INCOMPLETE`，规划保持阻断；不得从相邻腾讯产品 Skill 规范、旧V1 Skill、CLI/MCP或自然语言/脚本能力推导本项目的直调接口。
 
-未来受控客户端验证必须另行授权，使用全新会话、隔离工作区和最小无生产副作用 candidate Skill，记录包树/schema、安装归属、显式命中、唯一消费者、无命令/argv/Shell 的 Python 直调探针和完整 receipt 对照；本阶段不创建、不安装、不上传、不调用 Skill，也不运行 Provider、媒体、Package 或 Stage4 真实 spawn。
+后续另行授权的受控客户端任务已在 WorkBuddy `5.3.13` 执行：D盘隔离根中的唯一无副作用 candidate Skill 通过客户端默认安全检测导入；客户端可见合同确认文件夹或ZIP包含`SKILL.md`，Markdown YAML含name/description；新任务的`/`入口显式加载 exact Skill，并在明确选择`Hy3`后返回`T1_CONTROLLED_NOOP_OK`。第一次Auto结果只作为探测历史，不计入HY3验收。该证据把显式调用提升为`PROVED_CLIENT_FOR_5.3.13_SESSION`，但完整schema、物理安装位置与完整归属、全局唯一消费者，以及无命令/argv/Shell的Python直调`launch_session_tool(...)`和完整receipt仍未证明。因此总结果保持`T1_CLIENT_EVIDENCE_INCOMPLETE`，不得运行Provider、媒体、最终Package或Stage4真实spawn，也不得启动Stage5实现。
 
 ## 5. 消息与授权边界
 

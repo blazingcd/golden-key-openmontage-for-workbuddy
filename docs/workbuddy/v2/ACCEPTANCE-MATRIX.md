@@ -190,7 +190,7 @@ Stage 5 规划文档冻结任务只允许三条路径：`docs/workbuddy/v2/TASK-
 
 | 任务 | 验收对象/权威输入 | 必须动作与输出 | 未来物理承载 | 失败裁决与下游 |
 |---|---|---|---|---|
-| T1 真实唯一入口 | 腾讯官方资料、受控真实客户端（另行授权）、本仓库入口边界；旧V1 Skill仅历史证据 | Evidence1 已核查官方资料：包结构`UNPROVED_OFFICIAL`、安装归属`PARTIALLY_PROVED_OFFICIAL`、显式调用`PARTIALLY_PROVED_OFFICIAL`、唯一消费者边界`PARTIALLY_PROVED_OFFICIAL`、Stage4 Python直调协议`UNPROVED_OFFICIAL`；总结果`T1_EVIDENCE_INCOMPLETE` | 一个入口资产；精确包结构/路径/安装归属`UNFROZEN_PENDING_T1` | 五项未全为`PROVED_OFFICIAL`即保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`；禁止假Skill/CLI/MCP/第二Skill；未闭合不进入实施 |
+| T1 真实唯一入口 | 腾讯官方资料、WorkBuddy 5.3.13受控真实客户端、本仓库入口边界；旧V1 Skill仅历史证据 | 官方Evidence1后追加客户端裁决：包结构`PARTIALLY_PROVED_CLIENT`、安装归属`PARTIALLY_PROVED_CLIENT`、显式调用`PROVED_CLIENT_FOR_5.3.13_SESSION`、唯一消费者边界`PARTIALLY_PROVED_CLIENT`、Stage4 Python直调协议`UNPROVED_CLIENT`；HY3 exact Skill调用返回`T1_CONTROLLED_NOOP_OK`，总结果`T1_CLIENT_EVIDENCE_INCOMPLETE` | 一个入口资产；完整schema/物理路径/完整归属/直调适配仍`UNFROZEN_PENDING_T1` | 五项未闭合即保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`；禁止假Skill/CLI/MCP/第二Skill；未闭合不进入实施 |
 | T2 输入合同 | Stage2/3/4正式合同与用户授权 | 冻结literal `user_message`、素材、closed controls、PackageToolDefinitionV1、Provider env、完整approved definition+original Stage3 fact、cancel/continuation | 唯一入口和受控调用域；不进入日志/平行库 | 跨域、非法字段、摘要重包装即fail closed；下游T3/T4 |
 | T3 验证顺序 | Registration/Locator合同 | 显式入口后先Locator，验证Registration/PackageRoot/Manifest/Lock/Guide/必带工具链，成功后读Guide并取得当前定义 | 复用Stage2 Locator；不复制Guide/Package | 扫盘/猜路径/未验证Guide/漂移即spawn 0；下游T4 |
 | T4 Stage4适配 | 固定`launch_session_tool(...)`与LauncherReceiptV1 | 原样传message；只传完整定义/原始事实；Stage5不生成命令/argv/Shell/摘要；Stage4固定工具最多spawn一次 | 最多一个入口适配生产模块，精确路径待T1 | 违反固定调用或定义契约即停止；下游T5/T6 |
@@ -221,7 +221,19 @@ Evidence1 的正式候选基线是 `44d89625c1fd71d07d1173e18681e64e7459cec2`、
 
 因五项未全部`PROVED_OFFICIAL`，Evidence1总结果为`T1_EVIDENCE_INCOMPLETE`；当前候选完成后的状态固定为`stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`、`current_task=NONE`、`next_authorized_task=NONE`。这不是 Stage 5 实现授权，也不改变最终Package、生产Registration、Provider、媒体和Stage6的未授权/未证明状态。
 
-未来若要继续，只能另行授权最小受控客户端证据卡：全新会话和隔离工作区；无生产副作用的candidate Skill；包树/schema、导入归属、显式命中、唯一消费者；不生成 CLI/MCP/命令/argv/Shell 的 Python 直调探针；完整 `LauncherReceiptV1` 对照；Provider/媒体/Package/Stage4真实spawn为0；以及另行授权的证据保存和清理。该卡本任务不执行，不创建任何 Skill 或物理路径。
+#### T1受控客户端证据门禁（候选）
+
+受控客户端候选使用 WorkBuddy `5.3.13`、D盘隔离根和唯一无副作用 `golden-key-s5-t1-noop-evidence`。客户端默认安全检测完成后，“我安装的”从0变1；上传页明确文件夹或ZIP包含`SKILL.md`，Markdown YAML含name/description；新任务输入框明确“`/` 调用技能与指令”。在模型明确由Auto切换为`Hy3`后，第二次 exact Skill 调用8秒完成并精确返回`T1_CONTROLLED_NOOP_OK`，响应底部标注`Hy3`。第一次`Auto (GLM-5.2)`结果排除出最终模型证据。未出现额外权限提示，Provider、媒体、最终Package、production Registration、Python、CLI/MCP和Stage4真实spawn均未运行。
+
+| T1 项目 | 受控客户端候选状态 | 当前通过范围 | 仍需闭合 |
+|---|---|---|---|
+| Skill 包结构/必需文件/schema | `PARTIALLY_PROVED_CLIENT` | root `SKILL.md` ZIP、name/description YAML最小导入合同 | 完整schema和可选目录树 |
+| 安装/导入归属与物理位置 | `PARTIALLY_PROVED_CLIENT` | 当前客户端“我安装的”集合及exact身份 | 物理落点、账号/设备/workspace/project完整归属 |
+| 显式调用主体/入口/触发 | `PROVED_CLIENT_FOR_5.3.13_SESSION` | WorkBuddy新任务slash入口加载exact Skill，HY3返回exact marker | 不外推其他版本/账号；生产Stage4入口未实现/运行 |
+| 唯一消费者/WorkBuddy唯一Agent边界 | `PARTIALLY_PROVED_CLIENT` | 干净UI起点只有该临时Skill，调用与响应均由同一WorkBuddy UI呈现 | 全局唯一消费者、无第二Agent及无其他dispatch未由UI证明 |
+| Stage4 Python直调协议 | `UNPROVED_CLIENT` | 无 | 无CLI/MCP/命令/argv/Shell的模块直调与`LauncherReceiptV1`逐字段回传；依授权不得真实spawn |
+
+客户端候选五项未全部闭合，因此总结果仍为`T1_CLIENT_EVIDENCE_INCOMPLETE`，Stage5规划继续`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。临时Skill已由用户手动卸载，客户端核验已安装技能为0；精确D盘隔离根已移入Windows回收站且源路径不存在。该候选不是产品PASS或实现授权；独立Reviewer批准并普通fast-forward前，也不是正式仓库交付。
 
 #### T8失败矩阵的机械要求
 

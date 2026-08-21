@@ -81,10 +81,14 @@ stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_COMMIT_IS_FORMAL
-stage_5_t1_evidence_authorization_candidate: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMAL_AUTHORITY_WHEN_THIS_COMMIT_IS_FORMAL
-pending_next_authorized_task: NONE / HISTORICAL_PRE_AUTHORIZATION
-next_authorized_task_condition: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / ONLY_AFTER_THIS_COMMIT_IS_FORMAL
+next_authorized_task: NONE
+stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
+stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
+stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
+stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
+stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
+pending_next_authorized_task: NONE
+next_authorized_task_condition: NONE
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -246,6 +250,42 @@ candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
 - 证据固化后清理临时 Skill 和隔离工作区；删除若触发 Windows UI 确认，必须在动作当时重新确认，或仅对已核验精确 D 盘路径执行项目规则允许的清理。正式文档只保留非敏感文字证据。
 
 本授权候选本身仍只修改 `PROJECT-STATE.md` 与 `TASK-REGISTER.md`，不打开 WorkBuddy、不创建/上传/安装 Skill、不运行代码/测试/CI/Launcher/Provider/媒体/WSL，不物化 Package、不创建 Registration、不启动 Stage 6；后续客户端任务须在本候选正式推广后，按顶部唯一 `next_authorized_task` 单独接管。
+
+## Stage 5 T1受控真实WorkBuddy客户端证据候选结果（2026-08-21）
+
+本候选从正式授权对象 `5c7d76190be4cb76afafb5d32798219e09630153`、tree `9f042420ed82ac01ffacabc650cb2a0a42a49c74`、tracked 37 接管，只核查 `V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1`。隔离根为 `D:\\BlazingCD\\Temp\\Golden_Key_WorkBuddy_S5_T1_Client_Evidence1`，candidate Skill 为唯一临时无副作用入口；用户在取证前已自行卸载两个旧 V1 Skill，该用户动作不作为新入口实现证据。未运行生产代码、测试、CI、Provider、媒体、最终 Package、production Registration、Stage 4 真实 spawn、Python、CLI 或 MCP。
+
+```text
+task_id: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1
+task_kind: STAGE5_T1_CONTROLLED_REAL_CLIENT_EVIDENCE / DOCS_ONLY_CLOSEOUT / ZERO_PRODUCT_CODE_CHANGE
+base_commit: 5c7d76190be4cb76afafb5d32798219e09630153
+base_tree: 9f042420ed82ac01ffacabc650cb2a0a42a49c74
+tracked_files_at_base: 37
+candidate_branch: codex/v2-s5-t1-controlled-client-evidence1
+candidate_worktree: D:\\BlazingCD\\Personal\\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2-s5-t1-client-evidence1
+isolation_root: D:\\BlazingCD\\Temp\\Golden_Key_WorkBuddy_S5_T1_Client_Evidence1
+workbuddy_version: 5.3.13
+required_test_model: HY3
+candidate_skill: golden-key-s5-t1-noop-evidence
+candidate_skill_zip_sha256: 08AA43E11DD1BBBABA53A8DED33B60FB7E4FF0B26129800974F61342A8F4EBB5
+hy3_invocation_result: T1_CONTROLLED_NOOP_OK / completed 8s / response labeled Hy3
+auto_probe_result: T1_CONTROLLED_NOOP_OK / EXCLUDED_FROM_FINAL_MODEL_EVIDENCE / response labeled Auto (GLM-5.2)
+permission_or_risk_prompt: NONE_OBSERVED
+provider_media_final_package_stage4_spawn: NOT_RUN
+candidate_result: T1_CLIENT_EVIDENCE_INCOMPLETE
+stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization: NOT_GRANTED
+current_task_after_candidate: NONE
+next_authorized_task_after_candidate: NONE
+cleanup_status: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
+candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+```
+
+客户端直接证明：上传页接受“包含 `SKILL.md` 的文件夹或 `.zip`”，并要求 `.md` 的 YAML 含 Skill 名称与描述；未勾选跳过检测时客户端完成安全检测后自动安装；“我安装的”从 0 变为 1，且显示 YAML 中的名称与描述；新任务输入框明确提示“`/` 调用技能与指令”；发送 `/golden-key-s5-t1-noop-evidence` 后，消息被识别为该 Skill、界面显示“加载技能 golden-key-s5-t1-noop-evidence”，在明确选择 `Hy3` 后 8 秒精确返回 `T1_CONTROLLED_NOOP_OK`，响应底部标注 `Hy3`。第一次 Auto 调用只保留为探测历史，不计入最终 HY3 证据。
+
+客户端仍未证明完整 Skill schema/可选目录树、安装后的物理路径和完整用户级/workspace级/项目级归属、全局唯一消费者及不存在其他 dispatch，也未给出不生成 CLI/MCP/命令/argv/Shell 字符串的本地 Python 模块直调 `launch_session_tool(...)` 与逐字段回传 `LauncherReceiptV1` 的合同。第五项依授权禁止真实 Python/Stage 4 spawn，因此保持 `UNPROVED_CLIENT`。五项没有全部闭合，T1 结果仍为 `T1_CLIENT_EVIDENCE_INCOMPLETE`，Stage 5 规划继续 `PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不得启动实现。
+
+取证后由用户在 WorkBuddy 内手动卸载唯一临时 Skill；重新置前核验“我安装的”页面显示“还没有安装任何技能”。已核验的精确隔离根随后以可恢复方式移入 Windows 回收站，源路径检查为不存在。该清理不删除 WorkBuddy 任务历史，也不改变上述证据裁决。
 
 ## 已完成的Stage 4最终交接卫生收口
 

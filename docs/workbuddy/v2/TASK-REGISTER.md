@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_PLANNING_IN_PROGRESS_T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING / NO_ACTIVE_TASK`
+状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_PLANNING_PASS_ACCEPTED_CANDIDATE / STAGE_5_IMPLEMENTATION_AUTHORIZED_PENDING_BUILDER / NO_ACTIVE_TASK`
 
 更新时间：2026-08-21
 
@@ -37,7 +37,7 @@ stage_5_planning_next_task_kind_history: DOCS_ONLY / no production code / tests 
 initial_product_goal_recheck: PASS / WorkBuddy is the only running Agent and the only user entry; after loading the verified Package Guide it assumes the OpenMontage logical production role
 stage_5_t1_cli_boundary: CLI_NOT_A_BLANKET_BAN / forbid a second entry, parallel control plane, fallback, or arbitrary command/argv/Shell generation; a fixed CLI used internally by the one official WorkBuddy Skill remains eligible for controlled contract verification
 stage_5_planning_t1_hard_stop: HISTORICAL_EXTERNAL_CONTRACT_STOP / superseded for the external-mechanism question; never fabricate an interface or use CLI/MCP/second-Skill fallback, and do not treat CLI presence alone as architecture unavailability
-stage_5_planning_t1_current_state: IN_PROGRESS / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING
+stage_5_planning_t1_current_state: T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING / CLOSEOUT_CANDIDATE
 stage_5_t1_evidence2_result_candidate: HISTORICAL_ARCHITECTURE_CONTRACT_UNAVAILABLE / SUPERSEDED_BY_CLI_BOUNDARY_CORRECTION / OFFICIAL_SOURCES_PLUS_READ_ONLY_CLIENT / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED_WHEN_THIS_COMMIT_IS_FORMAL
 stage_5_t1_evidence2_result_candidate_base: 4515268d1f77211a14f22927a02344b578527c4a / tree 45b351bbf60419dc76833ddfcd61cd2ef52ff24c / tracked 37
 stage_5_t1_evidence2_result_candidate_scope: EXACT_2_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
@@ -48,17 +48,17 @@ stage_5_t1_evidence1_formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED
 stage_5_t1_evidence_candidate: T1_EVIDENCE_INCOMPLETE / OFFICIAL_SOURCES_ONLY / CLIENT_NOT_AUTHORIZED / FORMALLY_PROMOTED
 stage_5_t1_evidence_candidate_base: 44d89625c1fd71d07d1173e18681e64e7459cec2 / tree 10c8c4187299564fc83cef38a3f9ac65f4f9790a / tracked 37
 stage_5_t1_evidence_candidate_scope: EXACT_4_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
-stage_5_implementation_authorization: NOT_GRANTED
+stage_5_implementation_authorization: EXPLICIT_USER_AUTHORIZED / PENDING_FORMAL_CLOSEOUT_AND_BUILDER_TAKEOVER
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
-next_authorized_task: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1 / ONLY_AFTER_FIXED_CLI_BRIDGE_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
+next_authorized_task: V2-S5-WORKBUDDY-ENTRY-BUILDER1 / EFFECTIVE_ONLY_AFTER_THIS_CLOSEOUT_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
 stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
 stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
 stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
-pending_next_authorized_task: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1 / INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD_OF_FIXED_BRIDGE_CANDIDATE_REQUIRED
-next_authorized_task_condition: assess planning closeout and implementation handoff in docs only; no client operation, code, implementation or production authorization
+pending_next_authorized_task: V2-S5-WORKBUDDY-ENTRY-BUILDER1 / WAITING_FOR_CLOSEOUT_CANDIDATE_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task_condition: after closeout promotion, Builder may take over latest formal with the exact five-path implementation allowlist; no real WorkBuddy production acceptance, Provider/media, final Package/Registration or Stage6 authorization
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -1149,22 +1149,22 @@ Stage 4已接受的11级优先级（invalid input、pre-cancel、preflight、spa
 
 #### T12：未来Stage 5实施任务包
 
-- **目标**：把未来实现授权所需的身份、基线、文件、测试、审查和推广规则冻结，同时诚实保留T1未闭合导致的未冻结项。
+- **目标**：把未来实现授权所需的身份、基线、文件、测试、审查和推广规则冻结；T1已闭合为可规划内部桥梁，真实客户端/生产证据仍独立未证明。
 - **权威输入**：本节T1-T11；届时实时`origin/codex/workbuddy-shell-v2`；用户后续明确原话“启动阶段五实施”；T1最终入口合同；Stage 2/3/4合同和正式状态。
 - **具体动作**：未来唯一Builder ID固定为`V2-S5-WORKBUDDY-ENTRY-BUILDER1`；接管时重新解析实时formal HEAD/tree/tracked，不能直接使用历史SHA、main、旧长期分支或当前规划分支；先核验干净状态和精确白名单，再创建D盘独立临时worktree/branch。公共入口固定为1，新增生产模块上限为1，直接测试文件固定为1；Stage 6不预建。
-- **输出**：T1闭合后才能写入的实施任务包：精确入口资产路径、最多一个生产模块、一个直接测试、必要的单次`__init__.py`导出、CI现有命令的最小更新（如确有消费者需求）、tracked `37 -> N`和固定命令。当前这些字段必须是`UNFROZEN_PENDING_T1`，不能伪造路径、N或命令。
-- **未来文件/物理承载**：实施最多承载一个真实WorkBuddy入口资产、一个生产模块、一个直接测试；`__init__.py`仅在T1证明需要时允许；CI是否修改、具体路径、物理安装归属和包结构全部待T1。若需要第N+1个路径，立即停止并回到用户重新授权。
+- **输出**：T1闭合后的实施任务包已冻结：入口源资产`workbuddy-skill/golden-key-openmontage/SKILL.md`；唯一生产模块`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`；唯一直接测试`tests/workbuddy/test_workbuddy_entry_cli.py`；验收同步仅为`tests/workbuddy/test_repository_hygiene.py`与`.github/workflows/ci.yml`；不改`__init__.py`、`pyproject.toml`、`MODULE-DISPOSITION.md`；tracked精确`37 -> 40`。固定命令为direct/hygiene/full三组`python -m pytest -p no:cacheprovider ... -q`，详见本账本收口候选。
+- **未来文件/物理承载**：实施恰好承载上述一个Skill源资产、一个生产模块和一个直接测试；hygiene/CI为既有文件的最小同步；Skill客户端物理安装路径保持opaque，由最终Installer/Package gate按release身份物化。若需要第N+1个路径，立即停止并回到用户重新授权。
 - **验收**：实施前必须有“启动阶段五实施”明确授权；精确base/tree/tracked与formal等值；Builder只改白名单；项目D盘私有`.venv`；直接测试、hygiene、完整测试按冻结命令最终exit 0；`git diff --check`、tracked/clean/untracked/stash等值；Reviewer独立零写比较base..candidate；只有`APPROVE/P0=0/P1=0/P2=0`且formal仍等于base才可普通fast-forward。
 - **Fail-closed**：T1未闭合、授权缺失、对象/路径/tracked不符、命令需猜测、需要第N+1路径、测试无最终exit、Reviewer非APPROVE或正式分支已前移时停止；不force push、不merge/rebase、不推广、不自动开启Stage 6。
 - **上下游**：上游是T1闭合、Stage 2/3/4已接受合同和未来用户授权；下游是唯一Builder、独立Reviewer、普通FF及真实Stage 5验收。规划被接受也不等于实现被授权。
 
-### 4. 规划交付与治理出口
+### [HISTORICAL / SUPERSEDED_BY_T1_FIXED_CLI_AND_PLANNING_CLOSEOUT] 4. 规划交付与治理出口
 
-本候选只允许三条路径：`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`。Builder不修改正式分支、不运行测试（`test=NOT_RUN_DOCS_ONLY`）、不运行真实WorkBuddy/Launcher/Provider/媒体/WSL、不物化Package、不创建Registration、不启动Stage 6。候选必须以单一临时分支非force push，报告base/candidate/tree/三路径/status；独立零写Reviewer只审文档准确性和范围，不得把产品规划变成`PASS_ACCEPTED`。
+本段只记录旧三路径规划候选规则，已被 T1 固定桥梁和本文末六文档 closeout 候选 supersede；Builder不修改正式分支、不运行测试（`test=NOT_RUN_DOCS_ONLY`）、不运行真实WorkBuddy/Launcher/Provider/媒体/WSL、不物化Package、不创建Registration、不启动Stage 6。它不再约束当前 closeout 或未来实施 Builder。
 
 Reviewer至少核对：WorkBuddy是否仍是唯一Agent；是否只有一个真实入口；是否错误预建CLI/MCP/第二Agent；是否硬编码Provider/Runtime；是否保持literal message与controls分离；是否完整消费Stage 2/3/4合同；是否区分最终Package与生产验收；是否含T1-T12和15类失败矩阵；是否保持Stage 6零代码出口；是否存在产品或文档范围膨胀。P0为架构/安全/权限/身份绕过或泄密；P1为可执行合同、映射、证据或边界缺口；P2为不影响合同的表述问题。只有`APPROVE / P0=0 / P1=0 / P2=0`才允许后续治理普通fast-forward；REQUEST_CHANGES只能回原Builder。
 
-候选经Reviewer批准和普通fast-forward后，只正式固化这三份规划文档，不因此把Stage 5规划记为`PASS_ACCEPTED`；T1合同证据未闭合时，Evidence1完成后的裁决必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。只有未来T1合同证据闭合、完成独立审查并经过另行权威状态收口后，才能评估Stage 5规划是否达到`PASS_ACCEPTED`；该评估仍不授权Stage 5实现。`next_authorized_task=NONE`只适用于`AFTER_EVIDENCE1_COMPLETES_WITH_T1_EVIDENCE_INCOMPLETE`，不是本候选进入formal后的当前live值；当前live direct authority只由顶部条件化Evidence1字段表达。下一步不是自动写代码，而是先完成独立零写文档审查、普通FF和临时现场清理；之后若要进入实施，用户必须另行明确“启动阶段五实施”，再按T12重新接管实时formal对象。
+本段原先关于三路径、`PLANNING_BLOCKED_EXTERNAL_CONTRACT`、规划不得`PASS_ACCEPTED`和`next_authorized_task=NONE`的文字全部是历史条件，只适用于旧 Evidence1/旧规划候选；当前外部机制与 T1 内部桥梁已闭合，当前 closeout 候选的六路径、`PASS_ACCEPTED`条件和下一 Builder 以本文末为准。
 
 ## Stage 5 T1真实WorkBuddy入口合同证据核验授权候选（2026-08-21）
 
@@ -1293,9 +1293,9 @@ O1/O2/O3/O4 均没有证明“Skill 触发后在 WorkBuddy 进程内直接 impor
 
 在上述受控客户端证据真正闭合前，T1 不得建议 `PASS_ACCEPTED`，T12 的精确入口路径、包结构、tracked 迁移和 CI 命令继续 `UNFROZEN_PENDING_T1`。
 
-## Stage 5 T1 Skill+CLI合同重新评估候选（V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1，2026-08-21）
+## [HISTORICAL / SUPERSEDED_BY_STAGE5_PLANNING_CLOSEOUT] Stage 5 T1 Skill+CLI合同重新评估候选（V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1，2026-08-21）
 
-本节是当前 T1 的唯一重新评估结果，优先于上方历史 Evidence1/客户端候选中把“零 CLI 直调”写成必要条件的文字。它只做官方资料、既有 Stage4 合同和既有受控客户端证据的 docs-only 裁决；不运行真实 WorkBuddy，不调用 Skill，不运行 Python/Stage4，不写代码、测试、CI、Provider、媒体、Package、Registration 或 Stage6。
+本节是 closeout 前的 T1 重新评估结果，曾优先于上方历史 Evidence1/客户端候选中把“零 CLI 直调”写成必要条件的文字；现作为历史审计事实保留。当前 live 状态和下一任务以本文末 Stage5 规划收口候选及顶部字段为准。它只做官方资料、既有 Stage4 合同和既有受控客户端证据的 docs-only 裁决；不运行真实 WorkBuddy，不调用 Skill，不运行 Python/Stage4，不写代码、测试、CI、Provider、媒体、Package、Registration 或 Stage6。
 
 ```text
 task_id: V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1
@@ -1366,9 +1366,9 @@ WorkBuddy conversation
 
 官方能力形态加上既有 HY3 exact Skill 命中已足以确认 WorkBuddy 的外部机制可用，解除“外部机制不存在/不可用”的卡点。本候选已把内部固定 CLI identity、transport envelope、secret-safe controls、唯一消费者边界、Stage4 一次调用和 receipt 映射冻结为 `FROZEN_FOR_PLANNING`；它不是 `PASS_ACCEPTED`，也不授予实现。Stage5 规划保持 `IN_PROGRESS / T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING`；Stage5 实现、真实 WorkBuddy、Provider、媒体、最终 Package、生产 Registration、Stage6 仍为 `NOT_GRANTED` 或未证明。下一步只允许在本候选独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并普通 fast-forward 后，启动窄范围 docs-only `V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1`；不得自动进入代码或生产。
 
-## Stage 5 T1固定 CLI内部桥梁合同冻结候选（`V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1`，2026-08-21）
+## [HISTORICAL / SUPERSEDED_BY_STAGE5_PLANNING_CLOSEOUT] Stage 5 T1固定 CLI内部桥梁合同冻结候选（`V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1`，2026-08-21）
 
-本节是当前 T1 的最小、可实现、docs-only 内部合同。它只冻结一个 WorkBuddy-managed Skill 内的固定 transport adapter，不创建代码、Skill 包、Installer、Package、生产入口或第二控制面；它不把腾讯官方页面冒充为本仓库 Python API 定义。官方 `Skill + CLI` 机制、既有 HY3 exact Skill 会话和已接受 Stage4 合同是外部/内部两层前提；本节把内部桥梁达到 `FROZEN_FOR_PLANNING`，但不把规划写成 `PASS_ACCEPTED`。
+本节是上一项 T1 的最小、可实现、docs-only 内部合同，现作为历史结果保留。它只冻结一个 WorkBuddy-managed Skill 内的固定 transport adapter，不创建代码、Skill 包、Installer、Package、生产入口或第二控制面；它不把腾讯官方页面冒充为本仓库 Python API 定义。官方 `Skill + CLI` 机制、既有 HY3 exact Skill 会话和已接受 Stage4 合同是外部/内部两层前提；本节把内部桥梁达到 `FROZEN_FOR_PLANNING`，其后续规划收口和实施交接以本文末当前候选为准。
 
 ```text
 task_id: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1
@@ -1485,7 +1485,50 @@ CLI 解析 `cancel_requested` 后创建本地 `threading.Event`：`true` 先 `se
 
 有效 envelope 但 Stage4 定义/能力/Locator/preflight 失败，必须仍由 Stage4 真实调用一次并返回其既定 receipt；只有 JSON/bridge/env/asset 无法安全进入 Stage4 的错误才是“无 receipt 的 pre-Stage4 bridge error”。两者不得混淆。任何动态命令、额外 argv、console-script、MCP/第二入口、secret value 进入非授权域、完整能力定义被摘要化、receipt 字段丢失/改写、重试/重放、第二 Agent 或第 N+1 生产路径，均 `STOPPED_SCOPE_EXPANSION`/`INCOMPLETE`。
 
-本候选只把合同冻结为 `FROZEN_FOR_PLANNING`；不冻结 WorkBuddy 物理目录，不生成真实 Skill/Installer 资产，不写代码/测试/CI，不运行客户端/Python/Stage4/Provider/媒体/Package/Registration/Stage6。下游实现白名单仍为 `UNFROZEN`，必须在独立 docs-only `V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1` 中从届时最新 formal 重新评估，并经独立 Reviewer、普通 fast-forward、用户另行明确“启动阶段五实施”后才可能授权；本候选不得预先写入任何生产路径或 `PASS_ACCEPTED`。
+本节只把合同冻结为 `FROZEN_FOR_PLANNING`；不冻结 WorkBuddy 物理目录，不生成真实 Skill/Installer 资产，不写代码/测试/CI，不运行客户端/Python/Stage4/Provider/媒体/Package/Registration/Stage6。下游实现白名单、tracked 迁移和测试命令已由当前 docs-only closeout 候选另行冻结；本历史段不得覆盖本文末的当前候选状态。
+
+## Stage 5规划收口与实施交接候选（`V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1`，2026-08-21）
+
+本节是当前六文档 docs-only authority-sync/closeout 候选。Stage5 planning `PASS_ACCEPTED`、用户实施授权的正式生效和下一 Builder 只有在本候选经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并普通 fast-forward 进入 `origin/codex/workbuddy-shell-v2` 后生效；在此之前不得把候选当作 formal live。候选不运行代码、测试、CI、真实 WorkBuddy、Python、Stage4、Provider、媒体、Package、Registration 或 Stage6。
+
+```text
+task_id: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1
+task_kind: STAGE5_PLANNING_CLOSEOUT_AND_IMPLEMENTATION_HANDOFF / DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE
+base_commit: e0bd0c45c9deec233b27b63f018fa6b4b89aab1a
+base_tree: 79a2b44d0a7dcd52a1f8be168ee408dfab1ea17d
+tracked_files_at_base: 37
+initial_product_goal_recheck: PASS
+user_authorization: 2026-08-21 / 启动阶段五实施
+candidate_allowed_docs: AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md
+candidate_result: STAGE5_PLANNING_PASS_ACCEPTED / EFFECTIVE_ONLY_AFTER_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_5_planning_after_candidate: PASS_ACCEPTED
+stage_5_implementation_authorization_after_candidate: EXPLICIT_USER_AUTHORIZED / PENDING_BUILDER_TAKEOVER_FROM_LATEST_FORMAL
+stage_5_real_workbuddy_production_acceptance: NOT_GRANTED / FINAL_PACKAGE_AND_REAL_CLIENT_EVIDENCE_PENDING
+current_task_after_candidate: NONE
+next_authorized_task_after_candidate: V2-S5-WORKBUDDY-ENTRY-BUILDER1
+candidate_test: NOT_RUN_DOCS_ONLY
+candidate_push: NOT_PUSHED
+```
+
+### 当前冻结的未来 Builder 最小实现白名单
+
+唯一入口源资产为 `workbuddy-skill/golden-key-openmontage/SKILL.md`。这是仓库内唯一 WorkBuddy Skill 源资产；既有客户端已证明 folder/ZIP root `SKILL.md`、name/description YAML 的最小导入形态。WorkBuddy 实际安装路径仍保持 opaque。最终 Installer/Package gate 必须把该源资产与 release identity、owner、固定 CLI module/schema/argv/environment hash 绑定后物化；任何未解析 placeholder、身份漂移或来源不明均 fail closed，不能作为生产安装或真实客户端 PASS。
+
+唯一生产模块为 `golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`，只作 package-private `-I -m` transport adapter，不加入 `__init__.py` 公共导出，不建立 console script、子命令、路由、第二入口或第二控制面。唯一直接测试为 `tests/workbuddy/test_workbuddy_entry_cli.py`，覆盖 fixed envelope、literal message 原样、secret non-disclosure、pre-Stage4 fail-closed、一次 Stage4 调用、receipt/exit `0/64/70/78`、cancel/continuation 和无 retry/replay。
+
+现有验收基础设施只允许两项同步：`tests/workbuddy/test_repository_hygiene.py` 更新固定 tracked/source inventory、唯一 Skill 源资产和 package-private module 断言；`.github/workflows/ci.yml` 仅把新直接测试加入现有唯一 pytest 命令，不改触发器、Python 版本或其他 CI 语义。`__init__.py`、`pyproject.toml`、`docs/workbuddy/v2/MODULE-DISPOSITION.md` 和其他文件均拒绝加入：现有 package 已自动包含新增 `.py`，且 pyproject 禁止 console script；Module-Disposition 既有唯一入口/CLI受控适配边界足够；Installer/最终 Package gate 承担 release 资产承载，不在本 Builder 伪造物理客户端路径。
+
+tracked 目标精确为 `37 -> 40`（新增三项：Skill 源资产、CLI 模块、直接测试；hygiene/CI 为现有文件修改）。Builder 必须使用 D 盘 task-private 环境 `D:\BlazingCD\Personal\Temp\workbuddy-v2-s5-entry-builder1\.venv`，不得混用全局包。
+
+固定命令（Builder 以该 `.venv\Scripts\python.exe` 执行；CI 使用同一 pytest 参数序列）：
+
+```text
+direct:  python -m pytest -p no:cacheprovider tests/workbuddy/test_workbuddy_entry_cli.py -q
+hygiene: python -m pytest -p no:cacheprovider tests/workbuddy/test_repository_hygiene.py -q
+full/CI: python -m pytest -p no:cacheprovider tests/workbuddy/test_package_registration.py tests/workbuddy/test_runtime_prepare.py tests/workbuddy/test_session_launcher.py tests/workbuddy/test_workbuddy_entry_cli.py tests/workbuddy/test_repository_hygiene.py -q
+```
+
+实施仍需 Builder commit、独立 zero-write Reviewer `APPROVE / P0=0 / P1=0 / P2=0`、ordinary fast-forward、tracked/clean/untracked/stash 验证和临时现场清理。该候选不冒充实施完成；真实 WorkBuddy 新会话、唯一入口命中、原话/授权/继续、最终 Package/Registration、Provider、媒体和业务效果仍是后续独立证据层。
 
 ## Stage 5 T1 Evidence1收口与受控客户端证据授权候选（2026-08-21）
 

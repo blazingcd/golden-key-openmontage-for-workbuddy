@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_PLANNING_IN_PROGRESS_T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING / STAGE_5_IMPLEMENTATION_NOT_GRANTED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_PLANNING_PASS_ACCEPTED_CANDIDATE / STAGE_5_IMPLEMENTATION_AUTHORIZED_PENDING_BUILDER / SIX_MODULE_MVP`
 
 ```text
 formal_ref: refs/heads/codex/workbuddy-shell-v2
@@ -117,7 +117,7 @@ Stage4规划已经独立审查、普通fast-forward并记为`PASS_ACCEPTED`。�
 
 实现严格覆盖既定五路径和35到37的固定树迁移。最终实现对象`fa9adb8470ab94b88ec9900ede03cb26f7de0ebd`、tree `0809d1c4cccc9838180a016c75320b0d9fbce28a`经第八轮独立零写审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward。首个正式CI run `32367792637`只因测试夹具错误假定GitHub `setup-python`环境有`pyvenv.cfg`而失败，没有生产Launcher finding；单测试路径修复`13a3227b0c55bbe9039b46d7e92eba822b48f57e`、tree `d3ac89ec89b66789cabe92d94c3e827f9c2cc22f`也经独立审查`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward。修复后官方Ubuntu 24.04 / Python 3.11.16 CI run `32369588814`为`357 passed / 1 skipped / exit 0`；Windows最终证据为158 direct、11 hygiene、358 combined，全部exit 0且无skip。
 
-secret nondisclosure合同澄清已经独立`APPROVE / P0=0 / P1=0 / P2=0`并进入formal，实现候选也已经据此修订和重新独立验收。Stage4 closeout固定历史锚点`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`已经`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward；closeout CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`。Stage4实现已是`PASS_ACCEPTED`，当前`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`只自解析镜像仓库交付，不形成当前任务、不重新门禁既有Stage4产品状态。
+secret nondisclosure合同澄清已经独立`APPROVE / P0=0 / P1=0 / P2=0`并进入formal，实现候选也已经据此修订和重新独立验收。Stage4 closeout固定历史锚点`b63d8c2bc2214bc39f18378dbe47057ef538301e`、tree `02814c6a4a483913e7b1abe3e9ee6d025236c951`已经`V2-S4-IMPLEMENTATION-CLOSEOUT-REVIEW1`独立`APPROVE / P0=0 / P1=0 / P2=0`并普通fast-forward；closeout CI run `32371507874`在Ubuntu 24.04 / Python 3.11.16上`357 passed / 1 skipped`。Stage4实现已是`PASS_ACCEPTED`；其中`current_task=NONE / current_task_status=NO_ACTIVE_TASK / next_authorized_task=NONE`是`HISTORICAL_STAGE4_CLOSEOUT_CONTEXT`，不覆盖当前Stage5 authority。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`只自解析镜像仓库交付，不形成当前任务、不重新门禁既有Stage4产品状态。
 
 ### 3.5 Stage 4已实现合同与验收边界
 
@@ -161,13 +161,13 @@ Stage5的消费者合同只需提供literal message、closed controls、approved
 本节裁决Stage 5规划候选，不裁决Stage 5产品实现或真实客户端PASS。当前必须保持：
 
 ```text
-stage_5_planning: IN_PROGRESS / T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING
-stage_5_implementation_authorization: NOT_GRANTED
+stage_5_planning: PASS_ACCEPTED_CANDIDATE / EFFECTIVE_ONLY_AFTER_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_5_implementation_authorization: EXPLICIT_USER_AUTHORIZED / PENDING_FORMAL_CLOSEOUT_AND_BUILDER_TAKEOVER
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate: NOT_GRANTED / final_package_artifact=NOT_MATERIALIZED / production_registration=NOT_CREATED
-next_authorized_task: V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1 / ONLY_AFTER_FIXED_CLI_BRIDGE_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
-test: NOT_RUN_DOCS_ONLY
+next_authorized_task: V2-S5-WORKBUDDY-ENTRY-BUILDER1 / EFFECTIVE_ONLY_AFTER_THIS_CLOSEOUT_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
+test: NOT_RUN_DOCS_ONLY / CLOSEOUT_DOCS_ONLY
 ```
 
 Stage 5唯一目标是“WorkBuddy唯一Agent + 一个真实显式入口 + 原话不变 + Locator/Guide/PackageToolDefinition顺序 + 一次已接受Stage 4调用 + 原始事实转交”。固定链路为：
@@ -184,13 +184,13 @@ Stage 4 accepted API
   -> Stage6 direct LauncherReceiptV1/fact relay
 ```
 
-当前 Stage 5 T1 固定桥梁候选只允许四条路径：`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`；此前三路径规划和 Evidence1 四路径边界均保留为历史任务记录。当前候选不等同于实现 Builder，也不授权实现。任一任务超出各自明确白名单即`STOPPED_SCOPE_EXPANSION`。所有规划/Evidence1任务均不运行代码、测试、CI、真实WorkBuddy、Launcher、Provider、媒体、WSL，不物化最终Package或创建生产Registration。
+此前 Stage 5 T1 固定桥梁候选四路径规则仅属于历史 docs-only 合同候选；当前规划收口候选允许六份 authority 文档同步，未来实施另有五路径白名单。当前候选不等同于实现完成，也不冒充真实生产 PASS。任一任务超出各自明确白名单即`STOPPED_SCOPE_EXPANSION`。本候选不运行代码、测试、CI、真实WorkBuddy、Launcher、Provider、媒体、WSL，不物化最终Package或创建生产Registration。
 
 #### T1-T12规划验收表
 
 | 任务 | 验收对象/权威输入 | 必须动作与输出 | 未来物理承载 | 失败裁决与下游 |
 |---|---|---|---|---|
-| T1 真实唯一入口 | 腾讯/WorkBuddy官方资料、WorkBuddy 5.3.13既有受控客户端证据、本仓库入口边界；旧V1 Skill仅历史证据 | 入口冻结为一个 WorkBuddy-managed Skill catalog 资产；官方资料确认 Skill 可封装脚本/工作流并支持 `Skill + CLI` 形态，固定 CLI 只能作为该 Skill 内部桥梁；既有 HY3 exact Skill 证据证明会话命中。内部桥梁已冻结为单消费者、固定身份、固定 envelope，并绑定已接受 Stage4 `launch_session_tool(...)`/`LauncherReceiptV1` | 物理安装路径保持 opaque（不得编造磁盘目录）；禁止第二用户入口、第二Agent、MCP/CLI并行控制面、兜底、任意命令/argv/Shell生成和自动重试/重放 | 外部 WorkBuddy 机制已确认；当前为`T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING`、规划`IN_PROGRESS`，release-specific Installer/Skill asset 与真实实现仍待后续 handoff/验收；不因CLI存在判架构不可用 |
+| T1 真实唯一入口 | 腾讯/WorkBuddy官方资料、WorkBuddy 5.3.13既有受控客户端证据、本仓库入口边界；旧V1 Skill仅历史证据 | 入口冻结为一个 WorkBuddy-managed Skill catalog 资产；官方资料确认 Skill 可封装脚本/工作流并支持 `Skill + CLI` 形态，固定 CLI 只能作为该 Skill 内部桥梁；既有 HY3 exact Skill 证据证明会话命中。内部桥梁已冻结为单消费者、固定身份、固定 envelope，并绑定已接受 Stage4 `launch_session_tool(...)`/`LauncherReceiptV1` | 物理安装路径保持 opaque（不得编造磁盘目录）；禁止第二用户入口、第二Agent、MCP/CLI并行控制面、兜底、任意命令/argv/Shell生成和自动重试/重放 | 外部 WorkBuddy 机制已确认；T1 内部桥梁为`FROZEN_FOR_PLANNING`，当前规划为`STAGE5_PLANNING_PASS_ACCEPTED_CANDIDATE`，仅待独立 APPROVE/ordinary FF 生效；release-specific Installer/Skill asset 与真实实现仍待后续 handoff/验收；不因CLI存在判架构不可用 |
 | T2 输入合同 | Stage2/3/4正式合同与用户授权 | 冻结literal `user_message`、素材、closed controls、PackageToolDefinitionV1、Provider env、完整approved definition+original Stage3 fact、cancel/continuation | 唯一入口和受控调用域；不进入日志/平行库 | 跨域、非法字段、摘要重包装即fail closed；下游T3/T4 |
 | T3 验证顺序 | Registration/Locator合同 | 显式入口后先Locator，验证Registration/PackageRoot/Manifest/Lock/Guide/必带工具链，成功后读Guide并取得当前定义 | 复用Stage2 Locator；不复制Guide/Package | 扫盘/猜路径/未验证Guide/漂移即spawn 0；下游T4 |
 | T4 Stage4适配 | 固定`launch_session_tool(...)`与LauncherReceiptV1；本项目T1内部桥梁合同 | 原样传message；只传完整定义/原始事实；Skill 内部桥梁只消费已冻结固定 CLI envelope，Stage5不拼接任意命令/argv/Shell、不改写摘要；Stage4固定工具最多spawn一次 | 最多一个入口适配生产模块；固定 CLI 的 release-specific identity/template/envelope 已`FROZEN_FOR_PLANNING`，实际资产与实现仍待后续授权 | 任何第二入口、动态命令、重试/重放、字段丢失或receipt改写即停止；下游T5/T6 |
@@ -201,7 +201,7 @@ Stage 4 accepted API
 | T9 Package Gate | Package Registration合同、Project State、Stage4定义合同 | 规划不要求最终Package；受控fixture可证明合同；真实生产前必须Final Package物化/安装/Production Registration+Activation/新进程Locator；缺具体Release定义实例真实调用阻断 | 最终Package由后续Installer承载，入口不写PackageRoot | 临时ZIP/旧Skill/单测冒充生产即停止；下游真实Gate |
 | T10 证据分层 | 本矩阵状态定义和真实测试卡 | 独立报告10层：静态合同、单元负面、Stage2/3/4集成、WorkBuddy新会话、唯一入口、原话不变、授权/继续、生产Package身份、Provider/媒体、业务效果 | 各自证据对象，不在代码伪造 | 前层PASS不得替代后层；缺证据`NOT_PROVED/INCOMPLETE` |
 | T11 Stage6交接 | Stage4 LauncherReceiptV1、Stage3 facts、真实Stage5消费者（尚未证明） | 先直接复用；无真实字段缺口则`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`、生产代码0；有缺口才另行授权 | 当前零Stage6文件/模块 | 无消费者/无缺口不预建；下游独立Stage6授权 |
-| T12 实施任务包 | T1-T11、届时latest formal、用户明确“启动阶段五实施” | 固定Builder `V2-S5-WORKBUDDY-ENTRY-BUILDER1`；入口1、生产模块≤1、直接测试1；Reviewer、P0/P1/P2、普通FF、清理和N+1停止规则 | 精确入口路径、37->N、CI命令均`UNFROZEN_PENDING_IMPLEMENTATION_HANDOFF`；第N+1路径停止 | 无T1/授权/对象一致性/独立APPROVE不得实施或推广 |
+| T12 实施任务包 | T1-T11、届时latest formal、用户明确“启动阶段五实施” | 固定Builder `V2-S5-WORKBUDDY-ENTRY-BUILDER1`；入口1、生产模块≤1、直接测试1；Reviewer、P0/P1/P2、普通FF、清理和N+1停止规则 | 精确五路径已冻结：`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`、`.github/workflows/ci.yml`；tracked`37 -> 40`；direct/hygiene/full命令固定；第N+1路径停止 | 无T1/授权/对象一致性/独立APPROVE不得实施或推广 |
 
 #### T1 Evidence1 官方证据门禁（历史候选，已被本轮T1 Skill+CLI重新评估取代）
 
@@ -248,7 +248,7 @@ Evidence1 的正式候选基线是 `44d89625c1fd71d07d1173e18681e64e7459cec2`、
 - 不得从用户原话拼接任意 command/argv/Shell，不得启用 MCP 旁路、第二 Skill、全局意图截获、自动重试或自动重放；Stage4 的一次固定 Package-tool spawn 上限不变。
 - WorkBuddy-managed installed Skill catalog 是可冻结的逻辑安装归属；官方未披露的物理路径保持 `opaque`，不得借 CodeBuddy 页面或路径推断 WorkBuddy 目录。
 
-本轮官方能力证据和既有 HY3 exact Skill 命中已足以确认该 WorkBuddy 外部机制可用；本候选已把固定 CLI identity、固定 argv、secret-safe envelope、唯一消费者和 Stage4 字段映射冻结为 `FROZEN_FOR_PLANNING`。因此 T1 当前结果为 `T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING`，Stage5 规划为 `IN_PROGRESS / T1_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING`，实现授权继续 `NOT_GRANTED`；下一步是条件化的 `V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1`，不是自动写代码，也不是“CLI存在即架构不可用”。
+本轮官方能力证据和既有 HY3 exact Skill 命中已足以确认该 WorkBuddy 外部机制可用；本节保留已冻结的固定 CLI identity、固定 argv、secret-safe envelope、唯一消费者和 Stage4 字段映射合同。其 closeout 前状态为 `T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING` / `IN_PROGRESS`；当前 planning closeout 候选已接管 live 状态，规划为 `STAGE5_PLANNING_PASS_ACCEPTED_CANDIDATE`，仅待独立 APPROVE/ordinary FF 生效，下一 Builder 见本文件当前 closeout 段，不得把旧状态或“CLI存在即架构不可用”作为当前裁决。
 
 #### 当前 T1 固定 CLI 桥梁验收合同（`FROZEN_FOR_PLANNING`）
 
@@ -261,7 +261,7 @@ Evidence1 的正式候选基线是 `44d89625c1fd71d07d1173e18681e64e7459cec2`、
 | 一次 Stage4 调用 | 仅当 bridge preflight 已通过并进入 Stage4 的有效请求，CLI 才必须恰好一次调用 `launch_session_tool(...)`，传原话、重建 controls、完整 definition、完整 local evidence 和本地 cancel Event；Stage4 保持 Locator/preflight/spawn/receipt 唯一控制面 | bridge preflight 通过后 0 次或 2 次调用、并行、后台服务/IPC、Provider选择、Stage4字段重排或新控制面；pre-Stage4 input/identity/env/asset fail-closed 的合法结果是 Stage4 调用0次、无 receipt |
 | 输出与 exit | stdout 只允许一个 `golden-key-workbuddy-launcher-receipt-v1` 完整 JSON mapping，逐字段对应 immutable LauncherReceiptV1；stderr 只允许固定脱敏诊断 token。闭集为 `0`=Stage4 恰好一次且完整 receipt 缓冲/验证/序列化/输出（含失败 outcome），`64`=输入/schema/identity/cancel/continuation 无效，`78`=固定 asset/process-env/provider-name 配置或 secret provenance 无效，`70`=bridge internal 或 Stage4 后 receipt 完整序列化/输出前验证失败；stdout 先完整缓冲验证，错误时为空 | stdout 摘要/包装/多对象/日志、receipt 改写或丢字段；使用非 `0/64/70/78`、伪造 receipt、错误时输出部分 stdout；stderr含secret/路径/异常/动态值 |
 | 取消与继续 | `cancel_requested` 只在入口创建本地 `threading.Event`，true 先 set 后一次调用；运行中取消/Host终止留给 T5/实现，不造后台 IPC。`USER_CONFIRMED_NEW_REQUEST` 必须是新 request/envelope，`prior_request_id` 仅审计关联 | 自动重放旧 message、把 continuation 当 retry、伪造运行中取消 receipt |
-| 实施边界 | 本候选仅 docs-only，状态为 `T1_INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_FROZEN_FOR_PLANNING`；下游实现白名单、实际 Skill/Installer 资产、测试/CI命令均待 `V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1` 另行冻结 | 任何代码、测试、CI、真实客户端、Python/Stage4 spawn、Provider、媒体、Package、Registration、Stage6 或 `PASS_ACCEPTED/GRANTED` 宣称 |
+| 实施边界 | 本 closeout 候选仅 docs-only；规划 `PASS_ACCEPTED` 仅在独立 APPROVE 和 ordinary FF 后生效；未来五路径实现白名单、D盘 task-private venv、direct/hygiene/full 命令和`37 -> 40`已冻结；用户“启动阶段五实施”已记录，但 Builder 必须从最新formal接管 | 任何候选代码/测试/CI执行、真实客户端、Python/Stage4 spawn、Provider、媒体、Package、Registration、Stage6 或实施完成/真实生产 `PASS_ACCEPTED` 宣称 |
 
 transport exit 语义必须保持闭集且只允许 `0/64/70/78`：`0` 表示 Stage4 恰好调用一次且完整 receipt 已先缓冲、验证、序列化并输出，Stage4 返回任何真实 receipt（包括非成功 outcome）均为 `0`；`64` 表示 input/schema/identity/cancel/continuation 或已验证的 Stage4 `user_message` NFC/UTF-8 前置无效；`78` 表示固定 release asset、process-environment、provider-name 配置或 secret provenance 无效；`70` 表示 bridge internal failure，或 Stage4 调用后完整 receipt 序列化/输出前验证失败。所有非 `0` 结果 stdout 为空且不得伪造 receipt；Stage4 原有九值 outcome、23 reason、11级优先级、`spawn_count<=1` 和 `retry_count=0` 不由 CLI 改写。
 
@@ -285,7 +285,7 @@ transport exit 语义必须保持闭集且只允许 `0/64/70/78`：`0` 表示 St
 
 当前候选基线固定为`3eed285da6ae48e502d5be1f8ca726906d36b7cd`、tree `c0b03c4e7d858d5f15c7ce328cf5e2b60b57978b`、tracked 37；候选精确允许且只允许以下四条路径：`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`。必须通过`git diff --check`，tracked 仍为37，不得出现第五路径、代码/测试/CI/客户端/生产/Provider/媒体/Package/Registration/Stage6变化；测试状态固定为`NOT_RUN_DOCS_ONLY`。独立零写 Reviewer 只审固定模板、closed envelope、secret non-disclosure、一次 Stage4 调用、receipt/exit 语义、唯一入口和范围；P0 为安全/架构/授权/身份绕过或泄密，P1 为可执行合同/映射/证据缺口，P2 为非合同性文档问题。只有`APPROVE / P0=0 / P1=0 / P2=0`才可对该候选普通非force fast-forward；Reviewer不能把规划变成产品PASS。通过后仅条件化进入`V2-S5-PLANNING-CLOSEOUT-IMPLEMENTATION-HANDOFF-ASSESSMENT1`，仍不授予实现、客户端或生产授权，且不推送远端。
 
-未来实施只有在用户另行明确“启动阶段五实施”后，且T1合同闭合、实时formal对象等值、精确白名单冻结、直接测试/CI命令冻结后才可开始。Builder必须使用D盘独立worktree和项目私有`.venv`，REQUEST_CHANGES只能回原Builder；审核通过后普通非force fast-forward，关闭并清理临时worktree/branch。任何第N+1路径、假设路径/命令、formal前移、无最终exit或真实入口证据缺失均停止。
+用户已于 2026-08-21 明确“启动阶段五实施”，因此该用户授权条件已满足；但实现仍须等待本 closeout 候选的独立 APPROVE/P0=0/P1=0/P2=0、ordinary fast-forward，并由 Builder 从届时最新 formal 接管。T1合同闭合、实时formal对象等值、精确白名单冻结、直接测试/CI命令冻结仍是实施门禁。Builder必须使用D盘独立worktree和项目私有`.venv`，REQUEST_CHANGES只能回原Builder；审核通过后普通非force fast-forward，关闭并清理临时worktree/branch。任何第N+1路径、假设路径/命令、formal前移、无最终exit或真实入口证据缺失均停止。
 
 ## 4. Gate A：对象与环境
 

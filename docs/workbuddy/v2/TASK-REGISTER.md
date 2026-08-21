@@ -26,14 +26,14 @@ final_handoff_hygiene_scope: EXACT_6_PATHS / tracked 37
 final_handoff_hygiene_review: independent zero-write Reviewer / APPROVE / P0=0 / P1=0 / P2=0
 final_handoff_hygiene_local_evidence: Python 3.14.7 / 11 hygiene passed / 358 combined passed / all final exit 0
 final_handoff_hygiene_ci: run 32386393634 / completed / success / Python 3.14.7 / 357 passed / 1 skipped / actions v6 / no Node20 deprecation warning
-stage_5_planning_authorization_candidate: V2-S5-PLANNING-AUTHORIZATION-BUILDER1 / DOCS_ONLY / FORMALLY_PROMOTED_AS_BASE_FOR_CURRENT_PLANNING
-stage_5_planning_authorization_candidate_base: 67e39b345df954898a68c9c14645c9c04c380ac3 / tree c6bf74231434850fda07722ab9eed701797e48ff / tracked 37
-stage_5_planning_authorization_candidate_branch: codex/v2-s5-planning-authorization1
-stage_5_planning_authorization_candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
-stage_5_planning_authorization_candidate_result: 042686039386a63866eba2f964f1fa9674bbec4b / ordinary fast-forward / origin/codex/workbuddy-shell-v2
-stage_5_planning_authorized_next_task: V2-S5-PLAN-BUILDER1 / CURRENT_DOCS_ONLY_CANDIDATE
-stage_5_planning_next_task_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
-stage_5_planning_next_task_kind: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL
+stage_5_planning_authorization_history: V2-S5-PLANNING-AUTHORIZATION-BUILDER1 / DOCS_ONLY / CONSUMED_COMPLETE / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
+stage_5_planning_authorization_history_base: 67e39b345df954898a68c9c14645c9c04c380ac3 / tree c6bf74231434850fda07722ab9eed701797e48ff / tracked 37
+stage_5_planning_authorization_history_branch: codex/v2-s5-planning-authorization1
+stage_5_planning_authorization_history_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+stage_5_planning_authorization_history_result: 042686039386a63866eba2f964f1fa9674bbec4b / ordinary fast-forward / origin/codex/workbuddy-shell-v2 / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
+stage_5_planning_authorized_next_task_history: V2-S5-PLAN-BUILDER1 / CURRENT_DOCS_ONLY_CANDIDATE / CONSUMED_COMPLETE / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
+stage_5_planning_next_task_allowed_paths_history: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md / CONSUMED_COMPLETE / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
+stage_5_planning_next_task_kind_history: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL / CONSUMED_COMPLETE / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
 stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT when exact real WorkBuddy Skill/install/entry/call contract is not evidenced; never fabricate interface or use CLI/MCP/second-Skill fallback
 stage_5_t1_evidence1_candidate_result: d11513907c3662b18fd06a200fac935efcb50055 / tree 81e38bc90dd37d586b46e20cc047db35b613759d / T1_EVIDENCE_INCOMPLETE
 stage_5_t1_evidence1_independent_review: APPROVE / P0=0 / P1=0 / P2=0

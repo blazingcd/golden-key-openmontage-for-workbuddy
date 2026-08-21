@@ -7,14 +7,15 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 - 阶段1：`PASS_ACCEPTED`
 - 阶段2 Registration/Locator实现：`PASS_ACCEPTED`
 - 阶段2真实临时Package验证：`PASS_ACCEPTED`；最终Release保留：`NOT_MATERIALIZED`；生产Package登记：`NOT_CREATED`
-- 仓库卫生：`PASS_ACCEPTED`；历史Wave C对象`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为33文件，当前已接受Stage3/4正式树tracked精确37
+- 仓库卫生：`PASS_ACCEPTED`；历史Wave C对象`20ddab75825c1b6e7de5a51603afe8b6fd82eceb`为33文件，当前正式树tracked精确40
 - 阶段3规划与实现：`PASS_ACCEPTED`
 - 阶段4规划与实现：`PASS_ACCEPTED`
-- 阶段5 WorkBuddy入口：`NOT_GRANTED`
+- 阶段5整体：`IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`
 - 阶段6状态结果转交：`NOT_GRANTED`
-- 最终Package物化与生产登记：`NOT_MATERIALIZED / NOT_CREATED`
+- 最终Package/PackageRoot/生产Registration/Activation/最终安装Skill：`NOT_MATERIALIZED / NOT_CREATED`
+- 真实WorkBuddy `LauncherReceiptV1`：`NOT_PROVED`
 
-实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。当前维护只同步入口文档和CI action版本，不授权阶段5、阶段6或最终Package工作。
+实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。本轮`V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1`只做文档纠偏；推广后没有自动授权任务。下一计划任务R01执行合同证据核验必须另行取得用户授权。
 
 阶段2 Registration/Locator、阶段3 Runtime按需准备和阶段4会话Launcher实现均已接受。阶段2还证明过一次包含Python、FFmpeg、Node的真实临时Package，但临时Package随后已删除；这不能证明最终Release已经保留、生产PackageRoot已经安装登记，也不能证明Installer或最终分发。阶段2合同边界见[`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md)。
 
@@ -26,6 +27,6 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 
 阶段4已接受的唯一公共入口为`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`。它只接受批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`，恰好启动一个固定Package工具，并返回九值闭集、递归不可改写的`LauncherReceiptV1`。阶段4对Provider和Runtime保持opaque，不选择Remotion、HyperFrames或任何其他Provider/Runtime。
 
-阶段5仍是未来最终用户入口，尚未实现或授权；它将通过阶段2重验生产Package，并把literal用户原话与技术控制分离传递。阶段6同样未实现或授权；若不存在真实格式转换缺口，可直接复用阶段4回执。暂停、同意与继续由WorkBuddy负责，Shell不得自动重放原业务请求。真实生产WorkBuddy/Launcher会话、Provider/媒体执行、阶段5/6以及最终Package物化/生产登记仍未证明或为`NOT_GRANTED`。
+阶段5尚未完成：入口代码已交付，但真实集成仍不完整。完整PASS必须同时有五类证据：持久final Release/PackageRoot；生产Registration+Activation及新进程Locator；无placeholder且唯一的最终安装Skill；HY3真实WorkBuddy取得真实`LauncherReceiptV1`；独立审查、正式Git/CI和无歧义live authority。Provider、媒体/视频、Remotion/HyperFrames下载安装、Stage6转换代码和完整业务E2E不属于阶段5完成前置。阶段5之后先判断能否直接复用回执；整个项目业务E2E另行处理，不称为阶段7。
 
 历史证据可以保留旧阶段3签名、Package绑定能力模型或阶段4实施前Gate，但这些内容只代表historical记录，不覆盖上述当前已接受接口与状态。

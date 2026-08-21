@@ -67,7 +67,7 @@ stage_5_planning_authorization_history_scope: DOCS_ONLY / no production code / t
 initial_product_goal_recheck: PASS / WorkBuddy is the only running Agent and the only user entry; after loading the verified Package Guide it assumes the OpenMontage logical production role
 stage_5_t1_cli_boundary: CLI_NOT_A_BLANKET_BAN / forbid a second entry, parallel control plane, fallback, or arbitrary command/argv/Shell generation; a fixed CLI used internally by the one official WorkBuddy Skill remains eligible for controlled contract verification
 stage_5_planning_t1_hard_stop: HISTORICAL_EXTERNAL_CONTRACT_STOP / superseded for the external-mechanism question; never fabricate an interface or use CLI/MCP/second-Skill fallback, and do not treat CLI presence alone as architecture unavailability
-stage_5_planning_t1_current_state: HISTORICAL_PRE_CLOSEOUT_T1_STATE / IN_PROGRESS / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING; current live state is the Stage5 implementation closeout candidate below
+stage_5_planning_t1_current_state: HISTORICAL_PRE_CLOSEOUT_T1_STATE / SUPERSEDED_BY_V2-S5-R00 / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING; current live state is the Stage5 remainder R00 docs-only candidate below
 stage_5_t1_fixed_cli_bridge_status: FROZEN_FOR_PLANNING / one WorkBuddy-managed Skill -> one non-user-facing fixed transport adapter -> one accepted Stage4 consumer
 stage_5_t1_fixed_cli_bridge_command: LOCATOR_PACKAGE_PYTHON / -I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli / no console-script / no subcommands / shell=false
 stage_5_t1_fixed_cli_bridge_user_message_boundary: wire canonicalization only / no NFC-NFD-trim-newline rewrite / verify Stage4 NFC+UTF-8 precondition / non-NFC exit64 / valid Unicode code-point sequence unchanged
@@ -92,27 +92,39 @@ stage_5_implementation_scope: EXACT_5_PATHS / tracked 37->40
 stage_5_implementation_review: APPROVE / P0=0 / P1=0 / P2=0
 stage_5_implementation_windows_evidence: direct 19 passed / hygiene 11 passed / full 377 passed / final exit 0
 stage_5_implementation_ci: run 32489111184 / completed / success / headSha=0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / Ubuntu / Python 3.14.7 / 376 passed / 1 skipped / final exit 0
-stage_5_implementation: CLOSEOUT_CANDIDATE_PENDING_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+stage_5_implementation: ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+stage_5_entry_code_formal_result: 0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / tree 85c266edb7349c940e8cd45870cc0538c95726c0 / parent aa70c2cf9b6b4a29517d7354f0239ea0cdc9a5d3
+stage_5_entry_code_scope: EXACT_5_PATHS / tracked 37->40
+stage_5_entry_code_review: APPROVE / P0=0 / P1=0 / P2=0
+stage_5_entry_code_ci: run 32489111184 / completed / success / Ubuntu / Python 3.14.7 / 376 passed / 1 skipped / final exit 0
+stage_5_entry_closeout: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / FORMALLY_DELIVERED_DOCS_ONLY / NOT_STAGE5_PASS
 stage_4_launcher_authorization: NOT_GRANTED
-stage_5_workbuddy_entry: NOT_GRANTED
+stage_5_workbuddy_entry: ENTRY_CODE_COMPLETE / REAL_WORKBUDDY_INTEGRATION_INCOMPLETE
 stage_6_status_result_relay: NOT_GRANTED
-stage_5_implementation_authorization: CONSUMED_COMPLETE / USER_AUTHORIZED / FORMAL_IMPLEMENTATION_RESULT_PRESENT
-current_task: NONE
-current_task_status: NO_ACTIVE_TASK / CLOSEOUT_CANDIDATE_PENDING_REVIEW_AND_PROMOTION
+stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_DOCS_CORRECTION_IN_PROGRESS / R01_NOT_AUTHORIZED
+current_task: V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1 / DOCS_ONLY / CURRENT_CANDIDATE
+current_task_status: IN_PROGRESS / CANDIDATE_NOT_PROMOTED
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: NONE / AFTER_CLOSEOUT
+next_authorized_task: NONE
+next_planned_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
 stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
 stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
 stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
 pending_next_authorized_task: NONE
-next_authorized_task_condition: closeout promotion ends with no automatic next task; real WorkBuddy production acceptance, Provider/media, final Package/Registration and Stage6 require separate authorization and evidence
+next_authorized_task_condition: after R00 promotion current_task=NONE / NO_ACTIVE_TASK and next_authorized_task=NONE; R01 is planned only and requires separate user authorization
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
 effective_final_package_gate_authorization: NOT_GRANTED
-final_package_gate: LATER_FINAL_DELIVERY_OR_INSTALLER_TASK / NOT_GRANTED / DUE_BEFORE_STAGE5_PRODUCTION_ACCEPTANCE
+final_package_artifact: NOT_MATERIALIZED
+production_package_root: NOT_CREATED
+production_registration_activation: NOT_CREATED
+final_installed_skill: NOT_CREATED
+real_workbuddy_launcher_receipt: NOT_PROVED
+final_package_gate: R04/R05_FINAL_DELIVERY_OWNERSHIP / NOT_GRANTED / NOT_MATERIALIZED
 ```
 
 ## [HISTORICAL / SUPERSEDED_BY_FIXED_CLI_BRIDGE_CONTRACT] Stage 5 T1 CLI边界纠偏与目标回读门禁（2026-08-21）
@@ -378,7 +390,7 @@ User -> Stage 5 WorkBuddy entry -> Stage 2 Locator revalidation
 
 规划结果已冻结两个原合同缺口：固定工具身份来自批准Package定义/最终交付Installer owner提供的release-specific immutable `PackageToolDefinitionV1`；唯一公共入口为`launch_session_tool(...)`；输出为九值闭集、递归不可改写的`LauncherReceiptV1`。Stage4对Provider和Runtime保持opaque，不硬编码Remotion、HyperFrames或任何Provider；只有固定定义声明本地要求时才接收完整approved capability definition与未改写original Stage3 fact，并按`managed/explicit/PATH`原始source重新验证实际字节。
 
-Stage 4规划、实现、closeout及最终交接卫生均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复、产品closeout和六路径最终入口卫生都已进入历史；原三路径卫生Builder的安全停止也已闭合。`HISTORICAL_STAGE4_CLOSEOUT_CONTEXT`：当时“当前没有活动任务或下一授权任务”仅为Stage4 closeout历史快照，不覆盖当前Stage5 live authority。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`不改变或重新门禁产品状态。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+Stage 4规划、实现、closeout及最终交接卫生均已完成独立审查、普通fast-forward并由正式CI验证，`stage_4_planning=PASS_ACCEPTED`且`stage_4_implementation=PASS_ACCEPTED`。六权威同步、secret nondisclosure澄清、五路径实现、单文件CI夹具修复、产品closeout和六路径最终入口卫生都已进入历史；原三路径卫生Builder的安全停止也已闭合。`HISTORICAL_STAGE4_CLOSEOUT_CONTEXT`：当时“当前没有活动任务或下一授权任务”仅为Stage4 closeout历史快照，不覆盖当前Stage5 live authority。`mirror_result/mirror_effect/mirror_repository_delivery_resolution`不改变或重新门禁产品状态。Stage5整体当前为`IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`；真实生产WorkBuddy/Launcher会话、Stage5最终集成、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明。
 
 ## Stage 5内部T1 Evidence2授权候选（2026-08-21）
 
@@ -631,7 +643,7 @@ full/CI: python -m pytest -p no:cacheprovider tests/workbuddy/test_package_regis
 
 实施仍必须经历 Builder commit、独立 zero-write Reviewer `APPROVE / P0=0 / P1=0 / P2=0`、ordinary fast-forward、tracked/clean/untracked/stash 验证和临时现场清理。该候选不等于实施完成；真实 WorkBuddy 新会话、唯一入口命中、原话/授权/继续、最终 Package/Registration、Provider、媒体和业务效果仍是后续独立证据层。
 
-## Stage 5实施完成与入口收口候选（`V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1`，2026-08-21）
+## [HISTORICAL / SUPERSEDED_BY_V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1] Stage 5实施完成与入口收口候选（`V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1`，2026-08-21）
 
 本节是本轮六文档 docs-only 机械镜像；它不修改产品代码状态。Stage 5 planning 已是 `PASS_ACCEPTED`，实施 Builder 结果已在正式分支存在并经独立 Reviewer/CI 证实；但本 closeout 自身在独立 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 与普通 fast-forward 进入 formal 前仍是候选，不能自称已交付。只有该推广完成后，`stage_5_implementation=PASS_ACCEPTED`；收口后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`。
 
@@ -663,3 +675,57 @@ candidate_push: NOT_PUSHED
 唯一入口合同保持：WorkBuddy 是唯一 Agent/用户入口；一个 Skill 只调用 package-private fixed `-I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli` transport adapter，随后恰好一次 `launch_session_tool(...)` 并输出真实 `LauncherReceiptV1`。无 console script、subcommands、router、MCP、第二 Agent、retry/replay；literal message、closed JSON、provider secret non-disclosure、固定环境身份、cancel/continuation 和 receipt 约束不变。静态/direct/hygiene/CI 证据不等于真实 WorkBuddy 生产、业务或 E2E 证据。
 
 实施的精确五路径为：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。最终 Installer-stamped Skill、最终 Package 物化/Registration、真实 WorkBuddy、Provider/媒体和 Stage6 均需后续独立授权与证据；本 closeout 不自动产生下一任务。
+
+## Stage 5剩余计划与当前纠偏（`V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1`，2026-08-21）
+
+本节是当前十二文档 docs-only 候选。产品目标回读为 `PASS`：WorkBuddy 是唯一运行中的 Agent 和唯一用户入口，Shell 只负责六模块，不成为 Director/FSM/第二 Agent/媒体控制面。Stage 5 整体必须保持 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`；入口代码、固定 CLI、Stage4 `launch_session_tool(...)`、Reviewer、正式 Git/CI 是已交付子项，不等于 Stage5整体PASS。该候选推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`；`next_planned_task=V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION`，本候选不自动授权 R01。
+
+```text
+task_id: V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1
+task_kind: DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / EXACT_12_EXISTING_DOCS
+base_commit: 2207c9083ceabcf6539936e47b0935a4eaa77c46
+base_tree: 8c66c3c38bf0dc00595c09743de715d7c1117c40
+tracked_files_at_base: 40
+initial_product_goal_recheck: PASS
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+entry_code_result: 0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / tree 85c266edb7349c940e8cd45870cc0538c95726c0 / tracked 37->40
+entry_code_review_ci: APPROVE / P0=0 / P1=0 / P2=0 / Windows 19+11+377 passed / CI 32489111184 success 376 passed 1 skipped
+final_package_artifact: NOT_MATERIALIZED
+production_package_root: NOT_CREATED
+production_registration_activation: NOT_CREATED
+final_installed_skill: NOT_CREATED
+real_workbuddy_launcher_receipt: NOT_PROVED
+candidate_allowed_paths: AGENT_GUIDE.md; README.md; README_zh-CN.md; PROJECT_CONTEXT.md; PROJECT-STATE.md; docs/workbuddy/v2/README.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/MODULE-DISPOSITION.md; docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
+candidate_test: NOT_RUN_DOCS_ONLY
+candidate_push: NOT_PUSHED
+after_promotion: current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE
+next_planned_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION
+```
+
+### Stage 5整体完成定义
+
+只有以下五类证据全部存在，Stage 5 才能整体 `PASS_ACCEPTED`：
+
+1. 持久保留的 final Package Release 与 PackageRoot；
+2. production Registration + Activation + new-process Locator 返回一致身份；
+3. 无 placeholder、已安装且唯一的 final WorkBuddy Skill；
+4. HY3 真实 WorkBuddy 成功取得真实 `LauncherReceiptV1`；
+5. 独立 Review、正式 Git/CI，以及无歧义的 live authority。
+
+缺任一项都只能保持 `REAL_INTEGRATION_INCOMPLETE`，不得用静态测试、临时Package、客户端导入、Skill命中或 closeout 文档替代。
+
+### S5-00 至 S5-08 严格顺序
+
+| 编号 / 任务 | 作用、输出与验收 | 停止边界 / 不证明 |
+|---|---|---|
+| S5-00 / `V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1` | 本十二文档 live truth 纠偏；固定 Stage5 状态、五类完成定义和 R01-R08 依赖；`DOCS_ONLY`、测试不运行 | 不实现产品、不授权 R01，不创建Package、Registration、Skill或客户端证据 |
+| S5-01 / `V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1` | 仅官方资料与受控 HY3 无副作用临时Skill，核验 scripts/resources/workflows、literal input、固定命令/cwd/env、单JSON stdin、stdout/stderr/exit/timeout capture；`https://cloud.tencent.com/document/product/1831/134516`（访问日2026-08-21）是 CodeBuddy 相邻 Skills 页面，标记 `PRODUCT_MISMATCH`，只能用于探索，不能证明 WorkBuddy 物理路径、归属或精确执行合同；`https://cloud.tencent.com/document/product/1831/134432` 是 WorkBuddy 官方资料，但精确客户端语义仍须受控 HY3 核验 | 未知即 `BLOCKED_EXTERNAL_CONTRACT`；禁止 MCP、第二Skill、任意CLI旁路；不证明最终Skill、Package或真实Launcher成功 |
+| S5-02 / `V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1` | 实时重验批准的最终Package Release；`0.3.24/tree 0464861c`仅为候选，需live复核；绑定真实存在的 safe fixed tool 与 release-specific `PackageToolDefinitionV1`，纳入Manifest/Lock | 无真实Release即 `BLOCKED_PACKAGE_RELEASE`，Shell不得臆造fixture、工具或定义 |
+| S5-03 / `V2-S5-R03-EXECUTABLE-SKILL-BUNDLE1` | 构建单一可执行Skill bundle：最小bundled helper、verified Guide/definition、canonical envelope、scrubbed env、固定private CLI一次、receipt映射、Stage3逐能力询问和用户确认的新continuation；须代码/Skill/测试/CI/独立Review/FF | 禁止第二Agent、MCP、router、retry/replay；具体路径必须届时从live formal另行冻结，不由R00预造 |
+| S5-04 / `V2-S5-R04-INSTALLER-LIFECYCLE1` | 实现当前缺失的Installer/lifecycle：approved OpenMontage、Shell包、private Python+locked deps、FFmpeg/ffprobe、Node/npm/npx、tool definition、Manifest/Lock/ZIP/sidecar、Skill identity/schema/module/argv/interpreter stamping，以及fresh/repair/upgrade/rollback/uninstall、数据保留/ownership/staging/atomicity | 先D盘隔离测试；未获实现授权不得改代码或预造路径；不证明生产Package已登记 |
+| S5-05 / `V2-S5-R05-FINAL-PACKAGE-MATERIALIZATION-REGISTRATION1` | 用户另行确认正式D盘DataRoot；用R04物化并持久保留final Release/PackageRoot，register+activate+new-process locate，验证工具链、Guide、Manifest/Lock/Shell/tool definition | 未经用户确认不得操作正式DataRoot；成功产物不得删除为临时证据 |
+| S5-06 / `V2-S5-R06-FINAL-SKILL-INSTALLATION1` | 导入Installer-stamped完整Skill folder/ZIP；零placeholder；客户端仅一个`golden-key-openmontage`，无旧V1/测试Skill；HY3 slash精确命中 | 不猜物理安装路径；不把导入成功当作Stage5整体PASS |
+| S5-07 / `V2-S5-R07-REAL-WORKBUDDY-ACCEPTANCE1` | HY3-only真实新会话覆盖正常成功、取消/超时、并发/幂等、重启后定位；成功必须真实`LauncherReceiptV1`，并核对WorkBuddy呈现与receipt字段 | 不使用Auto；Provider、媒体、业务E2E不在本任务；任一身份/证据缺失即阻断，不伪造receipt |
+| S5-08 / `V2-S5-R08-STAGE5-FINAL-CLOSEOUT1` | 仅在R01-R07全部证据齐备后独立Review、正式Git/CI、清理temporary但保留正式Package/Registration/Skill；唯一任务可把live `stage_5=PASS_ACCEPTED` | 不使用self-resolving candidate冒充完成；Stage6只在另行授权后接管 |
+
+依赖严格为 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`；任一阻断不得跳过。R03/R04即使未来证据允许合并，也必须另行授权并保留全部验收项。Stage5不要求Provider真实调用、媒体/视频生成、Remotion/HyperFrames下载安装、Stage6转换代码或完整业务E2E；optional缺失/decline/defer不阻断base。Stage5之后先判断Stage6能否直接复用receipt（可直用则优先零代码），整个项目最终业务E2E另行授权，不称为Stage7。

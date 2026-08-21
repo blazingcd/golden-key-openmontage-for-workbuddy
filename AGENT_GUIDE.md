@@ -34,25 +34,30 @@ The accepted minimum contract remains provider- and runtime-opaque: a release-sp
 
 Stage 4 does not hard-code, select, configure, or route any Provider or runtime, including Remotion or HyperFrames. Provider configuration is separate external-service input and only definition-allowlisted environment names reach the child process. Local Stage 3 evidence is accepted only when `PackageToolDefinitionV1.required_local_capabilities` declares the same opaque capability and definition; the caller must pass the complete approved definition plus the unmodified original Stage 3 fact, and Stage 4 independently revalidates bytes using the accepted `managed`, `explicit`, or `PATH` source semantics. A base fixed-tool call never requires optional local-capability evidence. Stage 4 must not accept arbitrary shell or commands, parse user intent, read an unverified Package Guide, launch another Agent, install Runtime, choose a renderer, retry or replay, schedule work, run media production, create Artifacts, or advance Checkpoints. Literal `user_message` and `executor_controls` remain separate. Real WorkBuddy new-session behavior and continuation belong to Stage 5; Stage 6 first attempts direct `LauncherReceiptV1` reuse with zero production code.
 
-Stage 5 planning is `PASS_ACCEPTED` (not a candidate). The implementation task `V2-S5-WORKBUDDY-ENTRY-BUILDER1` is `CONSUMED_COMPLETE` with its approved formal result recorded below. The current six-document closeout remains a candidate: only an independent `APPROVE / P0=0 / P1=0 / P2=0` and ordinary fast-forward into the formal branch may make `stage_5_implementation=PASS_ACCEPTED`; this candidate must not call itself delivered. After that closeout, `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`. Real WorkBuddy production acceptance, final Installer-stamped Skill, final Package materialization/Registration, Provider/media execution, and Stage 6 remain ungranted and unproved.
+Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The `V2-S5-WORKBUDDY-ENTRY-BUILDER1` implementation and its six-document closeout are formally delivered as repository changes, but they prove only the entry-code/static contract layer; they do not make the whole Stage 5 `PASS_ACCEPTED`. Final Package/PackageRoot/Registration/Activation, a final installed Skill, and a real WorkBuddy-produced `LauncherReceiptV1` remain absent or unproved. The current `V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1` is a docs-only candidate; after its independent review and ordinary fast-forward, it is consumed and `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`. The next planned task is `V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1`, but it requires separate user authorization.
 
-## Current Stage 5 implementation and closeout mirror
+## Current Stage 5 remainder mirror
 
 ```text
-implementation_task: V2-S5-WORKBUDDY-ENTRY-BUILDER1 / CONSUMED_COMPLETE
-implementation_formal_result: 0e7a0be65877b03fb386e1c6c6bc258c0b27db6c
-implementation_tree: 85c266edb7349c940e8cd45870cc0538c95726c0
-implementation_parent: aa70c2cf9b6b4a29517d7354f0239ea0cdc9a5d3
-implementation_scope: EXACT_5_PATHS / tracked 37->40
-implementation_reviewer: APPROVE / P0=0 / P1=0 / P2=0
-implementation_windows_evidence: direct 19 passed / hygiene 11 passed / full 377 passed / final exit 0
-implementation_ci: run 32489111184 / completed / success / headSha=0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / Ubuntu / Python 3.14.7 / 376 passed / 1 skipped / final exit 0
-closeout_task: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / DOCS_ONLY / EXACT_6_PATHS / ZERO_PRODUCT_STATE_CHANGE
-closeout_candidate: stage_5_implementation=PASS_ACCEPTED only after independent APPROVE and ordinary fast-forward; candidate not delivered
-after_closeout: current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE
+entry_code_task: V2-S5-WORKBUDDY-ENTRY-BUILDER1 / CONSUMED_COMPLETE / ENTRY_CODE_COMPLETE
+entry_code_formal_result: 0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / tree 85c266edb7349c940e8cd45870cc0538c95726c0 / parent aa70c2cf9b6b4a29517d7354f0239ea0cdc9a5d3
+entry_code_scope: EXACT_5_PATHS / tracked 37->40
+entry_code_reviewer: APPROVE / P0=0 / P1=0 / P2=0
+entry_code_windows_evidence: direct 19 passed / hygiene 11 passed / full 377 passed / final exit 0
+entry_code_ci: run 32489111184 / completed / success / headSha=0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / Ubuntu / Python 3.14.7 / 376 passed / 1 skipped / final exit 0
+entry_closeout: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / FORMALLY_DELIVERED_DOCS_ONLY / NOT_STAGE5_PASS
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+final_package_artifact: NOT_MATERIALIZED
+production_package_root: NOT_CREATED
+production_registration_activation: NOT_CREATED
+final_installed_skill: NOT_CREATED
+real_workbuddy_launcher_receipt: NOT_PROVED
+current_task: V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1 / DOCS_ONLY / CURRENT_CANDIDATE
+after_r00_promotion: current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE
+next_planned_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION
 ```
 
-The implementation contract remains one WorkBuddy-managed Skill as the sole Agent/user entry, one package-private fixed CLI transport adapter, and exactly one accepted Stage 4 call with a real `LauncherReceiptV1`. It has no console script, subcommands, router, MCP, second Agent, retry or replay; JSON, provider-secret, fixed-environment identity, cancellation and receipt boundaries remain as frozen. Static, direct-test, hygiene and CI evidence does not prove a real WorkBuddy business/E2E session.
+The entry-code contract remains one WorkBuddy-managed Skill as the sole Agent/user entry, one package-private fixed CLI transport adapter, and exactly one accepted Stage 4 call with a real `LauncherReceiptV1`. It has no console script, subcommands, router, MCP, second Agent, retry or replay; JSON, provider-secret, fixed-environment identity, cancellation and receipt boundaries remain as frozen. Static, direct-test, hygiene and CI evidence does not prove a real WorkBuddy business/E2E session. The complete Stage 5 gate and ordered R01-R08 remainder are authoritative in `docs/workbuddy/v2/TASK-REGISTER.md`.
 
 ## External Package Guide
 

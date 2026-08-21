@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 旧资产处置
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / MAPPING_ONLY / TRACKED_37`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_IN_PROGRESS_ENTRY_CODE_COMPLETE_REAL_INTEGRATION_INCOMPLETE / MAPPING_ONLY / TRACKED_40`
 
 固定来源：`2a2bf09832d558388dc2816c54b32a2dce4aa607`
 
@@ -19,7 +19,7 @@
 
 | V1 来源 | 真实消费者 / 调用链 | V2 归属 / 裁决 | 最小保留能力 | 禁止迁移逻辑 | 后续消费者证据 | 最小验收 |
 |---|---|---|---|---|---|---|
-| `__init__.py`、`__main__.py`、`cli.py` | 包导入、`python -m`、控制台入口、Launcher、两个Skill | 会话Launcher / `REWRITE_PASS_ACCEPTED` | 唯一入口`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`先用Stage2 Locator重验，只消费release-specific immutable `PackageToolDefinitionV1`，恰好调用一个固定Package工具并返回九值闭集、递归不可改写的`LauncherReceiptV1`；基础调用不依赖可选能力 | 恢复CLI平台；改写用户原话；读未验证Guide；启动第二Agent；Project/Stage/Tool/Artifact/Checkpoint命令；任意Shell/命令；Runtime安装；Provider或渲染器选择；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产 | 批准Package定义/最终交付Installer owner提供工具身份；Stage5未来只可原样消费已冻结接口，未获实现授权 | Stage4规划与实现均`PASS_ACCEPTED`；真实生产WorkBuddy/Launcher、Provider和媒体执行未证明，Stage5/6仍`NOT_GRANTED` |
+| `__init__.py`、`__main__.py`、`cli.py` | 包导入、`python -m`、控制台入口、Launcher、两个Skill | 会话Launcher / `REWRITE_PASS_ACCEPTED` | 唯一入口`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`先用Stage2 Locator重验，只消费release-specific immutable `PackageToolDefinitionV1`，恰好调用一个固定Package工具并返回九值闭集、递归不可改写的`LauncherReceiptV1`；基础调用不依赖可选能力 | 恢复CLI平台；改写用户原话；读未验证Guide；启动第二Agent；Project/Stage/Tool/Artifact/Checkpoint命令；任意Shell/命令；Runtime安装；Provider或渲染器选择；自动重试/重放；队列/服务/数据库/多进程调度；媒体生产 | 批准Package定义/最终交付Installer owner提供工具身份；Stage5 entry-code 已正式交付并仅消费已冻结接口；R03/R04/R05/R06 等后续实现仍须分别授权 | Stage4规划与实现均`PASS_ACCEPTED`；真实生产WorkBuddy/Launcher、Provider和媒体执行未证明；Stage5整体为`IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，Stage6仍未授权/未证明 |
 | `doctor.py`、`paths.py`、`gate.py` | CLI/MCP/Skill与维护者CI | OpenMontage 执行包登记与定位 / `REWRITE`；静态gate仅`HISTORICAL`参考 | 只读Package Registration、完整必带工具链身份和规范化路径报告 | 硬编码版本/Pipeline、扫盘、隐式准备、把doctor/gate当产品PASS | Locator与Launcher消费唯一活动Package Registration | Python/核心依赖、FFmpeg/ffprobe、Node/npm/npx任一未登记或漂移即fail closed，零写入 |
 | `runtime_prepare.py`、`host_tools.py`、Runtime locks、`subprocess_guard/**` | doctor、CLI runtime、安装repair、宿主工具发现、missing-only准备、运行时/离线测试 | Runtime按需准备 / `REWRITE_PASS_ACCEPTED_AT_A3F8959682D296301DC573C2835F8C705A52E8B2` | 唯一入口`prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`有界探测Remotion/HyperFrames；结果闭集为`DETECTION_REPORT/CONSENT_REQUIRED/INTEGRATED/SKIPPED/BLOCKED`，能力事实为`PRESENT/MISSING/INCOMPATIBLE/NOT_INTEGRATED`；缺失/不兼容时零下载计划，逐能力批准后才受管集成 | 迁移Python核心依赖、FFmpeg或Node准备逻辑；把可选能力当必带Runtime；恢复旧全闭集Lock、旧入口签名、Shell-owned Lock、独立`host_tools.py`/`subprocess_guard`框架；扫盘；通用包管理；自动安装；Shell选择渲染器；修改系统Python/PATH/注册表 | Stage4仅在`PackageToolDefinitionV1`声明要求时消费同一capability+definition的完整批准定义和未改写`PRESENT`或`INTEGRATED`原始事实；基础调用不依赖可选能力 | 55 direct、10 hygiene、199 full全部退出0无skip；真实下载、生产DataRoot、WorkBuddy、Provider和媒体/视频E2E不在该证据层 |
 | `security.py` | CLI/MCP/runtime/tasks 输出 | 六模块横切 / `KEEP` | 纯函数脱敏 | 读取或记录明文凭据；用脱敏掩盖对象或退出状态 | 安装、Launcher 与状态回执共同消费同一边界 | 明文 canary 不出现在输出 |
@@ -34,4 +34,8 @@
 
 ## 3. 收口
 
-全部旧资产已映射到六个模块、`DROP`或`HISTORICAL`，无`UNKNOWN`。CLI/MCP不是独立MVP模块；其中只允许受控入口适配，其生产编排能力一律`DROP`。`347272c`的包内Python结论和`899592d`中Python核心依赖、FFmpeg、Node的锁定/组装模式移交Package交付与阶段2登记，不再进入阶段3；Stage3实现和closeout已经正式推广并`PASS_ACCEPTED`，旧全闭集入口、Shell-owned Lock和第二框架已`SUPERSEDED`。Stage4的`PackageToolDefinitionV1`、唯一`launch_session_tool(...)`与九值递归不可改写`LauncherReceiptV1`已经规划、实现、独立审查并正式推广为`PASS_ACCEPTED`；当前正式树tracked精确37。Stage5/6及最终Package物化/生产登记仍为`NOT_GRANTED`或未证明。
+全部旧资产已映射到六个模块、`DROP`或`HISTORICAL`，无`UNKNOWN`。CLI/MCP不是独立MVP模块；其中只允许受控入口适配，其生产编排能力一律`DROP`。`347272c`的包内Python结论和`899592d`中Python核心依赖、FFmpeg、Node的锁定/组装模式移交Package交付与阶段2登记，不再进入阶段3；Stage3实现和closeout已经正式推广并`PASS_ACCEPTED`，旧全闭集入口、Shell-owned Lock和第二框架已`SUPERSEDED`。Stage4的`PackageToolDefinitionV1`、唯一`launch_session_tool(...)`与九值递归不可改写`LauncherReceiptV1`已经规划、实现、独立审查并正式推广为`PASS_ACCEPTED`；Stage5入口代码已正式交付但整体仍`IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，当前正式树tracked精确40。最终Package/PackageRoot/Registration/Activation、最终安装Skill和真实WorkBuddy回执仍未创建或证明。
+
+## 当前Stage 5映射边界（非实施授权）
+
+已交付的 Stage 5 entry-code 只映射到现有五个实现/验收路径：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。这些文件的存在和 tracked=40 不是对后续 R03/R04/R05/R06 实施的授权。R03 的 executable Skill bundle、R04 的 Installer/lifecycle 生产实现及其具体路径，必须在各自任务接管时从最新 formal 重新冻结；不得由本映射预造路径、模块或通用框架。

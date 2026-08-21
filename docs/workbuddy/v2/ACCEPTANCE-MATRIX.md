@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_PLANNING_PASS_ACCEPTED / STAGE_5_IMPLEMENTATION_CLOSEOUT_CANDIDATE / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_IN_PROGRESS_ENTRY_CODE_COMPLETE_REAL_INTEGRATION_INCOMPLETE / SIX_MODULE_MVP`
 
 ```text
 formal_ref: refs/heads/codex/workbuddy-shell-v2
@@ -154,7 +154,7 @@ tests/workbuddy/test_repository_hygiene.py
 
 Builder最终给出Stage4 direct 158、repository hygiene 11、full suite 358的未截断Windows输出，全部exit 0且无skip，并报告精确base/candidate/tree/5路径/37 tracked/clean/untracked0/stash0。Reviewer独立零写比较精确base..candidate，核对公共合同最小性、fail-closed反例、secret边界和无Scope扩张，最终为`APPROVE / P0=0 / P1=0 / P2=0`；单文件CI夹具修复也独立`APPROVE / P0=0 / P1=0 / P2=0`。WSL只作临时Linux等价验证，已清理关闭，不是运行依赖。普通fast-forward正式推广后仍不得自动启动Stage5/6。
 
-Stage5的消费者合同只需提供literal message、closed controls、approved PackageToolDefinition、经单独授权的Provider环境，并在定义声明时原样传递完整approved capability definition与未改写original Stage3 fact；不得重包装摘要。Stage4按原始managed/explicit/PATH source语义独立验证实际资产；Stage6优先直接使用同一receipt，格式无缺口时必须`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明，不得用Stage4单元测试冒充。
+Stage5的消费者合同只需提供literal message、closed controls、approved PackageToolDefinition、经单独授权的Provider环境，并在定义声明时原样传递完整approved capability definition与未改写original Stage3 fact；不得重包装摘要。Stage4按原始managed/explicit/PATH source语义独立验证实际资产；Stage6优先直接使用同一receipt，格式无缺口时必须`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。Stage5整体仍为`IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`；真实生产WorkBuddy/Launcher会话、Stage5最终集成、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明，不得用Stage4单元测试冒充。
 
 ### 3.6 [历史 / 已被 V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 取代] 阶段5规划验收与实施启动前置
 
@@ -404,7 +404,7 @@ cost_authorization
 
 任何字段缺失时，真实验收不得开始。
 
-## 10. Stage 5实施结果与入口收口机械出口
+## 10. [HISTORICAL / SUPERSEDED_BY_V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1] Stage 5实施结果与入口收口机械出口
 
 Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 `V2-S5-WORKBUDDY-ENTRY-BUILDER1` 为 `CONSUMED_COMPLETE`，正式结果为 `0e7a0be65877b03fb386e1c6c6bc258c0b27db6c`、tree `85c266edb7349c940e8cd45870cc0538c95726c0`、parent `aa70c2cf9b6b4a29517d7354f0239ea0cdc9a5d3`，精确五路径、tracked `37 -> 40`。独立实施 Reviewer 为 `APPROVE / P0=0 / P1=0 / P2=0`；Windows direct/hygiene/full 为 `19/11/377 passed`、final exit 0；正式 CI run `32489111184` 为 completed/success、headSha 同上、Ubuntu/Python 3.14.7、`376 passed / 1 skipped`。
 
@@ -413,3 +413,19 @@ Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 
 入口验收合同不变：一个 WorkBuddy-managed Skill 是唯一 Agent/用户入口；Skill 内只调用 package-private fixed `-I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli` transport adapter，并在 bridge preflight 通过后恰好一次调用 `launch_session_tool(...)`，输出完整 immutable `LauncherReceiptV1`。无 console script、subcommands、router、MCP、第二 Agent、retry/replay、动态 command/argv/Shell；literal user message、closed JSON、provider secret、fixed identity、cancel/continuation 和 receipt 边界保持 fail-closed。
 
 精确五个实施路径为：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。静态/direct/hygiene/CI 证据只证明实现与运输合同，不证明真实 WorkBuddy、业务效果或 E2E；最终 Installer/Package/Registration、Provider、媒体和 Stage 6 仍须独立授权与证据。
+
+## 11. Stage 5当前R00纠偏与整体验收门
+
+当前Stage5不是PASS，而是 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。入口代码及其正式Review/CI是已接受子项；旧的 closeout candidate 只作 `HISTORICAL`，不得作为当前整体状态。
+
+整体PASS的五个必要验收对象如下，缺一即不得 `PASS_ACCEPTED`：
+
+| 必要证据 | 必须成立的事实 | 不能替代 |
+|---|---|---|
+| Final Release | retained final Package Release 与 PackageRoot 在清理后仍存在 | task-only临时Package、ZIP或旧运行历史 |
+| Production registration | production Registration+Activation，new-process Locator 返回一致Package/工具链/Guide身份 | 单次register、task-only DataRoot或静态Registration |
+| Final Skill | Installer-stamped、零placeholder、已安装且全局唯一的`golden-key-openmontage` Skill | 源目录、测试Skill、旧V1、一次导入成功 |
+| Real WorkBuddy | HY3真实新会话成功取得真实`LauncherReceiptV1`，呈现字段可比对 | mock、静态CLI、Codex、客户端no-op标记 |
+| Governance | 独立Review、正式Git/CI、无歧义live authority | 候选分支、聊天确认、历史PASS或未推广closeout |
+
+当前R00为十二文档、`DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE`；推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`，R01只作为 `next_planned_task` 且需另行用户授权。依赖严格为 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`，任一任务的外部输入、对象、权限或证据不满足即`BLOCKED`/停止，不跳跃。Stage5不要求Provider、媒体/视频、Remotion/HyperFrames安装、Stage6转换代码或完整业务E2E；optional缺失/decline/defer不阻断base。Stage5完成后，Stage6优先直接复用receipt，完整业务E2E另行授权且不是Stage7。

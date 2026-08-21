@@ -7,14 +7,15 @@ Current status:
 - Stage 1: `PASS_ACCEPTED`
 - Stage 2 Registration/Locator implementation: `PASS_ACCEPTED`
 - Stage 2 real temporary-Package validation: `PASS_ACCEPTED`; retained final Release: `NOT_MATERIALIZED`; production Package Registration: `NOT_CREATED`
-- Repository hygiene: `PASS_ACCEPTED`; the historical Wave C anchor `20ddab75825c1b6e7de5a51603afe8b6fd82eceb` had 33 files, and the current accepted Stage 3/4 tree tracks exactly 37 files
+- Repository hygiene: `PASS_ACCEPTED`; the historical Wave C anchor `20ddab75825c1b6e7de5a51603afe8b6fd82eceb` had 33 files, and the current accepted tree tracks exactly 40 files
 - Stage 3 planning and implementation: `PASS_ACCEPTED`
 - Stage 4 planning and implementation: `PASS_ACCEPTED`
-- Stage 5 WorkBuddy entry: `NOT_GRANTED`
+- Stage 5: `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`
 - Stage 6 status/result relay: `NOT_GRANTED`
-- Final Package materialization and production Registration: `NOT_MATERIALIZED / NOT_CREATED`
+- Final Package/PackageRoot/production Registration/Activation/final installed Skill: `NOT_MATERIALIZED / NOT_CREATED`
+- Real WorkBuddy `LauncherReceiptV1`: `NOT_PROVED`
 
-Live status, exact Git objects, and task authorization are recorded only in [`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md). The current maintenance only aligns entry documentation and CI action versions; it does not authorize Stage 5, Stage 6, or final Package work.
+Live status, exact Git objects, and task authorization are recorded only in [`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md). The current `V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1` is docs-only; after promotion it leaves no authorized task. The next planned task is R01 execution-contract evidence and requires separate user authorization; this document does not authorize it.
 
 Stage 2 Registration/Locator, Stage 3 runtime preparation, and Stage 4 session Launcher implementations are accepted. Stage 2 also proved one real temporary Package containing Python, FFmpeg, and Node, but that temporary Package was deleted. This does not prove a retained final Release, installed production PackageRoot, production Registration, Installer, or final distribution. The Stage 2 boundary is in [`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md).
 
@@ -26,6 +27,6 @@ Stage 3 has one accepted public entry: `prepare_optional_capabilities(data_root,
 
 Stage 4 has one accepted public entry: `launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`. It accepts only a release-specific immutable `PackageToolDefinitionV1` from the approved Package definition/final-delivery Installer owner, spawns exactly one fixed Package tool, and returns a recursively immutable `LauncherReceiptV1` limited to nine outcomes. It remains Provider- and runtime-opaque and never selects Remotion, HyperFrames, or another Provider/runtime.
 
-Stage 5 remains the future end-user entry and is not implemented or authorized. It will revalidate the production Package through Stage 2 and pass the literal user request separately from technical controls; Stage 6 remains unimplemented and unapproved and may directly reuse the Stage 4 receipt if no real conversion gap exists. WorkBuddy owns pause, consent, and continuation, and Shell never auto-replays the original request. Real production WorkBuddy/Launcher sessions, Provider/media execution, Stage 5/6, and final Package materialization/production Registration remain unproven or `NOT_GRANTED`.
+Stage 5 is not complete: the entry code is delivered, but real integration is incomplete. Completion requires all five evidence classes: a retained final Release/PackageRoot; production Registration+Activation with new-process Locator; one final Installer-stamped Skill with no placeholders; a HY3 real WorkBuddy session yielding a real `LauncherReceiptV1`; and independent review/formal Git/CI plus unambiguous live authority. Provider calls, media/video generation, optional Remotion/HyperFrames installation, Stage 6 conversion code, and full business E2E are not Stage 5 completion prerequisites. After Stage 5, Stage 6 should first attempt direct receipt reuse; the whole-project business E2E remains a separate post-Stage5 effort, not a Stage 7.
 
 Historical evidence may describe superseded Stage 3 signatures, Package-bound capability models, or pre-implementation Stage 4 gates. Those records are historical only and do not override the current accepted interfaces and status above.

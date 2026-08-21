@@ -35,6 +35,10 @@ stage_5_planning_authorized_next_task_history: V2-S5-PLAN-BUILDER1 / CURRENT_DOC
 stage_5_planning_next_task_allowed_paths_history: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md / CONSUMED_COMPLETE / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
 stage_5_planning_next_task_kind_history: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL / CONSUMED_COMPLETE / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
 stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT when exact real WorkBuddy Skill/install/entry/call contract is not evidenced; never fabricate interface or use CLI/MCP/second-Skill fallback
+stage_5_t1_evidence2_result_candidate: ARCHITECTURE_CONTRACT_UNAVAILABLE / OFFICIAL_SOURCES_PLUS_READ_ONLY_CLIENT / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED_WHEN_THIS_COMMIT_IS_FORMAL
+stage_5_t1_evidence2_result_candidate_base: 4515268d1f77211a14f22927a02344b578527c4a / tree 45b351bbf60419dc76833ddfcd61cd2ef52ff24c / tracked 37
+stage_5_t1_evidence2_result_candidate_scope: EXACT_2_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
+stage_5_t1_evidence2_authorization_history: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2 / DOCS_ONLY / CONSUMED_BY_CANDIDATE_RESULT / FORMALLY_CONSUMED_WHEN_THIS_COMMIT_IS_FORMAL
 stage_5_t1_evidence1_candidate_result: d11513907c3662b18fd06a200fac935efcb50055 / tree 81e38bc90dd37d586b46e20cc047db35b613759d / T1_EVIDENCE_INCOMPLETE
 stage_5_t1_evidence1_independent_review: APPROVE / P0=0 / P1=0 / P2=0
 stage_5_t1_evidence1_formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED
@@ -44,14 +48,14 @@ stage_5_t1_evidence_candidate_scope: EXACT_4_DOC_PATHS / NO_CODE / NO_TEST / NO_
 stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
-next_authorized_task: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2 / CONDITIONAL / ONLY_AFTER_THIS_CANDIDATE_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
+next_authorized_task: NONE
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
 stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
 stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
 stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
-pending_next_authorized_task: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2 / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
-next_authorized_task_condition: ONLY_THIS_CANDIDATE_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
+pending_next_authorized_task: NONE / EVIDENCE2_COMPLETED_WITH_ARCHITECTURE_CONTRACT_UNAVAILABLE
+next_authorized_task_condition: NONE
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -1427,3 +1431,83 @@ Evidence2 的只读核查范围严格限定为：
 上一轮受控客户端证据继续保留为历史/候选事实：WorkBuddy `5.3.13`、HY3 下临时 no-op Skill 导入和 slash 命中成功，但总裁决仍为 `T1_CLIENT_EVIDENCE_INCOMPLETE`，并已完成卸载/清理；不得把它改写为完整合同或 `PASS_ACCEPTED`。
 
 如果 Evidence2 不能证明零 CLI/MCP/命令/argv/Shell 的 `launch_session_tool(...)` 直调合同，结果必须固定为 `ARCHITECTURE_CONTRACT_UNAVAILABLE`；T1 与 Stage 5 继续阻断，`stage_5_implementation_authorization=NOT_GRANTED`，结果后的 `next_authorized_task=NONE`，不得设计替代接口、第二 Skill、第二 Agent 或旁路入口。Evidence2 结果仍须独立零写审查；本授权候选本身不推进 formal。
+
+## Stage 5内部T1 Evidence2结果候选（2026-08-21）
+
+本节消费上一节已经正式生效的 `V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2` 授权，只记录本轮允许的官方资料与受控客户端只读证据结果。Evidence2 是 Stage 5 内部 T1 的执行，不是 Stage 5 的前置阶段或前置任务；本候选不授权 Stage 5 实现、真实生产流程或任何替代接口。候选未推广前，formal 仍以 `4515268d1f77211a14f22927a02344b578527c4a`、tree `45b351bbf60419dc76833ddfcd61cd2ef52ff24c`、tracked 37 为权威；只有本候选经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并以普通 fast-forward 进入 `origin/codex/workbuddy-shell-v2` 后，以下结果与“授权消费完成且无下一任务”才成为 formal live 状态。
+
+```text
+task_id: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2
+task_kind: STAGE5_T1_CONTRACT_CLOSURE_EVIDENCE2_RESULT / DOCS_ONLY_CLOSEOUT / ZERO_PRODUCT_STATE_CHANGE
+authorization_consumption: V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2 / CONSUMED_BY_THIS_CANDIDATE_RESULT / FORMALLY_CONSUMED_WHEN_THIS_COMMIT_IS_FORMAL
+base_commit: 4515268d1f77211a14f22927a02344b578527c4a
+base_tree: 45b351bbf60419dc76833ddfcd61cd2ef52ff24c
+tracked_files_at_base: 37
+formal_authority_before_promotion: 4515268d1f77211a14f22927a02344b578527c4a / tree 45b351bbf60419dc76833ddfcd61cd2ef52ff24c / tracked 37
+candidate_branch: codex/v2-s5-t1-evidence2-result1
+candidate_worktree: D:\\BlazingCD\\Personal\\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2-s5-t1-evidence2-result1
+formal_target_branch: origin/codex/workbuddy-shell-v2
+candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+candidate_production_code_changes: 0
+candidate_test_changes: 0
+candidate_ci_changes: 0
+candidate_package_registration_changes: 0
+candidate_external_writes: NONE
+candidate_client_operations: READ_ONLY_ONLY
+candidate_real_workbuddy_execution: NEW_READ_ONLY_UI_OBSERVATION_ONLY / NO_SKILL_UPLOAD_INSTALL_ENABLE_CALL / NO_TASK_OR_MODEL_CALL
+candidate_launcher_provider_media_stage4_python_stage4_spawn_final_package_registration_stage6: NOT_RUN
+candidate_test: NOT_RUN_DOCS_ONLY
+workbuddy_version_observed: 5.3.13
+installed_skill_count_observed: 0
+candidate_result: ARCHITECTURE_CONTRACT_UNAVAILABLE
+candidate_result_reason: REQUIRED_OFFICIAL_CURRENT_VERIFIABLE_CONTRACT_UNAVAILABLE / NOT_PRODUCT_ABSOLUTE_IMPOSSIBILITY
+stage_5_planning_after_result: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization_after_result: NOT_GRANTED
+current_task_after_result: NONE
+current_task_status_after_result: NO_ACTIVE_TASK
+next_authorized_task_after_result: NONE
+pending_next_authorized_task_after_result: NONE
+stage_3_and_stage_4_status: PASS_ACCEPTED / UNCHANGED
+stage_6_final_package_production_registration: NOT_GRANTED_OR_UNPROVED
+candidate_temp_artifacts: NO_TEMP_SKILL_OR_FILES_CREATED
+candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED_WHEN_THIS_COMMIT_IS_FORMAL
+```
+
+### Evidence2官方一手来源（仅限腾讯云正式页面）
+
+本轮只把以下五个腾讯云页面作为官方资料来源；页面更新时间按页面自身标注记录，不能扩写为页面未给出的本地实现合同。
+
+| ID | 页面 | 页面更新时间 | 直接支持与边界 |
+|---|---|---|---|
+| O1 | `https://cloud.tencent.com/document/product/1831/134432`《技能》 | 2026-07-20 19:49:32 | 说明 WorkBuddy Skill 可封装脚本/工作流，UI 路径包括上传、查找、创建，启用后可在对话中召唤或自动调用；未给出完整 package/schema、物理安装位置、用户/工作区/项目归属与优先级，也未给出 Python 模块原生注册、参数或 receipt 合同。 |
+| O2 | `https://cloud.tencent.com/document/product/1831/134525`《连接器》 | 2026-07-20 19:49:32 | 公开能力技术形态列为 `MCP + CLI` 与 `Skill + CLI`；这不满足本任务禁止 CLI/MCP 的必要条件。它只能证明公开支持形态，不能扩写为“产品绝对不可能”，也不能作为零 CLI/MCP 直调合同。 |
+| O3 | `https://cloud.tencent.com/document/product/1831/134391`《新建任务栏（本地 AI 工作台）》 | 2026-08-03 15:25:00 | 说明用户可选择已安装 Skill，WorkBuddy 自动调用；未给出所需 Python 直调、参数承载或 `LauncherReceiptV1` 返回合同。 |
+| O4 | `https://cloud.tencent.com/document/product/1831/134324`《WorkBuddy 更新记录》 | 2026-07-30 17:41:50 | 4.8.0 有 Desktop Skills/SkillHub/Marketplace 与斜杠命令模型驱动调用，4.9.1 有导入安全检查，5.1.0 有企业自建 Skill/插件市场与 CLI 连接器修复，5.3.3 有 MCP 本地服务；版本记录仍没有所需原生 Python 函数绑定合同。这里只作支持范围证据，不作排他证明。 |
+| O5 | `https://cloud.tencent.com/document/product/1831/134516`《Skills》 | 2026-08-14 09:56:30 | 属于 CodeBuddy Skill 管理/工作区语境，只能作为相邻产品上下文；标记为 `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`，不得把它转写为 WorkBuddy 5.3.13 的物理安装路径、所有权或优先级合同。 |
+
+五个官方页面合计仍未给出完整 WorkBuddy package/schema、物理安装路径与 user/workspace/project 归属及优先级、当前精确 slash/选择/dispatch 与唯一消费者边界，也未给出在零 CLI/MCP/命令/argv/Shell 条件下原生直调本仓库 `launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)` 并逐字段回传 `LauncherReceiptV1` 的真实合同。O2 的公开支持形态不是绝对不可能证明；它只是不能满足本任务的必要条件。
+
+### 本轮受控客户端只读证据
+
+本轮只记录既有受控客户端的只读观察，不上传、安装、启用或调用 Skill，不发送 WorkBuddy 任务，不改变设置，不进行登录或权限操作，不接受收费/外部服务提示，也没有模型调用：
+
+- WorkBuddy `5.3.13` 的“我安装的”显示没有任何技能，`installed_skill_count=0`；“添加技能”菜单仅显示“查找技能 / 上传技能 / 创建技能”。本轮没有新建临时 Skill。
+- 搜索“技能创建指南”得到推荐结果与 SkillHub 结果；详情属于 SkillHub/ClawHub 社区包。其源视图只显示 `name/category/version/author` 及说明，不是腾讯官方工具绑定合同。
+- 抽查推荐“腾讯微云”`v1.0.5` 的详情/源视图，仅显示 `name/slug/version` 与说明正文，没有工具注册、Python import、参数 schema 或 receipt schema。
+- 上一轮 `5.3.13` 客户端的 HY3 证据只作为历史记录保留；HY3 不属于本轮新观察，不得把本轮结果写成使用了 HY3。
+
+### T1五项Evidence2裁决
+
+| T1 项目 | 建议状态 | 本轮可保留的证明 | 仍未证明与边界 |
+|---|---|---|---|
+| 1. 完整 WorkBuddy Skill package/schema | `UNPROVED_OFFICIAL_CURRENT` | O1 只证明 Skill 可封装脚本/工作流并可通过 UI 上传、查找、创建；当前客户端未安装任何 Skill，不能从社区包源视图补齐官方 schema。 | 完整包文件、目录树、必需/可选文件、版本与校验规则未给出。 |
+| 2. 物理安装路径、user/workspace/project 归属与优先级 | `UNPROVED_OFFICIAL_CURRENT` | O1/O3 只证明“已安装 Skill”可被选择/自动调用；O5 是相邻产品，不能作为 WorkBuddy 路径证据。 | 物理落点、所有权、同步/持久化、层级优先级未给出；不得把 CodeBuddy 语境写成 WorkBuddy 路径。 |
+| 3. slash/选择/自动 dispatch | `PARTIALLY_PROVED_OFFICIAL / PROVED_CLIENT_FOR_SESSION (HISTORICAL_5.3.13_HY3)` | O1/O3/O4 证明公开的选择/自动调用与斜杠模型驱动范围；上一轮 HY3 记录证明当时会话命中临时 Skill。 | 当前本轮未安装/未调用 Skill；全局唯一消费者与无替代 dispatch 仍为 `UNPROVED`，不得外推为本仓库入口合同。 |
+| 4. 唯一消费者与 WorkBuddy 唯一 Agent 边界 | `PROJECT_BOUNDARY_ONLY / NOT_PUBLIC_PRODUCT_PROOF` | 本仓库 AGENT_GUIDE 的项目边界仍规定 WorkBuddy 是唯一运行 Agent。 | 这是项目治理边界，不是官方产品公开证明；全局唯一消费者、无第二 Agent/并行入口仍未证实。 |
+| 5. 零 CLI/MCP/命令/argv/Shell 原生直调 `launch_session_tool(...)` 并逐字段回传 `LauncherReceiptV1` | `UNAVAILABLE_REQUIRED_CONTRACT` | 允许的官方资料和受控客户端只读观察均未给出模块加载方式、精确参数 schema、literal `user_message`/`executor_controls` 分离、返回类型或 receipt 字段合同；O2 公开形态明确包含 CLI，不能替代所需直调证明。 | 所需的官方/当前可验证合同不可用；这不是“产品绝对不可能”。 |
+
+五项未闭合，故本候选的总裁决固定为 `candidate_result=ARCHITECTURE_CONTRACT_UNAVAILABLE`。该裁决只表示在本轮允许的官方资料与受控客户端只读证据中，所需的官方/当前可验证合同不可用；不声称产品绝对不可能。T1 与 Stage 5 继续 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`，`stage_5_implementation_authorization=NOT_GRANTED`，`current_task=NONE`，`current_task_status=NO_ACTIVE_TASK`，结果后的 `next_authorized_task=NONE`、`pending_next_authorized_task=NONE`。不得提出或授权替代接口、第二 Skill、第二 Agent、CLI/MCP 旁路；Stage 3/4 既有 `PASS_ACCEPTED` 不变，Stage 6、final Package 与 production registration 仍未授权或未证明。
+
+### 机械收口与治理门
+
+本候选仅修改本账本与 `PROJECT-STATE.md` 两个白名单路径；production code/test/CI/Package/Registration 变更均为 0，客户端操作为 `READ_ONLY_ONLY`，清理为 `NO_TEMP_SKILL_OR_FILES_CREATED`。结果候选仍须独立零写 Reviewer 审查并普通 fast-forward；在此之前，本节是候选结果，不改变 formal 的 `4515268d1f77211a14f22927a02344b578527c4a` 权威。若审查与普通 FF 完成，Evidence2 授权历史才标为 consumed candidate/result，formal live 的 `next_authorized_task` 与 `pending_next_authorized_task` 均保持 `NONE`。

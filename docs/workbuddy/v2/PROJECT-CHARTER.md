@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 项目章程
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_PLANNING_BLOCKED_EXTERNAL_CONTRACT / STAGE_5_IMPLEMENTATION_NOT_GRANTED / SIX_MODULE_MVP`
 
 ```text
 formal_ref: refs/heads/codex/workbuddy-shell-v2
@@ -241,6 +241,37 @@ OpenMontage的capability/provider registry是动态业务权威。Stage 4不查�
 不可改写receipt schema固定为`golden-key-workbuddy-launcher-receipt-v1`；根字段固定为`schema_version/outcome/reason_code/session/request/registration/package/manifest/lock/tool_definition/tool_file/interpreter/user_message/provider_environment_names/local_capability_evidence_identities/launched/spawn_count/pid/started_at_utc/ended_at_utc/duration_ms/exit_code/timed_out/cancelled/retry_count/stdout/stderr/result_pointer/error/residual_process`，任何输入/preflight/spawn/运行结果都总是返回该全字段递归冻结receipt。结果闭集仍为九值、reason仍为23个、裁决仍为11级。固定且secret-independent的schema/outcome/reason/field names/预冻结标识文本，及`TASK-REGISTER.md`精确字段闭集内的独立Package/definition authority字段，和secret偶然字节相同不算传播；不得为消除碰撞改闭集或类型。所有caller/child动态域在freeze前必须做provenance-aware non-propagation检查；`local_capability_evidence_identities`的item因含fact-derived字段而整体视为动态对象，任一item受污染时清空整个tuple。其他受污染值以字段已有的`None`、空tuple、固定安全文本或安全流摘要替换，不能删除字段或向`tuple[str]`写入`None`。入口已取消仍精确为`CANCELLED/CANCELLED_BEFORE_SPAWN`且Locator/spawn为0；若secret等于session/request，只清空相关hints，不得使固定取消receipt不可表示。exit 0+child `FAILED`仍精确为`CHILD_REPORTED_FAILURE/CHILD_REPORTED_FAILURE`，`retry_count`恒为0。完整字段类型、安全替换、reason闭集、stdin/result envelope及测试矩阵以`TASK-REGISTER.md`的Stage4执行任务包为live implementation authority。
 
 Stage 5保留用户原话、形成controls并提供经授权Provider配置和Package工具定义；固定定义声明本地要求时，Stage5原样传递完整approved capability definition与original Stage3 fact。Stage 4按原始managed/explicit/PATH source语义独立复核实际资产，只启动固定工具并返回receipt；Stage 6优先原样复用receipt，能直接消费时生产代码为0。该接口不预建Stage5/6，也不使Stage4实现自动获权。
+
+### 4.11 Stage 5规划边界与T1-T12冻结
+
+Stage 5的唯一产品目标是：真实腾讯WorkBuddy作为唯一运行中的Agent，通过一个且仅一个显式入口接收用户业务请求和素材；保持literal `user_message`原样；将技术控制、授权、当前Release的`PackageToolDefinitionV1`、Provider环境和完整Stage 3原始事实分离承载；按“显式入口 -> Stage 2 Locator -> Registration/PackageRoot/Manifest/Lock/Guide/完整必带工具链验证 -> 已验证Guide -> 当前Release工具定义 -> Stage 4一次固定工具调用”的顺序执行；由WorkBuddy/OpenMontage承担生产决策；把事实和结果转交给Stage 6。Shell不成为第二Agent、Director/FSM/Supervisor、Pipeline/Stage/Artifact/Checkpoint执行器、Provider/渲染器选择器、CLI/MCP控制面、自动重试/重放器或后台调度器。
+
+```text
+Stage 4 accepted contract -> Stage 5 one WorkBuddy entry -> Stage 6 direct fact/receipt relay
+                                      |
+                                      +-> WorkBuddy/OpenMontage owns Guide, Pipeline, Provider, media and creative decisions
+```
+
+规划状态固定为`stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`：现有官方资料只证明WorkBuddy支持上传本地Skill并在对话中选择/召唤，本机5.3.13只证明用户级Skill存在；现有两个Golden Key Skill是V1双入口/旧CLI形态，不能复用。真实Skill包结构、安装归属、显式调用主体、唯一消费者以及不生成命令/argv/Shell字符串即可调用Stage 4 Python API的精确协议尚未证明。不得以假Skill、CLI、MCP或第二Skill填补缺口。Stage 5实现、真实WorkBuddy、Provider/媒体、Stage 6、最终Package和生产Registration均继续`NOT_GRANTED`或未证明。
+
+T1-T12的详细执行合同以`TASK-REGISTER.md`同名章节为唯一任务级权威；本章程冻结其产品裁决如下：
+
+| 任务 | 产品裁决 | 物理承载/实施边界 | 通过或停止 |
+|---|---|---|---|
+| T1 入口身份 | 证明唯一真实Skill的包、安装、调用主体和消费者 | 一个真实入口资产；路径/包形态待T1 | 未证明即`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不编造 |
+| T2 输入合同 | 原话、素材、controls、工具定义、Provider环境、完整Stage3事实、取消/继续分离 | 只进入唯一入口和受控调用域，不落平行服务 | 跨域/摘要重包装即停止 |
+| T3 验证顺序 | Locator及全部身份成功后才读Guide和取得工具定义 | 不扫盘、不猜路径、不复制Guide | 身份/Guide/必带工具链失败则spawn 0 |
+| T4 Stage4适配 | 只调用固定`launch_session_tool(...)`，原话/完整事实原样传递 | 不生成命令、argv、Shell或第二Launcher | 违反一次固定调用或摘要替代即停止 |
+| T5 授权继续 | 能力、服务、网络/费用独立授权；拒绝/暂缓可走基础；不支持继续时提示“继续刚才的任务” | 不保存重放请求、不建授权数据库 | 失效授权/自动重放即停止 |
+| T6 结果映射 | Stage3五结果与Stage4九outcome闭集映射 | 直接呈现receipt/事实，不解释Artifact | 失败不得改成功，优先级不重排 |
+| T7 凭据隐私 | secret只进定义allowlist child env；Key不等于可用/授权/成功 | 无Provider目录、日志仓或独立服务 | 任意非授权传播即fail closed |
+| T8 失败闭集 | 15类失败逐项给出Locator/Stage4/spawn/用户结果/基础继续/终止 | 复用Stage4 11级优先级 | 未分类、残留、泄密或无最终exit即停止 |
+| T9 Package Gate | 规划可用受控fixture；真实生产前必须最终Package/安装/Registration/Activation/新进程Locator | 最终Package由后续Installer承载，入口不物化 | 缺具体Release定义实例真实调用阻断 |
+| T10 证据分层 | 静态、测试、Stage2/3/4集成、WorkBuddy入口/原话/授权继续、生产身份、Provider/媒体、业务效果各自裁决 | 不用前层PASS冒充后层 | 缺证据保持`NOT_PROVED/INCOMPLETE` |
+| T11 Stage6交接 | 先直接复用`LauncherReceiptV1`；无字段缺口则生产代码0 | 本阶段不预建Stage6 | 只有真实缺口才另行授权 |
+| T12 实施任务包 | Builder=`V2-S5-WORKBUDDY-ENTRY-BUILDER1`；入口1、生产模块≤1、直接测试1 | 精确路径、37->N、CI命令均`UNFROZEN_PENDING_T1`；第N+1路径停止 | 另有“启动阶段五实施”授权、独立APPROVE和普通FF后才可实施 |
+
+规划候选只能修改任务账本、章程和验收矩阵三条路径；不改代码、测试、CI、Package或外部对象，不运行WorkBuddy/Launcher/Provider/媒体/WSL。候选审查是文档准确性审查，不把`PLANNING_BLOCKED_EXTERNAL_CONTRACT`改成产品PASS；正式推广前`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`。未来实施必须从届时最新formal精确对象新建D盘临时Builder现场，经独立零写Reviewer `APPROVE/P0=0/P1=0/P2=0`后普通fast-forward，不能由规划候选自动启动。
 
 ## 5. 消息与授权边界
 

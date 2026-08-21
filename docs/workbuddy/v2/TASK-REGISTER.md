@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_PLANNING_AUTHORIZATION_CANDIDATE_PENDING_REVIEW / NO_ACTIVE_TASK`
+状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_PLANNING_BLOCKED_EXTERNAL_CONTRACT / NO_ACTIVE_TASK`
 
 更新时间：2026-08-21
 
@@ -26,19 +26,19 @@ final_handoff_hygiene_scope: EXACT_6_PATHS / tracked 37
 final_handoff_hygiene_review: independent zero-write Reviewer / APPROVE / P0=0 / P1=0 / P2=0
 final_handoff_hygiene_local_evidence: Python 3.14.7 / 11 hygiene passed / 358 combined passed / all final exit 0
 final_handoff_hygiene_ci: run 32386393634 / completed / success / Python 3.14.7 / 357 passed / 1 skipped / actions v6 / no Node20 deprecation warning
-stage_5_planning_authorization_candidate: V2-S5-PLANNING-AUTHORIZATION-BUILDER1 / DOCS_ONLY / PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+stage_5_planning_authorization_candidate: V2-S5-PLANNING-AUTHORIZATION-BUILDER1 / DOCS_ONLY / FORMALLY_PROMOTED_AS_BASE_FOR_CURRENT_PLANNING
 stage_5_planning_authorization_candidate_base: 67e39b345df954898a68c9c14645c9c04c380ac3 / tree c6bf74231434850fda07722ab9eed701797e48ff / tracked 37
 stage_5_planning_authorization_candidate_branch: codex/v2-s5-planning-authorization1
 stage_5_planning_authorization_candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
-stage_5_planning_authorization_candidate_result: THIS_COMMIT / ordinary fast-forward not performed here
-stage_5_planning_authorized_next_task: V2-S5-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CANDIDATE_INDEPENDENT_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_5_planning_authorization_candidate_result: 042686039386a63866eba2f964f1fa9674bbec4b / ordinary fast-forward / origin/codex/workbuddy-shell-v2
+stage_5_planning_authorized_next_task: V2-S5-PLAN-BUILDER1 / CURRENT_DOCS_ONLY_CANDIDATE
 stage_5_planning_next_task_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
 stage_5_planning_next_task_kind: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL
 stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT when exact real WorkBuddy Skill/install/entry/call contract is not evidenced; never fabricate interface or use CLI/MCP/second-Skill fallback
 stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
-next_authorized_task: V2-S5-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_CANDIDATE_INDEPENDENT_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
+next_authorized_task: NONE / current planning candidate must be reviewed before any next task
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -73,14 +73,14 @@ next_task_base_rule: take over only from the exact latest live formal head/tree/
 next_task_allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
 next_task_scope: freeze the approved Stage 5 T1-T12 plan and acceptance boundaries in those three documents only
 next_task_forbidden: production code; tests; CI/workflow; Package bytes or Registration; real WorkBuddy; Launcher; Provider; media; WSL; fourth planning file
-stage_5_planning_status: CANDIDATE_PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+stage_5_planning_status: AUTHORIZATION_PROMOTED / CURRENT_PLAN_CANDIDATE_UNDER_REVIEW
 stage_5_implementation_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
 final_package_gate_authorization: NOT_GRANTED
 current_task_after_candidate: NONE
 next_authorized_task_before_review: NONE
-pending_next_authorized_task: V2-S5-PLAN-BUILDER1 / EFFECTIVE_ONLY_AFTER_INDEPENDENT_ZERO_WRITE_APPROVE_AND_ORDINARY_FAST_FORWARD
+pending_next_authorized_task: NONE / current V2-S5-PLAN-BUILDER1 candidate must be independently reviewed
 ```
 
 T1 的外部合同门禁是不可漂移的硬停止：如果官方资料或受控真实客户端证据仍不能证明真实 WorkBuddy Skill 的包结构、安装/导入归属、显式调用主体，以及不生成命令/argv/Shell 字符串即可调用 Stage 4 Python API 的精确协议，T1 必须记录为 `PLANNING_BLOCKED_EXTERNAL_CONTRACT`。不得伪造工具名、参数、Skill 结构或调用接口，不得用 CLI、MCP 或第二 Skill 作为兜底；此时规划停止在合同证据层，不进入实现授权。
@@ -896,3 +896,224 @@ repository_hygiene_wave_c_result: 20ddab75825c1b6e7de5a51603afe8b6fd82eceb
 刷新前的旧Stage2对象只证明早期Package的Python登记合同；当前已接受对象另行证明完整必带工具链Registration/Locator实现及一次真实临时Package验证。两代证据都不证明最终Release仍然存在，也不证明生产安装/登记、Installer、Runtime、Launcher、真实WorkBuddy、Provider、SaaS、网络或媒体E2E。阶段3至阶段6不得读取未验证Package Guide、扫描磁盘猜测对象，或把技术控制词写入literal `user_message`。
 
 老项目可迁移证据：`347272c`固定包内便携Python；`899592d`固定完整Runtime、hash、许可、DataRoot和大陆PyPI/npm/Node/浏览器镜像；`639978d`增加`managed`、`registered_host`、`PATH_host`、`missing`发现与missing-only准备。旧锁中的“FFmpeg 9.0 essentials”只提供候选来源标签；本次冻结URL与hash对应二进制实际报告`9.0.1-essentials_build`。它不形成阶段3下载授权，也不得扩展为其他可选能力的海外回退权。
+
+## Stage 5规划冻结（V2-S5-PLAN-BUILDER1）
+
+本节是本任务的唯一Stage 5规划蓝图。它冻结产品目标、T1-T12执行顺序、输入/输出、物理承载和验收边界；它不授权Stage 5实现、真实WorkBuddy、Stage 4真实Launcher、Provider、媒体、最终Package或Stage 6。若本节与旧历史Prompt、旧任务包或聊天内容冲突，以本节、`PROJECT-CHARTER.md`、`ACCEPTANCE-MATRIX.md`和顶部live字段为准；不能确认时停止，不自行解释。
+
+上方继承的“Stage 5规划授权候选”块是`0426860`进入formal前的授权候选历史记录；当前formal对象已在本任务接管前核验为本节的`base_commit/tree`。该历史块不覆盖本节当前规划状态，也不形成Stage 5实现或真实WorkBuddy授权。
+
+```text
+task_id: V2-S5-PLAN-BUILDER1
+task_kind: STAGE5_PLANNING / DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE
+base_commit: 042686039386a63866eba2f964f1fa9674bbec4b
+base_tree: 6d6f3f0352eeb75c57170f2fe9e854c79564416c
+tracked_files_at_base: 37
+builder_branch: codex/v2-s5-plan-builder1
+builder_worktree: D:\\BlazingCD\\Personal\\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2-s5-plan1
+allowed_paths: docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+forbidden: production code; tests; CI/workflow; pyproject; Package bytes; Registration/Activation; real WorkBuddy; Launcher; Provider; media; WSL; fourth planning path
+stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_planning_blocker: T1 exact WorkBuddy Skill package/install/consumer/Stage4-Python-call contract is not evidenced
+stage_5_implementation_authorization: NOT_GRANTED
+stage_5_workbuddy_entry_authorization: NOT_GRANTED
+stage_6_status_result_relay_authorization: NOT_GRANTED
+final_package_gate_authorization: NOT_GRANTED
+candidate_status: READY_FOR_INDEPENDENT_ZERO_WRITE_REVIEW / NOT_FORMALLY_PROMOTED
+test: NOT_RUN_DOCS_ONLY
+current_task_after_candidate: NONE
+next_authorized_task: NONE
+```
+
+### 1. Stage 5产品目标与唯一运行链路
+
+Stage 5的产品目标只有一个：在真实腾讯WorkBuddy中建立一个、且仅一个可显式命中的入口；接收用户原样业务请求和素材引用；把技术控制、授权、经验证的Package身份和Stage 3事实放入独立输入；在读取已验证Package Guide之后，由WorkBuddy承担OpenMontage生产角色；仅调用已接受的Stage 4 `launch_session_tool(...)`；把事实和结果原样呈现给用户。腾讯WorkBuddy是唯一运行中的Agent，Shell不得成为第二Agent、Director、FSM、Supervisor、任务平台、Pipeline/Stage/Artifact/Checkpoint执行器、Provider/模型/渲染器/媒体选择器、CLI/MCP并行控制面或自动重试/重放/后台调度系统。
+
+```text
+WorkBuddy唯一显式入口
+  -> Stage 2 locate_active_package(data_root)
+  -> 验证Registration / PackageRoot / Manifest / Lock / Guide身份 / Python+FFmpeg+ffprobe+Node+npm+npx
+  -> 只有验证成功后才读取已验证Package Guide
+  -> 取得当前Release提供的PackageToolDefinitionV1
+  -> Stage 4 launch_session_tool（固定工具最多spawn一次）
+  -> WorkBuddy/OpenMontage按Package合同作Pipeline/Provider/媒体/创意决策
+  -> Stage 6原样转交事实与LauncherReceiptV1
+```
+
+建设顺序是`Stage 3 -> Stage 4 -> Stage 5 -> Stage 6`，用户实际运行从Stage 5开始。Stage 3五结果和Stage 4九种outcome是两个独立闭集；Stage 6先尝试直接消费同一`LauncherReceiptV1`。任何一层的PASS都不能替代另一层的真实证据。
+
+### 2. 范围内、范围外与外部前置
+
+范围内只有：唯一真实入口身份的合同核验；literal `user_message`、素材、closed `executor_controls`、PackageToolDefinitionV1、Provider环境、完整Stage 3能力定义/原始事实和cancel/continuation的边界；Locator到Guide再到Stage 4的顺序；授权/暂停/继续及结果映射；隐私、凭据、失败闭集；Stage 4至Stage 6事实交接；未来最小Builder任务包和分层验收。
+
+范围外包括：现在写任何生产入口或适配器代码；修改Stage 2/3/4实现、Package、Registration、Activation或CI；运行真实WorkBuddy、真实Launcher、Provider、网络下载、媒体或视频生产；物化最终Package；创建第二Skill、CLI、MCP、服务、数据库、队列、状态机或Stage 6代码；把Remotion、HyperFrames或任何Provider硬编码成Shell选择。
+
+外部前置分为两类：
+
+1. 规划可继续但生产验收前必须满足：最终Package物化、安装、生产Registration/Activation及新进程Locator验证；当前Release具体`PackageToolDefinitionV1`实例；真实WorkBuddy版本、Skill安装归属和会话证据。
+2. 规划本身的硬阻断：T1必须证明Skill包结构、安装/导入归属、显式调用主体、唯一消费者，以及不生成命令/argv/Shell字符串即可调用Stage 4 Python API的精确协议。现有官方材料只证明可上传本地Skill并在对话中选择/召唤；本机WorkBuddy 5.3.13只证明存在用户级Skills；两个现存Golden Key Skill属于V1双入口/旧CLI形态，不能复用。T1未闭合时必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。
+
+### 3. T1-T12固定执行蓝图
+
+以下每项的“未来物理承载”是实施前的裁决，不是当前实现白名单；T1未闭合前禁止把占位路径当成真实接口。
+
+#### T1：真实WorkBuddy唯一Skill入口身份
+
+- **目标**：证明并冻结唯一真实WorkBuddy Skill的包结构、安装/导入归属、显式调用主体、调用机制和唯一消费者。
+- **权威输入**：本仓库`AGENT_GUIDE.md`、本章程、`MODULE-DISPOSITION.md`；腾讯官方WorkBuddy资料；经另行授权的当前真实客户端证据；旧V1 Skill仅作`HISTORICAL/DROP`证据。
+- **具体动作**：先核对官方资料；若官方合同不足，只在另行授权的独立真实客户端任务中验证安装、显式命中、新会话和调用Stage 4 Python API的实际协议；记录证据、版本、Skill身份和消费者；不修改旧Skill，不启动生产请求。
+- **输出**：`T1_WORKBUDDY_ENTRY_CONTRACT`，至少含Skill包结构、安装归属、入口名/调用主体、消费者、Stage 4调用协议和版本证据；当前输出只能是`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。
+- **未来文件/物理承载**：最多一个真实WorkBuddy入口资产；包内/用户级物理位置、文件名和导入形态均`UNFROZEN_PENDING_T1`；本规划不创建假Skill、假工具或候选文件。
+- **验收**：官方或受控客户端证据能复现一个新会话的显式命中；不依赖CLI/MCP/第二Skill；入口消费者唯一且与WorkBuddy唯一Agent边界一致。
+- **Fail-closed**：任一包结构、安装归属、调用主体、精确API或唯一消费者缺失/冲突，状态保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不进入T2实现冻结、不伪造参数、不用CLI/MCP兜底。
+- **上下游**：上游为腾讯官方/真实客户端合同；下游是T2输入承载和T12精确文件白名单。T1没有通过时T2-T12只能做合同规划，不能产生实现授权。
+
+#### T2：Stage 5输入合同
+
+- **目标**：冻结用户原话与技术控制、授权和证据的类型/所有权边界。
+- **权威输入**：Stage 4已接受的`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`合同；Stage 2 Registration/Locator合同；Stage 3完整能力定义和未改写原始`PRESENT/INTEGRATED`事实；本章程消息与凭据边界。
+- **具体动作**：分别接收literal `user_message`、素材引用、closed `executor_controls`、完整当前Release `PackageToolDefinitionV1`、Provider环境、完整approved capability definition+original Stage 3 fact、cancel和continuation事实；禁止把路径、Python、cwd、命令、Package身份、重试或证据控制拼入用户消息。
+- **输出**：一份可审计的Stage 5输入合同及字段来源表；`local_capability_evidence`只能原样承载完整批准定义和原始事实，不能传摘要、摘要hash或重包装对象。
+- **未来文件/物理承载**：仅进入T1确定的唯一入口适配边界和最多一个生产模块；用户原话留在WorkBuddy会话域，控制/凭据留在受控调用域，不能落入PackageRoot、日志或新数据库。
+- **验收**：字节级`user_message`不变；素材引用独立；controls闭集；Provider环境只含定义允许名字；Stage 3定义和事实完整、同一能力/definition绑定；cancel与continuation不混为重试。
+- **Fail-closed**：未知字段、非法类型、跨域注入、缺完整定义/原始事实、未授权Provider环境或无法安全隔离时停止并不调用Stage 4；不修剪成“看似可用”的摘要。
+- **上下游**：上游为T1入口与Stage 2/3/4合同；下游是T3顺序、T4适配、T7隐私和T8失败裁决。
+
+#### T3：Package与Guide验证顺序
+
+- **目标**：保证WorkBuddy只在活动Package和必带工具链被同次Locator验证后读取Guide和取得工具定义。
+- **权威输入**：`PACKAGE-REGISTRATION-CONTRACT.md`；Stage 2 `locate_active_package(data_root)`；当前Registration、PackageRoot、Manifest、Lock、Guide和Python/FFmpeg/ffprobe/Node/npm/npx身份。
+- **具体动作**：严格执行“显式入口 -> `locate_active_package(data_root)` -> 验证Registration/PackageRoot/Manifest/Lock/Guide身份和完整必带工具链 -> 成功后读取已验证Guide -> 取得当前Release的PackageToolDefinitionV1 -> 形成Stage 4调用”；不扫盘、不猜目录/最新版、不由调用方构造定义。
+- **输出**：同次、可追溯的Locator验证事实、已验证Guide身份和当前Release工具定义绑定；失败只产生阻断事实。
+- **未来文件/物理承载**：Locator仍为Stage 2既有实现；Guide只由下游消费者在身份验证成功后读取；Stage 5不复制Guide、Registration或Package。
+- **验收**：每次新会话验证同一活动Registration；Guide读取前所有身份通过；任何漂移均不进入Stage 4；无盘符遍历、猜路径或未验证Guide读取。
+- **Fail-closed**：无活动Registration、Package/必带工具链漂移、Guide未验证或定义无法绑定时Locator/Stage 4分别按合同停止，spawn为0；不选择备用Package。
+- **上下游**：上游为T1/T2；下游为T4 Stage 4适配和T6结果映射；Stage 4不能跳过本顺序。
+
+#### T4：Stage 4调用适配
+
+- **目标**：把已验证事实传给一个已接受的Stage 4调用，不复制其控制面。
+- **权威输入**：Stage 4正式固定签名、`PackageToolDefinitionV1`和`LauncherReceiptV1`合同；T2输入；T3同次Locator事实。
+- **具体动作**：只调用`launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`；`user_message`原样传递；定义声明本地能力时原样传递完整approved capability definition和未改写original Stage 3 fact；Stage 5不生成命令、argv、Shell字符串、stdin替代包或本地能力摘要。
+- **输出**：Stage 4原样的递归不可改写`LauncherReceiptV1`，以及Stage 5可呈现的事实引用；固定工具至多一次spawn由Stage 4负责。
+- **未来文件/物理承载**：未来最多一个Stage 5生产模块/入口适配器；不新增Launcher、命令构造器、MCP桥或第二进程；实际调用物理承载依赖T1且当前`UNFROZEN_PENDING_T1`。
+- **验收**：函数参数域分离、完整事实无摘要重包装、Stage 4定义/源语义自验证；Stage 5自身spawn=0且不含Shell字符串；Stage 4仍`spawn<=1/retry=0`。
+- **Fail-closed**：定义缺失/不匹配、能力证据缺失/漂移、输入跨域或协议不确定时不伪造调用；由Stage 4既定九值/11级优先级裁决，不由Stage 5重排。
+- **上下游**：上游为T2/T3；下游为T5授权、T6映射、T11回执转交。
+
+#### T5：用户授权、暂停与同任务继续
+
+- **目标**：把能力、外部服务、网络/下载和费用授权拆开，并保证拒绝/暂缓不被伪装成失败或自动重放。
+- **权威输入**：Stage 3五结果/逐能力`capability+definition_sha256+plan_sha256`批准合同；Package Guide的实际要求；WorkBuddy会话与用户授权；Stage 4 cancel/continuation边界。
+- **具体动作**：每个可选能力、外部服务和费用独立询问；批准绑定definition、plan、session，校验当前事实仍一致；`decline/defer`走基础或其他已有能力路径；同任务继续优先由真实WorkBuddy完成，客户端不支持时固定提示“继续刚才的任务”；Shell不保存、不自动重放原业务请求。
+- **输出**：逐项授权/拒绝/暂缓事实、绑定身份、失效原因、继续提示或用户可见的暂停状态。
+- **未来文件/物理承载**：授权只保留在当前WorkBuddy受控会话和本次调用域；不建授权数据库、不把原请求落盘成可重放队列，不写Provider目录。
+- **验收**：定义/计划/session或探测事实任一变化使批准失效；拒绝/暂缓能继续基础能力（若Package/用户业务允许）；取消与继续不改变原话、不多spawn。
+- **Fail-closed**：授权缺失、过期、definition/plan不一致、费用未授权或客户端继续语义不明时暂停并提示；不得静默替代Provider、自动重试或声称无缝继续。
+- **上下游**：上游为T3/T4和WorkBuddy用户对话；下游为T6结果动作、T7凭据注入和真实验收第7层。
+
+#### T6：结果到用户动作映射
+
+- **目标**：为Stage 3五结果和Stage 4九种Launcher outcome建立闭集映射，保持错误事实和业务语义不变。
+- **权威输入**：Stage 3结果闭集`DETECTION_REPORT/CONSENT_REQUIRED/INTEGRATED/SKIPPED/BLOCKED`；Stage 4九值`PRELAUNCH_BLOCKED/SPAWN_FAILED/EXITED_SUCCESS/EXITED_NONZERO/CHILD_REPORTED_FAILURE/TIMED_OUT/CANCELLED/INCOMPLETE/RESIDUAL_PROCESS`及其11级优先级；用户授权事实。
+- **具体动作**：只展示事实、展示计划并询问、报告准备完成、报告阻断/取消/超时/失败/泄密/残留或返回结果指针；不解释Artifact业务含义、不改变Stage 4 outcome/reason、不自动重试。
+- **输出**：用户动作矩阵和可审计原始receipt/Stage 3事实；下游可直接消费的状态，不新增平行状态服务。
+- **未来文件/物理承载**：优先在唯一入口适配层作确定性映射；若Stage 6能直接消费则不新增文件；不得建立解释器、任务库或结果数据库。
+- **验收**：
+  - `DETECTION_REPORT`：展示两能力事实，不替OpenMontage选能力；`CONSENT_REQUIRED`：展示绑定计划并逐项询问；`INTEGRATED`：报告已验证就绪但不宣称已被生产使用；`SKIPPED`：报告`NOT_INTEGRATED`并继续其他/基础能力；`BLOCKED`：报告无效定义或已授权集成失败，能力单纯缺失不误报。
+  - `PRELAUNCH_BLOCKED`：展示安全阻断原因，未spawn的请求终止；若仅是可选能力未满足，只能由WorkBuddy在用户明确选择后形成新的基础能力请求；`SPAWN_FAILED`：报告启动失败；`EXITED_SUCCESS`：仅返回有效结果指针；`EXITED_NONZERO`：报告真实非零退出；`CHILD_REPORTED_FAILURE`：报告child明确失败；`TIMED_OUT`：报告超时；`CANCELLED`：报告取消；`INCOMPLETE`：报告证据/输出不完整或secret disclosure；`RESIDUAL_PROCESS`：报告残留进程阻断。九值均不改写为成功。
+- **Fail-closed**：任何未列举映射、优先级竞争、缺receipt字段或业务解释需求停止；Stage 4既定11级优先级不得被Stage 5覆盖。
+- **上下游**：上游为T3-T5和Stage 3/4；下游为T10证据分层与T11 Stage 6。
+
+#### T7：凭据与隐私边界
+
+- **目标**：保证Provider secret只到达PackageToolDefinition允许的child环境，不进入用户对话或任何非授权域。
+- **权威输入**：Stage 4 secret-nondisclosure合同；T2 `provider_environment`；当前Release工具定义allowlist；WorkBuddy单独Provider/费用授权。
+- **具体动作**：仅传递定义allowlist中的环境变量名和值；secret只进入固定child环境；在生成message、stdin、receipt、日志和异常前建立secret source并做provenance-aware non-propagation检查；Key存在不等于能力可用、调用成功或费用授权；Provider选择和回退由WorkBuddy/OpenMontage已验证Package合同决定，Shell不推荐/排序/回退。
+- **输出**：allowlisted环境名、授权状态和安全receipt；secret原文永不出现在chat、`user_message`、argv、stdin非授权域、日志、receipt或错误文本。
+- **未来文件/物理承载**：不建立Provider配置仓库、密钥数据库或日志服务；值只存在当前调用的child环境和必要内存生命周期。
+- **验收**：非空secret进入唯一授权sink；任一日志/receipt/error/stdin/argv传播为0；无授权Provider不调用；配置缺失不被解释为Stage 3能力缺失。
+- **Fail-closed**：环境名越权、值传播、无法证明来源、child输出泄密或费用授权缺失时阻断；不以hash、长度、摘要或固定常量掩盖传播。
+- **上下游**：上游为T2/T5；下游为T4 Stage 4 child、T6安全错误映射和真实验收第9层。
+
+#### T8：失败闭集与优先级
+
+- **目标**：为用户列出的15类失败固定Locator/Stage 4/spawn/用户结果/基础能力/全请求终止裁决；不创造第二套优先级。
+- **权威输入**：Stage 2 Locator合同；Stage 4九值和11级优先级；T2-T7闭集；用户授权状态。
+- **具体动作与输出**：按下表机械映射。`Stage4=是`表示调用已接受API后由Stage 4返回阻断/结果；Stage 5不自行spawn。任何“可继续基础能力”都要求WorkBuddy在用户明确选择后形成新的请求，绝不自动重放原话。
+
+| 失败类别 | Locator | Stage 4 | spawn | 用户结果 | 基础能力继续 | 终止当前请求 |
+|---|---:|---:|---:|---|---|---:|
+| 无活动Registration | 是 | 否 | 0 | `PRELAUNCH_BLOCKED/LOCATOR_FAILED`，提示Package不可用 | 否 | 是 |
+| Package或必带工具链漂移 | 是 | 否 | 0 | 身份漂移阻断，提示重新安装/修复 | 否 | 是 |
+| Guide未验证 | 是 | 否 | 0 | Guide读取前阻断 | 否 | 是 |
+| PackageToolDefinitionV1缺失或不匹配 | 是 | 是（preflight） | 0 | `PRELAUNCH_BLOCKED/TOOL_DEFINITION_UNBOUND`或精确reason | 仅当WorkBuddy另行选择不需该定义的基础请求 | 是 |
+| 用户输入非法 | 否（入口闭集先拒绝） | 否 | 0 | 输入无效，要求修正；不暴露内部合同 | 可在用户修正后重新提交，不自动继续 | 是 |
+| 可选能力证据缺失或漂移 | 是 | 是（preflight） | 0 | `LOCAL_CAPABILITY_EVIDENCE_REQUIRED/MISMATCH` | 用户明确改走基础能力时可新请求 | 是 |
+| Provider配置未授权 | 是 | 否（入口授权门禁） | 0 | 告知需单独授权；不调用Provider | 是（不需要该Provider时） | 否，暂停该分支 |
+| 用户拒绝或暂缓 | 是（如已完成探测） | 否（对应可选能力） | 0 | `SKIPPED/NOT_INTEGRATED`，展示继续选项 | 是，其他/基础能力继续 | 否；若业务硬依赖则由WorkBuddy报告无法完成 |
+| 入口前取消 | 否 | 否 | 0 | `CANCELLED/CANCELLED_BEFORE_SPAWN`语义 | 否 | 是 |
+| 启动失败 | 是 | 是 | 0 | `SPAWN_FAILED/SPAWN_OS_ERROR` | 否；不得自动重试 | 是 |
+| child报告失败 | 是 | 是 | 1 | `CHILD_REPORTED_FAILURE`，保留child事实 | 仅用户明确新计划时 | 是 |
+| timeout | 是 | 是 | 1 | `TIMED_OUT/TIMEOUT`，保留终止/残留事实 | 否；不得重放 | 是 |
+| secret disclosure | 是 | 是 | 1 | `INCOMPLETE/SECRET_DISCLOSURE_DETECTED`，仅安全抑制摘要 | 否 | 是 |
+| result pointer非法 | 是 | 是 | 1 | `INCOMPLETE/RESULT_POINTER_INVALID`，不返回伪成功指针 | 否 | 是 |
+| 残留进程 | 是 | 是 | 1 | `RESIDUAL_PROCESS/RESIDUAL_PROCESS_DETECTED` | 否；等待人工/治理处理 | 是 |
+
+Stage 4已接受的11级优先级（invalid input、pre-cancel、preflight、spawn fail、residual、secret、timeout/cancel、nonzero、invalid output、child failed、success）优先于本表用户呈现；本表不重排、不覆盖、不把失败解释为Artifact业务失败。
+
+- **验收**：15类每类都有Locator/Stage4/spawn/用户结果/基础继续/终止字段；冲突分支按Stage 4优先级；任何未定义失败为`INCOMPLETE/EVIDENCE_INCOMPLETE`或对应既定reason，不得成功。
+- **Fail-closed**：出现第16类未分类失败、没有最终退出、对象/证据不一致或需要自动重试时停止并返回`INCOMPLETE`/`STOPPED_SCOPE_EXPANSION`。
+- **未来文件/物理承载**：失败映射只存在唯一入口和回执呈现边界；不新增失败服务、队列、数据库或重试器。
+- **上下游**：上游为T1-T7、Stage 2/4合同；下游为T10分层证据和T12直接负面测试。
+
+#### T9：最终Package Gate关系
+
+- **目标**：把规划、受控fixture和真实生产Package身份分层，避免临时Package或缺定义被误报为生产PASS。
+- **权威输入**：`PACKAGE-REGISTRATION-CONTRACT.md`、当前`PROJECT-STATE.md`和验收矩阵；Stage 4 release-specific `PackageToolDefinitionV1`规则。
+- **具体动作**：规划不要求最终Package已物化；未来代码/fixture可以使用受控测试Package验证输入/Locator/定义绑定，但必须标记fixture；真实WorkBuddy生产验收前必须完成最终Package物化、安装、production Registration/Activation和新进程Locator验证；真实调用缺具体Release定义实例时必须preflight fail closed。
+- **输出**：三个独立状态`FINAL_PACKAGE_MATERIALIZED`、`PRODUCTION_PACKAGE_REGISTERED`和`TOOL_DEFINITION_BOUND`；当前仍为`NOT_MATERIALIZED/NOT_CREATED/未绑定具体实例`。
+- **未来文件/物理承载**：最终Package由后续最终交付/Installer任务承载；Stage 5入口模块不得物化、安装、登记、激活或写PackageRoot。
+- **验收**：fixture只证明合同可实例化；生产验收必须有持久Release、安装Root、Registration/Activation、新进程Locator和当前Release定义全套身份；任何一层缺失不启动真实生产。
+- **Fail-closed**：把临时ZIP、静态Guide、旧V1 Skill、Stage 4单测或目录名当生产对象时立即停止并纠正状态。
+- **上下游**：上游为Stage 2/最终Installer；下游为T10真实证据第8层、未来T12实施前置和真实Stage 5验收。
+
+#### T10：真实验收与证据分层
+
+- **目标**：让每一层证据只裁决自己的问题，前层PASS永远不能替代后层。
+- **权威输入**：验收矩阵独立状态定义、Stage 2/3/4已接受边界、真实WorkBuddy授权卡和T1合同。
+- **具体动作与输出**：分别记录以下10层：`(1)`静态合同审查；`(2)`单元/负面测试；`(3)`Stage 2/3/4接口集成测试；`(4)`真实腾讯WorkBuddy新会话；`(5)`唯一入口命中；`(6)`literal `user_message`不变；`(7)`用户授权与同任务继续；`(8)`最终Package生产身份；`(9)`真实Provider或媒体证据；`(10)`业务效果。每层记录对象、命令/动作、最终exit、输出、时间和边界。
+- **未来文件/物理承载**：静态/测试证据留在未来任务审查包；真实客户端证据只在受控D盘证据目录和正式验收卡中保存；不在代码中伪造生产/业务结果。
+- **验收**：每层可独立给`PASS/FAIL/BLOCKED/INCOMPLETE/NOT_TESTED/NOT_APPLICABLE`；真实Provider、媒体、成片和业务效果不由Stage 5单测宣称完成。
+- **Fail-closed**：缺对象、输出截断、无最终exit、客户端状态不明、跨层代替或历史证据混用时保持`INCOMPLETE/NOT_PROVED`，不升级下一层。
+- **上下游**：上游为T1-T9；下游为T12 Reviewer/正式验收和未来Stage 6裁决。
+
+#### T11：Stage 6不断档
+
+- **目标**：只冻结Stage 5向Stage 6交付的真实事实，不提前建设第二个结果系统。
+- **权威输入**：Stage 4递归不可改写`LauncherReceiptV1`；Stage 3五结果；真实Stage 5消费者字段需求（尚未证明）。
+- **具体动作**：Stage 6首先尝试直接复用同一`LauncherReceiptV1`和Stage 3事实；只有真实消费者存在明确字段转换缺口时才提出一次确定性转换；本阶段不预建任何Stage 6代码。
+- **输出**：若无缺口，固定为`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`、`production code changes=0`；若有缺口，提交真实字段差异、唯一消费者和单一转换方案，另行授权。
+- **未来文件/物理承载**：当前为零文件、零模块、零服务；不得预建状态数据库、轮询器、解释器或重试器。
+- **验收**：事实、错误、取消、超时、残留和结果指针原样可追溯；没有业务Artifact解释或成功改写。
+- **Fail-closed**：没有真实Stage 5消费者、无法证明格式缺口或直接消费可行时，保持零代码，不假设需要转换。
+- **上下游**：上游为T4/T6的Stage 4 receipt和Stage 3事实；下游是未来独立Stage 6授权。
+
+#### T12：未来Stage 5实施任务包
+
+- **目标**：把未来实现授权所需的身份、基线、文件、测试、审查和推广规则冻结，同时诚实保留T1未闭合导致的未冻结项。
+- **权威输入**：本节T1-T11；届时实时`origin/codex/workbuddy-shell-v2`；用户后续明确原话“启动阶段五实施”；T1最终入口合同；Stage 2/3/4合同和正式状态。
+- **具体动作**：未来唯一Builder ID固定为`V2-S5-WORKBUDDY-ENTRY-BUILDER1`；接管时重新解析实时formal HEAD/tree/tracked，不能直接使用历史SHA、main、旧长期分支或当前规划分支；先核验干净状态和精确白名单，再创建D盘独立临时worktree/branch。公共入口固定为1，新增生产模块上限为1，直接测试文件固定为1；Stage 6不预建。
+- **输出**：T1闭合后才能写入的实施任务包：精确入口资产路径、最多一个生产模块、一个直接测试、必要的单次`__init__.py`导出、CI现有命令的最小更新（如确有消费者需求）、tracked `37 -> N`和固定命令。当前这些字段必须是`UNFROZEN_PENDING_T1`，不能伪造路径、N或命令。
+- **未来文件/物理承载**：实施最多承载一个真实WorkBuddy入口资产、一个生产模块、一个直接测试；`__init__.py`仅在T1证明需要时允许；CI是否修改、具体路径、物理安装归属和包结构全部待T1。若需要第N+1个路径，立即停止并回到用户重新授权。
+- **验收**：实施前必须有“启动阶段五实施”明确授权；精确base/tree/tracked与formal等值；Builder只改白名单；项目D盘私有`.venv`；直接测试、hygiene、完整测试按冻结命令最终exit 0；`git diff --check`、tracked/clean/untracked/stash等值；Reviewer独立零写比较base..candidate；只有`APPROVE/P0=0/P1=0/P2=0`且formal仍等于base才可普通fast-forward。
+- **Fail-closed**：T1未闭合、授权缺失、对象/路径/tracked不符、命令需猜测、需要第N+1路径、测试无最终exit、Reviewer非APPROVE或正式分支已前移时停止；不force push、不merge/rebase、不推广、不自动开启Stage 6。
+- **上下游**：上游是T1闭合、Stage 2/3/4已接受合同和未来用户授权；下游是唯一Builder、独立Reviewer、普通FF及真实Stage 5验收。规划被接受也不等于实现被授权。
+
+### 4. 规划交付与治理出口
+
+本候选只允许三条路径：`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`。Builder不修改正式分支、不运行测试（`test=NOT_RUN_DOCS_ONLY`）、不运行真实WorkBuddy/Launcher/Provider/媒体/WSL、不物化Package、不创建Registration、不启动Stage 6。候选必须以单一临时分支非force push，报告base/candidate/tree/三路径/status；独立零写Reviewer只审文档准确性和范围，不得把产品规划变成`PASS_ACCEPTED`。
+
+Reviewer至少核对：WorkBuddy是否仍是唯一Agent；是否只有一个真实入口；是否错误预建CLI/MCP/第二Agent；是否硬编码Provider/Runtime；是否保持literal message与controls分离；是否完整消费Stage 2/3/4合同；是否区分最终Package与生产验收；是否含T1-T12和15类失败矩阵；是否保持Stage 6零代码出口；是否存在产品或文档范围膨胀。P0为架构/安全/权限/身份绕过或泄密；P1为可执行合同、映射、证据或边界缺口；P2为不影响合同的表述问题。只有`APPROVE / P0=0 / P1=0 / P2=0`才允许后续治理普通fast-forward；REQUEST_CHANGES只能回原Builder。
+
+候选经Reviewer批准和普通fast-forward后，Stage 5规划才能记录为`PASS_ACCEPTED`；在此之前及T1未闭合期间，当前状态必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，`stage_5_implementation_authorization=NOT_GRANTED`，`next_authorized_task=NONE`。下一步不是自动写代码，而是先完成独立零写文档审查、普通FF和临时现场清理；之后若要进入实施，用户必须另行明确“启动阶段五实施”，再按T12重新接管实时formal对象。

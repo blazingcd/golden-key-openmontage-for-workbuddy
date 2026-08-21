@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 验收矩阵
 
-状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / SIX_MODULE_MVP`
+状态：`STAGE_3_PASS_ACCEPTED / STAGE_4_PLANNING_PASS_ACCEPTED / STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / STAGE_5_PLANNING_BLOCKED_EXTERNAL_CONTRACT / STAGE_5_IMPLEMENTATION_NOT_GRANTED / SIX_MODULE_MVP`
 
 ```text
 formal_ref: refs/heads/codex/workbuddy-shell-v2
@@ -155,6 +155,67 @@ tests/workbuddy/test_repository_hygiene.py
 Builder最终给出Stage4 direct 158、repository hygiene 11、full suite 358的未截断Windows输出，全部exit 0且无skip，并报告精确base/candidate/tree/5路径/37 tracked/clean/untracked0/stash0。Reviewer独立零写比较精确base..candidate，核对公共合同最小性、fail-closed反例、secret边界和无Scope扩张，最终为`APPROVE / P0=0 / P1=0 / P2=0`；单文件CI夹具修复也独立`APPROVE / P0=0 / P1=0 / P2=0`。WSL只作临时Linux等价验证，已清理关闭，不是运行依赖。普通fast-forward正式推广后仍不得自动启动Stage5/6。
 
 Stage5的消费者合同只需提供literal message、closed controls、approved PackageToolDefinition、经单独授权的Provider环境，并在定义声明时原样传递完整approved capability definition与未改写original Stage3 fact；不得重包装摘要。Stage4按原始managed/explicit/PATH source语义独立验证实际资产；Stage6优先直接使用同一receipt，格式无缺口时必须`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`且生产代码0。真实生产WorkBuddy/Launcher会话、Stage5、Stage6、Provider/媒体执行及final Package物化/生产登记仍为`NOT_GRANTED`或未证明，不得用Stage4单元测试冒充。
+
+### 3.6 阶段5规划验收与实施启动前置
+
+本节裁决Stage 5规划候选，不裁决Stage 5产品实现或真实客户端PASS。当前必须保持：
+
+```text
+stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization: NOT_GRANTED
+stage_5_workbuddy_entry_authorization: NOT_GRANTED
+stage_6_status_result_relay_authorization: NOT_GRANTED
+final_package_gate: NOT_GRANTED / final_package_artifact=NOT_MATERIALIZED / production_registration=NOT_CREATED
+next_authorized_task: NONE
+test: NOT_RUN_DOCS_ONLY
+```
+
+Stage 5唯一目标是“WorkBuddy唯一Agent + 一个真实显式入口 + 原话不变 + Locator/Guide/PackageToolDefinition顺序 + 一次已接受Stage 4调用 + 原始事实转交”。固定链路为：
+
+```text
+Stage 4 accepted API
+  -> one real WorkBuddy entry
+  -> locate_active_package(data_root)
+  -> Registration/PackageRoot/Manifest/Lock/Guide/required-toolchain validation
+  -> verified Guide read
+  -> current-release PackageToolDefinitionV1
+  -> launch_session_tool(...), Stage4 fixed tool spawn <= 1
+  -> WorkBuddy/OpenMontage production decisions
+  -> Stage6 direct LauncherReceiptV1/fact relay
+```
+
+规划只允许三条路径：`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`。规划阶段不运行代码、测试、CI、真实WorkBuddy、Launcher、Provider、媒体、WSL，不物化最终Package或创建生产Registration；需要第四条路径即`STOPPED_SCOPE_EXPANSION`。
+
+#### T1-T12规划验收表
+
+| 任务 | 验收对象/权威输入 | 必须动作与输出 | 未来物理承载 | 失败裁决与下游 |
+|---|---|---|---|---|
+| T1 真实唯一入口 | 腾讯官方资料、受控真实客户端（另行授权）、本仓库入口边界；旧V1 Skill仅历史证据 | 证明Skill包、安装归属、显式调用主体、唯一消费者和Stage4 Python API协议；当前官方资料只证明本地Skill上传/对话选择，本机5.3.13只证明用户级Skill存在 | 一个入口资产；精确包结构/路径/安装归属`UNFROZEN_PENDING_T1` | 未证明即`PLANNING_BLOCKED_EXTERNAL_CONTRACT`；禁止假Skill/CLI/MCP/第二Skill；未闭合不进入实施 |
+| T2 输入合同 | Stage2/3/4正式合同与用户授权 | 冻结literal `user_message`、素材、closed controls、PackageToolDefinitionV1、Provider env、完整approved definition+original Stage3 fact、cancel/continuation | 唯一入口和受控调用域；不进入日志/平行库 | 跨域、非法字段、摘要重包装即fail closed；下游T3/T4 |
+| T3 验证顺序 | Registration/Locator合同 | 显式入口后先Locator，验证Registration/PackageRoot/Manifest/Lock/Guide/必带工具链，成功后读Guide并取得当前定义 | 复用Stage2 Locator；不复制Guide/Package | 扫盘/猜路径/未验证Guide/漂移即spawn 0；下游T4 |
+| T4 Stage4适配 | 固定`launch_session_tool(...)`与LauncherReceiptV1 | 原样传message；只传完整定义/原始事实；Stage5不生成命令/argv/Shell/摘要；Stage4固定工具最多spawn一次 | 最多一个入口适配生产模块，精确路径待T1 | 违反固定调用或定义契约即停止；下游T5/T6 |
+| T5 授权继续 | Stage3逐能力授权、Package Guide、WorkBuddy会话 | 能力/外部服务/费用独立授权，绑定definition+plan+session；失效即重问；拒绝/暂缓走基础/其他路径；不支持继续时提示“继续刚才的任务” | 当前会话，不建重放库/授权数据库 | 自动重试/重放、授权混用即停止；下游T6/T10 |
+| T6 结果映射 | Stage3五结果、Stage4九outcome和11级优先级 | 建立展示事实、展示计划、继续基础、准备完成、阻断、取消/超时/失败/泄密/残留、结果指针的闭集映射 | 入口确定性呈现或直接receipt；不建结果服务 | 失败不改成功、不解释Artifact、不改优先级；下游T11 |
+| T7 凭据隐私 | Stage4 secret合同和定义allowlist | secret只入allowlisted child env；不进入chat/message/argv/stdin非授权域/log/receipt/error；Key不等于可用/费用授权；不推荐/排序/回退Provider | child环境短生命周期，不建Provider目录/密钥库 | 任意传播/未授权环境/泄密即fail closed；下游真实安全验收 |
+| T8 失败闭集 | Stage2 Locator、Stage4 9值+11级优先级 | 每类固定Locator?、Stage4?、spawn次数、用户结果、基础能力继续、是否终止；覆盖15类：无Registration、Package/工具链漂移、Guide未验证、定义缺失/不匹配、非法输入、能力证据缺失/漂移、Provider未授权、拒绝/暂缓、入口前取消、启动失败、child失败、timeout、secret disclosure、非法result pointer、残留进程 | 只在入口/receipt呈现边界，不建重试器/数据库 | 未分类、无最终exit、优先级被覆盖即`INCOMPLETE`；下游T10/T12 |
+| T9 Package Gate | Package Registration合同、Project State、Stage4定义合同 | 规划不要求最终Package；受控fixture可证明合同；真实生产前必须Final Package物化/安装/Production Registration+Activation/新进程Locator；缺具体Release定义实例真实调用阻断 | 最终Package由后续Installer承载，入口不写PackageRoot | 临时ZIP/旧Skill/单测冒充生产即停止；下游真实Gate |
+| T10 证据分层 | 本矩阵状态定义和真实测试卡 | 独立报告10层：静态合同、单元负面、Stage2/3/4集成、WorkBuddy新会话、唯一入口、原话不变、授权/继续、生产Package身份、Provider/媒体、业务效果 | 各自证据对象，不在代码伪造 | 前层PASS不得替代后层；缺证据`NOT_PROVED/INCOMPLETE` |
+| T11 Stage6交接 | Stage4 LauncherReceiptV1、Stage3 facts、真实Stage5消费者（尚未证明） | 先直接复用；无真实字段缺口则`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`、生产代码0；有缺口才另行授权 | 当前零Stage6文件/模块 | 无消费者/无缺口不预建；下游独立Stage6授权 |
+| T12 实施任务包 | T1-T11、届时latest formal、用户明确“启动阶段五实施” | 固定Builder `V2-S5-WORKBUDDY-ENTRY-BUILDER1`；入口1、生产模块≤1、直接测试1；Reviewer、P0/P1/P2、普通FF、清理和N+1停止规则 | 精确入口路径、37->N、CI命令均`UNFROZEN_PENDING_T1`；第N+1路径停止 | 无T1/授权/对象一致性/独立APPROVE不得实施或推广 |
+
+#### T8失败矩阵的机械要求
+
+对于15类失败，候选文档必须同时给出：是否调用Locator、是否调用Stage4、`spawn_count`、用户可见状态、是否允许基础能力继续、是否终止当前请求。入口前非法输入和入口前取消可在Locator前阻断；Package/Guide/定义/能力身份失败必须保持spawn 0；Stage4启动失败为spawn 0；child失败、timeout、secret disclosure、非法pointer、残留均为spawn 1并保留真实事实。拒绝/暂缓与Provider未授权可以在WorkBuddy明确选择下继续基础能力，但不得自动回放；所有竞争结果服从Stage4既定11级优先级，Stage5不覆盖。
+
+#### T9/T10生产边界
+
+规划、fixture、Stage 2/3/4接口集成和真实WorkBuddy生产是不同证据层。当前最终Package仍`NOT_MATERIALIZED`，生产Registration仍`NOT_CREATED`；真实WorkBuddy生产验收前必须完成最终物化、安装、生产登记/激活和新进程Locator。真实Provider、媒体、成片和业务效果均不能由Stage 5单测宣称完成。
+
+#### 规划候选治理验收
+
+候选基线必须是`042686039386a63866eba2f964f1fa9674bbec4b`、tree `6d6f3f0352eeb75c57170f2fe9e854c79564416c`、tracked 37；候选只允许三条路径，`git diff --check`必须通过，tracked仍为37，不能有第四路径、代码/测试/CI/Package/外部对象变化；测试状态固定为`NOT_RUN_DOCS_ONLY`。独立零写Reviewer只审准确性、闭集、Stage 4/3合同消费、唯一入口、WorkBuddy唯一Agent、Stage 6零代码、最终Package关系和范围；P0为安全/架构/授权/身份绕过或泄密，P1为可执行合同/映射/证据缺口，P2为非合同性文档问题。只有`APPROVE / P0=0 / P1=0 / P2=0`才可普通fast-forward；Reviewer不能把规划改成产品PASS。
+
+未来实施只有在用户另行明确“启动阶段五实施”后，且T1合同闭合、实时formal对象等值、精确白名单冻结、直接测试/CI命令冻结后才可开始。Builder必须使用D盘独立worktree和项目私有`.venv`，REQUEST_CHANGES只能回原Builder；审核通过后普通非force fast-forward，关闭并清理临时worktree/branch。任何第N+1路径、假设路径/命令、formal前移、无最终exit或真实入口证据缺失均停止。
 
 ## 4. Gate A：对象与环境
 

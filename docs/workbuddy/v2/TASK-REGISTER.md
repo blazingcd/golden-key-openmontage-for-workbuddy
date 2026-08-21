@@ -39,6 +39,8 @@ stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 next_authorized_task: NONE / current planning candidate must be reviewed before any next task
+stage_5_t1_evidence_authorization_candidate: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1 / DOCS_ONLY / READY_FOR_INDEPENDENT_ZERO_WRITE_REVIEW / NOT_FORMALLY_PROMOTED
+pending_next_authorized_task: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -1117,3 +1119,60 @@ Stage 4已接受的11级优先级（invalid input、pre-cancel、preflight、spa
 Reviewer至少核对：WorkBuddy是否仍是唯一Agent；是否只有一个真实入口；是否错误预建CLI/MCP/第二Agent；是否硬编码Provider/Runtime；是否保持literal message与controls分离；是否完整消费Stage 2/3/4合同；是否区分最终Package与生产验收；是否含T1-T12和15类失败矩阵；是否保持Stage 6零代码出口；是否存在产品或文档范围膨胀。P0为架构/安全/权限/身份绕过或泄密；P1为可执行合同、映射、证据或边界缺口；P2为不影响合同的表述问题。只有`APPROVE / P0=0 / P1=0 / P2=0`才允许后续治理普通fast-forward；REQUEST_CHANGES只能回原Builder。
 
 候选经Reviewer批准和普通fast-forward后，只正式固化这三份规划文档，不因此把Stage 5规划记为`PASS_ACCEPTED`；只要T1合同证据未闭合，当前状态仍必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。只有未来T1合同证据闭合、完成独立审查并经过另行权威状态收口后，才能评估Stage 5规划是否达到`PASS_ACCEPTED`；该评估仍不授权Stage 5实现。当前仍须保持`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`。下一步不是自动写代码，而是先完成独立零写文档审查、普通FF和临时现场清理；之后若要进入实施，用户必须另行明确“启动阶段五实施”，再按T12重新接管实时formal对象。
+
+## Stage 5 T1真实WorkBuddy入口合同证据核验授权候选（2026-08-21）
+
+本节只固化用户对 T1 证据核验的授权，不表示证据已经完成，也不授权 Stage 5 实现、真实 WorkBuddy、Launcher、Provider、媒体、最终 Package 或 Stage 6。候选推广前 `current_task=NONE`、`next_authorized_task=NONE`；只有本候选经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并普通 fast-forward 后，下一项才是唯一的 `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1`。
+
+```text
+task_id: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1
+task_kind: STAGE5_T1_EVIDENCE_AUTHORIZATION / DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE
+user_authorization: 2026-08-21 / 授权启动T1真实WorkBuddy唯一入口合同证据核验任务，仅核查官方资料和经另行允许的受控客户端证据，不写代码、不运行生产流程。
+base_commit: 5840470728f3618e575eacab2298b37a177d7c28
+base_tree: fc86e90d65369d4f421f5debec21514bf2fc5186
+tracked_files_at_base: 37
+candidate_branch: codex/v2-s5-t1-evidence-authorization1
+formal_target_branch: origin/codex/workbuddy-shell-v2
+candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+candidate_production_code_changes: 0
+candidate_test_changes: 0
+candidate_ci_changes: 0
+candidate_package_registration_changes: 0
+candidate_external_writes: NONE
+candidate_real_workbuddy_execution: NOT_PERMITTED
+candidate_launcher_provider_media_wsl_execution: NOT_PERMITTED
+candidate_test: NOT_RUN_DOCS_ONLY
+subsequent_task_id: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1
+subsequent_task_effective: ONLY_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD
+stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization: NOT_GRANTED
+current_task_before_promotion: NONE
+next_authorized_task_before_promotion: NONE
+candidate_status: READY_FOR_INDEPENDENT_ZERO_WRITE_REVIEW / NOT_FORMALLY_PROMOTED
+```
+
+### T1五项核验范围
+
+T1 只核查以下五项，不得扩展为实现设计或客户端生产验证：
+
+1. 真实 WorkBuddy Skill 的包结构；
+2. Skill 的安装/导入归属；
+3. 显式调用主体和调用机制；
+4. 唯一消费者，以及它与 WorkBuddy 唯一 Agent 边界的关系；
+5. 不生成 CLI、MCP、命令、argv 或 Shell 字符串即可直接调用已接受 Stage 4 Python API `launch_session_tool(...)` 的精确协议。
+
+第一阶段证据源只允许腾讯/WorkBuddy官方一手公开资料，以及本仓库已经存在的静态证据。网页证据必须记录 URL、标题、访问日期、原文直接支持的精确 claim 和仍未支持的 gap；搜索摘要、第三方文章、论坛、推测和旧 V1 Skill 均不得作为权威。旧 V1 Skill 只能标记为 `HISTORICAL/DROP`，不得复用或推导新的入口合同。
+
+用户所说的“经另行允许的受控客户端证据”在本授权候选中冻结为 `NOT_AUTHORIZED_IN_THIS_TASK`：不得打开、操作或运行真实 WorkBuddy，不得上传、安装或调用 Skill。若官方资料不足，只能记录未来另行授权的最小客户端核验步骤及其待证明字段；本候选不得执行这些步骤。
+
+### T1后续Evidence Builder边界与结果
+
+后续唯一 Evidence Builder `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1` 的最大文档白名单冻结为：`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`；不得新增平行证据或规划文档，实际结果可以少改文件。Evidence Builder 只能提交 docs-only 证据候选和建议状态，必须经独立零写 Reviewer 与普通 fast-forward；即使五项均被官方资料证明，也不得自行标记 Stage 5 实现 PASS 或启动实现。
+
+若官方资料不能同时证明五项，Evidence Builder 完成时必须保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`，最终结果记为 `T1_EVIDENCE_INCOMPLETE`，并将 `next_authorized_task=NONE`；不得填造路径、接口、参数，不得授权实施。即使官方资料足以形成五项证据，仍只能记为证据候选/待独立审查，随后另行进行权威状态收口；不得从 Evidence1 自动推导 Stage 5 实现授权。
+
+本授权候选及其后续 Evidence1 均禁止：生产代码、测试、CI、pyproject、Package 字节、Registration/Activation、真实 WorkBuddy、Launcher、Provider、Runtime 下载、媒体、WSL、Stage 6、final Package、production Registration，以及 CLI/MCP/第二 Skill/第二 Agent/并行入口。
+
+### 候选治理出口
+
+候选只允许修改 `PROJECT-STATE.md` 与本账本两条路径；不得修改章程、验收矩阵或新增证据文档。Builder 不运行测试（`test=NOT_RUN_DOCS_ONLY`）、不运行真实 WorkBuddy/Launcher/Provider/媒体/WSL、不物化 Package、不创建 Registration、不启动 Stage 6。完成后必须核验精确两路径、tracked 仍为 37、`git diff --check` 通过、clean/untracked 0/stash 0，并以单一临时分支非force push；独立零写 Reviewer 只审该授权候选，`REQUEST_CHANGES` 只能回原 Builder。只有 `APPROVE / P0=0 / P1=0 / P2=0` 且 formal 仍等于 base 时，才允许普通 fast-forward；推广后唯一下一任务才生效为 `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1`。

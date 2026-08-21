@@ -65,7 +65,10 @@ stage_5_planning_authorization_history_result: 042686039386a63866eba2f964f1fa967
 stage_5_planning_authorization_history_consumption: V2-S5-PLAN-BUILDER1 / CURRENT_PLANNING_DOCUMENT_CANDIDATE / AUTHORIZATION_CONSUMED
 stage_5_planning_authorization_history_scope: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL
 stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT when exact real WorkBuddy Skill/install/entry/call contract is not evidenced; never fabricate interface or use CLI/MCP/second-Skill fallback
-stage_5_t1_evidence_candidate: T1_EVIDENCE_INCOMPLETE / OFFICIAL_SOURCES_ONLY / CLIENT_NOT_AUTHORIZED / READY_FOR_INDEPENDENT_REVIEW
+stage_5_t1_evidence1_candidate_result: d11513907c3662b18fd06a200fac935efcb50055 / tree 81e38bc90dd37d586b46e20cc047db35b613759d / T1_EVIDENCE_INCOMPLETE
+stage_5_t1_evidence1_independent_review: APPROVE / P0=0 / P1=0 / P2=0
+stage_5_t1_evidence1_formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED
+stage_5_t1_evidence_candidate: T1_EVIDENCE_INCOMPLETE / OFFICIAL_SOURCES_ONLY / CLIENT_NOT_AUTHORIZED / FORMALLY_PROMOTED
 stage_5_t1_evidence_candidate_base: 44d89625c1fd71d07d1173e18681e64e7459cec2 / tree 10c8c4187299564fc83cef38a3f9ac65f4f9790a / tracked 37
 stage_5_t1_evidence_candidate_scope: EXACT_4_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
 stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
@@ -78,9 +81,10 @@ stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: NONE
-stage_5_t1_evidence_authorization_candidate: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1 / DOCS_ONLY / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMAL_AUTHORITY_WHEN_THIS_COMMIT_IS_FORMAL
-pending_next_authorized_task: NONE / EVIDENCE1_COMPLETED_WITH_T1_EVIDENCE_INCOMPLETE
+next_authorized_task: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_COMMIT_IS_FORMAL
+stage_5_t1_evidence_authorization_candidate: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMAL_AUTHORITY_WHEN_THIS_COMMIT_IS_FORMAL
+pending_next_authorized_task: NONE / HISTORICAL_PRE_AUTHORIZATION
+next_authorized_task_condition: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / ONLY_AFTER_THIS_COMMIT_IS_FORMAL
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -198,6 +202,50 @@ test: NOT_RUN_DOCS_ONLY
 官方来源及五项矩阵的完整记录以 `docs/workbuddy/v2/TASK-REGISTER.md` 的同名 Evidence1 章节为任务级权威；本状态文件只镜像最终裁决。官方资料截至 2026-08-21 仅能证明 WorkBuddy 存在 Skill 导入/安装、对话选择和自动调用能力，不能证明包结构/schema、安装物理归属、当前精确入口分派、唯一消费者边界或直接调用 Stage 4 Python API 的参数/receipt 协议。五项未全部 `PROVED_OFFICIAL`，因此不得填造任何路径、文件、入口名、参数或返回值，也不得使用 CLI/MCP/旧 V1 Skill 补缺。
 
 未来若要继续，只能另行授权最小受控客户端验证卡：全新会话和隔离工作区、最小无生产副作用 candidate Skill、显式导入/命中、可观察安装归属、唯一消费者、无命令/argv/Shell 的 Python 直调探针、完整 receipt 对照、Provider/媒体/Package/Stage4真实spawn为0，以及另行授权的证据保存/清理。该验证卡本候选只记录不执行。
+
+## Stage 5 T1受控真实WorkBuddy客户端证据授权候选（2026-08-21）
+
+本节只固化 Evidence1 收口后的下一项受控客户端证据授权，不表示客户端证据已经取得，也不授权 Stage 5 实现、真实 Launcher、Provider、媒体、最终 Package 或 Stage 6。候选进入 formal 前 `current_task=NONE`、`next_authorized_task=NONE` 仅为历史/授权前状态；只有本候选经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并普通 fast-forward 进入 formal 后，顶部 live direct 才生效为唯一的 `V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1`。
+
+```text
+task_id: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
+task_kind: STAGE5_T1_EVIDENCE1_CLOSEOUT_AND_CONTROLLED_CLIENT_AUTHORIZATION / DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE
+user_authorization: 2026-08-21 / 授权执行T1 Evidence1两文档机械收口，并启动受控真实WorkBuddy客户端证据核验；仅允许隔离工作区和临时无副作用Skill，禁止Provider、媒体、最终Package和Stage4真实spawn，额外权限必须停止。
+base_commit: d11513907c3662b18fd06a200fac935efcb50055
+base_tree: 81e38bc90dd37d586b46e20cc047db35b613759d
+tracked_files_at_base: 37
+candidate_branch: codex/v2-s5-t1-client-evidence-authorization1
+candidate_worktree: D:\\BlazingCD\\Personal\\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2-s5-t1-client-auth1
+candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md
+candidate_production_code_changes: 0
+candidate_test_changes: 0
+candidate_ci_changes: 0
+candidate_external_writes: NONE
+candidate_real_workbuddy_execution: NOT_PERFORMED_IN_THIS_AUTHORIZATION_TASK
+candidate_test: NOT_RUN_DOCS_ONLY
+current_task_before_promotion: NONE
+next_authorized_task_before_promotion: NONE / HISTORICAL_PRE_AUTHORIZATION
+next_authorized_task_after_promotion: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / ONLY_AFTER_THIS_COMMIT_IS_FORMAL
+stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization: NOT_GRANTED
+candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+```
+
+后续受控客户端任务的边界固定如下：
+
+- 只操作预先存在的腾讯 WorkBuddy 客户端和现有登录态。出现登录/认证界面立即停止并交用户处理，不自动认证。
+- 隔离根固定为 `D:\\BlazingCD\\Temp\\Golden_Key_WorkBuddy_S5_T1_Client_Evidence1`；开始前必须核验精确绝对路径，禁止写入 C 盘或项目生产目录。
+- 第一阶段只观察客户端 UI、版本、Skill 入口/创建/导入页面及可见格式说明，不猜包结构、schema、路径或入口。
+- 只有客户端 UI 或官方可见模板明确给出包格式后，才可创建临时 candidate Skill。它只能返回唯一非敏感静态诊断标记并声明不执行工具；不得含脚本、命令、CLI、MCP、网络、文件读写、Python 执行、Stage 4 调用、Provider、媒体或生产逻辑。
+- 观察或导航到导入/安装页面可以继续；实际“上传/导入/安装/启用”是客户端状态改变，动作当时必须再次取得用户确认后才能点击，即使已有总体授权。
+- 任何登录、Windows/浏览器权限、安全或隐私设置、管理员权限、额外目录、全局安装、插件/扩展安装、外部网络/第三方服务、收费、Provider、媒体、final Package、production Registration 或 Stage 4 真实 spawn 请求，立即 `STOP`；不接受权限提示。
+- 不发送敏感数据；candidate Skill 只能包含非敏感静态诊断文本；不得打开终端或通过 UI 运行命令。
+- 只取证五项：Skill 包结构/schema；安装/导入归属与物理/项目级语义；显式调用主体/入口/触发；唯一消费者/唯一 Agent 边界；无 CLI/MCP/命令/argv/Shell 字符串的本地 Python 直调 `launch_session_tool(...)` 协议。客户端不能证明的项目记 `UNPROVED_CLIENT`，不得推断。
+- Python 直调只允许检查 UI、模板、文档或可见合同；若需要真实 Python 执行或 Stage 4 spawn，立即停止并记录缺口。
+- 证据固化只能写现有四份权威文档的后续候选：`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`，不得新增平行报告；任务完成后 `current_task=NONE`、`next_authorized_task=NONE`，除非另行授权。
+- 证据固化后清理临时 Skill 和隔离工作区；删除若触发 Windows UI 确认，必须在动作当时重新确认，或仅对已核验精确 D 盘路径执行项目规则允许的清理。正式文档只保留非敏感文字证据。
+
+本授权候选本身仍只修改 `PROJECT-STATE.md` 与 `TASK-REGISTER.md`，不打开 WorkBuddy、不创建/上传/安装 Skill、不运行代码/测试/CI/Launcher/Provider/媒体/WSL，不物化 Package、不创建 Registration、不启动 Stage 6；后续客户端任务须在本候选正式推广后，按顶部唯一 `next_authorized_task` 单独接管。
 
 ## 已完成的Stage 4最终交接卫生收口
 

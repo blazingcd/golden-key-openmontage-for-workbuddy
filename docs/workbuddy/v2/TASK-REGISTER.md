@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_PLANNING_BLOCKED_EXTERNAL_CONTRACT / NO_ACTIVE_TASK`
+状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_PLANNING_IN_PROGRESS_T1_INTERNAL_BRIDGE_CONTRACT_PENDING / NO_ACTIVE_TASK`
 
 更新时间：2026-08-21
 
@@ -36,7 +36,8 @@ stage_5_planning_next_task_allowed_paths_history: docs/workbuddy/v2/TASK-REGISTE
 stage_5_planning_next_task_kind_history: DOCS_ONLY / no production code / tests / CI / Package / real WorkBuddy / Launcher / Provider / media / WSL / CONSUMED_COMPLETE / HISTORICAL_BEFORE_V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1
 initial_product_goal_recheck: PASS / WorkBuddy is the only running Agent and the only user entry; after loading the verified Package Guide it assumes the OpenMontage logical production role
 stage_5_t1_cli_boundary: CLI_NOT_A_BLANKET_BAN / forbid a second entry, parallel control plane, fallback, or arbitrary command/argv/Shell generation; a fixed CLI used internally by the one official WorkBuddy Skill remains eligible for controlled contract verification
-stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT only while the exact real WorkBuddy Skill/install/entry/consumer/call contract is unproved; never fabricate an interface or use CLI/MCP/second-Skill fallback, and do not treat CLI presence alone as architecture unavailability
+stage_5_planning_t1_hard_stop: HISTORICAL_EXTERNAL_CONTRACT_STOP / superseded for the external-mechanism question; never fabricate an interface or use CLI/MCP/second-Skill fallback, and do not treat CLI presence alone as architecture unavailability
+stage_5_planning_t1_current_state: IN_PROGRESS / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_PENDING
 stage_5_t1_evidence2_result_candidate: HISTORICAL_ARCHITECTURE_CONTRACT_UNAVAILABLE / SUPERSEDED_BY_CLI_BOUNDARY_CORRECTION / OFFICIAL_SOURCES_PLUS_READ_ONLY_CLIENT / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED_WHEN_THIS_COMMIT_IS_FORMAL
 stage_5_t1_evidence2_result_candidate_base: 4515268d1f77211a14f22927a02344b578527c4a / tree 45b351bbf60419dc76833ddfcd61cd2ef52ff24c / tracked 37
 stage_5_t1_evidence2_result_candidate_scope: EXACT_2_DOC_PATHS / NO_CODE / NO_TEST / NO_CI / NO_EXTERNAL_OBJECT
@@ -50,14 +51,14 @@ stage_5_t1_evidence_candidate_scope: EXACT_4_DOC_PATHS / NO_CODE / NO_TEST / NO_
 stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
-next_authorized_task: V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1 / ONLY_AFTER_THIS_CORRECTION_IS_FORMAL
+next_authorized_task: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1 / ONLY_AFTER_THIS_CANDIDATE_IS_INDEPENDENTLY_APPROVED_AND_ORDINARY_FAST_FORWARD_TO_FORMAL
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
 stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
 stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
 stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
-pending_next_authorized_task: V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1 / INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD_REQUIRED
-next_authorized_task_condition: reread initial product goal first; reassess the official one-Skill fixed-CLI bridge against the accepted Stage 4 Python contract; no implementation authorization
+pending_next_authorized_task: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1 / INDEPENDENT_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD_REQUIRED
+next_authorized_task_condition: freeze fixed internal CLI identity/envelope/Stage4 mapping in docs only; no client operation, code, implementation or production authorization
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -67,9 +68,9 @@ production_evidence_boundary: real WorkBuddy/Launcher session; Provider/media ex
 
 该自解析记录不重新门禁Stage4 `PASS_ACCEPTED`，也不形成新的产品任务。六路径最终交接卫生结果`4636e27a62aad9f1b721e6c482e34b44d350503c`已经独立Reviewer最终`APPROVE / P0=0 / P1=0 / P2=0`、普通fast-forward和正式CI验证；该收口的历史状态（`HISTORICAL_BEFORE_V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1`）是`current_task=NONE / current_task_status=NO_ACTIVE_TASK / historical_next_authorized_task=NONE`。2026-08-21的Stage5规划授权候选及其生效条件见下节；任何Stage5实现、Stage6或最终Package权限仍不得从本收口推导。
 
-## Stage 5 T1 CLI边界纠偏与目标回读门禁（2026-08-21）
+## [历史] Stage 5 T1 CLI边界纠偏与目标回读门禁（2026-08-21）
 
-本节是对上一轮 `V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2` 候选的 **superseding docs-level correction**。历史证据、候选提交和当时的 `ARCHITECTURE_CONTRACT_UNAVAILABLE` 文字均保留，不伪造或重写历史；本节只 supersede 其中把“CLI/MCP 不满足本任务必要条件”误读成“CLI 一概禁止”的解释。
+本节是对上一轮 `V2-S5-T1-CONTRACT-CLOSURE-EVIDENCE2` 候选的 **历史 superseding docs-level correction**。历史证据、候选提交和当时的 `ARCHITECTURE_CONTRACT_UNAVAILABLE` 文字均保留，不伪造或重写历史；本节只纠正当时把“CLI/MCP 不满足必要条件”误读成“CLI 一概禁止”的解释。它不再表示当前 live 阻断；当前覆盖以本账本下方 `V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1` 节为准。
 
 ```text
 initial_product_goal_recheck: PASS
@@ -80,17 +81,17 @@ cli_allowed_condition: an officially supported fixed CLI may be an internal brid
 cli_forbidden_conditions: second user entry; parallel control plane; second Agent; fallback after an unsupported contract; arbitrary command/argv/Shell generation; unbounded intent interception; automatic retry/replay
 mcp_rule: MCP is not an authorized second entry or parallel control plane; no MCP bridge is assumed without separate official contract evidence
 t1_reopened_decision: REASSESS_OFFICIAL_SKILL_PLUS_FIXED_CLI_UNIQUE_ENTRY_CONTRACT
-t1_blocker_meaning: PLANNING_BLOCKED_EXTERNAL_CONTRACT means the real contract is not yet sufficiently evidenced; it does not mean the product or an internal fixed CLI bridge is impossible
+t1_blocker_meaning: HISTORICAL_ONLY / PLANNING_BLOCKED_EXTERNAL_CONTRACT was the pre-reassessment interpretation; it never meant the product or an internal fixed CLI bridge was impossible
 t4_direct_python_rule: accepted Stage 4 implementation and launch_session_tool(...) contract remain PASS_ACCEPTED; direct Python is the current Stage 5/T1 consumption candidate; if official evidence identifies a fixed internal CLI bridge, compare and reconcile the Stage 5 binding under T1 rather than reopening or denying Stage 4 or the product goal
 t4_preserved_boundary: Stage 5 still must not generate arbitrary command/argv/Shell strings or create a second control plane; any fixed bridge must be consumed only as its evidenced contract
 stage_5_implementation_authorization: NOT_GRANTED
-next_authorized_task_after_correction: V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1 / only after this correction is independently approved and ordinarily fast-forwarded
+historical_next_authorized_task_after_correction: V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1 / only after this historical correction was independently approved and ordinarily fast-forwarded
 next_task_scope: reread initial product goal; recheck official Skill plus fixed-CLI internal bridge and its unique consumer/entry boundary; reconcile with Stage 4 without code or production execution
 next_task_forbidden: second entry; second Agent; CLI/MCP fallback or parallel control plane; arbitrary command/argv/Shell; code; tests; CI; Provider; media; Package; Registration; Stage4 real spawn; Stage6
 recheck_gate_for_every_future_stage5_task: initial_product_goal_recheck=PASS is mandatory before task start, evidence裁决, or implementation decision
 ```
 
-该纠偏不使 Stage 5 规划或实现自动 `PASS_ACCEPTED`，不解除当前外部合同证据阻断，也不授权真实 WorkBuddy/Stage 4/Provider/媒体/Package/Stage 6。它只把 T1 从“CLI 存在即否定”纠正为“继续核验唯一 WorkBuddy Skill 内部固定 CLI 合同”。
+该历史纠偏不使 Stage 5 规划或实现自动 `PASS_ACCEPTED`，也不授权真实 WorkBuddy/Stage 4/Provider/媒体/Package/Stage 6。当前外部机制阻断已由官方 `Skill + CLI` 资料和既有 HY3 exact Skill 会话在下方当前 T1 重新评估中解除；当前为 `IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING`。本节只记录错误解释如何被纠正，不覆盖当前状态。
 
 ## Stage 5 规划授权候选（2026-08-21）
 
@@ -127,7 +128,7 @@ next_authorized_task_before_review: NONE
 pending_next_authorized_task: NONE / current V2-S5-PLAN-BUILDER1 candidate must be independently reviewed
 ```
 
-历史规划授权中的 T1 外部合同门禁文字现由上方“CLI边界纠偏与目标回读门禁”supersede：合同未证实时仍是不可漂移的 `PLANNING_BLOCKED_EXTERNAL_CONTRACT` 硬停止，但“不得用 CLI”只表示不得把 CLI/MCP 用作第二入口、并行控制面或兜底；不得把 CLI 本身当成产品不可能或架构不可用。
+历史规划授权中的 T1 外部合同门禁文字仅适用于历史候选，现由当前 T1 重新评估 supersede：外部机制已确认，当前不是 `PLANNING_BLOCKED_EXTERNAL_CONTRACT`；当前为 `IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING`。不可漂移的禁止项仍是第二入口、并行控制面、第二 Agent、CLI/MCP 兜底、任意命令/argv/Shell 生成和自动重试/重放；不得把 CLI 本身当成产品不可能或架构不可用。
 
 该候选自身不得推广 formal、不得启动下一任务。候选最终报告必须给出 base commit/tree/tracked、candidate commit/tree、仅两条 diff path、docs-only 状态、`test=NOT_RUN_DOCS_ONLY` 与临时分支 push 状态；Reviewer 和推广由后续独立治理步骤处理。
 
@@ -998,7 +999,7 @@ WorkBuddy唯一显式入口
 外部前置分为两类：
 
 1. 规划可继续但生产验收前必须满足：最终Package物化、安装、生产Registration/Activation及新进程Locator验证；当前Release具体`PackageToolDefinitionV1`实例；真实WorkBuddy版本、Skill安装归属和会话证据。
-2. 规划本身的硬阻断：T1必须证明Skill包结构、安装/导入归属、显式调用主体、唯一消费者，以及调用已接受Stage 4合同的精确协议。当前规划优先描述 direct Python `launch_session_tool(...)`，但这只是候选实现形态；若官方真实合同是唯一Skill内部调用固定CLI，必须按同一入口/消费者边界受控核验，不能仅因CLI存在就判定架构不可用。Stage 5不得自行生成任意命令/argv/Shell字符串，不得用CLI/MCP作为第二入口、并行控制面或失败兜底。现有证据不足时仍保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，其含义是合同未证实，不是产品绝对不可能。
+2. 当前规划可以继续，但内部固定 CLI 桥梁合同尚未冻结：T1已由官方`Skill + CLI`形态和既有 HY3 exact Skill 命中确认外部机制可用；剩余 Skill 归属的 opaque 物理路径、固定 CLI identity/envelope、唯一消费者和 Stage4 字段映射属于本项目 docs-only 规划。当前状态为`IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING`，不是`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。Stage 5不得自行生成任意命令/argv/Shell字符串，不得用CLI/MCP作为第二入口、并行控制面或失败兜底；CLI本身不是失败条件。
 
 ### 3. T1-T12固定执行蓝图
 
@@ -1009,11 +1010,11 @@ WorkBuddy唯一显式入口
 - **目标**：证明并冻结唯一真实WorkBuddy Skill的包结构、安装/导入归属、显式调用主体、调用机制和唯一消费者。
 - **权威输入**：本仓库`AGENT_GUIDE.md`、本章程、`MODULE-DISPOSITION.md`；腾讯官方WorkBuddy资料；经另行授权的当前真实客户端证据；旧V1 Skill仅作`HISTORICAL/DROP`证据。
 - **具体动作**：先核对官方资料；若官方合同不足，只在另行授权的独立真实客户端任务中验证安装、显式命中、新会话和调用Stage 4的实际协议（直接Python或官方固定CLI内部桥梁，以证据为准）；记录证据、版本、Skill身份和消费者；不修改旧Skill，不启动生产请求。
-- **输出**：`T1_WORKBUDDY_ENTRY_CONTRACT`，至少含Skill包结构、安装归属、入口名/调用主体、消费者、Stage 4调用协议和版本证据；当前输出只能是`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。
+- **输出**：`T1_WORKBUDDY_ENTRY_CONTRACT`，至少含Skill包结构、安装归属、入口名/调用主体、消费者、固定CLI桥梁边界、Stage 4调用协议和版本证据；当前输出为`T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_PENDING`，不等于实现通过。
 - **未来文件/物理承载**：最多一个真实WorkBuddy入口资产；包内/用户级物理位置、文件名和导入形态均`UNFROZEN_PENDING_T1`；本规划不创建假Skill、假工具或候选文件。
 - **验收**：官方或受控客户端证据能复现一个新会话的显式命中；不依赖第二入口、并行控制面或第二Skill；若官方合同是唯一Skill内部固定CLI，必须证明其为同一入口/消费者的受控桥梁；入口消费者唯一且与WorkBuddy唯一Agent边界一致。
-- **Fail-closed**：任一包结构、安装归属、调用主体、精确Stage 4直调协议或固定CLI桥梁协议、唯一消费者缺失/冲突，状态保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，不进入T2实现冻结、不伪造参数、不用CLI/MCP作为第二入口、并行控制面或兜底；CLI本身的存在不是失败条件。
-- **上下游**：上游为腾讯官方/真实客户端合同；下游是T2输入承载和T12精确文件白名单。T1没有通过时T2-T12只能做合同规划，不能产生实现授权。
+- **Fail-closed**：任一固定CLI identity、envelope、唯一消费者或Stage4映射缺失/冲突，保持`T1_INTERNAL_BRIDGE_CONTRACT_PENDING`，不进入代码实现、不伪造参数、不用CLI/MCP作为第二入口、并行控制面或兜底；CLI本身的存在不是失败条件。
+- **上下游**：上游为腾讯官方/真实客户端机制证据和已接受Stage4合同；下游是当前窄 docs-only `V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1` 及T2输入承载、T12精确文件白名单。内部合同未冻结前不授权实现；冻结后仍需独立审查、普通FF和用户另行实施授权。
 
 #### T2：Stage 5输入合同
 
@@ -1204,7 +1205,7 @@ T1 只核查以下五项，不得扩展为实现设计或客户端生产验证�
 2. Skill 的安装/导入归属；
 3. 显式调用主体和调用机制；
 4. 唯一消费者，以及它与 WorkBuddy 唯一 Agent 边界的关系；
-5. 不生成 CLI、MCP、命令、argv 或 Shell 字符串即可直接调用已接受 Stage 4 Python API `launch_session_tool(...)` 的精确协议。
+5. 一个 WorkBuddy Skill 内固定 CLI 桥梁是否能以单一、固定、非用户入口的 envelope 消费已接受 Stage 4 Python API `launch_session_tool(...)`；任意命令/argv/Shell 生成、第二入口、MCP旁路和自动重试/重放仍禁止。
 
 第一阶段证据源只允许腾讯/WorkBuddy官方一手公开资料，以及本仓库已经存在的静态证据。网页证据必须记录 URL、标题、访问日期、原文直接支持的精确 claim 和仍未支持的 gap；搜索摘要、第三方文章、论坛、推测和旧 V1 Skill 均不得作为权威。旧 V1 Skill 只能标记为 `HISTORICAL/DROP`，不得复用或推导新的入口合同。
 
@@ -1216,13 +1217,13 @@ T1 只核查以下五项，不得扩展为实现设计或客户端生产验证�
 
 若官方资料不能同时证明五项，Evidence Builder 在 `AFTER_EVIDENCE1_COMPLETES_WITH_T1_EVIDENCE_INCOMPLETE` 时必须保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`；这不是本候选进入formal后的当前live值，不得填造路径、接口、参数，不得授权实施。即使官方资料足以形成五项证据，仍只能记为证据候选/待独立审查，随后另行进行权威状态收口；不得从 Evidence1 自动推导 Stage 5 实现授权。
 
-本授权候选及其后续 Evidence1 均禁止：生产代码、测试、CI、pyproject、Package 字节、Registration/Activation、真实 WorkBuddy、Launcher、Provider、Runtime 下载、媒体、WSL、Stage 6、final Package、production Registration，以及 CLI/MCP/第二 Skill/第二 Agent/并行入口。
+本授权候选及其后续 Evidence1 均禁止：生产代码、测试、CI、pyproject、Package 字节、Registration/Activation、真实 WorkBuddy、Launcher、Provider、Runtime 下载、媒体、WSL、Stage 6、final Package、production Registration，以及第二 CLI/第二入口、MCP旁路、第二 Skill、第二 Agent、并行控制面、任意命令/argv/Shell生成。一个固定 CLI 作为唯一 Skill 的内部桥梁不属于“一概禁止”，但仍需本项目合同和证据闭合。
 
 ### 本授权候选治理出口（Evidence1 前置授权历史）
 
 以下是 Evidence1 之前的授权候选历史治理出口，不是 Evidence1 的当前白名单。该前置候选只允许修改 `PROJECT-STATE.md` 与本账本两条路径；不得修改章程、验收矩阵或新增证据文档。Builder 不运行测试（`test=NOT_RUN_DOCS_ONLY`）、不运行真实 WorkBuddy/Launcher/Provider/媒体/WSL、不物化 Package、不创建 Registration、不启动 Stage 6。完成后必须核验精确两路径、tracked 仍为 37、`git diff --check` 通过、clean/untracked 0/stash 0，并以单一临时分支非force push；独立零写 Reviewer 只审该授权候选，`REQUEST_CHANGES` 只能回原 Builder。只有 `APPROVE / P0=0 / P1=0 / P2=0` 且 formal 仍等于 base 时，才允许普通 fast-forward；推广后唯一下一任务才生效为 `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1`。Evidence1 的当前白名单、证据范围和候选治理以其下方同名章节为准。
 
-## Stage 5 T1 官方合同证据核验候选（V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1，2026-08-21）
+## Stage 5 T1 官方合同证据核验候选（历史候选，已被当前Skill+CLI重新评估取代）
 
 本节是 Evidence1 的唯一候选结果。它只记录官方资料核验，不宣称真实客户端证据，不授权实现或生产。当前候选从实时 formal `44d89625c1fd71d07d1173e18681e64e7459cec2`、tree `10c8c4187299564fc83cef38a3f9ac65f4f9790a`、tracked 37 接管；默认工作目录不是该 formal 对象，Builder 已在 D 盘独立 worktree 中从精确 commit 建立候选。受控真实客户端在本任务冻结为 `NOT_AUTHORIZED_IN_THIS_TASK`。
 
@@ -1274,9 +1275,9 @@ O1/O2/O3/O4 均没有证明“Skill 触发后在 WorkBuddy 进程内直接 impor
 | 2. 安装/导入归属、物理位置、用户级或 workspace 级语义 | `PARTIALLY_PROVED_OFFICIAL` | O1 证明选择的是“已安装 Skill”；O2 证明项目级 Skill 和一键安装能力；O3 证明工作空间属于任务文件读写边界。 | 未给出本地 Skill 安装根、用户级与项目/工作区级优先级、导入后的物理文件路径、所有权或持久化规则；不能把 O2 的项目级功能倒推为本地目录合同。 |
 | 3. 显式调用主体、入口名、选择/触发机制 | `PARTIALLY_PROVED_OFFICIAL` | O1 证明对话框选择已安装 Skill 后由 WorkBuddy 自动调用；O2 的更新记录证明 Skill 列表/市场与模型驱动的 Skill 相关入口持续存在。 | 未给出当前版本固定 Skill 名/入口名、选择值如何绑定实际包、自动调用的内部 dispatch、会话边界或 WorkBuddy 到本地 Python 的调用协议；不能把自然语言触发、斜杠命令或 UI 选择互相等同。 |
 | 4. 唯一真实消费者及 WorkBuddy 唯一 Agent 边界 | `PARTIALLY_PROVED_OFFICIAL` | O1/O4 将 WorkBuddy描述为任务执行者，Skill能力由 WorkBuddy任务调用；O3 将权限确认归于 WorkBuddy。 | 官方资料没有证明本项目所需的“唯一消费者=一个 Skill/一个 WorkBuddy Agent、无第二 Agent/CLI/MCP/并行入口”的边界，也未证明入口只服务本仓库而非市场/插件/连接器等其他消费者。 |
-| 5. 不生成 CLI/MCP/命令/argv/Shell 字符串而直调 Stage 4 Python API 的精确协议 | `UNPROVED_OFFICIAL` | O1/O3 证明 WorkBuddy 能调用 Skill、脚本或外部程序这一高层能力。 | 没有 `launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)` 的加载方式、参数 schema、literal message/controls 分离、返回类型或 receipt 字段；外部脚本/命令能力不能替代直调证明。 |
+| 5. 固定 CLI 内部桥梁与 Stage 4 消费协议 | `UNPROVED_PROJECT_BRIDGE` | O1/O3 证明 WorkBuddy 能调用 Skill、脚本或外部程序；本轮 O2 官方连接器页面明确公开`Skill + CLI`形态。 | 本项目仍需冻结固定 CLI identity、单一 envelope、literal message/controls 分离、完整定义/原始事实传递、一次调用和`LauncherReceiptV1`逐字段映射；腾讯官方无需定义本仓库 Python API，且不得以外部脚本能力填造内部合同。 |
 
-五项没有全部为 `PROVED_OFFICIAL`，总裁决固定为 `T1_EVIDENCE_INCOMPLETE`。因此本候选完成后保持 `stage_5_planning=PLANNING_BLOCKED_EXTERNAL_CONTRACT`、`stage_5_implementation_authorization=NOT_GRANTED`、`current_task=NONE`、`next_authorized_task=NONE`；不能填造 Skill 路径、包文件、入口名、参数或返回协议，也不能由证据候选自动获得实现授权。
+五项没有全部闭合，旧候选总裁决 `T1_EVIDENCE_INCOMPLETE` 仅作历史记录；本轮当前裁决见下方 `T1_CONTRACT_REASSESSMENT_INCOMPLETE`。不得填造 WorkBuddy 物理路径、固定 CLI 名称或未证实的运行协议，也不能由证据候选自动获得实现授权。
 
 ### 最小未来受控客户端验证卡（仅记录，不执行）
 
@@ -1285,12 +1286,85 @@ O1/O2/O3/O4 均没有证明“Skill 触发后在 WorkBuddy 进程内直接 impor
 1. 另行书面授权，锁定 WorkBuddy 精确版本、全新会话、全新隔离工作区和 D 盘证据保存位置；确认不接触现有 Golden Key Skill、Provider、媒体和生产 Package。
 2. 制作一个最小、无生产副作用的 candidate Skill（仅在未来任务获授权后），记录上传前完整包字节、目录树、必需文件/schema 和每个文件的 SHA-256；不得沿用旧 V1 Skill。
 3. 在全新会话中通过产品支持的显式方式导入/安装 candidate Skill，保存 UI 提示、Skill 名称/版本/hash（若产品展示）、导入结果和安装/导入归属；同时观察被另行授权的最小文件边界，确认用户级、项目级或 workspace 级语义及物理位置。
-4. 显式命中 candidate Skill，记录入口名、选择值、触发方式、会话 ID、WorkBuddy 版本和唯一消费者；确认没有 CLI、MCP、第二 Skill、第二 Agent 或自动化旁路参与。
-5. 让 candidate Skill 执行一个零生产副作用的探针，证明它是否能在不生成 CLI/MCP/命令/argv/Shell 字符串的情况下加载本仓库 Python 模块，并传入完整 `launch_session_tool(...)` 参数；若产品只支持外部脚本/命令，必须记录为“不支持直调”，不得把外部执行当作通过。
+4. 显式命中 candidate Skill，记录入口名、选择值、触发方式、会话 ID、WorkBuddy 版本和唯一消费者；确认没有第二 CLI、MCP、第二 Skill、第二 Agent 或自动化旁路；若存在 CLI，只能是本项目定义的一个固定内部桥梁。
+5. 让 candidate Skill 执行一个零生产副作用的探针，证明固定 CLI 是否能以不可变单一 envelope 消费本项目 `launch_session_tool(...)`，并原样传递完整参数；不得从用户输入动态生成命令/argv/Shell。若产品只支持外部脚本/命令而无法满足固定桥梁合同，必须记录为“不支持本项目桥梁”，不得把外部执行泛化为通过。
 6. 观察并保存返回值是否逐字段对应 `LauncherReceiptV1`；确认 literal `user_message` 原样、`executor_controls` 独立、Provider/媒体/Package/Stage 4真实 spawn 均为 0；任何证据缺失、输出截断、对象漂移或副作用都保持 `INCOMPLETE`。
 7. 证据位置、清理范围、客户端日志和截图的保存/删除必须由该未来任务另行授权；完成后由独立零写 Reviewer 复核，不能把客户端结果直接改成 PASS 或启动实施。
 
 在上述受控客户端证据真正闭合前，T1 不得建议 `PASS_ACCEPTED`，T12 的精确入口路径、包结构、tracked 迁移和 CI 命令继续 `UNFROZEN_PENDING_T1`。
+
+## Stage 5 T1 Skill+CLI合同重新评估候选（V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1，2026-08-21）
+
+本节是当前 T1 的唯一重新评估结果，优先于上方历史 Evidence1/客户端候选中把“零 CLI 直调”写成必要条件的文字。它只做官方资料、既有 Stage4 合同和既有受控客户端证据的 docs-only 裁决；不运行真实 WorkBuddy，不调用 Skill，不运行 Python/Stage4，不写代码、测试、CI、Provider、媒体、Package、Registration 或 Stage6。
+
+```text
+task_id: V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1
+task_kind: STAGE5_T1_CONTRACT_REASSESSMENT / DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE
+user_authorization: 2026-08-21 / 好，那开始吧
+initial_product_goal_recheck: PASS / WorkBuddy is the only running Agent and the only user entry; after loading the verified Package Guide it assumes the OpenMontage logical production role
+base_commit: 24418c7cf5cc003c106a8282158adb3125bb0606
+base_tree: d61a4a455a0e4f5202a2b4907476beb97a655201
+tracked_files_at_base: 37
+candidate_branch: codex/v2-s5-t1-skill-cli-reassessment1
+candidate_worktree: D:\\BlazingCD\\Personal\\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2-s5-t1-skill-cli-reassessment1
+formal_target_branch: origin/codex/workbuddy-shell-v2
+candidate_allowed_paths: PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md
+candidate_forbidden: code; tests; CI; pyproject; Package; Registration/Activation; new WorkBuddy client operations; Launcher/Python/Stage4 spawn; Provider; Runtime download; media; WSL; Stage6; second entry; MCP/second Skill/second Agent; arbitrary command/argv/Shell generation
+official_sources_access_date: 2026-08-21
+controlled_client_evidence: EXISTING_ONLY / WorkBuddy 5.3.13 / HY3 no-op Skill record; no new client operation in this task
+stage_4_contract: PASS_ACCEPTED / launch_session_tool(...) + immutable LauncherReceiptV1 / unchanged
+candidate_result: T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_PENDING
+stage_5_planning_after_candidate: IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING
+stage_5_implementation_authorization_after_candidate: NOT_GRANTED
+current_task_after_candidate: NONE
+next_authorized_task_after_candidate: V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1 / ONLY_AFTER_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+test: NOT_RUN_DOCS_ONLY
+candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD
+push_status: NOT_PUSHED
+```
+
+### 初始产品目标与两层证据
+
+`initial_product_goal_recheck=PASS` 是本任务的强制起点。官方证据层（A）只回答 WorkBuddy 是否支持 Skill、脚本/工作流、用户授权执行和 `Skill + CLI` 技术形态；本项目内部桥梁层（B）负责冻结一个固定 CLI 的 identity、envelope、调用主体、消费者和与 Stage4 的字段映射。不得要求腾讯官方页面替本仓库定义 `launch_session_tool(...)` 的 Python 参数或 `LauncherReceiptV1` 字段，也不得用官方高层“可执行脚本”能力填造这些内部字段。
+
+### 官方一手来源与证据矩阵
+
+以下只使用腾讯/WorkBuddy官方页面；页面更新时间为页面自身标注，访问日期统一为 `2026-08-21`。每条来源均列出可证明与不可证明边界：
+
+| ID | URL / 页面标题 | 直接可证明 | 不能证明、不得推断 |
+|---|---|---|---|
+| O1 | `https://cloud.tencent.com/document/product/1831/134432` /《WorkBuddy Enterprise 技能》 | Skill 可封装可执行脚本与工作流；可上传/查找/创建并启用；在对话中召唤后 WorkBuddy 自动调用；脚本、命令和第三方调用按用户身份/授权执行。 | 完整包 schema/目录、物理安装路径、用户/工作区/项目优先级、当前固定 dispatch、全局唯一消费者、项目 CLI identity/envelope 和 Stage4 receipt 映射。 |
+| O2 | `https://cloud.tencent.com/document/product/1831/134525` /《WorkBuddy Enterprise 连接器》 | 官方公开技术形态包括 `MCP + CLI` 和 `Skill + CLI（内置脚本）`；连接器是 WorkBuddy 与外部能力的桥梁，支持授权与调用。 | 不证明本项目必须使用 MCP；不定义本项目固定 CLI 名称/sha/owner、单一 envelope、唯一消费者或 `launch_session_tool(...)`/`LauncherReceiptV1` 映射。 |
+| O3 | `https://cloud.tencent.com/document/product/1831/134391` /《WorkBuddy Enterprise 新建任务栏（本地 AI 工作台）》 | 任务栏是 WorkBuddy 本地 AI 工作台入口；用户可选已安装 Skill，执行任务时自动调用对应能力；每个对话是独立任务/工作空间。 | “任务栏入口”不等于本项目全局唯一消费者证明；不定义 Skill 包、安装物理路径、固定 CLI 或 Stage4 API。 |
+| O4 | `https://cloud.tencent.com/document/product/1831/134401` /《WorkBuddy Enterprise 两个权限模式》 | WorkBuddy 在工作空间/授权边界内读写文件；执行脚本、命令或外部程序可触发确认；取消确认则不执行。 | 不证明 Python 原生导入、参数承载、stdin/argv 规则、固定 CLI identity 或 receipt 字段。 |
+| O5 | `https://cloud.tencent.com/document/product/1831/134324` /《WorkBuddy Enterprise WorkBuddy 更新记录》 | 既有版本记录支持 Desktop Skills/SkillHub/Marketplace、Skill 导入安全检查、企业自建 Skill/插件市场及 CLI 连接器相关能力。 | 更新记录不是当前版本的精确包 schema、安装路径、唯一 dispatch 或本项目 Stage4 适配合同。 |
+| O6 | `https://cloud.tencent.com/document/product/1831/134516` /《WorkBuddy Enterprise Skills》 | 页面可作为相邻 Skills 产品资料线索。 | 页面面包屑和正文是 **CodeBuddy** 语境；`.codebuddy/skills` 不能作为 WorkBuddy 的安装路径、所有权、优先级或 5.3.13 合同证明。 |
+
+### 当前 T1 五项裁决
+
+| 项目 | 当前状态 | 已能冻结的内容 | 仍未证明/边界 |
+|---|---|---|---|
+| 1. 入口身份与 Skill 归属 | `EXTERNAL_MECHANISM_CONFIRMED / IMPLEMENTATION_PACKAGE_DETAILS_PENDING` | 一个 WorkBuddy-managed installed Skill catalog 入口；物理路径保持 `opaque`；WorkBuddy 是用户对话主体。 | 完整包 schema、版本/校验规则、物理落点和跨 user/workspace/project 优先级待后续内部合同/实现验收，不构成外部机制阻断。 |
+| 2. 调用主体与触发 | `EXTERNAL_CALL_CONFIRMED / CLIENT_SESSION_PROVED` | WorkBuddy 选择/召唤已安装 Skill 后自动调用；现有 HY3 记录命中过 exact no-op Skill。 | 当前固定入口名、dispatch 绑定和生产入口的最终实现字段待内部合同规划/后续验收。 |
+| 3. 固定 CLI 桥梁边界 | `SUPPORTED_FORM_CONFIRMED / INTERNAL_CONTRACT_PENDING` | 官方明确支持 `Skill + CLI`；项目冻结 `one WorkBuddy Skill -> one fixed internal CLI bridge`，CLI 不是用户第二入口、并行控制面或失败兜底。 | 真实 CLI identity/owner/hash、固定单一 input/output envelope、无任意 command/argv/Shell 生成、无自动重试/重放待本项目 docs-only 合同冻结；不得使用 MCP 旁路。 |
+| 4. 唯一消费者与 WorkBuddy 唯一 Agent | `PROJECT_BOUNDARY_FROZEN / GLOBAL_RUNTIME_PROOF_PENDING` | 仓库产品边界冻结 WorkBuddy 唯一 Agent；Skill/CLI 只能是该 Agent 的内部桥梁，不能启动第二 Agent。 | 全局无第二 dispatch/消费者/并行入口属于后续内部合同和真实验收字段，不是官方机制不存在。 |
+| 5. 与Stage4衔接 | `COMPATIBLE_INTERNAL_CONTRACT / BRIDGE_MAPPING_PENDING` | Stage4 `launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)` 与不可变 `LauncherReceiptV1` 是唯一内部消费合同；不重开 Stage4。 | 固定 CLI 逐字段承载 envelope、保持 literal message/controls 分离并返回 receipt 的映射待下一窄 docs-only 合同冻结；本任务禁止真实 spawn。 |
+
+### 固化的唯一桥梁边界与裁决
+
+允许冻结的逻辑链是：
+
+```text
+WorkBuddy conversation
+  -> one WorkBuddy-managed Skill catalog entry
+  -> one fixed internal CLI bridge (opaque physical path, non-user-facing)
+  -> accepted launch_session_tool(...)
+  -> one immutable LauncherReceiptV1
+```
+
+固定 CLI 合同必须在后续闭合时给出 release-specific identity/owner/hash（或等效可验证身份）和固定 envelope。该 envelope 原样承载 `literal user_message`、closed `executor_controls`、`PackageToolDefinitionV1`、完整 approved capability definition、original Stage 3 fact 与 cancel 事实；输出逐字段保持 `LauncherReceiptV1`。Skill 不得从用户原话拼接 command/argv/Shell，不得同时保留 CLI/MCP/第二Skill入口，不得自动重试或重放；Stage4 固定 Package 工具最多 spawn 一次的合同不变。
+
+官方能力形态加上既有 HY3 exact Skill 命中已足以确认 WorkBuddy 的外部机制可用，解除“外部机制不存在/不可用”的卡点。剩余固定 CLI identity、envelope、唯一消费者和 Stage4 字段映射是本项目可自行冻结的 docs-only 内部规划合同，不再作为腾讯外部阻断。故总裁决固定为 `T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_CONTRACT_PENDING`，不是旧的 `ARCHITECTURE_CONTRACT_UNAVAILABLE`，也不是 `PASS_ACCEPTED`。Stage5 规划进入 `IN_PROGRESS / T1_INTERNAL_BRIDGE_CONTRACT_PENDING`；Stage5 实现、真实 WorkBuddy、Provider、媒体、最终 Package、生产 Registration、Stage6 仍为 `NOT_GRANTED` 或未证明。下一步只允许在本候选独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并普通 fast-forward 后，启动窄范围 docs-only `V2-S5-T1-FIXED-CLI-BRIDGE-CONTRACT-PLAN1`；不得自动进入代码或生产。
 
 ## Stage 5 T1 Evidence1收口与受控客户端证据授权候选（2026-08-21）
 

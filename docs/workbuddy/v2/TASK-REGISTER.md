@@ -38,8 +38,8 @@ stage_5_planning_t1_hard_stop: PLANNING_BLOCKED_EXTERNAL_CONTRACT when exact rea
 stage_5_implementation_authorization: NOT_GRANTED
 current_task: NONE
 current_task_status: NO_ACTIVE_TASK
-next_authorized_task: NONE / current planning candidate must be reviewed before any next task
-stage_5_t1_evidence_authorization_candidate: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1 / DOCS_ONLY / READY_FOR_INDEPENDENT_ZERO_WRITE_REVIEW / NOT_FORMALLY_PROMOTED
+next_authorized_task: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1 / EFFECTIVE_ONLY_WHEN_THIS_AUTHORIZATION_COMMIT_IS_FORMAL
+stage_5_t1_evidence_authorization_candidate: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1 / DOCS_ONLY / CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMAL_AUTHORITY_WHEN_THIS_COMMIT_IS_FORMAL
 pending_next_authorized_task: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1 / EFFECTIVE_ONLY_AFTER_THIS_AUTHORIZATION_REVIEW_APPROVE_AND_ORDINARY_FAST_FORWARD
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: NOT_GRANTED
@@ -1122,7 +1122,7 @@ Reviewer至少核对：WorkBuddy是否仍是唯一Agent；是否只有一个真�
 
 ## Stage 5 T1真实WorkBuddy入口合同证据核验授权候选（2026-08-21）
 
-本节只固化用户对 T1 证据核验的授权，不表示证据已经完成，也不授权 Stage 5 实现、真实 WorkBuddy、Launcher、Provider、媒体、最终 Package 或 Stage 6。候选推广前 `current_task=NONE`、`next_authorized_task=NONE`；只有本候选经独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` 并普通 fast-forward 后，下一项才是唯一的 `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1`。
+本节只固化用户对 T1 证据核验的授权，不表示证据已经完成，也不授权 Stage 5 实现、真实 WorkBuddy、Launcher、Provider、媒体、最终 Package 或 Stage 6。候选分支未进入 formal 前 `current_task=NONE`；本提交进入 formal 后，live direct authority 才生效为唯一的 `V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE1`。独立零写 Reviewer 与普通 fast-forward 仍是本候选的正式治理条件。
 
 ```text
 task_id: V2-S5-T1-OFFICIAL-CONTRACT-EVIDENCE-AUTHORIZATION1
@@ -1148,7 +1148,7 @@ stage_5_planning: PLANNING_BLOCKED_EXTERNAL_CONTRACT
 stage_5_implementation_authorization: NOT_GRANTED
 current_task_before_promotion: NONE
 next_authorized_task_before_promotion: NONE
-candidate_status: READY_FOR_INDEPENDENT_ZERO_WRITE_REVIEW / NOT_FORMALLY_PROMOTED
+candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD / FORMAL_AUTHORITY_WHEN_THIS_COMMIT_IS_FORMAL
 ```
 
 ### T1五项核验范围

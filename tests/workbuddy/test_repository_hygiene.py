@@ -48,11 +48,14 @@ EXPECTED_TRACKED_FILES = frozenset(
         "golden_key_openmontage_workbuddy/package_registration.py",
         "golden_key_openmontage_workbuddy/runtime_prepare.py",
         "golden_key_openmontage_workbuddy/session_launcher.py",
+        "golden_key_openmontage_workbuddy/workbuddy_entry_cli.py",
+        "workbuddy-skill/golden-key-openmontage/SKILL.md",
         "pyproject.toml",
         "tests/workbuddy/test_package_registration.py",
         "tests/workbuddy/test_repository_hygiene.py",
         "tests/workbuddy/test_runtime_prepare.py",
         "tests/workbuddy/test_session_launcher.py",
+        "tests/workbuddy/test_workbuddy_entry_cli.py",
     }
 )
 
@@ -66,6 +69,8 @@ EXPECTED_SOURCE_DIRECTORIES = frozenset(
         "golden_key_openmontage_workbuddy",
         "tests",
         "tests/workbuddy",
+        "workbuddy-skill",
+        "workbuddy-skill/golden-key-openmontage",
     }
 )
 
@@ -91,7 +96,6 @@ REMOVED_TOP_LEVEL_DIRECTORIES = (
     "styles",
     "tools",
     "workbuddy-runtime",
-    "workbuddy-skill",
 )
 
 REMOVED_SHELL_CONTROL_PLANE_PATHS = (
@@ -199,10 +203,10 @@ def _source_inventory() -> tuple[frozenset[str], frozenset[str]]:
     return frozenset(files), frozenset(directories)
 
 
-def test_final_git_index_is_the_fixed_37_file_contract() -> None:
+def test_final_git_index_is_the_fixed_40_file_contract() -> None:
     actual = _git_index_files()
-    assert len(EXPECTED_TRACKED_FILES) == 37
-    assert len(actual) == 37
+    assert len(EXPECTED_TRACKED_FILES) == 40
+    assert len(actual) == 40
     assert actual == EXPECTED_TRACKED_FILES
 
 
@@ -293,8 +297,20 @@ def test_stage2_stage3_and_stage4_are_the_only_public_apis() -> None:
         for path in (REPO_ROOT / "golden_key_openmontage_workbuddy").glob("*.py")
     }
     assert package_sources == {
-        "__init__.py", "package_registration.py", "runtime_prepare.py", "session_launcher.py"
+        "__init__.py",
+        "package_registration.py",
+        "runtime_prepare.py",
+        "session_launcher.py",
+        "workbuddy_entry_cli.py",
     }
+    entry_source = (
+        REPO_ROOT / "golden_key_openmontage_workbuddy" / "workbuddy_entry_cli.py"
+    ).read_text(encoding="utf-8")
+    init_source = (
+        REPO_ROOT / "golden_key_openmontage_workbuddy" / "__init__.py"
+    ).read_text(encoding="utf-8")
+    assert "__all__: tuple[str, ...] = ()" in entry_source
+    assert "from .workbuddy_entry_cli" not in init_source
 
 
 def test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented() -> None:
@@ -339,7 +355,7 @@ def test_agent_guide_preserves_the_shell_and_verified_package_boundaries() -> No
     ) in guide
 
 
-def test_ci_targets_only_the_formal_branch_and_the_four_final_tests() -> None:
+def test_ci_targets_only_the_formal_branch_and_the_five_final_tests() -> None:
     ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     expected_trigger_block = (
         "pull_request:\n"
@@ -354,6 +370,7 @@ def test_ci_targets_only_the_formal_branch_and_the_four_final_tests() -> None:
         "tests/workbuddy/test_package_registration.py "
         "tests/workbuddy/test_runtime_prepare.py "
         "tests/workbuddy/test_session_launcher.py "
+        "tests/workbuddy/test_workbuddy_entry_cli.py "
         "tests/workbuddy/test_repository_hygiene.py -q"
     )
 

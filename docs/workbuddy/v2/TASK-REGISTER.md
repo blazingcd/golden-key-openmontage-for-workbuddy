@@ -1116,4 +1116,4 @@ Stage 4已接受的11级优先级（invalid input、pre-cancel、preflight、spa
 
 Reviewer至少核对：WorkBuddy是否仍是唯一Agent；是否只有一个真实入口；是否错误预建CLI/MCP/第二Agent；是否硬编码Provider/Runtime；是否保持literal message与controls分离；是否完整消费Stage 2/3/4合同；是否区分最终Package与生产验收；是否含T1-T12和15类失败矩阵；是否保持Stage 6零代码出口；是否存在产品或文档范围膨胀。P0为架构/安全/权限/身份绕过或泄密；P1为可执行合同、映射、证据或边界缺口；P2为不影响合同的表述问题。只有`APPROVE / P0=0 / P1=0 / P2=0`才允许后续治理普通fast-forward；REQUEST_CHANGES只能回原Builder。
 
-候选经Reviewer批准和普通fast-forward后，Stage 5规划才能记录为`PASS_ACCEPTED`；在此之前及T1未闭合期间，当前状态必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`，`stage_5_implementation_authorization=NOT_GRANTED`，`next_authorized_task=NONE`。下一步不是自动写代码，而是先完成独立零写文档审查、普通FF和临时现场清理；之后若要进入实施，用户必须另行明确“启动阶段五实施”，再按T12重新接管实时formal对象。
+候选经Reviewer批准和普通fast-forward后，只正式固化这三份规划文档，不因此把Stage 5规划记为`PASS_ACCEPTED`；只要T1合同证据未闭合，当前状态仍必须保持`PLANNING_BLOCKED_EXTERNAL_CONTRACT`。只有未来T1合同证据闭合、完成独立审查并经过另行权威状态收口后，才能评估Stage 5规划是否达到`PASS_ACCEPTED`；该评估仍不授权Stage 5实现。当前仍须保持`stage_5_implementation_authorization=NOT_GRANTED`、`next_authorized_task=NONE`。下一步不是自动写代码，而是先完成独立零写文档审查、普通FF和临时现场清理；之后若要进入实施，用户必须另行明确“启动阶段五实施”，再按T12重新接管实时formal对象。

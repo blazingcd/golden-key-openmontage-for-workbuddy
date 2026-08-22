@@ -1985,4 +1985,4 @@ candidate_package_provider_media_stage4_stage6_changes: 0
 candidate_push: FORMALLY_EFFECTIVE_IFF_LIVE_REMOTE_REF_CONTAINS_THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 ```
 
-refresh1 的独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`。旧 R01 的原生事件阻断只保留为原始已关闭记录；本 refresh1 的唯一阻断理由是 Skill-root cwd/bundled-relative resource resolution 合同缺失。R01 链继续停止，不运行 nonzero/timeout，不启动 R02-R08，不触碰 Provider、媒体、Package、Stage4、Stage6 或生产流程。临时 Skill 等待用户动作时确认卸载；baseline 两个 Skill 不动，任务历史保留。
+refresh1 的独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`。旧 R01 的原生事件阻断只保留为原始已关闭记录；本 refresh1 的唯一阻断理由是 Skill-root cwd/bundled-relative resource resolution 合同缺失。R01 链继续停止，不运行 nonzero/timeout，不启动 R02-R08，不触碰 Provider、媒体、Package、Stage4、Stage6 或生产流程。已验证事实：临时 Skill `workbuddy-skill-1787379691395` 已卸载且不在“我安装的”列表；列表仅有 `agent-browser`、`find-skills`；两个 R01 任务历史保留；隔离 source/ZIP 已删除且路径不存在。

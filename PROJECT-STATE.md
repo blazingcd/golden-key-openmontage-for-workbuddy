@@ -102,19 +102,19 @@ stage_5_entry_closeout: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / FORMALLY_DELIVERED_DOC
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: ENTRY_CODE_COMPLETE / REAL_WORKBUDDY_INTEGRATION_INCOMPLETE
 stage_6_status_result_relay: NOT_GRANTED
-stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / ORIGINAL_R01_CLOSED / R01_REFRESH1_DOCS_RESULT_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT
-current_task: NONE / NO_ACTIVE_TASK / R01_REFRESH1_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT
-current_task_status: BLOCKED_EXTERNAL_CONTRACT / DOCS_REVIEW_APPROVED / R01_CHAIN_STOPPED
+stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE / EXECUTION_PROOF_DEFERRED_TO_R03_R07
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+current_task_status: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07 / DOCS_ONLY_ACCEPTANCE_CORRECTION
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: NONE / R01_REMAINS_BLOCKED / R02-R08_BLOCKED_BY_CHAIN
-next_planned_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY
+next_planned_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R03-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: HISTORICAL_V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / WORKBUDDY_5.3.13 / SUPERSEDED_BY_R01
 stage_5_t1_controlled_client_proved: ORIGINAL_R01 / WORKBUDDY_5.3.14 / BASELINE_SKILLS_2_RETAINED / SAFETY_SCAN_NOT_SKIPPED / TEMP_PROBE_INSTALLED_COUNT_3 / EXACT_IDENTITY=golden-key-openmontage-r01-controlled-probe_APPEARED / ISOLATED_TASK_ATTACHED_SOLE_PROBE / HY3_SELECTED / NO_NATIVE_EVENT / NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT
 stage_5_t1_controlled_client_unproved: ORIGINAL_R01 / native bundled-script invocation/tool event; script stdout/stderr/final exit/cwd/timeout capture; real LauncherReceiptV1
 stage_5_t1_controlled_client_cleanup: ORIGINAL_R01 / COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / WORKBUDDY_INSTALLED_SKILLS_2 / TASK_HISTORY_RETAINED / BASELINE_SKILLS_2_UNTOUCHED / PROBE_FOLDER_AND_ZIP_DELETED
 pending_next_authorized_task: NONE
-next_authorized_task_condition: R01_REMAINS_BLOCKED / current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE; only a separately authorized R01 reopen plus accepted success-contract evidence can unlock R02-R08
+next_authorized_task_condition: R01_CORRECTED_ACCEPTED_ENTRY_SURFACE / current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1; R02 is authorized, R03-R08 remain strict-order and unauthorized
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -147,15 +147,25 @@ stage_5_r01_refresh1_computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY /
 stage_5_r01_refresh1_candidate_test: NOT_RUN_DOCS_ONLY / candidate_product_code_changes=0 / candidate_test_changes=0 / candidate_ci_changes=0 / candidate_external_product_state_changes=0
 stage_5_r01_refresh1_accepted_result: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d / DOCS_REVIEW=APPROVE_P0_0_P1_0_P2_0
 stage_5_r01_refresh1_candidate_push: FORMALLY_EFFECTIVE_IFF_LIVE_REMOTE_REF_CONTAINS_THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
-stage_5_expert_entry_feasibility1: INCOMPLETE / EXPERT_AS_SOLE_VISIBLE_ENTRY_NOT_PROVED / DOES_NOT_SUPERSEDE_SOLE_SKILL_ENTRY / R01_UNCHANGED_BLOCKED_EXTERNAL_CONTRACT
+stage_5_expert_entry_feasibility1: HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / INCOMPLETE / EXPERT_AS_SOLE_VISIBLE_ENTRY_NOT_PROVED / DOES_NOT_SUPERSEDE_SOLE_SKILL_ENTRY / R01_UNCHANGED_BLOCKED_EXTERNAL_CONTRACT
 stage_5_expert_entry_feasibility1_official_contract: EXPERT_IS_WORKBUDDY_ROLE_LAYER / SKILL_OR_MCP_CAN_PROVIDE_INDIRECT_FILE_OR_EXTERNAL_SERVICE_ACCESS / NO_OFFICIAL_PROOF_EXPERT_CAN_REPLACE_EXECUTABLE_SKILL
 stage_5_expert_entry_feasibility1_client: WORKBUDDY_5.3.14 / HY3_ONLY / MY_EXPERT_COUNT=0 / CREATE_ENTRY_OPENED_EXPERT_MANAGER_CONVERSATION / NO_EXPERT_CREATED_SAVED_OR_PUBLISHED
 stage_5_expert_entry_feasibility1_expert_manager_observation: CANNOT_DIRECTLY_BIND_INSTALLED_SKILL / CANNOT_LOCK_HY3 / SAME_CONVERSATION_MAY_PROMPT_GLOBAL_SKILL / BUNDLED_AUTOLOAD_NOT_PROVED
 stage_5_expert_entry_feasibility1_self_report_boundary: MODEL_OR_BUILTIN_SKILL_SELF_REPORT_NOT_OFFICIAL_CONTRACT
 stage_5_expert_entry_feasibility1_review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_REVIEWER
 stage_5_expert_entry_feasibility1_anti_expansion: PASS / NO_EXPERT_OR_PACKAGE_OR_SKILL_CREATED / NO_NEW_R01_GATE / NO_PROVIDER_MEDIA_PACKAGE_STAGE4_STAGE6_OR_PRODUCTION
-stage_5_expert_entry_feasibility1_current_task: NONE / NO_ACTIVE_TASK
-stage_5_expert_entry_feasibility1_next_authorized_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
+stage_5_expert_entry_feasibility1_current_task: HISTORICAL / NONE / NO_ACTIVE_TASK
+stage_5_expert_entry_feasibility1_next_authorized_task: HISTORICAL / NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
+stage_5_r01_acceptance_correction1: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07 / USER_AUTHORIZED_PROJECT_ACCEPTANCE_CORRECTION / NOT_NEW_OFFICIAL_EVIDENCE
+stage_5_r01_acceptance_correction1_entry_surface_evidence: SKILL_PACKAGING / UPLOAD / INSTALL / IDENTITY_APPEARED / SELECTION_HIT / CLIENT_SANDBOX_SCRIPTS / POWERSHELL_ELIGIBLE_CANDIDATE_SURFACE
+stage_5_r01_acceptance_correction1_deferred_unproved_contract: SKILL_ROOT_CWD / BUNDLED_RELATIVE_RESOURCE_RESOLUTION / STDIN / STDOUT / STDERR / FINAL_EXIT / TIMEOUT / NOT_R01_HARD_GATE / DEFERRED_TO_R03_R07
+stage_5_r01_acceptance_correction1_execution_chain: LOCATOR -> FIXED_POWERSHELL_OR_PRIVATE_CLI -> LAUNCHER_RECEIPT / IMPLEMENTATION_AND_REAL_PROOF_DEFERRED_TO_R03_R07 / NOT_CURRENTLY_PROVED
+stage_5_r01_acceptance_correction1_no_overclaim: NO_SCRIPT_EXECUTION_PROOF / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT_PROOF / NO_LAUNCHER_RECEIPT_PROOF / NOT_STAGE5_PASS
+stage_5_r01_acceptance_correction1_hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+stage_5_r01_acceptance_correction1_boundaries: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI / NO_PATH_GUESSING / NO_SCAN / NO_PATH_FALLBACK / NO_MCP / NO_SECOND_SKILL / NO_SECOND_AGENT / NO_ROUTER / NO_RETRY / NO_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
+stage_5_r01_acceptance_correction1_review_state: PENDING_INDEPENDENT_REVIEW / DOCS_ONLY_CANDIDATE
+stage_5_r01_acceptance_correction1_current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+stage_5_r01_acceptance_correction1_next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
 ```
 
 ## [HISTORICAL / SUPERSEDED_BY_FIXED_CLI_BRIDGE_CONTRACT] Stage 5 T1 CLI边界纠偏与目标回读门禁（2026-08-21）
@@ -761,7 +771,7 @@ next_planned_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_S
 
 依赖严格为 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`；任一阻断不得跳过。R03/R04即使未来证据允许合并，也必须另行授权并保留全部验收项。Stage5不要求Provider真实调用、媒体/视频生成、Remotion/HyperFrames下载安装、Stage6转换代码或完整业务E2E；optional缺失/decline/defer不阻断base。Stage5之后先判断Stage6能否直接复用receipt（可直用则优先零代码），整个项目最终业务E2E另行授权，不称为Stage7。
 
-## [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 R01 受控执行合同证据收口（2026-08-22）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 R01 受控执行合同证据收口（2026-08-22）
 
 ```text
 task_id: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1
@@ -809,7 +819,7 @@ candidate_push: R01_RESULT_FORMALLY_FAST_FORWARDED / origin/codex/workbuddy-shel
 
 R01 的官方资料只证明 WorkBuddy Skill 可以封装脚本/工作流、可上传和在任务中选择/自动调用；更新记录只作支持范围证据，未给出精确 command/cwd/env/stdin/stdout/stderr/exit/timeout 语义。由于真实客户端没有产生独立原生 bundled-script invocation/tool event，R01 的三个 case 不能逐项继续；不运行非零或 timeout case，不把客户端安装成功当作脚本执行成功，也不把模型文字、自报或匹配诊断当作事件证据。R01 最终裁决仍为 `BLOCKED_EXTERNAL_CONTRACT`；独立 zero-write Review 已 `APPROVE / P0=0 / P1=0 / P2=0` 并正式 fast-forward，用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，精确隔离 probe folder/ZIP 已删除。R01 失败只阻断 R01->R02 链，不改变 Stage 3/4 已接受状态，也不扩大 Shell 为第二控制面。
 
-## Stage 5 R01 Sandbox Refresh1 受控客户端正式结果镜像（2026-08-22）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] Stage 5 R01 Sandbox Refresh1 受控客户端正式结果镜像（2026-08-22）
 
 本节是独立于已关闭原始 R01 的 refresh1 正式结果镜像；原始 R01 记录、其清理结果和正式提交均保留，不被改写。官方 134420 只证明 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；不能再以“PowerShell 非原生/只暴露 shell”作为阻断理由。当前真正缺少的是 Skill-root cwd 与 bundled-relative resource resolution 合同，以及 stdin/stdout/stderr/final-exit/timeout 的精确合同。
 

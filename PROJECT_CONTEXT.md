@@ -31,13 +31,13 @@ Stage 3 planning and implementation are `PASS_ACCEPTED`. Its single public entry
 
 Stage 4 planning and implementation are also `PASS_ACCEPTED`. Its single public entry is `launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`. The Launcher accepts only a release-specific immutable `PackageToolDefinitionV1` supplied by the approved Package definition/final-delivery Installer owner, spawns exactly one fixed Package tool, and returns a recursively immutable `LauncherReceiptV1` limited to nine outcomes. It remains Provider- and runtime-opaque; it does not select or configure Remotion, HyperFrames, or any Provider.
 
-The current accepted repository tree tracks exactly 40 files. Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`: the entry-code implementation and closeout are formally delivered, but final Package/PackageRoot/Registration/Activation, final installed Skill, and real WorkBuddy receipt evidence are not present. R00 is formally promoted and consumed. R01 was separately authorized and executed; its final result is `BLOCKED_EXTERNAL_CONTRACT` because HY3 exposed no native bundled-script invocation/tool event, and the approved docs closeout was formally fast-forwarded at `9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc`. R02-R08 remain `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`. Stage 6 remains later and should first reuse `LauncherReceiptV1` directly when possible; whole-project business E2E is separate and is not Stage 7. WorkBuddy owns pause, consent, and continuation; Shell never auto-replays.
+The current accepted repository tree tracks exactly 40 files. Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`: the entry-code implementation and closeout are formally delivered, but final Package/PackageRoot/Registration/Activation, final installed Skill, and real WorkBuddy receipt evidence are not present. R00 is formally promoted and consumed. The original R01, Sandbox Refresh1, and Expert Entry Feasibility records remain `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`; their observed facts and old `BLOCKED_EXTERNAL_CONTRACT`/`INCOMPLETE` outcomes are preserved. The current user-authorized correction accepts the R01 entry surface only and defers execution proof to R03-R07; R02 is the only next authorized task, while R03-R08 remain strict-order and not authorized. Stage 6 remains later and should first reuse `LauncherReceiptV1` directly when possible; whole-project business E2E is separate and is not Stage 7. WorkBuddy owns pause, consent, and continuation; Shell never auto-replays.
 
-### [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] R01 controlled-client boundary
+### [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] R01 controlled-client boundary
 
 The product-goal recheck and scope-expansion audit both pass. WorkBuddy remains the only Agent/user entry, and the fixed CLI is allowed only as an internal bridge inside that sole Skill; no arbitrary CLI bypass or parallel control plane was introduced. WorkBuddy `5.3.14` started with exactly `agent-browser` and `find-skills`; the reviewed temporary probe ZIP was safety-scanned without skip, auto-installed as the exact `golden-key-openmontage-r01-controlled-probe`, and reached installed count `3`. A new isolated task used `Hy3` only. The client exposed only Bash/PowerShell shell execution, not an independent native bundled-script invocation/tool event, so execution was stopped before any shell/terminal run. No script, stdout/stderr, exit, cwd, or timeout evidence exists; the R01 result is therefore `BLOCKED_EXTERNAL_CONTRACT`. Independent review approved the docs closeout and formal fast-forward; the user uninstalled the temporary Skill, WorkBuddy showed `2` installed Skills, task history remained, both baseline Skills were untouched, and the exact D-drive probe folder/ZIP was deleted. No later R task may start.
 
-### Current R01 Sandbox Refresh1 controlled-client boundary (accepted result mirror)
+### [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] Current R01 Sandbox Refresh1 controlled-client boundary (accepted result mirror)
 
 This is an independent refresh of the original R01. Official 134420 proves only that enterprise Skill scripts execute in the client sandbox. In the controlled WorkBuddy observation, PowerShell is recorded as an `ELIGIBLE_CANDIDATE_SURFACE`, not as an official exact execution contract. The remaining gaps are Skill-root cwd, bundled-relative resolution, and exact stdin/stdout/stderr/final-exit/timeout semantics. Reviewer-independent facts are limited to WorkBuddy `5.3.14`, `Hy3`, user cancellation, and no success/stdout/stderr/exit/cwd evidence; coordinator path/cwd reasoning is `COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER`.
 
@@ -64,6 +64,21 @@ temporary_skill: UNINSTALLED / USER_UNINSTALLED_TEMPORARY_SKILL / TEMP_SKILL_ID=
 computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_RECOVERED
 next_authorized_task: NONE / R01_REMAINS_BLOCKED / ONLY_SEPARATE_R01_REOPEN_AUTHORIZATION_PLUS_ACCEPTED_SUCCESS_CONTRACT_EVIDENCE_CAN_UNLOCK_R02_R08
 test_and_scope: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / provider_media_package_stage4_stage6=0
+```
+
+## Current R01 acceptance-contract correction1
+
+The historical R01, Sandbox Refresh1, and Expert Entry Feasibility records are preserved as `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`. Their old blocked/incomplete outcomes describe the evidence under the former execution-proof gate; this user-authorized correction changes the project acceptance ownership, not the underlying client facts or official documentation.
+
+```text
+r01_acceptance: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07
+r01_entry_surface: SKILL_PACKAGING / UPLOAD / INSTALL / IDENTITY_APPEARED / SELECTION_HIT / CLIENT_SANDBOX_SCRIPTS / POWERSHELL_ELIGIBLE_CANDIDATE_SURFACE
+r01_execution_proof: NOT_CURRENTLY_PROVED / IMPLEMENTATION_AND_REAL_PROOF_DEFERRED_TO_R03_R07 / NO_SCRIPT_STDOUT_STDERR_EXIT_CWD_TIMEOUT_OR_RECEIPT_CLAIM
+hy3: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+boundaries: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI_PATH_GUESSING_SCAN_PATH_FALLBACK_MCP_SECOND_SKILL_SECOND_AGENT_ROUTER_RETRY_REPLAY
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
 ```
 
 The previous Stage 3 execution packet, `prepare_runtime_on_demand(...)` and `prepare_optional_capability(...)` signatures, Shell-owned all-component Runtime Lock, Package-bound capability model, and pre-implementation Stage 4 gates are `SUPERSEDED`. They may remain only as explicitly historical evidence and do not override the accepted Stage 3/4 contracts above.

@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_IN_PROGRESS_ENTRY_CODE_COMPLETE_REAL_INTEGRATION_INCOMPLETE / ORIGINAL_R01_FORMALLY_CLOSED / R01_REFRESH1_BLOCKED_EXTERNAL_CONTRACT_DOCS_REVIEW_APPROVED / NO_ACTIVE_TASK`
+状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_IN_PROGRESS_ENTRY_CODE_COMPLETE_REAL_INTEGRATION_INCOMPLETE / R01_ENTRY_SURFACE_ACCEPTED_EXECUTION_PROOF_DEFERRED_TO_R03_R07 / NEXT_R02_AUTHORIZED`
 
 更新时间：2026-08-22
 
@@ -57,19 +57,19 @@ stage_5_entry_code_review: APPROVE / P0=0 / P1=0 / P2=0
 stage_5_entry_code_windows_evidence: direct 19 passed / hygiene 11 passed / full 377 passed / final exit 0
 stage_5_entry_code_ci: run 32489111184 / completed / success / headSha=0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / Ubuntu / Python 3.14.7 / 376 passed / 1 skipped / final exit 0
 stage_5_entry_closeout: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / FORMALLY_DELIVERED_DOCS_ONLY / NOT_STAGE5_PASS
-stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / ORIGINAL_R01_CLOSED / R01_REFRESH1_DOCS_RESULT_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT
+stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE / EXECUTION_PROOF_DEFERRED_TO_R03_R07
 stage_5_implementation: ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
-current_task: NONE / NO_ACTIVE_TASK / R01_REFRESH1_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT
-current_task_status: BLOCKED_EXTERNAL_CONTRACT / DOCS_REVIEW_APPROVED / R01_CHAIN_STOPPED
-next_authorized_task: NONE / R01_REMAINS_BLOCKED / R02-R08_BLOCKED_BY_CHAIN
-next_planned_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+current_task_status: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07 / DOCS_ONLY_ACCEPTANCE_CORRECTION
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY
+next_planned_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R03-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: HISTORICAL_V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / WORKBUDDY_5.3.13 / SUPERSEDED_BY_R01
 stage_5_t1_controlled_client_proved: ORIGINAL_R01 / WORKBUDDY_5.3.14 / BASELINE_SKILLS_2_RETAINED / SAFETY_SCAN_NOT_SKIPPED / TEMP_PROBE_INSTALLED_COUNT_3 / EXACT_IDENTITY=golden-key-openmontage-r01-controlled-probe_APPEARED / ISOLATED_TASK_ATTACHED_SOLE_PROBE / HY3_SELECTED / NO_NATIVE_EVENT / NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT
 stage_5_t1_controlled_client_unproved: native bundled-script invocation/tool event; script stdout/stderr/final exit/cwd/timeout capture; real LauncherReceiptV1
 stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / WORKBUDDY_INSTALLED_SKILLS_2 / TASK_HISTORY_RETAINED / BASELINE_SKILLS_2_UNTOUCHED / PROBE_FOLDER_AND_ZIP_DELETED
 pending_next_authorized_task: NONE
-next_authorized_task_condition: R01_REMAINS_BLOCKED / current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE; only a separately authorized R01 reopen plus accepted success-contract evidence can unlock R02-R08
+next_authorized_task_condition: R01_CORRECTED_ACCEPTED_ENTRY_SURFACE / current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1; R02 is authorized, R03-R08 remain strict-order and unauthorized
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -1867,7 +1867,7 @@ Stage5只有在以下五类证据全部存在时才可整体 `PASS_ACCEPTED`：
 | 编号 / 任务 | scope与必须输出 | acceptance / stop boundary / 不证明 |
 |---|---|---|
 | S5-00 / `V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1` | 十二份现有文档的 live truth、Stage5五类PASS门和R01-R08依赖；`DOCS_ONLY` | `test=NOT_RUN_DOCS_ONLY`；不改代码、不授权R01、不创建Package/Registration/Skill/客户端证据 |
-| S5-01 / `V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1` | 原始 R01 官方资料 + 受控HY3无副作用临时Skill；资料形态由 134432 证明，134420 进一步明示 enterprise Skill scripts 在客户端沙箱执行；134516 仍为 CodeBuddy `PRODUCT_MISMATCH`。refresh1 专门复核 Skill-root cwd/bundled-relative resolution 与精确 stdin/stdout/stderr/final-exit/timeout 语义 | PowerShell 资格仅来自受控客户端观察，不是 134420 的精确执行合同；不得再以 PowerShell 非原生作为阻断；缺少 Skill-root/bundled-relative 合同仍为 `BLOCKED_EXTERNAL_CONTRACT`。禁止MCP、第二Skill、任意CLI旁路；不证明最终Skill/Package/真实Launcher |
+| S5-01 / `V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1` | **历史 / `SUPERSEDED_ACCEPTANCE_CONTRACT`**：原始 R01、refresh1 和专家可行性记录保留其事实及旧裁决；当前验收只接受 Skill 包装/上传/安装/身份出现/选择命中、客户端 sandbox scripts 与 PowerShell `ELIGIBLE_CANDIDATE_SURFACE` 的入口面 | 当前 `ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07`；Skill-root cwd、bundle-relative、stdin/stdout/stderr/final-exit/timeout 不再是 R01 硬门，但仍未证明；禁止任意CLI、路径猜测/扫描/PATH fallback、MCP、第二Skill/Agent、router、retry/replay；不证明最终Skill/Package/真实Launcher |
 | S5-02 / `V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1` | 实时重验批准最终Package Release；`0.3.24/tree 0464861c`仅候选；绑定真实 safe fixed tool、release-specific `PackageToolDefinitionV1` 并纳入Manifest/Lock | 无真实Release=`BLOCKED_PACKAGE_RELEASE`；Shell不得臆造fixture/工具/定义 |
 | S5-03 / `V2-S5-R03-EXECUTABLE-SKILL-BUNDLE1` | 单一可执行Skill bundle，含必要最小bundled helper、verified Guide/definition、canonical envelope、scrubbed env、固定private CLI一次、receipt映射、Stage3逐能力询问及确认后的新continuation；代码/Skill/测试/CI/独立Review/FF | 禁止第二Agent/MCP/router/retry/replay；具体路径须从届时live formal重新冻结，不由R00预造；不证明最终安装或真实客户端 |
 | S5-04 / `V2-S5-R04-INSTALLER-LIFECYCLE1` | Installer install/update/repair/uninstall/stamp/rollback；组装approved OpenMontage、Shell、private Python+locked deps、FFmpeg/ffprobe、Node/npm/npx、tool definition、Manifest/Lock/ZIP/sidecar、Skill identity/schema/module/argv/interpreter；隔离D盘测试、ownership/staging/atomicity | 需代码/测试/CI/Review/FF；不证明正式Package已注册，未授权不得预造路径 |
@@ -1878,7 +1878,7 @@ Stage5只有在以下五类证据全部存在时才可整体 `PASS_ACCEPTED`：
 
 依赖严格为 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`，任一阻断不得跳过。R03/R04未来即使合并，也必须另行授权并保留所有验收项。Stage5不要求Provider真实调用、媒体/视频生成、Remotion/HyperFrames下载安装、Stage6转换代码或完整业务E2E；optional缺失/decline/defer不阻断base。Stage5完成后，Stage6先判断是否可直接复用receipt（可直用则优先零代码），整个项目业务E2E另行授权，不称为Stage7。
 
-## [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] Stage 5当前 R01受控执行合同证据结果（2026-08-22）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] Stage 5当前 R01受控执行合同证据结果（2026-08-22）
 
 本节是当前 R01 正式结果镜像；R00 已正式推广并消费。产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一运行中的 Agent/用户入口，Shell 仍仅负责六模块；固定 CLI 仅允许作为唯一 Skill 内部桥梁，不构成任意 CLI 旁路。R01 结果不是 Stage5 整体 PASS，Stage5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。
 
@@ -1931,7 +1931,7 @@ after_r01_closeout_promotion: current_task=NONE / NO_ACTIVE_TASK / next_authoriz
 
 官方资料只证明 Skill 的脚本/工作流打包、上传、选择和自动调用形态；没有给出精确 native command/cwd/env/stdin/stdout/stderr/exit/timeout 合同。WorkBuddy `5.3.14` 的受控路径只暴露 Bash/PowerShell，没有独立原生 bundled-script invocation/tool event；协调者在任何 shell/terminal 执行前停止。因此不运行 nonzero/timeout，不伪造 stdout/stderr/exit/cwd/timeout，不把 Skill 上传/安装或模型文字当作脚本执行证据。R01 最终结果固定为 `BLOCKED_EXTERNAL_CONTRACT`；独立审查已 `APPROVE / P0=0 / P1=0 / P2=0` 并正式 fast-forward，用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，精确隔离 probe folder/ZIP 已删除；R02-R08 不得启动。
 
-## Stage 5 R01 Sandbox Refresh1 受控客户端正式结果镜像（2026-08-22）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] Stage 5 R01 Sandbox Refresh1 受控客户端正式结果镜像（2026-08-22）
 
 本节是独立于原始 R01 正式关闭/清理记录的 refresh1 正式结果镜像；原始记录不改写。官方 134420 明示 enterprise Skill 的 scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；不得再用“PowerShell 非原生/只暴露 shell”作为阻断理由。134432 证明 Skill 可封装脚本/工作流并上传/调用；134516 仍为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。官方资料仍未给出 bundled-relative resource resolution、Skill-root cwd、stdin/stdout/stderr/final-exit/timeout 的精确合同。
 
@@ -1987,7 +1987,7 @@ candidate_push: FORMALLY_EFFECTIVE_IFF_LIVE_REMOTE_REF_CONTAINS_THIS_COMMIT / SE
 
 refresh1 的独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`。旧 R01 的原生事件阻断只保留为原始已关闭记录；本 refresh1 的唯一阻断理由是 Skill-root cwd/bundled-relative resource resolution 合同缺失。R01 链继续停止，不运行 nonzero/timeout，不启动 R02-R08，不触碰 Provider、媒体、Package、Stage4、Stage6 或生产流程。已验证事实：临时 Skill `workbuddy-skill-1787379691395` 已卸载且不在“我安装的”列表；列表仅有 `agent-browser`、`find-skills`；两个 R01 任务历史保留；隔离 source/ZIP 已删除且路径不存在。
 
-## Stage 5 专家入口可行性核验收口（2026-08-22）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] Stage 5 专家入口可行性核验收口（2026-08-22）
 
 本节是独立的 docs-only / zero-product-state-change 结果，不改写原始 R01 或 refresh1，不创建、保存、发布专家，不创建或安装 Skill/Package，不增加新的 R01 门，不授权 R02-R08。官方资料把专家定义为 WorkBuddy 的角色层，并说明配置的 Skill/MCP 可以间接提供文件或外部服务访问；官方没有证明专家可以替代可执行 Skill。下方 `DOES_NOT_SUPERSEDE_SOLE_SKILL_ENTRY` 与 `NOT_PROVED` 是本项目的证据裁决，不是腾讯官方结论。客户端观察不构成官方精确执行合同；模型文字或内置 Skill 自报不替代原生事件证据。
 
@@ -2007,4 +2007,27 @@ current_task: NONE / NO_ACTIVE_TASK
 next_authorized_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_REVIEWER
 anti_expansion: PASS / NO_EXPERT_OR_PACKAGE_OR_SKILL_CREATED / NO_NEW_R01_GATE / NO_PROVIDER_MEDIA_PACKAGE_STAGE4_STAGE6_OR_PRODUCTION
+```
+
+## 当前 Stage 5 R01 验收归属纠正（V2-S5-R01-ACCEPTANCE-CONTRACT-CORRECTION1，2026-08-22）
+
+原始 R01、Sandbox Refresh1 和专家入口可行性记录均明确标记为 `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；其事实与旧 `BLOCKED_EXTERNAL_CONTRACT`/`INCOMPLETE` 裁决保留，不伪造脚本执行、stdout/stderr/exit/cwd/timeout 或 `LauncherReceiptV1`。本节是用户基于最初产品目标作出的项目验收归属纠正，不是新增官方 WorkBuddy 证据。
+
+```text
+task_id: V2-S5-R01-ACCEPTANCE-CONTRACT-CORRECTION1
+task_kind: DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / USER_AUTHORIZED_ACCEPTANCE_CORRECTION
+r01_acceptance: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07
+r01_entry_surface_evidence: SKILL_PACKAGING / UPLOAD / INSTALL / IDENTITY_APPEARED / SELECTION_HIT / CLIENT_SANDBOX_SCRIPTS / POWERSHELL_ELIGIBLE_CANDIDATE_SURFACE
+r01_deferred_unproved_contract: SKILL_ROOT_CWD / BUNDLED_RELATIVE_RESOURCE_RESOLUTION / STDIN / STDOUT / STDERR / FINAL_EXIT / TIMEOUT / NOT_R01_HARD_GATE / DEFERRED_TO_R03_R07
+deferred_execution_chain: LOCATOR -> FIXED_POWERSHELL_OR_PRIVATE_CLI -> LAUNCHER_RECEIPT / IMPLEMENTATION_AND_REAL_PROOF_DEFERRED_TO_R03_R07 / NOT_CURRENTLY_PROVED
+no_overclaim: NO_SCRIPT_EXECUTION_PROOF / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT_PROOF / NO_LAUNCHER_RECEIPT_PROOF / NOT_STAGE5_PASS
+hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+client_test_policy: AUTHORIZED_CLIENT_TESTS_FOLLOW_USER_HY3_AND_NEVER_AUTO / PRODUCT_MODEL_NOT_LOCKED
+preserved_boundaries: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI / NO_PATH_GUESSING / NO_SCAN / NO_PATH_FALLBACK / NO_MCP / NO_SECOND_SKILL / NO_SECOND_AGENT / NO_ROUTER / NO_RETRY / NO_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY
+next_task_scope: PACKAGE_RELEASE_TOOL_DEFINITION_BINDING_ONLY / NO_R03_R08_EXECUTION_PROOF_IN_THIS_TASK
+chain: R01_CORRECTED_ACCEPTED -> R02_AUTHORIZED -> R03_R04_R05_R06_R07_R08_STRICT_ORDER / R03-R08_NOT_AUTHORIZED
+acceptance_correction_review_state: PENDING_INDEPENDENT_REVIEW / DOCS_ONLY_CANDIDATE
 ```

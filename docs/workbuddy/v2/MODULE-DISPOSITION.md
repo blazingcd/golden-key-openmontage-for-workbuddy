@@ -40,11 +40,11 @@
 
 已交付的 Stage 5 entry-code 只映射到现有五个实现/验收路径：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。这些文件的存在和 tracked=40 不是对后续 R03/R04/R05/R06 实施的授权。R03 的 executable Skill bundle、R04 的 Installer/lifecycle 生产实现及其具体路径，必须在各自任务接管时从最新 formal 重新冻结；不得由本映射预造路径、模块或通用框架。
 
-## [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 R01 证据边界（非实施授权）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 R01 证据边界（非实施授权）
 
 R01 的临时 `golden-key-openmontage-r01-controlled-probe` 只用于核验 WorkBuddy bundled-script 执行合同，不改变六模块映射，也不新增生产模块、入口或 CLI/MCP 控制面。WorkBuddy `5.3.14` 的 HY3 受控路径没有产生独立原生 bundled-script invocation/tool event；协调者在 Bash/PowerShell 执行前停止。因此 R01 最终为 `BLOCKED_EXTERNAL_CONTRACT`，独立审查已批准并正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，probe folder/ZIP 已删除。不产生脚本、Launcher、Package、Registration、Provider、媒体或 Stage6 证据。R02-R08 不得启动。
 
-## 当前 R01 Sandbox Refresh1 映射边界（正式结果镜像，2026-08-22）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] 当前 R01 Sandbox Refresh1 映射边界（正式结果镜像，2026-08-22）
 
 该 refresh1 不修改六模块映射，也不增加入口、生产模块、CLI/MCP 控制面。产品目标和 anti-expansion 均 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，固定 CLI 仍只能是唯一 Skill 内部桥梁。官方 134420 说明 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为允许的 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；134432 说明脚本/工作流封装、上传和调用；134516 仍为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。本轮阻断来自 Skill-root cwd/bundled-relative resource resolution 及精确 stdin/stdout/stderr/final-exit/timeout 合同缺失，而不是 PowerShell 非原生。
 
@@ -64,3 +64,18 @@ computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER
 ```
 
 该候选不产生脚本、Launcher、Package、Registration、Provider、媒体、Stage4或Stage6证据，也不改变 Stage5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。旧 R01 的“Bash/PowerShell-only”事实只作为已关闭历史保留。
+
+## 当前 Stage 5 R01 映射验收纠正（2026-08-22）
+
+原始 R01、Sandbox Refresh1 和 Expert Entry Feasibility 记录均为 `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；其旧阻断/不完整裁决保留，不改写为脚本或 receipt 成功。当前 R01 只接受入口面，不新增模块或生产路径。
+
+```text
+r01_acceptance: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07
+r01_surface: SKILL_PACKAGING / UPLOAD / INSTALL / IDENTITY_APPEARED / SELECTION_HIT / CLIENT_SANDBOX_SCRIPTS / POWERSHELL_ELIGIBLE_CANDIDATE_SURFACE
+deferred_execution: LOCATOR -> FIXED_POWERSHELL_OR_PRIVATE_CLI -> LAUNCHER_RECEIPT / R03_R07_IMPLEMENTATION_AND_REAL_PROOF / NOT_CURRENTLY_PROVED
+hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+module_boundary: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI_PATH_GUESSING_SCAN_PATH_FALLBACK_MCP_SECOND_SKILL_SECOND_AGENT_ROUTER_RETRY_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED
+```

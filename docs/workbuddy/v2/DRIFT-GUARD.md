@@ -94,13 +94,13 @@ Stage4规划和实现均已`PASS_ACCEPTED`，`PackageToolDefinitionV1`固定工�
 
 R00 已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 已于 2026-08-22 单独授权并执行；最终结果为 `BLOCKED_EXTERNAL_CONTRACT`，独立审查已批准并正式 fast-forward，因此依赖严格 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08` 在 R01 停止，R02-R08 未启动、未授权。
 
-## [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 防漂移守卫（2026-08-22）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 防漂移守卫（2026-08-22）
 
 产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，Shell 仍只负责六模块；固定 CLI 只允许作为唯一 Skill 内部桥梁，不得演变为任意 CLI/Shell 旁路。R01 使用 WorkBuddy `5.3.14`、HY3（不使用 Auto）和唯一临时 probe Skill；上传安全扫描未跳过，基线两个 Skill 未触碰。客户端仅暴露 Bash/PowerShell，未产生独立原生 bundled-script invocation/tool event，协调者在任何 shell/terminal 执行前停止。
 
 因此 R01 不得把 Skill 上传/安装、模型文字、marker、JSON 或截图当作脚本执行证据；不运行 nonzero/timeout，不记录或复述物理 cwd，不伪造 stdout/stderr/exit/timeout。R01 结果固定为 `BLOCKED_EXTERNAL_CONTRACT`，独立 zero-write Review 已 `APPROVE / P0=0 / P1=0 / P2=0` 并正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，D 盘精确隔离 probe folder/ZIP 已删除，基线两个 Skill 保持不变。R02-R08 必须保持 `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`。
 
-## 当前 R01 Sandbox Refresh1 防漂移守卫（2026-08-22，独立文档审查已通过）
+## [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] 当前 R01 Sandbox Refresh1 防漂移守卫（2026-08-22，独立文档审查已通过）
 
 本 refresh1 独立于原始 R01 已关闭记录。产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 是唯一 Agent/user entry，固定 CLI 只可作为唯一 Skill 内部桥梁，不构成 blanket CLI ban、第二入口或第二控制面。官方 134420 已确认 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；禁止再把 PowerShell 非原生当作阻断。134432 只证明 Skill 脚本/工作流打包、上传和调用形态；134516 必须保持 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。合同仍缺 Skill-root cwd、bundled-relative resource resolution、stdin/stdout/stderr/final-exit/timeout 精确语义。
 
@@ -123,3 +123,20 @@ computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER
 ```
 
 任何后续执行若缺少 Skill-root cwd 或 bundled-relative event，必须立即 `BLOCKED_EXTERNAL_CONTRACT`；不得以模型文字、物理路径、PowerShell shell transcript、marker、JSON、截图或推理替代。候选不授权 R02-R08、Provider、媒体、Package、Stage4、Stage6 或生产流程。
+
+## 当前 Stage 5 R01 验收契约纠正防漂移守卫（2026-08-22）
+
+原始 R01、Sandbox Refresh1 和 Expert Entry Feasibility 记录已标为 `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；旧阻断/不完整事实保留，不作为当前 R01 入口面硬门。本节是用户基于最初产品目标作出的验收归属纠正，不是新官方证据。
+
+```text
+r01_acceptance: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07
+r01_entry_surface: SKILL_PACKAGING / UPLOAD / INSTALL / IDENTITY_APPEARED / SELECTION_HIT / CLIENT_SANDBOX_SCRIPTS / POWERSHELL_ELIGIBLE_CANDIDATE_SURFACE
+r01_deferred_contract: SKILL_ROOT_CWD / BUNDLED_RELATIVE_RESOURCE_RESOLUTION / STDIN / STDOUT / STDERR / FINAL_EXIT / TIMEOUT / NOT_R01_HARD_GATE / DEFERRED_TO_R03_R07
+deferred_chain: LOCATOR -> FIXED_POWERSHELL_OR_PRIVATE_CLI -> LAUNCHER_RECEIPT / IMPLEMENTATION_AND_REAL_PROOF_DEFERRED_TO_R03_R07 / NOT_CURRENTLY_PROVED
+no_overclaim: NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT / NO_LAUNCHER_RECEIPT / NO_STAGE5_PASS
+hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED
+```
+
+安全边界不降低：仍只有一个 WorkBuddy Skill 和一个用户入口；固定 CLI 只能是该 Skill 内部桥；禁止任意 CLI、路径猜测、扫盘、PATH fallback、MCP、第二 Skill、第二 Agent、router、retry 和 replay。最终 Skill 必须使用 Installer-stamped locator；实际 Locator 到固定 PowerShell/private CLI 再到 receipt 的实现与真实证据只能在 R03/R07 受相应授权时形成。授权客户端测试若使用模型，遵守用户指定 HY3/NEVER_AUTO，但 HY3 仅为当前测试模型与成本控制，不锁定产品模型或系统依赖。

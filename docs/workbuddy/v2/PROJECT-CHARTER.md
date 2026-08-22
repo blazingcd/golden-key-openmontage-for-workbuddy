@@ -369,7 +369,7 @@ Stage 5整体状态固定为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATI
 
 当时的 R00 任务已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 只表示 R00 收口后的历史交接状态。R01 已由 2026-08-22 单独授权并执行，当前结果由本文末的 R01 镜像统一定义。
 
-## 12. [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 受控执行合同证据结果
+## 12. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 受控执行合同证据结果
 
 Stage 5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不是整体 PASS。产品目标回读和范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一运行中的 Agent/用户入口，Shell 仍只负责六模块；固定 CLI 只作为唯一 Skill 内部桥梁，不构成任意 CLI 旁路。R01 最终结果为 `BLOCKED_EXTERNAL_CONTRACT`，独立审查已批准并正式 fast-forward；因此严格依赖链在 R01 停止，R02-R08 为 `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`。
 
@@ -405,7 +405,7 @@ candidate_test: NOT_RUN_DOCS_ONLY
 
 官方资料只证明脚本/工作流打包、上传、选择和自动调用的公开形态，未证明精确 native command/cwd/env/stdin/stdout/stderr/exit/timeout 合同。R01 的三个 case 不得继续运行；本结果不创建或推广 Package、Registration、Installer、最终 Skill、Stage4 spawn、Provider、媒体或 Stage6。
 
-## 13. Current Stage 5 R01 Sandbox Refresh1 governance mirror (2026-08-22)
+## 13. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] Current Stage 5 R01 Sandbox Refresh1 governance mirror (2026-08-22)
 
 This is an independent refresh of the original R01 closeout; the original record remains preserved. Product-goal recheck and anti-expansion audit are `PASS`: WorkBuddy remains the sole Agent/user entry, and the fixed CLI remains eligible only as the internal bridge of that one Skill. Official 134420 establishes only that enterprise Skill scripts execute in the client sandbox. Controlled WorkBuddy observation records PowerShell as an `ELIGIBLE_CANDIDATE_SURFACE`, not an official exact execution contract; 134432 establishes Skill script/workflow packaging and upload/invocation shape; 134516 is CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`. The unresolved contract is Skill-root cwd/bundled-relative resource resolution plus exact stdin/stdout/stderr/final-exit/timeout semantics.
 
@@ -429,3 +429,18 @@ computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FO
 ```
 
 The refresh1 accepted result does not authorize or create Package, Registration, Installer, final Skill, Stage 4 spawn, Provider, media, Stage 6, or production flow. It also does not elevate Stage 5 to `PASS_ACCEPTED`; the temporary Skill is uninstalled and its isolated source/ZIP cleanup is complete.
+
+## Current Stage 5 R01 acceptance-contract correction1 (2026-08-22)
+
+The original R01, Sandbox Refresh1, and Expert Entry Feasibility records are retained as `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`; their old blocked/incomplete outcomes remain historical evidence. This user-authorized correction is an acceptance-ownership decision based on the original product goal, not new official WorkBuddy evidence.
+
+```text
+r01_acceptance: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07
+r01_entry_surface_evidence: SKILL_PACKAGING / UPLOAD / INSTALL / IDENTITY_APPEARED / SELECTION_HIT / CLIENT_SANDBOX_SCRIPTS / POWERSHELL_ELIGIBLE_CANDIDATE_SURFACE
+r01_execution_proof: NOT_CURRENTLY_PROVED / LOCATOR_TO_FIXED_POWERSHELL_OR_PRIVATE_CLI_TO_LAUNCHER_RECEIPT_DEFERRED_TO_R03_R07 / NO_SCRIPT_STDOUT_STDERR_EXIT_CWD_TIMEOUT_OR_RECEIPT_CLAIM
+hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+boundary: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI_PATH_GUESSING_SCAN_PATH_FALLBACK_MCP_SECOND_SKILL_SECOND_AGENT_ROUTER_RETRY_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+```

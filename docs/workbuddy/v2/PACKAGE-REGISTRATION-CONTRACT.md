@@ -99,11 +99,11 @@ The Release, PackageRoot, and DataRoot used for this proof were task-only tempor
 
 This Stage 2 contract remains unchanged: the public Registration/Activation/Locator schemas, APIs, validation rules, and accepted temporary-package evidence above are not reopened or expanded by Stage 5 planning. The retained final Release, production PackageRoot, production Registration/Activation, and new-process Locator proof are final-delivery responsibilities of the separately authorized `V2-S5-R04-INSTALLER-LIFECYCLE1` and `V2-S5-R05-FINAL-PACKAGE-MATERIALIZATION-REGISTRATION1` tasks. The final installed, Installer-stamped WorkBuddy Skill is handled by the separately authorized R03/R04/R06 chain. Until those tasks produce evidence, `final_package_artifact=NOT_MATERIALIZED`, `production_package_root=NOT_CREATED`, `production_registration_activation=NOT_CREATED`, `final_installed_skill=NOT_CREATED`, and a real WorkBuddy `LauncherReceiptV1` remains `NOT_PROVED`. R00 and R01 do not create, register, activate, or silently promote any Package object.
 
-## 7. [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] Current R01 boundary confirmation
+## 7. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] Current R01 boundary confirmation
 
 R01 was a controlled WorkBuddy execution-contract evidence attempt only. It did not call Registration, Activation, Locator, Package, Installer, Stage4, Provider, media, or Stage6. WorkBuddy `5.3.14` installed the temporary probe Skill after a non-skipped safety scan, but the HY3 path exposed no independent native bundled-script invocation/tool event and execution stopped before Bash/PowerShell. The final R01 result is `BLOCKED_EXTERNAL_CONTRACT`; independent review approved and formally fast-forwarded the docs closeout. The user uninstalled the temporary Skill, WorkBuddy showed `2` installed Skills, task history remained, and the exact probe folder/ZIP was deleted; the two baseline Skills were untouched. The Stage 2 contract and its accepted temporary-package proof remain unchanged. R02-R08 are blocked by the strict chain.
 
-## 8. R01 Sandbox Refresh1 不改变 Stage 2 Registration/Locator 合同（正式结果镜像，2026-08-22）
+## 8. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] R01 Sandbox Refresh1 不改变 Stage 2 Registration/Locator 合同（正式结果镜像，2026-08-22）
 
 refresh1 是独立的 WorkBuddy 客户端沙箱执行面窄核验，不调用、不修改 Registration、Activation、Locator、Package、Installer 或 Stage 2 既有临时 Package 证据。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为沙箱执行面的 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；本轮不得再把 PowerShell 非原生当作阻断。剩余阻断是 Skill-root cwd/bundled-relative resource resolution 与 stdin/stdout/stderr/final-exit/timeout 合同缺失；134432 仅证明 Skill 脚本/工作流打包上传调用形态，134516 是 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。
 
@@ -126,3 +126,20 @@ computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FO
 ```
 
 该候选不改变 Stage 2 `PASS_ACCEPTED` 或 Stage 5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不创建或启动 Provider、媒体、Stage4、Stage6、生产 Package 或生产 Registration。
+
+## Current Stage 5 R01 acceptance-contract correction1 and Stage 2 boundary (2026-08-22)
+
+The original R01, Sandbox Refresh1, and Expert Entry Feasibility records are `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`; their old blocked/incomplete outcomes remain preserved. This user-authorized correction does not reopen or change the accepted Stage 2 Registration/Activation/Locator contract and is not new official evidence.
+
+```text
+r01_acceptance: ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07
+r01_surface_evidence: SKILL_PACKAGING / UPLOAD / INSTALL / IDENTITY_APPEARED / SELECTION_HIT / CLIENT_SANDBOX_SCRIPTS / POWERSHELL_ELIGIBLE_CANDIDATE_SURFACE
+deferred_execution: LOCATOR -> FIXED_POWERSHELL_OR_PRIVATE_CLI -> LAUNCHER_RECEIPT / IMPLEMENTATION_AND_REAL_PROOF_DEFERRED_TO_R03_R07 / NOT_CURRENTLY_PROVED
+no_overclaim: NO_SCRIPT_STDOUT_STDERR_EXIT_CWD_TIMEOUT_OR_LAUNCHER_RECEIPT_CLAIM / NO_FINAL_PACKAGE_OR_REGISTRATION_CLAIM / NOT_STAGE5_PASS
+hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+stage_2_boundary: REGISTRATION_ACTIVATION_LOCATOR_CONTRACT_UNCHANGED / NO_PACKAGE_OR_PRODUCTION_REGISTRATION_SIDE_EFFECT
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED
+```
+
+The single WorkBuddy Skill/user-entry, fixed internal CLI bridge, no arbitrary CLI/path guessing/scan/PATH fallback/MCP/second Skill/second Agent/router/retry/replay, and Installer-stamped final Skill locator boundaries remain unchanged. R03/R07 own the later implementation and real execution proof; this correction creates no Package, Registration, Locator, PowerShell process, private CLI run, Provider, media, Stage 4, Stage 6, or production state.

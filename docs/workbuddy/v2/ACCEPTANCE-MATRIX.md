@@ -430,7 +430,7 @@ Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 
 
 R00 已正式推广并消费；其推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 已于 2026-08-22 单独授权并执行，当前结果由本文末 R01 镜像定义。
 
-## 12. [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 受控执行合同证据验收结果
+## 12. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 受控执行合同证据验收结果
 
 产品目标回读和范围扩张审计均为 `PASS`。Stage 5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。R01 的验收要求每个 case 均有独立、可观察、由 WorkBuddy 原生提供的 bundled-script invocation/tool event；event 必须证明真实相对脚本调用并原生捕获 stdout、stderr、最终 exit、cwd 和 timeout。模型文字、自报、重复 JSON、marker 匹配或推断不能替代。
 
@@ -469,7 +469,7 @@ candidate_test: NOT_RUN_DOCS_ONLY
 
 R01 的阻断不改变五类 Stage5 总体验收门，也不构成 Stage5 PASS。独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`，该结果已正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，probe folder/ZIP 已删除。R02-R08 严格停止；不运行 nonzero/timeout，不把上传/安装、旧客户端历史或模型输出当作真实脚本、Launcher 或 receipt 证据。Provider、媒体、最终 Package、Stage4 spawn 和 Stage6 均未运行。
 
-## 13. 当前 Stage 5 R01 Sandbox Refresh1 受控客户端正式结果镜像（2026-08-22）
+## 13. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT] 当前 Stage 5 R01 Sandbox Refresh1 受控客户端正式结果镜像（2026-08-22）
 
 本节独立于原始 R01 已关闭记录；旧记录不改写。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；不能再以“PowerShell 非原生/只暴露 shell”阻断。134432 证明脚本/工作流封装、上传和调用形态；134516 为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。剩余合同缺口是 bundled-relative resource resolution、Skill-root cwd，以及 stdin/stdout/stderr/final-exit/timeout 精确语义。
 
@@ -497,3 +497,24 @@ test_and_scope: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / Provider-m
 ```
 
 该候选继续保持 Stage5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不形成 Stage5 PASS；不运行 nonzero/timeout，不启动 R02-R08，不创建或运行 Provider、媒体、Package、Stage4、Stage6 或生产流程。
+
+## 14. 当前 Stage 5 R01 验收契约纠正（2026-08-22）
+
+原始 R01、Sandbox Refresh1 和 Expert Entry Feasibility 记录均为 `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；其旧 `BLOCKED_EXTERNAL_CONTRACT`/`INCOMPLETE` 事实与裁决保留。本节是用户基于最初产品目标作出的项目验收归属纠正，不是新官方证据，也不宣称脚本或 Launcher 已执行。
+
+| R01层 | 当前裁决 | 证据边界 |
+|---|---|---|
+| 入口面 | `ENTRY_SURFACE_ACCEPTED` | 只接受 Skill 包装、上传、安装、身份出现、选择命中、客户端 sandbox scripts 与 PowerShell `ELIGIBLE_CANDIDATE_SURFACE` |
+| 执行面 | `EXECUTION_PROOF_DEFERRED_TO_R03_R07` | Skill-root cwd、bundle-relative、stdin/stdout/stderr/final-exit/timeout 不再是 R01 硬门，但仍未证明；实现链 `Locator -> fixed PowerShell/private CLI -> LauncherReceipt` 归 R03/R07 |
+| 真实结果 | `NOT_PROVED` | 不伪造脚本执行、stdout/stderr/exit/cwd/timeout、LauncherReceipt 或 Stage5 PASS |
+
+```text
+task_id: V2-S5-R01-ACCEPTANCE-CONTRACT-CORRECTION1
+task_kind: DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / USER_AUTHORIZED_ACCEPTANCE_CORRECTION
+hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+client_test_policy: AUTHORIZED_CLIENT_TESTS_FOLLOW_USER_HY3_AND_NEVER_AUTO / PRODUCT_MODEL_NOT_LOCKED
+preserved_boundaries: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI / NO_PATH_GUESSING / NO_SCAN / NO_PATH_FALLBACK / NO_MCP / NO_SECOND_SKILL / NO_SECOND_AGENT / NO_ROUTER / NO_RETRY / NO_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+```

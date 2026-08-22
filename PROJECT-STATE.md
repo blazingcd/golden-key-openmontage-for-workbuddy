@@ -868,3 +868,85 @@ candidate_push: FORMALLY_EFFECTIVE_IFF_LIVE_REMOTE_REF_CONTAINS_THIS_COMMIT / SE
 ```
 
 该正式结果镜像不改变 Stage 5 的 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不运行 nonzero/timeout，不创建或推广 Package、Registration、Installer、最终 Skill、Stage 4 spawn、Provider、媒体或 Stage 6。旧 R01 的“PowerShell-only”事实仅属于原始已关闭记录；refresh1 的阻断理由必须保持为缺少 Skill-root cwd/bundled-relative resolution 合同。
+
+## 当前项目级架构纠偏审计 Phase A 镜像（A7 docs-only candidate，2026-08-22）
+
+以下是 A0-A6 经独立零写 Reviewer 批准后的单一自包含结论。它固化的是审计结果和最小纠偏任务方案，不是产品纠偏完成，也不改变正式分支或任何产品状态。历史合同 PASS 与当前产品架构状态分开记录；旧记录不被改写。
+
+```text
+task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
+candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
+candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+formal_anchor_commit: f338d9d50cad2cccf1398438ad4a8c8d45127a21
+formal_anchor_tree: 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+candidate_base: EXACT_FORMAL_ANCHOR / CLEAN / DIVERGENCE=0/0
+phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
+candidate_scope: EXACTLY_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
+candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+tests: NOT_RUN_DOCS_ONLY
+phase_b: NOT_AUTHORIZED
+phase_b_authorization: NOT_AUTHORIZED
+```
+
+### 原始目标、谱系和需求分类
+
+原始目标是让普通用户只需在 WorkBuddy 中用自然语言提出业务需求，由 WorkBuddy 作为唯一运行 Agent 和唯一用户对话主体，读取经 Registration/Locator 验证的 OpenMontage Package Guide、Manifest、Pipeline/Stage/Artifact/Checkpoint/Reviewer/Tool/Provider 合同，作出生产决策并展示结果。Shell 只提供安装与生命周期、Registration/Locator、按需运行时准备、确定性 Launcher、WorkBuddy 入口支持、状态/结果转交六个模块；OpenMontage Agent 是 WorkBuddy 读取 Guide 后承担的逻辑生产角色，不是第二 Agent。
+
+谱系为：原始 V2 重构交接目标及八阶段/十一步承诺 -> 六模块 Shell 边界 -> Stage 1 治理 -> Stage 2 Registration/Locator -> Stage 3 可选能力准备 -> Stage 4 机械 Launcher 合同 -> Stage 5 WorkBuddy/最终 Package 真实集成 -> Stage 6 结果转交。A1-A6 确认断档发生在 Stage 4 机械合同和 Stage 5 真实集成之间：最终 Package/Installer/生产 Registration 的 Owner 与真实 WorkBuddy Guide-read 证据没有被前置纳入完成条件。
+
+| 领域 | 需求分类 | 当前结论 |
+|---|---|---|
+| 唯一 WorkBuddy Agent、六模块 Shell、自然语言用户入口 | `FULFILLED_AND_RETAIN` / `FULFILLED_BUT_NARROW` | 边界保留；真实客户端链仍未完成证明 |
+| OpenMontage Agent-first、Guide 驱动生产决策 | `UNPROVED` | 必须在真实 WorkBuddy 中观察 Guide-read 与决策顺序 |
+| Stage 2 Registration/Locator | `FULFILLED_BUT_NARROW` | 临时 assembled-Package 证据不等于最终生产 Package |
+| Stage 3 可选能力 | `FULFILLED_BUT_NARROW` | 只处理显式授权的可选 Remotion/HyperFrames，不拥有必带工具链 |
+| 最终 PackageRoot、私有工具链、Installer/生命周期 | `DEFERRED_WITH_VALID_OWNER` / `UNPROVED` | 归最终交付 Installer Owner，Node 22+ 必须随最终 Package 提供 |
+| Stage 4 `PackageToolDefinitionV1`/Launcher/Receipt | `FULFILLED_BUT_NARROW` | 历史机械合同 PASS；当前产品架构仅 `HISTORICAL_PASS_ONLY` |
+| Stage 5 真实 WorkBuddy、Artifact/Receipt、业务 E2E | `PARTIAL` / `UNPROVED` | `REWORK`，不得称 Stage 5 PASS |
+| Stage 6 直接复用 Receipt | `DEFERRED_WITH_VALID_OWNER` / `INSUFFICIENT_EVIDENCE` | 保持零代码，等待真实消费者证据 |
+| R02 阻断责任归属 | `MISASSIGNED_TO_WRONG_LAYER` | 推荐移到 Shell/Installer 装配责任，live 状态不改 |
+| 旧 Stage 2 对齐分支 | `SUPERSEDED_WITH_VALID_REASON` | 只保留历史，禁止合并/删除 |
+| 旧 R03-R05 任务包 | `SUPERSEDED_WITH_VALID_REASON` | 被 B02/B03 替代，禁止并行执行 |
+
+### 阶段当前处置（历史字段与当前字段分离）
+
+```text
+stage_1_historical_contract: PASS_ACCEPTED
+stage_1_current_disposition: KEEP
+stage_2_historical_contract: PASS_ACCEPTED_FOR_REGISTRATION_LOCATOR_AND_TEMPORARY_PACKAGE
+stage_2_current_disposition: KEEP_WITH_NARROWING
+stage_3_historical_contract: PASS_ACCEPTED
+stage_3_current_disposition: KEEP_WITH_NARROWING
+stage_4_historical_contract: PASS_ACCEPTED_MECHANICAL_CONTRACT
+stage_4_current_disposition: HISTORICAL_PASS_ONLY
+stage_5_historical_repository_result: ENTRY_CODE_COMPLETE
+stage_5_current_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+stage_5_current_disposition: REWORK
+stage_6_historical_design_result: LATER_RELAY_BOUNDARY_ONLY
+stage_6_current_disposition: INSUFFICIENT_EVIDENCE
+```
+
+### 绑定与 R02 当前状态
+
+唯一 binding delivery owner 是 `V2 Final-delivery Installer / Release Assembly Owner`。Carrier 是最终 WorkBuddy `PackageRoot` 内独立的 `Shell-adapter` 子树；Shell 拥有 schema 和 consumer；OpenMontage 0.3.24 子树、Release、Lock、Guide 和源码保持不可变。最终 Manifest/Lock/hash 负责两棵子树的确定性绑定。
+
+```text
+r02_live_status: R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+recommended_reclassification: SHELL_INSTALLER_ADAPTER_BINDING_REQUIRED + REAL_FIXED_CHILD_UNVERIFIED
+recommended_reclassification_state: NOT_YET_EFFECTIVE
+binding_delivery_owner: V2 Final-delivery Installer / Release Assembly Owner
+binding_carrier: FINAL_WORKBUDDY_PACKAGEROOT / INDEPENDENT_SHELL_ADAPTER_SUBTREE
+shell_owns: BINDING_SCHEMA_AND_CONSUMER
+openmontage_0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
+```
+
+正确的真实顺序是 `Registration identity validation -> Locator 返回已验证 PackageRoot/Guide identity/hash -> WorkBuddy 读取 Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy 作生产决策 -> 唯一固定 CLI transport -> 确定性 fixed child/tool -> LauncherReceipt 机械事实 -> WorkBuddy 展示结果`。Guide-read、identity/hash 和顺序必须由独立可见的 WorkBuddy/client 证据证明；模型自报、child 自报、普通日志、静态测试、CI 或 receipt 单独不能替代。最终 Package 必带 Node.js `22+`、npm、npx；Stage 3 不探测、下载或替换 Node/npm/npx。
+
+### 残留对象与纠偏执行边界
+
+旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（`86a7902465d8e215e0830b9640e7222d7c7f5188`，含 `9b8ebb2`、`8d4461d`、`86a7902`）为 `SUPERSEDED_WITH_VALID_REASON / PRESERVE_HISTORY / DO_NOT_MERGE / DO_NOT_DELETE`。它把 assembled Package 对齐成 Git checkout 的方向不属于当前合同；需要的安全点只能在另行授权下按当前模型重做。两个 dirty detached worktree `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`、`C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）仅登记，不复制、不提交、不回收、不删除。
+
+纠偏计划严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 先用固定 official 对照组，B05 只替换为 0.3.24 并保持 Shell/Installer/Skill/Launcher/请求/验收方法不变；B06 唯一下游为 `HANDOFF_TO_B07_ONLY`；B07 后唯一推广动作是 `PROMOTE_AND_CLEANUP`，且仅允许普通 `ff-only`，禁止 merge/rebase main、force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。B01-B07 的完整 21 字段合同在 TASK-REGISTER 的 Phase A 账本中。
+
+本 A7 候选只改六个既有权威文件，零产品代码/测试/CI/Package/外部仓库/客户端/Provider/媒体/Registration/Activation/DataRoot 变化。独立 Reviewer 只审核候选精确 commit/tree；Reviewer APPROVE 不等于正式推广，正式分支仍需用户后续明确批准和普通 fast-forward。

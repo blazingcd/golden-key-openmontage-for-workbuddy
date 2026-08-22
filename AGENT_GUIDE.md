@@ -206,3 +206,103 @@ If those sources disagree, stop fail-closed and report the conflict. Do not infe
 - A later stage takes over only from the newest exact formal-branch commit, never from a task branch.
 
 Use exact path allowlists, preserve unrelated worktrees and user data, and treat object mismatch, missing evidence, timeout, truncated output, or no final exit as `INCOMPLETE`.
+
+## Phase A architecture-recovery audit result mirror (2026-08-22; A7 candidate)
+
+This is the single self-contained result of the independently reviewed A0-A6 architecture-recovery audit. It is a documentation candidate on the dedicated task branch, not a product correction and not a promotion to the formal branch. Existing historical facts and historical PASS results remain historical; the current product-architecture disposition is recorded separately.
+
+```text
+task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
+candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
+candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+formal_anchor_commit: f338d9d50cad2cccf1398438ad4a8c8d45127a21
+formal_anchor_tree: 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+candidate_base: formal_anchor_commit / formal_anchor_tree / clean / divergence=0/0
+phase_a_result: A0-A6_INDEPENDENTLY_REVIEWED_APPROVED / A7_DOCS_CANDIDATE
+phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
+candidate_scope: DOCS_ONLY_EXACTLY_THE_SIX_ALLOWLISTED_FILES
+candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+formal_promotion: NOT_AUTHORIZED / USER_PROMOTION_APPROVAL_REQUIRED
+phase_b: NOT_AUTHORIZED
+```
+
+### Product target and lineage ruling
+
+The non-negotiable target is: an ordinary user gives a natural-language business request to WorkBuddy; WorkBuddy is the only running Agent and user-facing conversation owner; after Registration and Locator have validated the Package, WorkBuddy reads the verified Package Guide, Manifest, Pipeline/Stage/Artifact/Checkpoint/Reviewer/Tool/Provider contracts, makes production decisions, calls the deterministic Shell transport when required, and presents the result. The Shell remains the six-module support layer and must not become a Director, FSM, Supervisor, Agent Host, workflow engine, Provider selector, renderer selector, or media control plane. “OpenMontage Agent” is only the logical production role assumed by WorkBuddy after the verified Guide is read.
+
+The reviewed lineage is: the original V2 refactor handoff and its eight-stage/eleven-step delivery commitments -> the current six-module Shell boundary -> Stage 1 governance -> Stage 2 Registration/Locator -> Stage 3 bounded optional-capability preparation -> Stage 4 deterministic launcher contract -> Stage 5 WorkBuddy entry and final-package integration -> Stage 6 status/result relay. A stage name, task renumbering, branch, or chat transition cannot erase an original commitment. The break found by A1-A6 is the loss of final-package/Installer/real-WorkBuddy ownership between the mechanical Stage 4 contract and Stage 5 real integration.
+
+| Stage | Historical contract/evidence field | Current architecture disposition | A7 decision |
+|---|---|---|---|
+| Stage 1 | accepted six-module/Agent-first governance | remains aligned with the target | `KEEP` |
+| Stage 2 | Registration/Locator and temporary assembled-Package proof accepted | useful but narrower than a final distributable Package/production Registration | `KEEP_WITH_NARROWING` |
+| Stage 3 | bounded optional Remotion/HyperFrames preparation accepted | optional capability preparation only; required toolchain and final Package remain outside it | `KEEP_WITH_NARROWING` |
+| Stage 4 | mechanical launcher contract/tests/CI accepted | proves the frozen mechanical contract only, not a real product or WorkBuddy session | `HISTORICAL_PASS_ONLY` |
+| Stage 5 | entry-code/static layer delivered; real integration incomplete | final assembly, Guide-read observation, real receipt and control-variable acceptance must be reworked | `REWORK` |
+| Stage 6 | later relay boundary designed but not authorized | no direct receipt reuse or implementation is justified by current evidence | `INSUFFICIENT_EVIDENCE` |
+
+The required requirement classifications are:
+
+```text
+unique_WorkBuddy_Agent_and_six_module_Shell: FULFILLED_AND_RETAIN
+natural_language_only_user_entry: FULFILLED_BUT_NARROW / REAL_WORKBUDDY_NOT_PROVED
+OpenMontage_Agent_first_Guide_owned_production_decisions: UNPROVED / REWORK_REQUIRED
+Stage2_Registration_Locator: FULFILLED_BUT_NARROW
+Stage3_optional_capability_boundary: FULFILLED_BUT_NARROW
+final_private_toolchain_and_final_PackageRoot: DEFERRED_WITH_VALID_OWNER / UNPROVED
+Stage4_mechanical_contract: FULFILLED_BUT_NARROW / HISTORICAL_PASS_ONLY
+Stage5_real_WorkBuddy_and_business_result: PARTIAL / UNPROVED / REWORK_REQUIRED
+Stage6_receipt_relay: DEFERRED_WITH_VALID_OWNER / INSUFFICIENT_EVIDENCE
+R02_package_defect_attribution: MISASSIGNED_TO_WRONG_LAYER
+old_Stage2_alignment_branch: SUPERSEDED_WITH_VALID_REASON / PRESERVE_HISTORY
+old_R03_R05_execution_packets: SUPERSEDED_WITH_VALID_REASON / REPLACED_BY_B02_B03
+```
+
+### Binding, Guide-read, and evidence boundary
+
+The unique binding delivery owner is `V2 Final-delivery Installer / Release Assembly Owner`. The binding carrier is an independent `Shell-adapter` subtree inside the final WorkBuddy `PackageRoot`; it is not a WorkBuddy-specific addition to the immutable OpenMontage 0.3.24 subtree. The Shell owns the binding schema and consumer. The 0.3.24 Package, its source, Release metadata, Lock, and Guide remain immutable in this task. A final assembly Manifest/Lock/hash must bind the two subtrees without changing the 0.3.24 bytes.
+
+The real required order is:
+
+```text
+Registration identity validation
+ -> Locator returns verified PackageRoot and Guide identity/hash
+ -> WorkBuddy receives the verified identity
+ -> WorkBuddy reads Guide, Manifest, Pipeline and Stage Skills
+ -> WorkBuddy makes Pipeline/Stage/creative/review/Checkpoint/tool decisions
+ -> one fixed internal CLI transport
+ -> one deterministic fixed child/tool
+ -> immutable LauncherReceipt facts
+ -> WorkBuddy presents Artifact/result to the user
+```
+
+The Guide-read and decision steps must be observable in an independently reviewable WorkBuddy/client event or equivalent authoritative client evidence, with verified identity/hash. Model self-report, child self-report, ordinary logs, a generated receipt, or static/CI tests alone cannot prove that WorkBuddy actually read and followed the Guide. The child is not an Agent and must not decide production, start another Agent, choose a renderer/provider, or implement a second Director.
+
+The final distributable Package must always include Node.js `22+` together with `npm`/`npx` (because the current HyperFrames requirement is Node 22+), as well as its other required private toolchain. Stage 3 must not detect, download, replace, or upgrade Node/npm/npx; it continues to own only bounded, user-authorized optional capability preparation.
+
+### R02 and residual-object ruling
+
+The live R02 field remains exactly `R02_CLOSED_BLOCKED_PACKAGE_RELEASE`. A7 adds, without changing that live status:
+
+```text
+r02_live_status: R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+recommended_reclassification: SHELL_INSTALLER_ADAPTER_BINDING_REQUIRED + REAL_FIXED_CHILD_UNVERIFIED
+recommended_reclassification_state: NOT_YET_EFFECTIVE
+binding_delivery_owner: V2 Final-delivery Installer / Release Assembly Owner
+binding_carrier: FINAL_WORKBUDDY_PACKAGEROOT / INDEPENDENT_SHELL_ADAPTER_SUBTREE
+shell_ownership: BINDING_SCHEMA_AND_CONSUMER
+package_0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
+```
+
+The published 0.3.24 candidate identity check remains a historical fact. The recommended reclassification corrects responsibility attribution; it does not turn R02 into a pass, create a fixed child, create a PackageRoot, or authorize a Package change.
+
+The old Stage 2 branch `codex/v2-s2-official-package-alignment-b1` at `86a7902465d8e215e0830b9640e7222d7c7f5188` (commits `9b8ebb2`, `8d4461d`, `86a7902`) is classified as `SUPERSEDED_WITH_VALID_REASON / PRESERVE_HISTORY / DO_NOT_MERGE / DO_NOT_DELETE`. Its checkout-alignment direction treated an assembled Package as a Git checkout and is not a basis for the correction. Any useful narrow safety idea must be reimplemented under a separately authorized current contract. The two dirty detached worktrees at `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2` and `C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`, both at `4d74d6576773dc9d383efec091bdc8d42f0d480c`, are non-authoritative and are not to be copied, committed, recovered, or deleted by A7.
+
+### Correction execution boundary
+
+The minimum correction plan is strictly serial `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`. The full 21-field contracts are the live planning record in `docs/workbuddy/v2/TASK-REGISTER.md`. The old R03-R05 packets are `SUPERSEDED_WITH_VALID_REASON` by B02/B03 and must not run in parallel. B04 uses the fixed official control group first; B05 changes only the Package to the fixed 0.3.24 candidate while keeping the same Shell, Installer assembly, Skill, Launcher, request, and acceptance method. B06 has only `HANDOFF_TO_B07_ONLY` as its downstream action. After B07, the only promotion/cleanup path is `PROMOTE_AND_CLEANUP`, using ordinary fast-forward only; no merge/rebase of `main`, no force-push, and no cleanup of the old Stage 2 branch or dirty detached worktrees without separate authorization.
+
+`B01` freezes the corrected binding and Guide-read contract; `B02` implements only the one Skill/fixed transport/child boundary; `B03` materializes the final PackageRoot and lifecycle through the named Installer owner; `B04` proves the real flow with the fixed official Package; `B05` repeats it with the same Shell and 0.3.24; `B06` closes Stage 5 only when final Package, production Registration/Activation, final Skill, real WorkBuddy receipt, independent review, Git and CI evidence all exist; `B07` is the external portrait/business acceptance gate. No B task is product authorization merely because this planning candidate was pushed.
+
+The A7 candidate itself is limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only candidate; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The candidate must be independently reviewed by exact commit/tree, but reviewer approval is not formal promotion. Formal promotion requires a later explicit user approval and ordinary fast-forward only.

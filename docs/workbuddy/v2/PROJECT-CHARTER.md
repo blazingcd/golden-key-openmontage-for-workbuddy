@@ -460,3 +460,65 @@ unblock_condition: SEPARATE_PACKAGE_OWNER_APPROVAL_AND_INDEPENDENT_SAFE_FIXED_TO
 stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 product_goal_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
 ```
+
+## 项目级架构纠偏审计 Phase A 章程镜像（A7 docs-only candidate，2026-08-22）
+
+本节固化 A0-A6 经独立零写 Reviewer 批准的单一审计结果和最小纠偏方案。它不是产品纠偏完成，不改变正式分支、Stage 5 live 状态或任何历史 commit；历史合同 PASS 和当前架构处置始终分字段表达。
+
+```text
+task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
+candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
+candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
+formal_anchor: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
+candidate_scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
+candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+phase_b: NOT_AUTHORIZED
+```
+
+### 不可改变的产品目标
+
+普通用户只在 WorkBuddy 中用自然语言表达业务目标。WorkBuddy 是唯一运行 Agent、唯一用户对话主体和唯一用户入口；它在 Registration/Locator 返回已验证 PackageRoot 与 Guide identity/hash 后，读取 OpenMontage Guide、Manifest、Pipeline、Stage、Artifact、Checkpoint、Reviewer、Tool、Provider 合同，并自己作生产决策。所谓 “OpenMontage Agent” 是 WorkBuddy 读取 Guide 后承担的逻辑生产角色，不是第二 Agent、子 Agent、额外模型进程或 Shell Host。
+
+Shell 只承担六个模块：安装与生命周期、Package Registration/Locator、按需运行时准备、必要的确定性 Launcher、WorkBuddy 入口支持、状态与结果转交。Shell 不得成为 Director、FSM、Supervisor、Agent Host、工作流引擎、Provider/Renderer 选择器或媒体控制面。固定 CLI 可以存在，但只能是唯一 Skill 内的无智能传输桥，不能成为第二用户入口、任意命令面、Router、MCP 或第二导演系统。
+
+### A1-A6 谱系结论与阶段处置
+
+原始 V2 重构交接目标和八阶段/十一步承诺映射到当前六模块和 Stage 1-6 后，确认的断档是：Stage 4 的安全机械合同被误当成产品架构完成，Stage 5 没有形成最终 Package/Installer/生产 Registration 与真实 WorkBuddy Guide-read 的交付 Owner 和验收链。A7 不把这段历史改写为“历史实现失败”；只把当前产品状态降为需要纠偏的未证明/未完成状态。
+
+| Stage | 当前章程裁决 |
+|---|---|
+| Stage 1 | `KEEP`：唯一 Agent 与六模块边界保留 |
+| Stage 2 | `KEEP_WITH_NARROWING`：Registration/Locator 和临时 assembled-Package 证据保留，但不等于 final PackageRoot |
+| Stage 3 | `KEEP_WITH_NARROWING`：只做边界明确、逐项授权的可选能力准备；不拥有必带工具链、Installer 或 Renderer/Provider 选择 |
+| Stage 4 | `HISTORICAL_PASS_ONLY`：机械 contract/tests/CI 的历史 PASS 保留；不证明真实产品/WorkBuddy |
+| Stage 5 | `REWORK`：entry-code 保留，最终装配、Guide-read、真实 receipt 和官方控制组验收重做 |
+| Stage 6 | `INSUFFICIENT_EVIDENCE`：不实施、不直接复用 receipt，等待真实消费者证据 |
+
+需求分类保持如下：唯一 Agent/六模块为 `FULFILLED_AND_RETAIN`；Stage 2/3 为 `FULFILLED_BUT_NARROW`；Guide-first 生产决策、最终 PackageRoot、真实 WorkBuddy 和业务 E2E 为 `UNPROVED/PARTIAL`；最终 Installer/工具链为 `DEFERRED_WITH_VALID_OWNER`；R02 归因是 `MISASSIGNED_TO_WRONG_LAYER`；旧 Stage 2 分支和旧 R03-R05 为 `SUPERSEDED_WITH_VALID_REASON`。
+
+### 最终 Package 与 R02 归属
+
+唯一 binding delivery owner 是 `V2 Final-delivery Installer / Release Assembly Owner`。Binding carrier 是最终 WorkBuddy `PackageRoot` 中独立的 `Shell-adapter` 子树；Shell 拥有 `PackageToolDefinitionV1` schema/consumer；OpenMontage 0.3.24 子树、源码、Guide、Release、Lock 不修改、不嵌入 WorkBuddy 专用入口。最终 assembly 的 Manifest/Lock/hash 必须覆盖并绑定两棵子树。
+
+```text
+r02_live_status: R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+recommended_reclassification: SHELL_INSTALLER_ADAPTER_BINDING_REQUIRED + REAL_FIXED_CHILD_UNVERIFIED
+recommended_reclassification_state: NOT_YET_EFFECTIVE
+binding_delivery_owner: V2 Final-delivery Installer / Release Assembly Owner
+binding_carrier: FINAL_WORKBUDDY_PACKAGEROOT / INDEPENDENT_SHELL_ADAPTER_SUBTREE
+shell_owns: BINDING_SCHEMA_AND_CONSUMER
+0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
+```
+
+最终 Package 始终必须随包提供 Node.js `22+`、npm、npx 及其他必需 private toolchain。Stage 3 不探测、下载或替换 Node/npm/npx；是否使用 Remotion、HyperFrames 或其他能力由 OpenMontage/WorkBuddy 决定。
+
+真实 Guide-read 的不可跳过顺序是：`Registration identity validation -> Locator verified PackageRoot/Guide identity/hash -> WorkBuddy reads Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy decisions -> single fixed CLI transport -> deterministic child/tool -> mechanical LauncherReceipt -> WorkBuddy result`。Guide-read 事件、identity/hash 和决策主体必须由独立可见的 WorkBuddy/client 证据支持；模型自报、child 自报、静态测试、CI 或 receipt 单独不算真实集成证据。
+
+### 最小纠偏路径与边界
+
+任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`；完整 21 字段在 TASK-REGISTER。B01 冻结 binding/Guide-read 合同；B02 只实现一个 Skill、一个固定 transport、一个确定性 child；B03 由最终交付 Installer Owner 组装 final PackageRoot 和生命周期；B04 使用固定 official Package 作控制组；B05 保持同一 Shell/Installer/Skill/Launcher/请求/验收方法，仅替换到固定 0.3.24；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 完成外部 portrait/business gate 后，才有唯一 `PROMOTE_AND_CLEANUP`，并且只能普通 `git merge --ff-only` / fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。
+
+旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（`C:\Users\blazi\.codex\worktrees\aef5\...`、`C:\Users\blazi\.codex\worktrees\df76\...`，均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只作历史登记；A7 不合并、复制、提交或删除。
+
+A7 候选只包含六个现有权威文件，明确 `ZERO_PRODUCT_STATE_CHANGE`、`NOT_RUN_DOCS_ONLY`、`Phase B NOT_AUTHORIZED`。独立 Reviewer 通过后仍须等待用户另行批准推广；没有该批准，不能触碰正式分支。

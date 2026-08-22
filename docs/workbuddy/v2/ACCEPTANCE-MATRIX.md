@@ -533,3 +533,93 @@ unblock_condition: SEPARATE_PACKAGE_OWNER_APPROVAL_AND_INDEPENDENT_SAFE_FIXED_TO
 stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 product_goal_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
 ```
+
+## 项目级架构纠偏审计 Phase A 验收镜像（A7 docs-only candidate，2026-08-22）
+
+本节是 A0-A6 独立审查批准后的当前验收边界。它不把审计完成写成产品纠偏完成，不覆盖历史证据，也不改变正式分支或 R02 live 状态。
+
+```text
+task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
+candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
+candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
+formal_anchor: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
+candidate_scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
+candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+verification: GIT_DIFF_CHECK_ONLY / NOT_RUN_DOCS_ONLY
+phase_b: NOT_AUTHORIZED
+```
+
+### 历史证据与当前架构处置必须分栏
+
+| Stage | 历史合同/证据字段 | 当前架构验收字段 | 处置 |
+|---|---|---|---|
+| Stage 1 | 六模块、唯一 Agent 边界历史接受 | 与目标一致 | `KEEP` |
+| Stage 2 | Registration/Locator 与临时 assembled-Package proof 接受 | 不等于 final Package/production Registration | `KEEP_WITH_NARROWING` |
+| Stage 3 | bounded optional capability preparation 接受 | 不拥有必带 Python/FFmpeg/Node，也不选 Renderer/Provider | `KEEP_WITH_NARROWING` |
+| Stage 4 | `PackageToolDefinitionV1`、固定 spawn、Receipt、测试/CI 历史通过 | 仅机械合同通过，真实产品架构与 WorkBuddy 未证明 | `HISTORICAL_PASS_ONLY` |
+| Stage 5 | entry-code/static layer delivered | final PackageRoot、Installer、Guide-read、真实 receipt/E2E 缺失 | `REWORK` |
+| Stage 6 | later relay boundary design only | 直接复用 Receipt 的前提不足 | `INSUFFICIENT_EVIDENCE` |
+
+### 目标与需求分类验收
+
+```text
+unique_WorkBuddy_Agent_and_six_module_Shell: FULFILLED_AND_RETAIN
+ordinary_natural_language_user_entry: FULFILLED_BUT_NARROW / REAL_CLIENT_NOT_PROVED
+OpenMontage_Guide_drives_WorkBuddy_production_decisions: UNPROVED / REWORK_REQUIRED
+Stage2_registration_locator: FULFILLED_BUT_NARROW
+Stage3_optional_capabilities: FULFILLED_BUT_NARROW
+final_PackageRoot_Installer_private_toolchain: DEFERRED_WITH_VALID_OWNER / UNPROVED
+Stage4_mechanical_contract: FULFILLED_BUT_NARROW / HISTORICAL_PASS_ONLY
+Stage5_real_WorkBuddy_Artifact_and_business_E2E: PARTIAL / UNPROVED
+Stage6_receipt_relay: INSUFFICIENT_EVIDENCE
+R02_attribution: MISASSIGNED_TO_WRONG_LAYER
+old_Stage2_branch_and_old_R03_R05: SUPERSEDED_WITH_VALID_REASON
+```
+
+### 真实集成验收顺序
+
+```text
+Registration_identity_validation
+ -> Locator_verified_PackageRoot_and_Guide_identity_hash
+ -> WorkBuddy_reads_Guide_Manifest_Pipeline_Stage_Skills
+ -> WorkBuddy_makes_production_decisions
+ -> one_fixed_internal_CLI_transport
+ -> one_deterministic_fixed_child_tool
+ -> immutable_LauncherReceipt_mechanical_facts
+ -> WorkBuddy_presents_Artifact_result
+```
+
+必需证据是独立可见的 WorkBuddy/client Guide-read event 或同等权威客户端记录、匹配的 Guide identity/hash、固定 child source/hash/argv/cwd/stdin/stdout/stderr、`spawn=1`、`retry=0`、真实 receipt/Artifact，以及独立 Reviewer 对 exact commit/tree、Git 和 CI headSha 的核验。模型自报、child 自报、普通日志、静态代码、单元测试、CI、Skill 被识别、CLI 能启动或生成 receipt 均不能单独证明真实 WorkBuddy 生产。
+
+最终 Package 必带 Node.js `22+`、npm、npx 和其他必需 private toolchain；Stage 3 不探测、下载或替换 Node/npm/npx。Optional Remotion/HyperFrames 仍是显式授权能力，不改变 Shell 六模块边界。
+
+### R02 binding 验收归属
+
+```text
+r02_live_status: R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+recommended_reclassification: SHELL_INSTALLER_ADAPTER_BINDING_REQUIRED + REAL_FIXED_CHILD_UNVERIFIED
+recommended_reclassification_state: NOT_YET_EFFECTIVE
+binding_delivery_owner: V2 Final-delivery Installer / Release Assembly Owner
+binding_carrier: FINAL_WORKBUDDY_PACKAGEROOT / INDEPENDENT_SHELL_ADAPTER_SUBTREE
+shell_owns: BINDING_SCHEMA_AND_CONSUMER
+0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
+```
+
+验收时不能把 0.3.24 缺少 WorkBuddy 专用字段写成共享 Package 的产品缺陷；应验收最终 Installer 是否在 PackageRoot 内装配 adapter、fixed child、Manifest/Lock/hash，并保持 0.3.24 子树字节不变。
+
+### 纠偏任务验收门
+
+任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 是固定 official 控制组，B05 是同一 Shell/Installer/Skill/Launcher/请求/验收方法下仅替换为固定 `0.3.24`；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 后才允许唯一 `PROMOTE_AND_CLEANUP`，且仅普通 fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，不得并行。
+
+| Gate | 必须证明 | 不能证明/失败处置 |
+|---|---|---|
+| B01 | binding owner/carrier、Guide-read 顺序、可观察证据、第二控制面禁止条件 | 缺字段或职责冲突则 `BLOCKED`，不改代码 |
+| B02 | 一个 Skill、一个固定 transport、一个 deterministic child、无第二 Agent/Router/MCP/retry/replay | 任何并行入口、用户技术参数或导演逻辑则 `FAIL_CLOSED` |
+| B03 | final PackageRoot、private toolchain（含 Node 22+ npm/npx）、adapter、fixed child、Manifest/Lock/hash、生命周期与生产 Registration/Activation | 只有临时 Package、源码 checkout、静态 lock 或无 owner 则 `INCOMPLETE` |
+| B04 | fresh install/register/activate、新进程 Locator、Guide-read event、官方 fixed control 的真实 receipt/Artifact | 模型/child 自报或复用旧状态不算证据 |
+| B05 | 同一 Shell 路径在固定 0.3.24 上复现 B04 证据 | 同时改 Shell 与 Package、复用 Registration/PackageRoot 或改 0.3.24 则 `BLOCKED` |
+| B06 | 五类 Stage 5 证据齐全且独立审查通过 | 只允许 `HANDOFF_TO_B07_ONLY`，不得推广/清理/启动 Stage 6 |
+| B07 | 普通自然语言 portrait 业务 Artifact 与独立业务验收 | Core/业务 gate 未过则不推广；Shell 不补媒体逻辑 |
+
+旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只登记、物理保留，不合并、不复制、不删除。A7 自身仅 docs-only 六文件候选，`NOT_RUN_DOCS_ONLY`；Phase B `NOT_AUTHORIZED`。

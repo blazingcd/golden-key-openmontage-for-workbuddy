@@ -46,17 +46,18 @@ R01 的临时 `golden-key-openmontage-r01-controlled-probe` 只用于核验 Work
 
 ## 当前 R01 Sandbox Refresh1 映射边界（候选，2026-08-22）
 
-该 refresh1 不修改六模块映射，也不增加入口、生产模块、CLI/MCP 控制面。产品目标和 anti-expansion 均 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，固定 CLI 仍只能是唯一 Skill 内部桥梁。官方 134420 说明 enterprise Skill scripts 在客户端沙箱执行，因此 WorkBuddy 原生 PowerShell 是允许的客户端沙箱执行面；134432 说明脚本/工作流封装、上传和调用；134516 仍为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。本轮阻断来自 Skill-root cwd/bundled-relative resource resolution 及精确 stdin/stdout/stderr/final-exit/timeout 合同缺失，而不是 PowerShell 非原生。
+该 refresh1 不修改六模块映射，也不增加入口、生产模块、CLI/MCP 控制面。产品目标和 anti-expansion 均 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，固定 CLI 仍只能是唯一 Skill 内部桥梁。官方 134420 说明 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为允许的 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；134432 说明脚本/工作流封装、上传和调用；134516 仍为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。本轮阻断来自 Skill-root cwd/bundled-relative resource resolution 及精确 stdin/stdout/stderr/final-exit/timeout 合同缺失，而不是 PowerShell 非原生。
 
 ```text
 task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
 base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 client: WorkBuddy 5.3.14 / HY3_ONLY / NEVER_AUTO / baseline=agent-browser,find-skills
-probe: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_S5_R01_Sandbox_Refresh1 / hashes=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9,8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359,2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
+probe: ISOLATED_D_DRIVE_TEMP_ROOT / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / hashes=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9,8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359,2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
 install: safety_scan_not_skipped / no_non_high_risk_auto_install_selected / count_3 / client_id=workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / body_first_line_match
-read_and_attempt: SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / physical_install_path_exposed_contract_deviation / session_cwd=C:\Users\blazi\WorkBuddy\2026-08-22-14-25-11 / relative=.\\scripts\\r01_contract_probe.py / no_cd_no_absolute_no_guessing_no_mutation / skill_root_and_bundle_relative_not_exposed
+read_and_attempt: SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / physical_install_path_exposed_contract_deviation / SESSION_WORKSPACE_CWD / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / relative=.\\scripts\\r01_contract_probe.py / no_cd_no_absolute_no_guessing_no_mutation / skill_root_and_bundle_relative_not_exposed
 result: USER_CANCELLED / POWERSHELL_NOT_STARTED / NO_SCRIPT_OR_IO_EXIT_TIMEOUT_EVIDENCE / BLOCKED_EXTERNAL_CONTRACT
 review_and_chain: APPROVE_P0=0_P1=0_P2=0 / nonzero=NOT_RUN / timeout=NOT_RUN / R02-R08=NOT_STARTED_NOT_AUTHORIZED
+reviewer_independent_observation: WORKBUDDY_5.3.14 / HY3 / USER_CANCELLED / NO_SUCCESS_STDOUT_STDERR_EXIT_CWD / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER
 cleanup: TEMP_SKILL_STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_UNTOUCHED
 computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_RECOVERED
 ```

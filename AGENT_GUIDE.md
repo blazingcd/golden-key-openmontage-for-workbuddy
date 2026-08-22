@@ -74,7 +74,7 @@ R01 evidence artifact hashes (historical; sources deleted after review and not t
 
 ## Current Stage 5 R01 Sandbox Refresh1 result candidate (2026-08-22)
 
-This is an independent refresh of the original R01 and does not rewrite the original record. The product-goal recheck and scope-expansion audit are `PASS`: WorkBuddy remains the only running Agent/user entry; the fixed CLI remains eligible only as an internal bridge inside that sole Skill, not a blanket CLI ban or a second control plane. Official WorkBuddy 134420 explicitly says enterprise Skill scripts execute in the client sandbox, so native WorkBuddy PowerShell is an eligible client-sandbox execution surface; 134432 proves Skill script/workflow packaging and upload/invocation shape; 134516 remains CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`. The remaining official gaps are bundled-relative resource resolution, Skill-root cwd, stdin/stdout/stderr/final-exit, and timeout semantics.
+This is an independent refresh of the original R01 and does not rewrite the original record. The product-goal recheck and scope-expansion audit are `PASS`: WorkBuddy remains the only running Agent/user entry; the fixed CLI remains eligible only as an internal bridge inside that sole Skill, not a blanket CLI ban or a second control plane. Official WorkBuddy 134420 explicitly says enterprise Skill scripts execute in the client sandbox. In the controlled WorkBuddy observation, PowerShell is an `ELIGIBLE_CANDIDATE_SURFACE`, not an official exact execution contract. 134432 proves Skill script/workflow packaging and upload/invocation shape; 134516 remains CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`. The remaining official gaps are bundled-relative resource resolution, Skill-root cwd, stdin/stdout/stderr/final-exit, and timeout semantics.
 
 ```text
 task_id: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1
@@ -82,18 +82,19 @@ candidate_branch: codex/v2-s5-r01-sandbox-refresh1-closeout
 base_commit: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 workbuddy: 5.3.14 / baseline=agent-browser,find-skills / HY3_ONLY / NEVER_AUTO
 refresh1_hashes: SKILL=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9 / SCRIPT=8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359 / ZIP=2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
-refresh1_source_root: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_S5_R01_Sandbox_Refresh1 / RETAINED_PENDING_USER_CLEANUP
-install_observation: SAFETY_SCAN_NOT_SKIPPED / NO_NON_HIGH_RISK_AUTO_INSTALL_SELECTED / installed_count=3 / client_id=workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / BODY_FIRST_LINE_MATCHED_PROBE
-native_read_event: PRESENT / SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / PHYSICAL_INSTALL_PATH_EXPOSED_CONTRACT_DEVIATION_SENSITIVE_MINIMIZATION_FAILURE
-frozen_success_observation: SESSION_POWERSHELL_CWD=C:\Users\blazi\WorkBuddy\2026-08-22-14-25-11 / relative=.\\scripts\\r01_contract_probe.py / NO_CD_NO_ABSOLUTE_PATH_NO_GUESSING_NO_COMMAND_MUTATION / SKILL_ROOT_CWD_NOT_EXPOSED / BUNDLE_RELATIVE_INVOCATION_NOT_EXPOSED
+refresh1_source_root: ISOLATED_D_DRIVE_TEMP_ROOT / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / RETAINED_PENDING_USER_CLEANUP
+install_observation: SAFETY_SCAN_NOT_SKIPPED / NO_NON_HIGH_RISK_AUTO_INSTALL_SELECTED / installed_count=3 / client_id=workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / BODY_FIRST_LINE_MATCHED_PROBE / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER
+native_read_event: PRESENT / BUNDLED_SKILL_MD_AND_SCRIPT_READ / PHYSICAL_INSTALL_PATH_EXPOSED_CONTRACT_DEVIATION / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER
+frozen_success_observation: SESSION_WORKSPACE_CWD / FROZEN_RELATIVE_SCRIPT / NO_CD_NO_ABSOLUTE_PATH_NO_GUESSING_NO_COMMAND_MUTATION / SKILL_ROOT_CWD_NOT_EXPOSED / BUNDLE_RELATIVE_INVOCATION_NOT_EXPOSED / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER
 execution: POWERSHELL_NOT_STARTED / USER_CANCELLED / NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_FINAL_EXIT_CWD_CLASSIFICATION_TIMEOUT
+reviewer_independent_observation: WORKBUDDY_5.3.14 / HY3 / USER_CANCELLED / NO_SUCCESS_STDOUT_STDERR_EXIT_CWD / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER
 result: BLOCKED_EXTERNAL_CONTRACT / MISSING_SKILL_ROOT_CWD_AND_BUNDLE_RELATIVE_RESOLUTION / NOT_BECAUSE_POWERSHELL_IS_NON_NATIVE
-review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_REVIEWER / PATH_AND_REASONING_FOLDED_FROM_COORDINATOR_OBSERVATION
+review: APPROVE / P0=0 / P1=0 / P2=0
 nonzero_case: NOT_RUN
 timeout_case: NOT_RUN
 r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
 temporary_skill: STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_SKILLS_UNTOUCHED
-computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / EXISTING_EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_AND_RECOVERED
+computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / EXISTING_EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_AND_RECOVERED
 candidate_current_task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
 candidate_next_authorized_task: NONE / R02-R08_BLOCKED_BY_CHAIN
 candidate_test: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / provider_media_package_stage4_stage6=0

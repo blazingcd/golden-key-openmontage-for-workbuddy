@@ -471,7 +471,7 @@ R01 的阻断不改变五类 Stage5 总体验收门，也不构成 Stage5 PASS�
 
 ## 13. 当前 Stage 5 R01 Sandbox Refresh1 受控客户端结果候选（2026-08-22）
 
-本节独立于原始 R01 已关闭记录；旧记录不改写。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行，因此 WorkBuddy 原生 PowerShell 是可接受的客户端沙箱执行面，不能再以“PowerShell 非原生/只暴露 shell”阻断。134432 证明脚本/工作流封装、上传和调用形态；134516 为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。剩余合同缺口是 bundled-relative resource resolution、Skill-root cwd，以及 stdin/stdout/stderr/final-exit/timeout 精确语义。
+本节独立于原始 R01 已关闭记录；旧记录不改写。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；不能再以“PowerShell 非原生/只暴露 shell”阻断。134432 证明脚本/工作流封装、上传和调用形态；134516 为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。剩余合同缺口是 bundled-relative resource resolution、Skill-root cwd，以及 stdin/stdout/stderr/final-exit/timeout 精确语义。
 
 ```text
 task_id: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1
@@ -479,18 +479,19 @@ candidate_branch: codex/v2-s5-r01-sandbox-refresh1-closeout
 base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 goal_and_scope: product_goal_recheck=PASS / scope_expansion_audit=PASS / WorkBuddy唯一Agent-user入口 / fixed CLI仅唯一Skill内部桥梁
 client: WorkBuddy 5.3.14 / baseline=agent-browser,find-skills / HY3 / NEVER_AUTO
-probe: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_S5_R01_Sandbox_Refresh1 / retained_pending_user_cleanup
+probe: ISOLATED_D_DRIVE_TEMP_ROOT / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / RETAINED_PENDING_USER_CLEANUP
 hashes: SKILL=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9 / SCRIPT=8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359 / ZIP=2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
 install: SAFETY_SCAN_NOT_SKIPPED / NO_NON_HIGH_RISK_AUTO_INSTALL_SELECTED / INSTALLED_COUNT_3 / client_id=workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / BODY_FIRST_LINE_MATCHED_PROBE
-native_read: PRESENT / SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / PHYSICAL_INSTALL_PATH_EXPOSED_CONTRACT_DEVIATION_SENSITIVE_MINIMIZATION_FAILURE
-frozen_success: relative=.\\scripts\\r01_contract_probe.py / NO_CD_NO_ABSOLUTE_PATH_NO_GUESSING_NO_COMMAND_MUTATION / session_PowerShell_cwd=C:\Users\blazi\WorkBuddy\2026-08-22-14-25-11 / Skill-root-cwd=NOT_EXPOSED / bundle-relative=NOT_EXPOSED
+native_read: PRESENT / SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / PHYSICAL_INSTALL_PATH_EXPOSED_CONTRACT_DEVIATION_SENSITIVE_MINIMIZATION_FAILURE / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER
+frozen_success: relative=.\\scripts\\r01_contract_probe.py / SESSION_WORKSPACE_CWD / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / NO_CD_NO_ABSOLUTE_PATH_NO_GUESSING_NO_COMMAND_MUTATION / Skill-root-cwd=NOT_EXPOSED / bundle-relative=NOT_EXPOSED
 execution: POWERSHELL_NOT_STARTED / USER_CANCELLED / no script, stdout, stderr, final exit, cwd classification or timeout evidence
 result: BLOCKED_EXTERNAL_CONTRACT / MISSING_SKILL_ROOT_CWD_AND_BUNDLE_RELATIVE_RESOLUTION / NOT_BECAUSE_POWERSHELL_IS_NON_NATIVE
-review: APPROVE / P0=0 / P1=0 / P2=0 / independent Reviewer / folded full path and reasoning from coordinator observation
+review: APPROVE / P0=0 / P1=0 / P2=0 / independent Reviewer
+reviewer_independent_observation: WORKBUDDY_5.3.14 / HY3 / USER_CANCELLED / NO_SUCCESS_STDOUT_STDERR_EXIT_CWD / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER
 nonzero_timeout: NOT_RUN / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 temporary_skill: STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_SKILLS_UNTOUCHED
 computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_AND_RECOVERED
-candidate_state: current_task=V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW / next_authorized_task=NONE
+candidate_state: current_task=V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW / next_authorized_task=NONE / R01_REMAINS_BLOCKED / ONLY_SEPARATE_R01_REOPEN_AUTHORIZATION_PLUS_ACCEPTED_SUCCESS_CONTRACT_EVIDENCE_CAN_UNLOCK_R02_R08
 test_and_scope: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / Provider-media-Package-Stage4-Stage6=0
 ```
 

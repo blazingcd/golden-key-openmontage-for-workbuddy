@@ -525,7 +525,7 @@ R02 的 published candidate 身份已核验匹配，但不能作为 bindable fin
 
 ```text
 task_id: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1
-published_candidate: blazingcd/golden-key-openmontage / codex/golden-key-openmontage-v0.3.24 / commit=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / tree=0464861c5985c7c9072e789b94889d29cf9a937a / approved_source_subtree=8395e578...
+published_candidate: blazingcd/golden-key-openmontage / codex/golden-key-openmontage-v0.3.24 / published_commit=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / published_root_tree=0464861c5985c7c9072e789b94889d29cf9a937a / approved_source_commit=8395e578165e802990d53fef5a166f8b4cf0461a / approved_source_commit_tree=4624394238802a9577690248e43b8f0dff391a2b / approved_source_package_subtree=0464861c5985c7c9072e789b94889d29cf9a937a
 r02_result: BLOCKED_PACKAGE_RELEASE / PUBLISHED_CANDIDATE_IDENTITY_VERIFIED / MISSING_SAFE_FIXED_TOOL_AND_RELEASE_SPECIFIC_DEFINITION
 current_task: NONE / NO_ACTIVE_TASK / R02_CLOSED_BLOCKED_PACKAGE_RELEASE
 next_authorized_task: NONE / PACKAGE_OWNER_RELEASE_BINDING_REAUTHORIZATION_REQUIRED / R03-R08_NOT_AUTHORIZED_BY_CHAIN

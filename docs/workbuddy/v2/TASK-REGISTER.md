@@ -2040,7 +2040,7 @@ R02 是 docs-only 收口。已发布候选存在且身份与批准 source subtre
 task_id: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1
 published_repo: blazingcd/golden-key-openmontage / branch=codex/golden-key-openmontage-v0.3.24
 published_commit: ef5f5b58fa1c2b494b0154989cf0e4e36615a701
-published_tree: 0464861c5985c7c9072e789b94889d29cf9a937a / APPROVED_SOURCE_SUBTREE=8395e578...
+published_root_tree: 0464861c5985c7c9072e789b94889d29cf9a937a / approved_source_commit=8395e578165e802990d53fef5a166f8b4cf0461a / approved_source_commit_tree=4624394238802a9577690248e43b8f0dff391a2b / approved_source_package_subtree=0464861c5985c7c9072e789b94889d29cf9a937a
 published_tree_audit: REMOTE_RECURSIVE_TRUNCATED_FALSE / entries=2614 / binding_path_filter=(workbuddy|package.?tool.?definition|launcher|fixed.?tool|entry.?cli) / binding_related_paths=0 / local_same_tree_blobs=2155
 release_metadata: GOLDEN_KEY_OPENMONTAGE_RELEASE.json / release_version=0.3.24 / console_script_entrypoint=null / python_load_probe=lib.pipeline_loader:load_pipeline / authority_entry=README.md
 lock_metadata: GOLDEN_KEY_OPENMONTAGE.lock.json / NO_PackageToolDefinitionV1 / NO_workbuddy_entry_cli / NO_package_tool_definition / NO_launcher / NO_fixed_tool / NO_CORRESPONDING_TOP_LEVEL_FIELDS

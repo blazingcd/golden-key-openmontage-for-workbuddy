@@ -39,3 +39,7 @@
 ## 当前Stage 5映射边界（非实施授权）
 
 已交付的 Stage 5 entry-code 只映射到现有五个实现/验收路径：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。这些文件的存在和 tracked=40 不是对后续 R03/R04/R05/R06 实施的授权。R03 的 executable Skill bundle、R04 的 Installer/lifecycle 生产实现及其具体路径，必须在各自任务接管时从最新 formal 重新冻结；不得由本映射预造路径、模块或通用框架。
+
+## 当前 R01 证据边界（非实施授权）
+
+R01 的临时 `golden-key-openmontage-r01-controlled-probe` 只用于核验 WorkBuddy bundled-script 执行合同，不改变六模块映射，也不新增生产模块、入口或 CLI/MCP 控制面。WorkBuddy `5.3.14` 的 HY3 受控路径没有产生独立原生 bundled-script invocation/tool event；协调者在 Bash/PowerShell 执行前停止。因此 R01 为 `BLOCKED_EXTERNAL_CONTRACT / PENDING_INDEPENDENT_REVIEW`，不产生脚本、Launcher、Package、Registration、Provider、媒体或 Stage6 证据。R02-R08 不得启动。

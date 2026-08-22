@@ -1,6 +1,6 @@
 # Project State
 
-更新时间：2026-08-21
+更新时间：2026-08-22
 
 ## 当前状态
 
@@ -67,7 +67,7 @@ stage_5_planning_authorization_history_scope: DOCS_ONLY / no production code / t
 initial_product_goal_recheck: PASS / WorkBuddy is the only running Agent and the only user entry; after loading the verified Package Guide it assumes the OpenMontage logical production role
 stage_5_t1_cli_boundary: CLI_NOT_A_BLANKET_BAN / forbid a second entry, parallel control plane, fallback, or arbitrary command/argv/Shell generation; a fixed CLI used internally by the one official WorkBuddy Skill remains eligible for controlled contract verification
 stage_5_planning_t1_hard_stop: HISTORICAL_EXTERNAL_CONTRACT_STOP / superseded for the external-mechanism question; never fabricate an interface or use CLI/MCP/second-Skill fallback, and do not treat CLI presence alone as architecture unavailability
-stage_5_planning_t1_current_state: HISTORICAL_PRE_CLOSEOUT_T1_STATE / SUPERSEDED_BY_V2-S5-R00 / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING; current live state is the Stage5 remainder R00 docs-only candidate below
+stage_5_planning_t1_current_state: HISTORICAL_PRE_CLOSEOUT_T1_STATE / SUPERSEDED_BY_V2-S5-R00 / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING; current live state is the Stage5 R01 result-candidate mirror below
 stage_5_t1_fixed_cli_bridge_status: FROZEN_FOR_PLANNING / one WorkBuddy-managed Skill -> one non-user-facing fixed transport adapter -> one accepted Stage4 consumer
 stage_5_t1_fixed_cli_bridge_command: LOCATOR_PACKAGE_PYTHON / -I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli / no console-script / no subcommands / shell=false
 stage_5_t1_fixed_cli_bridge_user_message_boundary: wire canonicalization only / no NFC-NFD-trim-newline rewrite / verify Stage4 NFC+UTF-8 precondition / non-NFC exit64 / valid Unicode code-point sequence unchanged
@@ -102,19 +102,19 @@ stage_5_entry_closeout: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / FORMALLY_DELIVERED_DOC
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: ENTRY_CODE_COMPLETE / REAL_WORKBUDDY_INTEGRATION_INCOMPLETE
 stage_6_status_result_relay: NOT_GRANTED
-stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_DOCS_CORRECTION_IN_PROGRESS / R01_NOT_AUTHORIZED
-current_task: V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1 / DOCS_ONLY / CURRENT_CANDIDATE
-current_task_status: IN_PROGRESS / CANDIDATE_NOT_PROMOTED
+stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / R01_EXECUTION_AUTHORIZED_AND_CONSUMED_IN_RESULT_CANDIDATE
+current_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / CONTROLLED_CLIENT_EVIDENCE_EXECUTED / RESULT_CANDIDATE
+current_task_status: BLOCKED_EXTERNAL_CONTRACT / CANDIDATE_NOT_PROMOTED / PENDING_INDEPENDENT_REVIEW
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
-next_authorized_task: NONE
-next_planned_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION
+next_authorized_task: NONE / R01_BLOCKED_CHAIN
+next_planned_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
-stage_5_t1_controlled_client_evidence_candidate: V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / T1_CLIENT_EVIDENCE_INCOMPLETE / WORKBUDDY_5.3.13 / HY3
-stage_5_t1_controlled_client_proved: import accepts folder or zip containing SKILL.md; markdown YAML requires name and description; safety check completed without skip; one installed candidate appeared in user catalog; slash invocation loaded the exact Skill and returned T1_CONTROLLED_NOOP_OK under HY3
-stage_5_t1_controlled_client_unproved: complete package schema and optional tree; physical install path and full user/workspace/project ownership; global unique consumer/absence of alternate dispatch; direct in-process Python launch_session_tool protocol and LauncherReceiptV1 field relay
-stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / CLIENT_INSTALLED_SKILLS_0 / D_DRIVE_ISOLATION_RECYCLED / SOURCE_PATH_ABSENT
+stage_5_t1_controlled_client_evidence_candidate: HISTORICAL_V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / WORKBUDDY_5.3.13 / SUPERSEDED_BY_R01
+stage_5_t1_controlled_client_proved: WORKBUDDY_5.3.14 / BASELINE_SKILLS_2_RETAINED / SAFETY_SCAN_NOT_SKIPPED / TEMP_PROBE_INSTALLED_COUNT_3 / EXACT_IDENTITY=golden-key-openmontage-r01-controlled-probe_APPEARED / ISOLATED_TASK_ATTACHED_SOLE_PROBE / HY3_SELECTED / NO_NATIVE_EVENT / NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT
+stage_5_t1_controlled_client_unproved: native bundled-script invocation/tool event; script stdout/stderr/final exit/cwd/timeout capture; real LauncherReceiptV1
+stage_5_t1_controlled_client_cleanup: R01_TEMPORARY_SKILL_REMAINS_INSTALLED_PENDING_INDEPENDENT_REVIEW_AND_USER_UNINSTALL_CONFIRMATION / BASELINE_SKILLS_2_UNTOUCHED / PROBE_FOLDER_AND_ZIP_UNTRACKED_PENDING_CLEANUP
 pending_next_authorized_task: NONE
-next_authorized_task_condition: after R00 promotion current_task=NONE / NO_ACTIVE_TASK and next_authorized_task=NONE; R01 is planned only and requires separate user authorization
+next_authorized_task_condition: after R01 closeout promotion current_task=NONE / NO_ACTIVE_TASK and next_authorized_task=NONE; R02-R08 remain blocked until a new authorization and a reopened R01 contract evidence task
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -676,7 +676,7 @@ candidate_push: NOT_PUSHED
 
 实施的精确五路径为：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。最终 Installer-stamped Skill、最终 Package 物化/Registration、真实 WorkBuddy、Provider/媒体和 Stage6 均需后续独立授权与证据；本 closeout 不自动产生下一任务。
 
-## Stage 5剩余计划与当前纠偏（`V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1`，2026-08-21）
+## [HISTORICAL / CONSUMED_BY_V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1] Stage 5剩余计划与当前纠偏（`V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1`，2026-08-21）
 
 本节是当前十二文档 docs-only 候选。产品目标回读为 `PASS`：WorkBuddy 是唯一运行中的 Agent 和唯一用户入口，Shell 只负责六模块，不成为 Director/FSM/第二 Agent/媒体控制面。Stage 5 整体必须保持 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`；入口代码、固定 CLI、Stage4 `launch_session_tool(...)`、Reviewer、正式 Git/CI 是已交付子项，不等于 Stage5整体PASS。该候选推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`；`next_planned_task=V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION`，本候选不自动授权 R01。
 
@@ -729,3 +729,51 @@ next_planned_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_S
 | S5-08 / `V2-S5-R08-STAGE5-FINAL-CLOSEOUT1` | 仅在R01-R07全部证据齐备后独立Review、正式Git/CI、清理temporary但保留正式Package/Registration/Skill；唯一任务可把live `stage_5=PASS_ACCEPTED` | 不使用self-resolving candidate冒充完成；Stage6只在另行授权后接管 |
 
 依赖严格为 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`；任一阻断不得跳过。R03/R04即使未来证据允许合并，也必须另行授权并保留全部验收项。Stage5不要求Provider真实调用、媒体/视频生成、Remotion/HyperFrames下载安装、Stage6转换代码或完整业务E2E；optional缺失/decline/defer不阻断base。Stage5之后先判断Stage6能否直接复用receipt（可直用则优先零代码），整个项目最终业务E2E另行授权，不称为Stage7。
+
+## 当前 R01 受控执行合同证据收口（2026-08-22）
+
+```text
+task_id: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1
+task_kind: CONTROLLED_CLIENT_EVIDENCE + DOCS_ONLY_CLOSEOUT / ZERO_PRODUCT_STATE_CHANGE
+user_authorization: 2026-08-22 / 启动阶段五并要求每个子任务独立审核、边界审计和产品目标回读
+base_commit: d0a055689e9fc928a31edb24f3740e9408e123ef
+base_tree: 50197a1eb103ffad42ac3e2952dcd3f9761a9512
+base_parent: 2207c9083ceabcf6539936e47b0935a4eaa77c46
+tracked_files_at_base: 40
+initial_product_goal_recheck: PASS
+scope_expansion_audit: PASS
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+official_sources: 134432 WorkBuddy Skills; 134391 local AI workbench task bar; 134324 WorkBuddy update notes; 134516 CodeBuddy PRODUCT_MISMATCH_NOT_CONTRACT_PROOF
+workbuddy_version_observed: 5.3.14
+baseline_installed_skills: 2 / agent-browser; find-skills
+temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / UNTRACKED
+temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1
+temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064
+client_safety_scan: NOT_SKIPPED / AUTO_INSTALL_ACCEPTED
+installed_skill_observation: count 3 / exact golden-key-openmontage-r01-controlled-probe identity appeared
+controlled_task_model: HY3 / NEVER_AUTO
+success_case_prompt: relative scripts/r01_contract_probe.py + one literal JSON with final LF + fixed env marker + native stdout/stderr/final-exit/cwd/timeout capture
+native_bundled_script_invocation_event: ABSENT
+client_execution_path_observed: Bash/PowerShell only / no independent native bundled-script invocation/tool event
+coordinator_stop: BEFORE_ANY_SHELL_OR_TERMINAL_EXECUTION
+probe_script_execution: NOT_RUN
+stdout_stderr_exit_cwd_timeout_evidence: NONE
+nonzero_case: NOT_RUN
+timeout_case: NOT_RUN
+r01_result: BLOCKED_EXTERNAL_CONTRACT
+r01_result_reason: frozen contract requires one independent native bundled-script invocation/tool event per case; HY3 exposed only shell execution, so text/marker/JSON cannot substitute
+r01_result_review: PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
+temporary_skill_cleanup: PENDING_INDEPENDENT_REVIEW_AND_USER_ACTION_TIME_UNINSTALL_CONFIRMATION
+baseline_skill_cleanup: NOT_TOUCHED / TWO_RETAINED_SKILLS
+temporary_probe_cleanup: UNTRACKED_FOLDER_AND_ZIP_PENDING_REVIEW
+candidate_test: NOT_RUN_DOCS_ONLY
+candidate_production_code_changes: 0
+candidate_test_changes: 0
+candidate_ci_changes: 0
+candidate_package_registration_changes: 0
+candidate_provider_media_stage4_stage6_changes: 0
+candidate_push: PENDING_OWN_BRANCH_ONLY
+```
+
+R01 的官方资料只证明 WorkBuddy Skill 可以封装脚本/工作流、可上传和在任务中选择/自动调用；更新记录只作支持范围证据，未给出精确 command/cwd/env/stdin/stdout/stderr/exit/timeout 语义。由于真实客户端没有产生独立原生 bundled-script invocation/tool event，R01 的三个 case 不能逐项继续；不运行非零或 timeout case，不把客户端安装成功当作脚本执行成功，也不把模型文字、自报或匹配诊断当作事件证据。R01 失败只阻断 R01->R02 链，不改变 Stage 3/4 已接受状态，也不扩大 Shell 为第二控制面。

@@ -15,7 +15,7 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 - 最终Package/PackageRoot/生产Registration/Activation/最终安装Skill：`NOT_MATERIALIZED / NOT_CREATED`
 - 真实WorkBuddy `LauncherReceiptV1`：`NOT_PROVED`
 
-实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。本轮`V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1`只做文档纠偏；推广后没有自动授权任务。下一计划任务R01执行合同证据核验必须另行取得用户授权。
+实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。R00已经正式推广并消费。R01已于2026-08-22取得单独授权并执行，但HY3路径没有暴露独立原生bundled-script invocation/tool event，因此当前结果为待独立审查的`BLOCKED_EXTERNAL_CONTRACT`收口候选；R02-R08因链式阻断均未启动、未授权。
 
 阶段2 Registration/Locator、阶段3 Runtime按需准备和阶段4会话Launcher实现均已接受。阶段2还证明过一次包含Python、FFmpeg、Node的真实临时Package，但临时Package随后已删除；这不能证明最终Release已经保留、生产PackageRoot已经安装登记，也不能证明Installer或最终分发。阶段2合同边界见[`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md)。
 

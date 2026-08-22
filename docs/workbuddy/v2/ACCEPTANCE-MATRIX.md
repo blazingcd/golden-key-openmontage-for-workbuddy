@@ -414,7 +414,7 @@ Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 
 
 精确五个实施路径为：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。静态/direct/hygiene/CI 证据只证明实现与运输合同，不证明真实 WorkBuddy、业务效果或 E2E；最终 Installer/Package/Registration、Provider、媒体和 Stage 6 仍须独立授权与证据。
 
-## 11. Stage 5当前R00纠偏与整体验收门
+## 11. [HISTORICAL / CONSUMED_BY_V2-S5-R01] Stage 5当前R00纠偏与整体验收门
 
 当前Stage5不是PASS，而是 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。入口代码及其正式Review/CI是已接受子项；旧的 closeout candidate 只作 `HISTORICAL`，不得作为当前整体状态。
 
@@ -428,4 +428,43 @@ Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 
 | Real WorkBuddy | HY3真实新会话成功取得真实`LauncherReceiptV1`，呈现字段可比对 | mock、静态CLI、Codex、客户端no-op标记 |
 | Governance | 独立Review、正式Git/CI、无歧义live authority | 候选分支、聊天确认、历史PASS或未推广closeout |
 
-当前R00为十二文档、`DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE`；推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`，R01只作为 `next_planned_task` 且需另行用户授权。依赖严格为 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`，任一任务的外部输入、对象、权限或证据不满足即`BLOCKED`/停止，不跳跃。Stage5不要求Provider、媒体/视频、Remotion/HyperFrames安装、Stage6转换代码或完整业务E2E；optional缺失/decline/defer不阻断base。Stage5完成后，Stage6优先直接复用receipt，完整业务E2E另行授权且不是Stage7。
+R00 已正式推广并消费；其推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 已于 2026-08-22 单独授权并执行，当前结果由本文末 R01 镜像定义。
+
+## 12. 当前 Stage 5 R01 受控执行合同证据验收结果
+
+产品目标回读和范围扩张审计均为 `PASS`。Stage 5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。R01 的验收要求每个 case 均有独立、可观察、由 WorkBuddy 原生提供的 bundled-script invocation/tool event；event 必须证明真实相对脚本调用并原生捕获 stdout、stderr、最终 exit、cwd 和 timeout。模型文字、自报、重复 JSON、marker 匹配或推断不能替代。
+
+```text
+task_id: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1
+task_kind: CONTROLLED_CLIENT_EVIDENCE + DOCS_ONLY_CLOSEOUT / ZERO_PRODUCT_STATE_CHANGE
+user_authorization: 2026-08-22 / Stage5继续执行、每个子任务独立审核、边界审计和产品目标回读
+base_commit: d0a055689e9fc928a31edb24f3740e9408e123ef
+base_tree: 50197a1eb103ffad42ac3e2952dcd3f9761a9512
+base_parent: 2207c9083ceabcf6539936e47b0935a4eaa77c46
+tracked_files_at_base: 40
+initial_product_goal_recheck: PASS
+scope_expansion_audit: PASS
+official_sources: 134432 WorkBuddy Skills; 134391 local AI workbench task bar; 134324 update notes; 134516 CodeBuddy PRODUCT_MISMATCH_NOT_CONTRACT_PROOF
+workbuddy_version_observed: 5.3.14
+baseline_installed_skills: 2 / agent-browser; find-skills
+temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / UNTRACKED
+temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1
+temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064
+client_safety_scan: NOT_SKIPPED / AUTO_INSTALL_ACCEPTED / installed count 3 / exact probe identity
+controlled_task_model: HY3 / NEVER_AUTO
+native_bundled_script_invocation_event: ABSENT / Bash-PowerShell-only path exposed
+coordinator_stop: BEFORE_ANY_SHELL_OR_TERMINAL_EXECUTION
+probe_script_execution: NOT_RUN
+stdout_stderr_exit_cwd_timeout_evidence: NONE
+nonzero_case: NOT_RUN
+timeout_case: NOT_RUN
+r01_result: BLOCKED_EXTERNAL_CONTRACT
+r01_result_review: PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
+temporary_skill_cleanup: PENDING_INDEPENDENT_REVIEW_AND_USER_ACTION_TIME_UNINSTALL_CONFIRMATION
+baseline_skill_cleanup: NOT_TOUCHED / TWO_RETAINED_SKILLS
+temporary_probe_cleanup: UNTRACKED_FOLDER_AND_ZIP_PENDING_REVIEW
+candidate_test: NOT_RUN_DOCS_ONLY
+```
+
+R01 的阻断不改变五类 Stage5 总体验收门，也不构成 Stage5 PASS。R02-R08 严格停止；不运行 nonzero/timeout，不把上传/安装、旧客户端历史或模型输出当作真实脚本、Launcher 或 receipt 证据。Provider、媒体、最终 Package、Stage4 spawn 和 Stage6 均未运行。

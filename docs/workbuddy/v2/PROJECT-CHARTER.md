@@ -361,10 +361,46 @@ Stage 5 planning 当前为 `PASS_ACCEPTED`，不是 candidate。`V2-S5-WORKBUDDY
 
 精确五个实施路径为：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。物理 Skill 安装路径保持 opaque；最终 Installer/Package/Registration、真实客户端、Provider、媒体和 Stage 6 均须另行授权与验证。
 
-## 11. Stage 5当前剩余计划（R00纠偏）
+## 11. [HISTORICAL / CONSUMED_BY_V2-S5-R01] Stage 5剩余计划（R00纠偏）
 
 Stage 5整体状态固定为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。WorkBuddy仍是唯一运行中的Agent和唯一用户入口；Shell仍只负责六模块，不成为Director/FSM/第二Agent/媒体控制面。已交付的入口代码、固定CLI、一次Stage4调用、Reviewer和CI只能证明entry-code子项，不等于整体PASS。
 
 整体 `PASS_ACCEPTED` 必须同时有五类证据：持久 final Package Release+PackageRoot；production Registration+Activation+new-process Locator；无placeholder且唯一的最终安装Skill；HY3真实WorkBuddy成功取得真实`LauncherReceiptV1`；独立Review、正式Git/CI和无歧义live authority。Provider、媒体/视频、Remotion/HyperFrames下载安装、Stage6转换代码和完整业务E2E不属于Stage5完成前置；optional缺失/decline/defer不阻断base。Stage5完成后Stage6先判断能否直接复用receipt（可直用则优先零代码），完整业务E2E另行授权，不称为Stage7。
 
-当前任务为 `V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1`，仅十二份现有文档、`DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE`，推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`。下一计划任务仅为 `V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION`。任务严格按 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`，每项阻断即停；R03/R04未来即使合并也必须另行授权，不能由本章程预造实施路径。
+当时的 R00 任务已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 只表示 R00 收口后的历史交接状态。R01 已由 2026-08-22 单独授权并执行，当前结果由本文末的 R01 镜像统一定义。
+
+## 12. 当前 Stage 5 R01 受控执行合同证据结果
+
+Stage 5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不是整体 PASS。产品目标回读和范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一运行中的 Agent/用户入口，Shell 仍只负责六模块；固定 CLI 只作为唯一 Skill 内部桥梁，不构成任意 CLI 旁路。R01 结果为 `BLOCKED_EXTERNAL_CONTRACT / PENDING_INDEPENDENT_REVIEW`，因此严格依赖链在 R01 停止，R02-R08 为 `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`。
+
+```text
+task_id: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1
+task_kind: CONTROLLED_CLIENT_EVIDENCE + DOCS_ONLY_CLOSEOUT / ZERO_PRODUCT_STATE_CHANGE
+user_authorization: 2026-08-22 / Stage5继续执行、每个子任务独立审核、边界审计和产品目标回读
+base_commit: d0a055689e9fc928a31edb24f3740e9408e123ef
+base_tree: 50197a1eb103ffad42ac3e2952dcd3f9761a9512
+base_parent: 2207c9083ceabcf6539936e47b0935a4eaa77c46
+tracked_files_at_base: 40
+official_sources: 134432 WorkBuddy Skills; 134391 local AI workbench task bar; 134324 update notes; 134516 CodeBuddy PRODUCT_MISMATCH_NOT_CONTRACT_PROOF
+workbuddy_version_observed: 5.3.14
+baseline_installed_skills: 2 / agent-browser; find-skills
+temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / UNTRACKED
+temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1
+temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064
+client_safety_scan: NOT_SKIPPED / AUTO_INSTALL_ACCEPTED / installed count 3 / exact probe identity
+controlled_task_model: HY3 / NEVER_AUTO
+native_bundled_script_invocation_event: ABSENT / client exposed Bash/PowerShell only
+coordinator_stop: BEFORE_ANY_SHELL_OR_TERMINAL_EXECUTION
+probe_script_execution: NOT_RUN / stdout_stderr_exit_cwd_timeout_evidence=NONE
+nonzero_case: NOT_RUN
+timeout_case: NOT_RUN
+r01_result: BLOCKED_EXTERNAL_CONTRACT / native event is mandatory and cannot be replaced by model text, marker, JSON, or inference
+r01_result_review: PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
+temporary_skill_cleanup: PENDING_INDEPENDENT_REVIEW_AND_USER_ACTION_TIME_UNINSTALL_CONFIRMATION
+baseline_skill_cleanup: NOT_TOUCHED / TWO_RETAINED_SKILLS
+temporary_probe_cleanup: UNTRACKED_FOLDER_AND_ZIP_PENDING_REVIEW
+candidate_test: NOT_RUN_DOCS_ONLY
+```
+
+官方资料只证明脚本/工作流打包、上传、选择和自动调用的公开形态，未证明精确 native command/cwd/env/stdin/stdout/stderr/exit/timeout 合同。R01 的三个 case 不得继续运行；本结果不创建或推广 Package、Registration、Installer、最终 Skill、Stage4 spawn、Provider、媒体或 Stage6。

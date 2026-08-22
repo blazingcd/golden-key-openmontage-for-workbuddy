@@ -88,8 +88,14 @@ Stage4规划和实现均已`PASS_ACCEPTED`，`PackageToolDefinitionV1`固定工�
 
 实施入口边界仍是 WorkBuddy 唯一 Agent/用户入口，一个 Skill 到 package-private fixed CLI，再到一次且仅一次 Stage4 调用；无 console script、subcommands、router、MCP、第二 Agent、retry 或 replay。实施的精确五路径为：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。本六文档收口期间禁止代码、测试、CI、真实客户端、Stage4/Provider/media、final Package/Registration 和 Stage6 操作；静态/direct/hygiene/CI 证据与真实 WorkBuddy、业务和 E2E 证据必须分层，后者仍 `NOT_PROVED / NOT_GRANTED`。
 
-## 当前Stage 5剩余计划守卫（V2-S5-R00，2026-08-21）
+## [HISTORICAL / CONSUMED_BY_V2-S5-R01] Stage 5剩余计划守卫（V2-S5-R00，2026-08-21）
 
 当前唯一live状态为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。入口代码/CLI/LauncherReceiptV1/Reviewer/CI是已交付子项；不得把它们或旧closeout候选写成Stage5整体PASS。整体PASS必须同时有：retained final Release+PackageRoot、production Registration+Activation+new-process Locator、zero-placeholder唯一final Skill、HY3真实WorkBuddy真实`LauncherReceiptV1`、以及独立Review+formal Git/CI+无歧义live authority。
 
-本R00只允许十二份既有文档，`DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE`，不运行代码/测试/客户端/Provider/媒体/Package/Registration/Stage6；推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`。R01只作为 `next_planned_task` 且需单独用户授权。任务依赖严格 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08`，任一对象、输入、权限或证据不满足即停止，禁止跳跃；R03/R04不得由R00预造路径或合并授权。Stage5不要求Provider、媒体/视频、Remotion/HyperFrames、Stage6转换或完整业务E2E；optional缺失/decline/defer不阻断base。Stage5后Stage6优先直接复用receipt，完整业务E2E另行授权且不是Stage7。
+R00 已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 已于 2026-08-22 单独授权并执行；当前 R01 结果为 `BLOCKED_EXTERNAL_CONTRACT / PENDING_INDEPENDENT_REVIEW`，因此依赖严格 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08` 在 R01 停止，R02-R08 未启动、未授权。
+
+## 当前 Stage 5 R01 防漂移守卫（2026-08-22）
+
+产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，Shell 仍只负责六模块；固定 CLI 只允许作为唯一 Skill 内部桥梁，不得演变为任意 CLI/Shell 旁路。R01 使用 WorkBuddy `5.3.14`、HY3（不使用 Auto）和唯一临时 probe Skill；上传安全扫描未跳过，基线两个 Skill 未触碰。客户端仅暴露 Bash/PowerShell，未产生独立原生 bundled-script invocation/tool event，协调者在任何 shell/terminal 执行前停止。
+
+因此 R01 不得把 Skill 上传/安装、模型文字、marker、JSON 或截图当作脚本执行证据；不运行 nonzero/timeout，不记录或复述物理 cwd，不伪造 stdout/stderr/exit/timeout。R01 结果固定为 `BLOCKED_EXTERNAL_CONTRACT`，待独立 zero-write Review；R02-R08 必须保持 `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`。临时 Skill 与 D 盘未跟踪 probe folder/ZIP 在独立 Review 和用户卸载确认前保留；基线两个 Skill 保持不变。

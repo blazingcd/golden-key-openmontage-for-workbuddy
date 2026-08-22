@@ -34,7 +34,7 @@ The accepted minimum contract remains provider- and runtime-opaque: a release-sp
 
 Stage 4 does not hard-code, select, configure, or route any Provider or runtime, including Remotion or HyperFrames. Provider configuration is separate external-service input and only definition-allowlisted environment names reach the child process. Local Stage 3 evidence is accepted only when `PackageToolDefinitionV1.required_local_capabilities` declares the same opaque capability and definition; the caller must pass the complete approved definition plus the unmodified original Stage 3 fact, and Stage 4 independently revalidates bytes using the accepted `managed`, `explicit`, or `PATH` source semantics. A base fixed-tool call never requires optional local-capability evidence. Stage 4 must not accept arbitrary shell or commands, parse user intent, read an unverified Package Guide, launch another Agent, install Runtime, choose a renderer, retry or replay, schedule work, run media production, create Artifacts, or advance Checkpoints. Literal `user_message` and `executor_controls` remain separate. Real WorkBuddy new-session behavior and continuation belong to Stage 5; Stage 6 first attempts direct `LauncherReceiptV1` reuse with zero production code.
 
-Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The `V2-S5-WORKBUDDY-ENTRY-BUILDER1` implementation and its six-document closeout are formally delivered as repository changes, but they prove only the entry-code/static contract layer; they do not make the whole Stage 5 `PASS_ACCEPTED`. Final Package/PackageRoot/Registration/Activation, a final installed Skill, and a real WorkBuddy-produced `LauncherReceiptV1` remain absent or unproved. The current `V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1` is a docs-only candidate; after its independent review and ordinary fast-forward, it is consumed and `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE`. The next planned task is `V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1`, but it requires separate user authorization.
+Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The `V2-S5-WORKBUDDY-ENTRY-BUILDER1` implementation and its six-document closeout are formally delivered as repository changes, but they prove only the entry-code/static contract layer; they do not make the whole Stage 5 `PASS_ACCEPTED`. Final Package/PackageRoot/Registration/Activation, a final installed Skill, and a real WorkBuddy-produced `LauncherReceiptV1` remain absent or unproved. R00 is formally promoted and consumed. R01 was separately authorized and executed, but its current result is a docs-only closeout candidate classified `BLOCKED_EXTERNAL_CONTRACT / PENDING_INDEPENDENT_REVIEW` because no native bundled-script invocation/tool event existed; no R02-R08 task is authorized by the blocked chain.
 
 ## Current Stage 5 remainder mirror
 
@@ -52,12 +52,25 @@ production_package_root: NOT_CREATED
 production_registration_activation: NOT_CREATED
 final_installed_skill: NOT_CREATED
 real_workbuddy_launcher_receipt: NOT_PROVED
-current_task: V2-S5-R00-REMAINDER-PLAN-STATE-CORRECTION1 / DOCS_ONLY / CURRENT_CANDIDATE
-after_r00_promotion: current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE
-next_planned_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / REQUIRES_SEPARATE_USER_AUTHORIZATION
+current_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / RESULT_CANDIDATE / BLOCKED_EXTERNAL_CONTRACT / PENDING_INDEPENDENT_REVIEW
+after_r00_promotion: CONSUMED_COMPLETE / current_task=R01_RESULT_CANDIDATE
+after_r01_closeout_promotion: current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE / R02-R08_BLOCKED_BY_CHAIN
+next_planned_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 ```
 
 The entry-code contract remains one WorkBuddy-managed Skill as the sole Agent/user entry, one package-private fixed CLI transport adapter, and exactly one accepted Stage 4 call with a real `LauncherReceiptV1`. It has no console script, subcommands, router, MCP, second Agent, retry or replay; JSON, provider-secret, fixed-environment identity, cancellation and receipt boundaries remain as frozen. Static, direct-test, hygiene and CI evidence does not prove a real WorkBuddy business/E2E session. The complete Stage 5 gate and ordered R01-R08 remainder are authoritative in `docs/workbuddy/v2/TASK-REGISTER.md`.
+
+## Current Stage 5 R01 evidence mirror
+
+R00 is consumed. User authorization for Stage 5 continuation and per-task independent review was given on `2026-08-22`. R01 was executed only through official WorkBuddy documentation review and a controlled client attempt. The product-goal recheck is `PASS`: WorkBuddy remains the only running Agent and user entry; Shell remains limited to six modules and does not become a Director, FSM, second Agent, or media control plane. The scope-expansion audit is also `PASS`: the fixed internal CLI remains eligible only as an internal bridge inside the sole Skill; no arbitrary CLI bypass was authorized.
+
+Official current sources used for the R01 record are WorkBuddy Skills (`https://cloud.tencent.com/document/product/1831/134432`, executable scripts/workflows and local upload/invocation shape), the local AI workbench task bar (`https://cloud.tencent.com/document/product/1831/134391`, installed Skill selection/automatic invocation in new tasks), and update notes (`https://cloud.tencent.com/document/product/1831/134324`, support history only, not exact execution semantics). `https://cloud.tencent.com/document/product/1831/134516` remains a CodeBuddy `PRODUCT_MISMATCH` and is not WorkBuddy contract proof.
+
+The controlled client was WorkBuddy `5.3.14`. Baseline installed Skills were exactly `2` (`agent-browser`, `find-skills`). The reviewed temporary ZIP `r01-controlled-probe.zip` was uploaded; the safety scan was not skipped, the Skill was auto-installed, installed count became `3`, and the exact `golden-key-openmontage-r01-controlled-probe` identity appeared. An isolated new task attached that sole probe and selected `Hy3` (never Auto). The exact success-case prompt requested the relative bundled script, one literal JSON plus final LF on stdin, one fixed environment marker, and native stdout/stderr/final-exit/cwd/timeout capture.
+
+The HY3 execution path exposed only Bash/PowerShell shell execution and no independent native bundled-script invocation/tool event. Generation was stopped before any shell or terminal execution. No probe script ran; no stdout, stderr, final exit, cwd, or timeout evidence exists. Under the frozen R01 contract, the whole R01 result is `BLOCKED_EXTERNAL_CONTRACT`; the non-zero and timeout cases were not run. R02-R08 are `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`. The temporary Skill remains installed pending independent R01 result review and user action-time uninstall confirmation; the baseline two Skills remain untouched. The temporary D-drive probe folder and ZIP remain untracked pending review/cleanup.
+
+R01 evidence artifact hashes (temporary, not tracked) are: `SKILL.md` `D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1`; `scripts/r01_contract_probe.py` `52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064`; ZIP `C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D`. This docs-only mirror does not create or promote a Package, Registration, Installer, final Skill, Stage 4 spawn, Provider, media flow, or Stage 6.
 
 ## External Package Guide
 

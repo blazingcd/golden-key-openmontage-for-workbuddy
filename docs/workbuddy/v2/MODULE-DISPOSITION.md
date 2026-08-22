@@ -40,6 +40,25 @@
 
 已交付的 Stage 5 entry-code 只映射到现有五个实现/验收路径：`.github/workflows/ci.yml`、`workbuddy-skill/golden-key-openmontage/SKILL.md`、`golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`、`tests/workbuddy/test_workbuddy_entry_cli.py`、`tests/workbuddy/test_repository_hygiene.py`。这些文件的存在和 tracked=40 不是对后续 R03/R04/R05/R06 实施的授权。R03 的 executable Skill bundle、R04 的 Installer/lifecycle 生产实现及其具体路径，必须在各自任务接管时从最新 formal 重新冻结；不得由本映射预造路径、模块或通用框架。
 
-## 当前 R01 证据边界（非实施授权）
+## [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 R01 证据边界（非实施授权）
 
 R01 的临时 `golden-key-openmontage-r01-controlled-probe` 只用于核验 WorkBuddy bundled-script 执行合同，不改变六模块映射，也不新增生产模块、入口或 CLI/MCP 控制面。WorkBuddy `5.3.14` 的 HY3 受控路径没有产生独立原生 bundled-script invocation/tool event；协调者在 Bash/PowerShell 执行前停止。因此 R01 最终为 `BLOCKED_EXTERNAL_CONTRACT`，独立审查已批准并正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，probe folder/ZIP 已删除。不产生脚本、Launcher、Package、Registration、Provider、媒体或 Stage6 证据。R02-R08 不得启动。
+
+## 当前 R01 Sandbox Refresh1 映射边界（候选，2026-08-22）
+
+该 refresh1 不修改六模块映射，也不增加入口、生产模块、CLI/MCP 控制面。产品目标和 anti-expansion 均 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，固定 CLI 仍只能是唯一 Skill 内部桥梁。官方 134420 说明 enterprise Skill scripts 在客户端沙箱执行，因此 WorkBuddy 原生 PowerShell 是允许的客户端沙箱执行面；134432 说明脚本/工作流封装、上传和调用；134516 仍为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。本轮阻断来自 Skill-root cwd/bundled-relative resource resolution 及精确 stdin/stdout/stderr/final-exit/timeout 合同缺失，而不是 PowerShell 非原生。
+
+```text
+task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
+client: WorkBuddy 5.3.14 / HY3_ONLY / NEVER_AUTO / baseline=agent-browser,find-skills
+probe: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_S5_R01_Sandbox_Refresh1 / hashes=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9,8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359,2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
+install: safety_scan_not_skipped / no_non_high_risk_auto_install_selected / count_3 / client_id=workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / body_first_line_match
+read_and_attempt: SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / physical_install_path_exposed_contract_deviation / session_cwd=C:\Users\blazi\WorkBuddy\2026-08-22-14-25-11 / relative=.\\scripts\\r01_contract_probe.py / no_cd_no_absolute_no_guessing_no_mutation / skill_root_and_bundle_relative_not_exposed
+result: USER_CANCELLED / POWERSHELL_NOT_STARTED / NO_SCRIPT_OR_IO_EXIT_TIMEOUT_EVIDENCE / BLOCKED_EXTERNAL_CONTRACT
+review_and_chain: APPROVE_P0=0_P1=0_P2=0 / nonzero=NOT_RUN / timeout=NOT_RUN / R02-R08=NOT_STARTED_NOT_AUTHORIZED
+cleanup: TEMP_SKILL_STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_UNTOUCHED
+computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_RECOVERED
+```
+
+该候选不产生脚本、Launcher、Package、Registration、Provider、媒体、Stage4或Stage6证据，也不改变 Stage5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。旧 R01 的“Bash/PowerShell-only”事实只作为已关闭历史保留。

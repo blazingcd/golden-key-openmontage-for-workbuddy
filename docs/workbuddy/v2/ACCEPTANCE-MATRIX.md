@@ -430,7 +430,7 @@ Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 
 
 R00 已正式推广并消费；其推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 已于 2026-08-22 单独授权并执行，当前结果由本文末 R01 镜像定义。
 
-## 12. 当前 Stage 5 R01 受控执行合同证据验收结果
+## 12. [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 受控执行合同证据验收结果
 
 产品目标回读和范围扩张审计均为 `PASS`。Stage 5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。R01 的验收要求每个 case 均有独立、可观察、由 WorkBuddy 原生提供的 bundled-script invocation/tool event；event 必须证明真实相对脚本调用并原生捕获 stdout、stderr、最终 exit、cwd 和 timeout。模型文字、自报、重复 JSON、marker 匹配或推断不能替代。
 
@@ -468,3 +468,30 @@ candidate_test: NOT_RUN_DOCS_ONLY
 ```
 
 R01 的阻断不改变五类 Stage5 总体验收门，也不构成 Stage5 PASS。独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`，该结果已正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，probe folder/ZIP 已删除。R02-R08 严格停止；不运行 nonzero/timeout，不把上传/安装、旧客户端历史或模型输出当作真实脚本、Launcher 或 receipt 证据。Provider、媒体、最终 Package、Stage4 spawn 和 Stage6 均未运行。
+
+## 13. 当前 Stage 5 R01 Sandbox Refresh1 受控客户端结果候选（2026-08-22）
+
+本节独立于原始 R01 已关闭记录；旧记录不改写。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行，因此 WorkBuddy 原生 PowerShell 是可接受的客户端沙箱执行面，不能再以“PowerShell 非原生/只暴露 shell”阻断。134432 证明脚本/工作流封装、上传和调用形态；134516 为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。剩余合同缺口是 bundled-relative resource resolution、Skill-root cwd，以及 stdin/stdout/stderr/final-exit/timeout 精确语义。
+
+```text
+task_id: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1
+candidate_branch: codex/v2-s5-r01-sandbox-refresh1-closeout
+base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
+goal_and_scope: product_goal_recheck=PASS / scope_expansion_audit=PASS / WorkBuddy唯一Agent-user入口 / fixed CLI仅唯一Skill内部桥梁
+client: WorkBuddy 5.3.14 / baseline=agent-browser,find-skills / HY3 / NEVER_AUTO
+probe: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_S5_R01_Sandbox_Refresh1 / retained_pending_user_cleanup
+hashes: SKILL=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9 / SCRIPT=8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359 / ZIP=2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
+install: SAFETY_SCAN_NOT_SKIPPED / NO_NON_HIGH_RISK_AUTO_INSTALL_SELECTED / INSTALLED_COUNT_3 / client_id=workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / BODY_FIRST_LINE_MATCHED_PROBE
+native_read: PRESENT / SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / PHYSICAL_INSTALL_PATH_EXPOSED_CONTRACT_DEVIATION_SENSITIVE_MINIMIZATION_FAILURE
+frozen_success: relative=.\\scripts\\r01_contract_probe.py / NO_CD_NO_ABSOLUTE_PATH_NO_GUESSING_NO_COMMAND_MUTATION / session_PowerShell_cwd=C:\Users\blazi\WorkBuddy\2026-08-22-14-25-11 / Skill-root-cwd=NOT_EXPOSED / bundle-relative=NOT_EXPOSED
+execution: POWERSHELL_NOT_STARTED / USER_CANCELLED / no script, stdout, stderr, final exit, cwd classification or timeout evidence
+result: BLOCKED_EXTERNAL_CONTRACT / MISSING_SKILL_ROOT_CWD_AND_BUNDLE_RELATIVE_RESOLUTION / NOT_BECAUSE_POWERSHELL_IS_NON_NATIVE
+review: APPROVE / P0=0 / P1=0 / P2=0 / independent Reviewer / folded full path and reasoning from coordinator observation
+nonzero_timeout: NOT_RUN / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
+temporary_skill: STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_SKILLS_UNTOUCHED
+computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_AND_RECOVERED
+candidate_state: current_task=V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW / next_authorized_task=NONE
+test_and_scope: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / Provider-media-Package-Stage4-Stage6=0
+```
+
+该候选继续保持 Stage5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不形成 Stage5 PASS；不运行 nonzero/timeout，不启动 R02-R08，不创建或运行 Provider、媒体、Package、Stage4、Stage6 或生产流程。

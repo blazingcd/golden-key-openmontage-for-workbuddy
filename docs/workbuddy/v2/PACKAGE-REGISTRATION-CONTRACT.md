@@ -99,6 +99,28 @@ The Release, PackageRoot, and DataRoot used for this proof were task-only tempor
 
 This Stage 2 contract remains unchanged: the public Registration/Activation/Locator schemas, APIs, validation rules, and accepted temporary-package evidence above are not reopened or expanded by Stage 5 planning. The retained final Release, production PackageRoot, production Registration/Activation, and new-process Locator proof are final-delivery responsibilities of the separately authorized `V2-S5-R04-INSTALLER-LIFECYCLE1` and `V2-S5-R05-FINAL-PACKAGE-MATERIALIZATION-REGISTRATION1` tasks. The final installed, Installer-stamped WorkBuddy Skill is handled by the separately authorized R03/R04/R06 chain. Until those tasks produce evidence, `final_package_artifact=NOT_MATERIALIZED`, `production_package_root=NOT_CREATED`, `production_registration_activation=NOT_CREATED`, `final_installed_skill=NOT_CREATED`, and a real WorkBuddy `LauncherReceiptV1` remains `NOT_PROVED`. R00 and R01 do not create, register, activate, or silently promote any Package object.
 
-## 7. Current R01 boundary confirmation
+## 7. [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] Current R01 boundary confirmation
 
 R01 was a controlled WorkBuddy execution-contract evidence attempt only. It did not call Registration, Activation, Locator, Package, Installer, Stage4, Provider, media, or Stage6. WorkBuddy `5.3.14` installed the temporary probe Skill after a non-skipped safety scan, but the HY3 path exposed no independent native bundled-script invocation/tool event and execution stopped before Bash/PowerShell. The final R01 result is `BLOCKED_EXTERNAL_CONTRACT`; independent review approved and formally fast-forwarded the docs closeout. The user uninstalled the temporary Skill, WorkBuddy showed `2` installed Skills, task history remained, and the exact probe folder/ZIP was deleted; the two baseline Skills were untouched. The Stage 2 contract and its accepted temporary-package proof remain unchanged. R02-R08 are blocked by the strict chain.
+
+## 8. R01 Sandbox Refresh1 不改变 Stage 2 Registration/Locator 合同（候选，2026-08-22）
+
+refresh1 是独立的 WorkBuddy 客户端沙箱执行面窄核验，不调用、不修改 Registration、Activation、Locator、Package、Installer 或 Stage 2 既有临时 Package 证据。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行，故 WorkBuddy 原生 PowerShell 可以是沙箱执行面；本轮不得再把 PowerShell 非原生当作阻断。剩余阻断是 Skill-root cwd/bundled-relative resource resolution 与 stdin/stdout/stderr/final-exit/timeout 合同缺失；134432 仅证明 Skill 脚本/工作流打包上传调用形态，134516 是 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。
+
+```text
+task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
+client: WorkBuddy 5.3.14 / HY3_ONLY / NEVER_AUTO / baseline=agent-browser,find-skills
+probe: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_S5_R01_Sandbox_Refresh1 / retained_pending_user_cleanup
+hashes: SKILL=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9 / SCRIPT=8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359 / ZIP=2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
+client_evidence: safety_scan_not_skipped / no_non_high_risk_auto_install_selected / count_3 / workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / body_first_line_match
+native_read_and_path: SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / physical_install_path_exposed_contract_deviation / full path not reprinted as authority
+frozen_attempt: session_PowerShell_cwd=C:\Users\blazi\WorkBuddy\2026-08-22-14-25-11 / relative=.\\scripts\\r01_contract_probe.py / no_cd_no_absolute_no_guessing_no_command_mutation / Skill-root-and-bundle-relative=NOT_EXPOSED
+result: UI_USER_CANCELLED / POWERSHELL_NOT_STARTED / NO_SCRIPT_STDOUT_STDERR_FINAL_EXIT_CWD_TIMEOUT / BLOCKED_EXTERNAL_CONTRACT / NOT_BECAUSE_POWERSHELL_IS_NON_NATIVE
+review_chain: APPROVE_P0=0_P1=0_P2=0 / nonzero=NOT_RUN / timeout=NOT_RUN / R02-R08=NOT_STARTED_NOT_AUTHORIZED
+package_registration_state: UNTOUCHED / NO_REGISTRATION / NO_ACTIVATION / NO_LOCATOR / NO_PACKAGE / NO_INSTALLER
+temporary_skill: STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_SKILLS_UNTOUCHED
+computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_RECOVERED
+```
+
+该候选不改变 Stage 2 `PASS_ACCEPTED` 或 Stage 5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不创建或启动 Provider、媒体、Stage4、Stage6、生产 Package 或生产 Registration。

@@ -94,8 +94,30 @@ Stage4规划和实现均已`PASS_ACCEPTED`，`PackageToolDefinitionV1`固定工�
 
 R00 已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 已于 2026-08-22 单独授权并执行；最终结果为 `BLOCKED_EXTERNAL_CONTRACT`，独立审查已批准并正式 fast-forward，因此依赖严格 `R01 -> R02 -> R03 -> R04 -> R05 -> R06 -> R07 -> R08` 在 R01 停止，R02-R08 未启动、未授权。
 
-## 当前 Stage 5 R01 防漂移守卫（2026-08-22）
+## [ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 防漂移守卫（2026-08-22）
 
 产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，Shell 仍只负责六模块；固定 CLI 只允许作为唯一 Skill 内部桥梁，不得演变为任意 CLI/Shell 旁路。R01 使用 WorkBuddy `5.3.14`、HY3（不使用 Auto）和唯一临时 probe Skill；上传安全扫描未跳过，基线两个 Skill 未触碰。客户端仅暴露 Bash/PowerShell，未产生独立原生 bundled-script invocation/tool event，协调者在任何 shell/terminal 执行前停止。
 
 因此 R01 不得把 Skill 上传/安装、模型文字、marker、JSON 或截图当作脚本执行证据；不运行 nonzero/timeout，不记录或复述物理 cwd，不伪造 stdout/stderr/exit/timeout。R01 结果固定为 `BLOCKED_EXTERNAL_CONTRACT`，独立 zero-write Review 已 `APPROVE / P0=0 / P1=0 / P2=0` 并正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，D 盘精确隔离 probe folder/ZIP 已删除，基线两个 Skill 保持不变。R02-R08 必须保持 `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`。
+
+## 当前 R01 Sandbox Refresh1 防漂移守卫（2026-08-22，候选待独立文档审查）
+
+本 refresh1 独立于原始 R01 已关闭记录。产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 是唯一 Agent/user entry，固定 CLI 只可作为唯一 Skill 内部桥梁，不构成 blanket CLI ban、第二入口或第二控制面。官方 134420 已确认 enterprise Skill scripts 在客户端沙箱执行，因此 WorkBuddy 原生 PowerShell 是合法复核面；禁止再把 PowerShell 非原生当作阻断。134432 只证明 Skill 脚本/工作流打包、上传和调用形态；134516 必须保持 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。合同仍缺 Skill-root cwd、bundled-relative resource resolution、stdin/stdout/stderr/final-exit/timeout 精确语义。
+
+```text
+task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / candidate / pending_independent_docs_review
+base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
+client: WorkBuddy 5.3.14 / HY3_ONLY / NEVER_AUTO / baseline_skills=agent-browser,find-skills
+probe: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_S5_R01_Sandbox_Refresh1 / retained_pending_user_cleanup
+hashes: SKILL=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9 / SCRIPT=8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359 / ZIP=2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A
+install_identity: safety_scan_not_skipped / no_non_high_risk_auto_install_selected / count_3 / workbuddy-skill-1787379691395 / SKILL_MD_NO_METADATA_NAME / body_first_line_match
+native_read: SKILL_MD_AND_scripts\\r01_contract_probe.py_READ / physical_install_path_exposed / sensitive_minimization_contract_deviation
+success_attempt: relative=.\\scripts\\r01_contract_probe.py / no_cd / no_absolute_path / no_guessing / no_command_mutation / session_cwd=C:\Users\blazi\WorkBuddy\2026-08-22-14-25-11 / skill_root_cwd=NOT_EXPOSED / bundle_relative=NOT_EXPOSED
+stop_and_result: UI_USER_CANCELLED / POWERSHELL_NOT_STARTED / NO_SCRIPT_STDOUT_STDERR_FINAL_EXIT_CWD_TIMEOUT / BLOCKED_EXTERNAL_CONTRACT
+reason: MISSING_SKILL_ROOT_CWD_AND_BUNDLE_RELATIVE_RESOLUTION / NOT_POWERSHELL_NON_NATIVE
+review_chain: APPROVE_P0=0_P1=0_P2=0 / nonzero=NOT_RUN / timeout=NOT_RUN / R02-R08=NOT_STARTED_NOT_AUTHORIZED
+cleanup: TEMP_SKILL_STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_UNTOUCHED
+computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_RECOVERED
+```
+
+任何后续执行若缺少 Skill-root cwd 或 bundled-relative event，必须立即 `BLOCKED_EXTERNAL_CONTRACT`；不得以模型文字、物理路径、PowerShell shell transcript、marker、JSON、截图或推理替代。候选不授权 R02-R08、Provider、媒体、Package、Stage4、Stage6 或生产流程。

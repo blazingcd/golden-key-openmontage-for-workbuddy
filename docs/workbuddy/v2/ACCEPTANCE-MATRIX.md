@@ -447,9 +447,9 @@ scope_expansion_audit: PASS
 official_sources: 134432 WorkBuddy Skills; 134391 local AI workbench task bar; 134324 update notes; 134516 CodeBuddy PRODUCT_MISMATCH_NOT_CONTRACT_PROOF
 workbuddy_version_observed: 5.3.14
 baseline_installed_skills: 2 / agent-browser; find-skills
-temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / UNTRACKED
-temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1
-temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064
+temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / DELETED_AFTER_REVIEW
+temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1 / HASH_ONLY_SOURCE_DELETED_AFTER_REVIEW
+temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064 / HASH_ONLY_SOURCE_DELETED_AFTER_REVIEW
 client_safety_scan: NOT_SKIPPED / AUTO_INSTALL_ACCEPTED / installed count 3 / exact probe identity
 controlled_task_model: HY3 / NEVER_AUTO
 native_bundled_script_invocation_event: ABSENT / Bash-PowerShell-only path exposed
@@ -459,12 +459,12 @@ stdout_stderr_exit_cwd_timeout_evidence: NONE
 nonzero_case: NOT_RUN
 timeout_case: NOT_RUN
 r01_result: BLOCKED_EXTERNAL_CONTRACT
-r01_result_review: PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+r01_result_review: APPROVE / P0=0 / P1=0 / P2=0 / FORMALLY_FAST_FORWARDED_TO_ORIGIN_CODEX_WORKBUDDY_SHELL_V2 / COMMIT=9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc
 r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
-temporary_skill_cleanup: PENDING_INDEPENDENT_REVIEW_AND_USER_ACTION_TIME_UNINSTALL_CONFIRMATION
+temporary_skill_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / WORKBUDDY_INSTALLED_SKILLS_2 / TASK_HISTORY_RETAINED / BASELINE_SKILLS_2_UNTOUCHED
 baseline_skill_cleanup: NOT_TOUCHED / TWO_RETAINED_SKILLS
-temporary_probe_cleanup: UNTRACKED_FOLDER_AND_ZIP_PENDING_REVIEW
+temporary_probe_cleanup: COMPLETE / EXACT_ISOLATED_WORKTREE_FOLDER_AND_ZIP_DELETED / GIT_STATUS_CLEAN
 candidate_test: NOT_RUN_DOCS_ONLY
 ```
 
-R01 的阻断不改变五类 Stage5 总体验收门，也不构成 Stage5 PASS。R02-R08 严格停止；不运行 nonzero/timeout，不把上传/安装、旧客户端历史或模型输出当作真实脚本、Launcher 或 receipt 证据。Provider、媒体、最终 Package、Stage4 spawn 和 Stage6 均未运行。
+R01 的阻断不改变五类 Stage5 总体验收门，也不构成 Stage5 PASS。独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`，该结果已正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，probe folder/ZIP 已删除。R02-R08 严格停止；不运行 nonzero/timeout，不把上传/安装、旧客户端历史或模型输出当作真实脚本、Launcher 或 receipt 证据。Provider、媒体、最终 Package、Stage4 spawn 和 Stage6 均未运行。

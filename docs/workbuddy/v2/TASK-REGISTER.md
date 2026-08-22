@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 任务账本
 
-状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_IN_PROGRESS_ENTRY_CODE_COMPLETE_REAL_INTEGRATION_INCOMPLETE / R01_BLOCKED_EXTERNAL_CONTRACT / RESULT_CANDIDATE_PENDING_INDEPENDENT_REVIEW`
+状态：`STAGE_4_IMPLEMENTATION_PASS_ACCEPTED / FINAL_HANDOFF_HYGIENE_PASS_ACCEPTED / STAGE_5_IN_PROGRESS_ENTRY_CODE_COMPLETE_REAL_INTEGRATION_INCOMPLETE / R01_BLOCKED_EXTERNAL_CONTRACT / FORMALLY_PROMOTED / NO_ACTIVE_TASK`
 
 更新时间：2026-08-22
 
@@ -57,19 +57,19 @@ stage_5_entry_code_review: APPROVE / P0=0 / P1=0 / P2=0
 stage_5_entry_code_windows_evidence: direct 19 passed / hygiene 11 passed / full 377 passed / final exit 0
 stage_5_entry_code_ci: run 32489111184 / completed / success / headSha=0e7a0be65877b03fb386e1c6c6bc258c0b27db6c / Ubuntu / Python 3.14.7 / 376 passed / 1 skipped / final exit 0
 stage_5_entry_closeout: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / FORMALLY_DELIVERED_DOCS_ONLY / NOT_STAGE5_PASS
-stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / R01_EXECUTION_AUTHORIZED_AND_CONSUMED_IN_RESULT_CANDIDATE
+stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / R01_EXECUTION_AUTHORIZED / R01_RESULT_FORMALLY_PROMOTED_BLOCKED_EXTERNAL_CONTRACT
 stage_5_implementation: ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
-current_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / CONTROLLED_CLIENT_EVIDENCE_EXECUTED / RESULT_CANDIDATE
-current_task_status: BLOCKED_EXTERNAL_CONTRACT / CANDIDATE_NOT_PROMOTED / PENDING_INDEPENDENT_REVIEW
+current_task: NONE / NO_ACTIVE_TASK / R01_RESULT_FORMALLY_PROMOTED_BLOCKED_EXTERNAL_CONTRACT
+current_task_status: BLOCKED_EXTERNAL_CONTRACT / FORMALLY_PROMOTED / R01_CHAIN_STOPPED
 next_authorized_task: NONE
 next_planned_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTROLLED-CLIENT-AUTHORIZATION1 / DOCS_ONLY / CONSUMED_COMPLETE / FORMALLY_PROMOTED
 stage_5_t1_controlled_client_evidence_candidate: HISTORICAL_V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / WORKBUDDY_5.3.13 / SUPERSEDED_BY_R01
 stage_5_t1_controlled_client_proved: WORKBUDDY_5.3.14 / BASELINE_SKILLS_2_RETAINED / SAFETY_SCAN_NOT_SKIPPED / TEMP_PROBE_INSTALLED_COUNT_3 / EXACT_IDENTITY=golden-key-openmontage-r01-controlled-probe_APPEARED / ISOLATED_TASK_ATTACHED_SOLE_PROBE / HY3_SELECTED / NO_NATIVE_EVENT / NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT
 stage_5_t1_controlled_client_unproved: native bundled-script invocation/tool event; script stdout/stderr/final exit/cwd/timeout capture; real LauncherReceiptV1
-stage_5_t1_controlled_client_cleanup: R01_TEMPORARY_SKILL_REMAINS_INSTALLED_PENDING_INDEPENDENT_REVIEW_AND_USER_UNINSTALL_CONFIRMATION / BASELINE_SKILLS_2_UNTOUCHED / PROBE_FOLDER_AND_ZIP_UNTRACKED_PENDING_CLEANUP
+stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / WORKBUDDY_INSTALLED_SKILLS_2 / TASK_HISTORY_RETAINED / BASELINE_SKILLS_2_UNTOUCHED / PROBE_FOLDER_AND_ZIP_DELETED
 pending_next_authorized_task: NONE
-next_authorized_task_condition: after R01 closeout promotion current_task=NONE / NO_ACTIVE_TASK and next_authorized_task=NONE; R02-R08 remain blocked until a new authorization and a reopened R01 contract evidence task
+next_authorized_task_condition: R01_CLOSEOUT_PROMOTION_SATISFIED / current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE; R02-R08 remain blocked until a new authorization and a reopened R01 contract evidence task
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry_authorization: ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -1880,7 +1880,7 @@ Stage5只有在以下五类证据全部存在时才可整体 `PASS_ACCEPTED`：
 
 ## Stage 5当前 R01受控执行合同证据结果（2026-08-22）
 
-本节是当前 R01 结果收口候选；R00 已正式推广并消费。产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一运行中的 Agent/用户入口，Shell 仍仅负责六模块；固定 CLI 仅允许作为唯一 Skill 内部桥梁，不构成任意 CLI 旁路。R01 结果不是 Stage5 整体 PASS，Stage5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。
+本节是当前 R01 正式结果镜像；R00 已正式推广并消费。产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 仍是唯一运行中的 Agent/用户入口，Shell 仍仅负责六模块；固定 CLI 仅允许作为唯一 Skill 内部桥梁，不构成任意 CLI 旁路。R01 结果不是 Stage5 整体 PASS，Stage5 仍为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`。
 
 ```text
 task_id: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1
@@ -1895,9 +1895,9 @@ scope_expansion_audit: PASS
 official_sources: 134432 WorkBuddy Skills; 134391 local AI workbench task bar; 134324 update notes; 134516 CodeBuddy PRODUCT_MISMATCH_NOT_CONTRACT_PROOF
 workbuddy_version_observed: 5.3.14
 baseline_installed_skills: 2 / agent-browser; find-skills
-temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / UNTRACKED
-temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1
-temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064
+temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / DELETED_AFTER_REVIEW
+temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1 / HASH_ONLY_SOURCE_DELETED_AFTER_REVIEW
+temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064 / HASH_ONLY_SOURCE_DELETED_AFTER_REVIEW
 client_safety_scan: NOT_SKIPPED / AUTO_INSTALL_ACCEPTED
 installed_skill_observation: count 3 / exact golden-key-openmontage-r01-controlled-probe identity appeared
 controlled_task_model: HY3 / NEVER_AUTO
@@ -1911,22 +1911,22 @@ nonzero_case: NOT_RUN
 timeout_case: NOT_RUN
 r01_result: BLOCKED_EXTERNAL_CONTRACT
 r01_result_reason: each case requires an independent native bundled-script invocation/tool event; text/marker/JSON cannot substitute
-r01_result_review: PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+r01_result_review: APPROVE / P0=0 / P1=0 / P2=0 / FORMALLY_FAST_FORWARDED_TO_ORIGIN_CODEX_WORKBUDDY_SHELL_V2 / COMMIT=9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc
 r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
-temporary_skill_cleanup: PENDING_INDEPENDENT_REVIEW_AND_USER_ACTION_TIME_UNINSTALL_CONFIRMATION
+temporary_skill_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / WORKBUDDY_INSTALLED_SKILLS_2 / TASK_HISTORY_RETAINED / BASELINE_SKILLS_2_UNTOUCHED
 baseline_skill_cleanup: NOT_TOUCHED / TWO_RETAINED_SKILLS
-temporary_probe_cleanup: UNTRACKED_FOLDER_AND_ZIP_PENDING_REVIEW
+temporary_probe_cleanup: COMPLETE / EXACT_ISOLATED_WORKTREE_FOLDER_AND_ZIP_DELETED / GIT_STATUS_CLEAN
 candidate_allowed_paths: AGENT_GUIDE.md; README.md; README_zh-CN.md; PROJECT_CONTEXT.md; PROJECT-STATE.md; docs/workbuddy/v2/README.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; docs/workbuddy/v2/MODULE-DISPOSITION.md; docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md
 candidate_production_code_changes: 0
 candidate_test_changes: 0
 candidate_ci_changes: 0
 candidate_package_registration_changes: 0
-controlled_client_external_write: TEMPORARY_SKILL_UPLOAD_INSTALL / RETAINED_PENDING_INDEPENDENT_REVIEW_AND_USER_CONFIRMED_CLEANUP
+controlled_client_external_write: TEMPORARY_SKILL_UPLOAD_INSTALL / USER_UNINSTALLED_AFTER_REVIEW / WORKBUDDY_INSTALLED_SKILLS_2 / BASELINE_SKILLS_UNTOUCHED
 docs_closeout_external_writes: NONE
 candidate_real_workbuddy_execution: CONTROLLED_CLIENT_ATTEMPT_ONLY / NO_SCRIPT_EXECUTION / NO_SHELL_OR_TERMINAL_EXECUTION
 candidate_test: NOT_RUN_DOCS_ONLY
-candidate_push: PENDING_OWN_BRANCH_ONLY
+candidate_push: R01_RESULT_FORMALLY_FAST_FORWARDED / origin/codex/workbuddy-shell-v2 / commit=9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc
 after_r01_closeout_promotion: current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE / R02-R08_BLOCKED_BY_CHAIN
 ```
 
-官方资料只证明 Skill 的脚本/工作流打包、上传、选择和自动调用形态；没有给出精确 native command/cwd/env/stdin/stdout/stderr/exit/timeout 合同。WorkBuddy `5.3.14` 的受控路径只暴露 Bash/PowerShell，没有独立原生 bundled-script invocation/tool event；协调者在任何 shell/terminal 执行前停止。因此不运行 nonzero/timeout，不伪造 stdout/stderr/exit/cwd/timeout，不把 Skill 上传/安装或模型文字当作脚本执行证据。R01 结果固定为 `BLOCKED_EXTERNAL_CONTRACT`，独立审查完成前临时 Skill 与未跟踪探针现场保留；R02-R08 不得启动。
+官方资料只证明 Skill 的脚本/工作流打包、上传、选择和自动调用形态；没有给出精确 native command/cwd/env/stdin/stdout/stderr/exit/timeout 合同。WorkBuddy `5.3.14` 的受控路径只暴露 Bash/PowerShell，没有独立原生 bundled-script invocation/tool event；协调者在任何 shell/terminal 执行前停止。因此不运行 nonzero/timeout，不伪造 stdout/stderr/exit/cwd/timeout，不把 Skill 上传/安装或模型文字当作脚本执行证据。R01 最终结果固定为 `BLOCKED_EXTERNAL_CONTRACT`；独立审查已 `APPROVE / P0=0 / P1=0 / P2=0` 并正式 fast-forward，用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，精确隔离 probe folder/ZIP 已删除；R02-R08 不得启动。

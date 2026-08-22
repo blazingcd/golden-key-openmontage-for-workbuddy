@@ -15,7 +15,7 @@ Current status:
 - Final Package/PackageRoot/production Registration/Activation/final installed Skill: `NOT_MATERIALIZED / NOT_CREATED`
 - Real WorkBuddy `LauncherReceiptV1`: `NOT_PROVED`
 
-Live status, exact Git objects, and task authorization are recorded only in [`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md). R00 is formally promoted and consumed. R01 was separately authorized and executed, but its result is currently a `BLOCKED_EXTERNAL_CONTRACT` closeout candidate pending independent review because the HY3 path exposed no native bundled-script invocation/tool event; no R02-R08 task is authorized by the blocked chain.
+Live status, exact Git objects, and task authorization are recorded only in [`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md). R00 is formally promoted and consumed. R01 was separately authorized and executed; its final result remains `BLOCKED_EXTERNAL_CONTRACT` because the HY3 path exposed no native bundled-script invocation/tool event, and its approved docs closeout was formally fast-forwarded at `9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc`; no R02-R08 task is authorized by the blocked chain.
 
 Stage 2 Registration/Locator, Stage 3 runtime preparation, and Stage 4 session Launcher implementations are accepted. Stage 2 also proved one real temporary Package containing Python, FFmpeg, and Node, but that temporary Package was deleted. This does not prove a retained final Release, installed production PackageRoot, production Registration, Installer, or final distribution. The Stage 2 boundary is in [`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md).
 

@@ -67,7 +67,7 @@ stage_5_planning_authorization_history_scope: DOCS_ONLY / no production code / t
 initial_product_goal_recheck: PASS / WorkBuddy is the only running Agent and the only user entry; after loading the verified Package Guide it assumes the OpenMontage logical production role
 stage_5_t1_cli_boundary: CLI_NOT_A_BLANKET_BAN / forbid a second entry, parallel control plane, fallback, or arbitrary command/argv/Shell generation; a fixed CLI used internally by the one official WorkBuddy Skill remains eligible for controlled contract verification
 stage_5_planning_t1_hard_stop: HISTORICAL_EXTERNAL_CONTRACT_STOP / superseded for the external-mechanism question; never fabricate an interface or use CLI/MCP/second-Skill fallback, and do not treat CLI presence alone as architecture unavailability
-stage_5_planning_t1_current_state: HISTORICAL_PRE_CLOSEOUT_T1_STATE / SUPERSEDED_BY_V2-S5-R00 / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING; current live state is the Stage5 R01 result-candidate mirror below
+stage_5_planning_t1_current_state: HISTORICAL_PRE_CLOSEOUT_T1_STATE / SUPERSEDED_BY_V2-S5-R00 / T1_EXTERNAL_MECHANISM_CONFIRMED / INTERNAL_FIXED_CLI_BRIDGE_FROZEN_FOR_PLANNING; current live state is the Stage5 R01 formally promoted result mirror below
 stage_5_t1_fixed_cli_bridge_status: FROZEN_FOR_PLANNING / one WorkBuddy-managed Skill -> one non-user-facing fixed transport adapter -> one accepted Stage4 consumer
 stage_5_t1_fixed_cli_bridge_command: LOCATOR_PACKAGE_PYTHON / -I -m golden_key_openmontage_workbuddy.workbuddy_entry_cli / no console-script / no subcommands / shell=false
 stage_5_t1_fixed_cli_bridge_user_message_boundary: wire canonicalization only / no NFC-NFD-trim-newline rewrite / verify Stage4 NFC+UTF-8 precondition / non-NFC exit64 / valid Unicode code-point sequence unchanged
@@ -102,9 +102,9 @@ stage_5_entry_closeout: V2-S5-WORKBUDDY-ENTRY-CLOSEOUT1 / FORMALLY_DELIVERED_DOC
 stage_4_launcher_authorization: NOT_GRANTED
 stage_5_workbuddy_entry: ENTRY_CODE_COMPLETE / REAL_WORKBUDDY_INTEGRATION_INCOMPLETE
 stage_6_status_result_relay: NOT_GRANTED
-stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / R01_EXECUTION_AUTHORIZED_AND_CONSUMED_IN_RESULT_CANDIDATE
-current_task: V2-S5-R01-WORKBUDDY-EXECUTION-CONTRACT-EVIDENCE1 / CONTROLLED_CLIENT_EVIDENCE_EXECUTED / RESULT_CANDIDATE
-current_task_status: BLOCKED_EXTERNAL_CONTRACT / CANDIDATE_NOT_PROMOTED / PENDING_INDEPENDENT_REVIEW
+stage_5_implementation_authorization: ENTRY_CODE_RESULT_CONSUMED / R00_CONSUMED / R01_EXECUTION_AUTHORIZED / R01_RESULT_FORMALLY_PROMOTED_BLOCKED_EXTERNAL_CONTRACT
+current_task: NONE / NO_ACTIVE_TASK / R01_RESULT_FORMALLY_PROMOTED_BLOCKED_EXTERNAL_CONTRACT
+current_task_status: BLOCKED_EXTERNAL_CONTRACT / FORMALLY_PROMOTED / R01_CHAIN_STOPPED
 stage_4_contract_status: CLOSED_BY_FORMAL_PLAN_RESULT / PackageToolDefinitionV1 + launch_session_tool + nine-outcome immutable LauncherReceiptV1
 next_authorized_task: NONE / R01_BLOCKED_CHAIN
 next_planned_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
@@ -112,9 +112,9 @@ stage_5_t1_evidence_authorization_history: V2-S5-T1-EVIDENCE1-CLOSEOUT-AND-CONTR
 stage_5_t1_controlled_client_evidence_candidate: HISTORICAL_V2-S5-T1-CONTROLLED-CLIENT-EVIDENCE1 / WORKBUDDY_5.3.13 / SUPERSEDED_BY_R01
 stage_5_t1_controlled_client_proved: WORKBUDDY_5.3.14 / BASELINE_SKILLS_2_RETAINED / SAFETY_SCAN_NOT_SKIPPED / TEMP_PROBE_INSTALLED_COUNT_3 / EXACT_IDENTITY=golden-key-openmontage-r01-controlled-probe_APPEARED / ISOLATED_TASK_ATTACHED_SOLE_PROBE / HY3_SELECTED / NO_NATIVE_EVENT / NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT
 stage_5_t1_controlled_client_unproved: native bundled-script invocation/tool event; script stdout/stderr/final exit/cwd/timeout capture; real LauncherReceiptV1
-stage_5_t1_controlled_client_cleanup: R01_TEMPORARY_SKILL_REMAINS_INSTALLED_PENDING_INDEPENDENT_REVIEW_AND_USER_UNINSTALL_CONFIRMATION / BASELINE_SKILLS_2_UNTOUCHED / PROBE_FOLDER_AND_ZIP_UNTRACKED_PENDING_CLEANUP
+stage_5_t1_controlled_client_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / WORKBUDDY_INSTALLED_SKILLS_2 / TASK_HISTORY_RETAINED / BASELINE_SKILLS_2_UNTOUCHED / PROBE_FOLDER_AND_ZIP_DELETED
 pending_next_authorized_task: NONE
-next_authorized_task_condition: after R01 closeout promotion current_task=NONE / NO_ACTIVE_TASK and next_authorized_task=NONE; R02-R08 remain blocked until a new authorization and a reopened R01 contract evidence task
+next_authorized_task_condition: R01_CLOSEOUT_PROMOTION_SATISFIED / current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE; R02-R08 remain blocked until a new authorization and a reopened R01 contract evidence task
 effective_stage_4_launcher_authorization: NOT_GRANTED
 effective_stage_5_workbuddy_entry_authorization: NOT_GRANTED
 effective_stage_6_status_result_relay_authorization: NOT_GRANTED
@@ -746,9 +746,9 @@ stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 official_sources: 134432 WorkBuddy Skills; 134391 local AI workbench task bar; 134324 WorkBuddy update notes; 134516 CodeBuddy PRODUCT_MISMATCH_NOT_CONTRACT_PROOF
 workbuddy_version_observed: 5.3.14
 baseline_installed_skills: 2 / agent-browser; find-skills
-temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / UNTRACKED
-temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1
-temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064
+temporary_probe_zip: r01-controlled-probe.zip / sha256 C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D / DELETED_AFTER_REVIEW
+temporary_probe_skill_sha256: D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1E1 / HASH_ONLY_SOURCE_DELETED_AFTER_REVIEW
+temporary_probe_script_sha256: 52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064 / HASH_ONLY_SOURCE_DELETED_AFTER_REVIEW
 client_safety_scan: NOT_SKIPPED / AUTO_INSTALL_ACCEPTED
 installed_skill_observation: count 3 / exact golden-key-openmontage-r01-controlled-probe identity appeared
 controlled_task_model: HY3 / NEVER_AUTO
@@ -762,18 +762,18 @@ nonzero_case: NOT_RUN
 timeout_case: NOT_RUN
 r01_result: BLOCKED_EXTERNAL_CONTRACT
 r01_result_reason: frozen contract requires one independent native bundled-script invocation/tool event per case; HY3 exposed only shell execution, so text/marker/JSON cannot substitute
-r01_result_review: PENDING_INDEPENDENT_ZERO_WRITE_REVIEW
+r01_result_review: APPROVE / P0=0 / P1=0 / P2=0 / FORMALLY_FAST_FORWARDED_TO_ORIGIN_CODEX_WORKBUDDY_SHELL_V2 / COMMIT=9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc
 r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
-temporary_skill_cleanup: PENDING_INDEPENDENT_REVIEW_AND_USER_ACTION_TIME_UNINSTALL_CONFIRMATION
+temporary_skill_cleanup: COMPLETE / USER_UNINSTALLED_TEMPORARY_SKILL / WORKBUDDY_INSTALLED_SKILLS_2 / TASK_HISTORY_RETAINED / BASELINE_SKILLS_2_UNTOUCHED
 baseline_skill_cleanup: NOT_TOUCHED / TWO_RETAINED_SKILLS
-temporary_probe_cleanup: UNTRACKED_FOLDER_AND_ZIP_PENDING_REVIEW
+temporary_probe_cleanup: COMPLETE / EXACT_ISOLATED_WORKTREE_FOLDER_AND_ZIP_DELETED / GIT_STATUS_CLEAN
 candidate_test: NOT_RUN_DOCS_ONLY
 candidate_production_code_changes: 0
 candidate_test_changes: 0
 candidate_ci_changes: 0
 candidate_package_registration_changes: 0
 candidate_provider_media_stage4_stage6_changes: 0
-candidate_push: PENDING_OWN_BRANCH_ONLY
+candidate_push: R01_RESULT_FORMALLY_FAST_FORWARDED / origin/codex/workbuddy-shell-v2 / commit=9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc
 ```
 
-R01 的官方资料只证明 WorkBuddy Skill 可以封装脚本/工作流、可上传和在任务中选择/自动调用；更新记录只作支持范围证据，未给出精确 command/cwd/env/stdin/stdout/stderr/exit/timeout 语义。由于真实客户端没有产生独立原生 bundled-script invocation/tool event，R01 的三个 case 不能逐项继续；不运行非零或 timeout case，不把客户端安装成功当作脚本执行成功，也不把模型文字、自报或匹配诊断当作事件证据。R01 失败只阻断 R01->R02 链，不改变 Stage 3/4 已接受状态，也不扩大 Shell 为第二控制面。
+R01 的官方资料只证明 WorkBuddy Skill 可以封装脚本/工作流、可上传和在任务中选择/自动调用；更新记录只作支持范围证据，未给出精确 command/cwd/env/stdin/stdout/stderr/exit/timeout 语义。由于真实客户端没有产生独立原生 bundled-script invocation/tool event，R01 的三个 case 不能逐项继续；不运行非零或 timeout case，不把客户端安装成功当作脚本执行成功，也不把模型文字、自报或匹配诊断当作事件证据。R01 最终裁决仍为 `BLOCKED_EXTERNAL_CONTRACT`；独立 zero-write Review 已 `APPROVE / P0=0 / P1=0 / P2=0` 并正式 fast-forward，用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，精确隔离 probe folder/ZIP 已删除。R01 失败只阻断 R01->R02 链，不改变 Stage 3/4 已接受状态，也不扩大 Shell 为第二控制面。

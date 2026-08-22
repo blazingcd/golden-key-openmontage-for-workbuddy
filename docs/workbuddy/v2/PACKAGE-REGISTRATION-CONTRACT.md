@@ -127,7 +127,7 @@ computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FO
 
 该候选不改变 Stage 2 `PASS_ACCEPTED` 或 Stage 5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不创建或启动 Provider、媒体、Stage4、Stage6、生产 Package 或生产 Registration。
 
-## Current Stage 5 R01 acceptance-contract correction1 and Stage 2 boundary (2026-08-22)
+## [HISTORICAL / CONSUMED_BY_V2-S5-R02] Current Stage 5 R01 acceptance-contract correction1 and Stage 2 boundary (2026-08-22)
 
 The original R01, Sandbox Refresh1, and Expert Entry Feasibility records are `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`; their old blocked/incomplete outcomes remain preserved. This user-authorized correction does not reopen or change the accepted Stage 2 Registration/Activation/Locator contract and is not new official evidence.
 
@@ -138,8 +138,23 @@ deferred_execution: LOCATOR -> FIXED_POWERSHELL_OR_PRIVATE_CLI -> LAUNCHER_RECEI
 no_overclaim: NO_SCRIPT_STDOUT_STDERR_EXIT_CWD_TIMEOUT_OR_LAUNCHER_RECEIPT_CLAIM / NO_FINAL_PACKAGE_OR_REGISTRATION_CLAIM / NOT_STAGE5_PASS
 hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
 stage_2_boundary: REGISTRATION_ACTIVATION_LOCATOR_CONTRACT_UNCHANGED / NO_PACKAGE_OR_PRODUCTION_REGISTRATION_SIDE_EFFECT
-current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
-next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED
+current_task: HISTORICAL / NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: HISTORICAL / V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED
 ```
 
 The single WorkBuddy Skill/user-entry, fixed internal CLI bridge, no arbitrary CLI/path guessing/scan/PATH fallback/MCP/second Skill/second Agent/router/retry/replay, and Installer-stamped final Skill locator boundaries remain unchanged. R03/R07 own the later implementation and real execution proof; this correction creates no Package, Registration, Locator, PowerShell process, private CLI run, Provider, media, Stage 4, Stage 6, or production state.
+
+## Current Stage 5 R02 Package Release/Tool Definition Binding1 and Stage 2 boundary (2026-08-22)
+
+R02 verified that the published candidate exists and matches the approved source subtree, but it is not a bindable final Release. The published commit is `ef5f5b58fa1c2b494b0154989cf0e4e36615a701` with tree `0464861c5985c7c9072e789b94889d29cf9a937a`; the complete remote recursive tree has `2614` entries and zero binding-related paths, while the local same-tree immutable audit has `2155` blobs. Release/lock metadata contain no real safe fixed tool or release-specific `PackageToolDefinitionV1`/Manifest/Lock binding.
+
+```text
+task_id: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1
+r02_result: BLOCKED_PACKAGE_RELEASE / PUBLISHED_CANDIDATE_IDENTITY_VERIFIED / MISSING_SAFE_FIXED_TOOL_AND_RELEASE_SPECIFIC_DEFINITION
+stage_2_contract: REGISTRATION_ACTIVATION_LOCATOR_CONTRACT_UNCHANGED / NO_EXTERNAL_PACKAGE_MODIFICATION
+current_task: NONE / NO_ACTIVE_TASK / R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+next_authorized_task: NONE / PACKAGE_OWNER_RELEASE_BINDING_REAUTHORIZATION_REQUIRED / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+unblock_condition: SEPARATE_PACKAGE_OWNER_APPROVAL_AND_INDEPENDENT_SAFE_FIXED_TOOL_DEFINITION_MANIFEST_LOCK_VERIFICATION / THEN_REAUTHORIZE_R02
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+side_effects: NO_PACKAGE_MATERIALIZATION / NO_REGISTRATION / NO_ACTIVATION / NO_LOCATOR_CHANGE / NO_INSTALLER / NO_CLIENT / NO_PROVIDER_MEDIA_STAGE4_STAGE6_OR_PRODUCTION
+```

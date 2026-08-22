@@ -428,7 +428,7 @@ Stage 5 planning 当前为 `PASS_ACCEPTED`（不是 candidate）。实施任务 
 | Real WorkBuddy | HY3真实新会话成功取得真实`LauncherReceiptV1`，呈现字段可比对 | mock、静态CLI、Codex、客户端no-op标记 |
 | Governance | 独立Review、正式Git/CI、无歧义live authority | 候选分支、聊天确认、历史PASS或未推广closeout |
 
-R00 已正式推广并消费；其推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 已于 2026-08-22 单独授权并执行，当前结果由本文末 R01 镜像定义。
+R00 已正式推广并消费；其推广后 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 是历史交接状态。R01 入口面已接受，R02 已完成 docs-only 核验但因缺少 safe fixed tool 与 release-specific `PackageToolDefinitionV1`/Manifest/Lock binding 阻断；当前结果由本文末最新 R02 镜像定义。
 
 ## 12. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 受控执行合同证据验收结果
 
@@ -498,7 +498,7 @@ test_and_scope: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / Provider-m
 
 该候选继续保持 Stage5 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不形成 Stage5 PASS；不运行 nonzero/timeout，不启动 R02-R08，不创建或运行 Provider、媒体、Package、Stage4、Stage6 或生产流程。
 
-## 14. 当前 Stage 5 R01 验收契约纠正（2026-08-22）
+## 14. [HISTORICAL / CONSUMED_BY_V2-S5-R02] 当前 Stage 5 R01 验收契约纠正（2026-08-22）
 
 原始 R01、Sandbox Refresh1 和 Expert Entry Feasibility 记录均为 `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；其旧 `BLOCKED_EXTERNAL_CONTRACT`/`INCOMPLETE` 事实与裁决保留。本节是用户基于最初产品目标作出的项目验收归属纠正，不是新官方证据，也不宣称脚本或 Launcher 已执行。
 
@@ -515,6 +515,21 @@ hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / U
 client_test_policy: AUTHORIZED_CLIENT_TESTS_FOLLOW_USER_HY3_AND_NEVER_AUTO / PRODUCT_MODEL_NOT_LOCKED
 preserved_boundaries: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI / NO_PATH_GUESSING / NO_SCAN / NO_PATH_FALLBACK / NO_MCP / NO_SECOND_SKILL / NO_SECOND_AGENT / NO_ROUTER / NO_RETRY / NO_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
 stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
-current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
-next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+current_task: HISTORICAL / NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: HISTORICAL / V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+```
+
+## 15. 当前 Stage 5 R02 Package Release/Tool Definition Binding1 收口（2026-08-22）
+
+R02 的 published candidate 身份已核验匹配，但不能作为 bindable final Release：远程递归树 `truncated=false`、`2614` entries，绑定相关路径为 `0`；本地同树不可变审计为 `2155` blobs。`GOLDEN_KEY_OPENMONTAGE_RELEASE.json` 仅有 `release_version=0.3.24`、`console_script_entrypoint=null`、`python_load_probe=lib.pipeline_loader:load_pipeline`、`authority_entry=README.md`；lock 没有 `PackageToolDefinitionV1`、`workbuddy_entry_cli`、`package_tool_definition`、`launcher`、`fixed_tool` 或相应顶级字段。不得从媒体工具中随意挑选，不造 fixture/definition，不改外部 Package。
+
+```text
+task_id: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1
+published_candidate: blazingcd/golden-key-openmontage / codex/golden-key-openmontage-v0.3.24 / commit=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / tree=0464861c5985c7c9072e789b94889d29cf9a937a / approved_source_subtree=8395e578...
+r02_result: BLOCKED_PACKAGE_RELEASE / PUBLISHED_CANDIDATE_IDENTITY_VERIFIED / MISSING_SAFE_FIXED_TOOL_AND_RELEASE_SPECIFIC_DEFINITION
+current_task: NONE / NO_ACTIVE_TASK / R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+next_authorized_task: NONE / PACKAGE_OWNER_RELEASE_BINDING_REAUTHORIZATION_REQUIRED / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+unblock_condition: SEPARATE_PACKAGE_OWNER_APPROVAL_AND_INDEPENDENT_SAFE_FIXED_TOOL_DEFINITION_MANIFEST_LOCK_VERIFICATION / THEN_REAUTHORIZE_R02
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+product_goal_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
 ```

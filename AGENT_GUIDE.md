@@ -34,7 +34,7 @@ The accepted minimum contract remains provider- and runtime-opaque: a release-sp
 
 Stage 4 does not hard-code, select, configure, or route any Provider or runtime, including Remotion or HyperFrames. Provider configuration is separate external-service input and only definition-allowlisted environment names reach the child process. Local Stage 3 evidence is accepted only when `PackageToolDefinitionV1.required_local_capabilities` declares the same opaque capability and definition; the caller must pass the complete approved definition plus the unmodified original Stage 3 fact, and Stage 4 independently revalidates bytes using the accepted `managed`, `explicit`, or `PATH` source semantics. A base fixed-tool call never requires optional local-capability evidence. Stage 4 must not accept arbitrary shell or commands, parse user intent, read an unverified Package Guide, launch another Agent, install Runtime, choose a renderer, retry or replay, schedule work, run media production, create Artifacts, or advance Checkpoints. Literal `user_message` and `executor_controls` remain separate. Real WorkBuddy new-session behavior and continuation belong to Stage 5; Stage 6 first attempts direct `LauncherReceiptV1` reuse with zero production code.
 
-Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The `V2-S5-WORKBUDDY-ENTRY-BUILDER1` implementation and its six-document closeout are formally delivered as repository changes, but they prove only the entry-code/static contract layer; they do not make the whole Stage 5 `PASS_ACCEPTED`. Final Package/PackageRoot/Registration/Activation, a final installed Skill, and a real WorkBuddy-produced `LauncherReceiptV1` remain absent or unproved. R00 is formally promoted and consumed. The original R01, R01 refresh1, and Expert Entry Feasibility records remain preserved as `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`, including their historical `BLOCKED_EXTERNAL_CONTRACT` or `INCOMPLETE` outcomes. The current user-authorized acceptance correction accepts only the R01 entry surface and defers execution proof to R03-R07; it is not new official evidence. R02 is the only next authorized task; R03-R08 remain ordered and not authorized.
+Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The `V2-S5-WORKBUDDY-ENTRY-BUILDER1` implementation and its six-document closeout are formally delivered as repository changes, but they prove only the entry-code/static contract layer; they do not make the whole Stage 5 `PASS_ACCEPTED`. Final Package/PackageRoot/Registration/Activation, a final installed Skill, and a real WorkBuddy-produced `LauncherReceiptV1` remain absent or unproved. R00 is formally promoted and consumed. The original R01, R01 refresh1, and Expert Entry Feasibility records remain preserved as `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`, including their historical `BLOCKED_EXTERNAL_CONTRACT` or `INCOMPLETE` outcomes. The R01 entry surface was accepted, but R02 was closed as `BLOCKED_PACKAGE_RELEASE` because the published candidate lacks the required safe fixed-tool and release-specific definition binding. No next task is authorized; R03-R08 remain ordered and blocked by chain. This R02 result is a docs-only mirror, not new product or client evidence.
 
 ## Current Stage 5 remainder mirror
 
@@ -52,11 +52,11 @@ production_package_root: NOT_CREATED
 production_registration_activation: NOT_CREATED
 final_installed_skill: NOT_CREATED
 real_workbuddy_launcher_receipt: NOT_PROVED
-current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
-next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY
+current_task: NONE / NO_ACTIVE_TASK / R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+next_authorized_task: NONE / PACKAGE_OWNER_RELEASE_BINDING_REAUTHORIZATION_REQUIRED
 after_r00_promotion: CONSUMED_COMPLETE / ORIGINAL_R01_EXECUTED_AND_FORMALLY_CLOSED
 after_r01_closeout_promotion: HISTORICAL / ORIGINAL_R01_AND_REFRESH1_SUPERSEDED_ACCEPTANCE_CONTRACT
-next_planned_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+next_planned_task: NONE / R03-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 ```
 
 The entry-code contract remains one WorkBuddy-managed Skill as the sole Agent/user entry, one package-private fixed CLI transport adapter, and exactly one accepted Stage 4 call with a real `LauncherReceiptV1`. It has no console script, subcommands, router, MCP, second Agent, retry or replay; JSON, provider-secret, fixed-environment identity, cancellation and receipt boundaries remain as frozen. Static, direct-test, hygiene and CI evidence does not prove a real WorkBuddy business/E2E session. The corrected R01 entry-surface acceptance does not claim script execution, stdout/stderr/exit/cwd/timeout, or receipt proof; implementation and real proof remain deferred to R03-R07. The complete Stage 5 gate and ordered R01-R08 remainder are authoritative in `docs/workbuddy/v2/TASK-REGISTER.md`.
@@ -128,7 +128,7 @@ review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_REVIEWER
 anti_expansion: PASS / NO_EXPERT_OR_PACKAGE_OR_SKILL_CREATED / NO_NEW_R01_GATE / NO_PROVIDER_MEDIA_PACKAGE_STAGE4_STAGE6_OR_PRODUCTION
 ```
 
-## Current Stage 5 R01 acceptance-contract correction1 (2026-08-22)
+## [HISTORICAL / CONSUMED_BY_V2-S5-R02] Stage 5 R01 acceptance-contract correction1 (2026-08-22)
 
 The original R01, Sandbox Refresh1, and Expert Entry Feasibility records above are explicitly `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`; their observed facts and old `BLOCKED_EXTERNAL_CONTRACT` or `INCOMPLETE` outcomes remain preserved. This is a user-authorized project acceptance-ownership correction, not new official WorkBuddy evidence.
 
@@ -144,9 +144,32 @@ hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / U
 client_test_policy: AUTHORIZED_CLIENT_TESTS_FOLLOW_USER_HY3_AND_NEVER_AUTO / PRODUCT_MODEL_NOT_LOCKED
 preserved_boundaries: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI / NO_PATH_GUESSING / NO_SCAN / NO_PATH_FALLBACK / NO_MCP / NO_SECOND_SKILL / NO_SECOND_AGENT / NO_ROUTER / NO_RETRY / NO_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
 stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
-current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
-next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY
-chain: R01_CORRECTED_ACCEPTED -> R02_AUTHORIZED -> R03_R08_STRICT_ORDER / R03-R08_NOT_AUTHORIZED
+current_task: HISTORICAL / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: HISTORICAL / V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY
+chain: HISTORICAL / R01_CORRECTED_ACCEPTED -> R02_AUTHORIZED -> R03_R08_STRICT_ORDER / R03-R08_NOT_AUTHORIZED
+```
+
+## Current Stage 5 R02 Package Release/Tool Definition Binding1 closeout (2026-08-22)
+
+R02 is a docs-only closeout. The published candidate exists and its identity matches the approved source subtree, but it is not a bindable final Release: the verified tree and metadata do not provide a real safe fixed tool or a release-specific `PackageToolDefinitionV1`/Manifest/Lock binding. This result does not select a media tool, invent a fixture or definition, or modify the external Package.
+
+```text
+task_id: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1
+published_repo: blazingcd/golden-key-openmontage / branch=codex/golden-key-openmontage-v0.3.24
+published_commit: ef5f5b58fa1c2b494b0154989cf0e4e36615a701
+published_tree: 0464861c5985c7c9072e789b94889d29cf9a937a / APPROVED_SOURCE_SUBTREE=8395e578...
+published_tree_audit: REMOTE_RECURSIVE_TRUNCATED_FALSE / entries=2614 / binding_path_filter=(workbuddy|package.?tool.?definition|launcher|fixed.?tool|entry.?cli) / binding_related_paths=0 / local_same_tree_blobs=2155
+release_metadata: GOLDEN_KEY_OPENMONTAGE_RELEASE.json / release_version=0.3.24 / console_script_entrypoint=null / python_load_probe=lib.pipeline_loader:load_pipeline / authority_entry=README.md
+lock_metadata: GOLDEN_KEY_OPENMONTAGE.lock.json / NO_PackageToolDefinitionV1 / NO_workbuddy_entry_cli / NO_package_tool_definition / NO_launcher / NO_fixed_tool / NO_CORRESPONDING_TOP_LEVEL_FIELDS
+r02_result: BLOCKED_PACKAGE_RELEASE / PUBLISHED_CANDIDATE_IDENTITY_VERIFIED / MISSING_SAFE_FIXED_TOOL_AND_RELEASE_SPECIFIC_DEFINITION
+no_overclaim: PUBLISHED_CANDIDATE_EXISTS / NOT_BINDABLE_FINAL_RELEASE / NO_FINAL_PACKAGE_OR_REGISTRATION_OR_LAUNCHER_RECEIPT_PROOF
+preserved_r01_hy3_policy: R01_ENTRY_SURFACE_ACCEPTED / HY3_CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
+product_goal_and_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+current_task: NONE / NO_ACTIVE_TASK / R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+next_authorized_task: NONE / PACKAGE_OWNER_RELEASE_BINDING_REAUTHORIZATION_REQUIRED / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+unblock_condition: SEPARATE_PACKAGE_OWNER_TASK_MUST_APPROVE_RELEASE_DELIVERY_AND_INDEPENDENTLY_VERIFY_SAFE_FIXED_TOOL_PLUS_RELEASE_SPECIFIC_DEFINITION_PLUS_MANIFEST_LOCK_BINDING / THEN_REAUTHORIZE_R02
+side_effects: NO_CLIENT / NO_PACKAGE_MATERIALIZATION / NO_REGISTRATION / NO_STAGE4 / NO_PROVIDER_MEDIA_STAGE6_OR_PRODUCTION
 ```
 
 ## External Package Guide

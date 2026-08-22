@@ -367,7 +367,7 @@ Stage 5整体状态固定为 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATI
 
 整体 `PASS_ACCEPTED` 必须同时有五类证据：持久 final Package Release+PackageRoot；production Registration+Activation+new-process Locator；无placeholder且唯一的最终安装Skill；HY3真实WorkBuddy成功取得真实`LauncherReceiptV1`；独立Review、正式Git/CI和无歧义live authority。Provider、媒体/视频、Remotion/HyperFrames下载安装、Stage6转换代码和完整业务E2E不属于Stage5完成前置；optional缺失/decline/defer不阻断base。Stage5完成后Stage6先判断能否直接复用receipt（可直用则优先零代码），完整业务E2E另行授权，不称为Stage7。
 
-当时的 R00 任务已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 只表示 R00 收口后的历史交接状态。R01 已由 2026-08-22 单独授权并执行，当前结果由本文末的 R01 镜像统一定义。
+当时的 R00 任务已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE` 只表示 R00 收口后的历史交接状态。R01 入口面已接受，R02 已完成 docs-only 核验但因缺少 safe fixed tool 与 release-specific `PackageToolDefinitionV1`/Manifest/Lock binding 阻断；当前 R02 结果由本文末最新镜像统一定义。
 
 ## 12. [HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT / ORIGINAL R01 / FORMALLY CLOSED / PRESERVED] 当前 Stage 5 R01 受控执行合同证据结果
 
@@ -430,7 +430,7 @@ computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FO
 
 The refresh1 accepted result does not authorize or create Package, Registration, Installer, final Skill, Stage 4 spawn, Provider, media, Stage 6, or production flow. It also does not elevate Stage 5 to `PASS_ACCEPTED`; the temporary Skill is uninstalled and its isolated source/ZIP cleanup is complete.
 
-## Current Stage 5 R01 acceptance-contract correction1 (2026-08-22)
+## [HISTORICAL / CONSUMED_BY_V2-S5-R02] Current Stage 5 R01 acceptance-contract correction1 (2026-08-22)
 
 The original R01, Sandbox Refresh1, and Expert Entry Feasibility records are retained as `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`; their old blocked/incomplete outcomes remain historical evidence. This user-authorized correction is an acceptance-ownership decision based on the original product goal, not new official WorkBuddy evidence.
 
@@ -441,6 +441,22 @@ r01_execution_proof: NOT_CURRENTLY_PROVED / LOCATOR_TO_FIXED_POWERSHELL_OR_PRIVA
 hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
 boundary: ONE_WORKBUDDY_SKILL_AND_ONE_USER_ENTRY / FIXED_CLI_INTERNAL_BRIDGE_ONLY / NO_ARBITRARY_CLI_PATH_GUESSING_SCAN_PATH_FALLBACK_MCP_SECOND_SKILL_SECOND_AGENT_ROUTER_RETRY_REPLAY / FINAL_SKILL_INSTALLER_STAMPED_LOCATOR
 stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
-current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
-next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+current_task: HISTORICAL / NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: HISTORICAL / V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+```
+
+## Current Stage 5 R02 Package Release/Tool Definition Binding1 closeout (2026-08-22)
+
+R02 is a docs-only binding check. The published `blazingcd/golden-key-openmontage` candidate exists and matches the approved source subtree (`ef5f5b58fa1c2b494b0154989cf0e4e36615a701` / tree `0464861c5985c7c9072e789b94889d29cf9a937a`), but it is not a bindable final Release. The remote recursive tree is complete (`truncated=false`, `2614` entries) with zero binding-related paths; the local same-tree audit has `2155` blobs. Release metadata and lock metadata contain no real safe fixed tool or release-specific `PackageToolDefinitionV1`/Manifest/Lock binding.
+
+```text
+task_id: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1
+r02_result: BLOCKED_PACKAGE_RELEASE / PUBLISHED_CANDIDATE_IDENTITY_VERIFIED / MISSING_SAFE_FIXED_TOOL_AND_RELEASE_SPECIFIC_DEFINITION
+release_metadata: version=0.3.24 / console_script_entrypoint=null / python_load_probe=lib.pipeline_loader:load_pipeline / authority_entry=README.md
+lock_metadata: NO_PackageToolDefinitionV1 / NO_workbuddy_entry_cli / NO_package_tool_definition / NO_launcher / NO_fixed_tool / NO_CORRESPONDING_TOP_LEVEL_FIELDS
+current_task: NONE / NO_ACTIVE_TASK / R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+next_authorized_task: NONE / PACKAGE_OWNER_RELEASE_BINDING_REAUTHORIZATION_REQUIRED / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+unblock_condition: SEPARATE_PACKAGE_OWNER_APPROVAL_AND_INDEPENDENT_SAFE_FIXED_TOOL_DEFINITION_MANIFEST_LOCK_VERIFICATION / THEN_REAUTHORIZE_R02
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+product_goal_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
 ```

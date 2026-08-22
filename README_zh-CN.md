@@ -15,7 +15,7 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 - 最终Package/PackageRoot/生产Registration/Activation/最终安装Skill：`NOT_MATERIALIZED / NOT_CREATED`
 - 真实WorkBuddy `LauncherReceiptV1`：`NOT_PROVED`
 
-实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。原始R01、Sandbox Refresh1和专家入口可行性记录均为`HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；其中旧`BLOCKED_EXTERNAL_CONTRACT`/`INCOMPLETE`裁决及R02-R08未授权链只保留为当时历史证据，不是当前live状态。当前验收镜像将R01记为`ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07`；R02是唯一下一授权任务，R03-R08仍按严格顺序未授权。阶段5仍未完成，不声明脚本执行、stdout/stderr/exit/cwd/timeout或`LauncherReceiptV1`证据。
+实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。原始R01、Sandbox Refresh1和专家入口可行性记录仍为`HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`。R01入口面接受结果保留，HY3仍仅用于当前测试和成本控制、不锁定产品模型；R02已收口为`BLOCKED_PACKAGE_RELEASE`：已发布`blazingcd/golden-key-openmontage`候选的身份匹配，但没有真实safe fixed tool或release-specific `PackageToolDefinitionV1`/Manifest/Lock绑定。当前没有下一授权任务，R03-R08因链阻断；阶段5仍未完成，不声明客户端、Package、登记或`LauncherReceiptV1`证据。
 
 阶段2 Registration/Locator、阶段3 Runtime按需准备和阶段4会话Launcher实现均已接受。阶段2还证明过一次包含Python、FFmpeg、Node的真实临时Package，但临时Package随后已删除；这不能证明最终Release已经保留、生产PackageRoot已经安装登记，也不能证明Installer或最终分发。阶段2合同边界见[`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md)。
 

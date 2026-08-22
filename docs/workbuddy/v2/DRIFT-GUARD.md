@@ -124,7 +124,7 @@ computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER
 
 任何后续执行若缺少 Skill-root cwd 或 bundled-relative event，必须立即 `BLOCKED_EXTERNAL_CONTRACT`；不得以模型文字、物理路径、PowerShell shell transcript、marker、JSON、截图或推理替代。候选不授权 R02-R08、Provider、媒体、Package、Stage4、Stage6 或生产流程。
 
-## 当前 Stage 5 R01 验收契约纠正防漂移守卫（2026-08-22）
+## [HISTORICAL / CONSUMED_BY_V2-S5-R02] 当前 Stage 5 R01 验收契约纠正防漂移守卫（2026-08-22）
 
 原始 R01、Sandbox Refresh1 和 Expert Entry Feasibility 记录已标为 `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；旧阻断/不完整事实保留，不作为当前 R01 入口面硬门。本节是用户基于最初产品目标作出的验收归属纠正，不是新官方证据。
 
@@ -135,8 +135,23 @@ r01_deferred_contract: SKILL_ROOT_CWD / BUNDLED_RELATIVE_RESOURCE_RESOLUTION / S
 deferred_chain: LOCATOR -> FIXED_POWERSHELL_OR_PRIVATE_CLI -> LAUNCHER_RECEIPT / IMPLEMENTATION_AND_REAL_PROOF_DEFERRED_TO_R03_R07 / NOT_CURRENTLY_PROVED
 no_overclaim: NO_SCRIPT_EXECUTION / NO_STDOUT_STDERR_EXIT_CWD_TIMEOUT / NO_LAUNCHER_RECEIPT / NO_STAGE5_PASS
 hy3_policy: CURRENT_TEST_MODEL_ONLY / COST_AVOIDANCE / PRODUCT_MODEL_NEUTRAL / USER_SELECTED_MODEL / NOT_A_SKILL_OR_EXPERT_OR_SYSTEM_DEPENDENCY
-current_task: NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
-next_authorized_task: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED
+current_task: HISTORICAL / NONE / NO_ACTIVE_TASK / R01_CORRECTED_ACCEPTED_ENTRY_SURFACE
+next_authorized_task: HISTORICAL / V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1 / R02_AUTHORIZED_ONLY / R03-R08_NOT_AUTHORIZED
 ```
 
 安全边界不降低：仍只有一个 WorkBuddy Skill 和一个用户入口；固定 CLI 只能是该 Skill 内部桥；禁止任意 CLI、路径猜测、扫盘、PATH fallback、MCP、第二 Skill、第二 Agent、router、retry 和 replay。最终 Skill 必须使用 Installer-stamped locator；实际 Locator 到固定 PowerShell/private CLI 再到 receipt 的实现与真实证据只能在 R03/R07 受相应授权时形成。授权客户端测试若使用模型，遵守用户指定 HY3/NEVER_AUTO，但 HY3 仅为当前测试模型与成本控制，不锁定产品模型或系统依赖。
+
+## Current Stage 5 R02 Package Release/Tool Definition Binding1 stop guard (2026-08-22)
+
+R02 的 published candidate 身份与批准 source subtree 匹配，但不是可绑定的 final Release。远程递归树完整且 `2614` entries 中绑定相关路径为 `0`，本地同树不可变审计为 `2155` blobs；Release/lock 元数据没有真实 safe fixed tool 或 release-specific `PackageToolDefinitionV1`/Manifest/Lock binding。禁止从上千媒体工具中随意选择，禁止造 fixture/definition 或修改外部 Package。
+
+```text
+task_id: V2-S5-R02-PACKAGE-RELEASE-TOOL-DEFINITION-BINDING1
+r02_result: BLOCKED_PACKAGE_RELEASE / PUBLISHED_CANDIDATE_IDENTITY_VERIFIED / MISSING_SAFE_FIXED_TOOL_AND_RELEASE_SPECIFIC_DEFINITION
+current_task: NONE / NO_ACTIVE_TASK / R02_CLOSED_BLOCKED_PACKAGE_RELEASE
+next_authorized_task: NONE / PACKAGE_OWNER_RELEASE_BINDING_REAUTHORIZATION_REQUIRED / R03-R08_NOT_AUTHORIZED_BY_CHAIN
+unblock_condition: SEPARATE_PACKAGE_OWNER_APPROVAL_AND_INDEPENDENT_SAFE_FIXED_TOOL_DEFINITION_MANIFEST_LOCK_VERIFICATION / THEN_REAUTHORIZE_R02
+product_goal_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+side_effects: NO_CLIENT / NO_PACKAGE_MATERIALIZATION / NO_REGISTRATION / NO_STAGE4 / NO_PROVIDER_MEDIA_STAGE6_OR_PRODUCTION
+```

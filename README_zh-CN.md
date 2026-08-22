@@ -15,7 +15,7 @@ WorkBuddy Shell V2负责把腾讯WorkBuddy可靠连接到经过身份验证、�
 - 最终Package/PackageRoot/生产Registration/Activation/最终安装Skill：`NOT_MATERIALIZED / NOT_CREATED`
 - 真实WorkBuddy `LauncherReceiptV1`：`NOT_PROVED`
 
-实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。原始R01已在`9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc`正式关闭并保留。独立`V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1`是已通过独立审核的文档结果：官方134420只明确enterprise Skill脚本在客户端沙箱执行。受控客户端观察将PowerShell记为`ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；本轮阻断理由是缺少Skill-root cwd/bundled-relative解析合同。结果仍为`BLOCKED_EXTERNAL_CONTRACT`；R02-R08因链式阻断均未启动、未授权。
+实时状态、精确Git对象和任务授权只以[`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md)为准。原始R01、Sandbox Refresh1和专家入口可行性记录均为`HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；其中旧`BLOCKED_EXTERNAL_CONTRACT`/`INCOMPLETE`裁决及R02-R08未授权链只保留为当时历史证据，不是当前live状态。当前验收镜像将R01记为`ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07`；R02是唯一下一授权任务，R03-R08仍按严格顺序未授权。阶段5仍未完成，不声明脚本执行、stdout/stderr/exit/cwd/timeout或`LauncherReceiptV1`证据。
 
 阶段2 Registration/Locator、阶段3 Runtime按需准备和阶段4会话Launcher实现均已接受。阶段2还证明过一次包含Python、FFmpeg、Node的真实临时Package，但临时Package随后已删除；这不能证明最终Release已经保留、生产PackageRoot已经安装登记，也不能证明Installer或最终分发。阶段2合同边界见[`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md)。
 

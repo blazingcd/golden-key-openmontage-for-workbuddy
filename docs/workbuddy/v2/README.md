@@ -42,7 +42,7 @@ REAL_WORKBUDDY_LAUNCHER_RECEIPT_NOT_PROVED
 
 阶段3至阶段6不另建平行职责文档：职责只以`PROJECT-CHARTER.md`为准，实施必要性和PASS边界只以`ACCEPTANCE-MATRIX.md`为准，实时授权只以`TASK-REGISTER.md`为准。
 
-旧阶段3可执行任务包、入口签名、Shell自有全组件Runtime Lock和条件授权已经`SUPERSEDED`。阶段5拥有真实WorkBuddy新会话、唯一入口、literal `user_message`不变、逐能力询问和同任务继续；这些不是Stage4前置。原始R01已在`9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc`正式关闭并保留；官方134420只明确enterprise Skill脚本在客户端沙箱执行。受控客户端观察将PowerShell记为`ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；refresh1当前阻断是Skill-root cwd/bundled-relative解析合同缺失。refresh1结果仍为`BLOCKED_EXTERNAL_CONTRACT`，R02至R08因严格链式阻断而未启动、未授权。阶段5完整PASS的五类物证与任务链只以`TASK-REGISTER.md`最新R01节为准。阶段6只在Stage4回执和Stage5真实消费者存在后判断，可直接消费时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`和生产代码0结束；全项目业务E2E另行处理，不称为阶段7。
+旧阶段3可执行任务包、入口签名、Shell自有全组件Runtime Lock和条件授权已经`SUPERSEDED`。阶段5拥有真实WorkBuddy新会话、唯一入口、literal `user_message`不变、逐能力询问和同任务继续；这些不是Stage4前置。原始R01、Sandbox Refresh1和专家入口可行性记录均为`HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`；其中旧`BLOCKED_EXTERNAL_CONTRACT`/`INCOMPLETE`裁决及R02至R08未授权链只保留为历史结果，不是当前live状态。当前验收镜像将R01记为`ENTRY_SURFACE_ACCEPTED / EXECUTION_PROOF_DEFERRED_TO_R03_R07`；R02是唯一下一授权任务，R03至R08仍按严格顺序未授权。阶段5完整PASS的五类物证与任务链只以`TASK-REGISTER.md`最新R01节为准；本次纠正不声明脚本执行、stdout/stderr/exit/cwd/timeout或真实LauncherReceipt。阶段6只在Stage4回执和Stage5真实消费者存在后判断，可直接消费时以`STAGE_6_DIRECT_LAUNCHER_RECEIPT_REUSE`和生产代码0结束；全项目业务E2E另行处理，不称为阶段7。
 
 Stage4规划和实现已经完成独立审查、普通fast-forward与正式CI验证，均为`PASS_ACCEPTED`；这不证明真实生产WorkBuddy/Launcher会话、Provider或媒体执行。Stage4先调用`locate_active_package(data_root)`，基础固定工具调用不依赖Remotion/HyperFrames；只有固定定义声明要求时才使用相同capability+definition的Stage3 `PRESENT`或`INTEGRATED`证据。最终Package/生产Registration归后续最终交付或Installer任务，最迟在Stage5真实生产验收前完成；Stage5/6没有因本次入口同步获得授权。
 

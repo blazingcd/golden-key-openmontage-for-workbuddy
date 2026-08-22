@@ -1989,18 +1989,19 @@ refresh1 的独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`。旧 R01 的原�
 
 ## Stage 5 专家入口可行性核验收口（2026-08-22）
 
-本节是独立的 docs-only / zero-product-state-change 结果，不改写原始 R01 或 refresh1，不创建、保存、发布专家，不创建或安装 Skill/Package，不增加新的 R01 门，不授权 R02-R08。官方资料把专家定义为 WorkBuddy 的角色层；工具能力仍依赖配置的 Skill/MCP，专家不替代唯一可执行 Skill。客户端观察不构成官方精确执行合同；模型文字或内置 Skill 自报不替代原生事件证据。
+本节是独立的 docs-only / zero-product-state-change 结果，不改写原始 R01 或 refresh1，不创建、保存、发布专家，不创建或安装 Skill/Package，不增加新的 R01 门，不授权 R02-R08。官方资料把专家定义为 WorkBuddy 的角色层，并说明配置的 Skill/MCP 可以间接提供文件或外部服务访问；官方没有证明专家可以替代可执行 Skill。下方 `DOES_NOT_SUPERSEDE_SOLE_SKILL_ENTRY` 与 `NOT_PROVED` 是本项目的证据裁决，不是腾讯官方结论。客户端观察不构成官方精确执行合同；模型文字或内置 Skill 自报不替代原生事件证据。
 
 ```text
 task_id: V2-S5-EXPERT-ENTRY-FEASIBILITY1
 task_kind: OFFICIAL_DOCS_PLUS_CONTROLLED_CLIENT_STATIC_CLOSEOUT / ZERO_PRODUCT_STATE_CHANGE
-official_sources: 134393=WORKBUDDY_EXPERT_ROLE_LAYER_AND_SKILL_OR_MCP_TOOL_DEPENDENCY / 134421=EXPERT_PACKAGE_AND_MANAGEMENT / 134432=EXECUTABLE_SKILL_SCRIPTS_WORKFLOWS
+official_sources: 134393=WORKBUDDY_EXPERT_ROLE_LAYER / 134393+134432=SKILL_OR_MCP_CAN_PROVIDE_INDIRECT_FILE_OR_EXTERNAL_SERVICE_ACCESS / 134421=EXPERT_PACKAGE_AND_MANAGEMENT / 134432=EXECUTABLE_SKILL_SCRIPTS_WORKFLOWS
 official_source_urls: https://cloud.tencent.com/document/product/1831/134393 / https://cloud.tencent.com/document/product/1831/134421 / https://cloud.tencent.com/document/product/1831/134432
+official_contract_gap: NO_OFFICIAL_PROOF_EXPERT_CAN_REPLACE_EXECUTABLE_SKILL
 workbuddy_client: 5.3.14 / HY3_ONLY / NEVER_AUTO
 client_expert_observation: MY_EXPERT_COUNT=0 / CREATE_ENTRY_OPENED_EXPERT_MANAGER_CONVERSATION / NO_EXPERT_CREATED_SAVED_OR_PUBLISHED
 expert_manager_observation: CANNOT_DIRECTLY_BIND_INSTALLED_SKILL / CANNOT_LOCK_HY3 / SAME_CONVERSATION_MAY_PROMPT_GLOBAL_SKILL / BUNDLED_AUTOLOAD_NOT_PROVED
 unofficial_observation_boundary: MODEL_OR_BUILTIN_SKILL_SELF_REPORT_NOT_OFFICIAL_CONTRACT
-result: INCOMPLETE / EXPERT_AS_SOLE_VISIBLE_ENTRY_NOT_PROVED / DOES_NOT_SUPERSEDE_SOLE_SKILL_ENTRY / R01_UNCHANGED_BLOCKED_EXTERNAL_CONTRACT
+project_evidence_ruling: INCOMPLETE / EXPERT_AS_SOLE_VISIBLE_ENTRY_NOT_PROVED / DOES_NOT_SUPERSEDE_SOLE_SKILL_ENTRY / NOT_PROVED / R01_UNCHANGED_BLOCKED_EXTERNAL_CONTRACT
 stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 current_task: NONE / NO_ACTIVE_TASK
 next_authorized_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN

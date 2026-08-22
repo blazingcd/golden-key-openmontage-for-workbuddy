@@ -100,12 +100,13 @@ R00 已正式推广并消费；其 `current_task=NONE / NO_ACTIVE_TASK / next_au
 
 因此 R01 不得把 Skill 上传/安装、模型文字、marker、JSON 或截图当作脚本执行证据；不运行 nonzero/timeout，不记录或复述物理 cwd，不伪造 stdout/stderr/exit/timeout。R01 结果固定为 `BLOCKED_EXTERNAL_CONTRACT`，独立 zero-write Review 已 `APPROVE / P0=0 / P1=0 / P2=0` 并正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，D 盘精确隔离 probe folder/ZIP 已删除，基线两个 Skill 保持不变。R02-R08 必须保持 `NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN`。
 
-## 当前 R01 Sandbox Refresh1 防漂移守卫（2026-08-22，候选待独立文档审查）
+## 当前 R01 Sandbox Refresh1 防漂移守卫（2026-08-22，独立文档审查已通过）
 
 本 refresh1 独立于原始 R01 已关闭记录。产品目标回读与范围扩张审计均为 `PASS`：WorkBuddy 是唯一 Agent/user entry，固定 CLI 只可作为唯一 Skill 内部桥梁，不构成 blanket CLI ban、第二入口或第二控制面。官方 134420 已确认 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；禁止再把 PowerShell 非原生当作阻断。134432 只证明 Skill 脚本/工作流打包、上传和调用形态；134516 必须保持 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。合同仍缺 Skill-root cwd、bundled-relative resource resolution、stdin/stdout/stderr/final-exit/timeout 精确语义。
 
 ```text
-task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / candidate / pending_independent_docs_review
+task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / accepted_blocked_external_contract / no_active_task
+accepted_result: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d / docs_review=APPROVE_P0_0_P1_0_P2_0
 base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 client: WorkBuddy 5.3.14 / HY3_ONLY / NEVER_AUTO / baseline_skills=agent-browser,find-skills
 probe: ISOLATED_D_DRIVE_TEMP_ROOT / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / retained_pending_user_cleanup

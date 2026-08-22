@@ -410,7 +410,8 @@ candidate_test: NOT_RUN_DOCS_ONLY
 This is an independent refresh of the original R01 closeout; the original record remains preserved. Product-goal recheck and anti-expansion audit are `PASS`: WorkBuddy remains the sole Agent/user entry, and the fixed CLI remains eligible only as the internal bridge of that one Skill. Official 134420 establishes only that enterprise Skill scripts execute in the client sandbox. Controlled WorkBuddy observation records PowerShell as an `ELIGIBLE_CANDIDATE_SURFACE`, not an official exact execution contract; 134432 establishes Skill script/workflow packaging and upload/invocation shape; 134516 is CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`. The unresolved contract is Skill-root cwd/bundled-relative resource resolution plus exact stdin/stdout/stderr/final-exit/timeout semantics.
 
 ```text
-refresh1_task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+refresh1_task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / ACCEPTED_BLOCKED_EXTERNAL_CONTRACT / NO_ACTIVE_TASK
+accepted_result: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d / docs_review=APPROVE_P0_0_P1_0_P2_0
 formal_base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 workbuddy: 5.3.14 / baseline=agent-browser,find-skills / HY3_ONLY / NEVER_AUTO
 source_root: ISOLATED_D_DRIVE_TEMP_ROOT / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / RETAINED_PENDING_USER_CLEANUP
@@ -427,4 +428,4 @@ cleanup: TEMP_SKILL_STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAIN
 computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_AND_RECOVERED
 ```
 
-The refresh1 candidate does not authorize or create Package, Registration, Installer, final Skill, Stage 4 spawn, Provider, media, Stage 6, or production flow. It also does not elevate Stage 5 to `PASS_ACCEPTED`; user confirmation is still required to uninstall the temporary Skill.
+The refresh1 accepted result does not authorize or create Package, Registration, Installer, final Skill, Stage 4 spawn, Provider, media, Stage 6, or production flow. It also does not elevate Stage 5 to `PASS_ACCEPTED`; user confirmation is still required to uninstall the temporary Skill.

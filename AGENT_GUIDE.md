@@ -34,7 +34,7 @@ The accepted minimum contract remains provider- and runtime-opaque: a release-sp
 
 Stage 4 does not hard-code, select, configure, or route any Provider or runtime, including Remotion or HyperFrames. Provider configuration is separate external-service input and only definition-allowlisted environment names reach the child process. Local Stage 3 evidence is accepted only when `PackageToolDefinitionV1.required_local_capabilities` declares the same opaque capability and definition; the caller must pass the complete approved definition plus the unmodified original Stage 3 fact, and Stage 4 independently revalidates bytes using the accepted `managed`, `explicit`, or `PATH` source semantics. A base fixed-tool call never requires optional local-capability evidence. Stage 4 must not accept arbitrary shell or commands, parse user intent, read an unverified Package Guide, launch another Agent, install Runtime, choose a renderer, retry or replay, schedule work, run media production, create Artifacts, or advance Checkpoints. Literal `user_message` and `executor_controls` remain separate. Real WorkBuddy new-session behavior and continuation belong to Stage 5; Stage 6 first attempts direct `LauncherReceiptV1` reuse with zero production code.
 
-Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The `V2-S5-WORKBUDDY-ENTRY-BUILDER1` implementation and its six-document closeout are formally delivered as repository changes, but they prove only the entry-code/static contract layer; they do not make the whole Stage 5 `PASS_ACCEPTED`. Final Package/PackageRoot/Registration/Activation, a final installed Skill, and a real WorkBuddy-produced `LauncherReceiptV1` remain absent or unproved. R00 is formally promoted and consumed. The original R01 was separately authorized, executed, and formally closed at `9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc`; the independent R01 refresh1 is now a docs candidate whose result remains `BLOCKED_EXTERNAL_CONTRACT` for missing Skill-root cwd/bundled-relative resolution, not because PowerShell is non-native. No R02-R08 task is authorized by the blocked chain.
+Stage 5 is `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The `V2-S5-WORKBUDDY-ENTRY-BUILDER1` implementation and its six-document closeout are formally delivered as repository changes, but they prove only the entry-code/static contract layer; they do not make the whole Stage 5 `PASS_ACCEPTED`. Final Package/PackageRoot/Registration/Activation, a final installed Skill, and a real WorkBuddy-produced `LauncherReceiptV1` remain absent or unproved. R00 is formally promoted and consumed. The original R01 was separately authorized, executed, and formally closed at `9eefe8600d9bed0c8ea6024880e4b2d2ef4e3bfc`; the independent R01 refresh1 docs result `6c20371f1c72ee9d55147e1ad7feb8ede201858f` was independently approved and remains `BLOCKED_EXTERNAL_CONTRACT` for missing Skill-root cwd/bundled-relative resolution, not because PowerShell is non-native. No R02-R08 task is authorized by the blocked chain.
 
 ## Current Stage 5 remainder mirror
 
@@ -52,9 +52,9 @@ production_package_root: NOT_CREATED
 production_registration_activation: NOT_CREATED
 final_installed_skill: NOT_CREATED
 real_workbuddy_launcher_receipt: NOT_PROVED
-current_task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+current_task: NONE / NO_ACTIVE_TASK / R01_REFRESH1_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT
 after_r00_promotion: CONSUMED_COMPLETE / ORIGINAL_R01_EXECUTED_AND_FORMALLY_CLOSED
-after_r01_closeout_promotion: ORIGINAL_R01 current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE / REFRESH1_CANDIDATE_PENDING_REVIEW / R02-R08_BLOCKED_BY_CHAIN
+after_r01_closeout_promotion: ORIGINAL_R01 current_task=NONE / NO_ACTIVE_TASK / next_authorized_task=NONE / REFRESH1_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT / R02-R08_BLOCKED_BY_CHAIN
 next_planned_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 ```
 
@@ -72,7 +72,7 @@ The HY3 execution path exposed only Bash/PowerShell shell execution and no indep
 
 R01 evidence artifact hashes (historical; sources deleted after review and not tracked) are: `SKILL.md` `D1BE59EF9221BA739482555744385244C86B771F5604DB738F5E0952CCC1E1`; `scripts/r01_contract_probe.py` `52B1F6283FF376F99DE49AE87EF24781042DC12F679AAAF7F976F58F19307064`; ZIP `C55C90B7E86E9399F04EF13B8D78DF9228A8D72F7149B5B2A11B4362320F102D`. This docs-only mirror does not create or promote a Package, Registration, Installer, final Skill, Stage 4 spawn, Provider, media flow, or Stage 6.
 
-## Current Stage 5 R01 Sandbox Refresh1 result candidate (2026-08-22)
+## Current Stage 5 R01 Sandbox Refresh1 accepted result mirror (2026-08-22)
 
 This is an independent refresh of the original R01 and does not rewrite the original record. The product-goal recheck and scope-expansion audit are `PASS`: WorkBuddy remains the only running Agent/user entry; the fixed CLI remains eligible only as an internal bridge inside that sole Skill, not a blanket CLI ban or a second control plane. Official WorkBuddy 134420 explicitly says enterprise Skill scripts execute in the client sandbox. In the controlled WorkBuddy observation, PowerShell is an `ELIGIBLE_CANDIDATE_SURFACE`, not an official exact execution contract. 134432 proves Skill script/workflow packaging and upload/invocation shape; 134516 remains CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`. The remaining official gaps are bundled-relative resource resolution, Skill-root cwd, stdin/stdout/stderr/final-exit, and timeout semantics.
 
@@ -95,13 +95,15 @@ timeout_case: NOT_RUN
 r02_r08_status: NOT_STARTED / NOT_AUTHORIZED_BY_CHAIN
 temporary_skill: STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_SKILLS_UNTOUCHED
 computer_use_transparency: LOW_IMPACT_OPERATIONAL_ANOMALY / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / EXISTING_EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_AND_RECOVERED
-candidate_current_task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+accepted_result_commit: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d
+docs_review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE_REVIEW
+candidate_current_task: NONE / NO_ACTIVE_TASK / R01_REFRESH1_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT
 candidate_next_authorized_task: NONE / R02-R08_BLOCKED_BY_CHAIN
 candidate_test: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / provider_media_package_stage4_stage6=0
-candidate_push: NOT_PUSHED
+candidate_push: FORMALLY_EFFECTIVE_IFF_LIVE_REMOTE_REF_CONTAINS_THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 ```
 
-The refresh1 candidate is not Stage 5 `PASS_ACCEPTED`; it keeps `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The original R01 “Bash/PowerShell-only” observation remains preserved as historical evidence, while refresh1’s blocker is only the missing Skill-root cwd/bundled-relative contract. Nonzero/timeout remain unrun, and no Provider, media, Package, Stage 4, Stage 6, or production flow ran.
+The refresh1 accepted result is not Stage 5 `PASS_ACCEPTED`; it keeps `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The original R01 “Bash/PowerShell-only” observation remains preserved as historical evidence, while refresh1’s blocker is only the missing Skill-root cwd/bundled-relative contract. Nonzero/timeout remain unrun, and no Provider, media, Package, Stage 4, Stage 6, or production flow ran.
 
 ## External Package Guide
 

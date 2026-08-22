@@ -44,12 +44,13 @@
 
 R01 的临时 `golden-key-openmontage-r01-controlled-probe` 只用于核验 WorkBuddy bundled-script 执行合同，不改变六模块映射，也不新增生产模块、入口或 CLI/MCP 控制面。WorkBuddy `5.3.14` 的 HY3 受控路径没有产生独立原生 bundled-script invocation/tool event；协调者在 Bash/PowerShell 执行前停止。因此 R01 最终为 `BLOCKED_EXTERNAL_CONTRACT`，独立审查已批准并正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，probe folder/ZIP 已删除。不产生脚本、Launcher、Package、Registration、Provider、媒体或 Stage6 证据。R02-R08 不得启动。
 
-## 当前 R01 Sandbox Refresh1 映射边界（候选，2026-08-22）
+## 当前 R01 Sandbox Refresh1 映射边界（正式结果镜像，2026-08-22）
 
 该 refresh1 不修改六模块映射，也不增加入口、生产模块、CLI/MCP 控制面。产品目标和 anti-expansion 均 `PASS`：WorkBuddy 仍是唯一 Agent/user entry，固定 CLI 仍只能是唯一 Skill 内部桥梁。官方 134420 说明 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为允许的 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；134432 说明脚本/工作流封装、上传和调用；134516 仍为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。本轮阻断来自 Skill-root cwd/bundled-relative resource resolution 及精确 stdin/stdout/stderr/final-exit/timeout 合同缺失，而不是 PowerShell 非原生。
 
 ```text
-task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / ACCEPTED_BLOCKED_EXTERNAL_CONTRACT / NO_ACTIVE_TASK
+accepted_result: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d / docs_review=APPROVE_P0_0_P1_0_P2_0
 base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 client: WorkBuddy 5.3.14 / HY3_ONLY / NEVER_AUTO / baseline=agent-browser,find-skills
 probe: ISOLATED_D_DRIVE_TEMP_ROOT / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / hashes=A369E89912B51C1627C972A7DE8F82111E55E2909622CB2E0E3276B45331FFF9,8A1D38A65945CC99C4B7F8EE95FDF4FF744D105303BC9904E5915E630DF58359,2284E6D6FE8FFD38689A357DD0A6653CEB23B923F0C531BF9EAC376178E9A28A

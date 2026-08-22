@@ -469,7 +469,7 @@ candidate_test: NOT_RUN_DOCS_ONLY
 
 R01 的阻断不改变五类 Stage5 总体验收门，也不构成 Stage5 PASS。独立 Reviewer 已 `APPROVE / P0=0 / P1=0 / P2=0`，该结果已正式 fast-forward；用户已卸载临时 Skill，WorkBuddy 显示安装技能数为 `2`，任务历史保留，probe folder/ZIP 已删除。R02-R08 严格停止；不运行 nonzero/timeout，不把上传/安装、旧客户端历史或模型输出当作真实脚本、Launcher 或 receipt 证据。Provider、媒体、最终 Package、Stage4 spawn 和 Stage6 均未运行。
 
-## 13. 当前 Stage 5 R01 Sandbox Refresh1 受控客户端结果候选（2026-08-22）
+## 13. 当前 Stage 5 R01 Sandbox Refresh1 受控客户端正式结果镜像（2026-08-22）
 
 本节独立于原始 R01 已关闭记录；旧记录不改写。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；不能再以“PowerShell 非原生/只暴露 shell”阻断。134432 证明脚本/工作流封装、上传和调用形态；134516 为 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。剩余合同缺口是 bundled-relative resource resolution、Skill-root cwd，以及 stdin/stdout/stderr/final-exit/timeout 精确语义。
 
@@ -491,7 +491,8 @@ reviewer_independent_observation: WORKBUDDY_5.3.14 / HY3 / USER_CANCELLED / NO_S
 nonzero_timeout: NOT_RUN / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
 temporary_skill: STILL_INSTALLED / USER_ACTION_REQUIRED / TASK_HISTORY_RETAINED / BASELINE_SKILLS_UNTOUCHED
 computer_use: LOW_IMPACT_OPERATIONAL_ANOMALY / EXPLORER_MISTAKEN_FOR_FILE_PICKER / ALT+N_MAY_OPEN_TAB_OR_WINDOW / NO_PATH_INPUT_NO_FILE_SELECTION_NO_WRITE_DELETE / STOPPED_AND_RECOVERED
-candidate_state: current_task=V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW / next_authorized_task=NONE / R01_REMAINS_BLOCKED / ONLY_SEPARATE_R01_REOPEN_AUTHORIZATION_PLUS_ACCEPTED_SUCCESS_CONTRACT_EVIDENCE_CAN_UNLOCK_R02_R08
+accepted_result: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d / docs_review=APPROVE_P0_0_P1_0_P2_0
+candidate_state: current_task=NONE / NO_ACTIVE_TASK / R01_REFRESH1_ACCEPTED_BLOCKED_EXTERNAL_CONTRACT / next_authorized_task=NONE / R01_REMAINS_BLOCKED / ONLY_SEPARATE_R01_REOPEN_AUTHORIZATION_PLUS_ACCEPTED_SUCCESS_CONTRACT_EVIDENCE_CAN_UNLOCK_R02_R08
 test_and_scope: NOT_RUN_DOCS_ONLY / product_code=0 / tests=0 / ci=0 / Provider-media-Package-Stage4-Stage6=0
 ```
 

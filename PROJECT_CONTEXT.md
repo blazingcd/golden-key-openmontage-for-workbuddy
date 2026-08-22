@@ -37,12 +37,13 @@ The current accepted repository tree tracks exactly 40 files. Stage 5 is `IN_PRO
 
 The product-goal recheck and scope-expansion audit both pass. WorkBuddy remains the only Agent/user entry, and the fixed CLI is allowed only as an internal bridge inside that sole Skill; no arbitrary CLI bypass or parallel control plane was introduced. WorkBuddy `5.3.14` started with exactly `agent-browser` and `find-skills`; the reviewed temporary probe ZIP was safety-scanned without skip, auto-installed as the exact `golden-key-openmontage-r01-controlled-probe`, and reached installed count `3`. A new isolated task used `Hy3` only. The client exposed only Bash/PowerShell shell execution, not an independent native bundled-script invocation/tool event, so execution was stopped before any shell/terminal run. No script, stdout/stderr, exit, cwd, or timeout evidence exists; the R01 result is therefore `BLOCKED_EXTERNAL_CONTRACT`. Independent review approved the docs closeout and formal fast-forward; the user uninstalled the temporary Skill, WorkBuddy showed `2` installed Skills, task history remained, both baseline Skills were untouched, and the exact D-drive probe folder/ZIP was deleted. No later R task may start.
 
-### Current R01 Sandbox Refresh1 controlled-client boundary (candidate)
+### Current R01 Sandbox Refresh1 controlled-client boundary (accepted result mirror)
 
 This is an independent refresh of the original R01. Official 134420 proves only that enterprise Skill scripts execute in the client sandbox. In the controlled WorkBuddy observation, PowerShell is recorded as an `ELIGIBLE_CANDIDATE_SURFACE`, not as an official exact execution contract. The remaining gaps are Skill-root cwd, bundled-relative resolution, and exact stdin/stdout/stderr/final-exit/timeout semantics. Reviewer-independent facts are limited to WorkBuddy `5.3.14`, `Hy3`, user cancellation, and no success/stdout/stderr/exit/cwd evidence; coordinator path/cwd reasoning is `COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER`.
 
 ```text
-task_id: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+task_id: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / ACCEPTED_BLOCKED_EXTERNAL_CONTRACT / NO_ACTIVE_TASK
+accepted_result: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d / docs_review=APPROVE_P0_0_P1_0_P2_0
 candidate_base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 product_goal_recheck: PASS / WorkBuddy sole Agent-user entry / fixed CLI only sole-Skill internal bridge / no second entry-control plane
 official_134420: ENTERPRISE_SKILL_SCRIPTS_CLIENT_SANDBOX_ONLY

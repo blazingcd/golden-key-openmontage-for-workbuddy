@@ -103,12 +103,13 @@ This Stage 2 contract remains unchanged: the public Registration/Activation/Loca
 
 R01 was a controlled WorkBuddy execution-contract evidence attempt only. It did not call Registration, Activation, Locator, Package, Installer, Stage4, Provider, media, or Stage6. WorkBuddy `5.3.14` installed the temporary probe Skill after a non-skipped safety scan, but the HY3 path exposed no independent native bundled-script invocation/tool event and execution stopped before Bash/PowerShell. The final R01 result is `BLOCKED_EXTERNAL_CONTRACT`; independent review approved and formally fast-forwarded the docs closeout. The user uninstalled the temporary Skill, WorkBuddy showed `2` installed Skills, task history remained, and the exact probe folder/ZIP was deleted; the two baseline Skills were untouched. The Stage 2 contract and its accepted temporary-package proof remain unchanged. R02-R08 are blocked by the strict chain.
 
-## 8. R01 Sandbox Refresh1 不改变 Stage 2 Registration/Locator 合同（候选，2026-08-22）
+## 8. R01 Sandbox Refresh1 不改变 Stage 2 Registration/Locator 合同（正式结果镜像，2026-08-22）
 
 refresh1 是独立的 WorkBuddy 客户端沙箱执行面窄核验，不调用、不修改 Registration、Activation、Locator、Package、Installer 或 Stage 2 既有临时 Package 证据。官方 134420 明示 enterprise Skill scripts 在客户端沙箱执行。受控 WorkBuddy 客户端观察将 PowerShell 记录为沙箱执行面的 `ELIGIBLE_CANDIDATE_SURFACE`，不是官方精确执行合同；本轮不得再把 PowerShell 非原生当作阻断。剩余阻断是 Skill-root cwd/bundled-relative resource resolution 与 stdin/stdout/stderr/final-exit/timeout 合同缺失；134432 仅证明 Skill 脚本/工作流打包上传调用形态，134516 是 CodeBuddy `PRODUCT_MISMATCH_NOT_CONTRACT_PROOF`。
 
 ```text
-task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / RESULT_CANDIDATE / PENDING_INDEPENDENT_DOCS_REVIEW
+task: V2-S5-R01-WORKBUDDY-SANDBOX-REFRESH1 / ACCEPTED_BLOCKED_EXTERNAL_CONTRACT / NO_ACTIVE_TASK
+accepted_result: 6c20371f1c72ee9d55147e1ad7feb8ede201858f / tree 9eb4643f09d03cc9f39b0b46906773e5bcc9125d / docs_review=APPROVE_P0_0_P1_0_P2_0
 base: 932bcabc5baf90d0190101b1039e4ccf087b2b08 / tree 2ed2cd0e67dd8628b7f0b1acf84df0a7d8b0d0fd / tracked 40
 client: WorkBuddy 5.3.14 / HY3_ONLY / NEVER_AUTO / baseline=agent-browser,find-skills
 probe: ISOLATED_D_DRIVE_TEMP_ROOT / COORDINATOR_OBSERVATION_NOT_INDEPENDENTLY_VISIBLE_TO_REVIEWER / retained_pending_user_cleanup

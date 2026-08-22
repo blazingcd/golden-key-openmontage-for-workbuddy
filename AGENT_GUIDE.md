@@ -105,6 +105,27 @@ candidate_push: FORMALLY_EFFECTIVE_IFF_LIVE_REMOTE_REF_CONTAINS_THIS_COMMIT / SE
 
 The refresh1 accepted result is not Stage 5 `PASS_ACCEPTED`; it keeps `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`. The original R01 “Bash/PowerShell-only” observation remains preserved as historical evidence, while refresh1’s blocker is only the missing Skill-root cwd/bundled-relative contract. Nonzero/timeout remain unrun, and no Provider, media, Package, Stage 4, Stage 6, or production flow ran.
 
+## Stage 5 Expert Entry Feasibility1 closeout (2026-08-22)
+
+This is a separate zero-product-state-change feasibility record. It does not rewrite either R01 record, create or publish an Expert, create or install a Skill or Package, add a new R01 gate, or authorize R02-R08. Official WorkBuddy documentation treats an Expert as a WorkBuddy role layer whose tool capability is obtained through configured Skill/MCP; it does not replace the one executable Skill contract. The controlled-client observations below are not official execution-contract proof, and any model or built-in Skill self-report is explicitly non-authoritative.
+
+```text
+task_id: V2-S5-EXPERT-ENTRY-FEASIBILITY1
+task_kind: OFFICIAL_DOCS_PLUS_CONTROLLED_CLIENT_STATIC_CLOSEOUT / ZERO_PRODUCT_STATE_CHANGE
+official_sources: 134393=WORKBUDDY_EXPERT_ROLE_LAYER_AND_SKILL_OR_MCP_TOOL_DEPENDENCY / 134421=EXPERT_PACKAGE_AND_MANAGEMENT / 134432=EXECUTABLE_SKILL_SCRIPTS_WORKFLOWS
+official_source_urls: https://cloud.tencent.com/document/product/1831/134393 / https://cloud.tencent.com/document/product/1831/134421 / https://cloud.tencent.com/document/product/1831/134432
+workbuddy_client: 5.3.14 / HY3_ONLY / NEVER_AUTO
+client_expert_observation: MY_EXPERT_COUNT=0 / CREATE_ENTRY_OPENED_EXPERT_MANAGER_CONVERSATION / NO_EXPERT_CREATED_SAVED_OR_PUBLISHED
+expert_manager_observation: CANNOT_DIRECTLY_BIND_INSTALLED_SKILL / CANNOT_LOCK_HY3 / SAME_CONVERSATION_MAY_PROMPT_GLOBAL_SKILL / BUNDLED_AUTOLOAD_NOT_PROVED
+unofficial_observation_boundary: MODEL_OR_BUILTIN_SKILL_SELF_REPORT_NOT_OFFICIAL_CONTRACT
+result: INCOMPLETE / EXPERT_AS_SOLE_VISIBLE_ENTRY_NOT_PROVED / DOES_NOT_SUPERSEDE_SOLE_SKILL_ENTRY / R01_UNCHANGED_BLOCKED_EXTERNAL_CONTRACT
+stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
+current_task: NONE / NO_ACTIVE_TASK
+next_authorized_task: NONE / R02-R08_NOT_STARTED_NOT_AUTHORIZED_BY_CHAIN
+review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_REVIEWER
+anti_expansion: PASS / NO_EXPERT_OR_PACKAGE_OR_SKILL_CREATED / NO_NEW_R01_GATE / NO_PROVIDER_MEDIA_PACKAGE_STAGE4_STAGE6_OR_PRODUCTION
+```
+
 ## External Package Guide
 
 An external Package's `AGENT_GUIDE.md` is not this repository's operating guide. It may be read only by the downstream consumer authorized for a session, and only after Package Registration identity validation has succeeded and the Locator has returned the verified PackageRoot and Guide identity. Never scan disks, guess a Package, or read an unverified Guide as authority.

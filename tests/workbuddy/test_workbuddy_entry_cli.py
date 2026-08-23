@@ -84,7 +84,29 @@ def _receipt(
     reason: str = "NONE",
     provider_names: tuple[str, ...] = (),
     secret: str | None = None,
+    partial_identity: bool = False,
 ) -> MappingProxyType:
+    definition = _definition()
+    partial_prelaunch = outcome == "PRELAUNCH_BLOCKED" or (
+        outcome == "CANCELLED" and reason == "CANCELLED_BEFORE_SPAWN"
+    )
+    package = {
+        "openmontage_release": definition["package_release"],
+        "openmontage_commit": definition["package_commit"],
+        "package_root": "D:/fixtures/package",
+    }
+    tool_definition = {
+        "definition_id": definition["definition_id"],
+        "definition_sha256": definition["definition_sha256"],
+        "authority_owner": definition["authority_owner"],
+    }
+    if outcome == "CANCELLED" and reason == "CANCELLED_BEFORE_SPAWN":
+        package = {"openmontage_release": None, "openmontage_commit": None, "package_root": None}
+    if partial_prelaunch:
+        tool_definition = {"definition_id": None, "definition_sha256": None, "authority_owner": None}
+    if partial_identity:
+        package = {"openmontage_release": None, "openmontage_commit": None, "package_root": None}
+        tool_definition = {"definition_id": None, "definition_sha256": None, "authority_owner": None}
     error: Any = None
     if outcome != "EXITED_SUCCESS":
         error = {"code": reason, "origin": "CHILD", "sanitized_message": reason}
@@ -95,28 +117,31 @@ def _receipt(
             "schema_version": cli._RESULT_SCHEMA,
             "outcome": outcome,
             "reason_code": reason,
-            "session": MappingProxyType({"session_id": "session-1"}),
-            "request": MappingProxyType({"request_id": "request-1"}),
+            "session": MappingProxyType({"session_id": None if partial_identity else "session-1"}),
+            "request": MappingProxyType({"request_id": None if partial_identity else "request-1"}),
             "registration": MappingProxyType({"registration_sha256": None}),
-            "package": MappingProxyType(
-                {"openmontage_release": None, "openmontage_commit": None, "package_root": None}
-            ),
+            "package": MappingProxyType(package),
             "manifest": MappingProxyType({"sha256": None, "size": None}),
             "lock": MappingProxyType({"sha256": None, "size": None, "bundle_sha256": None}),
-            "tool_definition": MappingProxyType(
-                {"definition_id": None, "definition_sha256": None, "authority_owner": None}
-            ),
+            "tool_definition": MappingProxyType(tool_definition),
             "tool_file": MappingProxyType(
                 {"tool_id": None, "relative_path": None, "path": None, "sha256": None, "size": None, "owner": None}
             ),
             "interpreter": MappingProxyType({"binding": None, "path": None, "sha256": None, "size": None}),
-            "user_message": MappingProxyType({"sha256": None, "byte_length": None}),
+            "user_message": MappingProxyType(
+                {
+                    "sha256": None
+                    if partial_identity
+                    else hashlib.sha256("literal user message".encode()).hexdigest(),
+                    "byte_length": None if partial_identity else len("literal user message".encode()),
+                }
+            ),
             "provider_environment_names": provider_names,
             "local_capability_evidence_identities": (),
-            "launched": False,
-            "spawn_count": 0,
-            "pid": None,
-            "started_at_utc": None,
+            "launched": not partial_prelaunch,
+            "spawn_count": 0 if partial_prelaunch else 1,
+            "pid": None if partial_prelaunch else 1234,
+            "started_at_utc": None if partial_prelaunch else "2026-08-23T00:00:00.000Z",
             "ended_at_utc": None,
             "duration_ms": 0,
             "exit_code": None,
@@ -148,6 +173,9 @@ def _environment(provider: Mapping[str, str] | None = None) -> dict[str, str]:
         cli._ENV_SKILL_IDENTITY: "golden-key-openmontage",
         cli._ENV_RELEASE_IDENTITY: "release-1",
         cli._ENV_AUTHORITY_OWNER: "golden-key",
+        cli._ENV_PACKAGE_TOOL_DEFINITION_ID: "definition-1",
+        cli._ENV_PACKAGE_TOOL_DEFINITION_SHA256: "a" * 64,
+        cli._ENV_PACKAGE_TOOL_DEFINITION_RELATIVE_PATH: "definitions/tool.json",
         cli._ENV_BRIDGE_CONTRACT_ID: cli._BRIDGE_CONTRACT_ID,
         cli._ENV_REQUEST_SCHEMA_ID: cli._REQUEST_SCHEMA,
         cli._ENV_REQUEST_SCHEMA_SHA256: cli._REQUEST_SCHEMA_SHA256,
@@ -260,7 +288,6 @@ def test_definition_and_evidence_semantics_are_deferred_to_stage4(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     request = _request()
-    request["package_tool_definition"]["definition_sha256"] = "not-a-sha256"
     request["package_tool_definition"]["relative_path"] = 17
     request["local_capability_evidence"] = [{"schema_version": "stage4-owns-this-wire"}]
     receipt = _receipt(outcome="PRELAUNCH_BLOCKED", reason="TOOL_DEFINITION_INVALID")
@@ -271,6 +298,25 @@ def test_definition_and_evidence_semantics_are_deferred_to_stage4(
     assert len(calls) == 1
     assert calls[0][3] == request["package_tool_definition"]
     assert calls[0][4] == request["local_capability_evidence"]
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("package_release", "other-release"),
+        ("authority_owner", "other-owner"),
+        ("definition_id", "other-definition"),
+        ("definition_sha256", "f" * 64),
+        ("definition_relative_path", "definitions/other.json"),
+    ],
+)
+def test_installer_stamped_definition_identity_is_required_before_stage4(
+    monkeypatch: pytest.MonkeyPatch, field: str, value: Any
+) -> None:
+    request = _request()
+    request["package_tool_definition"][field] = value
+    code, stdout, stderr, calls = _run(monkeypatch, request)
+    assert (code, stdout, stderr, calls) == (78, b"", b"BRIDGE_ASSET_INVALID\n", [])
 
 
 def test_missing_extra_and_disallowed_environment_names_are_78(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -332,6 +378,60 @@ def test_invalid_receipt_is_70_with_no_partial_stdout(monkeypatch: pytest.Monkey
     assert code == 70
     assert stdout == b""
     assert stderr == b"BRIDGE_OUTPUT_INVALID\n"
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    "path,value",
+    [
+        (("session", "session_id"), "other-session"),
+        (("request", "request_id"), "other-request"),
+        (("user_message", "sha256"), "f" * 64),
+        (("user_message", "byte_length"), 999),
+        (("package", "openmontage_release"), "other-release"),
+        (("package", "openmontage_commit"), "f" * 40),
+        (("tool_definition", "authority_owner"), "other-owner"),
+        (("tool_definition", "definition_id"), "other-definition"),
+        (("tool_definition", "definition_sha256"), "f" * 64),
+    ],
+)
+def test_receipt_identity_mismatch_is_output_error(
+    monkeypatch: pytest.MonkeyPatch, path: tuple[str, str], value: Any
+) -> None:
+    request = _request()
+    receipt = dict(_receipt())
+    nested = dict(receipt[path[0]])
+    nested[path[1]] = value
+    receipt[path[0]] = MappingProxyType(nested)
+    code, stdout, stderr, calls = _run(monkeypatch, request, result=receipt)
+    assert (code, stdout, stderr) == (70, b"", b"BRIDGE_OUTPUT_INVALID\n")
+    assert len(calls) == 1
+
+
+def test_partial_prelaunch_receipt_is_forwarded_without_fabricating_identity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = _request()
+    receipt = _receipt(
+        outcome="PRELAUNCH_BLOCKED",
+        reason="LOCATOR_FAILED",
+        partial_identity=True,
+    )
+    code, stdout, stderr, calls = _run(monkeypatch, request, result=receipt)
+    assert code == 0
+    assert stderr == b""
+    assert json.loads(stdout)["outcome"] == "PRELAUNCH_BLOCKED"
+    assert json.loads(stdout)["package"]["openmontage_release"] is None
+    assert len(calls) == 1
+
+
+def test_non_prelaunch_receipt_must_be_fully_correlated(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = _request()
+    receipt = _receipt(partial_identity=True)
+    code, stdout, stderr, calls = _run(monkeypatch, request, result=receipt)
+    assert (code, stdout, stderr) == (70, b"", b"BRIDGE_OUTPUT_INVALID\n")
     assert len(calls) == 1
 
 

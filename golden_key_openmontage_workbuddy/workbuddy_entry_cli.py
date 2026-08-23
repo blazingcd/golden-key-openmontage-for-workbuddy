@@ -219,6 +219,9 @@ _MAX_OUTPUT_BYTES = 4 * 1024 * 1024
 _ENV_SKILL_IDENTITY = "GOLDEN_KEY_WORKBUDDY_SKILL_IDENTITY"
 _ENV_RELEASE_IDENTITY = "GOLDEN_KEY_WORKBUDDY_RELEASE_IDENTITY"
 _ENV_AUTHORITY_OWNER = "GOLDEN_KEY_WORKBUDDY_AUTHORITY_OWNER"
+_ENV_PACKAGE_TOOL_DEFINITION_ID = "GOLDEN_KEY_WORKBUDDY_PACKAGE_TOOL_DEFINITION_ID"
+_ENV_PACKAGE_TOOL_DEFINITION_SHA256 = "GOLDEN_KEY_WORKBUDDY_PACKAGE_TOOL_DEFINITION_SHA256"
+_ENV_PACKAGE_TOOL_DEFINITION_RELATIVE_PATH = "GOLDEN_KEY_WORKBUDDY_PACKAGE_TOOL_DEFINITION_RELATIVE_PATH"
 _ENV_BRIDGE_CONTRACT_ID = "GOLDEN_KEY_WORKBUDDY_BRIDGE_CONTRACT_ID"
 _ENV_REQUEST_SCHEMA_ID = "GOLDEN_KEY_WORKBUDDY_REQUEST_SCHEMA_ID"
 _ENV_REQUEST_SCHEMA_SHA256 = "GOLDEN_KEY_WORKBUDDY_REQUEST_SCHEMA_SHA256"
@@ -240,6 +243,9 @@ _FIXED_ENVIRONMENT_NAMES = (
     _ENV_INTERPRETER_SHA256,
     _ENV_MODULE_NAME,
     _ENV_MODULE_SHA256,
+    _ENV_PACKAGE_TOOL_DEFINITION_ID,
+    _ENV_PACKAGE_TOOL_DEFINITION_RELATIVE_PATH,
+    _ENV_PACKAGE_TOOL_DEFINITION_SHA256,
     _ENV_RELEASE_IDENTITY,
     _ENV_REQUEST_SCHEMA_ID,
     _ENV_REQUEST_SCHEMA_SHA256,
@@ -580,7 +586,7 @@ def _safe_allowed_environment_map(value: Any) -> dict[str, str] | None:
 
 def _load_environment(
     request: Mapping[str, Any], raw: bytes
-) -> tuple[dict[str, str], tuple[str, ...], tuple[str, ...]]:
+) -> tuple[dict[str, str], tuple[str, ...], tuple[str, ...], dict[str, str]]:
     controls = request["executor_controls"]
     definition = request["package_tool_definition"]
     provider_names = tuple(controls["provider_environment_names"])
@@ -643,8 +649,13 @@ def _load_environment(
     for name, expected_value in expected_values.items():
         if value(name) != expected_value:
             _asset_error()
-    for name in (_ENV_RELEASE_IDENTITY, _ENV_AUTHORITY_OWNER):
-        _asset_text(value(name))
+    release_identity = _asset_text(value(_ENV_RELEASE_IDENTITY))
+    authority_owner = _asset_text(value(_ENV_AUTHORITY_OWNER))
+    definition_id = _asset_text(value(_ENV_PACKAGE_TOOL_DEFINITION_ID))
+    definition_sha256 = value(_ENV_PACKAGE_TOOL_DEFINITION_SHA256)
+    if not re.fullmatch(r"[0-9a-f]{64}", definition_sha256):
+        _asset_error()
+    definition_relative_path = _asset_text(value(_ENV_PACKAGE_TOOL_DEFINITION_RELATIVE_PATH))
     if value(_ENV_REQUEST_SCHEMA_SHA256) != _REQUEST_SCHEMA_SHA256:
         _asset_error()
     if value(_ENV_RESULT_SCHEMA_SHA256) != _RESULT_SCHEMA_SHA256:
@@ -678,7 +689,34 @@ def _load_environment(
             secrets.append(provider[canonical_name])
             if encoded in raw:
                 _environment_error()
-    return provider, tuple(secrets), canonical_names
+    return provider, tuple(secrets), canonical_names, {
+        "release_identity": release_identity,
+        "authority_owner": authority_owner,
+        "definition_id": definition_id,
+        "definition_sha256": definition_sha256,
+        "definition_relative_path": definition_relative_path,
+    }
+
+
+def _bind_installer_definition(
+    request: dict[str, Any], installer_identity: Mapping[str, str]
+) -> None:
+    """Require the complete request definition to match the stamped release asset."""
+
+    definition = request["package_tool_definition"]
+    if not isinstance(definition, Mapping):
+        _asset_error()
+    expected = {
+        "package_release": installer_identity["release_identity"],
+        "authority_owner": installer_identity["authority_owner"],
+        "definition_id": installer_identity["definition_id"],
+        "definition_sha256": installer_identity["definition_sha256"],
+        "definition_relative_path": installer_identity["definition_relative_path"],
+    }
+    if any(definition.get(field) != value for field, value in expected.items()):
+        _asset_error()
+    # Keep the full caller envelope while making the release binding explicit.
+    request["package_tool_definition"] = dict(definition)
 
 
 def _secret_occurs(value: Any, secrets: tuple[str, ...]) -> bool:
@@ -741,7 +779,104 @@ def _wire_value(value: Any) -> Any:
     _output_error()
 
 
-def _validate_receipt(value: Any, provider_names: tuple[str, ...], secrets: tuple[str, ...]) -> bytes:
+def _receipt_identity_matches(
+    wire: Mapping[str, Any], request: Mapping[str, Any]
+) -> None:
+    controls = request["executor_controls"]
+    definition = request["package_tool_definition"]
+    if not isinstance(controls, Mapping) or not isinstance(definition, Mapping):
+        _output_error()
+    message_bytes = request["user_message"].encode("utf-8")
+    expected = {
+        "session_id": controls["session_id"],
+        "request_id": controls["request_id"],
+        "message_sha256": hashlib.sha256(message_bytes).hexdigest(),
+        "message_byte_length": len(message_bytes),
+        "package_release": definition["package_release"],
+        "package_commit": definition["package_commit"],
+        "definition_id": definition["definition_id"],
+        "definition_sha256": definition["definition_sha256"],
+        "authority_owner": definition["authority_owner"],
+    }
+    partial_prelaunch = wire["outcome"] == "PRELAUNCH_BLOCKED" or (
+        wire["outcome"] == "CANCELLED" and wire["reason_code"] == "CANCELLED_BEFORE_SPAWN"
+    )
+
+    def match_scalar(container: Any, field: str, expected_value: Any) -> bool:
+        if not isinstance(container, Mapping) or field not in container:
+            _output_error()
+        actual = container[field]
+        if actual is None:
+            return partial_prelaunch
+        if actual != expected_value:
+            _output_error()
+        return True
+
+    match_scalar(wire["session"], "session_id", expected["session_id"])
+    match_scalar(wire["request"], "request_id", expected["request_id"])
+    message = wire["user_message"]
+    if not isinstance(message, Mapping) or "sha256" not in message or "byte_length" not in message:
+        _output_error()
+    message_sha = message["sha256"]
+    message_length = message["byte_length"]
+    if (message_sha is None) != (message_length is None):
+        _output_error()
+    message_present = message_sha is not None
+    if message_present and (
+        message_sha != expected["message_sha256"] or message_length != expected["message_byte_length"]
+    ):
+        _output_error()
+    if not partial_prelaunch and not message_present:
+        _output_error()
+
+    package = wire["package"]
+    if not isinstance(package, Mapping):
+        _output_error()
+    package_release = package.get("openmontage_release")
+    package_commit = package.get("openmontage_commit")
+    if (package_release is None) != (package_commit is None):
+        _output_error()
+    package_present = package_release is not None
+    if package_present and (
+        package_release != expected["package_release"] or package_commit != expected["package_commit"]
+    ):
+        _output_error()
+    if not partial_prelaunch and not package_present:
+        _output_error()
+
+    tool_definition = wire["tool_definition"]
+    if not isinstance(tool_definition, Mapping):
+        _output_error()
+    definition_fields = (
+        ("authority_owner", expected["authority_owner"]),
+        ("definition_id", expected["definition_id"]),
+        ("definition_sha256", expected["definition_sha256"]),
+    )
+    definition_values = [tool_definition.get(field) for field, _ in definition_fields]
+    if any(value is None for value in definition_values) and any(value is not None for value in definition_values):
+        _output_error()
+    definition_present = all(value is not None for value in definition_values)
+    if definition_present:
+        for (field, expected_value), actual in zip(definition_fields, definition_values):
+            if actual != expected_value:
+                _output_error()
+    if not partial_prelaunch and not definition_present:
+        _output_error()
+
+    if partial_prelaunch:
+        if wire["spawn_count"] != 0 or wire["launched"] is not False:
+            _output_error()
+    elif wire["outcome"] == "SPAWN_FAILED":
+        if wire["spawn_count"] != 0 or wire["launched"] is not False:
+            _output_error()
+    elif wire["spawn_count"] != 1 or wire["launched"] is not True:
+        _output_error()
+def _validate_receipt(
+    value: Any,
+    provider_names: tuple[str, ...],
+    secrets: tuple[str, ...],
+    request: Mapping[str, Any] | None = None,
+) -> bytes:
     wire = _wire_value(value)
     if not isinstance(wire, dict) or set(wire) != _RECEIPT_FIELDS:
         _output_error()
@@ -751,6 +886,8 @@ def _validate_receipt(value: Any, provider_names: tuple[str, ...], secrets: tupl
         _output_error()
     if wire["provider_environment_names"] != list(provider_names):
         _output_error()
+    if request is not None:
+        _receipt_identity_matches(wire, request)
     if _secret_occurs(wire, secrets):
         _output_error()
     try:
@@ -802,7 +939,8 @@ def main() -> int:
     try:
         raw = _read_stdin()
         request = _validate_request(_parse_request(raw))
-        provider, secrets, canonical_provider_names = _load_environment(request, raw)
+        provider, secrets, canonical_provider_names, installer_identity = _load_environment(request, raw)
+        _bind_installer_definition(request, installer_identity)
         if _secret_occurs(request, secrets):
             _environment_error()
         cancel_event = threading.Event()
@@ -819,7 +957,7 @@ def main() -> int:
             )
         except Exception:
             _internal_error()
-        payload = _validate_receipt(receipt, canonical_provider_names, secrets)
+        payload = _validate_receipt(receipt, canonical_provider_names, secrets, request)
         _write_stdout(payload)
         return 0
     except _BridgeError as error:

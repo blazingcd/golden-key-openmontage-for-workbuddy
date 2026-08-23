@@ -461,18 +461,23 @@ stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 product_goal_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
 ```
 
-## 项目级架构纠偏审计 Phase A 章程镜像（A7 docs-only candidate，2026-08-22）
+## 项目级架构纠偏审计 Phase A 章程镜像（A7 docs-only 已正式推广，2026-08-22）
 
-本节固化 A0-A6 经独立零写 Reviewer 批准的单一审计结果和最小纠偏方案。它不是产品纠偏完成，不改变正式分支、Stage 5 live 状态或任何历史 commit；历史合同 PASS 和当前架构处置始终分字段表达。
+本节固化 A0-A6 经独立零写 Reviewer 批准的单一审计结果和最小纠偏方案。A7 docs-only 结果已正式推广；它不是产品纠偏完成，不改变 Stage 5 live 状态或任何历史 commit；历史合同 PASS 和当前架构处置始终分字段表达。
 
 ```text
 task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
-candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
-candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
-formal_anchor: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
-phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
-candidate_scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
-candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+formal_baseline_parent: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+phase_a_audit_commit: 4727c5efda6ae53194ff2c16dd224c67178e8d8d
+phase_a_audit_tree: ac6206950b36f71663eddfb89b7e311aa85b53e6
+phase_a_status: A0-A6_APPROVED / A7_DOCS_FORMALLY_PROMOTED
+scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
+effect: ZERO_PRODUCT_STATE_CHANGE
+review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
+formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
+task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
+state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 phase_b: NOT_AUTHORIZED
 ```
 
@@ -521,4 +526,4 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（`C:\Users\blazi\.codex\worktrees\aef5\...`、`C:\Users\blazi\.codex\worktrees\df76\...`，均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只作历史登记；A7 不合并、复制、提交或删除。
 
-A7 候选只包含六个现有权威文件，明确 `ZERO_PRODUCT_STATE_CHANGE`、`NOT_RUN_DOCS_ONLY`、`Phase B NOT_AUTHORIZED`。独立 Reviewer 通过后仍须等待用户另行批准推广；没有该批准，不能触碰正式分支。
+本 Phase A 状态镜像只包含六个现有权威文件，明确 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY` 与 `Phase B NOT_AUTHORIZED`。A7 审计结果已完成用户批准、exact commit/tree/CI headSha 核验并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，原 Phase A 临时任务工作树、本地任务分支和远端任务分支已清理。B01-B07 仍仅为已固化计划，不因本次镜像获得执行授权；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。

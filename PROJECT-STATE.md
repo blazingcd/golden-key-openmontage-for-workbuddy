@@ -869,22 +869,24 @@ candidate_push: FORMALLY_EFFECTIVE_IFF_LIVE_REMOTE_REF_CONTAINS_THIS_COMMIT / SE
 
 该正式结果镜像不改变 Stage 5 的 `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`，不运行 nonzero/timeout，不创建或推广 Package、Registration、Installer、最终 Skill、Stage 4 spawn、Provider、媒体或 Stage 6。旧 R01 的“PowerShell-only”事实仅属于原始已关闭记录；refresh1 的阻断理由必须保持为缺少 Skill-root cwd/bundled-relative resolution 合同。
 
-## 当前项目级架构纠偏审计 Phase A 镜像（A7 docs-only candidate，2026-08-22）
+## 当前项目级架构纠偏审计 Phase A 镜像（A7 docs-only 已正式推广，2026-08-22）
 
-以下是 A0-A6 经独立零写 Reviewer 批准后的单一自包含结论。它固化的是审计结果和最小纠偏任务方案，不是产品纠偏完成，也不改变正式分支或任何产品状态。历史合同 PASS 与当前产品架构状态分开记录；旧记录不被改写。
+以下是 A0-A6 经独立零写 Reviewer 批准后的单一自包含结论。A7 docs-only 结果已正式推广到 formal branch；它固化的是审计结果和最小纠偏任务方案，不是产品纠偏完成，也不改变任何产品状态。历史合同 PASS 与当前产品架构状态分开记录；旧记录不被改写。
 
 ```text
 task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
-candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
-candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
 formal_ref: refs/heads/codex/workbuddy-shell-v2
-formal_anchor_commit: f338d9d50cad2cccf1398438ad4a8c8d45127a21
-formal_anchor_tree: 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
-candidate_base: EXACT_FORMAL_ANCHOR / CLEAN / DIVERGENCE=0/0
-phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
-candidate_scope: EXACTLY_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
-candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+formal_baseline_parent: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+phase_a_audit_commit: 4727c5efda6ae53194ff2c16dd224c67178e8d8d
+phase_a_audit_tree: ac6206950b36f71663eddfb89b7e311aa85b53e6
+phase_a_status: A0-A6_APPROVED / A7_DOCS_FORMALLY_PROMOTED
+scope: EXACTLY_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
+effect: ZERO_PRODUCT_STATE_CHANGE
 tests: NOT_RUN_DOCS_ONLY
+review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
+formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
+task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
+state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 phase_b: NOT_AUTHORIZED
 phase_b_authorization: NOT_AUTHORIZED
 ```
@@ -949,4 +951,4 @@ openmontage_0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 
 纠偏计划严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 先用固定 official 对照组，B05 只替换为 0.3.24 并保持 Shell/Installer/Skill/Launcher/请求/验收方法不变；B06 唯一下游为 `HANDOFF_TO_B07_ONLY`；B07 后唯一推广动作是 `PROMOTE_AND_CLEANUP`，且仅允许普通 `ff-only`，禁止 merge/rebase main、force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。B01-B07 的完整 21 字段合同在 TASK-REGISTER 的 Phase A 账本中。
 
-本 A7 候选只改六个既有权威文件，零产品代码/测试/CI/Package/外部仓库/客户端/Provider/媒体/Registration/Activation/DataRoot 变化。独立 Reviewer 只审核候选精确 commit/tree；Reviewer APPROVE 不等于正式推广，正式分支仍需用户后续明确批准和普通 fast-forward。
+本 Phase A 状态镜像只涉及六个既有权威文件，保持 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY`，不触碰产品代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation 或 DataRoot。A7 审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口提交使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，避免自引用 hash。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。Phase B 仍为 `NOT_AUTHORIZED`，B01-B07 仅为已固化计划。

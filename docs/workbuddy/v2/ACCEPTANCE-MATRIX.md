@@ -534,18 +534,23 @@ stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 product_goal_anti_expansion: PASS / WorkBuddy_ONLY_AGENT_USER_ENTRY / FIXED_CLI_ONLY_SOLE_SKILL_INTERNAL_BRIDGE / NO_ARBITRARY_MEDIA_TOOL_SELECTION_OR_FIXTURE_OR_DEFINITION_OR_EXTERNAL_PACKAGE_MODIFICATION
 ```
 
-## 项目级架构纠偏审计 Phase A 验收镜像（A7 docs-only candidate，2026-08-22）
+## 项目级架构纠偏审计 Phase A 验收镜像（A7 docs-only 已正式推广，2026-08-22）
 
-本节是 A0-A6 独立审查批准后的当前验收边界。它不把审计完成写成产品纠偏完成，不覆盖历史证据，也不改变正式分支或 R02 live 状态。
+本节是 A0-A6 独立审查批准后的当前验收边界。A7 docs-only 结果已正式推广；它不把审计完成写成产品纠偏完成，不覆盖历史证据，也不改变 R02 live 状态。
 
 ```text
 task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
-candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
-candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
-formal_anchor: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
-phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
-candidate_scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
-candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+formal_baseline_parent: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+phase_a_audit_commit: 4727c5efda6ae53194ff2c16dd224c67178e8d8d
+phase_a_audit_tree: ac6206950b36f71663eddfb89b7e311aa85b53e6
+phase_a_status: A0-A6_APPROVED / A7_DOCS_FORMALLY_PROMOTED
+scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
+effect: ZERO_PRODUCT_STATE_CHANGE
+review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
+formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
+task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
+state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 verification: GIT_DIFF_CHECK_ONLY / NOT_RUN_DOCS_ONLY
 phase_b: NOT_AUTHORIZED
 ```
@@ -622,4 +627,4 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 | B06 | 五类 Stage 5 证据齐全且独立审查通过 | 只允许 `HANDOFF_TO_B07_ONLY`，不得推广/清理/启动 Stage 6 |
 | B07 | 普通自然语言 portrait 业务 Artifact 与独立业务验收 | Core/业务 gate 未过则不推广；Shell 不补媒体逻辑 |
 
-旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只登记、物理保留，不合并、不复制、不删除。A7 自身仅 docs-only 六文件候选，`NOT_RUN_DOCS_ONLY`；Phase B `NOT_AUTHORIZED`。
+旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只登记、物理保留，不合并、不复制、不删除。本 Phase A 状态镜像保持 docs-only 六文件范围与 `NOT_RUN_DOCS_ONLY`；审计结果已正式推广，Phase B 仍为 `NOT_AUTHORIZED`，B01-B07 仅为已固化计划。

@@ -156,18 +156,23 @@ stage_5_status: IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE
 side_effects: NO_CLIENT / NO_PACKAGE_MATERIALIZATION / NO_REGISTRATION / NO_STAGE4 / NO_PROVIDER_MEDIA_STAGE6_OR_PRODUCTION
 ```
 
-## 项目级架构纠偏审计 Phase A 防漂移镜像（A7 docs-only candidate，2026-08-22）
+## 项目级架构纠偏审计 Phase A 防漂移镜像（A7 docs-only 已正式推广，2026-08-22）
 
-本节是 A0-A6 独立批准结论的防漂移落点。它只固化审计结果和纠偏计划，不修改历史 commit、不改正式分支、不把审计完成写成产品完成。
+本节是 A0-A6 独立批准结论的防漂移落点。A7 docs-only 结果已正式推广；本节只固化审计结果和纠偏计划，不把审计完成写成产品完成。
 
 ```text
 task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
-candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
-candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
-formal_anchor: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
-phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
-candidate_scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
-candidate_effect: ZERO_PRODUCT_STATE_CHANGE
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+formal_baseline_parent: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+phase_a_audit_commit: 4727c5efda6ae53194ff2c16dd224c67178e8d8d
+phase_a_audit_tree: ac6206950b36f71663eddfb89b7e311aa85b53e6
+phase_a_status: A0-A6_APPROVED / A7_DOCS_FORMALLY_PROMOTED
+scope: EXACT_SIX_EXISTING_AUTHORITY_FILES / DOCS_ONLY
+effect: ZERO_PRODUCT_STATE_CHANGE
+review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
+formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
+task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
+state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 verification: NOT_RUN_DOCS_ONLY (except mechanical diff/status/object checks)
 phase_b: NOT_AUTHORIZED
 ```
@@ -227,4 +232,4 @@ B04 必须先用固定 official control package，B05 只能替换 Package 为�
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）只保留历史，禁止合并或删除；两个 dirty detached worktree `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2` 与 `C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`（均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）不复制、不提交、不回收、不删除。它们不是权威状态。
 
-A7 只允许本候选分支修改以下六个现有文件：`AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`。禁止新文件、代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation、DataRoot。提交只能普通 commit 到任务分支并普通 push；禁止 force-push。独立 Reviewer 只按 exact commit/tree 审核，APPROVE 仍不等于 formal promotion。只有用户另行批准推广后，才允许从最新正式对象普通 fast-forward；推广后才可清理本任务 worktree/分支/临时证据，旧 Stage 2 分支和 dirty worktrees 仍需额外删除授权。A7 测试标签固定为 `NOT_RUN_DOCS_ONLY`。
+A7 状态收口仍只涉及以下六个现有文件：`AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`。禁止新文件、代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation、DataRoot。审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，测试标签固定为 `NOT_RUN_DOCS_ONLY`。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支和 dirty worktrees 仍需保留，除非另有授权。

@@ -207,23 +207,25 @@ If those sources disagree, stop fail-closed and report the conflict. Do not infe
 
 Use exact path allowlists, preserve unrelated worktrees and user data, and treat object mismatch, missing evidence, timeout, truncated output, or no final exit as `INCOMPLETE`.
 
-## Phase A architecture-recovery audit result mirror (2026-08-22; A7 candidate)
+## Phase A architecture-recovery audit result mirror (2026-08-22; A7 formally promoted)
 
-This is the single self-contained result of the independently reviewed A0-A6 architecture-recovery audit. It is a documentation candidate on the dedicated task branch, not a product correction and not a promotion to the formal branch. Existing historical facts and historical PASS results remain historical; the current product-architecture disposition is recorded separately.
+This is the single self-contained result of the independently reviewed A0-A6 architecture-recovery audit. The A7 documentation result is formally promoted into the formal branch; it is not a product correction or a Phase B authorization. Existing historical facts and historical PASS results remain historical; the current product-architecture disposition is recorded separately.
 
 ```text
 task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
-candidate_branch: codex/v2-architecture-recovery-audit-phase-a1
-candidate_worktree: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_Architecture_Recovery_PhaseA1
 formal_ref: refs/heads/codex/workbuddy-shell-v2
-formal_anchor_commit: f338d9d50cad2cccf1398438ad4a8c8d45127a21
-formal_anchor_tree: 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
-candidate_base: formal_anchor_commit / formal_anchor_tree / clean / divergence=0/0
-phase_a_result: A0-A6_INDEPENDENTLY_REVIEWED_APPROVED / A7_DOCS_CANDIDATE
-phase_a_status: A0-A6_APPROVED / A7_DOCS_CANDIDATE / NOT_PROMOTED
-candidate_scope: DOCS_ONLY_EXACTLY_THE_SIX_ALLOWLISTED_FILES
-candidate_effect: ZERO_PRODUCT_STATE_CHANGE
-formal_promotion: NOT_AUTHORIZED / USER_PROMOTION_APPROVAL_REQUIRED
+formal_baseline_parent: f338d9d50cad2cccf1398438ad4a8c8d45127a21 / tree 5ef5e8e524412f6220ad31f2cc38448c6b1dac8b
+phase_a_audit_commit: 4727c5efda6ae53194ff2c16dd224c67178e8d8d
+phase_a_audit_tree: ac6206950b36f71663eddfb89b7e311aa85b53e6
+phase_a_result: A0-A6_INDEPENDENTLY_REVIEWED_APPROVED / A7_DOCS_FORMALLY_PROMOTED
+phase_a_status: A0-A6_APPROVED / A7_DOCS_FORMALLY_PROMOTED
+scope: DOCS_ONLY_EXACTLY_THE_SIX_ALLOWLISTED_FILES
+effect: ZERO_PRODUCT_STATE_CHANGE
+verification: NOT_RUN_DOCS_ONLY
+review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
+formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
+task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
+state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 phase_b: NOT_AUTHORIZED
 ```
 
@@ -305,4 +307,4 @@ The minimum correction plan is strictly serial `B01 -> B02 -> B03 -> B04 -> B05 
 
 `B01` freezes the corrected binding and Guide-read contract; `B02` implements only the one Skill/fixed transport/child boundary; `B03` materializes the final PackageRoot and lifecycle through the named Installer owner; `B04` proves the real flow with the fixed official Package; `B05` repeats it with the same Shell and 0.3.24; `B06` closes Stage 5 only when final Package, production Registration/Activation, final Skill, real WorkBuddy receipt, independent review, Git and CI evidence all exist; `B07` is the external portrait/business acceptance gate. No B task is product authorization merely because this planning candidate was pushed.
 
-The A7 candidate itself is limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only candidate; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The candidate must be independently reviewed by exact commit/tree, but reviewer approval is not formal promotion. Formal promotion requires a later explicit user approval and ordinary fast-forward only.
+The A7 formal result remains limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only state closeout; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The audit result was independently reviewed and formally promoted by ordinary fast-forward at `4727c5efda6ae53194ff2c16dd224c67178e8d8d` with successful CI run `32615371879`; the original Phase A task worktree and local/remote task branches were cleaned. This closeout uses `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`; Phase B remains `NOT_AUTHORIZED`.

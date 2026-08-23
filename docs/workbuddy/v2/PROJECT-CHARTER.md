@@ -478,7 +478,7 @@ review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
 formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
 task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
 state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
-phase_b: NOT_AUTHORIZED
+phase_b: NOT_AUTHORIZED / A7_HISTORICAL_SNAPSHOT
 ```
 
 ### 不可改变的产品目标
@@ -504,7 +504,7 @@ Shell 只承担六个模块：安装与生命周期、Package Registration/Locat
 
 ### 最终 Package 与 R02 归属
 
-唯一 binding delivery owner 是 `V2 Final-delivery Installer / Release Assembly Owner`。Binding carrier 是最终 WorkBuddy `PackageRoot` 中独立的 `Shell-adapter` 子树；Shell 拥有 `PackageToolDefinitionV1` schema/consumer；OpenMontage 0.3.24 子树、源码、Guide、Release、Lock 不修改、不嵌入 WorkBuddy 专用入口。最终 assembly 的 Manifest/Lock/hash 必须覆盖并绑定两棵子树。
+唯一 binding delivery owner 是 `V2 Final-delivery Installer / Release Assembly Owner`。Binding carrier 是最终 WorkBuddy `PackageRoot` 中独立的 `Shell-adapter` 子树；Shell 拥有 `PackageToolDefinitionV1` schema/consumer；当前 Golden Key OpenMontage 0.3.25 子树、源码、Guide、Release、Lock 不修改、不嵌入 WorkBuddy 专用入口。最终 assembly 的 Manifest/Lock/hash 必须覆盖并绑定两棵子树。
 
 ```text
 r02_live_status: R02_CLOSED_BLOCKED_PACKAGE_RELEASE
@@ -513,7 +513,7 @@ recommended_reclassification_state: NOT_YET_EFFECTIVE
 binding_delivery_owner: V2 Final-delivery Installer / Release Assembly Owner
 binding_carrier: FINAL_WORKBUDDY_PACKAGEROOT / INDEPENDENT_SHELL_ADAPTER_SUBTREE
 shell_owns: BINDING_SCHEMA_AND_CONSUMER
-0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
+0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 ```
 
 最终 Package 始终必须随包提供 Node.js `22+`、npm、npx 及其他必需 private toolchain。Stage 3 不探测、下载或替换 Node/npm/npx；是否使用 Remotion、HyperFrames 或其他能力由 OpenMontage/WorkBuddy 决定。
@@ -522,8 +522,30 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 
 ### 最小纠偏路径与边界
 
-任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`；完整 21 字段在 TASK-REGISTER。B01 冻结 binding/Guide-read 合同；B02 只实现一个 Skill、一个固定 transport、一个确定性 child；B03 由最终交付 Installer Owner 组装 final PackageRoot 和生命周期；B04 使用固定 official Package 作控制组；B05 保持同一 Shell/Installer/Skill/Launcher/请求/验收方法，仅替换到固定 0.3.24；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 完成外部 portrait/business gate 后，才有唯一 `PROMOTE_AND_CLEANUP`，并且只能普通 `git merge --ff-only` / fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。
+任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`；完整 21 字段在 TASK-REGISTER。B01 冻结 binding/Guide-read 合同；B02 只实现一个 Skill、一个固定 transport、一个确定性 child；B03 由最终交付 Installer Owner 组装 final PackageRoot 和生命周期；B04 使用固定 official Package 作控制组；B05 保持同一 Shell/Installer/Skill/Launcher/请求/验收方法，仅替换到固定 0.3.25；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 完成外部 portrait/business gate 后，才有唯一 `PROMOTE_AND_CLEANUP`，并且只能普通 `git merge --ff-only` / fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（`C:\Users\blazi\.codex\worktrees\aef5\...`、`C:\Users\blazi\.codex\worktrees\df76\...`，均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只作历史登记；A7 不合并、复制、提交或删除。
 
-本 Phase A 状态镜像只包含六个现有权威文件，明确 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY` 与 `Phase B NOT_AUTHORIZED`。A7 审计结果已完成用户批准、exact commit/tree/CI headSha 核验并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，原 Phase A 临时任务工作树、本地任务分支和远端任务分支已清理。B01-B07 仍仅为已固化计划，不因本次镜像获得执行授权；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。
+本 Phase A 状态镜像只包含六个现有权威文件，明确 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY` 与 A7 当时的 `Phase B NOT_AUTHORIZED`。A7 审计结果已完成用户批准、exact commit/tree/CI headSha 核验并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，原 Phase A 临时任务工作树、本地任务分支和远端任务分支已清理。当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。
+
+## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+
+本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+
+```text
+phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
+current_task: B01 / CURRENT_DOCS_ONLY_CONTRACT_FREEZE
+b01_scope: FREEZE_BINDING_GUIDE_READ_CONTRACT + PACKAGE_INPUT_MIGRATION + AUTHORIZATION_MIRROR
+b01_effect: ZERO_PRODUCT_STATE_CHANGE / DOCS_ONLY
+b01_not_do: NO_PRODUCT_CODE_EXECUTION_OR_B02_B03_B04_B05_B06_B07_EXECUTION / NO_PACKAGE_OR_EXTERNAL_REPO_CHANGE / NO_CLIENT_SKILL_REGISTRATION_ACTIVATION_PROVIDER_MEDIA_DATAROOT
+b01_tests: NOT_RUN_DOCS_ONLY
+official_current_input: checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f / commit=cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree=6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / state=DETACHED_CLEAN
+golden_key_current_input: release=0.3.25 / checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673 / commit=73cab67322451601a824875c0e426067d736dd44 / tree=29231e0464fa4bc7533c1928415849e9b3a48e7c / parents=ef5f5b58fa1c2b494b0154989cf0e4e36615a701+cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / state=DETACHED_CLEAN
+historical_only_inputs: official_old=4eab34c5cfcccaa4f1970554928feccce73ee930,95e1c3d0ab93482159818560f6a8c8e866b9139f / Golden_Key_0.3.24=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / provenance_only / NEVER_FUTURE_CALL_OR_VERIFY
+b01_result: THIS_COMMIT
+b01_review_gate: INDEPENDENT_ZERO_WRITE_APPROVE_REQUIRED / NO_RESULT_PREWRITTEN
+b01_repository_delivery_resolution: INDEPENDENT_ZERO_WRITE_APPROVE + LIVE_FORMAL_REF_CONTAINS_THIS_COMMIT + EXACT_HEAD_CI_SUCCESS
+next: B02_ONLY_IF_B01_DELIVERED
+b02_b07: BLOCKED_BY_CHAIN
+builder_boundary: NO_FORMAL_PROMOTION
+```

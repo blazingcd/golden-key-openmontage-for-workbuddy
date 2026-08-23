@@ -552,7 +552,7 @@ formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6
 task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
 state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 verification: GIT_DIFF_CHECK_ONLY / NOT_RUN_DOCS_ONLY
-phase_b: NOT_AUTHORIZED
+phase_b: NOT_AUTHORIZED / A7_HISTORICAL_SNAPSHOT
 ```
 
 ### 历史证据与当前架构处置必须分栏
@@ -608,14 +608,14 @@ recommended_reclassification_state: NOT_YET_EFFECTIVE
 binding_delivery_owner: V2 Final-delivery Installer / Release Assembly Owner
 binding_carrier: FINAL_WORKBUDDY_PACKAGEROOT / INDEPENDENT_SHELL_ADAPTER_SUBTREE
 shell_owns: BINDING_SCHEMA_AND_CONSUMER
-0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
+0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 ```
 
-验收时不能把 0.3.24 缺少 WorkBuddy 专用字段写成共享 Package 的产品缺陷；应验收最终 Installer 是否在 PackageRoot 内装配 adapter、fixed child、Manifest/Lock/hash，并保持 0.3.24 子树字节不变。
+验收时不能把历史 0.3.24 缺少 WorkBuddy 专用字段写成共享 Package 的产品缺陷；当前纠偏应验收最终 Installer 是否在 PackageRoot 内装配 adapter、fixed child、Manifest/Lock/hash，并保持当前 0.3.25 子树字节不变。历史 0.3.24 只作 R02/provenance 证据，未来调用/验证不得使用。
 
 ### 纠偏任务验收门
 
-任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 是固定 official 控制组，B05 是同一 Shell/Installer/Skill/Launcher/请求/验收方法下仅替换为固定 `0.3.24`；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 后才允许唯一 `PROMOTE_AND_CLEANUP`，且仅普通 fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，不得并行。
+任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 是固定 official 控制组，B05 是同一 Shell/Installer/Skill/Launcher/请求/验收方法下仅替换为固定 `0.3.25`；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 后才允许唯一 `PROMOTE_AND_CLEANUP`，且仅普通 fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，不得并行。
 
 | Gate | 必须证明 | 不能证明/失败处置 |
 |---|---|---|
@@ -623,8 +623,30 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 | B02 | 一个 Skill、一个固定 transport、一个 deterministic child、无第二 Agent/Router/MCP/retry/replay | 任何并行入口、用户技术参数或导演逻辑则 `FAIL_CLOSED` |
 | B03 | final PackageRoot、private toolchain（含 Node 22+ npm/npx）、adapter、fixed child、Manifest/Lock/hash、生命周期与生产 Registration/Activation | 只有临时 Package、源码 checkout、静态 lock 或无 owner 则 `INCOMPLETE` |
 | B04 | fresh install/register/activate、新进程 Locator、Guide-read event、官方 fixed control 的真实 receipt/Artifact | 模型/child 自报或复用旧状态不算证据 |
-| B05 | 同一 Shell 路径在固定 0.3.24 上复现 B04 证据 | 同时改 Shell 与 Package、复用 Registration/PackageRoot 或改 0.3.24 则 `BLOCKED` |
+| B05 | 同一 Shell 路径在固定 0.3.25 上复现 B04 证据 | 同时改 Shell 与 Package、复用 Registration/PackageRoot 或改 0.3.25 则 `BLOCKED` |
 | B06 | 五类 Stage 5 证据齐全且独立审查通过 | 只允许 `HANDOFF_TO_B07_ONLY`，不得推广/清理/启动 Stage 6 |
 | B07 | 普通自然语言 portrait 业务 Artifact 与独立业务验收 | Core/业务 gate 未过则不推广；Shell 不补媒体逻辑 |
 
-旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只登记、物理保留，不合并、不复制、不删除。本 Phase A 状态镜像保持 docs-only 六文件范围与 `NOT_RUN_DOCS_ONLY`；审计结果已正式推广，Phase B 仍为 `NOT_AUTHORIZED`，B01-B07 仅为已固化计划。
+旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只登记、物理保留，不合并、不复制、不删除。本 Phase A 状态镜像保持 docs-only 六文件范围与 `NOT_RUN_DOCS_ONLY`；审计结果已正式推广，上方 Phase A 镜像中的 `NOT_AUTHORIZED` 是历史快照，当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准。
+
+## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+
+本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+
+```text
+phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
+current_task: B01 / CURRENT_DOCS_ONLY_CONTRACT_FREEZE
+b01_scope: FREEZE_BINDING_GUIDE_READ_CONTRACT + PACKAGE_INPUT_MIGRATION + AUTHORIZATION_MIRROR
+b01_effect: ZERO_PRODUCT_STATE_CHANGE / DOCS_ONLY
+b01_not_do: NO_PRODUCT_CODE_EXECUTION_OR_B02_B03_B04_B05_B06_B07_EXECUTION / NO_PACKAGE_OR_EXTERNAL_REPO_CHANGE / NO_CLIENT_SKILL_REGISTRATION_ACTIVATION_PROVIDER_MEDIA_DATAROOT
+b01_tests: NOT_RUN_DOCS_ONLY
+official_current_input: checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f / commit=cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree=6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / state=DETACHED_CLEAN
+golden_key_current_input: release=0.3.25 / checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673 / commit=73cab67322451601a824875c0e426067d736dd44 / tree=29231e0464fa4bc7533c1928415849e9b3a48e7c / parents=ef5f5b58fa1c2b494b0154989cf0e4e36615a701+cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / state=DETACHED_CLEAN
+historical_only_inputs: official_old=4eab34c5cfcccaa4f1970554928feccce73ee930,95e1c3d0ab93482159818560f6a8c8e866b9139f / Golden_Key_0.3.24=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / provenance_only / NEVER_FUTURE_CALL_OR_VERIFY
+b01_result: THIS_COMMIT
+b01_review_gate: INDEPENDENT_ZERO_WRITE_APPROVE_REQUIRED / NO_RESULT_PREWRITTEN
+b01_repository_delivery_resolution: INDEPENDENT_ZERO_WRITE_APPROVE + LIVE_FORMAL_REF_CONTAINS_THIS_COMMIT + EXACT_HEAD_CI_SUCCESS
+next: B02_ONLY_IF_B01_DELIVERED
+b02_b07: BLOCKED_BY_CHAIN
+builder_boundary: NO_FORMAL_PROMOTION
+```

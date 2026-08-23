@@ -887,8 +887,8 @@ review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
 formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
 task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
 state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
-phase_b: NOT_AUTHORIZED
-phase_b_authorization: NOT_AUTHORIZED
+phase_b: NOT_AUTHORIZED / A7_HISTORICAL_SNAPSHOT
+phase_b_authorization: NOT_AUTHORIZED / A7_HISTORICAL_SNAPSHOT
 ```
 
 ### 原始目标、谱系和需求分类
@@ -931,7 +931,7 @@ stage_6_current_disposition: INSUFFICIENT_EVIDENCE
 
 ### 绑定与 R02 当前状态
 
-唯一 binding delivery owner 是 `V2 Final-delivery Installer / Release Assembly Owner`。Carrier 是最终 WorkBuddy `PackageRoot` 内独立的 `Shell-adapter` 子树；Shell 拥有 schema 和 consumer；OpenMontage 0.3.24 子树、Release、Lock、Guide 和源码保持不可变。最终 Manifest/Lock/hash 负责两棵子树的确定性绑定。
+唯一 binding delivery owner 是 `V2 Final-delivery Installer / Release Assembly Owner`。Carrier 是最终 WorkBuddy `PackageRoot` 内独立的 `Shell-adapter` 子树；Shell 拥有 schema 和 consumer；当前 Golden Key OpenMontage 0.3.25 子树、Release、Lock、Guide 和源码保持不可变。最终 Manifest/Lock/hash 负责两棵子树的确定性绑定。
 
 ```text
 r02_live_status: R02_CLOSED_BLOCKED_PACKAGE_RELEASE
@@ -940,7 +940,7 @@ recommended_reclassification_state: NOT_YET_EFFECTIVE
 binding_delivery_owner: V2 Final-delivery Installer / Release Assembly Owner
 binding_carrier: FINAL_WORKBUDDY_PACKAGEROOT / INDEPENDENT_SHELL_ADAPTER_SUBTREE
 shell_owns: BINDING_SCHEMA_AND_CONSUMER
-openmontage_0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
+openmontage_0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 ```
 
 正确的真实顺序是 `Registration identity validation -> Locator 返回已验证 PackageRoot/Guide identity/hash -> WorkBuddy 读取 Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy 作生产决策 -> 唯一固定 CLI transport -> 确定性 fixed child/tool -> LauncherReceipt 机械事实 -> WorkBuddy 展示结果`。Guide-read、identity/hash 和顺序必须由独立可见的 WorkBuddy/client 证据证明；模型自报、child 自报、普通日志、静态测试、CI 或 receipt 单独不能替代。最终 Package 必带 Node.js `22+`、npm、npx；Stage 3 不探测、下载或替换 Node/npm/npx。
@@ -949,6 +949,28 @@ openmontage_0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（`86a7902465d8e215e0830b9640e7222d7c7f5188`，含 `9b8ebb2`、`8d4461d`、`86a7902`）为 `SUPERSEDED_WITH_VALID_REASON / PRESERVE_HISTORY / DO_NOT_MERGE / DO_NOT_DELETE`。它把 assembled Package 对齐成 Git checkout 的方向不属于当前合同；需要的安全点只能在另行授权下按当前模型重做。两个 dirty detached worktree `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`、`C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）仅登记，不复制、不提交、不回收、不删除。
 
-纠偏计划严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 先用固定 official 对照组，B05 只替换为 0.3.24 并保持 Shell/Installer/Skill/Launcher/请求/验收方法不变；B06 唯一下游为 `HANDOFF_TO_B07_ONLY`；B07 后唯一推广动作是 `PROMOTE_AND_CLEANUP`，且仅允许普通 `ff-only`，禁止 merge/rebase main、force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。B01-B07 的完整 21 字段合同在 TASK-REGISTER 的 Phase A 账本中。
+纠偏计划严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 先用固定 official 对照组，B05 只替换为 0.3.25 并保持 Shell/Installer/Skill/Launcher/请求/验收方法不变；B06 唯一下游为 `HANDOFF_TO_B07_ONLY`；B07 后唯一推广动作是 `PROMOTE_AND_CLEANUP`，且仅允许普通 `ff-only`，禁止 merge/rebase main、force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。B01-B07 的完整 21 字段合同在 TASK-REGISTER 的 Phase A 账本中。
 
-本 Phase A 状态镜像只涉及六个既有权威文件，保持 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY`，不触碰产品代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation 或 DataRoot。A7 审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口提交使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，避免自引用 hash。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。Phase B 仍为 `NOT_AUTHORIZED`，B01-B07 仅为已固化计划。
+本 Phase A 状态镜像只涉及六个既有权威文件，保持 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY`，不触碰产品代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation 或 DataRoot。A7 审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口提交使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，避免自引用 hash。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。上方 Phase A 镜像中的 `NOT_AUTHORIZED` 是历史快照；当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准。
+
+## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+
+本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+
+```text
+phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
+current_task: B01 / CURRENT_DOCS_ONLY_CONTRACT_FREEZE
+b01_scope: FREEZE_BINDING_GUIDE_READ_CONTRACT + PACKAGE_INPUT_MIGRATION + AUTHORIZATION_MIRROR
+b01_effect: ZERO_PRODUCT_STATE_CHANGE / DOCS_ONLY
+b01_not_do: NO_PRODUCT_CODE_EXECUTION_OR_B02_B03_B04_B05_B06_B07_EXECUTION / NO_PACKAGE_OR_EXTERNAL_REPO_CHANGE / NO_CLIENT_SKILL_REGISTRATION_ACTIVATION_PROVIDER_MEDIA_DATAROOT
+b01_tests: NOT_RUN_DOCS_ONLY
+official_current_input: checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f / commit=cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree=6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / state=DETACHED_CLEAN
+golden_key_current_input: release=0.3.25 / checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673 / commit=73cab67322451601a824875c0e426067d736dd44 / tree=29231e0464fa4bc7533c1928415849e9b3a48e7c / parents=ef5f5b58fa1c2b494b0154989cf0e4e36615a701+cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / state=DETACHED_CLEAN
+historical_only_inputs: official_old=4eab34c5cfcccaa4f1970554928feccce73ee930,95e1c3d0ab93482159818560f6a8c8e866b9139f / Golden_Key_0.3.24=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / provenance_only / NEVER_FUTURE_CALL_OR_VERIFY
+b01_result: THIS_COMMIT
+b01_review_gate: INDEPENDENT_ZERO_WRITE_APPROVE_REQUIRED / NO_RESULT_PREWRITTEN
+b01_repository_delivery_resolution: INDEPENDENT_ZERO_WRITE_APPROVE + LIVE_FORMAL_REF_CONTAINS_THIS_COMMIT + EXACT_HEAD_CI_SUCCESS
+next: B02_ONLY_IF_B01_DELIVERED
+b02_b07: BLOCKED_BY_CHAIN
+builder_boundary: NO_FORMAL_PROMOTION
+```

@@ -174,7 +174,7 @@ formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6
 task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
 state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 verification: NOT_RUN_DOCS_ONLY (except mechanical diff/status/object checks)
-phase_b: NOT_AUTHORIZED
+phase_b: NOT_AUTHORIZED / A7_HISTORICAL_SNAPSHOT
 ```
 
 ### 不可漂移的架构判断
@@ -209,7 +209,7 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 0_3_24: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 ```
 
-不得直接改写 R02 live 状态。0.3.24 缺少 WorkBuddy 专用 adapter/definition 的历史观察不等于共享 Package 应内置该职责；纠偏应由最终 Installer 在 final PackageRoot 中装配独立 adapter、fixed child 和 Manifest/Lock/hash。任何修改 0.3.24 源码、Release、Lock、Guide 或将 WorkBuddy 入口嵌入其中，立即 `BLOCKED_SCOPE_VIOLATION`。
+不得直接改写 R02 live 状态。历史 0.3.24 对象缺少 WorkBuddy 专用 adapter/definition 的观察不等于共享 Package 应内置该职责；当前纠偏应由最终 Installer 在 final PackageRoot 中装配独立 adapter、fixed child 和 Manifest/Lock/hash。任何修改历史 0.3.24 源码、Release、Lock、Guide 或将 WorkBuddy 入口嵌入其中，立即 `BLOCKED_SCOPE_VIOLATION`；未来调用/验证只允许使用当前 B01 镜像登记的 0.3.25 输入。
 
 ### 纠偏任务串行守卫
 
@@ -220,16 +220,38 @@ B01: freeze_binding_and_Guide_read_contract
 B02: implement_one_Skill_one_fixed_transport_one_deterministic_child
 B03: final_PackageRoot_Installer_lifecycle_and_production_Registration
 B04: official_fixed_control_group_real_acceptance
-B05: same_Shell_same_assembly_0_3_24_switch_acceptance
+B05: same_Shell_same_assembly_0_3_25_switch_acceptance
 B06: Stage5_closeout_only_HANDOFF_TO_B07_ONLY
 B07: external_portrait_business_gate
 after_B07_only: PROMOTE_AND_CLEANUP / ordinary_fast_forward_only
 ```
 
-B04 必须先用固定 official control package，B05 只能替换 Package 为固定 0.3.24，并保持 Shell、Installer assembly、Skill、Launcher、用户请求和验收方法一致；不能同时修改 Shell 和 Package，不能复用旧 PackageRoot/Registration。B06 不得推广、删除、开发 Stage 6；B07 之前不得执行唯一 promotion/cleanup 路径。B07 失败或证据缺失时保持 `INCOMPLETE`，不猜测。
+B04 必须先用固定 official control package，B05 只能替换 Package 为固定 0.3.25，并保持 Shell、Installer assembly、Skill、Launcher、用户请求和验收方法一致；不能同时修改 Shell 和 Package，不能复用旧 PackageRoot/Registration。B06 不得推广、删除、开发 Stage 6；B07 之前不得执行唯一 promotion/cleanup 路径。B07 失败或证据缺失时保持 `INCOMPLETE`，不猜测。
 
 ### Git、残留对象和 A7 边界
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）只保留历史，禁止合并或删除；两个 dirty detached worktree `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2` 与 `C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`（均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）不复制、不提交、不回收、不删除。它们不是权威状态。
 
-A7 状态收口仍只涉及以下六个现有文件：`AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`。禁止新文件、代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation、DataRoot。审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，测试标签固定为 `NOT_RUN_DOCS_ONLY`。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支和 dirty worktrees 仍需保留，除非另有授权。
+A7 状态收口仍只涉及以下六个现有文件：`AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`。禁止新文件、代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation、DataRoot。审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，测试标签固定为 `NOT_RUN_DOCS_ONLY`。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；上方 A7 的 `NOT_AUTHORIZED` 是历史快照，当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准；旧 Stage 2 分支和 dirty worktrees 仍需保留，除非另有授权。
+
+## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+
+本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+
+```text
+phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
+current_task: B01 / CURRENT_DOCS_ONLY_CONTRACT_FREEZE
+b01_scope: FREEZE_BINDING_GUIDE_READ_CONTRACT + PACKAGE_INPUT_MIGRATION + AUTHORIZATION_MIRROR
+b01_effect: ZERO_PRODUCT_STATE_CHANGE / DOCS_ONLY
+b01_not_do: NO_PRODUCT_CODE_EXECUTION_OR_B02_B03_B04_B05_B06_B07_EXECUTION / NO_PACKAGE_OR_EXTERNAL_REPO_CHANGE / NO_CLIENT_SKILL_REGISTRATION_ACTIVATION_PROVIDER_MEDIA_DATAROOT
+b01_tests: NOT_RUN_DOCS_ONLY
+official_current_input: checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f / commit=cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree=6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / state=DETACHED_CLEAN
+golden_key_current_input: release=0.3.25 / checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673 / commit=73cab67322451601a824875c0e426067d736dd44 / tree=29231e0464fa4bc7533c1928415849e9b3a48e7c / parents=ef5f5b58fa1c2b494b0154989cf0e4e36615a701+cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / state=DETACHED_CLEAN
+historical_only_inputs: official_old=4eab34c5cfcccaa4f1970554928feccce73ee930,95e1c3d0ab93482159818560f6a8c8e866b9139f / Golden_Key_0.3.24=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / provenance_only / NEVER_FUTURE_CALL_OR_VERIFY
+b01_result: THIS_COMMIT
+b01_review_gate: INDEPENDENT_ZERO_WRITE_APPROVE_REQUIRED / NO_RESULT_PREWRITTEN
+b01_repository_delivery_resolution: INDEPENDENT_ZERO_WRITE_APPROVE + LIVE_FORMAL_REF_CONTAINS_THIS_COMMIT + EXACT_HEAD_CI_SUCCESS
+next: B02_ONLY_IF_B01_DELIVERED
+b02_b07: BLOCKED_BY_CHAIN
+builder_boundary: NO_FORMAL_PROMOTION
+```

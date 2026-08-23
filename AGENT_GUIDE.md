@@ -226,7 +226,7 @@ review: APPROVE / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE
 formal_promotion: ORDINARY_FAST_FORWARD / FORMALLY_PROMOTED / commit=4727c5efda6ae53194ff2c16dd224c67178e8d8d / tree=ac6206950b36f71663eddfb89b7e311aa85b53e6 / ci_run=32615371879 / completed=success / headSha=4727c5efda6ae53194ff2c16dd224c67178e8d8d
 task_artifacts_cleanup: ORIGINAL_PHASE_A_WORKTREE_LOCAL_AND_REMOTE_TASK_BRANCH_CLEANED
 state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
-phase_b: NOT_AUTHORIZED
+phase_b: NOT_AUTHORIZED / A7_HISTORICAL_SNAPSHOT
 ```
 
 ### Product target and lineage ruling
@@ -263,7 +263,7 @@ old_R03_R05_execution_packets: SUPERSEDED_WITH_VALID_REASON / REPLACED_BY_B02_B0
 
 ### Binding, Guide-read, and evidence boundary
 
-The unique binding delivery owner is `V2 Final-delivery Installer / Release Assembly Owner`. The binding carrier is an independent `Shell-adapter` subtree inside the final WorkBuddy `PackageRoot`; it is not a WorkBuddy-specific addition to the immutable OpenMontage 0.3.24 subtree. The Shell owns the binding schema and consumer. The 0.3.24 Package, its source, Release metadata, Lock, and Guide remain immutable in this task. A final assembly Manifest/Lock/hash must bind the two subtrees without changing the 0.3.24 bytes.
+The unique binding delivery owner is `V2 Final-delivery Installer / Release Assembly Owner`. The binding carrier is an independent `Shell-adapter` subtree inside the final WorkBuddy `PackageRoot`; it is not a WorkBuddy-specific addition to the immutable Golden Key OpenMontage 0.3.25 subtree. The Shell owns the binding schema and consumer. The current 0.3.25 Package, its source, Release metadata, Lock, and Guide remain immutable in this task. A final assembly Manifest/Lock/hash must bind the two subtrees without changing the 0.3.25 bytes.
 
 The real required order is:
 
@@ -303,8 +303,30 @@ The old Stage 2 branch `codex/v2-s2-official-package-alignment-b1` at `86a790246
 
 ### Correction execution boundary
 
-The minimum correction plan is strictly serial `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`. The full 21-field contracts are the live planning record in `docs/workbuddy/v2/TASK-REGISTER.md`. The old R03-R05 packets are `SUPERSEDED_WITH_VALID_REASON` by B02/B03 and must not run in parallel. B04 uses the fixed official control group first; B05 changes only the Package to the fixed 0.3.24 candidate while keeping the same Shell, Installer assembly, Skill, Launcher, request, and acceptance method. B06 has only `HANDOFF_TO_B07_ONLY` as its downstream action. After B07, the only promotion/cleanup path is `PROMOTE_AND_CLEANUP`, using ordinary fast-forward only; no merge/rebase of `main`, no force-push, and no cleanup of the old Stage 2 branch or dirty detached worktrees without separate authorization.
+The minimum correction plan is strictly serial `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`. The full 21-field contracts are the live planning record in `docs/workbuddy/v2/TASK-REGISTER.md`. The old R03-R05 packets are `SUPERSEDED_WITH_VALID_REASON` by B02/B03 and must not run in parallel. B04 uses the fixed official control group first; B05 changes only the Package to the fixed 0.3.25 candidate while keeping the same Shell, Installer assembly, Skill, Launcher, request, and acceptance method. B06 has only `HANDOFF_TO_B07_ONLY` as its downstream action. After B07, the only promotion/cleanup path is `PROMOTE_AND_CLEANUP`, using ordinary fast-forward only; no merge/rebase of `main`, no force-push, and no cleanup of the old Stage 2 branch or dirty detached worktrees without separate authorization.
 
-`B01` freezes the corrected binding and Guide-read contract; `B02` implements only the one Skill/fixed transport/child boundary; `B03` materializes the final PackageRoot and lifecycle through the named Installer owner; `B04` proves the real flow with the fixed official Package; `B05` repeats it with the same Shell and 0.3.24; `B06` closes Stage 5 only when final Package, production Registration/Activation, final Skill, real WorkBuddy receipt, independent review, Git and CI evidence all exist; `B07` is the external portrait/business acceptance gate. No B task is product authorization merely because this planning candidate was pushed.
+`B01` freezes the corrected binding and Guide-read contract; `B02` implements only the one Skill/fixed transport/child boundary; `B03` materializes the final PackageRoot and lifecycle through the named Installer owner; `B04` proves the real flow with the fixed official Package; `B05` repeats it with the same Shell and 0.3.25; `B06` closes Stage 5 only when final Package, production Registration/Activation, final Skill, real WorkBuddy receipt, independent review, Git and CI evidence all exist; `B07` is the external portrait/business acceptance gate. No B task is product authorization merely because this planning candidate was pushed.
 
-The A7 formal result remains limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only state closeout; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The audit result was independently reviewed and formally promoted by ordinary fast-forward at `4727c5efda6ae53194ff2c16dd224c67178e8d8d` with successful CI run `32615371879`; the original Phase A task worktree and local/remote task branches were cleaned. This closeout uses `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`; Phase B remains `NOT_AUTHORIZED`.
+## Phase B current execution mirror: B01 authorized (2026-08-23)
+
+The A7 `phase_b: NOT_AUTHORIZED` field above is an A7 historical snapshot. The current owner authorization activates only B01; the live current task and package inputs are recorded here and in the other five authority files.
+
+```text
+phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
+current_task: B01 / CURRENT_DOCS_ONLY_CONTRACT_FREEZE
+b01_scope: FREEZE_BINDING_GUIDE_READ_CONTRACT + PACKAGE_INPUT_MIGRATION + AUTHORIZATION_MIRROR
+b01_effect: ZERO_PRODUCT_STATE_CHANGE / DOCS_ONLY
+b01_not_do: NO_PRODUCT_CODE_EXECUTION_OR_B02_B03_B04_B05_B06_B07_EXECUTION / NO_PACKAGE_OR_EXTERNAL_REPO_CHANGE / NO_CLIENT_SKILL_REGISTRATION_ACTIVATION_PROVIDER_MEDIA_DATAROOT
+b01_tests: NOT_RUN_DOCS_ONLY
+official_current_input: checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f / commit=cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree=6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / state=DETACHED_CLEAN
+golden_key_current_input: release=0.3.25 / checkout=D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673 / commit=73cab67322451601a824875c0e426067d736dd44 / tree=29231e0464fa4bc7533c1928415849e9b3a48e7c / parents=ef5f5b58fa1c2b494b0154989cf0e4e36615a701+cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / state=DETACHED_CLEAN
+historical_only_inputs: official_old=4eab34c5cfcccaa4f1970554928feccce73ee930,95e1c3d0ab93482159818560f6a8c8e866b9139f / Golden_Key_0.3.24=ef5f5b58fa1c2b494b0154989cf0e4e36615a701 / provenance_only / NEVER_FUTURE_CALL_OR_VERIFY
+b01_result: THIS_COMMIT
+b01_review_gate: INDEPENDENT_ZERO_WRITE_APPROVE_REQUIRED / NO_RESULT_PREWRITTEN
+b01_repository_delivery_resolution: INDEPENDENT_ZERO_WRITE_APPROVE + LIVE_FORMAL_REF_CONTAINS_THIS_COMMIT + EXACT_HEAD_CI_SUCCESS
+next: B02_ONLY_IF_B01_DELIVERED
+b02_b07: BLOCKED_BY_CHAIN
+builder_boundary: NO_FORMAL_PROMOTION
+```
+
+The A7 formal result remains limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only state closeout; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The audit result was independently reviewed and formally promoted by ordinary fast-forward at `4727c5efda6ae53194ff2c16dd224c67178e8d8d` with successful CI run `32615371879`; the original Phase A task worktree and local/remote task branches were cleaned. This closeout uses `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`; the A7 `NOT_AUTHORIZED` value is historical, and the current Phase B authorization is B01-only as recorded above.

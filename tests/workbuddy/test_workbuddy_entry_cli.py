@@ -90,6 +90,7 @@ def _receipt(
     partial_prelaunch = outcome == "PRELAUNCH_BLOCKED" or (
         outcome == "CANCELLED" and reason == "CANCELLED_BEFORE_SPAWN"
     )
+    spawn_failed = outcome == "SPAWN_FAILED"
     package = {
         "openmontage_release": definition["package_release"],
         "openmontage_commit": definition["package_commit"],
@@ -138,10 +139,12 @@ def _receipt(
             ),
             "provider_environment_names": provider_names,
             "local_capability_evidence_identities": (),
-            "launched": not partial_prelaunch,
-            "spawn_count": 0 if partial_prelaunch else 1,
-            "pid": None if partial_prelaunch else 1234,
-            "started_at_utc": None if partial_prelaunch else "2026-08-23T00:00:00.000Z",
+            "launched": False if partial_prelaunch or spawn_failed else True,
+            "spawn_count": 0 if partial_prelaunch or spawn_failed else 1,
+            "pid": None if partial_prelaunch or spawn_failed else 1234,
+            "started_at_utc": None
+            if partial_prelaunch or spawn_failed
+            else "2026-08-23T00:00:00.000Z",
             "ended_at_utc": None,
             "duration_ms": 0,
             "exit_code": None,
@@ -244,6 +247,42 @@ def test_failure_receipt_is_transport_success_without_rewrite(monkeypatch: pytes
     assert code == 0
     assert stderr == b""
     assert json.loads(stdout)["outcome"] == "CHILD_REPORTED_FAILURE"
+    assert len(calls) == 1
+
+
+def test_spawn_failed_receipt_keeps_full_identity_and_zero_spawn(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = _request()
+    receipt = _receipt(outcome="SPAWN_FAILED", reason="SPAWN_OS_ERROR")
+    code, stdout, stderr, calls = _run(monkeypatch, request, result=receipt)
+    wire = json.loads(stdout)
+    assert code == 0
+    assert stderr == b""
+    assert wire["outcome"] == "SPAWN_FAILED"
+    assert wire["launched"] is False
+    assert wire["spawn_count"] == 0
+    assert wire["pid"] is None
+    assert wire["started_at_utc"] is None
+    assert wire["session"]["session_id"] == "session-1"
+    assert wire["request"]["request_id"] == "request-1"
+    assert wire["package"]["openmontage_release"] == "release-1"
+    assert wire["package"]["openmontage_commit"] == "0" * 40
+    assert wire["tool_definition"]["authority_owner"] == "golden-key"
+    assert wire["tool_definition"]["definition_id"] == "definition-1"
+    assert wire["tool_definition"]["definition_sha256"] == "a" * 64
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(("field", "value"), [("launched", True), ("spawn_count", 1)])
+def test_spawn_failed_receipt_rejects_inconsistent_spawn_facts(
+    monkeypatch: pytest.MonkeyPatch, field: str, value: Any
+) -> None:
+    request = _request()
+    receipt = dict(_receipt(outcome="SPAWN_FAILED", reason="SPAWN_OS_ERROR"))
+    receipt[field] = value
+    code, stdout, stderr, calls = _run(monkeypatch, request, result=receipt)
+    assert (code, stdout, stderr) == (70, b"", b"BRIDGE_OUTPUT_INVALID\n")
     assert len(calls) == 1
 
 
@@ -545,6 +584,11 @@ def test_schema_hashes_bind_canonical_closed_descriptors_not_schema_ids() -> Non
     assert cli._RESULT_SCHEMA_SHA256 == cli._schema_digest(cli._RESULT_SCHEMA_DESCRIPTOR)
     assert cli._REQUEST_SCHEMA_SHA256 != hashlib.sha256(cli._REQUEST_SCHEMA.encode()).hexdigest()
     assert cli._RESULT_SCHEMA_SHA256 != hashlib.sha256(cli._RESULT_SCHEMA.encode()).hexdigest()
+    package_constraints = cli._REQUEST_SCHEMA_DESCRIPTOR["constraints"]["package_tool_definition"]
+    assert package_constraints["semantic_owner"] == "Stage4"
+    assert package_constraints["bridge_validation"] == (
+        "Installer-stamped exact release/authority/definition-id/hash/relative-path identity binding"
+    )
 
     assert cli._REQUEST_SCHEMA_DESCRIPTOR["root_fields"] == [
         "bridge_contract_id",

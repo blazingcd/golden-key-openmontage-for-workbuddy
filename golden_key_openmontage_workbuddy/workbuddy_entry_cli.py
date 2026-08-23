@@ -184,7 +184,7 @@ _REQUEST_SCHEMA_DESCRIPTOR = {
         "package_tool_definition": {
             "wire_type": "JSON mapping",
             "semantic_owner": "Stage4",
-            "bridge_validation": "mapping-only;no-definition-hash-binding-path-validation",
+            "bridge_validation": "Installer-stamped exact release/authority/definition-id/hash/relative-path identity binding",
         },
         "local_capability_evidence": {
             "wire_type": "JSON list of mapping wires",
@@ -871,11 +871,13 @@ def _receipt_identity_matches(
             _output_error()
     elif wire["spawn_count"] != 1 or wire["launched"] is not True:
         _output_error()
+
+
 def _validate_receipt(
     value: Any,
     provider_names: tuple[str, ...],
     secrets: tuple[str, ...],
-    request: Mapping[str, Any] | None = None,
+    request: Mapping[str, Any],
 ) -> bytes:
     wire = _wire_value(value)
     if not isinstance(wire, dict) or set(wire) != _RECEIPT_FIELDS:
@@ -886,8 +888,7 @@ def _validate_receipt(
         _output_error()
     if wire["provider_environment_names"] != list(provider_names):
         _output_error()
-    if request is not None:
-        _receipt_identity_matches(wire, request)
+    _receipt_identity_matches(wire, request)
     if _secret_occurs(wire, secrets):
         _output_error()
     try:

@@ -329,4 +329,31 @@ b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
 
+## Phase B 纠偏方案重基线守卫（2026-08-24）
+
+Owner 已暂停原 Phase B。最初 V2 目标和 official OpenMontage Agent-first 合同重新成为唯一裁决标准：普通用户只向 WorkBuddy 提自然语言业务需求；WorkBuddy 是唯一 Agent，读取 verified Guide、Manifest、Pipeline 和 Stage Skills，逐阶段作出生产决策并调用 OpenMontage tools；Shell 只绑定安装对象、运行时、确定性工具执行与结果传递，不替代 WorkBuddy 编排。
+
+```text
+rebaseline_task: V2-PROJECT-ARCHITECTURE-RECOVERY-PLAN-REBASELINE-AUDIT1
+phase_b: PAUSED_BY_OWNER / NO_ACTIVE_PRODUCT_EXECUTION
+phase_a_a0: KEEP_PROCEDURAL_TAKEOVER_FACTS / PER_TASK_REVIEW_EVIDENCE_NOT_PRESERVED
+phase_a_a1: TARGET_RECONSTRUCTION_CORRECT / REQUIRED_TRACE_MATRIX_INCOMPLETE
+phase_a_a2: STAGE1_STAGE2_DISPOSITION_MOSTLY_CORRECT / LEGACY_BRANCH_CAPABILITY_AUDIT_INCOMPLETE
+phase_a_a3: STAGE3_BOUNDARY_MOSTLY_CORRECT / ORIGINAL_DIRTY_WORKTREE_AUDIT_INCOMPLETE / NOW_CLASSIFIED_SUPERSEDED_HISTORY
+phase_a_a4: MECHANICAL_PASS_NARROWING_CORRECT / CORE_WHOLE_REQUEST_HYPOTHESIS_UNRESOLVED
+phase_a_a5: REAL_INTEGRATION_GAP_AND_R02_ATTRIBUTION_CORRECT / INHERITED_UNRESOLVED_A4_HYPOTHESIS
+phase_a_a6: EARLIEST_EXPLICIT_WRONG_PLAN_DECISION / SUPERSEDE_EXECUTION_PLAN
+phase_a_a7: HISTORICAL_PROMOTION_VALID / PROMOTED_PLAN_CONTENT_SUPERSEDED
+b01: HISTORICAL_DOCS_RESULT / CONTRACT_SUPERSEDED
+b02: HISTORICAL_MECHANICAL_IMPLEMENTATION / NOT_PRODUCT_ACCEPTED / REWORK_OR_REPLACE
+b03: KEEP_LIFECYCLE_AND_REPRODUCIBILITY_EVIDENCE_ONLY / FINAL_SKILL_AND_EXECUTION_BINDING_SUPERSEDED
+b04: INCOMPLETE / NEGATIVE_EVIDENCE_RETAINED / NO_SHELL_SUCCESS
+current_effect: DOCS_ONLY / ZERO_PRODUCT_PACKAGE_WORKBUDDY_CHANGE
+next_active_task: NONE / OWNER_REAUTHORIZATION_REQUIRED
+```
+
+一个用户入口不等于一次固定 child 调用完成整个生产请求。允许 WorkBuddy 在同一已验证 Shell 会话内按 official Guide 多次调用确定性 OpenMontage tool；禁止把 `PackageToolDefinitionV1`、哈希、绝对路径、环境白名单或完整 JSON 交给模型拼装，也禁止模型写辅助脚本、阅读 Shell 源码或临场发现技术路由。WorkBuddy 宿主可增加其沙箱环境；Shell 只能从宿主环境构造受限 child environment，不能以“宿主环境必须完全等于 Shell 白名单”为前提。
+
+原 `A0-A6_APPROVED` 只能保留为历史记录，不能再作为整体有效性结论。后续唯一计划是 `C01 -> C02 -> C03 -> C04 -> C05 -> C06 -> C07`：先证明 WorkBuddy 原生可用交互面，再冻结合同，然后才允许实现、装配、official 实机验收、0.3.25 同路径验收和最终业务/推广收口。每步完成后必须做目标回归审计和独立零写审查；任一步出现模型技术编排、第二控制面、直接 fallback 冒充 Shell 成功或证据不足，立即停止。
+
 The A7 formal result remains limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only state closeout; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The audit result was independently reviewed and formally promoted by ordinary fast-forward at `4727c5efda6ae53194ff2c16dd224c67178e8d8d` with successful CI run `32615371879`; the original Phase A task worktree and local/remote task branches were cleaned. This closeout uses `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`; the A7 `NOT_AUTHORIZED` value is historical, and the current Phase B authorization is B01-only as recorded above.

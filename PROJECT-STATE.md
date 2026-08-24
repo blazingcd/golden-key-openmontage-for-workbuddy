@@ -974,3 +974,23 @@ next: B02_ONLY_IF_B01_DELIVERED
 b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
+
+## 当前状态：Phase B 已暂停并完成方案重基线候选（2026-08-24）
+
+```text
+current_authority: V2-PROJECT-ARCHITECTURE-RECOVERY-PLAN-REBASELINE-AUDIT1
+phase_b: PAUSED_BY_OWNER
+current_product_task: NONE
+product_code_change: 0
+package_change: 0
+workbuddy_change: 0
+provider_or_media_change: 0
+formal_baseline: 6457d475ee43b291c7ac34ad42f9f48aaaaa1390 / tree d296e4ab98f8d6908e03360bea7d9c04b8ea06cc
+official_input: cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree 6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / DETACHED_CLEAN
+golden_key_input: 73cab67322451601a824875c0e426067d736dd44 / tree 29231e0464fa4bc7533c1928415849e9b3a48e7c / DETACHED_CLEAN
+next_active_task: NONE / C01_REQUIRES_OWNER_AUTHORIZATION
+```
+
+真实裁决：原 `A0-A6_APPROVED` 聚合状态降级为历史自述，不再是当前权威判断。A0 的精确基线/分支接管事实可保留，但当前仓库没有逐任务 Reviewer 证据；A1 的目标重建正确但强制追踪矩阵不完整；A2 没有审清遗留 Stage 2 分支内可选择性重做的 Windows stable-handle/reparse hardening；A3 没有逐项裁决两个 dirty worktree 的内容；A4 正确把 Stage4 降为机械合同历史 PASS，却没有裁决 fixed child 能否支撑完整用户请求；A5 正确识别真实集成与 R02 归属问题，但继承了 A4 未解决假设；A6 首次把该未证假设明确写成错误执行计划；A7 只保留推广事实。B01 是被取代的历史合同；B02 是最早落地这一偏差的产品实现，只有机械实现事实，未达到产品目标；B03 的装配、工具链、Registration/Locator 和生命周期证据可复用，但最终 Skill/Bridge 绑定不可复用为正确方案；B04 三次均未形成 Shell 成功，直接生成的策划文档属于 `DIRECT_WORKBUDDY_FALLBACK`。
+
+正式台账在此前只记录到“B01 已授权”，而正式分支已包含 B02 代码且外部已产生 B03/B04 结果。该状态漂移由本重基线显式封闭；历史提交和证据保留，不 reset、不删除、不倒写成从未发生。

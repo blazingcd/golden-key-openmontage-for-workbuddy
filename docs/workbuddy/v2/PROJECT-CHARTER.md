@@ -549,3 +549,24 @@ next: B02_ONLY_IF_B01_DELIVERED
 b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
+
+## 重基线后的产品宪章（2026-08-24）
+
+项目唯一目标是让普通用户在 WorkBuddy 中用自然语言稳定运行完整 OpenMontage 原生生产流程。WorkBuddy 是唯一 Agent、唯一对话主体和唯一生产决策者；official Guide、Pipeline manifest、Stage Director Skill、Reviewer、Checkpoint 与 Tool Registry 是生产权威。Shell 只做六模块支持，不以安全、确定性或“一个入口”为理由接管生产编排。
+
+正确主链为：
+
+```text
+natural-language user request
+ -> one WorkBuddy Skill
+ -> verified Registration/Locator and bounded Shell session
+ -> WorkBuddy reads verified Guide/Manifest/Pipeline/Stage Skills
+ -> WorkBuddy decides stage by stage
+ -> WorkBuddy invokes verified OpenMontage tools through the same bounded Shell session as needed
+ -> Shell returns mechanical receipts/status/artifacts
+ -> WorkBuddy reviews, checkpoints and presents the business result
+```
+
+禁止：第二 Agent/Director/FSM/Supervisor/Router/MCP 主链；让模型拼完整 transport JSON、hash、schema、绝对路径或环境合同；让模型写辅助脚本、读 Shell 源码或临场诊断才能启动；把一次固定 child/一次 receipt 当作整个 OpenMontage Agent-first 流程；把 WorkBuddy 直接生成文件当作 Shell/OpenMontage 成功；在 Shell 处理 Provider、Renderer 或媒体创意逻辑。
+
+Phase B 当前为 `PAUSED_BY_OWNER`。A0-A7 与 B01-B04 的重裁决及未来 C01-C07 任务合同以 TASK-REGISTER 末尾重基线记录为准；原 `A0-A6_APPROVED` 只作历史自述，任何旧计划冲突字段不再授权执行。

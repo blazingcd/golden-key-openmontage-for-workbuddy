@@ -650,3 +650,33 @@ next: B02_ONLY_IF_B01_DELIVERED
 b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
+
+## 重基线验收矩阵（2026-08-24）
+
+| 对象 | 历史事实 | 当前裁决 | 可复用边界 |
+|---|---|---|---|
+| Phase A A0 | exact formal base、独立分支/worktree 与残留对象被记录 | `KEEP_PROCEDURAL_FACTS / REVIEW_EVIDENCE_GAP` | 保留 Git 身份；不能推导 A1-A6 正确 |
+| Phase A A1 | 唯一 WorkBuddy Agent、六模块 Shell、自然语言目标重建正确 | `KEEP_TARGET / INCOMPLETE_DELIVERABLE` | 必须补原八阶段/十一步/T1-T12/R01-R08逐项追踪 |
+| Phase A A2 | Stage 1/2 薄 Shell 与临时 Package 证据缩小正确 | `PARTIAL_KEEP` | 遗留 Git-checkout 分支整体不合入；其中 stable-handle/reparse 思路仅列独立 hardening 候选，不进入本纠偏主链 |
+| Phase A A3 | Optional Remotion/HyperFrames 不由 Shell 选型的边界正确 | `KEEP_WITH_NARROWING / AUDIT_GAP_CLOSED_NOW` | 两个 dirty worktree 是旧 Stage3 计划迭代，已被正式 Stage3 实现/合同取代；继续只读保留 |
+| Phase A A4 | 区分机械合同 PASS 与产品架构 PASS 是对的 | `HISTORICAL_PASS_ONLY / CORE_QUESTION_UNRESOLVED` | `launch_session_tool` 最多保留为一次工具调用原语；不得把一次 spawn 当作完整用户请求 |
+| Phase A A5 | 识别 Stage5 真实集成缺口、R02 错层和 Stage6 前提不足 | `PARTIAL_KEEP / INHERITED_UNRESOLVED_ASSUMPTION` | 撤销 fixed-child 整体主链 |
+| Phase A A6 | 找到了职责和证据分层，但首次把未证假设写成 B 计划 | `EARLIEST_EXPLICIT_WRONG_PLAN / SUPERSEDED` | 旧 B01-B07 不再授权执行 |
+| Phase A A7 | 六份文档已审查、推广 | `PROMOTION_VALID / CONTENT_SUPERSEDED` | 保留 Git/审查事实，不再执行旧 B01-B07 计划 |
+| B01 | docs-only 合同提交存在 | `HISTORICAL / SUPERSEDED` | 仅保留 exact package identity 与禁止第二控制面 |
+| B02 | Bridge/Skill 单测与机械 schema 存在 | `NOT_PRODUCT_ACCEPTED` | 可读作实现证据；不得作为后续基线直接补丁式修复 |
+| B03 | assembly、toolchain、Registration/Activation、Locator、lifecycle 可重复证据存在 | `KEEP_WITH_NARROWING` | 复用装配基础设施；最终 Skill/Bridge binding 与 placeholder gate 重做 |
+| B04 | 三次真实 WorkBuddy 尝试均未产生有效 Shell receipt/Artifact | `INCOMPLETE` | 作为失败机制证据；直接策划文件仅为 WorkBuddy fallback |
+
+未来验收必须同时满足：
+
+| Gate | 必须可独立观察 | 失败条件 |
+|---|---|---|
+| 产品入口 | 普通自然语言、一个 Skill、无技术路由提示 | 用户/模型需提供 Python、路径、hash、schema、JSON 或脚本 |
+| Agent-first | WorkBuddy 读取 exact Guide、manifest、Stage Skills，并据此逐阶段决策 | 只读 Skill、只启动 Bridge、只产生 receipt，或固定 child 替代原生流程 |
+| Shell 边界 | 同一 verified session 提供定位、运行时、工具调用和机械结果 | Shell 选择 Pipeline/Stage/Provider/Renderer，或出现第二控制面 |
+| WorkBuddy 兼容 | 宿主可保留自己的沙箱环境；child 环境由 Shell 收敛 | 因宿主额外环境变量直接拒绝，或要求绕过 WorkBuddy 安全逻辑 |
+| 真实结果 | OpenMontage tool/Artifact/Checkpoint/Reviewer 链与最终业务产物可关联 | WorkBuddy 直接 fallback、mock、self-report 或无 provenance 的文件 |
+| 证据与推广 | 每步目标回归审计、独立零写审查、exact Git/package/client evidence | 缺项、状态台账滞后、越界修补或未授权推广 |
+
+当前验收状态固定为 `PAUSED_BY_OWNER / REBASELINE_DOCS_ONLY / NO_PRODUCT_PASS`。

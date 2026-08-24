@@ -255,3 +255,31 @@ next: B02_ONLY_IF_B01_DELIVERED
 b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
+
+## 纠偏重基线防漂移守卫（2026-08-24）
+
+```text
+phase_b: PAUSED_BY_OWNER
+execution_authority: NONE
+only_next_candidate: C01_WORKBUDDY_NATIVE_INTERACTION_PROOF
+authorization_rule: OWNER_EXPLICIT_PER_TASK
+review_rule: POST_STEP_GOAL_AUDIT + INDEPENDENT_ZERO_WRITE_REVIEW
+promotion_rule: ONLY_AFTER_C07 + SEPARATE_OWNER_APPROVAL + ORDINARY_FAST_FORWARD
+```
+
+每个未来任务开始前必须重读最初 V2 handoff 和 exact official `AGENT_GUIDE.md`；结束后必须回答五个问题：普通用户是否仍只说业务需求；WorkBuddy 是否仍是唯一 Agent 和决策者；是否真实读取并遵守 Guide/manifest/Stage Skills；Shell 是否仍只是六模块机械支持；本步证据是否足以证明所声明的状态。任一答案为否或未证明，立即停止，不能用下一步补证或修复。
+
+硬停止条件：
+
+- 模型需要拼 transport JSON、hash、schema、绝对路径、环境白名单，或写/运行辅助脚本；
+- “一个入口”再次被解释成“整个生产请求只能一次固定 child/spawn”；
+- Shell 或 fixed child 承担 Pipeline/Stage/Reviewer/Checkpoint/Provider/Renderer/媒体决策；
+- WorkBuddy sandbox 注入的宿主环境变量被当作产品错误，而不是在 child 构造边界收敛；
+- direct WorkBuddy fallback、mock、self-report、静态测试或 receipt 被升级成真实 OpenMontage 成功；
+- B03/B04 旧 assembly、Registration、Skill 或 evidence 被复用为 fresh acceptance；
+- official/GK exact identity 变化，或使用历史 official/0.3.24 作为未来调用输入；
+- 台账未先更新真实状态、未独立审查、越过 Owner 授权或扩大到 Package/Provider/media。
+
+不得 reset、删除或改写 A7/B01-B04 历史。旧合同可保留为 provenance，但不得继续提供执行授权。
+
+禁止再以 `A0-A6_APPROVED` 这一聚合字符串替代逐项证据。任何未来纠偏计划必须分别给出 A0-A7 的事实、未证明项、处置与因果影响；Reviewer 只能批准 exact 候选内容，不能把“文档内部一致”升级为“产品目标已经证明正确”。

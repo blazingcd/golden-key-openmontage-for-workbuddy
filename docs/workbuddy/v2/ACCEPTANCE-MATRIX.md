@@ -699,3 +699,17 @@ builder_boundary: NO_FORMAL_PROMOTION
 每个 Gate 还必须同时满足对应 21 字段与逐任务补充合同，并在实际执行后逐题通过十问 `EXECUTION_GATE`。未来 commit/tree、client build 或 evidence manifest 不能预先伪造，必须标为 `NOT_PROVED_FUTURE_INPUT` 并在接管时解析为完整 identity，否则任务不启动。规划中的未知事实只能作为当前任务的 fail-closed 输出，不能预写为 PASS；执行中的任何所需事实为 `NOT_PROVED` 都阻断当前 Gate 和下游。Worker 与 Reviewer 必须不同，Reviewer 零写；失败回到 named owner，下一任务不是修复窗口。
 
 当前候选状态是 `PLAN_CANDIDATE_ONLY / NOT_RUN_DOCS_ONLY / NO_PRODUCT_PASS / NO_EXECUTION_AUTHORITY`。Reviewer 通过只能证明上述验收设计未发现 P0/P1，不证明任何 D Gate 已完成。
+
+## D01 合同纠偏候选 Replacement1 验收镜像（2026-08-24）
+
+本节为 append-only 候选镜像；独立零写 Reviewer 通过、单独 Owner 推广批准、ordinary fast-forward 进入 live formal ref 并完成远端核验前，不改变正式验收矩阵或授权。基线为 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`；状态 `DOCS_ONLY / CANDIDATE_NOT_FORMAL / NOT_RUN_DOCS_ONLY`。只有独立纠偏 Reviewer 审核 exact final six-doc diff 通过后才可形成候选 commit；push 与正式推广后续分离。不得运行 pytest 或执行任何 WorkBuddy/probe/Product/Package/Provider/media 动作。
+
+| Gate | Replacement1 必须满足 | 硬停止 |
+|---|---|---|
+| 0 | 只读核验 live formal、正式 authority 与当前 WorkBuddy binary identity；B04 read scope 仅限 exact root 的 13 个文件；按 TASK-REGISTER 的 `B04NegativeEvidenceManifestV1`、canonical UTF-8 无 BOM/no self-hash 规则写固定 inputs 路径，完整 manifest SHA256 独立记录在 Gate-0 takeover | 清单项缺失、manifest 额外项、漂移、排序/hash 不符，或读取 PackageRoot/assembly |
+| 1 | import 前独立零写 Reviewer 核验 exact source tree/fixtures/ZIP listing+bytes+hash、两条 literal ordinary-language prompts、permissions/evidence plan，并返回 `PRE_RUN_APPROVE` | 未有 token 即 import/client mutation，或任一冻结输入不完整 |
+| 2 | Owner 完成正常安全/权限决定、exact Skill import 和两 fresh sessions | 额外 Skill/session/state 或技术路由/辅助脚本 |
+| 3 | 冻结 raw trace、correlation、pre-clean evidence，由独立零写 Reviewer 返回 `APPROVE_FOR_TASK_CLEANUP` | 证据不全，或 token 前卸载/关闭/删除 |
+| 4 | 仅在 Gate3 token 后 Owner 卸载 exact Skill、关闭两 sessions、删除 exact source+ZIP、捕获 after-state；Closeout Worker 写 result 与十问；随后独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE` | 顺序不明、after-state 不匹配、终审后又改 evidence/docs 或缺 FINAL_APPROVE |
+
+任一 Gate 失败即 `BLOCKED_WORKBUDDY_SURFACE`，D02-D08 继续未授权；该候选不把规划审查、probe primitive 或 negative evidence 升级为产品、Package、Shell、视频或业务 PASS。

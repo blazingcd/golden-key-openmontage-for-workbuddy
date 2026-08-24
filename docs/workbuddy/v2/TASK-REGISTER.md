@@ -3356,3 +3356,103 @@ Reviewer 完成节点 Q1-Q10：Q1 `PASS-审查直接阻止错误路线固化`；
 第三次 Reviewer 完成节点 Q1-Q10：Q1 `PASS-APPROVE 仅服务规划正确性`；Q2 `PASS-唯一 WorkBuddy Agent 及真实证据边界已复核`；Q3 `PASS-Shell primitive 与 OpenMontage semantics 分离`；Q4 `PASS-未发现推测合同或新 P0/P1`；Q5 `PASS-D06/D07 non-Package 同路径和 Package-owned 差异清楚`；Q6 `PASS-无 fallback/mock/离线证据升级`；Q7 `PASS-Reviewer 零写且范围仍六文档`；Q8 `PASS-全量映射与 42 字段未丢失`；Q9 `PASS-结论由 exact diff 和机械检查支持`；Q10 `PASS-无问题转嫁 D01-D08`。
 
 准备提交节点 Q1-Q10：Q1 `PASS-提交只固化审计与路线`；Q2 `PASS-不启动 WorkBuddy 或 Agent 流程`；Q3 `PASS-无产品代码/Shell 行为改变`；Q4 `PASS-提交不创造运行事实`；Q5 `PASS-official/GK objects 只读且方法未执行`；Q6 `PASS-NOT_RUN_DOCS_ONLY 明确`；Q7 `PASS-exact six-doc diff`；Q8 `PASS-八阶段/十一步/T1-T12/R01-R08/23项和任务合同均在候选`；Q9 `PASS-Reviewer P0/P1/P2 清零`；Q10 `PASS-提交/推送不推广正式分支且不授权 D01`。若提交前机械核验不再满足这些依据，必须停止并重审。
+
+## D01 合同纠偏候选 Replacement1（2026-08-24；仅 docs correction，不改变正式 authority）
+
+本节是对上方 D01 42 字段的 append-only replacement candidate。它的纠偏基线是已经正式存在的 D 计划对象 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`；该基线事实不等于本节已推广或已授权执行。当前本节只允许修改六份权威文档，`NOT_RUN_DOCS_ONLY`，不运行 WorkBuddy，不创建、导入或运行 probe，不修改产品代码、Package、Provider、media，也不启动 D02-D08。
+
+本节在独立零写 Reviewer 复审、Owner 单独批准推广、ordinary fast-forward 进入正式 ref 并完成远端对象核验以前，不改变正式路线；原 D01 仍保留为当前历史对象。只有该候选正式推广后，原 D01 才标记为 `HISTORICAL / SUPERSEDED_BY_D01_CONTRACT_CORRECTION1`，本节才成为 D01 的最新合同。下列 `PRE_RUN_APPROVE`、`APPROVE_FOR_TASK_CLEANUP`、`FINAL_APPROVE` 均为未来执行时必须实际产生的结果，当前不预写任何 Reviewer 结论。
+
+### D01 replacement contract（完整 42 字段）
+
+```text
+01_task_id: V2-CORRECTION-D01-WORKBUDDY-NATIVE-SURFACE-PROOF / CONTRACT_REPLACEMENT1
+02_confirmed_issue: B04 did not establish one stable WorkBuddy-supported way to read bundled Skill resources and invoke one fixed bundled operation without guessed paths, model-written helpers or Shell technical JSON
+03_why_correction_necessary: D01 cannot start from an unreviewed probe, an undefined B04 evidence universe, or an ambiguous cleanup/review sequence; each must be fixed before any client mutation
+04_correct_owner: WorkBuddy Surface Investigator Worker + independent zero-write Reviewer; Owner performs all client permission and cleanup actions
+05_authoritative_inputs: Current WorkBuddy client; official Tencent WorkBuddy Skill documentation only as documentary evidence; the exact B04 negative-evidence manifest defined below; B04 files read-only; no OpenMontage Package input
+06_exact_allowed_paths: Probe Worker may write only D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_probe_skill\ and D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\; the evidence root may contain only the named Gate-0 record, probe freeze/trace/closeout evidence and manifest; WorkBuddy-managed state is limited to one task-only probe Skill and two fresh task/session IDs; after execution, Closeout Worker may write only the six authority docs to record result/review/status
+07_concrete_actions: Gate 0 freezes formal/client/B04 identities and writes the exact B04 manifest plus its SHA256 record before any probe/client mutation; Gate 1 freezes the exact probe source tree, fixtures, ZIP listing/bytes/hash, two literal ordinary-language prompts, permissions and evidence plan and requires an independent zero-write PRE_RUN_APPROVE before import; Gate 2 is Owner-controlled import and two fresh sessions covering the frozen catalog; Gate 3 freezes all run evidence and requires APPROVE_FOR_TASK_CLEANUP before uninstall or deletion; Gate 4 is Owner cleanup/after-state/closeout followed by an independent zero-write final review
+08_explicitly_not_do: No official/GK Guide, Package, Registration, Locator, Shell product code, B02/B03/B04 carrier, PackageRoot or assembly, Provider, media or product-success claim; no B04 read outside the exact B04 file set; no absolute-path prompt; no helper authored during the run; no disabling WorkBuddy security; no cleanup before the Gate-3 approval
+09_output_contract: Immutable evidence bundle or precise BLOCKED result naming the exact usable/unusable native surface, client/Skill/session identities, Gate-0 manifest hash, every review decision actually reached, explicit NOT_REACHED states for later Gates, trace and after-state where reached; no review result is recorded before it occurs
+10_positive_tests: Two fresh ordinary-language runs; exact Skill hit; fixture resource read; every fixed harmless primitive shape exercised, including at least two sequential enum-selected calls; complete observable results; no model technical assembly; Gate 1 contains PRE_RUN_APPROVE, Gate 3 contains APPROVE_FOR_TASK_CLEANUP, and Gate 4 contains FINAL_APPROVE
+11_negative_tests: Wrong Skill; guessed install path; model-created helper; direct fallback; missing or drifted B04 manifest; missing PRE_RUN_APPROVE; import/client mutation before Gate 1; missing final exit/trace; cleanup before APPROVE_FOR_TASK_CLEANUP; unclean probe residue; security bypass; after-state mismatch; missing FINAL_APPROVE
+12_independent_reviewer_checks: Before import, independently verify exact probe source tree, fixtures, ZIP listing/bytes/hash, literal prompts, permissions/evidence plan, Gate-0 identity records and B04 manifest hash, then return PRE_RUN_APPROVE or block; after both runs, independently verify frozen traces and return APPROVE_FOR_TASK_CLEANUP or block; after Owner cleanup/after-state and Closeout Worker result/Q1-Q10, independently recheck the complete exact final evidence/docs and return FINAL_APPROVE or block; Reviewer is zero-write, changes no reviewed bytes and never performs client actions; the coordinator may preserve an exact copy of each external review result without changing the bytes that result reviewed
+13_p0_p1_p2_standard: P0 false native-surface claim, security bypass, Package/assembly read, or unapproved client mutation; P1 missing/ambiguous pre-run review, manifest scope/hash, evidence freeze, cleanup order, after-state or final review; P2 correlation/wording defect that cannot change the gate decision
+14_fail_closed_conditions: Any Gate 0-4 failure; any input identity mismatch or unresolved future input; any exact-set B04 item missing/changed or any extra manifest entry; any client mutation before PRE_RUN_APPROVE; any incomplete trace; any non-task state change; any security setting change without Owner action; any cleanup before APPROVE_FOR_TASK_CLEANUP; any exact final evidence/docs change after FINAL_APPROVE; any missing FINAL_APPROVE
+15_upstream_dependency: D plan and this replacement must be formally promoted; separate Owner authorization for D01; fresh D-drive roots absent; installed-Skill/task baseline snapshot and Owner-present client; the execution formal HEAD and client identity must be resolved at Gate 0
+16_downstream_handoff: D02 only if Gate 4 FINAL_APPROVE, the D01 result is independently reviewed and formally promoted by a separate Owner decision; BLOCKED returns to the named D01 owner with no contract invention or downstream repair
+17_real_workbuddy_required: YES / two fresh diagnostic sessions after PRE_RUN_APPROVE
+18_official_control_group: NO
+19_involves_0_3_25: NO
+20_proves_after_completion: The real client resource/invocation/result primitives available to a production Skill, with a bounded, independently reviewed evidence and cleanup chain
+21_cannot_prove_after_completion: Shell contract/code, Package binding, official/GK run, media/video, business E2E or promotion
+22_project_target: Prove the real ordinary-language WorkBuddy Skill surface before any product interface is designed
+23_deviation_to_remove: Guessed Skill paths, model-written helpers, undefined B04 evidence scope, and ambiguous evidence-review-uninstall-cleanup timing
+24_input_commit_tree: correction_candidate_base_formal_commit=99bc5c3d727671d7d2ea7313c6851792583efe66 / tree=b995a9a02add77f1e61769f364dd86b341137403; D01_execution_formal_commit_tree=NOT_PROVED_FUTURE_INPUT and must be resolved to the full 40-hex formal HEAD at takeover; Package commit/tree=NONE; WorkBuddy client version/binary SHA256 and B04 manifest SHA256=NOT_PROVED_FUTURE_INPUT and must be recorded at Gate 0 before any probe/client mutation or BLOCK
+25_prerequisites: This replacement formally promoted; separate Owner D01 execution authorization; exact fresh D01 roots absent; installed-Skill/task baseline snapshot; Owner-present client; assigned independent zero-write Reviewer; no unresolved Gate-0 identity
+26_exact_allowlist: WRITE probe_skill root + native_surface_evidence root and its named records; task-only WorkBuddy Skill/two sessions; after execution WRITE only the six authority docs; CONTROL_READ live formal Git identity and the six formal authority docs required for takeover; TASK_READ current client documentation, current WorkBuddy binary identity and only the exact B04 source root/file set below; no assembly or PackageRoot read
+27_exact_denylist: ALL filesystem paths, repository files and external state not named in 26; especially every Package/PackageRoot/assembly path, Shell product code/tests, OpenMontage Registration/Locator, Provider, media, DataRoot and non-task WorkBuddy state
+28_product_code_change: NO
+29_workbuddy_user_action: YES / Owner performs import, safety/permission decisions, fresh task submission, session close and exact uninstall/cleanup; Worker supplies frozen probe and observes; no unattended permission choice
+30_package_action: NONE / no install, replace, register, activate, locate or read of any Package/PackageRoot/assembly
+31_exact_steps: Gate 0 resolve the formal execution HEAD, six formal authority docs, client version/binary SHA256 and exact B04 manifest; write inputs/B04-NEGATIVE-EVIDENCE-MANIFEST.v1.json and records/GATE-0-TAKEOVER.v1.json, record the manifest SHA256 and stop on any mismatch; Gate 1 freeze probe source/fixtures/ZIP/prompt/permission/evidence bytes and obtain independent PRE_RUN_APPROVE before import; Gate 2 Owner imports through normal safety scan and runs exactly two fresh ordinary-language sessions covering the catalog, recording all client actions; Gate 3 freezes raw trace, correlated results and pre-clean state, then the independent Reviewer returns APPROVE_FOR_TASK_CLEANUP or blocks; Gate 4 only after that token Owner uninstalls the exact task Skill, closes both sessions, removes exact task source/ZIP and captures after-state, Closeout Worker records the result and Q1-Q10, then the independent zero-write Reviewer reviews the exact final evidence/docs and returns FINAL_APPROVE or blocks; any Gate failure stops immediately, prevents the next Gate and keeps D02 unauthorized
+32_positive_acceptance: Fields 10 and 12 plus a canonical B04 manifest with exactly 13 files, a Gate-0 record containing its full-byte SHA256, two correlated traces, frozen pre-clean evidence, exact cleanup evidence, exact after-state and all three actual review decisions
+33_negative_assertions: Field 11 plus absence of every denylisted path/state change; no Package/Shell success claim; no review token, identity or hash may be prewritten as a result
+34_failure_conditions: Field 14 or unresolved field 24; result becomes BLOCKED_WORKBUDDY_SURFACE; preserve the evidence needed to explain the block, do not enter the next Gate, and D02 remains unauthorized
+35_evidence_location: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\; manifest=inputs/B04-NEGATIVE-EVIDENCE-MANIFEST.v1.json; Gate-0 record=records/GATE-0-TAKEOVER.v1.json; retained evidence root is not deleted by D01 cleanup; six-doc closeout stores identities, verdict, Gate decisions and manifest SHA256 only
+36_worker_reviewer_split: Surface Worker creates/runs the probe only after PRE_RUN_APPROVE and captures evidence; Owner performs client actions and cleanup; Closeout Worker edits docs and records exact copies of externally returned review decisions; the independent Reviewer writes no repository/evidence/client state, performs no client action and separately returns PRE_RUN_APPROVE, APPROVE_FOR_TASK_CLEANUP and FINAL_APPROVE decisions
+37_rollback_recovery: Before Gate 1 no client mutation is permitted; after any failed Gate stop and preserve exact evidence; after Gate 3 approval restore only the pre-task installed-Skill set by uninstalling the exact task Skill, close both task sessions and verify after-state; any failed restoration blocks FINAL_APPROVE and downstream
+38_temp_cleanup: Never remove probe source/ZIP or task Skill/session artifacts before APPROVE_FOR_TASK_CLEANUP; after that exact token Owner performs only exact task uninstall/close/delete and captures after-state/closeout; the retained evidence root and B04 source remain read-only retained inputs until a separately authorized project cleanup
+39_git_gates: This correction candidate may be committed only after its own independent zero-write Reviewer approves the exact final six-doc diff; correction push and formal promotion are later separate decisions. For a future D01 result, candidate commit requires Gate-4 FINAL_APPROVE and exact six-doc/result checks, push requires exact commit/tree checks, formal result promotion requires separate Owner approval and ordinary fast-forward, and D02 authorization is a fourth separate decision
+40_end_drift_audit: After Gate 4 actual cleanup/after-state, Closeout Worker records the ten-question EXECUTION_GATE before final review; any NO, NOT_PROVED or identity drift blocks FINAL_APPROVE except facts explicitly assigned as later-task nonclaims. The independent Reviewer then reviews the exact final evidence/docs; any change to those reviewed bytes after FINAL_APPROVE invalidates it and requires re-review before a D01 result commit
+41_not_proved_after_task: All field 21 items remain NOT_PROVED unless the actual D01 evidence and all Gate decisions support the narrow primitive claim; no Package, Shell product, official/GK/video/business result is upgraded
+42_no_downstream_repair: D02 may map official semantic operations only onto APPROVE client primitives; it cannot invent, patch, reinterpret or re-probe a missing primitive, and D01 does not claim OpenMontage semantics
+```
+
+### D01 B04 negative-evidence manifest（Gate 0 normative input）
+
+The only permitted B04 read root is `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B04_official_evidence\workbuddy-client\`. It is read-only. The manifest is written to `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\inputs\B04-NEGATIVE-EVIDENCE-MANIFEST.v1.json` before any probe import, Skill installation, task creation, session creation or other WorkBuddy/client mutation. The manifest does not authorize reading any assembly or `PackageRoot`.
+
+The schema is exactly `B04NegativeEvidenceManifestV1`. Its only content is `schema`, exact `source_root`, and `entries`; `entries` is exactly the following 13 direct relative paths, in ascending `relative_path` order. No other file, directory, metadata or recursive discovery is allowed:
+
+```text
+B04-OWNER-PRODUCT-GOAL-RULING1.json
+B04-OWNER-PRODUCT-GOAL-RULING1.md
+B04-WORKBUDDY-FULL-ACCESS-ATTEMPT3-INCOMPLETE.json
+B04-WORKBUDDY-FULL-ACCESS-ATTEMPT3-INCOMPLETE.md
+B04-WORKBUDDY-FULL-ACCESS-ATTEMPT3-REVIEW1.json
+B04-WORKBUDDY-FULL-ACCESS-ATTEMPT3-REVIEW1.md
+B04-WORKBUDDY-SUCCESS-ATTEMPT1-INCOMPLETE.json
+B04-WORKBUDDY-SUCCESS-ATTEMPT1-INCOMPLETE.md
+B04-WORKBUDDY-SUCCESS-ATTEMPT1-REVIEW1.json
+B04-WORKBUDDY-SUCCESS-ATTEMPT2-INCOMPLETE.json
+B04-WORKBUDDY-SUCCESS-ATTEMPT2-INCOMPLETE.md
+B04-WORKBUDDY-SUCCESS-ATTEMPT2-REVIEW1.json
+B04-WORKBUDDY-SUCCESS-ATTEMPT2-REVIEW1.md
+```
+
+Each `entries` item has exactly `{relative_path,size_bytes,sha256}`: `relative_path` is one of the 13 names above using `/`, `size_bytes` is the non-negative byte length, and `sha256` is lowercase 64-hex SHA256 of the exact file bytes. The manifest itself is canonical JSON bytes encoded as UTF-8 without BOM, with `sort_keys=true`, `separators=(',',':')`, `allow_nan=false`, the 13-entry array already in the fixed relative-path order, no extra whitespace, and exactly one terminal LF. It contains no timestamp, generator, absolute per-file path, Package/assembly field, or self-hash. Compute SHA256 over the complete manifest bytes and record that value separately in `records/GATE-0-TAKEOVER.v1.json`; the manifest must not contain its own hash. Any missing, extra, renamed, newly selected, byte-drifted or rehashed-inconsistently item is `BLOCKED` before any probe/client mutation.
+
+### D01 replacement candidate state guard
+
+```text
+replacement_status: DOCS_ONLY / CANDIDATE_NOT_FORMAL / NOT_RUN_DOCS_ONLY
+correction_base: 99bc5c3d727671d7d2ea7313c6851792583efe66 / tree b995a9a02add77f1e61769f364dd86b341137403
+product_code_change: 0
+package_change: 0
+workbuddy_change: 0
+provider_or_media_change: 0
+review_status: APPROVE_D01_CONTRACT_CORRECTION_FOR_CANDIDATE_COMMIT / P0=0 / P1=0 / P2=0 / INDEPENDENT_ZERO_WRITE_REVIEW1
+promotion_status: NOT_REQUESTED_HERE
+execution_authority: NONE
+downstream: D02-D08 NOT_AUTHORIZED
+```
+
+本 replacement 修复只停留在规划/合同层；独立零写 Reviewer 必须重新检查 exact six-doc diff、Gate 0-4 时序、13 项 manifest、canonical 规则、无 PackageRoot 读取边界和三枚未来 review token。复审结论、Owner 推广决定及 D01 执行授权必须分别在实际发生后记录，不得由本节代填。
+
+### D01 Replacement1 独立零写复审与提交前十问
+
+独立 Reviewer 对 exact uncommitted six-doc diff 给出 `APPROVE_D01_CONTRACT_CORRECTION_FOR_CANDIDATE_COMMIT / P0=0 / P1=0 / P2=0`。Reviewer 核验了完整 01-42 字段、B04 exact 13-file manifest、canonical/no-self-hash 规则、Gate 0-4 唯一时序、Reviewer 零写边界、终审后字节变更失效规则、exact six paths、product code diff 0 与 `git diff --check`。该结论只允许形成候选 commit；不授权 push、formal promotion、D01 execution 或 D02-D08。
+
+纠偏任务提交前 Q1-Q10：Q1 `PASS-纠偏只服务 ordinary-language WorkBuddy native surface 取证`；Q2 `PASS-WorkBuddy 仍是唯一 Agent`；Q3 `PASS-Shell/Product/Package 变更为 0`；Q4 `PASS-B04 输入固定为 13 个负面事实文件且禁止 PackageRoot/assembly`；Q5 `PASS-PRE_RUN_APPROVE 在 import 前`；Q6 `PASS-APPROVE_FOR_TASK_CLEANUP 在卸载清理前`；Q7 `PASS-result/Q1-Q10 在 FINAL_APPROVE 前且终审后变更失效`；Q8 `PASS-Reviewer 零写且客户端动作只归 Owner`；Q9 `PASS-六文档、42字段、diff check 与无产品代码效果均机械核验`；Q10 `PASS-候选不推广、不执行 D01、不授权 D02-D08`。任何一项在 commit 前失效都必须停止并重新审查 exact final diff。

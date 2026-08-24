@@ -314,3 +314,9 @@ project_closeout_promotion_cleanup_rule: ONLY_AFTER_D08 + SEPARATE_OWNER_APPROVA
 - 任一任务没有 exact input commit/tree、允许路径、正反测试、named owner、零写 Reviewer、十问结果及下游阻断条件。
 
 每一步开始时重读届时正式 `AGENT_GUIDE.md`、TASK-REGISTER、原始 V2 handoff 和 exact external authority；只能从最新正式 HEAD 建新分支/worktree。每一步结束先记录事实与十问 `EXECUTION_GATE`，再由独立 Reviewer 审查 exact 候选；任何 repair 必须留在当前任务并重审，不得转嫁下游。D08 之后仍只生成 promotion/cleanup manifest，实际 fast-forward、远端/CI 核验和限定清理须另获 Owner 授权。
+
+## D01 合同纠偏候选 Replacement1 防漂移补充（2026-08-24）
+
+这是六文档 append-only 候选守卫，不是正式 authority。只有独立零写 Reviewer 通过、单独 Owner plan-promotion approval、ordinary fast-forward 进入 live formal ref 且远端对象核验完成后，才可成为最新 planning mirror；之后仍需单独 Owner D01 execution authorization。基线必须保持 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`；当前为 `DOCS_ONLY / CANDIDATE_NOT_FORMAL / NOT_RUN_DOCS_ONLY`。独立纠偏 Reviewer 通过 exact final six-doc diff 后才可形成候选 commit；push 与正式推广分别等待后续决定。禁止 pytest、WorkBuddy/probe/Product/Package/Provider/media 行动。
+
+漂移硬门按固定顺序执行：Gate0 只读核验 live formal、正式 authority 与当前 WorkBuddy binary identity；B04 read scope 仅限 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B04_official_evidence\workbuddy-client\` 下 TASK-REGISTER 规定的 13 个文件。canonical `B04NegativeEvidenceManifestV1` 写入固定 manifest path，manifest 不含 self-hash，完整字节 SHA256 另记 Gate-0 takeover，且不读 PackageRoot/assembly；Gate1 必须在 import 前由独立零写 Reviewer 对 exact source tree/fixtures/ZIP listing+bytes+hash、两条 literal ordinary-language prompts、permissions/evidence plan 返回 `PRE_RUN_APPROVE`；Gate2 才允许 Owner import/permissions/two sessions；Gate3 冻结证据并返回 `APPROVE_FOR_TASK_CLEANUP`；Gate4 只能在该 token 后由 Owner 卸载 exact Skill、关闭两 sessions、删除 exact source+ZIP、记录 after-state，再由 Closeout Worker 写 result 与十问，最后由独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE`。缺任一 Gate/token、出现清单项缺失、manifest 额外项或漂移、提前 cleanup、终审后改 evidence/docs、Package/产品动作或下游 repair，立即停止并保持 D02-D08 未授权。

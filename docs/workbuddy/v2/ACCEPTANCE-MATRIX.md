@@ -611,11 +611,11 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 ```
 
-验收时不能把历史 0.3.24 缺少 WorkBuddy 专用字段写成共享 Package 的产品缺陷；当前纠偏应验收最终 Installer 是否在 PackageRoot 内装配 adapter、fixed child、Manifest/Lock/hash，并保持当前 0.3.25 子树字节不变。历史 0.3.24 只作 R02/provenance 证据，未来调用/验证不得使用。
+本历史 A7 方案正确保留了“不能修改共享 Package、0.3.24 只作历史证据”的边界，但其 adapter/fixed-child 验收合同已被 2026-08-24 重基线取代；当前接口和装配验收以 TASK-REGISTER 末尾为准。
 
-### 纠偏任务验收门
+### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] B01-B07 纠偏任务验收门
 
-任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 是固定 official 控制组，B05 是同一 Shell/Installer/Skill/Launcher/请求/验收方法下仅替换为固定 `0.3.25`；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 后才允许唯一 `PROMOTE_AND_CLEANUP`，且仅普通 fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，不得并行。
+下表只保存 A7 当时的 B01-B07 验收门，已无执行效力；当前验收任务为本文件末尾及 TASK-REGISTER 末尾的 C01-C07。
 
 | Gate | 必须证明 | 不能证明/失败处置 |
 |---|---|---|

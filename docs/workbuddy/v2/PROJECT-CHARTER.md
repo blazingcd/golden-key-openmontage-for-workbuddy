@@ -518,11 +518,11 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 
 最终 Package 始终必须随包提供 Node.js `22+`、npm、npx 及其他必需 private toolchain。Stage 3 不探测、下载或替换 Node/npm/npx；是否使用 Remotion、HyperFrames 或其他能力由 OpenMontage/WorkBuddy 决定。
 
-真实 Guide-read 的不可跳过顺序是：`Registration identity validation -> Locator verified PackageRoot/Guide identity/hash -> WorkBuddy reads Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy decisions -> single fixed CLI transport -> deterministic child/tool -> mechanical LauncherReceipt -> WorkBuddy result`。Guide-read 事件、identity/hash 和决策主体必须由独立可见的 WorkBuddy/client 证据支持；模型自报、child 自报、静态测试、CI 或 receipt 单独不算真实集成证据。
+本历史 A7 方案当时假定的顺序是：`Registration identity validation -> Locator verified PackageRoot/Guide identity/hash -> WorkBuddy reads Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy decisions -> single fixed CLI transport -> deterministic child/tool -> mechanical LauncherReceipt -> WorkBuddy result`。其中 whole-request fixed-child 假设已被重基线废止；当前顺序和 per-tool bounded execution 边界以本文件末尾及 TASK-REGISTER 末尾为准。
 
-### 最小纠偏路径与边界
+### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] A7 最小纠偏路径与边界
 
-任务严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`；完整 21 字段在 TASK-REGISTER。B01 冻结 binding/Guide-read 合同；B02 只实现一个 Skill、一个固定 transport、一个确定性 child；B03 由最终交付 Installer Owner 组装 final PackageRoot 和生命周期；B04 使用固定 official Package 作控制组；B05 保持同一 Shell/Installer/Skill/Launcher/请求/验收方法，仅替换到固定 0.3.25；B06 只允许 `HANDOFF_TO_B07_ONLY`；B07 完成外部 portrait/business gate 后，才有唯一 `PROMOTE_AND_CLEANUP`，并且只能普通 `git merge --ff-only` / fast-forward，禁止 merge/rebase main 和 force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。
+A7 当时的 B01-B07 任务链及 21 字段仅作历史 provenance，已无执行效力。当前唯一计划是本文件末尾及 TASK-REGISTER 末尾的 C01-C07。
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（`C:\Users\blazi\.codex\worktrees\aef5\...`、`C:\Users\blazi\.codex\worktrees\df76\...`，均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只作历史登记；A7 不合并、复制、提交或删除。
 

@@ -945,11 +945,11 @@ openmontage_0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 
 正确的真实顺序是 `Registration identity validation -> Locator 返回已验证 PackageRoot/Guide identity/hash -> WorkBuddy 读取 Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy 作生产决策 -> 隐藏的 bounded Shell transport -> WorkBuddy 按需发起一个或多个独立 deterministic package-local tool calls -> 机械 receipt/status/Artifact facts -> WorkBuddy 继续 review/checkpoint 并展示结果`。每个 tool call 内最多一个 fixed child；不得把整项用户请求锁成一个 child。Guide-read、identity/hash 和顺序必须由独立可见的 WorkBuddy/client 证据证明；模型自报、child 自报、普通日志、静态测试、CI 或 receipt 单独不能替代。最终 Package 必带 Node.js `22+`、npm、npx；Stage 3 不探测、下载或替换 Node/npm/npx。
 
-### 残留对象与纠偏执行边界
+### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] A7 残留对象与 B01-B07 执行边界
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（`86a7902465d8e215e0830b9640e7222d7c7f5188`，含 `9b8ebb2`、`8d4461d`、`86a7902`）为 `SUPERSEDED_WITH_VALID_REASON / PRESERVE_HISTORY / DO_NOT_MERGE / DO_NOT_DELETE`。它把 assembled Package 对齐成 Git checkout 的方向不属于当前合同；需要的安全点只能在另行授权下按当前模型重做。两个 dirty detached worktree `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`、`C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）仅登记，不复制、不提交、不回收、不删除。
 
-纠偏计划严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 先用固定 official 对照组，B05 只替换为 0.3.25 并保持 Shell/Installer/Skill/Launcher/请求/验收方法不变；B06 唯一下游为 `HANDOFF_TO_B07_ONLY`；B07 后唯一推广动作是 `PROMOTE_AND_CLEANUP`，且仅允许普通 `ff-only`，禁止 merge/rebase main、force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。B01-B07 的完整 21 字段合同在 TASK-REGISTER 的 Phase A 账本中。
+A7 当时的纠偏计划为 `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`；其 21 字段合同只保留为历史 provenance，已无执行效力。当前唯一计划是末尾重基线的 C01-C07。
 
 本 Phase A 状态镜像只涉及六个既有权威文件，保持 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY`，不触碰产品代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation 或 DataRoot。A7 审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口提交使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，避免自引用 hash。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。上方 Phase A 镜像中的 `NOT_AUTHORIZED` 与下方 B01-only 镜像都只作历史；当前权威是 2026-08-24 重基线的 `PAUSED_BY_OWNER`。
 

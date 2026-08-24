@@ -213,7 +213,7 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 
 ### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] B01-B07 纠偏任务串行守卫
 
-唯一允许的最小任务顺序是 `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`，每项必须按 TASK-REGISTER 的 21 字段执行，禁止并行或跳过上游条件。旧 R03-R05 标为 `SUPERSEDED_WITH_VALID_REASON`，由 B02/B03 替代并禁止继续并行。
+A7 当时的 B01-B07 顺序及 21 字段只作历史 provenance，已无执行效力；当前唯一顺序是本文末尾重基线守卫中的 C01-C07。
 
 ```text
 B01: freeze_binding_and_Guide_read_contract

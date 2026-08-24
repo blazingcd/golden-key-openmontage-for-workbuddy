@@ -2339,7 +2339,7 @@ b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
 
-## Phase B 暂停与纠偏方案重基线审计（2026-08-24）
+## [HISTORICAL / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED] Phase B 暂停与纠偏方案重基线审计（2026-08-24）
 
 ```text
 task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PLAN-REBASELINE-AUDIT1
@@ -2721,3 +2721,638 @@ direct_WorkBuddy_fallback_counts_as_Shell_success: NEVER
 10. 当前产出是否能被下一步直接接管，且 TASK-REGISTER、Git、Package、WorkBuddy 与证据状态同步、无 repair-window 留置？
 
 任一答案为 `NO`、显示越界/膨胀，或关键事实为 `NOT_PROVED`：本步不得 APPROVE，不得启动下一步。当前重基线只形成计划，不授权 C01，也不修改产品代码、Package 或 WorkBuddy；独立零写审查后停止。
+
+## 新任纠偏统筹：目标与执行路线重建候选（2026-08-24）
+
+> 本节是 `codex/v2-correction-execution-plan-audit1` 上的规划候选。只有独立零写 Reviewer `APPROVE`、Owner 另行批准规划推广、并且正式远端普通 fast-forward 包含本候选后，它才可取代上节 C01-C07。候选存在、提交或推送均不授权任何产品执行。
+
+Append-only precedence：在本候选尚未进入正式 ref 时，正式 C01-C07 仍只是暂停中的旧候选且无执行授权；本候选经 Owner 批准、ordinary fast-forward 并完成远端对象核验后，前面所有指向 C01-C07 的 `current/next/only` 字段立即降为历史，本节成为唯一 planning authority。该推广仍不授权 D01。
+
+```text
+planning_task: V2-CORRECTION-EXECUTION-PLAN-AUDIT1
+planning_kind: READ_ONLY_AUDIT + DOCS_ONLY_PLAN
+planning_base: 5e8c7c1b1bf59d284996e16ff5aeea8ce55c614c / tree 829d506de0ca7e256eff9338dd33ec773d150155
+product_code_baseline: 6457d475ee43b291c7ac34ad42f9f48aaaaa1390 / tree d296e4ab98f8d6908e03360bea7d9c04b8ea06cc
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+candidate_branch: codex/v2-correction-execution-plan-audit1
+candidate_result: THIS_COMMIT
+scope: EXACT_SIX_EXISTING_AUTHORITY_DOCS_ONLY
+effect: ZERO_PRODUCT_CODE_TEST_PACKAGE_WORKBUDDY_PROVIDER_MEDIA_STATE_CHANGE
+tests: NOT_RUN_DOCS_ONLY
+current_product_task: NONE
+execution_authority: NONE
+old_C01_C07: SUPERSEDED_CANDIDATE / NEVER_EXECUTE
+new_route: D01 -> D02 -> D03 -> D04 -> D05 -> D06 -> D07 -> D08
+promotion_after_D08: SEPARATE_OWNER_AUTHORIZED_MECHANICAL_ACTION_ONLY
+```
+
+### 1. 项目核心目标与真实成功路径
+
+`FACT`：原始 V2 交接要求普通用户只在 WorkBuddy 中表达业务需求；WorkBuddy 是唯一对话 Agent；OpenMontage 的 Guide、manifest、Stage Skills、Reviewer、Checkpoint、Tool Registry 和 Artifact 合同是生产权威；Shell 只负责六模块支持；最终必须以真实 WorkBuddy、真实自然语言、真实成片和业务效果验收。
+
+`FACT`：official `cd9f3c1f` 明确规定 Agent 选择一个可用的用户 Pipeline、读取 manifest、逐阶段读取 director/meta/Layer-3 Skills、由 Agent 作出选择并调用 registry tools、审查 Artifact、写 checkpoint 并处理 human gate。Python 是工具与持久化，不是第二导演。Golden Key `73cab673` 保留这一 Agent-first 基础，并新增四条按“用户购买的单一业务结果”选择的 Pipeline；`framework-smoke` 已明确 `selection_scope=framework_only`，不得作为用户业务 control。
+
+`FACT`：B02 的最终 Skill 要求一个完整 technical JSON、完整 `PackageToolDefinitionV1`、hash/schema/path/environment；一次 `launch_session_tool` 只启动一个固定 child。B04 Attempt 2 证实 WorkBuddy sandbox 会增加宿主环境变量，旧 Bridge 因 exact-set 校验在 spawn 前失败；Attempt 3 又因最终 Skill 保留通用 `<installer:...>` token 而直接 fallback。三次均无有效 Shell receipt/OpenMontage Artifact。
+
+`INFERENCE`：一次固定、受限、可审计的 child/tool 调用可以保留为机械原语，但不能承担整个 Agent-first 用户请求。WorkBuddy 需要在一个经验证的会话中多次读取权威资源、选择 Stage，并按 manifest/Skill 决定多次机械工具调用。Shell 可以机械核验身份、资源范围、Stage tool allowlist、进程和结果，但不能替 WorkBuddy 决定调用顺序或内容。
+
+`PROPOSAL`：正确成功路径固定为：
+
+```text
+ordinary business request
+ -> one WorkBuddy Skill and one WorkBuddy conversation
+ -> Installer-managed, model-invisible Shell binding
+ -> Registration/Locator validates one immutable Package and opens one bounded session
+ -> WorkBuddy reads exact Guide, selected manifest and required Stage/meta Skills
+ -> WorkBuddy decides pipeline/stage/review/checkpoint/tool actions
+ -> each semantic OpenMontage operation is a separate bounded mechanical call
+ -> Shell/adapter returns identity-bound status/receipt/Artifact facts without interpretation
+ -> WorkBuddy continues the official pipeline and presents the result
+```
+
+`NOT PROVED`：WorkBuddy 当前可稳定使用哪一种 Skill-relative resource/script/call surface；应由 D01 先证明。`NOT PROVED`：现有 `launch_session_tool` 可原样复用到何种程度；D02 只能按 D01 证据裁决，D03 才实现。`NOT PROVED`：official `cd9f3c1f`、Golden Key `0.3.25` 和最终业务链是否成功；分别由 D06、D07、D08 证明。
+
+### 2. Phase A 与 B01-B04 最终重裁决
+
+| 对象 | 最终裁决 | 保留 | 废止/未证明 | 因果影响 |
+|---|---|---|---|---|
+| A0 | `KEEP_PROCEDURAL_FACTS_ONLY` | exact base、独立 worktree、残留对象登记 | 每 A 任务独立 Reviewer artifact 未保留 | 新计划重新保存逐步审查证据 |
+| A1 | `KEEP_TARGET / DELIVERABLE_INCOMPLETE` | 唯一 Agent、六模块、自然语言目标 | 完整映射和事实分层原来缺失 | 本节重新补齐全部映射 |
+| A2 | `PARTIAL_KEEP` | Stage1/2 薄 Shell、临时 Package 证据缩小 | 遗留分支 hardening 未完成产品归属审计 | 只列未来独立 hardening 候选，不进入 D 主链 |
+| A3 | `KEEP_WITH_NARROWING` | optional capability 逐项授权、Shell 不选 renderer/provider | 两个 dirty worktree 原审计不完整 | 已分类 superseded history，继续保护 |
+| A4 | `HISTORICAL_MECHANICAL_PASS_ONLY` | 单次固定调用的身份、进程、取消、receipt 思路 | whole-request fixed child 与 model-visible definition 未裁决 | D01/D02 必须先取证再定接口 |
+| A5 | `PARTIAL_KEEP` | real WorkBuddy、final Package/Installer、R02 wrong-layer 和 Stage6 证据缺口 | 继承 A4 假设 | D02-D05 重建入口与 Installer |
+| A6 | `EARLIEST_EXPLICIT_WRONG_PLAN / SUPERSEDED` | 串行闸门、独立审查 | B01-B07 固化 one-child whole-request | C 路线不再可执行 |
+| A7 | `PROMOTION_FACT_VALID / CONTENT_SUPERSEDED` | six-doc commit/review/CI/FF 事实 | 被推广计划内容 | 不 reset；只用新候选追加纠正 |
+| B01 | `HISTORICAL_DOCS_ONLY / SUPERSEDED` | exact Package inputs、唯一 Agent/入口 | one transport -> one child whole request | D02 重写合同 |
+| B02 | `MECHANICAL_CODE_EVIDENCE / NOT_PRODUCT_ACCEPTED` | input sanitation、single-call process safety、receipt/secret 思路 | model technical assembly、whole-host-env exact set、whole-request transaction | D03 选择性重写，不做补丁式续跑 |
+| B03 | `INFRASTRUCTURE_METHOD_EVIDENCE_ONLY` | deterministic assembly、private toolchain、Registration/Activation/Locator、rollback/uninstall 方法 | Installer 只存在 D 盘临时脚本；final Skill/binding/placeholder gate 错误 | D04 把 Installer 变成版本化产品；D05 fresh materialization |
+| B04 | `INCOMPLETE / NEGATIVE_EVIDENCE_RETAIN` | sandbox env、CRLF、Skill token、direct fallback 的真实失败机制 | 无 valid receipt、无 OpenMontage Artifact、无 Shell success | D01 先证实原生 surface；D06 才做 official control |
+
+### 3. 为什么 C01-C07 不能直接执行
+
+| 旧候选 | 缺陷 | 新去向 |
+|---|---|---|
+| C01 | 用 superseded B04 carrier 和临时 probe 同时尝试 Guide/Stage Skill/registry，混淆 client surface 与产品 path；未先证明 Skill-relative script/resource 语义 | D01 只证 WorkBuddy 原生 surface，不接 official/Package；D06 才做 official product proof |
+| C02 | 方向正确，但在 C01 混合证据上冻结合同，仍预写“bounded tool-call transport”形态 | D02 只消费 D01 exact trace，冻结 model-visible semantic operations 与 hidden binding |
+| C03 | 六路径 allowlist 仍预设现有 Bridge 可改成正确入口，未包含版本化 Package adapter | D03 增加一份版本化、无决策的 OpenMontage operation adapter，并以 D02 决定是否保留 bundled script |
+| C04 | 继续在 D 盘临时脚本中“recreate Installer”；无法形成可升级、可审查、可发布的产品资产 | D04 版本化 Installer；D05 才 materialize/verify 两个 fresh Package |
+| C05 | 只要求 real Artifact，可能把第一阶段 Artifact 当完整 official 可运行证明；下游仍可能成为修复窗口 | D06 要求两次完整、无付费、本地成片 control，包括 Guide/Stage/tool/review/checkpoint/video lineage |
+| C06 | 要求 Package 切换时 Skill identity+ZIP hash 不变，但旧 Skill 把 Package identity 盖进文本，逻辑冲突 | D02-D05 使 Skill 字节 Package-agnostic；D07 只改变 Package-derived binding/Registration |
+| C07 | closeout 与业务验收方向正确，但依赖上述不足，且业务任务之前没有完整 control/candidate 本地成片 | D08 只在 D06/D07 full local E2E 后做真实业务和 docs closeout；推广仍是单独动作 |
+
+### 4. 新纠偏执行路线：严格串行 D01-D08
+
+以下每项先保留正式 21 字段结构，再追加本次 Owner 要求的逐任务补充合同。两部分共同构成完整合同。每项只能在前项正式交付、Owner 单独授权、从最新正式 HEAD 建立独立分支/worktree 后启动；Worker 与 Reviewer 必须不同，Reviewer 零写入。未来前序提交、tree、客户端版本或 evidence manifest 尚未产生时，必须明确记录为 `NOT_PROVED_FUTURE_INPUT`，并在任务接管时解析成完整对象后才能执行，不能伪造未来 SHA。任何失败只能回到该任务的 named owner，不能进入下游修复。
+
+#### D01 WorkBuddy 原生 Skill 资源与调用面证明
+
+```text
+01_task_id: V2-CORRECTION-D01-WORKBUDDY-NATIVE-SURFACE-PROOF
+02_confirmed_issue: B04 did not establish one stable WorkBuddy-supported way to read bundled Skill resources and invoke one fixed bundled operation without guessed paths, model-written helpers or Shell technical JSON
+03_why_correction_necessary: Product contract cannot be frozen from speculation or from a probe already coupled to the superseded Package carrier
+04_correct_owner: WorkBuddy Surface Investigator Worker + independent zero-write Reviewer
+05_authoritative_inputs: Current WorkBuddy client; official Tencent WorkBuddy Skill documentation only as documentary evidence; B04 traces read-only; no OpenMontage Package input
+06_exact_allowed_paths: Probe Worker write only D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_probe_skill\ and D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\ plus WorkBuddy-managed state limited to one task-only probe Skill and two fresh task/session IDs; after probe, Closeout Worker may write only the six authority docs to record result/review/status, never product code
+07_concrete_actions: Build a non-production Skill containing fixed text fixtures and a pre-reviewed harmless script catalog that exercises only client primitives: Skill-relative resource read, enum-selected fixed script calls, structured stdin/stdout/stderr, repeated sequential calls, final exit, cwd, timeout and cancel; record ZIP/file hashes; import with normal safety scan; cover the catalog across two fresh ordinary-language tasks; record every client action; uninstall probe and clean task-owned source/ZIP only after Reviewer evidence capture
+08_explicitly_not_do: No official/GK Guide, Package, Registration, Locator, Shell product code, B02/B03/B04 carrier, Provider, media or product-success claim; no absolute-path prompt; no helper authored during the run; no disabling WorkBuddy security
+09_output_contract: Immutable evidence bundle or precise BLOCKED result naming the exact usable/unusable native surface, client/Skill/session identities, trace and cleanup state
+10_positive_tests: Two fresh ordinary-language runs; exact Skill hit; fixture resource read; every fixed harmless primitive shape exercised, including at least two sequential enum-selected calls; complete observable results; no model technical assembly
+11_negative_tests: Wrong Skill, guessed install path, model-created helper, direct fallback, missing final exit/trace, unclean probe residue, security bypass
+12_independent_reviewer_checks: Exact hashes and client version; literal prompts; trace completeness; surface classification; no Package/product effect; before/after installed-Skill state and cleanup
+13_p0_p1_p2_standard: P0 false native-surface claim or security bypass; P1 missing trace, helper/path dependence or residue; P2 correlation/wording defect
+14_fail_closed_conditions: Surface not independently visible; any Package/product action; incomplete trace; non-task state change; security setting changed without Owner action
+15_upstream_dependency: This plan formally promoted; explicit Owner authorization for D01; fresh D-drive roots absent
+16_downstream_handoff: D02 only if one exact surface is APPROVE; BLOCKED returns to Owner with no contract invention
+17_real_workbuddy_required: YES / two fresh diagnostic sessions
+18_official_control_group: NO
+19_involves_0_3_25: NO
+20_proves_after_completion: The real client resource/invocation/result primitives available to a production Skill, not any OpenMontage semantic operation
+21_cannot_prove_after_completion: Shell contract/code, Package binding, official/GK run, media/video, business E2E or promotion
+```
+
+补充合同：
+
+```text
+22_project_target: Prove the real ordinary-language WorkBuddy Skill surface before any product interface is designed
+23_deviation_to_remove: Guessed Skill paths, model-written helpers and coupling a client probe to the superseded Shell/Package carrier
+24_input_commit_tree: Shell formal commit/tree = NOT_PROVED_FUTURE_INPUT, resolve to full 40-hex commit/tree containing this promoted plan at takeover; Package commit/tree = NONE; WorkBuddy client version/binary hash and B04 evidence-manifest SHA256 = NOT_PROVED_FUTURE_INPUT, record before first action or BLOCK
+25_prerequisites: Promoted plan, separate Owner D01 authorization, absent fresh D01 roots, installed-Skill/task baseline snapshot and Owner-present client
+26_exact_allowlist: WRITE probe_skill root + native_surface_evidence root + task-only WorkBuddy Skill/two sessions; CLOSEOUT_WRITE six authority docs only; READ current client documentation and B04 evidence only
+27_exact_denylist: ALL filesystem paths, repository files and external state not named in 26; especially Shell product code/tests, any OpenMontage Package/Registration/Locator, Provider and media
+28_product_code_change: NO
+29_workbuddy_user_action: YES / Owner performs import, security/permission decisions, fresh task submission and uninstall; Worker supplies frozen probe and observes; no unattended permission choice
+30_package_action: NONE / no install, replace, register, activate or locate
+31_exact_steps: Resolve inputs -> snapshot client state -> build/hash fixed primitive catalog probe -> safety-scan/import -> two fresh ordinary-language runs covering every catalog primitive -> capture trace -> uninstall -> capture after-state -> Closeout Worker records result -> Reviewer zero-write review
+32_positive_acceptance: Fields 10 and 12 plus exact before/after state, two correlated traces and cleanup manifest
+33_negative_assertions: Field 11; absence of every denylisted path/state change; no Package/Shell success claim
+34_failure_conditions: Field 14 or unresolved field 24; result becomes BLOCKED_WORKBUDDY_SURFACE and D02 remains unauthorized
+35_evidence_location: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\ with immutable manifest/hashes; six-doc closeout stores identities, verdict and manifest hash only
+36_worker_reviewer_split: Surface Worker creates/runs probe and evidence; Closeout Worker edits docs; independent Reviewer writes nothing and rechecks literal prompts/hashes/state
+37_rollback_recovery: Restore pre-task installed-Skill set by uninstalling only exact task Skill; close both task sessions; preserve evidence; any failed restoration is P1 and blocks closeout
+38_temp_cleanup: After Reviewer evidence capture remove exact probe source/ZIP and task-only client Skill/session artifacts; retain reviewed evidence root until Owner-authorized project cleanup
+39_git_gates: Commit candidate result only after Reviewer APPROVE; push candidate only after clean exact commit/tree check; formal result promotion only after separate Owner approval; D02 authorization is a fourth separate decision
+40_end_drift_audit: Record Q1-Q10 EXECUTION_GATE after actual cleanup and before commit; any NO/NOT_PROVED blocks commit except facts explicitly assigned as later-task nonclaims
+41_not_proved_after_task: All field 21 items remain NOT_PROVED
+42_no_downstream_repair: D02 may map official semantic operations only onto APPROVE client primitives; it cannot invent, patch or re-probe a missing primitive, and D01 does not claim OpenMontage semantics
+```
+
+#### D02 Agent-first 产品合同与证据合同冻结
+
+```text
+01_task_id: V2-CORRECTION-D02-AGENT-FIRST-CONTRACT-FREEZE
+02_confirmed_issue: Current contract conflates one user entry with one whole-request child and exposes hidden binding to the model
+03_why_correction_necessary: D03-D08 need one evidence-backed division among WorkBuddy decisions, OpenMontage authority, Shell mechanics and Installer binding
+04_correct_owner: Product Architecture Contract Worker + independent zero-write Reviewer
+05_authoritative_inputs: D01 APPROVE trace; original V2 handoff; official cd9f3c1f Guide/manifests/Stage/meta Skills/tool registry contracts; Golden Key 73cab673 release and four-pipeline semantics; current six-module contracts
+06_exact_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md
+07_concrete_actions: Freeze one Package-agnostic Skill; one model-invisible session binding; logical authority-resource reads; WorkBuddy-owned pipeline/stage/review/checkpoint loop; semantic operations for project/checkpoint/preflight/registry-tool execution; one bounded process per operation; manifest/Stage allowlist validation without Shell ordering; identity-bound mechanical status/receipt/Artifact relay; separate PLAN_GATE and EXECUTION_GATE interpretations of the exact ten questions
+08_explicitly_not_do: No code/test/client/Package change; no unsupported WorkBuddy surface; no package identity/hash/path/env in Skill text; no whole-request child; no Shell pipeline/stage/provider/renderer/media choice; no MCP/router/second Agent
+09_output_contract: Six-file exact contract with model-visible semantic fields, hidden Installer/Shell fields, operation inventory, owner/consumer, evidence class, negative gates and per-stage DoD
+10_positive_tests: Every operation maps to one or more D01-proved client primitives plus an exact official semantic contract; Skill bytes are Package-agnostic; multiple calls are caller-ordered in contract fixtures; user prompt stays business-only; final Gate B/C/D mapping is complete
+11_negative_tests: Model-visible hash/schema/absolute path/env/definition; Shell ordering or creative decision; arbitrary command; second entry/control plane; framework-smoke as user control; unsupported client behavior
+12_independent_reviewer_checks: Exact six-doc diff; D01 trace-to-interface matrix; official/GK source citations; responsibility table; all original mappings; no execution authorization
+13_p0_p1_p2_standard: P0 second Agent/control plane, false client capability or Package mutation requirement; P1 missing owner/evidence/negative gate or unresolved logical contradiction; P2 cross-file wording/trace defect
+14_fail_closed_conditions: D01 not APPROVE; any interface unobserved; formal base mismatch; more than six docs; any task left to downstream as repair window
+15_upstream_dependency: D01 formally delivered; explicit Owner authorization for D02; latest exact formal takeover
+16_downstream_handoff: D03 only after Reviewer APPROVE, separate Owner promotion approval and ordinary fast-forward
+17_real_workbuddy_required: NO new run
+18_official_control_group: NO / contract input only
+19_involves_0_3_25: YES / read-only contract input only
+20_proves_after_completion: Evidence-backed product and implementation contract
+21_cannot_prove_after_completion: Code, Installer, assembly, real official/GK/video/business success
+```
+
+补充合同：
+
+```text
+22_project_target: Freeze the evidence-backed ordinary-user/sole-Agent/OpenMontage-authority/Shell-support product contract
+23_deviation_to_remove: Whole-request fixed child, model-visible binding and any unobserved client interface
+24_input_commit_tree: Shell formal commit/tree containing D01 result = NOT_PROVED_FUTURE_INPUT, resolve full 40-hex at takeover; official = cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / 6cd1961d552dd9d2bcfba990b80ac06edfe4b061; GK = 73cab67322451601a824875c0e426067d736dd44 / 29231e0464fa4bc7533c1928415849e9b3a48e7c; D01 evidence-manifest SHA256 = NOT_PROVED_FUTURE_INPUT
+25_prerequisites: All dynamic identities in 24 recorded, D01 formally delivered, separate Owner D02 authorization and clean fresh docs-only worktree
+26_exact_allowlist: READ D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\; D:\BlazingCD\Personal\Golden_Key_OpenMontage_for_WorkBuddy\docs\workbuddy\WORKBUDDY-SHELL-V2-REFACTOR-HANDOFF-2026-08-15.md; under each exact official/GK checkout only AGENT_GUIDE.md, pipeline_defs\, skills\pipelines\, skills\meta\, skills\core\, tools\base_tool.py, tools\tool_registry.py, lib\checkpoint.py, lib\pipeline_loader.py, schemas\pipelines\ and schemas\checkpoints\; under GK additionally GOLDEN_KEY_OPENMONTAGE_RELEASE.json and GOLDEN_KEY_OPENMONTAGE_0_3_25_MIGRATION.json; WRITE only the six authority docs named in field 06
+27_exact_denylist: ALL other filesystem paths and external state; no product code/test/client/Package/Registration/Provider/media writes
+28_product_code_change: NO / docs-only
+29_workbuddy_user_action: NO new run or client action
+30_package_action: NONE / exact official and GK trees read-only
+31_exact_steps: Resolve identities -> derive D01 trace matrix -> map official/GK authority -> freeze role/operation/evidence contracts -> map all original deliverables -> Q1-Q10 -> independent review -> candidate commit/push/promotion gates
+32_positive_acceptance: Fields 9-12 with every semantic operation traceable to D01-proved primitives and exact official semantic authority; fixture calls are caller-ordered, not claimed as real WorkBuddy evidence
+33_negative_assertions: Field 11 plus zero non-six-doc diff and no prewritten client/product PASS
+34_failure_conditions: Field 14 or any unresolved 24 input; remain BLOCKED_CONTRACT and do not start D03
+35_evidence_location: Six authority docs plus read-only D01 evidence manifest referenced by exact SHA256
+36_worker_reviewer_split: Contract Worker writes six docs; independent Reviewer writes nothing and validates original mapping, D01 trace and exact external authority
+37_rollback_recovery: Candidate branch can be abandoned without formal effect; if promoted content is later wrong, append a new reviewed correction, never reset history
+38_temp_cleanup: Remove only task-created diff-export/check artifacts after review; keep no new temp root; never touch D01 retained evidence or historical dirty worktrees
+39_git_gates: Reviewer APPROVE -> commit -> exact tree/diff check -> push candidate -> separate Owner result-promotion approval -> ordinary FF/remote+CI verify -> separate D03 authorization
+40_end_drift_audit: Actual Q1-Q10 EXECUTION_GATE before commit and after any repair; no P0/P1
+41_not_proved_after_task: Code, Installer, assemblies and every client/video/business result stay NOT_PROVED
+42_no_downstream_repair: D03 implements only the promoted exact contract and cannot decide unresolved architecture or client behavior
+```
+
+#### D03 最小 Agent-first Shell/Skill/Package-operation adapter 实现
+
+```text
+01_task_id: V2-CORRECTION-D03-MINIMAL-AGENT-FIRST-IMPLEMENTATION
+02_confirmed_issue: B02 cannot support the official multi-operation Agent loop without technical model assembly and a whole-request fixed child
+03_why_correction_necessary: The repository must expose D02 semantic operations while keeping all identity/process mechanics hidden and decision-free
+04_correct_owner: Shell Implementation Worker + independent zero-write Reviewer
+05_authoritative_inputs: D02 formally delivered contract; current session_launcher/workbuddy_entry_cli/Skill; official BaseTool/ToolRegistry/checkpoint contracts; B02/B04 negative fixtures
+06_exact_allowed_paths: Product Worker write only golden_key_openmontage_workbuddy/session_launcher.py; golden_key_openmontage_workbuddy/workbuddy_entry_cli.py; golden_key_openmontage_workbuddy/openmontage_operation_adapter.py; workbuddy-skill/golden-key-openmontage/SKILL.md; workbuddy-skill/golden-key-openmontage/scripts/invoke.ps1; tests/workbuddy/test_session_launcher.py; tests/workbuddy/test_workbuddy_entry_cli.py; tests/workbuddy/test_openmontage_operation_adapter.py; tests/workbuddy/test_repository_hygiene.py and D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D03_evidence\; Closeout Worker additionally write only the six authority docs
+07_concrete_actions: Rework the model-facing entry to accept only D02 semantic operations; mechanically load active binding; expose verified authority resources by logical identifier; validate requested tool against verified selected manifest/stage; call package-local registry/checkpoint/project functions through one versioned decision-free adapter; keep each process bounded; build closed child env while ignoring/not forwarding unrelated host env; emit correlated receipts/status/Artifact pointers
+08_explicitly_not_do: No Installer/Package bytes/client/Provider/media; no arbitrary command/path/import; no Shell stage ordering, retries, review or checkpoint choice; no second Agent/router/MCP; no model-visible binding
+09_output_contract: Reviewed exact-path code/test candidate implementing D02; optional invoke.ps1 must remain absent if D01 selected a different surface
+10_positive_tests: Authority-read; project/checkpoint operations; registry preflight; two caller-ordered contract-fixture tool calls; Stage allowlist enforcement; unrelated host env tolerated and not forwarded; closed child env; receipt/Artifact correlation
+11_negative_tests: Unknown logical resource/tool/stage; manifest mismatch; model-supplied identity; arbitrary command/path/import; second spawn inside one operation; retry/replay; secret leak; direct fallback; wrong Package
+12_independent_reviewer_checks: Exact diff and conditional script path; AST/import/subprocess surfaces; Skill model-visible text; D02 operation matrix; focused/full tests; exact CI headSha
+13_p0_p1_p2_standard: P0 arbitrary execution, secret leak or second control plane; P1 D02 mismatch, unsupported official operation, environment incompatibility or Shell orchestration; P2 test/trace wording defect
+14_fail_closed_conditions: Path expansion; unapproved dependency; any failing test/CI; model technical field; Package mutation; downstream repair note
+15_upstream_dependency: D02 formally delivered; explicit Owner authorization; latest exact formal head; project .venv only
+16_downstream_handoff: D04 only after Reviewer APPROVE, Owner promotion approval, ordinary FF and Builder cleanup
+17_real_workbuddy_required: NO
+18_official_control_group: NO
+19_involves_0_3_25: NO writes; read-only contract fixtures only
+20_proves_after_completion: Offline implementation correctness of the semantic Agent-first support surface
+21_cannot_prove_after_completion: Installer, assembly, real client, real OpenMontage/video/business success
+```
+
+补充合同：
+
+```text
+22_project_target: Implement the smallest decision-free support surface that lets WorkBuddy execute its official Agent loop
+23_deviation_to_remove: Technical model assembly, whole-host-env exact rejection and whole-request transaction control
+24_input_commit_tree: Shell formal commit/tree containing promoted D02 = NOT_PROVED_FUTURE_INPUT, resolve full 40-hex at takeover; official contract input = cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / 6cd1961d552dd9d2bcfba990b80ac06edfe4b061; D01 evidence-manifest SHA256 = NOT_PROVED_FUTURE_INPUT and must be recorded before edit
+25_prerequisites: Field 24 resolved, D02 formal, separate Owner D03 authorization, fresh worktree, project .venv verified, D03 evidence root absent and exact write paths frozen absent/unmodified baseline
+26_exact_allowlist: WRITE only the nine product/test paths, D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D03_evidence\ and six authority docs in field 06; READ D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\, the six promoted D02 authority docs, and under D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f\ only AGENT_GUIDE.md, pipeline_defs\, skills\pipelines\, skills\meta\, skills\core\, tools\base_tool.py, tools\tool_registry.py, lib\checkpoint.py, lib\pipeline_loader.py, schemas\pipelines\ and schemas\checkpoints\; project .venv only for Python
+27_exact_denylist: ALL other repository/filesystem/external state; Package bytes, Installer files, client, Registration, Provider and media forbidden
+28_product_code_change: YES / only product paths in 06; no dependency change unless pyproject is separately added by Owner, so current task must stop if required
+29_workbuddy_user_action: NO
+30_package_action: NONE / no install, replace, register or activate; exact authority fixtures read-only
+31_exact_steps: Resolve identities -> freeze path baselines -> write failing focused tests -> implement D02 operations -> focused tests -> full suite -> hygiene/secret scans -> Q1-Q10 -> closeout docs -> zero-write review -> CI candidate
+32_positive_acceptance: Fields 10 and 12; caller-ordered offline fixtures only; exact CI headSha after candidate push
+33_negative_assertions: Field 11 plus no non-allowlisted diff, no second entry/control plane and no real-client claim
+34_failure_conditions: Field 14, any unresolved input, new dependency need, test/CI failure or path drift; keep D04 blocked
+35_evidence_location: Versioned tests/code, six-doc closeout and D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D03_evidence\ for command logs/CI URL/headSha
+36_worker_reviewer_split: Implementation Worker owns nine product/test paths; Closeout Worker owns six docs; independent Reviewer zero-write inspects exact diff/tests/CI and model-visible text
+37_rollback_recovery: Before promotion, abandon candidate branch/worktree; after promotion, use a new reviewed revert/correction commit only; no destructive reset
+38_temp_cleanup: Delete only task-created .pytest/cache/build intermediates inside verified task roots after evidence capture; retain required CI/test logs; do not clean user or historical worktrees
+39_git_gates: Focused/full PASS -> Reviewer APPROVE -> commit -> push candidate/CI -> Reviewer confirms exact CI headSha -> separate Owner promotion -> ordinary FF verify -> separate D04 authorization
+40_end_drift_audit: Run Q1-Q10 after implementation/tests and again after any repair; real WorkBuddy ordering remains NOT_PROVED
+41_not_proved_after_task: Installer, assembly, client, OpenMontage tool/video and business success remain NOT_PROVED
+42_no_downstream_repair: D04 may package only an approved D03 surface; D03 code/test defects cannot be deferred to Installer or acceptance
+```
+
+#### D04 版本化 Installer、Package assembly 与 lifecycle 实现
+
+```text
+01_task_id: V2-CORRECTION-D04-VERSIONED-INSTALLER-LIFECYCLE
+02_confirmed_issue: B03 Installer exists only as task-temp scripts and therefore is not an auditable/upgradable repository product asset
+03_why_correction_necessary: Installation/lifecycle is a Shell six-module responsibility and cannot disappear after external mechanical evidence
+04_correct_owner: Installer/Lifecycle Implementation Worker + independent zero-write Reviewer
+05_authoritative_inputs: D03 formally delivered code; Stage2 Registration contract; B03 scripts/evidence read-only as method evidence; exact official/GK release metadata
+06_exact_allowed_paths: Product Worker write only golden_key_openmontage_workbuddy/installer.py; golden_key_openmontage_workbuddy/package_assembly.py; tests/workbuddy/test_installer.py; tests/workbuddy/test_package_assembly.py; tests/workbuddy/test_repository_hygiene.py; pyproject.toml; D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D04_test_roots\ and D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D04_evidence\; read exact D03 workbuddy-skill/golden-key-openmontage/ tree byte-for-byte; Closeout Worker additionally write only the six authority docs
+07_concrete_actions: Implement deterministic assembly from an exact immutable Package source plus exact Shell adapter/toolchain inputs; copy the exact D03 Package-agnostic Skill tree byte-for-byte rather than generating or stamping it; keep Package-specific identity only in model-invisible Manifest/Lock/Registration binding; validate generic placeholder tokens; implement install/register/activate/update/rollback/uninstall with CAS and user-data preservation; make every output reproducible and reviewable
+08_explicitly_not_do: No materialization into production roots; no WorkBuddy; no Package source mutation; no Provider/media; no reuse of B03 final Skill/binding/hash; no C-drive cache except system-required package metadata
+09_output_contract: Versioned Installer/assembly/lifecycle code and tests on the formal branch
+10_positive_tests: Deterministic byte-identical build fixture; package-agnostic Skill hash across Package identities; exact hidden binding; private toolchain closure; register/activate/locate/update/rollback/uninstall; preservation of DataRoot/projects/credentials
+11_negative_tests: Generic installer token; stale binding; Package mutation; missing toolchain; wrong commit/tree; unsafe removal; cross-root write; old B03 identity reuse
+12_independent_reviewer_checks: Exact allowlisted product-path diff plus six-doc closeout; ownership and filesystem boundaries; reproducibility; lifecycle recovery; Package-agnostic Skill proof; focused/full tests and CI
+13_p0_p1_p2_standard: P0 unsafe install/delete or Package mutation; P1 unreproducible artifact, visible binding, lifecycle/data-preservation defect; P2 evidence/packaging defect
+14_fail_closed_conditions: D03 absent; output path escape; global dependency use; any destructive target not exact; test/CI failure; B03 final identity reused
+15_upstream_dependency: D03 formally delivered; explicit Owner authorization; project .venv only
+16_downstream_handoff: D05 only after reviewed ordinary FF and cleanup of task-only build intermediates
+17_real_workbuddy_required: NO
+18_official_control_group: NO / fixtures only
+19_involves_0_3_25: Read-only release metadata/fixture only
+20_proves_after_completion: A versioned, reviewable Installer/lifecycle implementation exists
+21_cannot_prove_after_completion: Fresh real assemblies, client, official/GK/video/business success
+```
+
+补充合同：
+
+```text
+22_project_target: Make Installer/assembly/lifecycle a versioned Shell product responsibility while preserving immutable OpenMontage
+23_deviation_to_remove: Temp-only B03 scripts and Package-stamped Skill/binding
+24_input_commit_tree: Shell formal commit/tree containing promoted D03 = NOT_PROVED_FUTURE_INPUT, resolve full 40-hex at takeover; official = cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / 6cd1961d552dd9d2bcfba990b80ac06edfe4b061; GK = 73cab67322451601a824875c0e426067d736dd44 / 29231e0464fa4bc7533c1928415849e9b3a48e7c; B03 evidence plus installer-source file-list/SHA256 manifest = NOT_PROVED_FUTURE_INPUT and must be recorded before read
+25_prerequisites: Dynamic objects resolved, D03 formal, separate Owner D04 authorization, project .venv/write baselines verified and D04 test/evidence roots absent
+26_exact_allowlist: WRITE six product/test paths, D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D04_test_roots\, D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D04_evidence\ and six authority docs; READ workbuddy-skill\golden-key-openmontage\ from the promoted D03 formal tree; D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673\GOLDEN_KEY_OPENMONTAGE_RELEASE.json; D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673\GOLDEN_KEY_OPENMONTAGE_0_3_25_MIGRATION.json; D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B03_evidence\B03-EVIDENCE.json; D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B03_evidence\B03-REPORT.md; and B03 installer source scripts only after their exact file list/SHA256 manifest is recorded in field 24 at takeover
+27_exact_denylist: ALL other paths/state; no WorkBuddy/client, real PackageRoot/production Registration, Provider/media, Package-source mutation or C-drive engineering cache
+28_product_code_change: YES / only installer.py, package_assembly.py, three named tests and pyproject.toml
+29_workbuddy_user_action: NO
+30_package_action: NO real install/replace/register/activate; immutable Package fixtures and temp test assemblies only
+31_exact_steps: Resolve inputs -> freeze read/write hashes -> write lifecycle/reproducibility failure tests -> implement versioned Installer/assembly -> full lifecycle/fault tests -> full suite/CI -> cleanup fixtures -> Q1-Q10 -> closeout/review
+32_positive_acceptance: Fields 10 and 12, including byte-for-byte copy of D03 Skill and deterministic fixture assemblies
+33_negative_assertions: Field 11 plus zero Package/client state change and zero non-allowlisted diff
+34_failure_conditions: Field 14, unresolved input, data-loss risk, need for non-allowlisted write, test/CI failure or non-identical build
+35_evidence_location: Versioned code/tests, six-doc closeout and D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D04_evidence\
+36_worker_reviewer_split: Installer Worker owns product/test paths; Closeout Worker owns docs; independent Reviewer zero-write checks destructive boundaries, reproducibility and CI
+37_rollback_recovery: Tests use disposable roots and restore activation pointer from captured CAS state; before promotion abandon branch; after promotion only reviewed revert/correction commit
+38_temp_cleanup: Remove exact disposable test assemblies/tool caches after manifest and Reviewer capture; preserve user DataRoot/projects/credentials and retained evidence
+39_git_gates: Tests PASS -> Reviewer APPROVE -> commit -> push/CI -> exact headSha review -> separate Owner promotion -> ordinary FF -> separate D05 authorization
+40_end_drift_audit: Q1-Q10 after lifecycle/cleanup and after every repair; D05 real assembly remains NOT_PROVED
+41_not_proved_after_task: Fresh distributions, real WorkBuddy, official/GK runtime/video and business result remain NOT_PROVED
+42_no_downstream_repair: D05 only materializes approved D04 behavior; it cannot repair Installer code, lifecycle or reproducibility
+```
+
+#### D05 双对象 fresh assembly、Registration 与 lifecycle 证明
+
+```text
+01_task_id: V2-CORRECTION-D05-FRESH-DUAL-ASSEMBLY
+02_confirmed_issue: No fresh artifact exists from D03/D04, and B03 outputs bind superseded code
+03_why_correction_necessary: D06/D07 require clean reproducible official and 0.3.25 inputs without acceptance-time repair
+04_correct_owner: Release Assembly Worker + independent zero-write Reviewer
+05_authoritative_inputs: D03/D04 exact formal commits; official cd9f3c1f/tree 6cd1961d detached clean; GK 73cab673/tree 29231e04 parents exact detached clean; Package Registration contract
+06_exact_allowed_paths: Read-only exact official/GK checkouts; write only D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D05_shell_source\ (fresh exact checkout), D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D05_assembly\, D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D05_evidence\ and task-owned Registration/Activation records under those roots; Closeout Worker additionally write only the six authority docs
+07_concrete_actions: Build official and GK assemblies twice from D04; prove Package subtree immutability, same Skill ZIP/hash, separate hidden bindings, complete private Python/FFmpeg/ffprobe/Node/npm/npx, Manifest/Lock coverage, register/activate/new-process locate, update/rollback/uninstall and cleanup; retain exact reviewed acceptance artifacts
+08_explicitly_not_do: No WorkBuddy; no old B03 roots/registrations/Skill; no Package mutation; no Provider/media; no source checkout treated as installed PackageRoot
+09_output_contract: Two independently reproducible fresh assemblies, one Package-agnostic Skill ZIP, Package-specific hidden binding records, lifecycle/evidence bundle
+10_positive_tests: Double-build byte equality; same Skill hash; Package identities exact; toolchain/import/version; generic token scan; registration/lifecycle; immutable snapshots
+11_negative_tests: Non-Package drift; stale token/hash; wrong parent/tree; unlisted byte; shared mutable PackageRoot; rollback/uninstall failure; residue outside task roots
+12_independent_reviewer_checks: Exact inputs/outputs/hashes; D03/D04 objects consumed; both Package subtrees unchanged; Skill equality; lifecycle; cleanup and retained-evidence manifest
+13_p0_p1_p2_standard: P0 identity substitution, Package mutation or unsafe lifecycle; P1 stale binding/toolchain/reproducibility failure; P2 evidence packaging defect
+14_fail_closed_conditions: Input identity drift; task roots not fresh; any byte/token/toolchain/lifecycle mismatch; cleanup target ambiguous
+15_upstream_dependency: D04 formally delivered; explicit Owner authorization; all fresh roots verified absent
+16_downstream_handoff: D06 only; old B04 client evidence is negative reference only
+17_real_workbuddy_required: NO
+18_official_control_group: YES / fresh assembly prepared
+19_involves_0_3_25: YES / fresh assembly prepared
+20_proves_after_completion: Both exact distributions are reproducibly installable through the same versioned Shell/Installer with one identical Skill
+21_cannot_prove_after_completion: WorkBuddy behavior, real OpenMontage tools/video, same-path runtime compatibility or business effect
+```
+
+补充合同：
+
+```text
+22_project_target: Produce reproducible fresh official/GK installed inputs with one identical model-facing Skill
+23_deviation_to_remove: Reuse of B03 superseded output, temp Installer identity and Package-specific Skill bytes
+24_input_commit_tree: Shell formal commit/tree containing promoted D04 = NOT_PROVED_FUTURE_INPUT, resolve full 40-hex at takeover; official = cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / 6cd1961d552dd9d2bcfba990b80ac06edfe4b061; GK = 73cab67322451601a824875c0e426067d736dd44 / 29231e0464fa4bc7533c1928415849e9b3a48e7c with parents ef5f5b58fa1c2b494b0154989cf0e4e36615a701 + cd9f3c1f03368be87b140af494914b8ee4e3c7a4
+25_prerequisites: Field 24 resolved, D04 formal, separate Owner D05 authorization, all fresh roots/Registration IDs absent and exact cleanup targets predeclared
+26_exact_allowlist: READ two exact external checkouts; WRITE only D05 shell_source, assembly, evidence roots, task-owned Registration/Activation records under those roots and six authority docs
+27_exact_denylist: ALL other paths/state; WorkBuddy/client, B03/B04 installed outputs/registrations, Package source, Provider/media and production roots forbidden
+28_product_code_change: NO / consume exact promoted Installer
+29_workbuddy_user_action: NO
+30_package_action: YES / assemble, install, register, activate, locate, update, rollback and uninstall only two task-owned fresh distributions; no source mutation or production replacement
+31_exact_steps: Resolve/freeze inputs -> assert roots/IDs absent -> two independent builds each Package -> hash/Skill equality/toolchain checks -> lifecycle on task-owned roots -> immutable before/after snapshots -> cleanup disposable copies -> closeout/Q1-Q10/review
+32_positive_acceptance: Fields 9-12 plus full 40-hex source lineage, identical Skill ZIP SHA256 and lifecycle recovery state
+33_negative_assertions: Field 11 plus no client state and no write outside exact D05 roots/six docs
+34_failure_conditions: Field 14, any lifecycle recovery failure, Package-source diff, different Skill byte or untracked residue; D06 stays blocked
+35_evidence_location: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D05_evidence\ with immutable manifest/hashes; reviewed assemblies remain in D05 assembly root; six docs store exact identities/verdict
+36_worker_reviewer_split: Assembly Worker runs versioned Installer/lifecycle; Closeout Worker writes docs; independent Reviewer zero-write rehashes objects and verifies cleanup/immutability
+37_rollback_recovery: Restore prior task activation pointer or uninstall exact task Registration using D04 CAS; never alter production/current user Registration; preserve failed roots read-only for review
+38_temp_cleanup: Remove double-build scratch roots, installer download/cache and uninstalled disposable roots after evidence capture; retain only reviewed assemblies/evidence until post-D08 manifest cleanup
+39_git_gates: External evidence APPROVE -> docs result commit -> push candidate -> exact review -> separate Owner result promotion -> ordinary FF -> separate D06 authorization; assembly existence alone creates no promotion
+40_end_drift_audit: Q1-Q10 after lifecycle and cleanup; client/video claims must remain NOT_PROVED
+41_not_proved_after_task: WorkBuddy behavior, real registry tools/checkpoints/video, same-path compatibility and business outcome remain NOT_PROVED
+42_no_downstream_repair: D06 may only consume immutable approved assemblies; any toolchain/binding/lifecycle defect returns to D05/D04 and requires a new reviewed object
+```
+
+#### D06 official 完整本地成片 control acceptance
+
+```text
+01_task_id: V2-CORRECTION-D06-OFFICIAL-LOCAL-VIDEO-CONTROL
+02_confirmed_issue: Current official cd9f3c1f has no repeatable full WorkBuddy+Shell local-video proof
+03_why_correction_necessary: First-Artifact or receipt-only evidence would leave tool/checkpoint/compose defects for the GK comparison to discover
+04_correct_owner: Official Control Acceptance Worker + independent zero-write Reviewer
+05_authoritative_inputs: D05 fresh official assembly and exact Skill; D01/D02 acceptance method; official Guide and a user-selectable production Pipeline; one frozen no-paid-provider media fixture/brief; current WorkBuddy client
+06_exact_allowed_paths: Read-only D05 assembly/evidence and frozen D06 control input; write only D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D06_official_data_root\, D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D06_official_evidence\ and WorkBuddy state limited to one exact Skill, one official Registration and two fresh sessions; Closeout Worker additionally write only the six authority docs
+07_concrete_actions: Fresh install/register/activate/new-process locate; install exact Package-agnostic Skill; run the same ordinary business brief twice; WorkBuddy must select a user Pipeline (never framework-smoke), read exact Guide/manifest/Stage/meta Skills, run preflight, create canonical artifacts/checkpoints/reviews, invoke real local registry tools through Shell, compose and validate a playable local video; capture complete lineage and clean task state after review
+08_explicitly_not_do: No code/Installer/Skill/Package repair; no helper/source diagnosis; no technical prompt; no direct fallback; no paid Provider; no GK; no security bypass
+09_output_contract: Two-run official evidence bundle with exact client/Skill/Package/Registration/session/resource-read/operation/receipt/checkpoint/Artifact/video identities, or precise INCOMPLETE owner handoff
+10_positive_tests: Two fresh end-to-end videos; ordinary prompts; Agent-first order; WorkBuddy decisions; real local tools; schema-valid lineage; playable video/ffprobe; identical method with bounded allowed variability
+11_negative_tests: framework-smoke selection; wrong Package; missing Guide/Stage read; direct fallback; receipt without Artifact/video; mutation; hidden repair; truncated trace; Package-root writes outside projects/results
+12_independent_reviewer_checks: Exact hashes/prompts/sessions; full trace; decision owner; manifest tool allowlist; receipt/Artifact/video correlation; repeatability; residue
+13_p0_p1_p2_standard: P0 false real-video claim, wrong Package or second control plane; P1 missing Agent-first/tool/checkpoint/video evidence, fallback/mutation/residue; P2 correlation defect
+14_fail_closed_conditions: D05 not APPROVE; frozen fixture unavailable; identity mismatch; any technical model routing; missing provenance; acceptance-time repair
+15_upstream_dependency: D05 APPROVE; explicit Owner authorization; Owner performs any client permission decision; user-approved low-cost model if available
+16_downstream_handoff: D07 only after independent APPROVE; failure returns to named Shell/Installer/Package/WorkBuddy owner without changing D06 inputs
+17_real_workbuddy_required: YES / two fresh full sessions
+18_official_control_group: YES / cd9f3c1f exact
+19_involves_0_3_25: NO
+20_proves_after_completion: Repeatable full local-video Agent-first integration for current official through the corrected Shell
+21_cannot_prove_after_completion: GK compatibility, paid Providers, portrait business quality or formal project closeout
+```
+
+补充合同：
+
+```text
+22_project_target: Prove the corrected WorkBuddy+Shell path can repeatedly complete the current official Agent-first local-video flow
+23_deviation_to_remove: Treating receipt/first Artifact/direct fallback as official product success
+24_input_commit_tree: Shell formal commit/tree containing promoted D05 result and D03/D04 code = NOT_PROVED_FUTURE_INPUT, resolve full 40-hex at takeover; official = cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / 6cd1961d552dd9d2bcfba990b80ac06edfe4b061; D05 assembly/evidence manifest SHA256, Skill ZIP SHA256, client version/binary hash and frozen fixture manifest SHA256 = NOT_PROVED_FUTURE_INPUT
+25_prerequisites: Every field 24 identity recorded, D05 formal, separate Owner D06 authorization, fresh D06 data/evidence roots, frozen no-paid fixture and Owner-present permission decisions
+26_exact_allowlist: READ D05 assembly/evidence and frozen D06 control input; WRITE only D06 official_data_root, official_evidence, one exact WorkBuddy Skill/official Registration/two sessions and six authority docs
+27_exact_denylist: ALL other paths/state; code/test/Installer/Skill source/ZIP/Package source, GK, paid Provider, unrelated WorkBuddy tasks/Skills and media outside frozen fixture forbidden
+28_product_code_change: NO
+29_workbuddy_user_action: YES / Owner performs client permissions, exact Skill install and two ordinary-language task submissions; no technical routing or security bypass
+30_package_action: YES / install/register/activate/locate exact D05 official assembly in fresh task DataRoot; no replace/mutate/repair; uninstall only per rollback
+31_exact_steps: Resolve inputs -> before-state -> fresh install/register/activate/new-process locate -> Skill hash verify -> two identical ordinary briefs -> full trace/video capture -> ffprobe/business-neutral technical inspection -> cleanup/after-state -> closeout/Q1-Q10/review
+32_positive_acceptance: Fields 10 and 12; each run reaches a full playable local video with Guide/manifest/Stage/meta/tool/review/checkpoint lineage
+33_negative_assertions: Field 11 plus no Package-owned or non-Package input mutation, no paid call and no acceptance-time diagnosis/edit
+34_failure_conditions: Field 14 or any missing second video/lineage/cleanup fact; classify exact owner and keep D07 blocked
+35_evidence_location: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D06_official_evidence\ with immutable trace/video manifest; six docs store exact verdict/hashes
+36_worker_reviewer_split: Acceptance Worker operates exact client path/captures evidence; Owner makes permissions only; Closeout Worker writes docs; independent Reviewer zero-write inspects both videos/lineage/state
+37_rollback_recovery: Uninstall only exact D06 Skill and official Registration, restore captured pre-task activation pointer and preserve failed evidence/DataRoot read-only until review
+38_temp_cleanup: Remove task session scratch, duplicate downloads and non-evidence intermediates after Reviewer capture; retain frozen input, accepted data/evidence and exact failure artifacts until project cleanup
+39_git_gates: No product commit; Reviewer APPROVE -> six-doc result commit -> push -> separate Owner result promotion -> ordinary FF/remote verify -> separate D07 authorization
+40_end_drift_audit: Q1-Q10 after two runs and cleanup; any first-artifact shortcut, technical prompt or fallback is NO
+41_not_proved_after_task: GK compatibility, paid capability, portrait business quality, scale and closeout remain NOT_PROVED
+42_no_downstream_repair: D07 receives immutable D06 inputs/method; an official defect cannot be hidden by changing GK or acceptance method
+```
+
+#### D07 仅切换 Golden Key 0.3.25 的同路径完整成片比较
+
+```text
+01_task_id: V2-CORRECTION-D07-GK-0_3_25-SAME-PATH-VIDEO
+02_confirmed_issue: GK 0.3.25 has not run through the approved official path with only Package-derived binding changed
+03_why_correction_necessary: Full same-path comparison is required before the final store use case so D08 is not a repair window
+04_correct_owner: Controlled Package Comparison Worker + independent zero-write Reviewer
+05_authoritative_inputs: D06 approved immutable non-Package inputs; D05 fresh GK assembly; GK 73cab673/tree/parents exact; identical Package-agnostic Skill ZIP
+06_exact_allowed_paths: Read-only D05 assembly/evidence and D06 control input/evidence; write only D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D07_gk_data_root\, D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D07_gk_evidence\ and WorkBuddy state limited to unchanged Skill ZIP, one fresh GK Registration and two fresh sessions; Closeout Worker additionally write only the six authority docs
+07_concrete_actions: Prove every non-Package byte/method unchanged; install/register/activate GK in fresh DataRoot; run the exact D06 brief twice; capture the same structural Agent-first/full-video evidence and compare; Package-owned Guide, manifests, Stage/meta Skills, tool registry, selected user Pipeline and their resource identities may differ only as direct consequences of the exact Package switch; WorkBuddy must choose according to each Package's own authority, so the Pipeline ID is not forced equal
+08_explicitly_not_do: No Shell/Installer/Skill source/ZIP/prompt/fixture/model/method change; no old 0.3.24; no Package mutation; no acceptance-time repair; no Provider/media expansion
+09_output_contract: Exact one-variable full-video comparison or precise fail-closed owner attribution
+10_positive_tests: Same Skill hash and inputs; fresh GK binding; exact Guide/GK selected manifest/Stage Skills; real local tools/checkpoints/video; two-run repeatability; immutable Package
+11_negative_tests: Any non-Package byte/method drift; any Package-owned semantic difference not traceable to the two exact immutable Package trees; forced equal Pipeline ID against the Package Guide; stale state; old input; Package mutation; direct fallback; evidence reuse; technical prompt
+12_independent_reviewer_checks: Byte comparison of all non-Package inputs; source-object proof for every Package-owned Guide/manifest/Stage/tool/Pipeline difference; exact GK identity; trace/Artifact/video correlation; no non-Package second variable
+13_p0_p1_p2_standard: P0 false compatibility, two-variable test or Package mutation; P1 stale/non-matching input, missing real video evidence or fallback; P2 comparison defect
+14_fail_closed_conditions: D06 not APPROVE; any non-Package mismatch; fresh state unavailable; exact GK mismatch; incomplete evidence
+15_upstream_dependency: D06 APPROVE; explicit Owner authorization
+16_downstream_handoff: D08 only after independent APPROVE; otherwise return to named owner and preserve D07 inputs
+17_real_workbuddy_required: YES / two fresh full sessions
+18_official_control_group: YES / immutable D06 reference
+19_involves_0_3_25: YES / exact 73cab673; 0.3.24 forbidden
+20_proves_after_completion: Corrected path is compatible or precisely incompatible with GK 0.3.25 under one-variable full-video comparison
+21_cannot_prove_after_completion: Real store portrait business quality, paid/provider breadth, scale or closeout
+```
+
+补充合同：
+
+```text
+22_project_target: Prove GK 0.3.25 compatibility through the same structural path while changing only the immutable Package-owned authority/binding variable
+23_deviation_to_remove: Two-variable comparison or forcing official pipeline semantics onto a Package that legitimately adds Golden Key user Pipelines
+24_input_commit_tree: Shell formal commit/tree containing promoted D06 result = NOT_PROVED_FUTURE_INPUT, resolve full 40-hex at takeover; official control = cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / 6cd1961d552dd9d2bcfba990b80ac06edfe4b061; GK = 73cab67322451601a824875c0e426067d736dd44 / 29231e0464fa4bc7533c1928415849e9b3a48e7c; D05/D06 manifest, Skill ZIP, client/model/fixture/method hashes = NOT_PROVED_FUTURE_INPUT
+25_prerequisites: All field 24 identities resolved, D06 formal, separate Owner D07 authorization, fresh GK root/Registration/sessions and exact one-variable comparison manifest frozen
+26_exact_allowlist: READ D05/D06 approved inputs/evidence and exact GK checkout; WRITE only D07 GK data/evidence roots, unchanged Skill installation, one fresh GK Registration/two sessions and six authority docs
+27_exact_denylist: ALL other paths/state; any Shell/Installer/Skill/prompt/fixture/client/model/method change, official/GK source mutation, 0.3.24, Provider/media expansion and D06 evidence edit forbidden
+28_product_code_change: NO
+29_workbuddy_user_action: YES / Owner repeats the exact D06 permission and ordinary-language procedure; no technical routing
+30_package_action: YES / install/register/activate exact fresh GK assembly in its own DataRoot; only PackageRoot/Registration/hidden binding and Package-owned Guide/manifest/Stage/meta/tool/Pipeline identities/semantics may differ; no mutation
+31_exact_steps: Resolve/freeze byte comparison -> assert fresh state -> install/activate GK -> verify same Skill -> run exact brief twice -> capture full lineage/videos -> attribute every difference to Package tree or reject -> cleanup -> closeout/Q1-Q10/review
+32_positive_acceptance: Fields 10 and 12; structural sequence and non-Package bytes/method identical; WorkBuddy may select the correct Package-specific user Pipeline under that Package's Guide
+33_negative_assertions: Field 11; forced Pipeline-ID equality, untraceable semantic difference or any non-Package second variable is failure
+34_failure_conditions: Field 14, incomplete source attribution, missing full video/run, non-Package drift or cleanup failure; D08 remains blocked
+35_evidence_location: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D07_gk_evidence\ plus immutable cross-package comparison manifest and six-doc exact verdict
+36_worker_reviewer_split: Comparison Worker performs frozen procedure; Owner handles identical client decisions; Closeout Worker writes docs; independent Reviewer zero-write rehashes all non-Package inputs and source-attributes differences
+37_rollback_recovery: Uninstall exact GK Registration/Skill only, restore pre-D07 activation pointer without changing D06 evidence, preserve failed GK DataRoot/evidence read-only
+38_temp_cleanup: Remove session scratch and non-evidence intermediates after review; retain exact D05-D07 accepted/failure evidence until post-D08 cleanup authorization
+39_git_gates: Reviewer APPROVE -> six-doc result commit -> push -> separate Owner result promotion -> ordinary FF/remote verify -> separate D08 authorization
+40_end_drift_audit: Q1-Q10 after comparison/cleanup; Q5 passes only when all method bytes are equal and Package semantic differences have exact source provenance
+41_not_proved_after_task: Store portrait business quality, paid/provider breadth, scale and project closeout remain NOT_PROVED
+42_no_downstream_repair: D08 must consume the approved unchanged GK path; any compatibility or video defect returns to its named owner and cannot be repaired during business acceptance
+```
+
+#### D08 真实门店业务验收、项目状态收口候选与推广清单
+
+```text
+01_task_id: V2-CORRECTION-D08-BUSINESS-ACCEPTANCE-CLOSEOUT
+02_confirmed_issue: Technical local-video evidence cannot prove the original portrait store outcome or repository delivery readiness
+03_why_correction_necessary: Project completion requires an ordinary-user real business task, correct process, accepted video and exact closeout state
+04_correct_owner: Business Acceptance Owner + Closeout Worker + independent zero-write Reviewer
+05_authoritative_inputs: D06/D07 approved evidence; exact formal Shell/Installer; exact GK assembly; Owner-frozen source material, portrait requirements, rights, cost/provider approvals and acceptance owner; live remote/CI authority
+06_exact_allowed_paths: Frozen business source roots read-only; D06/D07 evidence read-only; D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D08_business_evidence\ (fresh); the six authority docs only for closeout candidate; WorkBuddy state limited to unchanged Skill/GK Registration and one fresh business session
+07_concrete_actions: Run one ordinary business request through approved GK path; allow WorkBuddy/OpenMontage to select the correct Golden Key user Pipeline, observe all distinct human/provider/cost gates, use only separately approved real capabilities, produce and independently inspect the portrait video; obtain business acceptance; audit exact Git/CI/Package/client/residue; write six-doc closeout candidate and an exact proposed promotion/cleanup manifest; stop
+08_explicitly_not_do: No Shell media/creative patch; no technical prompt; no silent Provider/fallback; no code repair during acceptance; no promotion/delete in D08; no unrelated branch/worktree cleanup
+09_output_contract: Business evidence, accepted/rejected decision, six-doc closeout candidate and exact proposed promotion/cleanup manifest with zero promotion effect
+10_positive_tests: Ordinary request; correct GK Pipeline semantics; real tools and approval receipts; playable portrait video with expected source/orientation/audio/subtitle/lineage; independent business acceptance; exact Git/CI/state
+11_negative_tests: Technical prompt; wrong orientation/video; fabricated evidence; direct fallback; identity drift; missing gate/evidence; Shell creative fix; unreviewed promotion or ambiguous cleanup target
+12_independent_reviewer_checks: Business brief/material rights/video semantics; D06/D07 lineage; exact identities; provider/cost approvals; full evidence; six-doc diff; Git/CI and cleanup manifest
+13_p0_p1_p2_standard: P0 false business PASS, unsafe promotion/delete, identity substitution or unauthorized spend; P1 missing video/gate/review/Git evidence or Shell media expansion; P2 closeout trace defect
+14_fail_closed_conditions: D07 not APPROVE; inputs/rights/acceptance owner not frozen; business result rejected; evidence missing; code repair required; live object mismatch
+15_upstream_dependency: D07 APPROVE; explicit Owner authorization; business acceptance contract and any paid/provider authorization frozen separately
+16_downstream_handoff: STOP_FOR_SEPARATE_OWNER_PROMOTION_APPROVAL; only later exact mechanical FF/remote+CI verification/manifest-bounded cleanup is eligible
+17_real_workbuddy_required: YES / one real business session
+18_official_control_group: YES / consumes D06 lineage, no new official run
+19_involves_0_3_25: YES / exact approved D07 assembly
+20_proves_after_completion: Original ordinary-user business outcome and a reviewed project closeout candidate
+21_cannot_prove_after_completion: Universal scale, every Provider/renderer/format, or formal promotion before Owner approval
+```
+
+补充合同：
+
+```text
+22_project_target: Prove the original ordinary-user store outcome and prepare an exact, reviewable repository closeout without executing promotion/cleanup
+23_deviation_to_remove: Technical PASS substituted for business acceptance, Shell creative repair and closeout mixed with destructive promotion/cleanup
+24_input_commit_tree: Shell formal commit/tree containing promoted D07 result = NOT_PROVED_FUTURE_INPUT, resolve full 40-hex at takeover; GK = 73cab67322451601a824875c0e426067d736dd44 / 29231e0464fa4bc7533c1928415849e9b3a48e7c; D06/D07 evidence manifests, unchanged Skill ZIP, business-source/rights/brief/acceptance manifest, client/model/provider identities = NOT_PROVED_FUTURE_INPUT
+25_prerequisites: All field 24 inputs and rights frozen, D07 formal, separate Owner D08 authorization, named business accepter, explicit provider/cost ceilings and fresh evidence root
+26_exact_allowlist: READ frozen business sources and D06/D07 evidence; WRITE only D08 business evidence, unchanged approved WorkBuddy/GK session state and six authority docs; proposed cleanup manifest is data only
+27_exact_denylist: ALL other paths/state; product code/tests/Installer/Skill/Package mutation, unapproved Provider/spend, unrelated client state, formal branch promotion and any deletion forbidden
+28_product_code_change: NO
+29_workbuddy_user_action: YES / Owner submits ordinary business request and alone approves permissions/provider/cost/human gates; independent business accepter evaluates final portrait video
+30_package_action: NO replace; reuse exact approved D07 GK assembly/Skill/binding, validate identity only; no install mutation except exact task session state
+31_exact_steps: Resolve/freeze inputs/gates -> before-state -> ordinary store request -> capture Agent-first/human/provider/tool lineage -> inspect portrait video -> business decision -> Git/CI/client/residue audit -> write six-doc closeout and proposed manifest -> Q1-Q10 -> zero-write review -> stop
+32_positive_acceptance: Fields 9-12 plus explicit accepted/rejected business decision, playable portrait result, exact rights/cost receipts and complete closeout manifest
+33_negative_assertions: Field 11 plus zero product repair, zero formal promotion/delete and no result claim beyond accepted evidence
+34_failure_conditions: Field 14, rejected video, unauthorized cost, identity/evidence mismatch or any required repair; project remains INCOMPLETE and no closeout promotion
+35_evidence_location: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D08_business_evidence\ and six authority docs; exact promotion/cleanup manifest contains targets and protected non-targets
+36_worker_reviewer_split: Business Run Worker captures path; Owner handles approvals; independent Business Accepter judges video; Closeout Worker writes docs/manifest; independent zero-write Reviewer audits all layers
+37_rollback_recovery: Stop/cancel exact task, preserve evidence, restore pre-D08 task/session state only; no code rollback is allowed because no code change; failed business output stays evidence, not PASS
+38_temp_cleanup: During D08 remove only task session scratch explicitly listed in before/after manifest; retain business evidence and every promotion/cleanup target; actual project cleanup waits for later Owner authorization
+39_git_gates: Reviewer APPROVE permits candidate closeout commit; push is separate; formal closeout promotion requires separate Owner approval and ordinary FF/remote+CI verification; actual manifest-bounded cleanup is another separately authorized action
+40_end_drift_audit: Q1-Q10 after business decision and closeout diff; final report repeats Q1-Q10 and stops
+41_not_proved_after_task: Universal scale, every Provider/renderer/format and formal closeout remain NOT_PROVED until separate promotion; acceptance cannot generalize beyond frozen case
+42_no_downstream_repair: There is no product downstream task; rejection or defect returns to the named D03-D07 owner under a new authorization, never repaired inside closeout/promotion
+```
+
+### 5. 原始八阶段、十一步、T1-T12、R01-R08 全量映射
+
+| 原始对象 | 新任务覆盖 | 验收证据 | 废止/边界依据 |
+|---|---|---|---|
+| Stage1 冻结边界 | D02 | six-doc contract + Reviewer | 旧 fixed-child 推导废止 |
+| Stage2 Registration | D04-D05 | versioned Installer tests + fresh register/locate | 原实现保留；临时 proof 不等 final |
+| Stage3 Launcher | D02-D03 | semantic operation contract/code/tests | whole-request child 废止 |
+| Stage4 WorkBuddy Skill | D01-D03,D06 | native surface + Package-agnostic Skill + real client | B02 Skill 废止 |
+| Stage5 progressive Runtime | D04-D07 | private toolchain + optional capability facts | Stage3 accepted boundary保留 |
+| Stage6 reduce CLI/MCP | D02-D03 | one internal semantic surface; no MCP/router | arbitrary/technical CLI 废止 |
+| Stage7 Installer/upgrade/migration | D04-D05 | versioned code + lifecycle + deterministic assemblies | B03 temp-only Installer 废止 |
+| Stage8 layered acceptance | D06-D08 | official, GK, business three layers | receipt/Artifact-only不算完整 |
+| Step1 architecture | D02 | target/role/negative gates | Phase A A6 superseded |
+| Step2 Registration | D04-D05 | exact final objects | Stage2 proof narrowed |
+| Step3 Launcher binding | D02-D03 | hidden binding + bounded calls | host-env exact set废止 |
+| Step4 production Skill | D01-D03 | real surface + package-agnostic Skill | B02 Skill废止 |
+| Step5 Runtime | D04-D07 | toolchain/capabilities | 保留 current Stage3 |
+| Step6 Installer/lifecycle | D04-D05 | versioned implementation + real lifecycle | 不再用 temp-only scripts |
+| Step7 offline/security/fault | D03-D05 | focused/full/CI + assembly fault matrix | 旧错误合同测试仅历史 |
+| Step8 first real WorkBuddy | D06 | two full official local videos | first Artifact不足 |
+| Step9 corrected Core | D07 | exact GK same-path videos | old 0.3.24历史-only |
+| Step10 store acceptance | D08 | portrait video + business approval | technical PASS不替代 |
+| Step11 optional fork/MCP/more entries | post-D08 separate decision | separate future evidence | 本主链明确不覆盖 |
+| T1 entry | D01-D03,D06 | native surface/Skill/client | fixed envelope废止 |
+| T2 input | D02-D03 | business user message + semantic ops | model-visible binding废止 |
+| T3 validation order | D02-D07 | identity/resource-read trace | 未验证 Guide禁止 |
+| T4 adapter | D02-D03 | per-operation receipts | whole-request call废止 |
+| T5 auth/continuation | D02,D06-D08 | distinct gate receipts | Shell不作授权决定 |
+| T6 result mapping | D02-D03,D06 | operation/status/Artifact lineage | one receipt闭集不足 |
+| T7 privacy | D03-D08 | closed child env/secret checks | host env exact ownership废止 |
+| T8 failures | D02-D08 | per-task fail-closed handoff | 下游 repair window禁止 |
+| T9 Package gate | D04-D05 | final assemblies/Registration | old B03 binding废止 |
+| T10 evidence layers | all D tasks | explicit evidence matrix | static/client/business分离 |
+| T11 Stage6 relay | D02-D03,D06 | direct mechanical relay first | 是否需额外代码由真实证据决定 |
+| T12 implementation package | D03-D05 | exact allowlists/review/CI | old six-path packet废止 |
+| R01 surface | D01 | two-session native proof | old blocked evidence历史保留 |
+| R02 binding | D02,D04-D05 | hidden binding + immutable Package | Package defect attribution废止 |
+| R03 Skill bundle | D03-D05 | package-agnostic exact ZIP | B02/B03 Skill废止 |
+| R04 Installer lifecycle | D04-D05 | versioned code + real lifecycle | B03 methods only参考 |
+| R05 materialization | D05 | two fresh roots/registrations | old B03 outputs不复用 |
+| R06 Skill install | D06-D07 | same ZIP installed and hit | upload不等 success |
+| R07 real WorkBuddy | D06-D08 | official/GK/business sessions | B04 remains incomplete |
+| R08 closeout | D08 + later promotion action | business/review/Git/CI/manifest | D08本身不推广 |
+
+### 6. 原 Phase A 23 项交付物映射
+
+| # | 交付物 | 本候选位置/未来证据 |
+|---|---|---|
+| 1 | 接管核验 | planning header + final Git evidence |
+| 2 | 分支/worktree身份 | planning header + final Git evidence |
+| 3 | 一页目标 | section 1 |
+| 4 | 谱系图 | section 1 success path |
+| 5 | 完整追踪矩阵 | sections 5-6 |
+| 6 | Stage1-5审查 | section 2 + mapping |
+| 7 | Stage6交接 | T11 mapping + D02/D03/D06 |
+| 8 | 可保留部分 | section 2 retain column |
+| 9 | 缩小/重做/删除/归属 | sections 2-3 |
+| 10 | PackageToolDefinitionV1 | D02 hidden binding; model-invisible; per-operation only |
+| 11 | launch_session_tool | D02/D03 mechanical primitive; no whole request |
+| 12 | workbuddy_entry_cli | D03 rework against D01/D02 |
+| 13 | R02归因 | section 2 + D02/D04 |
+| 14 | 遗留Stage2分支 | historical-only; hardening separate future authorization |
+| 15 | dirty worktrees | protected superseded history; no merge/copy/delete |
+| 16 | official->same Shell->GK | D06->D07 |
+| 17 | 最小目标架构 | section 1 |
+| 18 | 最小任务清单 | D01-D08 |
+| 19 | 每任务路径/边界/验收/Reviewer | 21-field packets |
+| 20 | 新DoD/下游条件 | fields 9-16 each task |
+| 21 | Owner决策 | section 8 below |
+| 22 | 文档白名单 | exact six docs in planning header |
+| 23 | 是否可固化 | Reviewer+Owner promotion gate; no execution |
+
+### 7. 十问防偏：规划门与执行门
+
+十问原文仍为本文件上节 2712-2721 行。为避免“上游任务因尚未产生下游证据而永远不能批准”的逻辑错误，使用两个严格模式：
+
+- `PLAN_GATE`：逐题证明任务合同直接服务目标、明确 Owner/边界、把尚未证明项列为本任务输出并阻断下游。未知事实不得被当成真，但可以被正确封装为当前任务的 fail-closed 验收目标。
+- `EXECUTION_GATE`：逐题检查实际结果；任何要求的事实为 `NOT_PROVED`、证据不足或答案为 NO，当前任务不得 APPROVE，下一任务不得启动。
+
+规划节点逐题结果如下；每格都给出通过依据，不以“已检查”代替：
+
+| 节点 | Q1 用户目标 | Q2 WorkBuddy/Guide | Q3 Shell边界 | Q4 新抽象 | Q5 责任归属 | Q6 外部Owner | Q7 Package只读 | Q8 证据分层 | Q9 用户/模型负担 | Q10 接管/repair |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 审计开始 | PASS-只读重建 | PASS-唯一Agent为基线 | PASS-零产品动作 | PASS-不预设接口 | PASS-逐层核验 | PASS-无外部实现 | PASS-exact只读 | PASS-FACT分层 | PASS-无用户动作 | PASS-先停执行 |
+| 目标模型 | PASS-自然语言到成片 | PASS-Guide/Stage为权威 | PASS-六模块 | PASS-只定义职责 | PASS-Installer回到Shell模块 | PASS-Package生产不纳入 | PASS-0.3.25只读 | PASS-未知显式 | PASS-隐藏binding | PASS-完整链 |
+| A/B裁决 | PASS-定位最早偏离 | PASS-A4未证被纠正 | PASS-B02越界废止 | PASS-不美化旧抽象 | PASS-R02回归正确层 | PASS-B03方法非产品 | PASS-历史保留 | PASS-mechanical≠product | PASS-技术JSON废止 | PASS-C路线不续跑 |
+| D01计划 | PASS-为真实入口取证 | PASS-只证surface不伪称Guide | PASS-无Shell实现 | PASS-临时probe非产品抽象 | PASS-client事实归WorkBuddy | PASS-无外部产品实现 | PASS-不接Package | PASS-仅client surface | PASS-普通提示 | PASS-BLOCKED不进D02 |
+| D02计划 | PASS-冻结正确主链 | PASS-明确决策与资源读 | PASS-机械operation | PASS-仅D01支持的surface | PASS-四方owner清楚 | PASS-Package只供合同 | PASS-无Package写 | PASS-contract-only | PASS-无hash/path/json | PASS-D03 exact handoff |
+| D03计划 | PASS-实现可用入口 | PASS-调用顺序归WorkBuddy | PASS-单operation机械 | PASS-adapter有限且无决策 | PASS-Installer未偷入 | PASS-不改Package | PASS-只读fixtures | PASS-offline only | PASS-semantic inputs | PASS-D04不修D03 |
+| D04计划 | PASS-补回可交付Installer | PASS-不触碰Agent决策 | PASS-install/lifecycle模块 | PASS-版本化替代temp脚本 | PASS-Installer归本仓库 | PASS-不吞Package Owner | PASS-source只读 | PASS-code evidence | PASS-Skill package-agnostic | PASS-D05只物化 |
+| D05计划 | PASS-形成真实输入 | PASS-不声称client | PASS-装配/注册 | PASS-无新控制面 | PASS-只消费D04 | PASS-外部输入只读 | PASS-双Package immutable | PASS-assembly only | PASS-同Skill | PASS-D06禁止修复 |
+| D06计划 | PASS-official完整控制 | PASS-完整Guide/Stage证据 | PASS-Shell不选流程 | PASS-无新接口 | PASS-故障归named owner | PASS-无Package修补 | PASS-official immutable | PASS-full video gate | PASS-自然语言 | PASS-D07只在APPROVE后 |
+| D07计划 | PASS-GK同路径 | PASS-GK Guide/Stage证据 | PASS-Shell不变 | PASS-无新抽象 | PASS-one-variable attribution | PASS-Package bug回owner | PASS-GK immutable | PASS-control/candidate分离 | PASS-同Prompt/Skill | PASS-D08非修复窗 |
+| D08计划 | PASS-真实业务成片 | PASS-GK生产权威 | PASS-无Shell媒体逻辑 | PASS-只closeout | PASS-业务/推广Owner分离 | PASS-Provider逐项授权 | PASS-Package只读 | PASS-business独立层 | PASS-用户只说业务 | PASS-推广另闸 |
+| 完整路线 | PASS-全承诺映射 | PASS-唯一Agent全程 | PASS-六模块闭合 | PASS-8任务有必要性 | PASS-无责任丢失 | PASS-外部动作显式 | PASS-old inputs禁用 | PASS-每层独立 | PASS-内部复杂度隐藏 | PASS-每步硬停 |
+
+Reviewer、提交前和最终汇报三个节点必须在实际发生后追加同样 Q1-Q10 的逐题依据；不得预写 PASS。
+
+### 8. Owner 决策、已证明、未证明与硬停止
+
+Owner 仍需逐项决定：规划候选是否推广；D01-D08 是否逐任务授权；每次 WorkBuddy 权限选择；D06/D07 冻结 control fixture 和低成本模型；D08 素材、权利、Provider/费用、验收人；post-D08 promotion/cleanup。任何一次决定不继承为下一次授权。
+
+已证明：实时 formal 对象、official/GK exact 输入、B02代码事实、B03机械方法证据、B04三次负面事实、当前无产品执行授权。未证明：D01 surface、正确代码、版本化 Installer、fresh assemblies、official/GK/业务 E2E。已废止：B01 whole-request contract、B02产品接受、B03 final binding、C01-C07执行候选。明确禁止：当前启动任何 D/C 任务、产品代码/Package/WorkBuddy/Provider/media动作、正式推广或清理历史对象。
+
+### 9. 第一次独立 Reviewer 报告与本任务内纠正
+
+独立零写 Reviewer 在未修改、未 fetch/commit/push、未操作 WorkBuddy/Package 的前提下给出 `REJECT / P0=0 / P1=4 / P2=1`。问题与当前处置如下：
+
+| Finding | Reviewer 结论 | 当前任务内纠正 |
+|---|---|---|
+| P1-1 | 规划推广与 D08 后项目推广共用 `ONLY_AFTER_D08`，形成 D01 无法启动的死锁 | 拆分 plan promotion、per-task result promotion、post-D08 project closeout/cleanup 三类闸门 |
+| P1-2 | D 任务缺完整输入 identity 与 allowlist/denylist；未来输入用动态描述 | 每项新增 24/26/27；固定输入写 full 40-hex，未来对象写 `NOT_PROVED_FUTURE_INPUT` 并成为 takeover hard gate；六文档 closeout 路径逐项补齐 |
+| P1-3 | Owner 要求的产品代码、用户操作、Package action、回滚、清理、Git gate 等未逐任务显式 | 每项新增 22-42 共 21 个补充字段，禁止依赖推测 |
+| P1-4 | D07 “只变 binding”与 GK 自有 Guide/Pipeline/Stage 语义矛盾 | 固定所有非 Package 输入；允许并只允许 exact immutable Package-owned authority/derived binding 差异；不强制 Pipeline ID 相同，每项差异必须 source-attributed |
+| P2-1 | D02/D03 离线阶段误写 `WorkBuddy-ordered` | 改为 `caller-ordered contract fixture`；真实 WorkBuddy 顺序只由 D06/D07 证明 |
+
+Reviewer 完成节点 Q1-Q10：Q1 `PASS-审查直接阻止错误路线固化`；Q2 `PASS-指出离线证据不得冒充 WorkBuddy`；Q3 `PASS-未扩大 Shell 职责`；Q4 `PASS-识别而非掩盖合同矛盾`；Q5 `PASS-纠正 D07 同路径定义`；Q6 `PASS-无 fallback/mock 产品声明`；Q7 `PASS-Reviewer 全程零写`；Q8 `PASS-原始逐任务附加合同缺口被追回`；Q9 `PASS-P0/P1/P2 有 exact diff 证据`；Q10 `PASS-全部问题留在当前规划任务纠正，未交给 D01-D08`。
+
+纠正完成节点 Q1-Q10：Q1 `PASS-D 路线仍直达普通用户真实成片`；Q2 `PASS-唯一 Agent 和 Package-owned authority 更明确`；Q3 `PASS-per-operation Shell 边界不变`；Q4 `PASS-未来 identity 不伪造且 fail-closed`；Q5 `PASS-official/GK 非 Package 方法冻结`；Q6 `PASS-离线 caller fixture 不再冒充 client`；Q7 `PASS-仍仅六文档修改`；Q8 `PASS-每任务 21+21 字段覆盖附加要求`；Q9 `PASS-固定事实与未来 gate 分层`；Q10 `PASS-回滚/清理/推广/repair-window 逐任务封闭`。当前仍须由同一 Reviewer 对修正后的 exact diff 复审；不得预写 `APPROVE`。
+
+### 10. 第二次独立 Reviewer 报告与再次纠正
+
+第二轮零写复审仍为 `REJECT / P0=0`。已关闭：每项 21+21 字段、D04 Skill 边界、D07 one-variable 定义、D02/D03 caller-ordered offline 证据。剩余 P1：较早 C 路线未显式建立 append-only precedence；D02-D04 部分 read allowlist 仍是概念描述且 D03 的 D01 evidence 未标 `NOT_PROVED_FUTURE_INPUT`；D01 单一操作无法支撑 D02 全 operation 映射。
+
+本任务再次纠正：六份文档把较早 C 节标成“仅在本 D 候选正式推广后 superseded”，并在最新节建立明确 append-only precedence；D02-D04 列出可读的 exact root/subtree/file allowlist，D03 evidence identity 改为接管 hard gate；D01 改为只证明 resource/invocation/result primitive catalog，D02 每个 semantic operation 必须同时映射到 D01-proved primitive 和 exact official semantic contract，不再要求 D01 假装证明 OpenMontage 语义。
+
+第二次 Reviewer 节点 Q1-Q10：Q1 `PASS-继续阻止死锁规划`；Q2 `PASS-要求真实 client 证据边界`；Q3 `PASS-未把语义归给 Shell`；Q4 `PASS-指出概念 allowlist 不可执行`；Q5 `PASS-D07 已确认同路径`；Q6 `PASS-离线/真实证据已分开`；Q7 `PASS-零写审查`；Q8 `PASS-检查 42 字段和路线优先级`；Q9 `PASS-P1 有 exact 行证据`；Q10 `PASS-问题仍在规划内修复`。再次纠正节点 Q1-Q10：Q1 `PASS-primitives 服务真实入口`；Q2 `PASS-WorkBuddy 仍按 official 语义决策`；Q3 `PASS-Shell 只承载已证 primitive`；Q4 `PASS-没有从 probe 发明业务语义`；Q5 `PASS-D06/D07 方法不变`；Q6 `PASS-primitive probe 不称产品成功`；Q7 `PASS-仍仅六文档`；Q8 `PASS-无 C/D 双 authority`；Q9 `PASS-未来 identity 仍 fail-closed`；Q10 `PASS-D02 不补 D01 primitive`。当前仍须第三次复审，不得预写结论。
+
+### 11. 第三次独立 Reviewer APPROVE 与提交前防偏
+
+第三轮独立零写 Reviewer 对修正后的 exact uncommitted six-doc diff 给出 `APPROVE / P0=0 / P1=0 / P2=0`。Reviewer 只读核验了：六个旧 C 节与最新 append-only precedence；D02-D04 exact read allowlist 与 future-input hard gates；D01 primitive/D02 semantic contract 双重映射；D01-D08 每项 21+21 字段；`git diff --check`；未提交修改严格只有六个 authority 文档。Reviewer 明确声明：该结论不构成执行授权、规划推广授权或产品验收。
+
+第三次 Reviewer 完成节点 Q1-Q10：Q1 `PASS-APPROVE 仅服务规划正确性`；Q2 `PASS-唯一 WorkBuddy Agent 及真实证据边界已复核`；Q3 `PASS-Shell primitive 与 OpenMontage semantics 分离`；Q4 `PASS-未发现推测合同或新 P0/P1`；Q5 `PASS-D06/D07 non-Package 同路径和 Package-owned 差异清楚`；Q6 `PASS-无 fallback/mock/离线证据升级`；Q7 `PASS-Reviewer 零写且范围仍六文档`；Q8 `PASS-全量映射与 42 字段未丢失`；Q9 `PASS-结论由 exact diff 和机械检查支持`；Q10 `PASS-无问题转嫁 D01-D08`。
+
+准备提交节点 Q1-Q10：Q1 `PASS-提交只固化审计与路线`；Q2 `PASS-不启动 WorkBuddy 或 Agent 流程`；Q3 `PASS-无产品代码/Shell 行为改变`；Q4 `PASS-提交不创造运行事实`；Q5 `PASS-official/GK objects 只读且方法未执行`；Q6 `PASS-NOT_RUN_DOCS_ONLY 明确`；Q7 `PASS-exact six-doc diff`；Q8 `PASS-八阶段/十一步/T1-T12/R01-R08/23项和任务合同均在候选`；Q9 `PASS-Reviewer P0/P1/P2 清零`；Q10 `PASS-提交/推送不推广正式分支且不授权 D01`。若提交前机械核验不再满足这些依据，必须停止并重审。

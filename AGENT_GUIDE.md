@@ -331,7 +331,7 @@ b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
 
-## Phase B 纠偏方案重基线守卫（2026-08-24）
+## [HISTORICAL / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED] Phase B 纠偏方案重基线守卫（2026-08-24）
 
 Owner 已暂停原 Phase B。最初 V2 目标和 official OpenMontage Agent-first 合同重新成为唯一裁决标准：普通用户只向 WorkBuddy 提自然语言业务需求；WorkBuddy 是唯一 Agent，读取 verified Guide、Manifest、Pipeline 和 Stage Skills，逐阶段作出生产决策并调用 OpenMontage tools；Shell 只绑定安装对象、运行时、确定性工具执行与结果传递，不替代 WorkBuddy 编排。
 
@@ -359,3 +359,28 @@ next_active_task: NONE / OWNER_REAUTHORIZATION_REQUIRED
 原 `A0-A6_APPROVED` 只能保留为历史记录，不能再作为整体有效性结论。后续唯一计划是 `C01 -> C02 -> C03 -> C04 -> C05 -> C06 -> C07`：先证明 WorkBuddy 原生可用交互面，再冻结合同，然后才允许实现、装配、official 实机验收、0.3.25 同路径验收和最终业务/推广收口。每步完成后必须做目标回归审计和独立零写审查；任一步出现模型技术编排、第二控制面、直接 fallback 冒充 Shell 成功或证据不足，立即停止。
 
 The A7 formal result remains limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only state closeout; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The audit result was independently reviewed and formally promoted by ordinary fast-forward at `4727c5efda6ae53194ff2c16dd224c67178e8d8d` with successful CI run `32615371879`; the original Phase A task worktree and local/remote task branches were cleaned. This closeout uses `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`; both the A7 `NOT_AUTHORIZED` value and the later B01-only authorization are historical. Current authority is `PAUSED_BY_OWNER / NO_ACTIVE_PRODUCT_EXECUTION` in the 2026-08-24 rebaseline section above.
+
+## 新任纠偏执行路线候选守卫（2026-08-24）
+
+本节只是在 `codex/v2-correction-execution-plan-audit1` 上等待审查和 Owner 推广决定的候选。它不因被提交、推送或 Reviewer 通过而成为正式 authority，也不授权任何产品执行。完整事实、逐项裁决、21 字段合同、十问记录和全部追踪矩阵只在 `docs/workbuddy/v2/TASK-REGISTER.md` 末尾维护；本文件只提供路由守卫。
+
+Append-only precedence：本候选未进入正式远端前，正式分支中的 C 路线仍只是 `PAUSED_BY_OWNER` 的既有候选且没有执行授权；一旦 Owner 批准并以 ordinary fast-forward 将本候选推广到正式 ref，本文件及其他五份 authority doc 中所有较早的 C01-C07 “current/next/only” 字段立即成为历史，不得继续路由。之后唯一 planning authority 是本节与 TASK-REGISTER 最后同名节的 D01-D08；D01 仍需另一次 Owner 明确授权。
+
+```text
+planning_base: 5e8c7c1b1bf59d284996e16ff5aeea8ce55c614c / tree 829d506de0ca7e256eff9338dd33ec773d150155
+product_code_baseline: 6457d475ee43b291c7ac34ad42f9f48aaaaa1390 / tree d296e4ab98f8d6908e03360bea7d9c04b8ea06cc
+candidate_branch: codex/v2-correction-execution-plan-audit1
+candidate_effect: DOCS_ONLY / NOT_RUN_DOCS_ONLY
+execution_authority: NONE
+current_product_task: NONE
+C01_C07: SUPERSEDED_CANDIDATE / NEVER_EXECUTE
+candidate_route: D01 -> D02 -> D03 -> D04 -> D05 -> D06 -> D07 -> D08
+promotion_condition: INDEPENDENT_ZERO_WRITE_APPROVE + OWNER_PLAN_PROMOTION_APPROVAL + LIVE_FORMAL_REF_CONTAINS_CANDIDATE
+first_execution_condition: ABOVE_PROMOTION_COMPLETE + SEPARATE_OWNER_D01_AUTHORIZATION
+```
+
+候选核心边界：WorkBuddy 是唯一 Agent、对话主体和生产决策者；它按 exact Guide、用户可选 manifest、Stage/meta Skills、Reviewer、Checkpoint 与 Tool Registry 推进完整流程。Skill 必须与 Package 字节无关，Package identity、hash、path、environment 和 binding 对模型不可见，由版本化 Installer 与 Shell 管理。Shell 只提供逻辑权威资源读取、项目/检查点、preflight、registry tool 执行和机械结果传递；每次调用只能完成一个有界机械 operation，不能决定 Pipeline、Stage、Review、Provider、Renderer 或媒体内容，也不能把 whole request 压成一个 child。
+
+严格顺序及目的：`D01` 先以无 Package 的临时 probe 证明真实 WorkBuddy 原生资源/脚本面；`D02` 只按该证据冻结合同；`D03` 实现最小语义 Shell/Skill/adapter；`D04` 把 Installer 从 D 盘临时证明变成版本化产品；`D05` 生成 fresh official/GK assemblies 与同一 Package-agnostic Skill ZIP；`D06` 用 official `cd9f3c1f` 做两次完整本地成片 control，且禁止 `framework-smoke`；`D07` 保持所有非 Package 输入/方法不变，只切换到 Golden Key `0.3.25` 的 immutable Package-owned Guide/manifest/Stage/tool/Pipeline authority 与其 derived binding，WorkBuddy 按各自 Package Guide 选正确用户 Pipeline；`D08` 做真实门店业务验收和 closeout 候选。规划推广、逐任务结果推广、D08 后项目 closeout/cleanup 是三个不同 Owner 闸门。
+
+任一步都必须从届时最新正式 HEAD 建立独立分支/worktree，由不同的 Worker 与零写 Reviewer 完成，并逐题通过 TASK-REGISTER 的十问 `EXECUTION_GATE`。`NOT_PROVED`、证据层混淆、模型技术路由、直接 fallback、验收期修复或下游 repair window 都会阻断当前任务及后续任务。

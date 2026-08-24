@@ -522,7 +522,7 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 
 ### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] A7 最小纠偏路径与边界
 
-A7 当时的 B01-B07 任务链及 21 字段仅作历史 provenance，已无执行效力。当前唯一计划是本文件末尾及 TASK-REGISTER 末尾的 C01-C07。
+A7 当时的 B01-B07 任务链及 21 字段仅作历史 provenance，已无执行效力。随后一轮当时的唯一候选是 C01-C07；D 路线候选正式推广后，该句只保留历史时序。
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（`C:\Users\blazi\.codex\worktrees\aef5\...`、`C:\Users\blazi\.codex\worktrees\df76\...`，均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只作历史登记；A7 不合并、复制、提交或删除。
 
@@ -550,7 +550,7 @@ b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
 
-## 重基线后的产品宪章（2026-08-24）
+## [HISTORICAL / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED] 重基线后的产品宪章（2026-08-24）
 
 项目唯一目标是让普通用户在 WorkBuddy 中用自然语言稳定运行完整 OpenMontage 原生生产流程。WorkBuddy 是唯一 Agent、唯一对话主体和唯一生产决策者；official Guide、Pipeline manifest、Stage Director Skill、Reviewer、Checkpoint 与 Tool Registry 是生产权威。Shell 只做六模块支持，不以安全、确定性或“一个入口”为理由接管生产编排。
 
@@ -569,4 +569,30 @@ natural-language user request
 
 禁止：第二 Agent/Director/FSM/Supervisor/Router/MCP 主链；让模型拼完整 transport JSON、hash、schema、绝对路径或环境合同；让模型写辅助脚本、读 Shell 源码或临场诊断才能启动；把一次固定 child/一次 receipt 当作整个 OpenMontage Agent-first 流程；把 WorkBuddy 直接生成文件当作 Shell/OpenMontage 成功；在 Shell 处理 Provider、Renderer 或媒体创意逻辑。
 
-Phase B 当前为 `PAUSED_BY_OWNER`。A0-A7 与 B01-B04 的重裁决及未来 C01-C07 任务合同以 TASK-REGISTER 末尾重基线记录为准；原 `A0-A6_APPROVED` 只作历史自述，任何旧计划冲突字段不再授权执行。
+该历史节记录 Phase B 当时为 `PAUSED_BY_OWNER`，并曾把 C01-C07 作为未来候选；D 路线候选正式推广后，以 TASK-REGISTER 最后同名节为唯一 planning authority。原 `A0-A6_APPROVED` 只作历史自述，任何旧计划冲突字段不再授权执行。
+
+## 新任纠偏产品宪章候选（2026-08-24）
+
+本候选进一步废止 C01-C07 的执行资格；在独立零写 Reviewer 通过、Owner 批准推广且正式远端包含候选前，它只是一份规划建议。即使推广完成，也仍须由 Owner 单独授权 D01；规划批准不是执行批准。
+
+一旦本候选被正式推广，本文件所有更早的 C01-C07 `current/next/only` 口径只作历史；D01-D08 是唯一 planning route。未推广前，本候选没有 authority；两种状态都不授权产品执行。
+
+唯一产品承诺不变：普通用户只在 WorkBuddy 中表达想要的业务结果；WorkBuddy 是唯一 Agent、唯一对话主体和唯一生产决策者；OpenMontage Guide、用户 Pipeline manifest、Stage Director/meta Skills、Reviewer、Checkpoint 与 Tool Registry 共同构成生产权威；最终用真实 WorkBuddy、真实自然语言、真实工具、完整可播放视频和独立业务验收证明结果。
+
+候选最小架构为：
+
+```text
+ordinary business request
+ -> one Package-agnostic WorkBuddy Skill and one conversation
+ -> Installer-managed, model-invisible Package/Shell binding
+ -> verified bounded Shell session
+ -> WorkBuddy reads exact Guide, selected user manifest and required Stage/meta Skills
+ -> WorkBuddy decides pipeline, stage, review, checkpoint and tool actions
+ -> one bounded mechanical operation per Shell call
+ -> identity-bound status/receipt/Artifact facts
+ -> WorkBuddy continues the official flow and presents the video
+```
+
+“一个入口”只表示一个用户 Skill/对话入口，不表示一个 child 完成 whole request。Skill 不得包含 Package identity/hash/path/environment；Installer 负责形成版本化产品、immutable assembly、Registration/Activation/Locator 与 hidden binding。Shell 可以核验 identity、logical resource scope 与 manifest/Stage tool allowlist，但不得决定调用顺序、内容或创意。`framework-smoke` 是 framework-only pipeline，不得作为 D06 用户 control。
+
+严格最小路线为 `D01 -> D02 -> D03 -> D04 -> D05 -> D06 -> D07 -> D08`。D06 与 D07 都必须各自两次完成本地可播放视频；D07 保持 Skill、Shell、Installer、client、model、brief、fixture 与方法不变，只允许 exact Package switch 直接带来的 Package-owned Guide/manifest/Stage/meta/tool/Pipeline 语义和 derived binding 差异，WorkBuddy 不被强制选择相同 Pipeline ID。D08 才处理真实门店业务。完整 21 字段及逐任务补充合同、八阶段/十一步/T1-T12/R01-R08/23项交付物映射和十问证据以 TASK-REGISTER 的同名候选节为准。

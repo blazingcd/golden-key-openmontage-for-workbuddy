@@ -949,7 +949,7 @@ openmontage_0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（`86a7902465d8e215e0830b9640e7222d7c7f5188`，含 `9b8ebb2`、`8d4461d`、`86a7902`）为 `SUPERSEDED_WITH_VALID_REASON / PRESERVE_HISTORY / DO_NOT_MERGE / DO_NOT_DELETE`。它把 assembled Package 对齐成 Git checkout 的方向不属于当前合同；需要的安全点只能在另行授权下按当前模型重做。两个 dirty detached worktree `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`、`C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）仅登记，不复制、不提交、不回收、不删除。
 
-A7 当时的纠偏计划为 `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`；其 21 字段合同只保留为历史 provenance，已无执行效力。当前唯一计划是末尾重基线的 C01-C07。
+A7 当时的纠偏计划为 `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`；其 21 字段合同只保留为历史 provenance，已无执行效力。随后一轮当时的唯一候选是 C01-C07；若本文 D 路线候选正式推广，该句只记录历史时序，不再提供路由。
 
 本 Phase A 状态镜像只涉及六个既有权威文件，保持 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY`，不触碰产品代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation 或 DataRoot。A7 审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口提交使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，避免自引用 hash。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。上方 Phase A 镜像中的 `NOT_AUTHORIZED` 与下方 B01-only 镜像都只作历史；当前权威是 2026-08-24 重基线的 `PAUSED_BY_OWNER`。
 
@@ -975,7 +975,7 @@ b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
 
-## 当前状态：Phase B 已暂停并完成方案重基线候选（2026-08-24）
+## [HISTORICAL / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED] 当前状态：Phase B 已暂停并完成方案重基线候选（2026-08-24）
 
 ```text
 current_authority: V2-PROJECT-ARCHITECTURE-RECOVERY-PLAN-REBASELINE-AUDIT1
@@ -988,9 +988,35 @@ provider_or_media_change: 0
 formal_baseline: 6457d475ee43b291c7ac34ad42f9f48aaaaa1390 / tree d296e4ab98f8d6908e03360bea7d9c04b8ea06cc
 official_input: cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree 6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / DETACHED_CLEAN
 golden_key_input: 73cab67322451601a824875c0e426067d736dd44 / tree 29231e0464fa4bc7533c1928415849e9b3a48e7c / DETACHED_CLEAN
-next_active_task: NONE / C01_REQUIRES_OWNER_AUTHORIZATION
+historical_next_active_task: NONE / C01_REQUIRES_OWNER_AUTHORIZATION / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED
 ```
 
 真实裁决：原 `A0-A6_APPROVED` 聚合状态降级为历史自述，不再是当前权威判断。A0 的精确基线/分支接管事实可保留，但当前仓库没有逐任务 Reviewer 证据；A1 的目标重建正确但原强制追踪矩阵缺失，本重基线已在 TASK-REGISTER 逐项补齐；A2 原先没有审清遗留 Stage 2 分支内的 Windows stable-handle/reparse hardening，本重基线只读分类为独立未来候选；A3 原先没有逐项裁决两个 dirty worktree，本重基线已确认其为被正式 Stage3 取代的历史计划；A4 正确把 Stage4 降为机械合同历史 PASS，却没有裁决 fixed child 能否支撑完整用户请求；A5 正确识别真实集成与 R02 归属问题，但继承了 A4 未解决假设；A6 首次把该未证假设明确写成错误执行计划；A7 只保留推广事实。B01 是被取代的历史合同；B02 是最早落地这一偏差的产品实现，只有机械实现事实，未达到产品目标；B03 的装配、工具链、Registration/Locator 和生命周期证据可复用，但最终 Skill/Bridge 绑定不可复用为正确方案；B04 三次均未形成 Shell 成功，直接生成的策划文档属于 `DIRECT_WORKBUDDY_FALLBACK`。
 
 正式台账在此前只记录到“B01 已授权”，而正式分支已包含 B02 代码且外部已产生 B03/B04 结果。该状态漂移由本重基线显式封闭；历史提交和证据保留，不 reset、不删除、不倒写成从未发生。
+
+## 新任纠偏执行路线候选状态（2026-08-24）
+
+优先级规则：候选未被 Owner 推广时不改变正式状态；候选经 ordinary fast-forward 进入正式 ref 后，本文件所有较早指向 C01-C07 的 `current/next/only` 字段立即降为历史，下面的 D01-D08 候选状态成为最新 planning authority，但仍保持 `execution_authority: NONE`。
+
+```text
+candidate_authority: V2-CORRECTION-EXECUTION-PLAN-AUDIT1 / NOT_FORMAL
+planning_base: 5e8c7c1b1bf59d284996e16ff5aeea8ce55c614c / tree 829d506de0ca7e256eff9338dd33ec773d150155
+product_code_baseline: 6457d475ee43b291c7ac34ad42f9f48aaaaa1390 / tree d296e4ab98f8d6908e03360bea7d9c04b8ea06cc
+candidate_branch: codex/v2-correction-execution-plan-audit1
+scope: SIX_AUTHORITY_DOCS_ONLY
+tests: NOT_RUN_DOCS_ONLY
+product_code_change: 0
+package_change: 0
+workbuddy_change: 0
+provider_or_media_change: 0
+current_product_task: NONE
+execution_authority: NONE
+old_C01_C07: SUPERSEDED_CANDIDATE / NEVER_EXECUTE
+new_route: D01 -> D02 -> D03 -> D04 -> D05 -> D06 -> D07 -> D08
+next_possible_action: OWNER_REVIEWS_PLAN_CANDIDATE
+```
+
+现行 C01-C07 不能安全续跑：C01 把 client surface probe 与产品路径混测；C04 仍把 Installer 留在 D 盘临时脚本；C05 允许用首个 Artifact 代替完整成片；C06 同时要求 Skill hash 不变又继承把 Package identity 写进 Skill 的旧合同。新候选把证据链拆成八个不可并行、不可跨越的任务：D01 client-native surface；D02 Agent-first 合同；D03 最小产品实现；D04 版本化 Installer；D05 fresh 双 assembly；D06 official 完整成片 control；D07 只切 0.3.25 的同路径完整成片；D08 真实业务与 closeout 候选。
+
+当前已证明的只包括 exact Git/Package 输入、B02 的机械代码事实、B03 的装配/生命周期方法证据和 B04 的三次负面事实。D01 surface、正确实现、版本化 Installer、fresh assemblies、official/GK 完整成片及业务 E2E 均为 `NOT_PROVED`。候选 Reviewer 只能判断规划是否完整且未偏离，不能把任何 `NOT_PROVED` 项升级为产品 PASS。

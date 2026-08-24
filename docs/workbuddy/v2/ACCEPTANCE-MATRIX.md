@@ -651,7 +651,7 @@ b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
 
-## 重基线验收矩阵（2026-08-24）
+## [HISTORICAL / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED] 重基线验收矩阵（2026-08-24）
 
 | 对象 | 历史事实 | 当前裁决 | 可复用边界 |
 |---|---|---|---|
@@ -680,3 +680,22 @@ builder_boundary: NO_FORMAL_PROMOTION
 | 证据与推广 | 每步目标回归审计、独立零写审查、exact Git/package/client evidence | 缺项、状态台账滞后、越界修补或未授权推广 |
 
 当前验收状态固定为 `PAUSED_BY_OWNER / REBASELINE_DOCS_ONLY / NO_PRODUCT_PASS`。
+
+## 新任纠偏 D01-D08 候选验收矩阵（2026-08-24）
+
+本候选正式推广后，本文件更早的 C01-C07 `current/next/only` 验收口径立即降为历史；未推广前本节不具 authority。无论哪种状态，任何 Gate 都未被执行或证明。
+
+| Gate | 必须独立证明 | 明确不能证明 | 硬失败/归属 |
+|---|---|---|---|
+| D01 native surface | 两个 fresh 普通语言 probe session；exact Skill/fixture；固定无害 operation；完整可观察结果；清理状态 | Shell、Package、产品成功 | guessed path、model helper、security bypass 或证据不全即 `BLOCKED_WORKBUDDY_SURFACE` |
+| D02 contract | D01 支持的 exact surface；Package-agnostic Skill；hidden binding；WorkBuddy-owned loop；per-operation Shell | 正确代码或 client E2E | 未证接口、whole-request child、model-visible technical binding 即 `REJECT_ARCHITECTURE` |
+| D03 implementation | 最小 allowlist；语义 inputs；resource/stage/tool validation；closed child；focused/full/CI | Installer、real WorkBuddy、完整视频 | Shell 作生产决策、技术 JSON、host-env exact-set、fallback 即 `REJECT_PRODUCT_CODE` |
+| D04 Installer | Installer 为仓库版本化产品；确定性装配/迁移/回滚/卸载；private toolchain；不可变 Package | fresh final assembly 或 client success | 只存在临时脚本、修改 Package、Skill 被 stamp 即 `REJECT_INSTALLER` |
+| D05 assemblies | fresh official/GK roots、Lock/hash、Registration lifecycle；同一 Package-agnostic Skill ZIP；零 Package 写入 | WorkBuddy/视频成功 | 旧状态复用、Skill 字节不同、binding 暴露给模型即 `REJECT_ASSEMBLY` |
+| D06 official control | exact `cd9f3c1f`；两次普通提示；用户 Pipeline；完整 Guide/Stage/tool/review/checkpoint/video lineage；playable local video | GK 或真实门店质量 | `framework-smoke`、首个 Artifact 止步、direct fallback、验收期修复即 `INCOMPLETE_OFFICIAL` |
+| D07 GK comparison | exact `73cab673`；D06 非 Package 输入逐字节不变；只换 immutable Package-owned authority 与 derived binding；每个 Package 下由 WorkBuddy 按其 Guide 选择正确用户 Pipeline；两次完整成片 | 业务质量或规模 | 任一非 Package 第二变量、强制 Pipeline ID 相同、0.3.24、Package mutation、证据复用即 `INCOMPLETE_GK` |
+| D08 business/closeout | 普通门店请求、正确 GK Pipeline、distinct human/provider/cost gates、portrait 视频、业务验收、六文档 closeout 与 exact cleanup manifest | 正式推广或全场景规模 | 技术提示、Shell 媒体修补、未授权花费、假 PASS、推广/删除即 `REJECT_CLOSEOUT` |
+
+每个 Gate 还必须同时满足对应 21 字段与逐任务补充合同，并在实际执行后逐题通过十问 `EXECUTION_GATE`。未来 commit/tree、client build 或 evidence manifest 不能预先伪造，必须标为 `NOT_PROVED_FUTURE_INPUT` 并在接管时解析为完整 identity，否则任务不启动。规划中的未知事实只能作为当前任务的 fail-closed 输出，不能预写为 PASS；执行中的任何所需事实为 `NOT_PROVED` 都阻断当前 Gate 和下游。Worker 与 Reviewer 必须不同，Reviewer 零写；失败回到 named owner，下一任务不是修复窗口。
+
+当前候选状态是 `PLAN_CANDIDATE_ONLY / NOT_RUN_DOCS_ONLY / NO_PRODUCT_PASS / NO_EXECUTION_AUTHORITY`。Reviewer 通过只能证明上述验收设计未发现 P0/P1，不证明任何 D Gate 已完成。

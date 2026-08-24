@@ -256,15 +256,15 @@ b02_b07: BLOCKED_BY_CHAIN
 builder_boundary: NO_FORMAL_PROMOTION
 ```
 
-## 纠偏重基线防漂移守卫（2026-08-24）
+## [HISTORICAL / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED] 纠偏重基线防漂移守卫（2026-08-24）
 
 ```text
 phase_b: PAUSED_BY_OWNER
 execution_authority: NONE
-only_next_candidate: C01_WORKBUDDY_NATIVE_INTERACTION_PROOF
+historical_only_next_candidate: C01_WORKBUDDY_NATIVE_INTERACTION_PROOF / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED
 authorization_rule: OWNER_EXPLICIT_PER_TASK
 review_rule: POST_STEP_GOAL_AUDIT + INDEPENDENT_ZERO_WRITE_REVIEW
-promotion_rule: ONLY_AFTER_C07 + SEPARATE_OWNER_APPROVAL + ORDINARY_FAST_FORWARD
+historical_promotion_rule: ONLY_AFTER_C07 + SEPARATE_OWNER_APPROVAL + ORDINARY_FAST_FORWARD / SUPERSEDED_WHEN_D_ROUTE_CANDIDATE_IS_FORMALLY_PROMOTED
 ```
 
 每个未来任务开始前必须重读最初 V2 handoff 和 exact official `AGENT_GUIDE.md`；结束后必须回答五个问题：普通用户是否仍只说业务需求；WorkBuddy 是否仍是唯一 Agent 和决策者；是否真实读取并遵守 Guide/manifest/Stage Skills；Shell 是否仍只是六模块机械支持；本步证据是否足以证明所声明的状态。任一答案为否或未证明，立即停止，不能用下一步补证或修复。
@@ -283,3 +283,34 @@ promotion_rule: ONLY_AFTER_C07 + SEPARATE_OWNER_APPROVAL + ORDINARY_FAST_FORWARD
 不得 reset、删除或改写 A7/B01-B04 历史。旧合同可保留为 provenance，但不得继续提供执行授权。
 
 禁止再以 `A0-A6_APPROVED` 这一聚合字符串替代逐项证据。任何未来纠偏计划必须分别给出 A0-A7 的事实、未证明项、处置与因果影响；Reviewer 只能批准 exact 候选内容，不能把“文档内部一致”升级为“产品目标已经证明正确”。
+
+## 新任纠偏路线候选防漂移守卫（2026-08-24）
+
+Append-only precedence：本候选未正式推广时不改变正式 ref 中暂停的 C 路线；本候选经 Reviewer、Owner plan-promotion approval、ordinary fast-forward 和远端对象核验后，所有较早的 C01-C07 `current/next/only/promotion_rule` 字段立即成为历史，禁止再用于路由。最新 D 路线仍无执行 authority，D01 必须另获授权。
+
+```text
+candidate_status: NOT_FORMAL / DOCS_ONLY
+execution_authority: NONE
+current_product_task: NONE
+forbidden_old_route: C01 -> C07 / SUPERSEDED_CANDIDATE / NEVER_EXECUTE
+only_candidate_route: D01 -> D02 -> D03 -> D04 -> D05 -> D06 -> D07 -> D08
+plan_promotion_rule: REVIEWER_APPROVE + OWNER_PLAN_PROMOTION_APPROVAL + FORMAL_REF_CONTAINS_PLAN
+authorization_rule: FORMAL_PLAN_PROMOTION_THEN_OWNER_EXPLICIT_PER_TASK
+review_rule: DIFFERENT_WORKER_AND_ZERO_WRITE_REVIEWER + PLAN_GATE_OR_EXECUTION_GATE_Q1_Q10
+per_task_result_promotion_rule: EACH_D_TASK_REVIEWER_APPROVE + SEPARATE_OWNER_RESULT_PROMOTION_APPROVAL + ORDINARY_FAST_FORWARD
+project_closeout_promotion_cleanup_rule: ONLY_AFTER_D08 + SEPARATE_OWNER_APPROVAL + ORDINARY_FAST_FORWARD + MANIFEST_BOUNDED_CLEANUP
+```
+
+新的硬停止条件：
+
+- D01 未以无 Package、无产品代码的 probe 证明 native surface，就开始冻结接口或修改代码；
+- Skill ZIP 因 official/GK 切换而改变，或任何 Package identity/hash/path/environment 出现在模型可见 Skill/提示中；
+- Installer 继续只存在 D 盘临时脚本、evidence helper 或一次性 assembly，而不是版本化本仓库产品；
+- Shell/adapter 决定 Pipeline、Stage、调用顺序、Reviewer、Checkpoint、Provider、Renderer 或媒体内容；
+- D06 使用 `framework-smoke`、只到 receipt/首个 Artifact、没有两次完整本地成片，或把 D07/D08 当作修复窗口；
+- D07 除 Package-derived root/Registration/hidden binding/resource identity 外改变任何 control 输入、Skill 字节或方法；
+- D08 在业务验收中修代码、补媒体逻辑、静默使用 Provider/费用，或同时执行推广/清理；
+- 把 Reviewer 的规划批准写成产品 PASS、D01 授权或正式 authority；
+- 任一任务没有 exact input commit/tree、允许路径、正反测试、named owner、零写 Reviewer、十问结果及下游阻断条件。
+
+每一步开始时重读届时正式 `AGENT_GUIDE.md`、TASK-REGISTER、原始 V2 handoff 和 exact external authority；只能从最新正式 HEAD 建新分支/worktree。每一步结束先记录事实与十问 `EXECUTION_GATE`，再由独立 Reviewer 审查 exact 候选；任何 repair 必须留在当前任务并重审，不得转嫁下游。D08 之后仍只生成 promotion/cleanup manifest，实际 fast-forward、远端/CI 核验和限定清理须另获 Owner 授权。

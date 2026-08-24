@@ -281,9 +281,9 @@ Evidence1 只使用腾讯/WorkBuddy官方公开资料和仓库已有静态证据
 
 后续另行授权的受控客户端任务已在 WorkBuddy `5.3.13` 执行：D盘隔离根中的唯一无副作用 candidate Skill 通过客户端默认安全检测导入；客户端可见合同确认文件夹或ZIP包含`SKILL.md`，Markdown YAML含name/description；新任务的`/`入口显式加载 exact Skill，并在明确选择`Hy3`后返回`T1_CONTROLLED_NOOP_OK`。第一次Auto结果只作为探测历史，不计入HY3验收。该证据把显式调用提升为`PROVED_CLIENT_FOR_5.3.13_SESSION`，但完整schema、物理安装位置与完整归属、全局唯一消费者，以及固定 CLI identity/envelope 与 Stage4 `launch_session_tool(...)`/`LauncherReceiptV1` 绑定仍未证明。因此历史总结果保持`T1_CLIENT_EVIDENCE_INCOMPLETE`，不得将其改写成 CLI 禁止或 CLI 可用；不得运行Provider、媒体、最终Package或Stage4真实spawn，也不得启动Stage5实现。
 
-#### T1 Skill+CLI合同重新评估（当前候选）
+#### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] T1 Skill+CLI合同重新评估
 
-本节是当前 T1 裁决，优先于本章前述历史 Evidence1/客户端候选文字。最初产品目标回读为`PASS`：WorkBuddy 是唯一运行中的 Agent 和唯一用户入口；它读取已验证 Package Guide 后承担 OpenMontage 逻辑生产角色。官方资料确认 Skill 可以封装脚本/工作流，且官方连接器技术形态包含 `Skill + CLI（内置脚本）`；因此固定 CLI 不因其为 CLI 而被排除。
+本节曾是 2026-08-21 的 T1 裁决，现只保留其“CLI 本身不等于第二 Agent”的历史事实；其 fixed-CLI/fixed-child 产品合同已被 2026-08-24 重基线取代。最初产品目标仍是 WorkBuddy 作为唯一运行 Agent 和唯一用户入口，读取已验证 Package Guide 后承担 OpenMontage 逻辑生产角色。
 
 当前项目合同只允许以下单链：
 
@@ -526,11 +526,11 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（`C:\Users\blazi\.codex\worktrees\aef5\...`、`C:\Users\blazi\.codex\worktrees\df76\...`，均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只作历史登记；A7 不合并、复制、提交或删除。
 
-本 Phase A 状态镜像只包含六个现有权威文件，明确 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY` 与 A7 当时的 `Phase B NOT_AUTHORIZED`。A7 审计结果已完成用户批准、exact commit/tree/CI headSha 核验并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，原 Phase A 临时任务工作树、本地任务分支和远端任务分支已清理。当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。
+本 Phase A 状态镜像只包含六个现有权威文件，明确 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY` 与 A7 当时的 `Phase B NOT_AUTHORIZED`。A7 审计结果已完成用户批准、exact commit/tree/CI headSha 核验并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，原 Phase A 临时任务工作树、本地任务分支和远端任务分支已清理。下方 B01-only 只作历史，当前权威是 2026-08-24 重基线的 `PAUSED_BY_OWNER`；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。
 
-## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+## [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] Phase B 执行镜像：B01 已授权（2026-08-23）
 
-本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+本节只保存 2026-08-23 当时的 B01-only 授权和 package 输入，已被 2026-08-24 重基线取代，不提供当前执行授权。
 
 ```text
 phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY

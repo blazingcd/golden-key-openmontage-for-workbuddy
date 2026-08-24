@@ -570,9 +570,9 @@ candidate_status: CANDIDATE_UNTIL_INDEPENDENT_APPROVE_AND_ORDINARY_FAST_FORWARD 
 
 本候选仅修改本账本与 `PROJECT-STATE.md` 两个白名单路径；production code/test/CI/Package/Registration 变更均为 0，客户端操作为 `READ_ONLY_ONLY`，清理为 `NO_TEMP_SKILL_OR_FILES_CREATED`。结果候选仍须独立零写 Reviewer 审查并普通 fast-forward；在此之前，本节是候选结果，不改变 formal 的 `4515268d1f77211a14f22927a02344b578527c4a` 权威。若审查与普通 FF 完成，Evidence2 授权历史才标为 consumed candidate/result，formal live 的 `next_authorized_task` 与 `pending_next_authorized_task` 均保持 `NONE`。
 
-## Stage 5 T1 Skill+CLI合同重新评估候选（2026-08-21）
+## [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] Stage 5 T1 Skill+CLI合同重新评估候选（2026-08-21）
 
-本节是当前 T1 的 superseding docs-level result。它保留此前 Evidence1/Evidence2 的历史证据和原始裁决，但纠正“零 CLI 直调是必要条件”的错误解释。最初产品目标回读为 `PASS`：Tencent WorkBuddy 是唯一运行中的 Agent 和唯一用户入口；读取已验证 Package Guide 后承担 OpenMontage 逻辑生产角色。
+本节曾是 2026-08-21 的 superseding docs-level result，现已被 2026-08-24 重基线取代；它只保留此前 Evidence1/Evidence2 的历史证据，以及“CLI 本身不等于第二 Agent”的窄结论。最初产品目标仍是 Tencent WorkBuddy 作为唯一运行中的 Agent 和唯一用户入口，读取已验证 Package Guide 后承担 OpenMontage 逻辑生产角色。
 
 ```text
 task_id: V2-S5-T1-SKILL-CLI-CONTRACT-REASSESSMENT1
@@ -943,7 +943,7 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 openmontage_0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 ```
 
-正确的真实顺序是 `Registration identity validation -> Locator 返回已验证 PackageRoot/Guide identity/hash -> WorkBuddy 读取 Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy 作生产决策 -> 唯一固定 CLI transport -> 确定性 fixed child/tool -> LauncherReceipt 机械事实 -> WorkBuddy 展示结果`。Guide-read、identity/hash 和顺序必须由独立可见的 WorkBuddy/client 证据证明；模型自报、child 自报、普通日志、静态测试、CI 或 receipt 单独不能替代。最终 Package 必带 Node.js `22+`、npm、npx；Stage 3 不探测、下载或替换 Node/npm/npx。
+正确的真实顺序是 `Registration identity validation -> Locator 返回已验证 PackageRoot/Guide identity/hash -> WorkBuddy 读取 Guide/Manifest/Pipeline/Stage Skills -> WorkBuddy 作生产决策 -> 隐藏的 bounded Shell transport -> WorkBuddy 按需发起一个或多个独立 deterministic package-local tool calls -> 机械 receipt/status/Artifact facts -> WorkBuddy 继续 review/checkpoint 并展示结果`。每个 tool call 内最多一个 fixed child；不得把整项用户请求锁成一个 child。Guide-read、identity/hash 和顺序必须由独立可见的 WorkBuddy/client 证据证明；模型自报、child 自报、普通日志、静态测试、CI 或 receipt 单独不能替代。最终 Package 必带 Node.js `22+`、npm、npx；Stage 3 不探测、下载或替换 Node/npm/npx。
 
 ### 残留对象与纠偏执行边界
 
@@ -951,11 +951,11 @@ openmontage_0_3_25: IMMUTABLE / NO_WORKBUDDY_ADAPTER_EMBEDDING
 
 纠偏计划严格串行：`B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`。B04 先用固定 official 对照组，B05 只替换为 0.3.25 并保持 Shell/Installer/Skill/Launcher/请求/验收方法不变；B06 唯一下游为 `HANDOFF_TO_B07_ONLY`；B07 后唯一推广动作是 `PROMOTE_AND_CLEANUP`，且仅允许普通 `ff-only`，禁止 merge/rebase main、force-push。旧 R03-R05 被 B02/B03 `SUPERSEDED_WITH_VALID_REASON`，禁止并行。B01-B07 的完整 21 字段合同在 TASK-REGISTER 的 Phase A 账本中。
 
-本 Phase A 状态镜像只涉及六个既有权威文件，保持 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY`，不触碰产品代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation 或 DataRoot。A7 审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口提交使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，避免自引用 hash。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。上方 Phase A 镜像中的 `NOT_AUTHORIZED` 是历史快照；当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准。
+本 Phase A 状态镜像只涉及六个既有权威文件，保持 `DOCS_ONLY / ZERO_PRODUCT_STATE_CHANGE / NOT_RUN_DOCS_ONLY`，不触碰产品代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation 或 DataRoot。A7 审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口提交使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，避免自引用 hash。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；旧 Stage 2 分支与两个 dirty detached worktree 继续保留。上方 Phase A 镜像中的 `NOT_AUTHORIZED` 与下方 B01-only 镜像都只作历史；当前权威是 2026-08-24 重基线的 `PAUSED_BY_OWNER`。
 
-## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+## [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] Phase B 执行镜像：B01 已授权（2026-08-23）
 
-本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+本节只保存 2026-08-23 当时的 B01-only 授权和 package 输入，已被 2026-08-24 重基线取代，不提供当前执行授权。
 
 ```text
 phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
@@ -991,6 +991,6 @@ golden_key_input: 73cab67322451601a824875c0e426067d736dd44 / tree 29231e0464fa4b
 next_active_task: NONE / C01_REQUIRES_OWNER_AUTHORIZATION
 ```
 
-真实裁决：原 `A0-A6_APPROVED` 聚合状态降级为历史自述，不再是当前权威判断。A0 的精确基线/分支接管事实可保留，但当前仓库没有逐任务 Reviewer 证据；A1 的目标重建正确但强制追踪矩阵不完整；A2 没有审清遗留 Stage 2 分支内可选择性重做的 Windows stable-handle/reparse hardening；A3 没有逐项裁决两个 dirty worktree 的内容；A4 正确把 Stage4 降为机械合同历史 PASS，却没有裁决 fixed child 能否支撑完整用户请求；A5 正确识别真实集成与 R02 归属问题，但继承了 A4 未解决假设；A6 首次把该未证假设明确写成错误执行计划；A7 只保留推广事实。B01 是被取代的历史合同；B02 是最早落地这一偏差的产品实现，只有机械实现事实，未达到产品目标；B03 的装配、工具链、Registration/Locator 和生命周期证据可复用，但最终 Skill/Bridge 绑定不可复用为正确方案；B04 三次均未形成 Shell 成功，直接生成的策划文档属于 `DIRECT_WORKBUDDY_FALLBACK`。
+真实裁决：原 `A0-A6_APPROVED` 聚合状态降级为历史自述，不再是当前权威判断。A0 的精确基线/分支接管事实可保留，但当前仓库没有逐任务 Reviewer 证据；A1 的目标重建正确但原强制追踪矩阵缺失，本重基线已在 TASK-REGISTER 逐项补齐；A2 原先没有审清遗留 Stage 2 分支内的 Windows stable-handle/reparse hardening，本重基线只读分类为独立未来候选；A3 原先没有逐项裁决两个 dirty worktree，本重基线已确认其为被正式 Stage3 取代的历史计划；A4 正确把 Stage4 降为机械合同历史 PASS，却没有裁决 fixed child 能否支撑完整用户请求；A5 正确识别真实集成与 R02 归属问题，但继承了 A4 未解决假设；A6 首次把该未证假设明确写成错误执行计划；A7 只保留推广事实。B01 是被取代的历史合同；B02 是最早落地这一偏差的产品实现，只有机械实现事实，未达到产品目标；B03 的装配、工具链、Registration/Locator 和生命周期证据可复用，但最终 Skill/Bridge 绑定不可复用为正确方案；B04 三次均未形成 Shell 成功，直接生成的策划文档属于 `DIRECT_WORKBUDDY_FALLBACK`。
 
 正式台账在此前只记录到“B01 已授权”，而正式分支已包含 B02 代码且外部已产生 B03/B04 结果。该状态漂移由本重基线显式封闭；历史提交和证据保留，不 reset、不删除、不倒写成从未发生。

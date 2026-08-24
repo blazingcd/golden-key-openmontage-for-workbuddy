@@ -235,11 +235,11 @@ Evidence1 的正式候选基线是 `44d89625c1fd71d07d1173e18681e64e7459cec2`、
 
 客户端候选五项未全部闭合，故历史客户端结果仍为`T1_CLIENT_EVIDENCE_INCOMPLETE`；它不能裁决固定 CLI 桥梁可用或不可用。临时Skill已由用户手动卸载，客户端核验已安装技能为0；精确D盘隔离根已移入Windows回收站且源路径不存在。该候选不是产品PASS或实现授权；独立Reviewer批准并普通fast-forward前，也不是正式仓库交付。
 
-#### T1 Skill+CLI合同重新评估（当前候选）
+#### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] T1 Skill+CLI合同重新评估
 
 本节 supersede 上述历史候选中“零 CLI 才能成立”的解释。最初产品目标回读为`PASS`：腾讯 WorkBuddy 是唯一运行中的 Agent 和唯一用户入口；读取已验证 Package Guide 后承担 OpenMontage 逻辑生产角色。CLI 只有在一个 WorkBuddy Skill 内作为固定、内部、单消费者 transport adapter 时才可进入候选；它不是用户第二入口、并行控制面或失败兜底。
 
-官方支持层与本项目合同层分开裁决：腾讯官方资料只需证明 WorkBuddy 的 Skill/脚本/CLI 能力形态；固定 CLI 的名称、身份、输入输出 envelope、Stage4 API 调用和 receipt 映射属于本项目自己的内部桥梁合同，不要求腾讯页面定义本仓库 Python API。官方资料、精确 URL、标题和缺口以 `TASK-REGISTER.md` 的当前 T1 评估矩阵为准。
+本节曾把官方支持层与项目内部 fixed-CLI 合同层分开裁决；该区分本身可作历史事实，但具体 fixed-CLI/fixed-child 产品合同已被 2026-08-24 重基线取代。当前接口裁决以 `TASK-REGISTER.md` 末尾的重基线矩阵为准。
 
 当前冻结边界如下：
 
@@ -627,11 +627,11 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 | B06 | 五类 Stage 5 证据齐全且独立审查通过 | 只允许 `HANDOFF_TO_B07_ONLY`，不得推广/清理/启动 Stage 6 |
 | B07 | 普通自然语言 portrait 业务 Artifact 与独立业务验收 | Core/业务 gate 未过则不推广；Shell 不补媒体逻辑 |
 
-旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只登记、物理保留，不合并、不复制、不删除。本 Phase A 状态镜像保持 docs-only 六文件范围与 `NOT_RUN_DOCS_ONLY`；审计结果已正式推广，上方 Phase A 镜像中的 `NOT_AUTHORIZED` 是历史快照，当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准。
+旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）和两个 dirty detached worktree（均 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）只登记、物理保留，不合并、不复制、不删除。本 Phase A 状态镜像保持 docs-only 六文件范围与 `NOT_RUN_DOCS_ONLY`；审计结果已正式推广，上方 `NOT_AUTHORIZED` 与下方 B01-only 都只作历史，当前权威是 2026-08-24 重基线的 `PAUSED_BY_OWNER`。
 
-## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+## [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] Phase B 执行镜像：B01 已授权（2026-08-23）
 
-本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+本节只保存 2026-08-23 当时的 B01-only 授权和 package 输入，已被 2026-08-24 重基线取代，不提供当前执行授权。
 
 ```text
 phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
@@ -656,7 +656,7 @@ builder_boundary: NO_FORMAL_PROMOTION
 | 对象 | 历史事实 | 当前裁决 | 可复用边界 |
 |---|---|---|---|
 | Phase A A0 | exact formal base、独立分支/worktree 与残留对象被记录 | `KEEP_PROCEDURAL_FACTS / REVIEW_EVIDENCE_GAP` | 保留 Git 身份；不能推导 A1-A6 正确 |
-| Phase A A1 | 唯一 WorkBuddy Agent、六模块 Shell、自然语言目标重建正确 | `KEEP_TARGET / INCOMPLETE_DELIVERABLE` | 必须补原八阶段/十一步/T1-T12/R01-R08逐项追踪 |
+| Phase A A1 | 唯一 WorkBuddy Agent、六模块 Shell、自然语言目标重建正确；原 formal 缺完整矩阵，本重基线已在 TASK-REGISTER 补齐 | `KEEP_TARGET / ORIGINAL_INCOMPLETE_CLOSED_BY_REBASELINE` | 后续必须按新矩阵逐项验收，不得恢复旧 fixed-child 计划 |
 | Phase A A2 | Stage 1/2 薄 Shell 与临时 Package 证据缩小正确 | `PARTIAL_KEEP` | 遗留 Git-checkout 分支整体不合入；其中 stable-handle/reparse 思路仅列独立 hardening 候选，不进入本纠偏主链 |
 | Phase A A3 | Optional Remotion/HyperFrames 不由 Shell 选型的边界正确 | `KEEP_WITH_NARROWING / AUDIT_GAP_CLOSED_NOW` | 两个 dirty worktree 是旧 Stage3 计划迭代，已被正式 Stage3 实现/合同取代；继续只读保留 |
 | Phase A A4 | 区分机械合同 PASS 与产品架构 PASS 是对的 | `HISTORICAL_PASS_ONLY / CORE_QUESTION_UNRESOLVED` | `launch_session_tool` 最多保留为一次工具调用原语；不得把一次 spawn 当作完整用户请求 |

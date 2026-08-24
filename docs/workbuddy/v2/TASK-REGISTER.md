@@ -2055,9 +2055,9 @@ side_effects: NO_CLIENT / NO_PACKAGE_MATERIALIZATION / NO_REGISTRATION / NO_STAG
 review_state: PENDING_INDEPENDENT_REVIEW / DOCS_ONLY_CANDIDATE
 ```
 
-## 项目级架构纠偏审计 Phase A 账本镜像（A7 docs-only 已正式推广，2026-08-22）
+## [HISTORICAL / CONTENT_SUPERSEDED_BY_2026-08-24_REBASELINE] 项目级架构纠偏审计 Phase A 账本镜像（A7 docs-only 已正式推广，2026-08-22）
 
-本节是 A0-A6 经独立零写 Reviewer 批准后的唯一项目级纠偏审计结论与最小执行方案。A7 docs-only 结果已正式推广；它不是 Stage 5 产品完成，也不是 Phase B 授权；既有历史记录和历史 PASS 不被改写。状态镜像只涉及六个现有权威文件，零产品状态变化。
+本节保存 A0-A7 当时经审查和推广的历史对象、结论与 B01-B07 方案；其内容权威已由本文末 2026-08-24 重基线取代，但 Git/CI/推广事实和历史 PASS 不被改写。它不是当前产品任务授权。
 
 ```text
 task_id: V2-PROJECT-ARCHITECTURE-RECOVERY-PHASE-A1
@@ -2315,11 +2315,11 @@ a7_state_closeout: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
 phase_b: NOT_AUTHORIZED / A7_HISTORICAL_SNAPSHOT
 ```
 
-A7 审计结果已完成用户批准、exact commit/tree/CI headSha 核验和普通 fast-forward 推广；原 Phase A 临时任务工作树、本地任务分支和远端任务分支已清理。上方 `phase_b: NOT_AUTHORIZED` 是 A7 当时的历史快照；当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准。后续纠偏任务仍须遵守 `PROMOTE_AND_CLEANUP`、普通 fast-forward、禁止 merge/rebase `main` 和 force-push 的边界，旧 Stage 2 分支与两个 dirty detached worktree 不得触碰。
+A7 审计结果已完成用户批准、exact commit/tree/CI headSha 核验和普通 fast-forward 推广；原 Phase A 临时任务工作树、本地任务分支和远端任务分支已清理。上方 `phase_b: NOT_AUTHORIZED` 与下方 B01-only 都只作历史；当前权威是 2026-08-24 重基线的 `PAUSED_BY_OWNER`。后续纠偏任务仍须遵守普通 fast-forward、禁止 merge/rebase `main` 和 force-push 的边界，旧 Stage 2 分支与两个 dirty detached worktree不得触碰。
 
-## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+## [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] Phase B 执行镜像：B01 已授权（2026-08-23）
 
-本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+本节只保存 2026-08-23 当时的 B01-only 授权和 package 输入，已被 2026-08-24 重基线取代，不提供当前执行授权。
 
 ```text
 phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY
@@ -2385,21 +2385,123 @@ Phase A 的审计完整性在 A1-A3 已出现缺口。A4 正确把 Stage4 缩为
 | 原要求 | 当前 formal 可复核结果 | 裁决 |
 |---|---|---|
 | 1-3 接管、分支/worktree、目标摘要 | exact parent/base 与目标摘要存在 | `FULFILLED_BUT_REVIEW_ARTIFACT_NOT_PRESERVED` |
-| 4 阶段谱系图 | 只有一段线性文字，没有完整图/逐项映射 | `PARTIAL` |
-| 5 完整需求追踪矩阵 | 未覆盖原八阶段、十一步、T1-T12、R01-R08 每一项 | `INCOMPLETE` |
+| 4 阶段谱系图 | 原 formal 只有线性文字；本次在下方补齐 exact 谱系和逐项映射 | `ORIGINAL_PARTIAL / CLOSED_BY_THIS_READ_ONLY_REBASELINE` |
+| 5 完整需求追踪矩阵 | 原 formal 未覆盖每一项；本次在下方补齐原八阶段、十一步、T1-T12、R01-R08 | `ORIGINAL_INCOMPLETE / CLOSED_BY_THIS_READ_ONLY_REBASELINE` |
 | 6-9 Stage1-6、保留/缩小/重做 | 有聚合 Stage disposition | `PARTIAL / TOO_COARSE` |
-| 10-12 `PackageToolDefinitionV1`、`launch_session_tool`、`workbuddy_entry_cli` 专项结论 | 没有三个独立专项裁决；关键待审假设被直接带入 B 计划 | `INCOMPLETE / A4_MISJUDGED` |
+| 10-12 `PackageToolDefinitionV1`、`launch_session_tool`、`workbuddy_entry_cli` 专项结论 | 原 formal 没有三个独立专项裁决；本次在下方逐项重裁决 | `ORIGINAL_INCOMPLETE / CLOSED_BY_THIS_READ_ONLY_REBASELINE` |
 | 13 R02 归因 | 错层归因被正确识别 | `FULFILLED_AND_RETAIN` |
-| 14 遗留 Stage2 分支 | 主方向判错成立，但有效 hardening idea 未审完 | `PARTIAL` |
-| 15 两个 dirty worktree | 只登记未裁决；本次只读比较后才确认是已被后续正式 Stage3 取代的历史候选 | `ORIGINAL_INCOMPLETE / NOW_CLOSED_READ_ONLY` |
+| 14 遗留 Stage2 分支 | 主方向判错成立；本次补齐 exact commits、hardening 证据与单独授权边界 | `ORIGINAL_PARTIAL / NOW_CLOSED_READ_ONLY` |
+| 15 两个 dirty worktree | 只登记未裁决；本次只读比较后确认是已被后续正式 Stage3 取代的历史候选 | `ORIGINAL_INCOMPLETE / NOW_CLOSED_READ_ONLY` |
 | 16 official -> same Shell -> candidate 顺序 | 已记录 | `FULFILLED_BUT_IMPLEMENTATION_ASSUMPTION_WRONG` |
 | 17-19 最小架构、任务清单、每任务 21 字段 | B01-B07 形式完整 | `FORM_COMPLETE / CONTENT_SUPERSEDED` |
-| 20 每阶段新 DoD 与下游接管 | 只有部分 gate，缺原阶段逐项 DoD | `INCOMPLETE` |
-| 21 仍需用户决策 | 未形成明确清单 | `INCOMPLETE` |
+| 20 每阶段新 DoD 与下游接管 | 原 formal 只有部分 gate；本次由下方完整 C01-C07 21 字段合同和逐项 downstream/fail-closed 字段取代 | `ORIGINAL_INCOMPLETE / CLOSED_BY_THIS_PLAN` |
+| 21 仍需用户决策 | 原 formal 未形成明确清单；本次在下方单列 | `ORIGINAL_INCOMPLETE / CLOSED_BY_THIS_PLAN` |
 | 22-23 固化白名单与是否可固化 | 六文件与可固化判断存在 | `FULFILLED_PROCEDURALLY` |
 | A0-A7 每项独立 Worker/Reviewer + 10问审核 | formal 仓库仅有 aggregate `A0-A6_APPROVED` | `NOT_INDEPENDENTLY_REPRODUCIBLE` |
 
 因此，Phase A 不能整体判为“没问题”。当前有效结论只能逐项保留，不能沿用聚合 APPROVE。
+
+### 原目标到当前对象的完整谱系
+
+```text
+ordinary_user_business_request
+  -> one WorkBuddy Agent reads exact OpenMontage Guide/manifest/Stage Skills
+  -> WorkBuddy selects pipeline and stage actions
+  -> one WorkBuddy Skill entry uses Shell support surfaces
+  -> Registration/Locator resolves an immutable installed Package
+  -> Runtime preparation exposes only verified capabilities
+  -> bounded tool execution invokes package-local registry tools as WorkBuddy decides
+  -> status/receipt/Artifact facts return without Shell interpretation
+  -> real WorkBuddy control proof
+  -> same-path Golden Key 0.3.25 proof
+  -> real business video acceptance
+```
+
+历史阶段发生过重排：原 Stage 3 Launcher 对应当前 Stage 4，原 Stage 4 Skill 对应当前 Stage 5，原 Stage 5 Runtime 对应当前 Stage 3；原 Stage 7 Installer/lifecycle 没有成为本仓库六模块产品代码，而应由 final-delivery Installer Owner 在 C04 承担。阶段改名不得让原任务消失。
+
+### 原八阶段与十一步逐项追踪
+
+| 原始项 | 当前规划/产出/证据 | 当前裁决 | 纠偏与下游 |
+|---|---|---|---|
+| Stage 1 冻结 V2 边界 | 当前 Stage 1 六模块、唯一 Agent 和分层证据合同存在 | `FULFILLED_BUT_NARROW`：目标保留，旧 fixed-child 推导废止 | 本重基线 + C02 |
+| Stage 2 Core Registration | 当前 Stage 2 Registration/Locator 有正式代码与测试；final Package 身份仍需 Installer 物化 | `PARTIAL` | C04 fresh lifecycle；不把 Installer 塞入 Shell |
+| Stage 3 Launcher | 重排为当前 Stage 4；`launch_session_tool` 机械合同通过，但 whole-request one-child 用法未证明 | `FULFILLED_BUT_NARROW` | C01 先取事实，C02/C03 冻结并实现 per-tool bounded execution |
+| Stage 4 WorkBuddy production Skill | 重排为当前 Stage 5；B02 Skill 要模型拼技术 JSON，B04 无 Shell success | `MISASSIGNED_TO_WRONG_LAYER` | C01-C03 重做入口合同与实现 |
+| Stage 5 progressive Runtime | 重排为当前 Stage 3；基础/可选能力、逐项授权与不选 Provider/Renderer 的边界有效 | `FULFILLED_AND_RETAIN` | C04 只消费，不扩张 Provider/media |
+| Stage 6 reduce CLI/MCP | MCP 不进主链正确；固定 CLI 只可作为隐藏 transport，但旧实现成为模型技术编排入口 | `PARTIAL` | C02/C03；CLI 不得成为第二入口/控制面 |
+| Stage 7 Installer/upgrade/migration | B03 有外部机械装配/lifecycle 证据，但绑定旧合同，未形成正式产品验收 | `DEFERRED_WITH_VALID_OWNER` | C04 final-delivery Installer Owner 重建 |
+| Stage 8 layered real acceptance | B04 三次均不完整；direct HTML/Markdown 不是 Shell success | `UNPROVED` | C05 official、C06 0.3.25、C07 business |
+| Step 1 架构决策/保留退出清单 | Phase A 曾完成但 A6 内容错误 | `SUPERSEDED_WITH_VALID_REASON` | 本重基线和 C02 替代 |
+| Step 2 Registration 合同 | 正式 Stage 2 机械合同/测试存在 | `FULFILLED_BUT_NARROW` | C04 以 final Package 实例复验 |
+| Step 3 Launcher 精确环境绑定 | 当前 Launcher/Bridge 有绑定，但 B02 错把整个 WorkBuddy host env 当 exact set | `PARTIAL` | C03 构造 closed child env，容忍不转发无关 host env |
+| Step 4 重写 production Skill | B02 已写但产品合同错误 | `LOST_BETWEEN_STAGES` | C01-C03 重做 |
+| Step 5 progressive Runtime | 当前 Stage 3 正式实现/测试存在 | `FULFILLED_AND_RETAIN` | C04/C05 只消费 |
+| Step 6 Installer/upgrade/rollback/migration | B03 外部 evidence 有机械价值，final binding 被取代 | `PARTIAL` | C04 重建并复验 |
+| Step 7 offline/security/fault tests | 旧测试通过的是错误 fixed-child 合同 | `FULFILLED_BUT_NARROW` | C03/C04 只对新合同重跑，不沿用产品 PASS |
+| Step 8 first real WorkBuddy Shell | B04 没有 valid receipt/OpenMontage Artifact | `UNPROVED` | C01 interaction proof，C05 official acceptance |
+| Step 9 corrected Core Release | exact Golden Key 0.3.25 已有 detached-clean release object，但未通过同路径 WorkBuddy | `DEFERRED_WITH_VALID_OWNER` | C06 one-variable switch |
+| Step 10 portrait store business acceptance | 未完成；direct策划文档不是 Shell 业务 E2E | `UNPROVED` | C07 |
+| Step 11 optional Chinese fork/MCP/more entries | 明确不是首条主链前置 | `DEFERRED_WITH_VALID_OWNER` | C07 后另行决策，不进入本计划 |
+
+### Stage 5 T1-T12 与 R01-R08 逐项追踪
+
+| 对象 | 可保留事实 | 错误/未证明 | 当前裁决与去向 |
+|---|---|---|---|
+| T1 唯一入口 | WorkBuddy Skill 导入/命中机制有客户端证据 | 固定 CLI envelope 被误当完整产品合同 | `PARTIAL` -> C01/C02/C05 |
+| T2 输入合同 | literal user message、secret-safe control separation 原则有效 | `PackageToolDefinitionV1`/hash/path/env 被暴露给模型 | `MISASSIGNED_TO_WRONG_LAYER` -> C02/C03 |
+| T3 验证顺序 | Registration/Locator/Guide fail-closed 顺序有效 | WorkBuddy 实际 Guide/manifest/Stage Skill/tool 顺序未证明 | `PARTIAL` -> C01/C05 |
+| T4 Stage4 adapter | 单次 bounded call、receipt 机械事实可保留 | one whole request = one fixed child 错误 | `FULFILLED_BUT_NARROW` -> C02/C03 |
+| T5 authorization/continuation | 授权与计划/会话绑定、拒绝不自动重试有效 | 不能让 Shell 成为授权/能力决策者 | `FULFILLED_BUT_NARROW` -> C02/C05 |
+| T6 result mapping | 机械 status/receipt 原样转交有效 | 旧闭集不能解释多次 tool/Artifact 流，真实 consumer 未证明 | `PARTIAL` -> C02/C03/C05 |
+| T7 credential privacy | allowlisted child env、禁止 chat/log/receipt 泄密有效 | B02 host-env exact-set 检查与 WorkBuddy sandbox 不兼容 | `PARTIAL` -> C03 |
+| T8 failure closure | fail-closed、无隐式 retry/replay 原则有效 | 旧分类绑死单 child/单 receipt | `FULFILLED_BUT_NARROW` -> C02/C03 |
+| T9 Package Gate | final Package/Registration/Activation/new-process Locator 才是生产门，正确 | B03 final binding 已被取代 | `PARTIAL` -> C04 |
+| T10 evidence layers | 不得用静态/CI/Skill hit 替代真实 WorkBuddy/业务证据，正确 | B01-B04 实际推进违反该原则 | `FULFILLED_AND_RETAIN` -> 每步 Reviewer + C05-C07 |
+| T11 Stage6 handoff | 优先直接复用原生 receipt/status 是合理建议 | 多 tool/Artifact 下是否足够没有 consumer evidence | `UNPROVED` -> C01/C02/C03，C05实证 |
+| T12 implementation package | 独立 Builder/Reviewer、白名单、CI、普通 FF 治理有效 | 五/六路径实现包固化了错误合同 | `SUPERSEDED_WITH_VALID_REASON` -> C03 新六路径合同 |
+| R01 entry surface | Skill 包装/上传/安装/选择命中事实保留 | 不证明 bundled execution 或 Agent-first tool flow | `FULFILLED_BUT_NARROW` -> C01 |
+| R02 Package/definition binding | final Release 和 verified registry definitions 确需绑定 | 被错归为 Package 必须提供“whole-request fixed child”；模型不应组装 definition | `MISASSIGNED_TO_WRONG_LAYER` -> C02/C04 |
+| R03 executable Skill bundle | 单一 Skill、无第二 Agent/MCP/router 原则有效 | B02/B03 bundle 要模型技术编排 | `PARTIAL` -> C03/C04 |
+| R04 Installer lifecycle | B03 install/update/rollback/uninstall 机械证据可复用为方法 | 旧 Skill/Bridge identity 不可复用 | `FULFILLED_BUT_NARROW` -> C04 |
+| R05 materialization/registration | B03 fresh root/Registration/Activation/Locator 证据有价值 | 不是正确合同的产品验收 | `FULFILLED_BUT_NARROW` -> C04 |
+| R06 final Skill installation | exact ZIP 曾成功导入安装 | 导入不等于调用成功；最终绑定已被取代 | `PARTIAL` -> C05 |
+| R07 real WorkBuddy acceptance | B04 负面 trace 可保留 | 三次均无 valid receipt/OpenMontage Artifact | `UNPROVED` -> C05/C06 |
+| R08 Stage5 closeout | 五类证据门的分层原则正确 | 前置 R01-R07 未完成，不能 closeout | `UNPROVED` -> C07 |
+
+### 三个关键接口与 R02 专项裁决
+
+| 对象 | 当前裁决 | 保留边界 | 必须纠偏 |
+|---|---|---|---|
+| `PackageToolDefinitionV1` | `VALID_INTERNAL_PACKAGE_INSTALLER_CONTRACT / MODEL_INVISIBLE` | 可作为 Installer 校验并固化的 package-local registry tool 定义，由 Shell 在每个 bounded tool call 内机械消费 | 不得让 WorkBuddy 模型拼 schema/hash/path/env；不得把一个 definition 当整个 OpenMontage 请求的唯一 child |
+| `launch_session_tool` | `MECHANICAL_PRIMITIVE_RETAIN_WITH_NARROWING` | Locator 重验、fixed argv/cwd、closed child env、单次调用的 cancel/timeout/status/receipt 可以保留 | 是否直接复用或最小适配必须由 C01 事实和 C02 合同决定；不得选 pipeline/stage/tool 顺序或成为第二 Director |
+| `workbuddy_entry_cli` | `CURRENT_IMPLEMENTATION_NOT_PRODUCT_ACCEPTED` | 只保留其中可独立证明的输入清洗、fail-closed 和 receipt 机械思路 | 当前完整 technical JSON、whole-host-env exact comparison、whole-request fixed-child 路径必须在 C03 重做或替换 |
+| R02 attribution | `WRONG_LAYER_CORRECTED` | Core/Package Owner 提供真实 release、Guide/manifest/registry definitions；Installer 负责 immutable assembly/stamp；Shell 负责验证/定位/机械调用 | Package Owner 不负责制造 Shell adapter 或 whole-request child；WorkBuddy 模型不负责技术 binding；R02 不能再阻断成“修改共享 Package” |
+
+### 仍需 Owner 决策的精确清单
+
+1. 本重基线候选独立 Reviewer 通过后，是否单独批准普通 fast-forward 推广；Reviewer 通过本身不等于推广授权。
+2. 每个 C01-C07 都需要单独激活授权；任何一步通过都不会自动授权下一步。
+3. C01/C05/C06/C07 如 WorkBuddy 弹出权限或安全设置，由 Owner 在客户端选择；Shell 不把“完全访问”或 sandbox 策略写成产品合同，只记录真实设置和行为。
+4. C05/C06 仅使用 Owner 指定的可用 `0.00x` HY3（若当前客户端存在）；模型选择是测试成本控制，不是产品依赖。
+5. C07 开始前由 Owner 冻结业务素材、期望成片与验收人；未冻结不得以技术成功替代业务 PASS。
+6. 遗留 Stage2 分支和两个 dirty worktree 的删除/归档需另行明确授权；不属于本重基线或 C01-C07 的自动清理范围。
+
+### A2/A3 残留对象只读证据锚点
+
+```text
+evidence_method: READ_ONLY_GIT_OBJECT_AND_WORKTREE_DIFF / NO_NEW_ARTIFACT / NO_MERGE / NO_DELETE / NO_COPY
+legacy_stage2_branch: refs/heads/codex/v2-s2-official-package-alignment-b1
+legacy_stage2_head: 86a7902465d8e215e0830b9640e7222d7c7f5188
+legacy_stage2_commits: 9b8ebb2f7c0e910758ad97c91e885c0ba18fdd79 + 8d4461dd159d7aff2484e34c21088ddb9f239053 + 86a7902465d8e215e0830b9640e7222d7c7f5188
+legacy_stage2_main_direction: REJECT_OFFICIAL_GIT_CHECKOUT_AS_PORTABLE_FINAL_PACKAGE
+legacy_stage2_hardening_evidence: package_registration.py and PACKAGE-REGISTRATION-CONTRACT.md at branch HEAD contain CreateFileW + FILE_FLAG_OPEN_REPARSE_POINT + GetFinalPathNameByHandleW + POSIX O_NOFOLLOW and git_tree identity checks
+legacy_stage2_disposition: HISTORICAL_ONLY / DO_NOT_MERGE / HARDENING_IDEAS_REQUIRE_SEPARATE_FUTURE_AUTHORIZATION
+dirty_worktree_aef5: path=C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / HEAD=4d74d6576773dc9d383efec091bdc8d42f0d480c / tree=2d467467810d8752c0be0a84d44e1f97dff4738b / modified_docs=5 / diff=+167,-49
+dirty_worktree_df76: path=C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / HEAD=4d74d6576773dc9d383efec091bdc8d42f0d480c / tree=2d467467810d8752c0be0a84d44e1f97dff4738b / modified_docs=5 / diff=+144,-29
+superseding_stage3_implementation: a3f8959682d296301dc573c2835f8c705a52e8b2 / tree=eca057c3643c36248cccbfb9606d9aea12b3dc42
+superseding_stage3_closeout: 7c15aae4e77c579309312b21c79076f930970214 / tree=4219a12faec8dc7dfc74258a3f99fcd43f17242f
+dirty_worktree_disposition: SUPERSEDED_STAGE3_CONTRACT_FREEZE_HISTORY / DO_NOT_MERGE / DO_NOT_COPY / DO_NOT_DELETE_IN_THIS_TASK
+```
 
 ### 重基线后的不可变产品边界
 
@@ -2421,105 +2523,201 @@ direct_WorkBuddy_fallback_counts_as_Shell_success: NEVER
 
 ### 新的最小纠偏执行方案
 
-严格串行 `C01 -> C02 -> C03 -> C04 -> C05 -> C06 -> C07`。每一步完成后先做“最初目标五问”回归审计，再由独立零写 Reviewer 审 exact 对象；未通过时停止，后续任务不得作为修复窗口。
+严格串行 `C01 -> C02 -> C03 -> C04 -> C05 -> C06 -> C07`。每一步完成后先做“最初目标十问”回归审计，再由独立零写 Reviewer 审 exact 对象；未通过时停止，后续任务不得作为修复窗口。
 
 #### C01 WorkBuddy 原生交互面事实证明
 
 ```text
 01_task_id: V2-REBASELINE-C01-WORKBUDDY-NATIVE-INTERACTION-PROOF
-02_goal: 用 ordinary natural-language request 证明 WorkBuddy 在不读 Shell 源码、不写 helper script、不拼 technical JSON 的情况下，如何读取 exact Guide/manifest/Stage Skills 并调用 package-local tools
-03_owner: WorkBuddy Integration Investigator + independent zero-write Reviewer
-04_inputs: official cd9f3c1f exact detached clean checkout; current WorkBuddy client; historical B04 negative evidence read-only
-05_allowed_changes: fresh C01 evidence root and explicitly authorized temporary test Skill/client state only
-06_not_do: no repository product code; no Package mutation; no B02/B03 patch; no Provider/media; no direct fallback acceptance
-07_acceptance: authoritative client trace shows natural input, exact Guide/manifest/Stage Skill reads and at least one real registry tool invocation without model technical assembly
-08_fail_closed: interaction surface cannot be proven, helper/source/technical prompt required, or client trace unavailable
-09_handoff: C02 only
+02_confirmed_issue: B04 never proved that an ordinary WorkBuddy session can enter the official Guide/manifest/Stage Skill/tool path without model-authored helper scripts or technical JSON
+03_why_correction_necessary: Freezing another Shell contract before observing the real client interaction surface would repeat A4-A6 and invent unsupported WorkBuddy behavior
+04_correct_owner: WorkBuddy Integration Investigator + independent zero-write Reviewer
+05_authoritative_inputs: approved/promoted rebaseline; official checkout D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f at cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / tree 6cd1961d552dd9d2bcfba990b80ac06edfe4b061 / DETACHED_CLEAN; current WorkBuddy client; B04 negative evidence read-only
+06_exact_allowed_paths: D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C01_probe_skill\ (task-only temporary source/ZIP); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C01_native_interaction_evidence\ (fresh evidence); no other filesystem write; WorkBuddy-managed external state is limited to one imported probe Skill identity+ZIP hash and one new task/session ID, all recorded before/after
+07_concrete_actions: Build the smallest non-production probe Skill; submit one ordinary natural-language request; observe exact Guide/manifest/Stage Skill reads and at least one real registry tool invocation; capture authoritative client trace and clean task-owned temporary state after review
+08_explicitly_not_do: No repository product code/test/CI edit; no Package mutation; no B02/B03 repair; no Provider/media/video; no technical routing in user message; no helper script/source inspection during the client run; no direct fallback acceptance
+09_output_contract: Immutable evidence bundle or BLOCKED result describing the actual model-visible/callable WorkBuddy interaction surface, exact client/package/Skill identities, trace, cleanup and remaining unknowns
+10_positive_tests: Ordinary input; exact Skill hit; exact Guide/manifest/Stage Skill reads; at least one real package-local registry tool call; no model technical assembly; complete trace/final status
+11_negative_tests: Wrong/unverified Package or Guide; helper/source/technical prompt required; direct fallback; missing/truncated client trace; temporary-state cleanup mismatch
+12_independent_reviewer_checks: Exact probe hashes; client/package identity; literal user message; trace order; absence of helper/source/technical assembly; no product/repository change; cleanup state
+13_p0_p1_p2_standard: P0 false WorkBuddy/Agent-first claim or wrong Package; P1 missing authoritative trace, technical model routing, direct fallback or residue; P2 non-material evidence correlation defect
+14_fail_closed_conditions: Interaction surface not independently visible; official identity mismatch; client requires model-authored technical assembly; any Provider/media action; any non-task-owned state change
+15_upstream_dependency: Rebaseline independently approved and formally promoted; explicit Owner authorization for C01; fresh evidence roots verified absent
+16_downstream_handoff: C02 only; no code or assembly task starts from a BLOCKED/INCOMPLETE result
+17_real_workbuddy_required: YES
+18_official_control_group: YES / cd9f3c1f03368be87b140af494914b8ee4e3c7a4
+19_involves_0_3_25: NO; old official and 0.3.24 are historical-only and forbidden
+20_proves_after_completion: The actual WorkBuddy Agent-first interaction surface needed to design one product entry
+21_cannot_prove_after_completion: Production Shell correctness, final assembly, repeatable official success, 0.3.25 compatibility, video/business E2E or promotion readiness
 ```
 
 #### C02 Agent-first Shell 合同冻结
 
 ```text
 01_task_id: V2-REBASELINE-C02-AGENT-FIRST-SHELL-CONTRACT
-02_goal: 只依据 C01 实证冻结 Skill、Locator/session、tool invocation、receipt/status 的最小接口，不预设一次 child 完成整个请求
-03_owner: Architecture Contract Owner + independent zero-write Reviewer
-04_allowed_changes: exact six authority docs only
-05_not_do: no code/test/Package/WorkBuddy change; no invented client capability
-06_acceptance: model-visible surface contains no hash/schema/path/env/PackageToolDefinition; WorkBuddy retains all pipeline/stage/review decisions; Shell exposes only deterministic execution facts
-07_fail_closed: any unproved WorkBuddy operation, second control plane, or production decision enters Shell
-08_handoff: C03 only
+02_confirmed_issue: The superseded B01 contract exposed technical binding to the model and conflated one user entry with one child for the whole request
+03_why_correction_necessary: Implementation needs an evidence-backed boundary that keeps WorkBuddy in control while hiding identity/runtime mechanics inside Installer/Shell
+04_correct_owner: Architecture Contract Owner + independent zero-write Reviewer
+05_authoritative_inputs: C01 approved evidence; original V2 handoff; official cd9f3c1f Guide; current six-module contracts; exact current formal Git object
+06_exact_allowed_paths: AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md
+07_concrete_actions: Freeze one Skill entry, verified Locator/session binding, WorkBuddy-owned Guide/pipeline/stage decision loop, independent bounded tool-call transport, receipt/status/artifact relay, hidden Installer-stamped identities and exact observability requirements
+08_explicitly_not_do: No code/test/CI/Package/WorkBuddy change; no invented client capability; no whole-request fixed child; no Agent/Director/FSM/router/MCP mainline; no Provider/Renderer/media decision in Shell
+09_output_contract: Six-file exact contract candidate with model-visible and hidden-mechanical field sets, task-by-task DoD, negative gates, owner and consumer for each interface
+10_positive_tests: Cross-file contract equality; every operation backed by C01; ordinary user message contains no technical control; multiple tool calls remain individually mechanical and WorkBuddy-ordered
+11_negative_tests: Model-visible hash/schema/path/env/PackageToolDefinition; Shell call ordering/pipeline choice; second entry/control plane; unsupported WorkBuddy operation; old B01/B02 contract still active
+12_independent_reviewer_checks: Six-file exact diff; C01 trace-to-contract mapping; user/WorkBuddy/Shell/OpenMontage responsibility table; current authority and historical mirrors; no implementation authorization
+13_p0_p1_p2_standard: P0 second Agent/control plane or false client capability; P1 missing owner/consumer/evidence/negative gate; P2 cross-file wording or traceability drift
+14_fail_closed_conditions: C01 not approved; any interface lacks observed client evidence; six-file inconsistency; formal base mismatch; more than six files changed
+15_upstream_dependency: C01 APPROVE and explicit Owner authorization for C02; latest formal branch exact takeover
+16_downstream_handoff: C03 only after independent APPROVE, separate Owner promotion approval and ordinary fast-forward into formal
+17_real_workbuddy_required: NO new run; consumes C01 evidence only
+18_official_control_group: YES / contract derives from C01 official evidence
+19_involves_0_3_25: NO; exact identity may be listed as future read-only input only
+20_proves_after_completion: An evidence-backed minimal Agent-first Shell/Skill/Installer contract and implementation boundary
+21_cannot_prove_after_completion: Code correctness, assembly/lifecycle, real official success, 0.3.25 compatibility, business E2E or promotion of product behavior
 ```
 
 #### C03 最小实现与离线合同验证
 
 ```text
 01_task_id: V2-REBASELINE-C03-MINIMAL-IMPLEMENTATION
-02_goal: rework or replace B02 Skill/adapter/launcher surfaces exactly to C02, preserving useful six-module infrastructure
-03_owner: Shell Implementation Worker + independent zero-write Reviewer
-04_allowed_changes: pre-frozen path allowlist limited to necessary Skill/adapter/launcher/tests
-05_not_do: no Installer output, Package, WorkBuddy client, Provider/media, second Agent/router/MCP, arbitrary command surface
-06_acceptance: ordinary-message fixture reaches verified session/tool surface; host extra env is tolerated while child env is closed; each tool call is mechanical and independent while call choice/order remain WorkBuddy-owned; negative tests reject arbitrary execution
-07_fail_closed: path expansion, model technical assembly, Shell orchestration, stale B02 assumption, or unreviewed dependency
-08_handoff: C04 only
+02_confirmed_issue: B02 Skill/Bridge requires model technical assembly, exact-compares the whole host environment and binds the whole request to one fixed-child transaction
+03_why_correction_necessary: The production entry must implement C02 without making WorkBuddy diagnose Shell internals or making Shell orchestrate OpenMontage
+04_correct_owner: Shell Implementation Worker + independent zero-write Reviewer
+05_authoritative_inputs: C02 approved/promoted contract; current session_launcher.py, workbuddy_entry_cli.py, final Skill and focused tests; B02/B04 failures as negative fixtures
+06_exact_allowed_paths: golden_key_openmontage_workbuddy/session_launcher.py; golden_key_openmontage_workbuddy/workbuddy_entry_cli.py; workbuddy-skill/golden-key-openmontage/SKILL.md; tests/workbuddy/test_session_launcher.py; tests/workbuddy/test_workbuddy_entry_cli.py; tests/workbuddy/test_repository_hygiene.py
+07_concrete_actions: Rework or replace the model-facing entry; load hidden Installer identities mechanically; build a closed child environment from approved names while tolerating unrelated host names; keep each tool invocation fixed, independent and decision-free; preserve literal user message and mechanical receipts
+08_explicitly_not_do: No Installer output or Package bytes; no WorkBuddy client; no Provider/media; no second Agent/router/MCP; no arbitrary command/path scan; no Shell pipeline/stage/review ordering; no old whole-request fixed-child assumption
+09_output_contract: Reviewed six-path code/test candidate implementing exact C02 interfaces, closed environment construction, zero model technical assembly and bounded receipt/status facts
+10_positive_tests: Ordinary-message fixture; hidden binding load; host extra environment tolerated and not forwarded; child environment closed; one spawn per tool call; multiple calls chosen/ordered only by caller; receipt/status integrity
+11_negative_tests: Arbitrary command/path; unknown binding; model-supplied hash/schema/env; second spawn inside one call; retry/replay; Shell production decision; secret leak; wrong Package identity
+12_independent_reviewer_checks: Exact six-path diff; AST/import/subprocess surfaces; model-visible Skill text; environment read/forward boundary; per-call spawn count; no new public entry/control plane; focused/full tests and CI headSha
+13_p0_p1_p2_standard: P0 arbitrary execution, secret leak or second control plane; P1 C02 mismatch, model technical assembly, environment incompatibility or Shell orchestration; P2 test/wording/traceability defect
+14_fail_closed_conditions: C02 absent; path allowlist expansion; unapproved dependency; test/CI failure; any model technical identity; any Shell-owned production decision
+15_upstream_dependency: C02 formally delivered; explicit Owner authorization for C03; branch from latest exact formal head
+16_downstream_handoff: C04 only after independent APPROVE, Owner promotion approval, ordinary fast-forward and temporary Builder branch cleanup
+17_real_workbuddy_required: NO; real client acceptance is C05
+18_official_control_group: NO
+19_involves_0_3_25: NO; Package inputs remain untouched
+20_proves_after_completion: Static/unit/CI correctness of the minimal Agent-first support surface inside the six-module Shell
+21_cannot_prove_after_completion: Installer assembly, real WorkBuddy Guide-read/tool calls, official success, 0.3.25 compatibility, business E2E or product completion
 ```
 
 #### C04 Fresh assembly 与生命周期重建
 
 ```text
 01_task_id: V2-REBASELINE-C04-FRESH-ASSEMBLY-LIFECYCLE
-02_goal: 复用 B03 已证明的装配/工具链/Registration/Locator/rollback 基础设施，以 C03 合同生成全新 official 与 0.3.25 assemblies
-03_owner: Final-delivery Installer Owner + independent zero-write Reviewer
-04_inputs: official cd9f3c1f and Golden Key 73cab673 exact detached clean read-only packages
-05_not_do: no package-byte mutation; no old PackageRoot/Registration/Skill reuse; no WorkBuddy acceptance
-06_acceptance: reproducible manifest/lock/hash/toolchain/lifecycle; generic zero-token scan; all stamped identities recomputed; Package subtrees immutable
-07_fail_closed: any `<installer:` token, stale hash/root/registration, source-checkout substitution, missing toolchain or rollback defect
-08_handoff: C05 only
+02_confirmed_issue: B03 lifecycle infrastructure is useful, but its final Skill/Bridge binding, hashes and placeholder gate encode the superseded contract
+03_why_correction_necessary: Real acceptance needs newly materialized official and 0.3.25 assemblies that consume C03 while retaining exact immutable Package bytes and reproducible lifecycle
+04_correct_owner: Final-delivery Installer Owner + independent zero-write Reviewer
+05_authoritative_inputs: C03 formally delivered code; B03 installer source/evidence read-only; official cd9f3c1f and Golden Key 73cab673 exact detached clean checkouts; Package Registration contract
+06_exact_allowed_paths: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B03_installer_source\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B03_evidence\ (read-only); D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f\ (read-only); D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C04_installer_source\; D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C04_fresh_assembly\; D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C04_evidence\
+07_concrete_actions: Recreate Installer source from reviewed inputs; materialize separate fresh official and 0.3.25 assemblies; recompute all bindings/hashes; generic scan for any installer token; verify private toolchain, Manifest/Lock, register/activate/new-process locate, upgrade/rollback/uninstall and deterministic rebuild
+08_explicitly_not_do: No Package source-byte mutation; no old PackageRoot/Registration/final Skill reuse; no WorkBuddy run; no Provider/media; no source checkout substituted for final assembly
+09_output_contract: Two reproducible fresh assemblies plus lifecycle evidence with exact subtrees/toolchain/binding/Skill/archive/Registration identities and cleanup/rollback facts
+10_positive_tests: Byte-identical rebuild; complete toolchain; generic zero-token scan; all stamp/hash reconciliation; fresh register/activate/locate; upgrade/rollback/uninstall; immutable Package snapshots
+11_negative_tests: Any `<installer:` token; stale schema/module/Skill hash; missing tool; wrong Package commit/tree; tampered Manifest/Lock; stale Registration; rollback failure; Package byte change
+12_independent_reviewer_checks: Exact inputs/paths; C03 object consumed; no B03 final identity reused; both Package subtrees immutable; deterministic output; complete lifecycle evidence; no external writes
+13_p0_p1_p2_standard: P0 Package mutation, unsafe lifecycle or identity substitution; P1 stale binding/token/tool/lifecycle evidence; P2 reproducibility/evidence packaging defect
+14_fail_closed_conditions: Any input identity drift; unregistered output path; any residual token/hash mismatch; toolchain/lifecycle failure; Package snapshot change; incomplete cleanup
+15_upstream_dependency: C03 formally delivered; explicit Owner authorization for C04; all fresh write roots verified absent or task-owned empty
+16_downstream_handoff: C05 only; no client acceptance from B03/B04 old assemblies
+17_real_workbuddy_required: NO
+18_official_control_group: YES / build fresh cd9f3c1f assembly
+19_involves_0_3_25: YES / build fresh 73cab673 assembly read-only from exact input; old 0.3.24 forbidden
+20_proves_after_completion: Fresh reproducible assembly, toolchain, binding and lifecycle mechanics for both exact Package inputs
+21_cannot_prove_after_completion: WorkBuddy Agent-first behavior, real OpenMontage Artifact, same-path comparison, business E2E or product promotion
 ```
 
 #### C05 official Agent-first 实机验收
 
 ```text
 01_task_id: V2-REBASELINE-C05-OFFICIAL-AGENT-FIRST-WORKBUDDY
-02_goal: fresh install 下用普通自然语言让 WorkBuddy 按 official Agent-first 合同走到真实 OpenMontage Artifact/Checkpoint
-03_owner: WorkBuddy Acceptance Worker + independent zero-write Reviewer
-04_inputs: C04 fresh official assembly; exact Skill; WorkBuddy 0.00x HY3 when available
-05_not_do: no code/Skill/Installer/Package repair during acceptance; no helper script/source inspection; no direct fallback; no Provider/media expansion
-06_acceptance: client trace correlates Guide/manifest/Stage Skill reads, WorkBuddy decisions, real registry tool invocations, receipts/status and OpenMontage Artifact; repeat fresh success
-07_fail_closed: any missing trace/provenance, technical prompting, direct fallback, or acceptance-time mutation
-08_handoff: C06 only
+02_confirmed_issue: No fresh real WorkBuddy evidence proves the corrected entry can execute official Agent-first behavior and produce an OpenMontage Artifact
+03_why_correction_necessary: Official is the known control needed to separate Shell/WorkBuddy defects from Golden Key package compatibility
+04_correct_owner: WorkBuddy Acceptance Worker + independent zero-write Reviewer
+05_authoritative_inputs: C04 fresh official assembly/evidence; official cd9f3c1f exact checkout identity; C01/C02 acceptance method; current WorkBuddy client; exact C04 Skill ZIP
+06_exact_allowed_paths: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C04_fresh_assembly\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C04_evidence\ (read-only); D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-official-main-cd9f3c1f\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C05_official_evidence\ (fresh); no other filesystem write; WorkBuddy-managed external state is limited to the one exact C04 Skill identity+ZIP hash, one official Registration identity and two fresh task/session IDs, all recorded before/after
+07_concrete_actions: Fresh install/register/activate and new-process locate; install exact Skill; use ordinary natural-language request; capture Guide/manifest/Stage Skill reads, WorkBuddy decisions, registry preflight/tool calls, review/checkpoint, receipts/status and real OpenMontage Artifact; repeat in a fresh session; clean task state after review
+08_explicitly_not_do: No code/Skill/Installer/Package repair during acceptance; no helper script/source inspection; no technical user prompt; no direct fallback acceptance; no 0.3.25; no Provider/media expansion beyond the approved no-cost control capability
+09_output_contract: Independently reviewable two-run official-control evidence bundle or precise INCOMPLETE/BLOCKED owner handoff, with exact client/Skill/Package/Registration/trace/receipt/Artifact identities
+10_positive_tests: Two fresh ordinary-language runs; exact Guide/manifest/Stage Skill sequence; WorkBuddy-owned decisions; real tool calls; receipt/Artifact correlation; no model technical assembly
+11_negative_tests: Wrong/stale Package or Registration; direct fallback; missing Guide/stage read; helper/source diagnosis; acceptance-time mutation; missing/truncated trace; Artifact without provenance
+12_independent_reviewer_checks: Fresh roots/sessions; exact hashes; literal user message; trace order and decision owner; tool/receipt/Artifact correlation; repeatability; cleanup; no hidden repair
+13_p0_p1_p2_standard: P0 false real-integration claim, wrong Package or second control plane; P1 missing Agent-first/tool/Artifact trace, direct fallback, mutation or residue; P2 evidence correlation defect
+14_fail_closed_conditions: C04 not approved; fresh state unavailable; official identity mismatch; any technical model routing; trace/provenance missing; direct fallback; acceptance-time write outside evidence/client task state
+15_upstream_dependency: C04 APPROVE; explicit Owner authorization for C05; WorkBuddy model fixed to user-approved 0.00x HY3 when available
+16_downstream_handoff: C06 only after independent APPROVE; no repair inside C05
+17_real_workbuddy_required: YES / two fresh sessions
+18_official_control_group: YES / cd9f3c1f exact
+19_involves_0_3_25: NO
+20_proves_after_completion: Repeatable real WorkBuddy Agent-first integration with the official control through the corrected Shell path
+21_cannot_prove_after_completion: 0.3.25 compatibility, paid Providers, broad media capability, business-quality video acceptance or formal closeout
 ```
 
 #### C06 同路径切换 Golden Key 0.3.25
 
 ```text
 01_task_id: V2-REBASELINE-C06-GOLDEN-KEY-0_3_25-SAME-PATH
-02_goal: 在 C05 exact Shell/Skill/Installer/WorkBuddy request/acceptance method 不变时，仅切换为 73cab673 package
-03_owner: Controlled Comparison Worker + independent zero-write Reviewer
-04_not_do: no two-variable change; no old 0.3.24 input; no state reuse; no 0.3.25 mutation
-05_acceptance: fresh root/registration and the same Agent-first trace/real tool/Artifact evidence; exact one-variable comparison
-06_fail_closed: C05 not approved, non-package input drift, stale state, package mismatch or incomplete evidence
-07_handoff: C07 only
+02_confirmed_issue: The corrected Shell path has not been proven against exact Golden Key 0.3.25 under a one-variable Package switch
+03_why_correction_necessary: Only the same WorkBuddy/Shell/Skill/Installer/request/method with a fresh 0.3.25 root can attribute compatibility correctly
+04_correct_owner: Controlled Comparison Worker + independent zero-write Reviewer
+05_authoritative_inputs: C05 approved official evidence and exact non-Package inputs; C04 fresh 0.3.25 assembly; Golden Key checkout 73cab67322451601a824875c0e426067d736dd44 / tree 29231e0464fa4bc7533c1928415849e9b3a48e7c / parents ef5f5b58fa1c2b494b0154989cf0e4e36615a701+cd9f3c1f03368be87b140af494914b8ee4e3c7a4 / DETACHED_CLEAN
+06_exact_allowed_paths: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C04_fresh_assembly\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C04_evidence\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C05_official_evidence\ (read-only); D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C06_0.3.25_evidence\ (fresh); no other filesystem write; WorkBuddy-managed external state is limited to the unchanged C05 Skill identity+ZIP hash, one fresh 0.3.25 Registration identity and one fresh task/session ID, all recorded before/after
+07_concrete_actions: Verify byte-for-byte retained C05 non-Package inputs; create fresh 0.3.25 PackageRoot/Registration/session; switch only Package; repeat exact natural-language method and capture the same Agent-first/tool/receipt/Artifact evidence; compare control versus candidate
+08_explicitly_not_do: No Shell/Skill/Installer/schema/request/method change; no C05 state reuse; no old 0.3.24; no 0.3.25 mutation; no acceptance-time repair; no new Provider/media scope
+09_output_contract: Exact one-variable comparison bundle or precise fail-closed mismatch, with fresh 0.3.25 identities and control/candidate diff
+10_positive_tests: Fresh install/register/activate/locate; same Skill/request/method; same Guide/stage/tool/receipt/Artifact classes; 0.3.25 subtree unchanged
+11_negative_tests: Any non-Package drift; stale root/registration/session; old input; package mutation; missing Agent-first trace; direct fallback; evidence reuse
+12_independent_reviewer_checks: Byte/commit comparison of every non-Package input; fresh state; exact 0.3.25 identity; trace/Artifact correlation; no two-variable change or mutation
+13_p0_p1_p2_standard: P0 false compatibility claim, two-variable test or Package mutation; P1 stale state, non-Package drift, missing real evidence or fallback; P2 comparison packaging defect
+14_fail_closed_conditions: C05 not approved; any non-Package input mismatch; fresh state unavailable; exact package identity mismatch; incomplete/truncated evidence
+15_upstream_dependency: C05 APPROVE and retained exact inputs; explicit Owner authorization for C06
+16_downstream_handoff: C07 only after independent APPROVE; otherwise return to named owner without modifying C06 acceptance inputs
+17_real_workbuddy_required: YES / fresh 0.3.25 session
+18_official_control_group: YES / C05 immutable comparison reference
+19_involves_0_3_25: YES / exact 73cab673; historical 0.3.24 forbidden
+20_proves_after_completion: Same corrected Shell path works or fails precisely against immutable Golden Key 0.3.25 with only Package changed
+21_cannot_prove_after_completion: Final business video quality, all Providers/renderers, production scale or formal promotion readiness
 ```
 
 #### C07 真实业务验收、状态收口与推广闸门
 
 ```text
 01_task_id: V2-REBASELINE-C07-BUSINESS-CLOSEOUT-PROMOTION-GATE
-02_goal: 用普通用户业务请求完成真实成片与独立业务验收，核对全链证据并形成可推广候选
-03_owner: Business Acceptance Owner + Closeout Coordinator + independent zero-write Reviewer
-04_not_do: no Shell media patch; no technical user prompt; no false PASS; no promotion/cleanup inside acceptance
-05_acceptance: exact identities + Agent-first process + real tools + final video + user/business acceptance + Git/CI/live authority all pass
-06_fail_closed: any evidence class missing, portrait/media issue被塞进Shell, or business result rejected
-07_handoff: STOP_FOR_SEPARATE_OWNER_PROMOTION_APPROVAL
-08_promotion: only ordinary fast-forward into codex/workbuddy-shell-v2, verify remote/CI, then clean temporary task branch/worktree; never leave a permanent correction branch
+02_confirmed_issue: Shell/process evidence alone cannot prove the original ordinary-user business outcome or safe repository closeout
+03_why_correction_necessary: The project is complete only when the same Agent-first path produces a real acceptable video and all evidence/Git state closes without leaving temporary branches
+04_correct_owner: Business Acceptance Owner + Closeout Coordinator + independent zero-write Reviewer
+05_authoritative_inputs: C05/C06 approved evidence; exact current formal Shell; exact 0.3.25 assembly; original business acceptance contract; live remote/CI authority
+06_exact_allowed_paths: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C05_official_evidence\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C06_0.3.25_evidence\ (read-only); D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_C07_business_evidence\ (fresh); AGENT_GUIDE.md; PROJECT-STATE.md; docs/workbuddy/v2/TASK-REGISTER.md; docs/workbuddy/v2/PROJECT-CHARTER.md; docs/workbuddy/v2/ACCEPTANCE-MATRIX.md; docs/workbuddy/v2/DRIFT-GUARD.md; no other filesystem write; WorkBuddy-managed external state is limited to the unchanged C06 Skill/Registration identities and one fresh business task/session ID, all recorded before/after
+07_concrete_actions: Run one ordinary-user business request through the approved 0.3.25 path; capture Agent-first trace, real tools, final video and independent business acceptance; audit exact Git/CI/package/client state; create docs-only closeout candidate; stop for Reviewer and separate Owner promotion approval; after promotion verify remote/CI then remove fully integrated temporary task branches/worktrees/files
+08_explicitly_not_do: No Shell media patch; no technical user prompt; no false PASS; no code repair during business acceptance; no promotion before independent review and separate Owner approval; no deletion of unrelated/historical branches or dirty worktrees
+09_output_contract: Business evidence plus six-file closeout candidate recording exact product/evidence/Git states, remaining limits and a single promotion/cleanup gate
+10_positive_tests: Ordinary request; approved Agent-first trace; real tools; playable correct final video; independent business acceptance; exact identities; docs consistency; CI/live remote match
+11_negative_tests: Technical prompt required; wrong/missing video; direct fallback; identity drift; missing evidence class; Shell media fix; unreviewed promotion; temporary correction branch left after verified integration
+12_independent_reviewer_checks: User request and video semantics; C05/C06 lineage; exact package/Shell/Skill identities; evidence completeness; six-doc diff; Git/CI headSha; cleanup targets and non-targets
+13_p0_p1_p2_standard: P0 false business PASS, unsafe promotion/deletion or identity substitution; P1 missing video/evidence/review/Git gate or Shell media expansion; P2 closeout/traceability/cleanup wording defect
+14_fail_closed_conditions: C06 not approved; business result rejected; any evidence class missing; code repair required; formal/live object mismatch; cleanup target not exact
+15_upstream_dependency: C06 APPROVE; explicit Owner authorization for C07; fresh evidence root and business acceptance owner confirmed
+16_downstream_handoff: STOP_FOR_SEPARATE_OWNER_PROMOTION_APPROVAL; no next product task; after separate Owner approval only, ordinary fast-forward to codex/workbuddy-shell-v2, verify remote commit/tree and CI headSha, then remove only fully integrated temporary correction task branches/worktrees/files
+17_real_workbuddy_required: YES / real business session
+18_official_control_group: YES / consume C05 comparison lineage, no new official run unless separately authorized
+19_involves_0_3_25: YES / exact approved C06 assembly; historical 0.3.24 forbidden
+20_proves_after_completion: Original ordinary-user Agent-first business outcome and a reviewed repository-closeout candidate
+21_cannot_prove_after_completion: Universal production scale, every Provider/renderer/format or promotion before Owner approval
 ```
 
-### 每步强制“最初目标五问”
+### 每步强制“最初目标十问”
 
-1. 普通用户是否仍只需表达业务需求？
-2. WorkBuddy 是否仍是唯一 Agent、唯一对话主体和唯一生产决策者？
-3. 是否有独立证据证明 WorkBuddy 读取并遵守 exact Guide、manifest、Stage Skills，而不是模型自报？
-4. Shell 是否只提供六模块支持，没有替代 Pipeline/Stage/Reviewer/Checkpoint/Provider/Renderer/媒体决策？
-5. 当前证据是否只支持当前声明，且台账、Git、Package、WorkBuddy 状态同步？
+1. 本步是否直接服务“普通用户只表达业务需求”的最初产品目标？
+2. WorkBuddy 是否仍是唯一 Agent、唯一对话主体和唯一生产决策者，并有独立证据证明其读取 exact Guide、manifest 与 Stage Skills？
+3. Shell 是否仍只提供六模块支持及其必要验收，没有复制 OpenMontage Pipeline、Stage Director、Reviewer、Checkpoint、Provider、Renderer 或媒体决策？
+4. 是否新增了没有事实证据支撑的抽象、接口、模块、状态机或第二控制面？
+5. 是否把 Shell 责任错误推给 Package、Core、WorkBuddy、外部 Owner 或下一任务？
+6. 是否把外部 Owner 的产品实现偷偷纳入本仓库或本任务允许路径？
+7. 是否修改或要求修改任何共享 OpenMontage Package；当前 0.3.25 是否始终只读，旧 official/0.3.24 是否始终只作历史证据？
+8. 是否混淆静态、单元、CI、客户端、生产、Artifact 与业务效果证据，或让当前证据支持超过自身层级的声明？
+9. 是否导致普通用户、WorkBuddy 模型或维护者需要理解原本应由 Installer/Shell 隐藏的 hash、schema、路径、环境或 transport JSON？
+10. 当前产出是否能被下一步直接接管，且 TASK-REGISTER、Git、Package、WorkBuddy 与证据状态同步、无 repair-window 留置？
 
-任一答案为 `NO` 或 `NOT_PROVED`：本步不得 APPROVE，不得启动下一步。当前重基线只形成计划，不授权 C01，也不修改产品代码、Package 或 WorkBuddy；独立零写审查后停止。
+任一答案为 `NO`、显示越界/膨胀，或关键事实为 `NOT_PROVED`：本步不得 APPROVE，不得启动下一步。当前重基线只形成计划，不授权 C01，也不修改产品代码、Package 或 WorkBuddy；独立零写审查后停止。

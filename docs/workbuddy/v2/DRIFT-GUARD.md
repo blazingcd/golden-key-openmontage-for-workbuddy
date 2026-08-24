@@ -197,7 +197,7 @@ stage_6_current_disposition: INSUFFICIENT_EVIDENCE
 
 不得把 Stage 4 测试/CI 的历史合同 PASS 改写为失败，也不得把它升级为真实 WorkBuddy/业务 E2E PASS。Stage 2 临时 assembled-Package proof 不得升级为 final PackageRoot、生产 Registration/Activation 或 Installer proof。Stage 3 不得探测、下载或替换 Node/npm/npx；最终 Package 必须始终自带 Node.js `22+`、npm、npx 和其他必需 private toolchain。
 
-### R02 责任归属守卫
+### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] R02 责任归属守卫
 
 ```text
 r02_live_status: R02_CLOSED_BLOCKED_PACKAGE_RELEASE
@@ -211,7 +211,7 @@ shell_owns: BINDING_SCHEMA_AND_CONSUMER
 
 不得直接改写 R02 live 状态。历史 0.3.24 对象缺少 WorkBuddy 专用 adapter/definition 的观察不等于共享 Package 应内置该职责；当前纠偏应由最终 Installer 在 final PackageRoot 中装配独立 adapter、fixed child 和 Manifest/Lock/hash。任何修改历史 0.3.24 源码、Release、Lock、Guide 或将 WorkBuddy 入口嵌入其中，立即 `BLOCKED_SCOPE_VIOLATION`；未来调用/验证只允许使用当前 B01 镜像登记的 0.3.25 输入。
 
-### 纠偏任务串行守卫
+### [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] B01-B07 纠偏任务串行守卫
 
 唯一允许的最小任务顺序是 `B01 -> B02 -> B03 -> B04 -> B05 -> B06 -> B07`，每项必须按 TASK-REGISTER 的 21 字段执行，禁止并行或跳过上游条件。旧 R03-R05 标为 `SUPERSEDED_WITH_VALID_REASON`，由 B02/B03 替代并禁止继续并行。
 
@@ -232,11 +232,11 @@ B04 必须先用固定 official control package，B05 只能替换 Package 为�
 
 旧 Stage 2 分支 `codex/v2-s2-official-package-alignment-b1`（HEAD `86a7902465d8e215e0830b9640e7222d7c7f5188`）只保留历史，禁止合并或删除；两个 dirty detached worktree `C:\Users\blazi\.codex\worktrees\aef5\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2` 与 `C:\Users\blazi\.codex\worktrees\df76\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`（均在 `4d74d6576773dc9d383efec091bdc8d42f0d480c`）不复制、不提交、不回收、不删除。它们不是权威状态。
 
-A7 状态收口仍只涉及以下六个现有文件：`AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`。禁止新文件、代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation、DataRoot。审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，测试标签固定为 `NOT_RUN_DOCS_ONLY`。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；上方 A7 的 `NOT_AUTHORIZED` 是历史快照，当前 Phase B 授权与 B01-only 状态以本文件末尾的当前镜像为准；旧 Stage 2 分支和 dirty worktrees 仍需保留，除非另有授权。
+A7 状态收口仍只涉及以下六个现有文件：`AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`。禁止新文件、代码、测试、CI、Package、外部仓库、客户端、Provider、媒体、Registration、Activation、DataRoot。审计结果已由用户批准并以普通 fast-forward 正式推广；本次状态收口使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`，测试标签固定为 `NOT_RUN_DOCS_ONLY`。原 Phase A 任务工作树、本地任务分支和远端任务分支已清理；A7 的 `NOT_AUTHORIZED` 与下方 B01-only 都只作历史，当前权威是 2026-08-24 重基线的 `PAUSED_BY_OWNER`；旧 Stage 2 分支和 dirty worktrees 仍需保留，除非另有授权。
 
-## Phase B 当前执行镜像：B01 已授权（2026-08-23）
+## [HISTORICAL / SUPERSEDED_BY_2026-08-24_REBASELINE] Phase B 执行镜像：B01 已授权（2026-08-23）
 
-本镜像只更新当前授权、当前任务和未来 package 输入；A7 及 R02 的历史事实仍保留。用户已于 2026-08-23 授权启动 Phase B，但严格只激活 B01；B01 未完成交付前不得启动 B02，B03-B07 不得并行。
+本节只保存 2026-08-23 当时的 B01-only 授权和 package 输入，已被 2026-08-24 重基线取代，不提供当前执行授权。
 
 ```text
 phase_b_authorization: USER_AUTHORIZED_2026-08-23 / B01_ONLY

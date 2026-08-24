@@ -1026,3 +1026,33 @@ next_possible_action: OWNER_REVIEWS_PLAN_CANDIDATE
 本节为 append-only 当前优先级候选；在独立零写 Reviewer、单独 Owner 推广批准、ordinary fast-forward 进入 live formal ref 并核验远端对象之前，仍是 `CANDIDATE_NOT_FORMAL`，不改变 `PAUSED_BY_OWNER`，不授权 D01。纠偏基线固定为 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`；`tests=NOT_RUN_DOCS_ONLY`，product/package/workbuddy/provider/media changes 均为 `0`。候选 commit 只允许在独立纠偏 Reviewer 审核 exact final six-doc diff 通过后形成；push 与正式推广是后续分离决定。
 
 Gate0 只读核验 live formal、正式 authority 与当前 WorkBuddy binary identity；B04 read scope 仅为唯一 root `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B04_official_evidence\workbuddy-client\` 下的精确 13 项。`B04NegativeEvidenceManifestV1` canonical manifest 输出到 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\inputs\B04-NEGATIVE-EVIDENCE-MANIFEST.v1.json`，manifest self-hash 不写入，完整字节 SHA256 仅记录在 Gate-0 takeover；不得读取 PackageRoot/assembly。Gate1 在任何 import/client mutation 前由独立零写 Reviewer 对 exact source tree/fixtures/ZIP listing+bytes+hash、两条 literal ordinary-language prompts、permissions/evidence plan 返回 `PRE_RUN_APPROVE`；Gate2 由 Owner 导入并完成两 fresh sessions；Gate3 冻结证据并返回 `APPROVE_FOR_TASK_CLEANUP`；仅在该 token 后 Gate4 Owner 卸载 exact Skill、关闭两 session、删除 exact source+ZIP、捕获 after-state，由 Closeout Worker 写 result 与十问，再由独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE`。任一 Gate 失败保持 `D02-D08 NOT_AUTHORIZED`，禁止补探测或 repair window。
+
+## Owner 紧急目标重置：当前项目状态（2026-08-24）
+
+```text
+active_task: V2-PROJECT-GOAL-AND-D-ROUTE-REAUDIT1
+active_scope: READ_ONLY_FACT_AUDIT + EXACT_SIX_PLANNING_DOCS_CORRECTION
+formal_base: b7bd6bc201f821f83d019c5b7addd8ec198d7ecf / tree daa4ed62e94cf9105358cb452b4950a134d7e2ef
+D01_D08: UNTRUSTED_PENDING_REAUDIT / NO_EXECUTION_AUTHORITY
+D01_raw_observation: RETAIN_AS_HISTORICAL_FACT_ONLY
+D01_old_product_conclusion: INVALIDATED_BY_MISALIGNED_TEST_DESIGN
+current_execution: PAUSED_BY_OWNER
+tests: NOT_RUN_DOCS_ONLY
+commit_push_promotion: NOT_AUTHORIZED
+```
+
+当前只允许核对原始目标、既有事实和规划内容。Shell 的产品价值是降低普通用户门槛并提供继续完成任务所需的环境、配置、命令和提示词引导；WorkBuddy 是唯一 Agent 和生产决策者。PowerShell/Bash/CLI 不因其技术形态自动失败。任何不能直接说明所消除用户门槛、要求模型猜内部路径/绑定/命令、绕过 OpenMontage Guide/Pipeline、或让 Shell 接管生产决策的路线都必须停止。禁止继续 WorkBuddy 探测、产品代码、Package、Provider、媒体和 D02-D08 执行。
+
+### E01 审计候选结果镜像
+
+```text
+candidate_route: E01 -> E02 -> E03 -> E04 -> E05 -> E06 -> E07
+E01: IN_PROGRESS / DOCS_ONLY_CANDIDATE / UNCOMMITTED
+E02_E07: NOT_AUTHORIZED
+D01: DELETE_AS_PRODUCT_GATE / RAW_FACTS_ONLY
+D02_D03: REPLACE_SEMANTIC_OPERATION_AND_ADAPTER_PREMISES
+D04_D08: KEEP_ONLY_USER_GOAL_ALIGNED_PARTS
+current_changes: EXACT_SIX_AUTHORITY_DOCS_ONLY
+```
+
+正式下一步只能是 E01 exact six-doc diff 的独立零写复审。Reviewer 通过也不授权 commit、push、推广或 E02。

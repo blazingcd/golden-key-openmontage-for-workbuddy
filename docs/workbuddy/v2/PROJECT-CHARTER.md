@@ -602,3 +602,15 @@ ordinary business request
 本节只镜像 TASK-REGISTER 的 Replacement1 合同，不改变正式 authority。候选必须先通过独立零写 Reviewer、单独 Owner 推广批准、ordinary fast-forward 和 live formal 远端对象核验；即使推广完成，D01 仍需另一次 Owner 执行授权。基线固定为 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`，当前为 `DOCS_ONLY / CANDIDATE_NOT_FORMAL / NOT_RUN_DOCS_ONLY`。独立纠偏 Reviewer 审核 exact final six-doc diff 通过后才可形成候选 commit；push 与正式推广分别等待后续决定。不得启动 WorkBuddy、probe、Product、Package、Provider、media、pytest。
 
 D01 Gate0 只读核验 live formal、正式 authority 与当前 WorkBuddy binary identity；B04 read scope 仅限精确 root `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B04_official_evidence\workbuddy-client\` 下 TASK-REGISTER 的 13 项清单。canonical `B04NegativeEvidenceManifestV1` 固定输出为 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\inputs\B04-NEGATIVE-EVIDENCE-MANIFEST.v1.json`；无 self-hash，完整字节 hash 独立记录，任何清单项缺失/漂移、manifest 额外项或 PackageRoot/assembly 读取均阻断。Gate1 在 import 前由独立零写 Reviewer 针对 exact source tree/fixtures/ZIP listing+bytes+hash、两条 literal ordinary-language prompts、permissions/evidence plan 返回 `PRE_RUN_APPROVE`；Gate2 Owner 导入并运行两 fresh sessions；Gate3 冻结运行证据并返回 `APPROVE_FOR_TASK_CLEANUP`；只有该 token 后 Gate4 Owner 卸载 exact Skill、关闭两 sessions、删除 exact source+ZIP、捕获 after-state，由 Closeout Worker 写 result 与十问，最终独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE`。任何 Gate 失败都不形成 Shell/Package/业务 PASS，D02 保持未授权且不允许下游 repair。
+
+## Owner 紧急产品宪章重置（2026-08-24）
+
+Shell V2 的首要产品责任是让不懂 OpenMontage 内部技术的普通用户能够在 WorkBuddy 中有引导地完成任务。引导至少覆盖生产环境/配置缺漏、可执行的下一步、命令提示和提示词内容；不得把内部路径、哈希、绑定、环境白名单或命令拼装转嫁给用户或模型。
+
+WorkBuddy 是唯一运行中的 Agent、用户对话主体和生产决策者。它读取已验证的 OpenMontage Guide、Manifest、Pipeline 和 Stage Skills 后作出 Pipeline/Stage/Review/Provider/Renderer/内容决策。Shell 只承担降低门槛所需的安装、定位、环境准备、受控执行、状态/结果传递和用户引导，不得成为第二 Agent、Director、FSM 或媒体控制面。PowerShell、Bash 或 CLI 只是实现表面，不因名称或形态被判为失败。
+
+现有 D01-D08 全部为 `UNTRUSTED_PENDING_REAUDIT / DO_NOT_CONTINUE`。D01 raw observation 保留；把缺少专门 native bundled-operation event 判为产品阻断的结论撤回，当前分类为 `D01_TEST_DESIGN_MISALIGNED`。当前唯一工作是只读事实审计和六份规划文档纠正；禁止 WorkBuddy、产品代码、Package、Provider、媒体和 D02-D08。每个新任务必须先证明其消除的具体用户门槛，否则停止。
+
+### 新最小产品路线候选
+
+`E01 -> E02 -> E03 -> E04 -> E05 -> E06 -> E07` 分别负责目标/路线固化、用户旅程与最小改动审计、guided entry 最小纠正、安装/装配/生命周期、official 用户路径 control、Golden Key 0.3.25 同用户路径、真实门店业务与 closeout 候选。该路线的“同路径”指用户入口、Shell 职责和验收层级一致，不要求 official/GK Skill ZIP、模型或所有非 Package 字节机械相同。任何 E 任务必须首先证明其消除的具体用户门槛；完整 21 字段见 TASK-REGISTER 最后同名节。当前仅 E01 docs-only 候选，后续全部未授权。

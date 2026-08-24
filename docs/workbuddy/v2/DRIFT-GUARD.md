@@ -320,3 +320,25 @@ project_closeout_promotion_cleanup_rule: ONLY_AFTER_D08 + SEPARATE_OWNER_APPROVA
 这是六文档 append-only 候选守卫，不是正式 authority。只有独立零写 Reviewer 通过、单独 Owner plan-promotion approval、ordinary fast-forward 进入 live formal ref 且远端对象核验完成后，才可成为最新 planning mirror；之后仍需单独 Owner D01 execution authorization。基线必须保持 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`；当前为 `DOCS_ONLY / CANDIDATE_NOT_FORMAL / NOT_RUN_DOCS_ONLY`。独立纠偏 Reviewer 通过 exact final six-doc diff 后才可形成候选 commit；push 与正式推广分别等待后续决定。禁止 pytest、WorkBuddy/probe/Product/Package/Provider/media 行动。
 
 漂移硬门按固定顺序执行：Gate0 只读核验 live formal、正式 authority 与当前 WorkBuddy binary identity；B04 read scope 仅限 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B04_official_evidence\workbuddy-client\` 下 TASK-REGISTER 规定的 13 个文件。canonical `B04NegativeEvidenceManifestV1` 写入固定 manifest path，manifest 不含 self-hash，完整字节 SHA256 另记 Gate-0 takeover，且不读 PackageRoot/assembly；Gate1 必须在 import 前由独立零写 Reviewer 对 exact source tree/fixtures/ZIP listing+bytes+hash、两条 literal ordinary-language prompts、permissions/evidence plan 返回 `PRE_RUN_APPROVE`；Gate2 才允许 Owner import/permissions/two sessions；Gate3 冻结证据并返回 `APPROVE_FOR_TASK_CLEANUP`；Gate4 只能在该 token 后由 Owner 卸载 exact Skill、关闭两 sessions、删除 exact source+ZIP、记录 after-state，再由 Closeout Worker 写 result 与十问，最后由独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE`。缺任一 Gate/token、出现清单项缺失、manifest 额外项或漂移、提前 cleanup、终审后改 evidence/docs、Package/产品动作或下游 repair，立即停止并保持 D02-D08 未授权。
+
+## Owner 紧急目标重置防漂移硬门（2026-08-24）
+
+1. 当前只允许 `READ_ONLY_FACT_AUDIT + EXACT_SIX_PLANNING_DOCS_CORRECTION`；任何 WorkBuddy/probe、产品代码、Package、Provider、媒体或 D02-D08 动作立即停止。
+2. 现有 D01-D08 一律为 `UNTRUSTED_PENDING_REAUDIT / DO_NOT_CONTINUE`；旧授权、token、Reviewer 结论和 Gate 不可继承。
+3. 每项计划先写出“具体消除的普通用户门槛”和用户可见验收结果；没有这两项不得进入技术合同。
+4. WorkBuddy 必须保持唯一 Agent 和生产决策者；Shell 只能提供降低门槛所需的支撑与引导。
+5. PowerShell/Bash/CLI 不是自动失败条件；不得再发明未由 Owner 目标、official OpenMontage authority 或真实用户场景要求的技术表面。
+6. 不得让用户或模型猜路径、哈希、绑定、环境白名单、命令拼装或其他内部路由。
+7. D01 raw observation 可保留，但 `BLOCKED_WORKBUDDY_SURFACE` 不再是产品结论；当前唯一有效分类是 `D01_TEST_DESIGN_MISALIGNED`。
+8. Reviewer 必须先核对 Owner 原始目标与事实，再核对合同一致性；仅合同自洽不能通过。
+9. 任一事实缺失、目标关系不能证明或六文档不一致，立即 `STOP_MISALIGNED`，禁止带病进入下一步。
+10. 当前重审候选不得 commit、push、推广或恢复产品执行，除非 Owner 后续分别明确授权。
+
+### E 路线追加守卫
+
+- 唯一候选顺序是 `E01 -> E02 -> E03 -> E04 -> E05 -> E06 -> E07`；当前只允许 E01 docs-only 候选。
+- E02 必须先把每个源码改动映射到真实用户阻断；未映射路径禁止进入 E03/E04 allowlist。
+- E03 不得新增 OpenMontage semantic-operation adapter 或复制 Pipeline/Stage/Reviewer/Checkpoint/Tool Registry。
+- E04 只产品化安装/装配/生命周期，不得以 identical Skill ZIP 或 byte-perfect official/GK comparison 取代用户验收。
+- E05/E06 的成功标准是普通用户被引导完成完整本地视频；PowerShell/Bash/CLI 的存在或缺少专用 native event 都不是单独 PASS/FAIL。
+- E07 业务验收失败不得现场修 Shell/Core；推广与清理仍是两个后续独立 Owner 闸门。

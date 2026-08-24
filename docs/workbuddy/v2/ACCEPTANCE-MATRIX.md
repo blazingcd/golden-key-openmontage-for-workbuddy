@@ -713,3 +713,32 @@ builder_boundary: NO_FORMAL_PROMOTION
 | 4 | 仅在 Gate3 token 后 Owner 卸载 exact Skill、关闭两 sessions、删除 exact source+ZIP、捕获 after-state；Closeout Worker 写 result 与十问；随后独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE` | 顺序不明、after-state 不匹配、终审后又改 evidence/docs 或缺 FINAL_APPROVE |
 
 任一 Gate 失败即 `BLOCKED_WORKBUDDY_SURFACE`，D02-D08 继续未授权；该候选不把规划审查、probe primitive 或 negative evidence 升级为产品、Package、Shell、视频或业务 PASS。
+
+## Owner 紧急目标重置验收矩阵（2026-08-24）
+
+此前 D01-D08 验收合同全部标记为 `UNTRUSTED_PENDING_REAUDIT`，不得执行。D01 raw observation 仅作历史事实；`BLOCKED_WORKBUDDY_SURFACE` 撤销为产品结论，当前分类为 `D01_TEST_DESIGN_MISALIGNED`。
+
+| 当前硬闸门 | 通过条件 | 失败即停止 |
+|---|---|---|
+| 用户门槛 | 每个候选任务明确指出所消除的环境、配置、命令、提示词或下一步门槛，并有可验收用户结果 | 只描述内部机制、证据格式或技术表面，无法说明用户价值 |
+| 唯一 Agent | WorkBuddy 读取 verified OpenMontage authority 并作生产决策 | Shell、脚本或 child 决定 Pipeline/Stage/Provider/Renderer/内容 |
+| 技术透明 | 用户与模型无需猜路径、哈希、绑定、环境白名单或拼命令 | 内部技术被转嫁给用户/模型 |
+| 执行表面中立 | PowerShell/Bash/CLI 仅按实际用户体验与架构结果评估 | 因缺少发明出的 native event/专用表面直接判失败 |
+| 当前授权 | 只读事实审计和精确六文档纠正 | WorkBuddy、probe、产品代码、Package、Provider、媒体或 D02-D08 动作 |
+| 审查质量 | Reviewer 同时审目标吻合性、事实支持和内部一致性 | 只检查 frozen contract 自洽而不追溯 Owner 产品目标 |
+
+任一候选在上述任一行失败都标记 `STOP_MISALIGNED`；不得用后续 Gate、测试或下游任务修复当前偏离。
+
+### E01-E07 分层验收候选
+
+| 任务 | 只证明 | 不证明 |
+|---|---|---|
+| E01 | 目标、D 裁决与新路线文档吻合 Owner 目标 | 产品/客户端 |
+| E02 | 用户旅程、现有资产复用与 exact minimal change packet | 实现正确 |
+| E03 | guided entry 与支撑层离线合同/代码 | WorkBuddy 真实可用 |
+| E04 | 安装、装配、定位、升级、回滚、卸载 | OpenMontage/视频 |
+| E05 | official 的真实引导与完整本地视频 | Golden Key/业务质量 |
+| E06 | Golden Key 0.3.25 的同用户路径与完整本地视频 | 真实门店接受 |
+| E07 | 冻结门店案例的业务接受与 closeout 候选 | 未执行的推广/清理或普遍规模 |
+
+所有层先过 `USER_VALUE_GATE`，再审 sole-Agent、无发明性合同、最小改动和证据层级；不得再以客户端是否出现特定 native event 代替用户成功。

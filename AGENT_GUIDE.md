@@ -390,3 +390,26 @@ first_execution_condition: ABOVE_PROMOTION_COMPLETE + SEPARATE_OWNER_D01_AUTHORI
 本节是六文档候选的 append-only 镜像；它在独立零写 Reviewer 通过、单独 Owner 推广批准、ordinary fast-forward 进入 live formal ref 并核验远端对象前，不改变正式 authority，也不授权 D01。基线固定为 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`；当前状态为 `DOCS_ONLY / CANDIDATE_NOT_FORMAL / NOT_RUN_DOCS_ONLY`。只有独立纠偏 Reviewer 对 exact final six-doc diff 给出 APPROVE 后才可形成候选 commit；push 与正式推广分别等待后续明确决定。禁止 WorkBuddy/probe/Product/Package/Provider/media 动作和 pytest。
 
 Gate 0 先只读核验 live formal object、当前 WorkBuddy binary identity 和正式 authority；其中 B04 输入严格限于根 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B04_official_evidence\workbuddy-client\` 下 TASK-REGISTER 列出的 13 个精确文件。随后生成 canonical UTF-8 无 BOM `B04NegativeEvidenceManifestV1`（`entries` 按 `relative_path` 排序、无 self-hash）到 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\inputs\B04-NEGATIVE-EVIDENCE-MANIFEST.v1.json`，并在独立 Gate-0 takeover 记录中保存全字节 SHA256；任何清单项缺失、漂移或 manifest 额外项立即阻断，禁止读取 PackageRoot/assembly。Gate 1 必须在 import 前由独立零写 Reviewer 对 exact probe source tree/fixtures/ZIP listing+bytes+hash、两条 literal ordinary-language prompts、permissions/evidence plan 返回 `PRE_RUN_APPROVE`；Gate 2 才由 Owner 完成权限、导入和两次 fresh session；Gate 3 冻结证据并取得 `APPROVE_FOR_TASK_CLEANUP` 后，Gate 4 才能由 Owner 卸载 exact Skill、关闭两 session、删除 exact source+ZIP、捕获 after-state，再由 Closeout Worker 写 result 与十问，最后由独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE`。任一 Gate 失败即停止，D02 保持未授权且不得下游修复。
+
+## Owner 紧急目标重置与 D 路线停机守卫（2026-08-24）
+
+本节是当前工作树的最新 append-only 路由守卫。它将此前所有 D01-D08 的 current/next/execution 字段降为历史待审记录；旧授权、旧 Reviewer 结论、旧 Gate 状态和旧观测均不得恢复执行权。
+
+```text
+task_id: V2-PROJECT-GOAL-AND-D-ROUTE-REAUDIT1
+task_kind: READ_ONLY_FACT_AUDIT + PLANNING_DOCS_CORRECTION_ONLY
+formal_base: b7bd6bc201f821f83d019c5b7addd8ec198d7ecf / tree daa4ed62e94cf9105358cb452b4950a134d7e2ef
+current_product_execution: PAUSED_BY_OWNER
+D01_D08: UNTRUSTED_PENDING_REAUDIT / DO_NOT_CONTINUE
+D01_product_verdict: D01_TEST_DESIGN_MISALIGNED / BLOCKED_WORKBUDDY_SURFACE_WITHDRAWN_AS_PRODUCT_CONCLUSION
+allowed_changes: EXACT_SIX_AUTHORITY_DOCS_ONLY
+forbidden: WORKBUDDY_PROBE + PRODUCT_CODE + PACKAGE + PROVIDER + MEDIA + D02_D08_EXECUTION
+tests: NOT_RUN_DOCS_ONLY
+commit_push_promotion: NOT_AUTHORIZED
+```
+
+产品目标以普通用户为中心：Shell 的存在理由是降低 OpenMontage 使用门槛，并提供环境缺漏、配置、命令提示、提示词内容和下一步操作的引导。WorkBuddy 仍是唯一 Agent 和生产决策者；Shell 不得成为第二控制面。PowerShell、Bash 或 CLI 只是可能的内部执行表面，使用它们本身不是失败。每个后续候选任务的第一硬闸门必须回答“它具体消除普通用户的哪一项使用门槛”；无法用事实回答、把内部技术暴露给用户/模型、或引入未经证明的新约束时立即停止。
+
+### E 路线候选路由镜像
+
+完整审计与 21 字段合同以 TASK-REGISTER 最后同名节为准。候选路线为 `E01 docs-only 目标/路线固化 -> E02 只读用户旅程/最小改动审计 -> E03 guided entry 最小纠正 -> E04 安装/装配/生命周期产品化 -> E05 official 用户路径 control -> E06 Golden Key 0.3.25 同用户路径 -> E07 真实门店业务/closeout 候选`。D01 被删除为产品 Gate；D02/D03 semantic-operation/adapter 假设被替换；D04-D08 仅保留与用户目标直接相关的部分。当前只执行 E01 文档候选，E02-E07 均未授权。

@@ -2571,7 +2571,7 @@ direct_WorkBuddy_fallback_counts_as_Shell_success: NEVER
 15_upstream_dependency: C01 APPROVE and explicit Owner authorization for C02; latest formal branch exact takeover
 16_downstream_handoff: C03 only after independent APPROVE, separate Owner promotion approval and ordinary fast-forward into formal
 17_real_workbuddy_required: NO new run; consumes C01 evidence only
-18_official_control_group: YES / contract derives from C01 official evidence
+18_official_control_group: NO / consumes C01 read-only probe evidence only; C05 is the official control acceptance
 19_involves_0_3_25: NO; exact identity may be listed as future read-only input only
 20_proves_after_completion: An evidence-backed minimal Agent-first Shell/Skill/Installer contract and implementation boundary
 21_cannot_prove_after_completion: Code correctness, assembly/lifecycle, real official success, 0.3.25 compatibility, business E2E or promotion of product behavior

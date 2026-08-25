@@ -463,3 +463,27 @@ cleanup: NOT_INCLUDED / SEPARATE_OWNER_AUTHORIZATION_REQUIRED
 - Planner 必须是 Owner 显式指派的 `Planning/Audit Coordinator`；handoff 绑定 Owner identity、record ID、issued/expires、exact formal commit/tree/task/packet SHA/allowlist/forbidden。`UXCopyContractV1` 由 Owner 或指定 approver 批准；E03 仅 `OFFLINE_CONTRACT_ONLY`，直到另有 `OwnerClientActionAuthorizationV1`。
 
 本轮 Owner 条件授权为：独立 Reviewer 先审 unstaged exact diff 并通过后允许 candidate commit；commit 后由零写核验 exact commit/tree 与已审字节一致并给出 post-commit binding `APPROVE`，随后允许 push 到专用候选分支。不构成 `FORMAL_DELIVERY`，不授权 E02。禁止产品代码、测试、WorkBuddy、Package/Registration/Installer、Provider、媒体、客户端和 cleanup。
+
+## V2-E02-EXECUTION-PLAN-FREEZE1（2026-08-25，docs-only 候选路由守卫）
+
+完整计划只以 `docs/workbuddy/v2/TASK-REGISTER.md` 同名节和下列 exact carrier bytes 为准；本文件不复制执行细节。候选提交/推送只形成 remote-candidate containment，不改变 live formal ref，不构成 E02 authorization 或 `FORMAL_DELIVERY`。
+
+```text
+plan_freeze_task: V2-E02-EXECUTION-PLAN-FREEZE1
+execution_task: V2-E02-CURRENT-JOURNEY-MINIMAL-CHANGE-AUDIT
+scope: DOCS_ONLY / EXACT_SIX_AUTHORITY_FILES / ZERO_PRODUCT_STATE_CHANGE
+formal_base: 271dee394bed5ca3dd5c31860c842a8cbfdfa536 / tree 8eea24e3bc3fc5f4c6eed536281799edaebdde40
+packet: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1\packet\E02ExecutionPacketV1.json
+packet_sha256: ddbd68018506f4df90a6c0bb49bd3d2127c5d77ee980ea890d5e02da2bb0c1a0
+input_manifest: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1\inputs\E02InputManifestV1.json
+input_manifest_sha256: 5345a83d628c22e45e8265509af30dd8d77abca7aaab5c44ff6dca8737cf1956
+plan_review: INDEPENDENT_ZERO_WRITE_APPROVE / P0=0 / P1=0 / P2=0 / EXACT_PACKET_AND_MANIFEST_HASHES
+candidate_result: THIS_COMMIT / SELF_RESOLVING_REMOTE_CANDIDATE_CONTAINMENT
+e02_state: NOT_STARTED / NOT_AUTHORIZED
+handoff_report_evidence: NOT_CREATED
+required_before_execution: PRE_EXECUTION_REVIEW + OwnerTaskExecutionAuthorizationV1
+e03_e04: BLOCKED_BY_E02_CHAIN
+formal_delivery: NOT_AUTHORIZED_IN_THIS_TASK
+```
+
+WorkBuddy 仍是唯一运行 Agent、用户对话主体和生产决策者；OpenMontage 仍是生产语义 authority；Shell 仅承担支持性、机械性边界。E02 只允许按 manifest 做 exact 只读检查；产品代码、测试、Skill、历史资产和外部仓库不得执行或修改，外部仓库不得写入、commit 或 push。只有独立 `PRE_EXECUTION_REVIEW` 通过且 `OwnerTaskExecutionAuthorizationV1` 生效后，Execution Worker 才可在固定 task root 写入 exact `reports/` 与 `evidence/` carriers。禁止 WorkBuddy、浏览器/客户端、Package、Registration、Installer、Provider、媒体、视频、测试运行、CI 和 cleanup 动作。九阶段、十条旅程、十六字段、七个输出合同、七组资产、十一组输入及停止规则只路由到 `TASK-REGISTER.md` 同名节和上述 exact packet hash。

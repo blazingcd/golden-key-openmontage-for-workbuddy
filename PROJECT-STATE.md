@@ -1138,3 +1138,29 @@ E02 固定十条旅程：安装/首次打开/环境就绪、具体需求、模�
 E05/E06 视频必须由真实 WorkBuddy、verified authority 和真实工具产生，非 fixture/mock/demo/fallback，竖屏、可播放、非零时长，lineage/receipt 可审且无手工绕行。same=ordinary-language user journey、business brief/materials、applicable consent/cost scenario、Shell responsibilities、client/model where supported and frozen、acceptance/evidence method；allowed-different=Package-owned Guide/Pipeline/Stage/tool、source-attributed package-specific Skill metadata/text/binding、derived creative decisions/artifacts；fail=额外用户技术负担、第二控制面、手工绕行/fallback、未在 comparison manifest 归因的控制变量漂移。不要求 Skill ZIP、model、client 或全部非-Package 字节机械相同。Planner 只能是 Owner 显式指派的 `Planning/Audit Coordinator`，handoff 绑定 Owner identity、record ID、issued/expires、exact formal commit/tree/task/packet SHA/allowlist/forbidden；E03 仅 `OFFLINE_CONTRACT_ONLY` 直到另有 `OwnerClientActionAuthorizationV1`。
 
 本轮 Owner 条件授权为：独立 Reviewer 先审 unstaged exact diff 并通过后允许 candidate commit；commit 后由零写核验 exact commit/tree 与已审字节一致并给出 post-commit binding `APPROVE`，随后允许 push 到专用候选分支。该候选不等于 `FORMAL_DELIVERY`，不授权 E02。禁止产品代码、测试、WorkBuddy、Package/Registration/Installer、Provider、媒体、客户端和 cleanup。
+
+## V2-E02-EXECUTION-PLAN-FREEZE1（2026-08-25，docs-only 候选镜像）
+
+本节与 TASK-REGISTER 同名节镜像 E02 的完整执行规划；它只形成 `THIS_COMMIT / SELF_RESOLVING_REMOTE_CANDIDATE_CONTAINMENT`，不改变 E01 formal/candidate 状态，不启动 E02。
+
+```text
+plan_freeze_task: V2-E02-EXECUTION-PLAN-FREEZE1
+execution_task: V2-E02-CURRENT-JOURNEY-MINIMAL-CHANGE-AUDIT
+scope: DOCS_ONLY / EXACT_SIX_AUTHORITY_FILES / ZERO_PRODUCT_STATE_CHANGE
+formal_base: 271dee394bed5ca3dd5c31860c842a8cbfdfa536 / tree 8eea24e3bc3fc5f4c6eed536281799edaebdde40
+packet_sha256: ddbd68018506f4df90a6c0bb49bd3d2127c5d77ee980ea890d5e02da2bb0c1a0
+input_manifest_sha256: 5345a83d628c22e45e8265509af30dd8d77abca7aaab5c44ff6dca8737cf1956
+plan_review: INDEPENDENT_ZERO_WRITE_APPROVE / P0=0 / P1=0 / P2=0
+e02_state: NOT_STARTED / NOT_AUTHORIZED
+handoff_report_evidence: NOT_CREATED
+required_before_execution: PRE_EXECUTION_REVIEW + OwnerTaskExecutionAuthorizationV1
+e03_e04: BLOCKED_BY_E02_CHAIN
+```
+
+目标是只读找出普通用户从安装、首次打开、自然语言需求到真实结果之间的真实阻断，并将其路由到最小后续动作；不为 E03/E04 凑功能。九阶段固定为 `P0 TAKEOVER_AND_FAIL_CLOSED`、`P1 EXACT_INPUT_VERIFICATION`、`P2 TARGET_JOURNEY_BASELINE`、`P3 CURRENT_FLOW_STATIC_TRACE`、`P4 ASSET_CLASSIFICATION`、`P5 MINIMAL_CHANGE_TRACE`、`P6 REPORT_AND_EVIDENCE_FREEZE`、`P7 INDEPENDENT_RESULT_REVIEW`、`P8 CLOSEOUT_BOUNDARY`。
+
+十条固定旅程按此顺序：`install-first-open-environment-ready`、`specific-request`、`vague-request-guided-entry`、`package-absent-or-unverified`、`required-environment-missing`、`configuration-consent-optional-capability`、`verified-guide-manifest-handoff`、`execution-error-recovery`、`result-receipt-video-relay`、`safe-uninstall-rollback-data-preservation`。每条必须填同一 16 字段：`journey_order`、`journey_id`、`ordinary_user_start_state`、`ordinary_user_action`、`expected_user_visible_outcome`、`responsibility_chain`、`exact_inputs_examined`、`current_static_capability`、`confirmed_user_blockers`、`evidence_refs`、`journey_status`、`candidate_disposition`、`candidate_change_refs`、`visible_copy_or_accessibility_risks`、`negative_case`、`cannot_prove`。
+
+七个结构化输出合同为 `blocker_record`、`candidate_change_record`、`bidirectional_trace_record`、`downstream_boundary_record`、`fact_record`、`deviation_or_stop_record`、`evidence_index_record`。证据必须绑定 exact Git blob 或 external file，并有必需 `source_locator`（行号范围、symbol、markdown heading 或 json pointer）；动态 URL 在 E02 中禁止。七组资产为 `current_registration_locator`、`current_optional_runtime`、`current_launcher_and_entry`、`current_package_exports_and_hygiene`、`historical_guidance_and_lifecycle`、`documentary_package_comparison`、`historical_raw_negative_evidence`；资产只可 `KEEP/REWORK/REMOVE/NO_CHANGE/NOT_PROVED`。十一组 exact input 为 `e01-current-authority`、`package-registration-contract-documentary`、`current-shell-source-tests-skill`、`original-v2-handoff-owner-snapshot`、`historical-v2-next-session-handoff`、`historical-guided-skill`、`historical-installer-lifecycle-assets`、`official-openmontage-documentary-source`、`golden-key-0.3.25-documentary-source`、`b04-raw-negative-evidence`、`d01-historical-manifest`。
+
+最小路由只有 `E03_CANDIDATE`（入口/引导/错误解释/呈现）、`E04_CANDIDATE`（安装/装配/生命周期/binding）、`NO_CODE_CHANGE_REQUIRED` 和 `NOT_PROVED`；每个改动必须有普通用户 blocker，跨 E03/E04 必须拆分。WorkBuddy 是 sole Agent，OpenMontage 是 semantic authority，Shell 仅 support/mechanical；禁止第二控制面、技术负担和真实客户端/视频 overclaim。E02 仍为 static read-only；Planner、Execution Worker、Closeout Worker、Reviewer 四方分离，分别受 packet 写域约束；计划固化不等于执行授权、formal delivery 或 cleanup。

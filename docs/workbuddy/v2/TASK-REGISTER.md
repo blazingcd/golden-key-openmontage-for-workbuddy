@@ -4289,3 +4289,101 @@ E05/E06 的真实完整视频最低标准相同：不是 fixture、mock、demo�
 `Planning/Audit Coordinator` 只能由 Owner 显式指派；角色 handoff record 必须包含 Owner identity、record ID、issued、expires、exact formal commit/tree、task、packet SHA、allowlist 和 forbidden。`UXCopyContractV1` 的 approver 必须是 Owner 或 Owner 指定的 approver。E03 在另有 client authorization 前仅允许 `OFFLINE_CONTRACT_ONLY`，不得借文案合同启动客户端或真实 WorkBuddy。
 
 本轮 Owner 条件授权为：独立 Reviewer 先审 unstaged exact diff 并返回 `APPROVE / P0=0 / P1=0 / P2=0` 后，允许 candidate commit；commit 后必须由零写核验 exact commit/tree 与已审字节一致并返回 post-commit binding `APPROVE`，随后允许 push 到本任务专用 `codex/` 分支。该授权不包含 `FORMAL_DELIVERY` 或 E02；push 仍不得改变 formal ref。
+
+## V2-E02-EXECUTION-PLAN-FREEZE1（2026-08-25，当前 docs-only 候选）
+
+本节是 E02 的完整具体执行规划与六文档镜像源。它只冻结规划，不执行 E02，不修改产品，不改变 E01 formal/candidate 状态；候选提交/推送仅形成 `THIS_COMMIT / SELF_RESOLVING_REMOTE_CANDIDATE_CONTAINMENT`，不等于 `FORMAL_DELIVERY` 或 E02 authorization。
+
+```text
+plan_freeze_task: V2-E02-EXECUTION-PLAN-FREEZE1
+execution_task: V2-E02-CURRENT-JOURNEY-MINIMAL-CHANGE-AUDIT
+scope: DOCS_ONLY / EXACT_SIX_AUTHORITY_FILES / ZERO_PRODUCT_STATE_CHANGE
+formal_base: 271dee394bed5ca3dd5c31860c842a8cbfdfa536 / tree 8eea24e3bc3fc5f4c6eed536281799edaebdde40
+packet_path: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1\packet\E02ExecutionPacketV1.json
+packet_sha256: ddbd68018506f4df90a6c0bb49bd3d2127c5d77ee980ea890d5e02da2bb0c1a0
+input_manifest_path: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1\inputs\E02InputManifestV1.json
+input_manifest_sha256: 5345a83d628c22e45e8265509af30dd8d77abca7aaab5c44ff6dca8737cf1956
+plan_review: INDEPENDENT_ZERO_WRITE_APPROVE / P0=0 / P1=0 / P2=0 / EXACT_HASHES_BOUND
+candidate_result: THIS_COMMIT / SELF_RESOLVING_REMOTE_CANDIDATE_CONTAINMENT
+e02_state: NOT_STARTED / NOT_AUTHORIZED
+handoff: NOT_CREATED
+execution_report: NOT_CREATED
+evidence_index: NOT_CREATED
+required_next: PRE_EXECUTION_REVIEW + OwnerTaskExecutionAuthorizationV1
+e03_e04: BLOCKED_BY_E02_CHAIN
+```
+
+### 1. 目标和不可越界边界
+
+E02 只回答一个问题：普通用户从安装、首次打开、提出自然语言需求到取得真实结果的路径上，哪一段有证据证明会阻断，现有能力能否复用，真正需要的最小后续动作属于谁。E02 不创建功能，不为 E03/E04 凑任务；证据不足必须保持 `NOT_PROVED`。
+
+WorkBuddy 是唯一运行 Agent、用户对话主体和生产决策者；OpenMontage 是生产语义 authority；Shell 只做安装、定位、受控机械执行、入口、状态/结果 relay 和可执行引导。普通用户不得接触 path/hash/schema/env/argv/transport；Shell 不理解业务意图、不发起 consent、不选择 recovery、不推进生产、不成为第二控制面。E02 是 `STATIC_READ_ONLY_EVIDENCE_AUDIT_NO_CLIENT_NO_PRODUCT_EXECUTION`：执行授权前，只允许按 manifest 对精确列明的代码、Skill、测试、历史材料和 documentary checkout 做只读检查。禁止执行或修改产品代码、测试、Skill、历史资产和外部仓库；禁止外部仓库写入、commit、push；禁止 WorkBuddy、浏览器/客户端、Package、Registration、Installer、Provider、媒体、视频、测试运行和 CI。只有独立 `PRE_EXECUTION_REVIEW` 通过且 `OwnerTaskExecutionAuthorizationV1` 生效后，Execution Worker 才可在固定 task root 写入 exact `reports/` 与 `evidence/` carriers；其他六文档外写入及 cleanup 均禁止。
+
+### 2. 九个阶段的实际执行顺序
+
+| 阶段 | 执行内容 | 必须形成的结果/硬停条件 |
+|---|---|---|
+| P0 `TAKEOVER_AND_FAIL_CLOSED` | 核验 Owner token、exact packet/manifest、formal commit/tree、角色和写域 | 不一致即 `STOP_NOT_AUTHORIZED` 或 `STOP_PACKET_MISMATCH` |
+| P1 `EXACT_INPUT_VERIFICATION` | 逐项核验 11 组 input 的 exact identity；不读 external OpenMontage `AGENT_GUIDE.md` | 缺失/额外/漂移/不可读即 `BLOCKED_INPUT_NOT_PROVED` |
+| P2 `TARGET_JOURNEY_BASELINE` | 固定每条旅程的用户起点、动作、可见成功结果、责任链 | 十条旅程都能回答用户门槛且不产生第二控制面 |
+| P3 `CURRENT_FLOW_STATIC_TRACE` | 只按 exact path/symbol 静态追踪代码、Skill、测试、历史材料；分开五种事实等级 | 每条旅程都有 evidence ref 或 `NOT_PROVED` |
+| P4 `ASSET_CLASSIFICATION` | 审计七组资产，优先 KEEP/NO_CHANGE；REWORK/REMOVE 必须有 confirmed blocker | 每项分类唯一并带理由、用户价值、保护边界、不能证明 |
+| P5 `MINIMAL_CHANGE_TRACE` | blocker→change、change→blocker 双向映射；拆分 E03/E04 | 无孤立 blocker、无无依据 change、无下游 repair window |
+| P6 `REPORT_AND_EVIDENCE_FREEZE` | 固化 report/index、source identity、internal locator、after-state | 固定编码/行尾，hash 可复算，无 dangling/duplicate evidence |
+| P7 `INDEPENDENT_RESULT_REVIEW` | 先审目标与用户价值，再审事实、旅程、映射、证据、写域 | `APPROVE / P0=0 / P1=0 / P2=0`，否则 `INCOMPLETE` |
+| P8 `CLOSEOUT_BOUNDARY` | 结果审查后才可由 Closeout Worker 镜像六 docs；保留证据 | `NOT_APPLICABLE_WITH_EVIDENCE`，不自动启动下游 |
+
+### 3. 十条固定旅程闭集
+
+必须严格按以下顺序审计，数量、顺序和定义变化必须同步 packet/report/index/六文档并重新审查：
+
+1. `install-first-open-environment-ready`：安装、首次打开、环境就绪；
+2. `specific-request`：具体自然语言需求；
+3. `vague-request-guided-entry`：模糊需求与 guided entry；
+4. `package-absent-or-unverified`：Package 缺失或 identity 未验证；
+5. `required-environment-missing`：必需环境缺漏；
+6. `configuration-consent-optional-capability`：配置、consent、可选能力或 Provider 决定；
+7. `verified-guide-manifest-handoff`：verified Guide/Manifest handoff 与决策归属；
+8. `execution-error-recovery`：机械错误、暂停、恢复、继续；
+9. `result-receipt-video-relay`：结果、receipt、Artifact lineage、视频 relay；
+10. `safe-uninstall-rollback-data-preservation`：安全卸载、升级/回滚、用户数据保全。
+
+### 4. 单一 16-field journey schema
+
+每条记录必须独立填满：`journey_order`、`journey_id`、`ordinary_user_start_state`、`ordinary_user_action`、`expected_user_visible_outcome`、`responsibility_chain`、`exact_inputs_examined`、`current_static_capability`、`confirmed_user_blockers`、`evidence_refs`、`journey_status`、`candidate_disposition`、`candidate_change_refs`、`visible_copy_or_accessibility_risks`、`negative_case`、`cannot_prove`。
+
+`journey_status` 只允许 `SUPPORTED_STATICALLY`、`PARTIAL`、`BLOCKED_BY_CONFIRMED_GAP`、`NOT_PROVED`；`candidate_disposition` 只允许 `NO_CODE_CHANGE_REQUIRED`、`E03_CANDIDATE`、`E04_CANDIDATE`、`E03_E04_SPLIT_CANDIDATE`、`NO_DOWNSTREAM_ACTION_NOT_PROVED`。
+
+### 5. 七个结构化 output contracts
+
+固定为：
+
+1. `blocker_record`：blocker、用户影响、当前/预期状态、证据、事实等级、处置、不能证明；
+2. `candidate_change_record`：change、owner、exact path/symbol、意图、linked blocker、用户价值、保护非目标、验收、证据、状态；
+3. `bidirectional_trace_record`：blocker/change 双向完整性与孤立原因；
+4. `downstream_boundary_record`：E03/E04 owner、用户阻断、exact allowlist/denylist、保护边界、验收、输入、不能证明、authorization；
+5. `fact_record`：statement、五种事实等级、证据、使用方、限制；
+6. `deviation_or_stop_record`：偏差/停止条件、阶段、状态、停止前写入、部分报告、下游状态、证据；
+7. `evidence_index_record`：evidence identity、source kind/input、required `source_locator`、支持的 statement/blocker、证据限制。
+
+Evidence 必须绑定 exact Git blob 或 external file；`source_locator` 必须是 `line_start + line_end`、`symbol`、`markdown_heading` 或 `json_pointer`，整文件 hash alone 不足以支持 blocker。动态 URL 在 E02 一律 `FORBIDDEN`。
+
+### 6. 七组资产与四路最小处置
+
+七组资产为：`current_registration_locator`、`current_optional_runtime`、`current_launcher_and_entry`、`current_package_exports_and_hygiene`、`historical_guidance_and_lifecycle`、`documentary_package_comparison`、`historical_raw_negative_evidence`。只审 packet 列明的 exact path/symbol；历史材料不得整包恢复或执行。
+
+资产分类仅允许 `KEEP`、`REWORK`、`REMOVE`、`NO_CHANGE`、`NOT_PROVED`。`REWORK`/`REMOVE` 必须有 confirmed blocker、evidence、named owner；无 blocker 时优先 KEEP/NO_CHANGE。最小改动路由为：`E03_CANDIDATE`（入口、guided entry、可见引导、错误解释、呈现）、`E04_CANDIDATE`（安装、装配、版本化生命周期、binding）、`NO_CODE_CHANGE_REQUIRED`（现有能力/非代码合同已够）、`NOT_PROVED`（证据不足，不创建任务）。跨 E03/E04 必须拆分，每个 change 必须反向连接 blocker。
+
+### 7. 十一组 exact inputs、载体和角色写域
+
+11 组 input 固定为：`e01-current-authority`、`package-registration-contract-documentary`、`current-shell-source-tests-skill`、`original-v2-handoff-owner-snapshot`、`historical-v2-next-session-handoff`、`historical-guided-skill`、`historical-installer-lifecycle-assets`、`official-openmontage-documentary-source`、`golden-key-0.3.25-documentary-source`、`b04-raw-negative-evidence`、`d01-historical-manifest`。只有 E01 六 docs 是当前 authority；Package Registration 是 documentary input；external OpenMontage `AGENT_GUIDE.md` 仅 identity-only，禁止读取。
+
+唯一 task root 为 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1`，载体固定为 `packet/E02ExecutionPacketV1.json`、`inputs/E02InputManifestV1.json`、`handoff/E02TakeoverV1.json`、`reports/E02ExecutionReportV1.json`、`evidence/E02EvidenceIndexV1.json`。所有载体 UTF-8 no BOM/LF/final LF，原始字节 SHA256 绑定；被 hash 文件不写自 hash。Planner 只写 packet/input，Owner token 后才可写 takeover；Execution Worker 只写 root 下 reports/evidence；Closeout Worker 只写六 docs；Reviewer 全零写；证据冻结且审查前不得清理。
+
+### 8. 审查、停止和授权顺序
+
+已存在的 PLAN_REVIEW 只证明 exact packet/manifest 规划通过，不等于可执行。新执行对话必须先由独立零写 Reviewer 做 `PRE_EXECUTION_REVIEW`，复核 live formal commit/tree、11 组 inputs、packet/manifest hashes、角色写域、九阶段、十旅程、16 字段、7 contracts、7 assets、source locator 和 dynamic URL 禁止规则；然后 Owner 才能签发绑定 exact packet SHA/formal objects/allowlist/forbidden 的 `OwnerTaskExecutionAuthorizationV1`。任何 mismatch、越界、缺 evidence locator、dynamic URL、事实等级坍缩、无 blocker 的改动、Shell 生产决策、第二控制面、真实 WorkBuddy/Package/Provider/media/video overclaim 或提前 cleanup，立即 `STOP`；E03/E04 保持阻断。
+
+### 9. 当前固化状态
+
+本次 Closeout Worker 只固化上述六份 authority docs；E02 `NOT_STARTED / NOT_AUTHORIZED`，`handoff/report/evidence` `NOT_CREATED`，E03/E04 `BLOCKED_BY_E02_CHAIN`。E02 只有在 execution report/evidence index 完整冻结并经独立结果审查后，才能形成下游 candidate boundary；本候选不授权执行、产品改动、客户端操作、测试、Package/Provider/media、cleanup、`FORMAL_DELIVERY` 或下一任务。

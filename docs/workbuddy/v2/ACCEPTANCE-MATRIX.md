@@ -804,3 +804,20 @@ E02 同样要求 Planner/Audit Coordinator、Execution Worker、Closeout Worker�
 | E05/E06 compare | same=ordinary-language user journey、business brief/materials、applicable consent/cost scenario、Shell responsibilities、client/model where supported and frozen、acceptance/evidence method；allowed-different=Package-owned Guide/Pipeline/Stage/tool、source-attributed package-specific Skill metadata/text/binding、derived creative decisions/artifacts；fail=额外用户技术负担、第二控制面、手工绕行/fallback、未在 comparison manifest 归因的控制变量漂移；不要求 Skill ZIP/model/client/全部非-Package 字节机械相同 | 用 byte-identical、粗略相似或技术内部差异替代用户结果 |
 | 角色与授权 | Owner 显式指派 Planning/Audit Coordinator；Planner 仅在 Owner 授权后写 `handoff/E02TakeoverV1.json`；handoff 有 Owner identity、record ID、issued/expires、exact formal commit/tree/task/packet SHA/allowlist/forbidden；E03 为 `OFFLINE_CONTRACT_ONLY`，直到 `OwnerClientActionAuthorizationV1`；UXCopyContractV1 由 Owner/指定 approver 批准 | 由聊天标题/历史自动继承，或文案/客户端权限不明 |
 | Git | Reviewer 先审 unstaged exact diff；通过后允许 candidate commit；commit 后零写核验 exact commit/tree 与已审字节一致并给 post-commit binding `APPROVE`，才可 push 专用候选分支。本轮条件授权不含 `FORMAL_DELIVERY`/E02 | 先提交/推送/推广、缺 post-commit binding，或把候选当正式 authority |
+
+## V2-E02-EXECUTION-PLAN-FREEZE1 验收镜像（2026-08-25，docs-only 候选）
+
+本节只验收 E02 规划是否完整，不验收 E02 执行或产品行为。候选结果为 `THIS_COMMIT / SELF_RESOLVING_REMOTE_CANDIDATE_CONTAINMENT`；E02 仍 `NOT_STARTED / NOT_AUTHORIZED`，handoff/report/evidence 尚未创建，执行前仍需 `PRE_EXECUTION_REVIEW` 和 `OwnerTaskExecutionAuthorizationV1`。
+
+| 规划硬门 | 固化内容 | 失败即停止 |
+|---|---|---|
+| 目标与边界 | WorkBuddy sole Agent/user conversation；OpenMontage semantic authority；Shell 仅 support/mechanical；普通用户不接触内部技术值；无第二控制面 | 加入生产决策、技术负担、第二 Agent/控制面 |
+| 顺序 | 九阶段 `P0`–`P8`：接管、输入、目标旅程、静态追踪、资产分类、最小改动、证据冻结、独立结果审查、收口边界 | 跳过阶段、执行/审查混在一起、下游 repair window |
+| 旅程闭集 | 十条固定 journey ID，数量、顺序、定义跨 packet/report/index/六文档同步 | 改成旧数量简称或漏项 |
+| 记录合同 | 每条旅程同一 16 字段：起点、动作、可见结果、责任链、exact inputs、能力、阻断、证据、状态、处置、风险、negative case、cannot prove | 字段不同、静态能力冒充真实可用 |
+| 输出合同 | 七项：blocker、candidate change、双向 trace、downstream boundary、fact、deviation/stop、evidence index | 缺合同、change 无 blocker 或 blocker 无处置 |
+| 资产/输入 | 七组资产，十一组 exact input；分类限 `KEEP/REWORK/REMOVE/NO_CHANGE/NOT_PROVED` | 自由扫描、整包恢复、无证据改动 |
+| 证据 | exact Git blob/external file identity；`source_locator` 必需；dynamic URL `FORBIDDEN` | 只有整文件 hash、动态网页或不可重连引用 |
+| 最小路由 | 只允许 `E03_CANDIDATE`、`E04_CANDIDATE`、`NO_CODE_CHANGE_REQUIRED`、`NOT_PROVED`；E03/E04 candidate-only | 预先授权、扩大 allowlist、把规划当执行 |
+| 角色/载体 | 唯一 E02 root、五个固定 carrier、四方分离、写域固定；Reviewer 全零写 | 多 root、越权写、提前 cleanup |
+| 当前状态 | `NOT_STARTED / NOT_AUTHORIZED`；E03/E04 blocked；不含产品、客户端、测试、Package、Provider、media、formal delivery | 任何执行、推广或成功 overclaim |

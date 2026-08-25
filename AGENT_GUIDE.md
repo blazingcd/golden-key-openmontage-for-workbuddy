@@ -360,7 +360,9 @@ next_active_task: NONE / OWNER_REAUTHORIZATION_REQUIRED
 
 The A7 formal result remains limited to these six existing files and has no product code, test, CI, Package, external repository, client, Provider, media, Registration, Activation, or DataRoot effect. Do not run pytest as part of this docs-only state closeout; the explicit verification label is `NOT_RUN_DOCS_ONLY`. The audit result was independently reviewed and formally promoted by ordinary fast-forward at `4727c5efda6ae53194ff2c16dd224c67178e8d8d` with successful CI run `32615371879`; the original Phase A task worktree and local/remote task branches were cleaned. This closeout uses `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`; both the A7 `NOT_AUTHORIZED` value and the later B01-only authorization are historical. Current authority is `PAUSED_BY_OWNER / NO_ACTIVE_PRODUCT_EXECUTION` in the 2026-08-24 rebaseline section above.
 
-## 新任纠偏执行路线候选守卫（2026-08-24）
+## [HISTORICAL / SUPERSEDED_BY_V2-E01-ROUTE-BOUNDARY-CORRECTION1] 新任纠偏执行路线候选守卫（2026-08-24；D01-D08 路线历史快照）
+
+本节及其所含 D01-D08 路线字段均为历史记录，不参与当前路由；当前唯一 authority/route 为最新 E01→E07 correction（`V2-E01-ROUTE-BOUNDARY-CORRECTION1`）及六文档同名 current 节。
 
 本节只是在 `codex/v2-correction-execution-plan-audit1` 上等待审查和 Owner 推广决定的候选。它不因被提交、推送或 Reviewer 通过而成为正式 authority，也不授权任何产品执行。完整事实、逐项裁决、21 字段合同、十问记录和全部追踪矩阵只在 `docs/workbuddy/v2/TASK-REGISTER.md` 末尾维护；本文件只提供路由守卫。
 
@@ -379,21 +381,25 @@ promotion_condition: INDEPENDENT_ZERO_WRITE_APPROVE + OWNER_PLAN_PROMOTION_APPRO
 first_execution_condition: ABOVE_PROMOTION_COMPLETE + SEPARATE_OWNER_D01_AUTHORIZATION
 ```
 
-候选核心边界：WorkBuddy 是唯一 Agent、对话主体和生产决策者；它按 exact Guide、用户可选 manifest、Stage/meta Skills、Reviewer、Checkpoint 与 Tool Registry 推进完整流程。Skill 必须与 Package 字节无关，Package identity、hash、path、environment 和 binding 对模型不可见，由版本化 Installer 与 Shell 管理。Shell 只提供逻辑权威资源读取、项目/检查点、preflight、registry tool 执行和机械结果传递；每次调用只能完成一个有界机械 operation，不能决定 Pipeline、Stage、Review、Provider、Renderer 或媒体内容，也不能把 whole request 压成一个 child。
+候选核心边界：WorkBuddy 是唯一 Agent、对话主体和生产决策者；它按 exact Guide、用户可选 manifest、Stage/meta Skills、Reviewer、Checkpoint 与 Tool Registry 推进完整流程。Skill 必须与 Package 字节无关；普通用户无需理解、构造或看到 Package identity、hash、path、environment 和 binding，WorkBuddy/model 不得猜测、自由合成或从用户输入推导这些值，但可接收 verified host 提供的 exact operation contract。Shell 只提供逻辑权威资源读取、项目/检查点、preflight、registry tool 执行和机械结果传递；每次调用只能完成一个有界机械 operation，不能决定 Pipeline、Stage、Review、Provider、Renderer 或媒体内容，也不能把 whole request 压成一个 child。
 
 严格顺序及目的：`D01` 先以无 Package 的临时 probe 证明真实 WorkBuddy 原生资源/脚本面；`D02` 只按该证据冻结合同；`D03` 实现最小语义 Shell/Skill/adapter；`D04` 把 Installer 从 D 盘临时证明变成版本化产品；`D05` 生成 fresh official/GK assemblies 与同一 Package-agnostic Skill ZIP；`D06` 用 official `cd9f3c1f` 做两次完整本地成片 control，且禁止 `framework-smoke`；`D07` 保持所有非 Package 输入/方法不变，只切换到 Golden Key `0.3.25` 的 immutable Package-owned Guide/manifest/Stage/tool/Pipeline authority 与其 derived binding，WorkBuddy 按各自 Package Guide 选正确用户 Pipeline；`D08` 做真实门店业务验收和 closeout 候选。规划推广、逐任务结果推广、D08 后项目 closeout/cleanup 是三个不同 Owner 闸门。
 
 任一步都必须从届时最新正式 HEAD 建立独立分支/worktree，由不同的 Worker 与零写 Reviewer 完成，并逐题通过 TASK-REGISTER 的十问 `EXECUTION_GATE`。`NOT_PROVED`、证据层混淆、模型技术路由、直接 fallback、验收期修复或下游 repair window 都会阻断当前任务及后续任务。
 
-## D01 合同纠偏候选 Replacement1 当前优先级守卫（2026-08-24）
+## [HISTORICAL / SUPERSEDED_BY_V2-E01-ROUTE-BOUNDARY-CORRECTION1] D01 合同纠偏候选 Replacement1 当前优先级守卫历史快照（2026-08-24）
+
+本节及其所含 D01 Replacement1 合同均为历史记录，不参与当前路由；当前唯一 authority/route 为最新 E01→E07 correction（`V2-E01-ROUTE-BOUNDARY-CORRECTION1`）及六文档同名 current 节。
 
 本节是六文档候选的 append-only 镜像；它在独立零写 Reviewer 通过、单独 Owner 推广批准、ordinary fast-forward 进入 live formal ref 并核验远端对象前，不改变正式 authority，也不授权 D01。基线固定为 `99bc5c3d727671d7d2ea7313c6851792583efe66` / tree `b995a9a02add77f1e61769f364dd86b341137403`；当前状态为 `DOCS_ONLY / CANDIDATE_NOT_FORMAL / NOT_RUN_DOCS_ONLY`。只有独立纠偏 Reviewer 对 exact final six-doc diff 给出 APPROVE 后才可形成候选 commit；push 与正式推广分别等待后续明确决定。禁止 WorkBuddy/probe/Product/Package/Provider/media 动作和 pytest。
 
 Gate 0 先只读核验 live formal object、当前 WorkBuddy binary identity 和正式 authority；其中 B04 输入严格限于根 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_B04_official_evidence\workbuddy-client\` 下 TASK-REGISTER 列出的 13 个精确文件。随后生成 canonical UTF-8 无 BOM `B04NegativeEvidenceManifestV1`（`entries` 按 `relative_path` 排序、无 self-hash）到 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_D01_native_surface_evidence\inputs\B04-NEGATIVE-EVIDENCE-MANIFEST.v1.json`，并在独立 Gate-0 takeover 记录中保存全字节 SHA256；任何清单项缺失、漂移或 manifest 额外项立即阻断，禁止读取 PackageRoot/assembly。Gate 1 必须在 import 前由独立零写 Reviewer 对 exact probe source tree/fixtures/ZIP listing+bytes+hash、两条 literal ordinary-language prompts、permissions/evidence plan 返回 `PRE_RUN_APPROVE`；Gate 2 才由 Owner 完成权限、导入和两次 fresh session；Gate 3 冻结证据并取得 `APPROVE_FOR_TASK_CLEANUP` 后，Gate 4 才能由 Owner 卸载 exact Skill、关闭两 session、删除 exact source+ZIP、捕获 after-state，再由 Closeout Worker 写 result 与十问，最后由独立零写 Reviewer 对 exact final evidence/docs 返回 `FINAL_APPROVE`。任一 Gate 失败即停止，D02 保持未授权且不得下游修复。
 
-## Owner 紧急目标重置与 D 路线停机守卫（2026-08-24）
+## [HISTORICAL / SUPERSEDED_BY_V2-E01-ROUTE-BOUNDARY-CORRECTION1] Owner 紧急目标重置与 D 路线停机状态快照（2026-08-24；E01→E07 路线骨架保留）
 
-本节是当前工作树的最新 append-only 路由守卫。它将此前所有 D01-D08 的 current/next/execution 字段降为历史待审记录；旧授权、旧 Reviewer 结论、旧 Gate 状态和旧观测均不得恢复执行权。
+本节保留产品目标与 E01→E07 路线骨架；formal base、D01-D08 status、current task、权限和 Git 字段均为历史快照。最新唯一 current authority 是下方 `V2-E01-ROUTE-BOUNDARY-CORRECTION1` 节及 TASK-REGISTER 同名节。
+
+本节原为 append-only 路由守卫；现只保留此前 D01-D08 的 current/next/execution 字段、旧授权、旧 Reviewer 结论、旧 Gate 状态和旧观测作为历史待审记录，不得恢复执行权。
 
 ```text
 task_id: V2-PROJECT-GOAL-AND-D-ROUTE-REAUDIT1
@@ -408,25 +414,25 @@ tests: NOT_RUN_DOCS_ONLY
 commit_push_formal_delivery: NOT_AUTHORIZED
 ```
 
-产品目标以普通用户为中心：Shell 的存在理由是降低 OpenMontage 使用门槛，并提供环境缺漏、配置、命令提示、提示词内容和下一步操作的引导。WorkBuddy 仍是唯一 Agent 和生产决策者；Shell 不得成为第二控制面。PowerShell、Bash 或 CLI 只是可能的内部执行表面，使用它们本身不是失败。每个后续候选任务的第一硬闸门必须回答“它具体消除普通用户的哪一项使用门槛”；无法用事实回答、把内部技术暴露给用户/模型、或引入未经证明的新约束时立即停止。
+产品目标以普通用户为中心：Shell 的存在理由是降低 OpenMontage 使用门槛，并提供环境缺漏、配置、命令提示、提示词内容和下一步操作的引导。WorkBuddy 仍是唯一 Agent 和生产决策者；Shell 不得成为第二控制面。PowerShell、Bash 或 CLI 只是可能的内部执行表面，使用它们本身不是失败。每个后续候选任务的第一硬闸门必须回答“它具体消除普通用户的哪一项使用门槛”；无法用事实回答、把内部技术要求普通用户理解/构造/看到，要求 WorkBuddy/model 猜测/合成，或引入未经证明的新约束时立即停止。
 
 ### E 路线候选路由镜像
 
-完整审计与 21 字段合同以 TASK-REGISTER 最后同名节为准。候选路线为 `E01 docs-only 目标/路线固化 -> E02 只读用户旅程/最小改动审计 -> E03 guided entry 最小纠正 -> E04 安装/装配/生命周期产品化 -> E05 official 用户路径 control -> E06 Golden Key 0.3.25 同用户路径 -> E07 真实门店业务/closeout 候选`。D01 被删除为产品 Gate；D02/D03 semantic-operation/adapter 假设被替换；D04-D08 仅保留与用户目标直接相关的部分。当前只执行 E01 文档候选，E02-E07 均未授权。
+完整审计与 21 字段合同以 TASK-REGISTER 最后同名节为准。候选路线为 `E01 docs-only 目标/路线固化 -> E02 只读用户旅程/最小改动审计 -> E03 guided entry 最小纠正 -> E04 安装/装配/生命周期产品化 -> E05 official 用户路径 control -> E06 Golden Key 0.3.25 同用户路径 -> E07 真实门店业务/closeout 候选`。D01 被删除为产品 Gate；D02/D03 semantic-operation/adapter 假设被替换；D04-D08 仅保留与用户目标直接相关的部分。当时只执行 E01 文档候选，E02-E07 均未授权；该状态不覆盖下方最新 current authority。
 
-## E 系列逐任务执行包规划候选（2026-08-25）
+## [HISTORICAL / SUPERSEDED_BY_V2-E01-ROUTE-BOUNDARY-CORRECTION1] E 系列逐任务执行包规划候选状态快照（2026-08-25；E01→E07 路线骨架保留）
 
-E 总路线候选已作为 commit `533fb410fda837259afa29e2bb2fdee76caca599`、tree `b0b0879cd84962eb3676f9cda43b9a89cf7238b5` 推送到 `refs/heads/codex/v2-goal-and-route-reaudit1`；formal ref 仍为 `b7bd6bc201f821f83d019c5b7addd8ec198d7ecf`、tree `daa4ed62e94cf9105358cb452b4950a134d7e2ef`，规划尚未 `FORMALLY_DELIVERED`，E02-E07 均未授权。此前“未提交/未推送”只作历史 pre-delivery snapshot。
+历史快照：E 总路线候选已作为 commit `533fb410fda837259afa29e2bb2fdee76caca599`、tree `b0b0879cd84962eb3676f9cda43b9a89cf7238b5` 推送到 `refs/heads/codex/v2-goal-and-route-reaudit1`；当时 formal ref 为 `b7bd6bc201f821f83d019c5b7addd8ec198d7ecf`、tree `daa4ed62e94cf9105358cb452b4950a134d7e2ef`，规划尚未 `FORMALLY_DELIVERED`，E02-E07 均未授权。此前“未提交/未推送”同样只作历史 pre-delivery snapshot。上述 commit/tree、formal status、current task、角色权限和 Git 状态字段均不再作为 current authority。
 
-当前规划对话负责每个 E 任务的 `E0xExecutionPacketV1`、目标追踪、allowlist、Gate、证据、回滚、清理和审核合同；新执行对话只能先做接管核验，再执行一个已获授权的 packet。现场与 packet 不一致时返回 `STOP_PACKET_MISMATCH`，不得自行规划或 repair。共同顺序为：formal/目标/输入核验 -> exact packet -> independent pre-execution review -> `OwnerTaskExecutionAuthorizationV1` -> bounded execution -> evidence freeze -> result review -> cleanup review + separate Owner cleanup token -> exact cleanup/after-state -> final closeout review -> 规范 Git 状态机。E02 的 Planner、Execution Worker、Closeout Worker、Reviewer 也必须四方分离。
+Owner 显式指派的 `Planning/Audit Coordinator` 负责每个 E 任务的 `E0xExecutionPacketV1`、目标追踪、allowlist、Gate、证据、回滚、清理和审核合同；新执行对话只能先做接管核验，再执行一个已获授权的 packet。现场与 packet 不一致时返回 `STOP_PACKET_MISMATCH`，不得自行规划或 repair。共同顺序为：formal/目标/输入核验 -> exact packet -> independent pre-execution review -> `OwnerTaskExecutionAuthorizationV1` -> bounded execution -> evidence freeze -> result review -> cleanup review + separate Owner cleanup token -> exact cleanup/after-state -> final closeout review -> 规范 Git 状态机。E02 的 Planner、Execution Worker、Closeout Worker、Reviewer 也必须四方分离。
 
 E 合同唯一更新正式 ref 的术语是 `FORMAL_DELIVERY`：`REVIEW_APPROVE -> OWNER_COMMIT_AUTHORIZATION -> CANDIDATE_COMMIT -> OWNER_PUSH_AUTHORIZATION -> CANDIDATE_PUSH -> OWNER_FORMAL_DELIVERY_AUTHORIZATION -> ORDINARY_FAST_FORWARD_FORMAL_REF -> REMOTE_COMMIT_TREE_VERIFICATION -> CI_HEADSHA_SUCCESS_IF_REQUIRED -> FORMALLY_DELIVERED -> OWNER_NEXT_TASK_AUTHORIZATION_SEPARATE`。更早历史节中的旧交付标签在 E 路线中都只解析为这个单一动作，不形成额外步骤。完整合同只以 TASK-REGISTER 最后章节为准。
 
-本节自身仍为六文档 `DOCS_ONLY / PLANNING_AND_REVIEW_ONLY` 未提交候选；禁止 WorkBuddy、probe、产品或测试代码、Package/Registration/Installer 动作、Provider、媒体、E02-E07 执行、commit、push、`FORMAL_DELIVERY` 和 cleanup。
+本节只保留 E01→E07 的目标/路线骨架及其历史合同背景；上述对象、状态、当前任务、角色授权和 Git 权限均为历史快照，不得据此继续路由或执行。最新唯一 current authority 是下方 `V2-E01-ROUTE-BOUNDARY-CORRECTION1` 节及 `docs/workbuddy/v2/TASK-REGISTER.md` 同名节。历史候选仍禁止 WorkBuddy、probe、产品或测试代码、Package/Registration/Installer 动作、Provider、媒体、E02-E07 执行、commit、push、`FORMAL_DELIVERY` 和 cleanup。
 
-## E01 文档正式收口镜像（2026-08-25）
+## [HISTORICAL / SUPERSEDED_BY_V2-E01-ROUTE-BOUNDARY-CORRECTION1] E01 文档正式收口镜像（2026-08-25）
 
-E 总路线与逐任务执行包已作为 commit `1ad4aa136b99d73e76a6f8847b7deb7d064649d0`、tree `6db61922d6c07c3ff337dbaa761ca6d65c080bbf` ordinary fast-forward 到 `refs/heads/codex/workbuddy-shell-v2`；远端对象核验一致，正式 CI run `32809470079` 为 `completed/success`、`headSha=1ad4aa136b99d73e76a6f8847b7deb7d064649d0`、`395 passed / 1 skipped`。上方 `NOT_DONE`、`UNCOMMITTED`、`NOT_AUTHORIZED` 和旧 formal HEAD 只解析为 `HISTORICAL_PRE_CLOSEOUT_SNAPSHOT`。
+E 总路线与逐任务执行包已作为 commit `1ad4aa136b99d73e76a6f8847b7deb7d064649d0`、tree `6db61922d6c07c3ff337dbaa761ca6d65c080bbf` ordinary fast-forward 到 `refs/heads/codex/workbuddy-shell-v2`；远端对象核验一致，正式 CI run `32809470079` 为 `completed/success`、`headSha=1ad4aa136b99d73e76a6f8847b7deb7d064649d0`、`395 passed / 1 skipped`。这些是已保留的历史 closeout 事实；本节不再作为当前 E01 零缺陷或 E02 可启动结论。
 
 ```text
 closeout_task: V2-E01-DOCS-FORMAL-CLOSEOUT1
@@ -441,3 +447,19 @@ next_authorized_task: NONE / SEPARATE_OWNER_E02_AUTHORIZATION_REQUIRED_IN_NEW_TA
 forbidden: WORKBUDDY_PRODUCT_TEST_PACKAGE_REGISTRATION_INSTALLER_PROVIDER_MEDIA_CLIENT_E02_E07_EXECUTION
 cleanup: NOT_INCLUDED / SEPARATE_OWNER_AUTHORIZATION_REQUIRED
 ```
+
+## V2-E01-ROUTE-BOUNDARY-CORRECTION1（2026-08-25，当前候选）
+
+本节与 `docs/workbuddy/v2/TASK-REGISTER.md` 同名章节一致，后者是完整合同。本纠正基于正式基线 `419373094e7ac4e1a5f092d25d8e62cef8a76a6d` / tree `bf2210f9c63661e10f16188faf860f27b2278390`，保留上一个 E01 closeout 的历史事实，但记录后续目标边界审计 `REJECT / P0=0 / P1=7 / P2=3`。当前 E01 为 `DOCS_ONLY / CORRECTION_CANDIDATE / NOT_FORMALLY_DELIVERED`；E02-E07 为 `NOT_STARTED / NOT_AUTHORIZED / BLOCKED_BY_E01_CORRECTION`。
+
+唯一目标：普通用户在 WorkBuddy 中提出自然语言需求；WorkBuddy 是唯一运行 Agent、用户对话主体和生产决策者；它在读取 verified OpenMontage Guide/Manifest/Pipeline/Stage/Tool/Reviewer/Checkpoint authority 后，按该 authority 作出 Pipeline/Stage/Tool/Review/Checkpoint/Provider/Renderer/内容决策；OpenMontage 是生产语义权威，不是第二运行 Agent；Shell 只负责安装、环境/定位、受控机械执行、入口、状态/结果 relay 和可执行引导；最终在真实 WorkBuddy 产出真实完整可播放视频。任何不直接降低这条链路用户门槛的模块、功能或约束不得进入后续任务。
+
+- 命令边界：普通用户不得被要求理解、构造或看到内部 path/hash/schema/env/argv/transport；WorkBuddy/model 不得猜测、自由合成或从用户输入推导这些值；WorkBuddy/固定 Skill 可接收并调用 verified Package/Shell 提供、identity-checked、allowlisted 的 exact mechanical operation。调用不授予 Shell 生产决策权。
+- 引导边界：Shell 可基于 verified mechanical state 返回 bounded/deterministic 的环境、配置、command、prompt、next-step remediation facts/options/material；Shell 不理解业务意图、不发起 consent、不选择 recovery、不推进生产；WorkBuddy 独占面向用户的解释/呈现、consent、recovery/continue、生产语义和业务决策。
+- E02 evidence root 固定为 `D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1`；固定相对载体为 `packet/E02ExecutionPacketV1.json`、`inputs/E02InputManifestV1.json`、`handoff/E02TakeoverV1.json`、`reports/E02ExecutionReportV1.json`、`evidence/E02EvidenceIndexV1.json`。载体均 UTF-8 no BOM/LF/final LF，按原始字节 SHA256 绑定；Planner 只写 `packet/`、`inputs/`，并且只能在 Owner 授权后记录 `handoff/E02TakeoverV1.json`；Execution Worker 只写 evidence root 的 `reports/`、`evidence/`，Closeout Worker 只写六文档，Reviewer 全零写。
+- E02 固定十条旅程：安装/首次打开/环境就绪；具体需求；模糊需求/guided entry；Package 缺失或未验证；环境缺漏；配置/consent/可选能力；verified Guide/Manifest handoff；执行错误/恢复；结果/receipt/video relay；安全卸载/回滚/数据保全。数量变化必须同步 packet、报告、索引和六文档。
+- E04 owner 为 `V2 Final-delivery Installer / Release Assembly Owner`；immutable official/GK source、Shell-adapter binding、final assembly/Manifest/Lock 三类责任分离，E04 不发明生产逻辑。
+- E05/E06 真实视频必须来自真实 WorkBuddy、verified authority、真实工具，非 fixture/mock/demo/fallback，竖屏、可播放、非零时长，lineage/receipt 可审且无手工绕行。same=ordinary-language user journey、business brief/materials、applicable consent/cost scenario、Shell responsibilities、client/model where supported and frozen、acceptance/evidence method；allowed-different=Package-owned Guide/Pipeline/Stage/tool、source-attributed package-specific Skill metadata/text/binding、derived creative decisions/artifacts；fail=额外用户技术负担、第二控制面、手工绕行/fallback、未在 comparison manifest 归因的控制变量漂移。不要求 Skill ZIP、model、client 或全部非-Package 字节机械相同。
+- Planner 必须是 Owner 显式指派的 `Planning/Audit Coordinator`；handoff 绑定 Owner identity、record ID、issued/expires、exact formal commit/tree/task/packet SHA/allowlist/forbidden。`UXCopyContractV1` 由 Owner 或指定 approver 批准；E03 仅 `OFFLINE_CONTRACT_ONLY`，直到另有 `OwnerClientActionAuthorizationV1`。
+
+本轮 Owner 条件授权为：独立 Reviewer 先审 unstaged exact diff 并通过后允许 candidate commit；commit 后由零写核验 exact commit/tree 与已审字节一致并给出 post-commit binding `APPROVE`，随后允许 push 到专用候选分支。不构成 `FORMAL_DELIVERY`，不授权 E02。禁止产品代码、测试、WorkBuddy、Package/Registration/Installer、Provider、媒体、客户端和 cleanup。

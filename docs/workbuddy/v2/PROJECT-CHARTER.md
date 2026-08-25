@@ -614,3 +614,11 @@ WorkBuddy 是唯一运行中的 Agent、用户对话主体和生产决策者。�
 ### 新最小产品路线候选
 
 `E01 -> E02 -> E03 -> E04 -> E05 -> E06 -> E07` 分别负责目标/路线固化、用户旅程与最小改动审计、guided entry 最小纠正、安装/装配/生命周期、official 用户路径 control、Golden Key 0.3.25 同用户路径、真实门店业务与 closeout 候选。该路线的“同路径”指用户入口、Shell 职责和验收层级一致，不要求 official/GK Skill ZIP、模型或所有非 Package 字节机械相同。任何 E 任务必须首先证明其消除的具体用户门槛；完整 21 字段见 TASK-REGISTER 最后同名节。当前仅 E01 docs-only 候选，后续全部未授权。
+
+### E 系列规划者、执行者与审核者宪章
+
+E 总路线候选 `533fb410fda837259afa29e2bb2fdee76caca599`、tree `b0b0879cd84962eb3676f9cda43b9a89cf7238b5` 已推送到 `refs/heads/codex/v2-goal-and-route-reaudit1`，但 formal ref 仍是 `b7bd6bc201f821f83d019c5b7addd8ec198d7ecf`、tree `daa4ed62e94cf9105358cb452b4950a134d7e2ef`，尚未 FORMALLY_DELIVERED，E02-E07 未授权。Planning/Audit Coordinator 负责在每个任务执行前基于最新正式结果生成唯一 `E0xExecutionPacketV1`；Execution Worker 只在 fresh 对话中完成接管核验和单任务有界执行；Closeout Worker 与 Execution Worker 分离且只把冻结事实写入六份 authority docs；Independent Reviewer 与前三者均不同、永远零写，并按目标、事实、机械合同的顺序审查；Owner 分别控制单任务、Package/client/Provider/rollback/cleanup token 以及 Git delivery。
+
+执行窗口不能自行完善 packet。任何未来身份、manifest、路径或 before-state 未解析时，任务为 `DRAFT_BLOCKED`；任何非 `APPROVE` 结果都阻断下游。失败证据必须先保全和审核，再按 exact manifest 获准清理。Shell 的产品责任仍是降低普通用户门槛和提供可执行引导；本职责分离不能被解释成第二 Agent、第二控制面或把内部技术交给用户。
+
+E 路线只用 `FORMAL_DELIVERY` 表示 candidate commit 以 ordinary fast-forward 更新 formal ref 并完成远端对象/适用 CI 核验。更早历史节中的旧交付标签不再用于 E 路线；`FORMALLY_DELIVERED` 后仍需 Owner 单独授权下一任务。

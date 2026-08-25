@@ -341,4 +341,16 @@ project_closeout_promotion_cleanup_rule: ONLY_AFTER_D08 + SEPARATE_OWNER_APPROVA
 - E03 不得新增 OpenMontage semantic-operation adapter 或复制 Pipeline/Stage/Reviewer/Checkpoint/Tool Registry。
 - E04 只产品化安装/装配/生命周期，不得以 identical Skill ZIP 或 byte-perfect official/GK comparison 取代用户验收。
 - E05/E06 的成功标准是普通用户被引导完成完整本地视频；PowerShell/Bash/CLI 的存在或缺少专用 native event 都不是单独 PASS/FAIL。
-- E07 业务验收失败不得现场修 Shell/Core；推广与清理仍是两个后续独立 Owner 闸门。
+- E07 业务验收失败不得现场修 Shell/Core；`FORMAL_DELIVERY` 与清理仍是两个后续独立 Owner 闸门。
+
+### E 系列执行包 fail-closed 守卫（2026-08-25 候选）
+
+1. 当前规划对话是唯一逐任务 packet 规划者；fresh 执行对话只允许 `TAKEOVER -> EXECUTE_ONE_PACKET -> STOP_AND_REPORT`。执行窗口补计划、扩 allowlist 或临场 repair 一律 `STOP_PACKET_MISMATCH`。
+2. 每项固定顺序为 `FORMAL_AUTHORITY -> USER_VALUE -> INPUT_IDENTITY -> EXACT_PACKET -> PRE_EXECUTION_REVIEW -> OWNER_TASK_EXECUTION_AUTHORIZATION -> BOUNDED_EXECUTION -> EVIDENCE_FREEZE -> RESULT_REVIEW -> CLEANUP_REVIEW -> OWNER_CLEANUP_AUTHORIZATION -> CLEANUP/AFTER_STATE -> FINAL_CLOSEOUT_REVIEW -> GIT_STATE_MACHINE`。Owner 单任务 token 必须绑定 task、packet SHA256、formal object、动作、路径、有效范围和禁止项；Package/client/Provider/rollback/cleanup token 分离。任一 Gate 失败阻断本任务和下游。
+3. E02 必须生成带 SHA256 的 minimal-change packet；E03/E04 只能消费其 exact allowlist。不存在的 future SHA/path/client state 只能 `NOT_PROVED_FUTURE_INPUT / BLOCKS_EXECUTION`。
+4. E05/E06 运行前必须冻结 client、Skill、Registration、literal prompts、fixture/brief、scenario、before-state 和 evidence schema。模型自报、child 自报、普通日志、receipt 或孤立 MP4 不证明 WorkBuddy 读 Guide、完成 Pipeline 或产生完整产品结果。
+5. 失败证据先冻结和审核，后清理；无 `EVIDENCE_APPROVE_FOR_CLEANUP` 不卸载、不删除、不关闭需保全会话。cleanup 只使用 exact manifest，rollback 失败立即停止，after-state 必须捕获。
+6. 唯一 Git 状态机为 `REVIEW_APPROVE -> OWNER_COMMIT_AUTHORIZATION -> CANDIDATE_COMMIT -> OWNER_PUSH_AUTHORIZATION -> CANDIDATE_PUSH -> OWNER_FORMAL_DELIVERY_AUTHORIZATION -> ORDINARY_FAST_FORWARD_FORMAL_REF -> REMOTE_COMMIT_TREE_VERIFICATION -> CI_HEADSHA_SUCCESS_IF_REQUIRED -> FORMALLY_DELIVERED -> OWNER_NEXT_TASK_AUTHORIZATION_SEPARATE`。更早历史节中的旧交付标签不得用于 E 路线，也不是额外动作。禁止 force-push、merge、rebase。
+7. Planner/Audit Coordinator、Execution Worker、Closeout Worker、Reviewer 四方分离，E02 也无例外。Worker 不能写 authority closeout；Closeout Worker 不运行产品；Reviewer 永远零写且与前三者不同。失败回 Planner/named owner，不在下游修。
+
+路线候选 commit `533fb410fda837259afa29e2bb2fdee76caca599` 已在远端专用分支，正式 ref 仍为 `b7bd6bc201f821f83d019c5b7addd8ec198d7ecf`。本次执行包规划是新的未提交六文档 diff；不得据此运行 E02-E07 或进行 Git/清理动作。

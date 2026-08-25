@@ -405,7 +405,7 @@ D01_product_verdict: D01_TEST_DESIGN_MISALIGNED / BLOCKED_WORKBUDDY_SURFACE_WITH
 allowed_changes: EXACT_SIX_AUTHORITY_DOCS_ONLY
 forbidden: WORKBUDDY_PROBE + PRODUCT_CODE + PACKAGE + PROVIDER + MEDIA + D02_D08_EXECUTION
 tests: NOT_RUN_DOCS_ONLY
-commit_push_promotion: NOT_AUTHORIZED
+commit_push_formal_delivery: NOT_AUTHORIZED
 ```
 
 产品目标以普通用户为中心：Shell 的存在理由是降低 OpenMontage 使用门槛，并提供环境缺漏、配置、命令提示、提示词内容和下一步操作的引导。WorkBuddy 仍是唯一 Agent 和生产决策者；Shell 不得成为第二控制面。PowerShell、Bash 或 CLI 只是可能的内部执行表面，使用它们本身不是失败。每个后续候选任务的第一硬闸门必须回答“它具体消除普通用户的哪一项使用门槛”；无法用事实回答、把内部技术暴露给用户/模型、或引入未经证明的新约束时立即停止。
@@ -413,3 +413,13 @@ commit_push_promotion: NOT_AUTHORIZED
 ### E 路线候选路由镜像
 
 完整审计与 21 字段合同以 TASK-REGISTER 最后同名节为准。候选路线为 `E01 docs-only 目标/路线固化 -> E02 只读用户旅程/最小改动审计 -> E03 guided entry 最小纠正 -> E04 安装/装配/生命周期产品化 -> E05 official 用户路径 control -> E06 Golden Key 0.3.25 同用户路径 -> E07 真实门店业务/closeout 候选`。D01 被删除为产品 Gate；D02/D03 semantic-operation/adapter 假设被替换；D04-D08 仅保留与用户目标直接相关的部分。当前只执行 E01 文档候选，E02-E07 均未授权。
+
+## E 系列逐任务执行包规划候选（2026-08-25）
+
+E 总路线候选已作为 commit `533fb410fda837259afa29e2bb2fdee76caca599`、tree `b0b0879cd84962eb3676f9cda43b9a89cf7238b5` 推送到 `refs/heads/codex/v2-goal-and-route-reaudit1`；formal ref 仍为 `b7bd6bc201f821f83d019c5b7addd8ec198d7ecf`、tree `daa4ed62e94cf9105358cb452b4950a134d7e2ef`，规划尚未 `FORMALLY_DELIVERED`，E02-E07 均未授权。此前“未提交/未推送”只作历史 pre-delivery snapshot。
+
+当前规划对话负责每个 E 任务的 `E0xExecutionPacketV1`、目标追踪、allowlist、Gate、证据、回滚、清理和审核合同；新执行对话只能先做接管核验，再执行一个已获授权的 packet。现场与 packet 不一致时返回 `STOP_PACKET_MISMATCH`，不得自行规划或 repair。共同顺序为：formal/目标/输入核验 -> exact packet -> independent pre-execution review -> `OwnerTaskExecutionAuthorizationV1` -> bounded execution -> evidence freeze -> result review -> cleanup review + separate Owner cleanup token -> exact cleanup/after-state -> final closeout review -> 规范 Git 状态机。E02 的 Planner、Execution Worker、Closeout Worker、Reviewer 也必须四方分离。
+
+E 合同唯一更新正式 ref 的术语是 `FORMAL_DELIVERY`：`REVIEW_APPROVE -> OWNER_COMMIT_AUTHORIZATION -> CANDIDATE_COMMIT -> OWNER_PUSH_AUTHORIZATION -> CANDIDATE_PUSH -> OWNER_FORMAL_DELIVERY_AUTHORIZATION -> ORDINARY_FAST_FORWARD_FORMAL_REF -> REMOTE_COMMIT_TREE_VERIFICATION -> CI_HEADSHA_SUCCESS_IF_REQUIRED -> FORMALLY_DELIVERED -> OWNER_NEXT_TASK_AUTHORIZATION_SEPARATE`。更早历史节中的旧交付标签在 E 路线中都只解析为这个单一动作，不形成额外步骤。完整合同只以 TASK-REGISTER 最后章节为准。
+
+本节自身仍为六文档 `DOCS_ONLY / PLANNING_AND_REVIEW_ONLY` 未提交候选；禁止 WorkBuddy、probe、产品或测试代码、Package/Registration/Installer 动作、Provider、媒体、E02-E07 执行、commit、push、`FORMAL_DELIVERY` 和 cleanup。

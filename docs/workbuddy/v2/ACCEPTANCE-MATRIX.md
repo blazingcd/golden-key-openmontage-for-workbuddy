@@ -739,6 +739,33 @@ builder_boundary: NO_FORMAL_PROMOTION
 | E04 | 安装、装配、定位、升级、回滚、卸载 | OpenMontage/视频 |
 | E05 | official 的真实引导与完整本地视频 | Golden Key/业务质量 |
 | E06 | Golden Key 0.3.25 的同用户路径与完整本地视频 | 真实门店接受 |
-| E07 | 冻结门店案例的业务接受与 closeout 候选 | 未执行的推广/清理或普遍规模 |
+| E07 | 冻结门店案例的业务接受、经 G8/G9/G10 受控完成的 `TASK_CLEANUP` 与 closeout 候选 | 未执行的 `FORMAL_DELIVERY`、`PROJECT_CLEANUP` 或普遍规模 |
 
 所有层先过 `USER_VALUE_GATE`，再审 sole-Agent、无发明性合同、最小改动和证据层级；不得再以客户端是否出现特定 native event 代替用户成功。
+
+### E 系列执行包与审核层级候选
+
+本矩阵基于远端候选 `533fb410fda837259afa29e2bb2fdee76caca599`、tree `b0b0879cd84962eb3676f9cda43b9a89cf7238b5`；formal ref 仍为 `b7bd6bc201f821f83d019c5b7addd8ec198d7ecf`、tree `daa4ed62e94cf9105358cb452b4950a134d7e2ef`。因此它仍是尚未 `FORMALLY_DELIVERED` 的 docs-only 规划候选，E02-E07 未授权。
+
+| 层级 | 必须通过 | 只证明 | 不能证明/不能授权 |
+|---|---|---|---|
+| Planner packet | ordinary-user barrier、formal/input identities、exact allowlist、steps、evidence、rollback、cleanup、review | 当前任务方案可接管 | 产品已运行、未来身份已存在 |
+| Pre-execution review | independent `PRE_EXECUTION_APPROVE`，P0/P1/P2=0 | packet 与目标/事实吻合 | 实际执行、cleanup、Git delivery |
+| Owner execution | `OwnerTaskExecutionAuthorizationV1` 绑定 task/packet SHA/formal object/actions/paths；Package/client/Provider/rollback/cleanup 适用 token 分离 | packet 中被明确授权的单任务动作 | 未列动作、其他 token、下一任务 |
+| Worker execution | packet 内有界动作、原始事实和最终结果 | 实际执行层事实 | 自行修复、扩大方案、下游 PASS |
+| Evidence review | manifest/hash、before/during state、结果层级 | 是否 APPROVE/REJECT/INCOMPLETE/BLOCKED_EXTERNAL | 未经审核清理 |
+| Cleanup review | exact targets/non-targets、失败证据已保全 | 是否允许 task cleanup | 项目清理或 `FORMAL_DELIVERY` |
+| Final closeout | after-state、六文档、Git/CI 候选 | 当前任务候选是否完整 | commit/push/`FORMAL_DELIVERY`/下一任务自动授权 |
+
+| 任务 | 必须的 packet 关键身份 | 关键假 PASS 防线 |
+|---|---|---|
+| E02 | minimal-change packet SHA256、六 journey、path/symbol 双向映射 | 无用户阻断的改动不得进入 E03/E04 |
+| E03 | E02 packet、UX copy contract、`.venv`、exact code/test paths | 静态/单元测试不证明 WorkBuddy；不得造 semantic adapter |
+| E04 | Release Manifest/Lock、toolchain、lifecycle/before-state manifests | 临时装配不等正式分发；数据删除/身份替换 P0 |
+| E05 | client/Skill/Registration、literal prompts、fixture、scenario、client/video correlation manifest | 模型/child 自报、receipt、日志、孤立 MP4 均不能冒充 guided product PASS |
+| E06 | exact GK 0.3.25、E05 method、same/allowed-different/fail comparison manifest | 不以 byte-identical 或“大致类似”判通过；不得复用 E05 运行证据 |
+| E07 | business/rights/acceptance/provider-cost/task-cleanup/after-state/closeout manifests | 技术可播放不覆盖业务拒绝；业务接受不自动触发 `FORMAL_DELIVERY` 或 `PROJECT_CLEANUP` |
+
+当前这套矩阵仍是未提交六文档候选；E02-E07 执行全部未授权。
+
+E02 同样要求 Planner/Audit Coordinator、Execution Worker、Closeout Worker、Independent Reviewer 四方分离。Git 只存在一个 `FORMAL_DELIVERY` 动作：reviewed candidate 在分别取得 commit、push、formal-delivery 授权后，以 ordinary fast-forward 更新 formal ref，核验远端 commit/tree 和适用 CI，之后才是独立 next-task authorization。更早历史节中的旧交付标签不构成多个动作。

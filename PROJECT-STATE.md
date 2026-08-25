@@ -1038,7 +1038,7 @@ D01_raw_observation: RETAIN_AS_HISTORICAL_FACT_ONLY
 D01_old_product_conclusion: INVALIDATED_BY_MISALIGNED_TEST_DESIGN
 current_execution: PAUSED_BY_OWNER
 tests: NOT_RUN_DOCS_ONLY
-commit_push_promotion: NOT_AUTHORIZED
+commit_push_formal_delivery: NOT_AUTHORIZED
 ```
 
 当前只允许核对原始目标、既有事实和规划内容。Shell 的产品价值是降低普通用户门槛并提供继续完成任务所需的环境、配置、命令和提示词引导；WorkBuddy 是唯一 Agent 和生产决策者。PowerShell/Bash/CLI 不因其技术形态自动失败。任何不能直接说明所消除用户门槛、要求模型猜内部路径/绑定/命令、绕过 OpenMontage Guide/Pipeline、或让 Shell 接管生产决策的路线都必须停止。禁止继续 WorkBuddy 探测、产品代码、Package、Provider、媒体和 D02-D08 执行。
@@ -1055,4 +1055,29 @@ D04_D08: KEEP_ONLY_USER_GOAL_ALIGNED_PARTS
 current_changes: EXACT_SIX_AUTHORITY_DOCS_ONLY
 ```
 
-正式下一步只能是 E01 exact six-doc diff 的独立零写复审。Reviewer 通过也不授权 commit、push、推广或 E02。
+正式下一步只能是 E01 exact six-doc diff 的独立零写复审。Reviewer 通过也不授权 commit、push、`FORMAL_DELIVERY` 或 E02。
+
+## E 系列逐任务执行包规划状态（2026-08-25）
+
+```text
+route_candidate_commit: 533fb410fda837259afa29e2bb2fdee76caca599
+route_candidate_tree: b0b0879cd84962eb3676f9cda43b9a89cf7238b5
+route_candidate_branch: refs/heads/codex/v2-goal-and-route-reaudit1
+route_candidate_remote: PRESENT
+formal_head: b7bd6bc201f821f83d019c5b7addd8ec198d7ecf
+formal_tree: daa4ed62e94cf9105358cb452b4950a134d7e2ef
+formal_delivery: NOT_DONE
+current_docs_task: V2-E01-EXECUTION-PACKETS-PLANNING-CORRECTION1 / UNCOMMITTED_SIX_DOC_CANDIDATE
+current_effect: DOCS_ONLY / ZERO_PRODUCT_CLIENT_PACKAGE_EFFECT
+planner: CURRENT_PLANNING_CONVERSATION
+executor: FUTURE_FRESH_EXECUTION_CONVERSATION / ONE_APPROVED_PACKET_ONLY
+closeout_worker: DISTINCT_FROM_EXECUTION_WORKER / AUTHORITY_DOCS_ONLY_AFTER_EVIDENCE_FREEZE
+reviewer: INDEPENDENT_ZERO_WRITE
+E02_E07: NOT_AUTHORIZED
+forbidden_now: WORKBUDDY_PROBE_CODE_TEST_PACKAGE_REGISTRATION_INSTALLER_PROVIDER_MEDIA_COMMIT_PUSH_FORMAL_DELIVERY_CLEANUP
+next: COMPLETE_PACKET_DOCS -> INDEPENDENT_ZERO_WRITE_REVIEW -> OWNER_GIT_DECISION
+```
+
+旧的“E01 未提交/未推送”字段是候选首次交付前快照。新的详细合同在 TASK-REGISTER 最后章节：每项必须先通过 formal authority、用户价值、输入身份、exact packet、独立 pre-execution review 和绑定 packet SHA256 的 Owner 单任务执行 token；适用 Package/client/Provider/rollback/cleanup 各自另 token。执行后必须先冻结证据，再审核、再获 Reviewer cleanup verdict 与 Owner cleanup token、再捕获 after-state。
+
+Git 唯一状态机是 `REVIEW_APPROVE -> OWNER_COMMIT_AUTHORIZATION -> CANDIDATE_COMMIT -> OWNER_PUSH_AUTHORIZATION -> CANDIDATE_PUSH -> OWNER_FORMAL_DELIVERY_AUTHORIZATION -> ORDINARY_FAST_FORWARD_FORMAL_REF -> REMOTE_COMMIT_TREE_VERIFICATION -> CI_HEADSHA_SUCCESS_IF_REQUIRED -> FORMALLY_DELIVERED -> OWNER_NEXT_TASK_AUTHORIZATION_SEPARATE`。E 路线不复用更早历史节中的旧交付标签，也不存在额外 Git 动作。

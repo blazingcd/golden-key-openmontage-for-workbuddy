@@ -4420,3 +4420,18 @@ e02_state: NOT_STARTED / NOT_AUTHORIZED
 ### 前置审查与结果边界更新
 
 `PLAN_REVIEW` binds the exact corrected packet and manifest hashes. `PRE_EXECUTION_REVIEW` is a separate zero-write readiness check of those hashes, the fixed evidence baseline, authority-floor ancestry, exact-six-only `floor..live` scope, dynamically resolved live formal commit/tree, all manifest identities, role write domains and unchanged E02 boundaries. Only after it returns `PRE_EXECUTION_APPROVE / P0=0 / P1=0 / P2=0` may the Owner issue `OwnerTaskExecutionAuthorizationV1`; E02 remains `NOT_STARTED / NOT_AUTHORIZED` until that token and takeover exist. This correction does not authorize E02, E03, E04, product/client/test/Package/Provider/media actions, cleanup, commit, push or `FORMAL_DELIVERY`.
+
+## CURRENT PRODUCT ROUTE RESET（2026-08-26）
+
+本节取代本文件之前的 current 路由。E01-E07 以及 E02 packet、handoff、report、current execution contracts 均为 `HISTORICAL_FAILED_ROUTE / NOT_EXECUTABLE / DO_NOT_CONTINUE`；不创建 F01-F07。已验证的 Stage 2 Registration/Locator、Stage 3 可选运行时准备、Stage 4 机械 Launcher、Stage 5 WorkBuddy entry adapter 继续保留。
+
+Stage 5 的真实缺口是最终安装/组装被推迟：没有持久最终 PackageRoot、私有 Python/FFmpeg/Node、生产注册激活、Installer 盖章后的最终 Skill 和真实 WorkBuddy 回执；缺失 Shell adapter 曾被错误归给不可修改的 OpenMontage package，责任应在最终 Shell Installer/Release Assembly。
+
+当前唯一执行路线只有四个结果：
+
+1. 完成可安装 Shell 成品：补齐机械适配入口，组装不可变 OpenMontage + Shell adapter + 私有工具链，形成最终 PackageRoot、Manifest/Lock/binding，盖章 Skill，跑通安装、注册、激活、卸载和数据保护。
+2. 让普通用户在 WorkBuddy 中用自然语言得到真实结果和回执。
+3. 沿同一路径让 Golden Key 生成真实可播放视频。
+4. 完成普通用户验收和正式收口。
+
+只有第 1 项是下一任务；第 2-4 项须以前一步真实验收为前提。每项只设置一个执行者和一次独立结果审查，不再另设 E02 审计、packet/pre-review 循环或额外角色。本次只固化路线，不授权产品代码、测试、客户端、Package、Provider、媒体或下游执行。

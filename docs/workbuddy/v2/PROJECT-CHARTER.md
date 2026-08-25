@@ -675,3 +675,11 @@ E02 仅做 `STATIC_READ_ONLY_EVIDENCE_AUDIT_NO_CLIENT_NO_PRODUCT_EXECUTION`，�
 E02 的旧 exact-live-equality 绑定由本节取代。产品目标和职责不变：固定 evidence/product baseline 为 `271dee394bed5ca3dd5c31860c842a8cbfdfa536` / tree `8eea24e3bc3fc5f4c6eed536281799edaebdde40`，formal authority floor 为已正式交付的 `1713ba8d0d3279233d702339548a242e40a1e759` / tree `38eddb5ccdbb000eb2048713c4b30a7f4e9e8d9b`；floor 必须是授权时 live formal 的 ancestor，floor..live 只允许 exact six authority docs。Live commit/tree 只能在 `PRE_EXECUTION_REVIEW` 后由 Owner token 与 `E02TakeoverV1` 锁定；未来 correction commit 不写入 packet。
 
 E02 仍是 static read-only journey/minimal-change audit。WorkBuddy 仍是唯一 Agent，OpenMontage 仍拥有生产语义，Shell 仍只提供支持性/机械性能力；本纠偏不增加模块、用户技术负担、生产决策、客户端动作、Package/Provider/media 动作或任何下游授权。Packet SHA256 为 `4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4`，input manifest SHA256 为 `aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2`。Lineage、scope、baseline 或 Owner token 任一不匹配均为 `STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH`。
+
+## CURRENT PRODUCT ROUTE RESET（2026-08-26）
+
+产品目标只有一条：普通用户在 WorkBuddy 里说出自然语言需求，WorkBuddy 作为唯一 Agent 读取已验证的 OpenMontage authority，借助 Shell 完成真实生产并交付真实可播放视频。Shell 只负责安装、定位、受控机械执行、入口和结果 relay；它不是第二 Agent、编排器或媒体控制面。
+
+此前 E01-E07 和 E02 载体路线是失败的历史执行方法，不再执行；不创建 F 系列。保留 Stage 2 Registration/Locator、Stage 3 可选运行时准备、Stage 4 机械 Launcher 和 Stage 5 entry adapter。Stage 5 失败的根因是最终安装/组装被推迟，导致最终 PackageRoot、私有工具链、生产注册激活、Installer 盖章 Skill 和真实 WorkBuddy 回执都没有形成；Shell adapter 的缺口也错误归给不可修改的 OpenMontage package。
+
+产品路线只有四项结果：完成可安装 Shell 成品；真实 WorkBuddy 自然语言结果/回执；沿同一路径生成 Golden Key 真实可播放视频；普通用户验收和正式收口。第一项是下一项，后续三项严格依赖前一步真实验收。每项一个执行者、一次独立结果审查；不增加与用户目标无关的模块、schema、控制面或技术负担。

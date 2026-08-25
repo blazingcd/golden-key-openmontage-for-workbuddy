@@ -507,3 +507,18 @@ e02_state: NOT_STARTED / NOT_AUTHORIZED
 ```
 
 WorkBuddy remains the sole Agent and OpenMontage remains semantic authority; Shell remains support/mechanical. All existing E02 read/write/forbidden boundaries, `PRE_EXECUTION_REVIEW`, Owner token, evidence freeze, result review and closeout rules remain unchanged.
+
+## CURRENT PRODUCT ROUTE RESET（2026-08-26）
+
+本节是当前唯一产品路由；本文件及其他 authority docs 中更早的 A/B/C/D/E 规划、E01-E07、E02 packet/handoff/report/current execution contracts 均为 `HISTORICAL_FAILED_ROUTE / NOT_EXECUTABLE / DO_NOT_CONTINUE`。不存在 F 系列，也不得创建 F01-F07。历史代码和证据仍保留，但不能把历史规划当作执行授权。
+
+已经保留的有效成果只有：Stage 2 Registration/Locator、Stage 3 可选运行时准备、Stage 4 机械 Launcher、Stage 5 WorkBuddy entry adapter。Stage 5 没跑通的根因是最终安装/组装被推迟：没有持久最终 PackageRoot、私有 Python/FFmpeg/Node、生产注册激活、Installer 盖章后的最终 Skill，也没有真实 WorkBuddy 回执；缺失的 Shell adapter 还曾错误归给不可修改的 OpenMontage package，实际应由最终 Shell Installer/Release Assembly 负责。
+
+当前产品只按四个结果推进：
+
+1. 完成可安装的 Shell 成品：补齐机械适配入口，组装最终 PackageRoot（不可变 OpenMontage + Shell adapter + 私有工具链），形成 Manifest/Lock/binding，盖章最终 Skill，并跑通安装、注册、激活、卸载和数据保护。
+2. 在 WorkBuddy 中让普通用户用自然语言得到真实结果和回执。
+3. 沿同一路径让 Golden Key 生成真实可播放视频。
+4. 完成普通用户验收和正式收口。
+
+只有第 1 项是下一项；第 2-4 项必须等待前一步真实验收。每项只允许一个执行者和一次独立结果审查；不再创建 packet/pre-review 循环或扩张角色。当前只固化路线，不执行产品代码、测试、客户端、Package、Provider 或媒体工作。

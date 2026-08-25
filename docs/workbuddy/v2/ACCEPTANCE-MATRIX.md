@@ -834,3 +834,16 @@ E02 同样要求 Planner/Audit Coordinator、Execution Worker、Closeout Worker�
 | live lock | `PRE_EXECUTION_REVIEW` 解析 live remote ref；`OwnerTaskExecutionAuthorizationV1` 与 `E02TakeoverV1` 锁定 exact live commit/tree；未来 correction commit 不嵌入 packet | packet 静态值替代 live lock、token mismatch 或未解析 |
 | carrier binding | packet `4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4`；manifest `aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2` | hash、字节、编码或路径不一致 |
 | stop classification | 上述 lineage/scope/baseline/token 任一失败均为 `STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH`；仍不授权 E02/E03/E04 | 继续内容审计或填补证据 |
+
+## CURRENT PRODUCT ROUTE RESET（2026-08-26）
+
+此前 E01-E07、E02 packet/handoff/report/current execution contracts 是 `HISTORICAL_FAILED_ROUTE / NOT_EXECUTABLE / DO_NOT_CONTINUE`；不创建 F01-F07。以下是当前唯一产品验收矩阵：
+
+| 结果 | 必须看到的真实结果 | 不通过即停止 |
+|---|---|---|
+| 1. Shell 成品 | 最终 PackageRoot 含不可变 OpenMontage、Shell adapter、私有 Python/FFmpeg/Node；Manifest/Lock/binding 和 Installer 盖章 Skill 存在；安装、注册、激活、卸载和数据保护真实可用 | 仍是临时组装、缺机械入口、缺工具链/注册激活/最终 Skill，或拿静态代码冒充成品 |
+| 2. WorkBuddy 接入 | 普通用户只用自然语言，WorkBuddy 读取已验证 authority，得到真实结果和可审回执 | 需要用户理解内部技术值、出现第二 Agent/控制面，或只有日志/自报 |
+| 3. Golden Key 视频 | 沿第 1、2 项同一路径得到真实 Golden Key、竖屏、非零时长、可播放视频，并能追溯 lineage/receipt | fixture/mock/demo/fallback、手工绕行、孤立 MP4 或无法追溯 |
+| 4. 用户收口 | 普通用户能看懂结果与失败提示；卸载/回滚不损害用户数据；正式 closeout 记录完整 | 仍需技术人员补洞，或数据保护/收口证据缺失 |
+
+四项按顺序进行；每项一个执行者和一次独立结果审查。当前仅授权路线固化，不授权产品代码、测试、客户端、Package、Provider 或媒体动作。

@@ -1182,3 +1182,20 @@ e02: NOT_STARTED / NOT_AUTHORIZED
 ```
 
 Current-repository manifest inputs remain exact at the evidence/product baseline; historical and external inputs retain their own frozen identities. Any unresolved live object, non-six-doc floor-to-live delta, baseline drift or token mismatch stops before execution.
+
+## CURRENT PRODUCT ROUTE RESET（2026-08-26）
+
+这是当前状态，不是新的 E02 计划：
+
+```text
+old_e_route: HISTORICAL_FAILED_ROUTE / NOT_EXECUTABLE / DO_NOT_CONTINUE
+e02_packet_handoff_report_contracts: HISTORICAL_FAILED_ROUTE / DO_NOT_CONTINUE
+f01_f07: DOES_NOT_EXIST / DO_NOT_CREATE
+retained_capabilities: STAGE2_REGISTRATION_LOCATOR + STAGE3_OPTIONAL_RUNTIME_PREP + STAGE4_MECHANICAL_LAUNCHER + STAGE5_WORKBUDDY_ENTRY_ADAPTER
+stage5_root_cause: FINAL_INSTALL_ASSEMBLY_DEFERRED / FINAL_PACKAGEROOT_AND_PRIVATE_TOOLCHAIN_NOT_MATERIALIZED / PRODUCTION_REGISTRATION_ACTIVATION_NOT_DONE / FINAL_INSTALLER_STAMPED_SKILL_NOT_DONE / REAL_WORKBUDDY_RECEIPT_NOT_PROVED / SHELL_ADAPTER_MISASSIGNED_TO_IMMUTABLE_PACKAGE
+current_next_product_task: STEP1_COMPLETE_INSTALLABLE_SHELL_PRODUCT
+step2_step4: BLOCKED_UNTIL_PRIOR_REAL_ACCEPTANCE
+current_task_scope: DOCS_ONLY_ROUTE_RESET / ZERO_PRODUCT_STATE_CHANGE
+```
+
+四个产品结果是：①完成可安装 Shell 成品（最终 PackageRoot、不可变 OpenMontage + Shell adapter + 私有 Python/FFmpeg/Node、Manifest/Lock/binding、最终 Skill、注册激活、卸载和数据保护）；②真实 WorkBuddy 自然语言结果/回执；③同一路径生成 Golden Key 真实可播放视频；④普通用户验收和正式收口。每项一个执行者、一次独立结果审查；不再做多轮 packet/pre-review 或角色扩张。

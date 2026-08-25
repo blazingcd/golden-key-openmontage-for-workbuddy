@@ -398,3 +398,13 @@ project_closeout_promotion_cleanup_rule: ONLY_AFTER_D08 + SEPARATE_OWNER_APPROVA
 - dynamic lock：`PRE_EXECUTION_REVIEW` 从 live remote ref 解析 exact commit/tree，OwnerTaskExecutionAuthorizationV1 与 E02TakeoverV1 锁定该对象；packet 不嵌入未来 correction commit/tree。
 - carrier hashes：packet `4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4`；input manifest `aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2`。
 - fail-closed：lineage、scope、baseline、path、bytes、token 任一不匹配均为 `STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH`，不得继续 E02 内容审计。
+
+## CURRENT PRODUCT ROUTE RESET（2026-08-26）
+
+旧 E01-E07 及 E02 packet/handoff/report/current execution contracts 统一标记为 `HISTORICAL_FAILED_ROUTE / NOT_EXECUTABLE / DO_NOT_CONTINUE`；不创建 F01-F07。已验证的 Stage 2 Registration/Locator、Stage 3 可选运行时准备、Stage 4 机械 Launcher、Stage 5 WorkBuddy entry adapter 只作为可复用成果，不能冒充最终产品。
+
+Stage 5 的根因硬门：最终安装/组装被推迟，最终 PackageRoot、私有 Python/FFmpeg/Node、生产注册激活、Installer 盖章 Skill 和真实 WorkBuddy 回执都未形成；Shell adapter 缺口曾错误归给不可修改的 OpenMontage package，必须由最终 Shell Installer/Release Assembly 负责。
+
+当前只允许四个产品结果，顺序不可改变：①可安装 Shell 成品（最终 PackageRoot、不可变 OpenMontage + Shell adapter + 私有工具链、Manifest/Lock/binding、Skill、注册激活、卸载和数据保护）；②真实 WorkBuddy 自然语言结果/回执；③同一路径 Golden Key 真实可播放视频；④普通用户验收和正式收口。只有第 1 项是下一项，后续必须有前一步真实验收。每项一个执行者、一次独立结果审查。
+
+新的停止条件：E 旧路线复活或创建 F 系列、重复 E02 审计或 packet/pre-review 循环、创建无用户阻断的模块/schema/角色、把静态代码/日志/自报/孤立视频当成真实结果、把内部技术值转嫁给用户、让 Shell/子进程取得生产决策权，立即停止并回报；本 docs-only reset 不得触碰产品代码、测试、客户端、Package、Provider 或媒体。

@@ -1164,3 +1164,21 @@ e03_e04: BLOCKED_BY_E02_CHAIN
 七个结构化输出合同为 `blocker_record`、`candidate_change_record`、`bidirectional_trace_record`、`downstream_boundary_record`、`fact_record`、`deviation_or_stop_record`、`evidence_index_record`。证据必须绑定 exact Git blob 或 external file，并有必需 `source_locator`（行号范围、symbol、markdown heading 或 json pointer）；动态 URL 在 E02 中禁止。七组资产为 `current_registration_locator`、`current_optional_runtime`、`current_launcher_and_entry`、`current_package_exports_and_hygiene`、`historical_guidance_and_lifecycle`、`documentary_package_comparison`、`historical_raw_negative_evidence`；资产只可 `KEEP/REWORK/REMOVE/NO_CHANGE/NOT_PROVED`。十一组 exact input 为 `e01-current-authority`、`package-registration-contract-documentary`、`current-shell-source-tests-skill`、`original-v2-handoff-owner-snapshot`、`historical-v2-next-session-handoff`、`historical-guided-skill`、`historical-installer-lifecycle-assets`、`official-openmontage-documentary-source`、`golden-key-0.3.25-documentary-source`、`b04-raw-negative-evidence`、`d01-historical-manifest`。
 
 最小路由只有 `E03_CANDIDATE`（入口/引导/错误解释/呈现）、`E04_CANDIDATE`（安装/装配/生命周期/binding）、`NO_CODE_CHANGE_REQUIRED` 和 `NOT_PROVED`；每个改动必须有普通用户 blocker，跨 E03/E04 必须拆分。WorkBuddy 是 sole Agent，OpenMontage 是 semantic authority，Shell 仅 support/mechanical；禁止第二控制面、技术负担和真实客户端/视频 overclaim。E02 仍为 static read-only；Planner、Execution Worker、Closeout Worker、Reviewer 四方分离，分别受 packet 写域约束；计划固化不等于执行授权、formal delivery 或 cleanup。
+
+## V2-E02-NONRECURSIVE-BINDING-CORRECTION1（2026-08-25，状态镜像）
+
+旧 exact-live-equality 绑定已由本节取代；本节只镜像非递归 lineage，不改变 E02 的完整执行合同或任何产品边界。
+
+```text
+evidence_product_baseline: 271dee394bed5ca3dd5c31860c842a8cbfdfa536 / tree 8eea24e3bc3fc5f4c6eed536281799edaebdde40
+formally_delivered_authority_floor: 1713ba8d0d3279233d702339548a242e40a1e759 / tree 38eddb5ccdbb000eb2048713c4b30a7f4e9e8d9b
+floor_to_live_scope: exact six authority docs only; floor must be live formal ancestor
+live_formal: resolve at PRE_EXECUTION_REVIEW; OwnerTaskExecutionAuthorizationV1 and E02TakeoverV1 lock exact commit/tree
+packet_sha256: 4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4
+input_manifest_sha256: aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2
+future_correction_commit: NOT_EMBEDDED_IN_PACKET
+lineage_stop: STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH
+e02: NOT_STARTED / NOT_AUTHORIZED
+```
+
+Current-repository manifest inputs remain exact at the evidence/product baseline; historical and external inputs retain their own frozen identities. Any unresolved live object, non-six-doc floor-to-live delta, baseline drift or token mismatch stops before execution.

@@ -387,3 +387,14 @@ project_closeout_promotion_cleanup_rule: ONLY_AFTER_D08 + SEPARATE_OWNER_APPROVA
 - asset/input hard gate：七组资产为 `current_registration_locator`、`current_optional_runtime`、`current_launcher_and_entry`、`current_package_exports_and_hygiene`、`historical_guidance_and_lifecycle`、`documentary_package_comparison`、`historical_raw_negative_evidence`；十一组 exact inputs 为 `e01-current-authority`、`package-registration-contract-documentary`、`current-shell-source-tests-skill`、`original-v2-handoff-owner-snapshot`、`historical-v2-next-session-handoff`、`historical-guided-skill`、`historical-installer-lifecycle-assets`、`official-openmontage-documentary-source`、`golden-key-0.3.25-documentary-source`、`b04-raw-negative-evidence`、`d01-historical-manifest`。
 - evidence hard gate：每个 evidence record 必须有 exact identity 和 `source_locator`（line range、symbol、markdown heading 或 json pointer）；dynamic URL `FORBIDDEN`；整文件 hash 不能独立支持 blocker。最小路由只允许 `E03_CANDIDATE`、`E04_CANDIDATE`、`NO_CODE_CHANGE_REQUIRED`、`NOT_PROVED`，REWORK/REMOVE 必须反向连接 confirmed blocker。
 - lifecycle hard gate：唯一 E02 root/carriers、四方角色写域、`PRE_EXECUTION_REVIEW` 和 `OwnerTaskExecutionAuthorizationV1` 先于执行；任一 mismatch、越界、缺 locator、事实等级坍缩、第二控制面、真实客户端/视频 overclaim、提前 cleanup 立即 STOP；E03/E04 保持 blocked。
+
+### V2-E02-NONRECURSIVE-BINDING-CORRECTION1 防漂移守卫（2026-08-25）
+
+本节取代旧 exact-live-equality 规则，只修正 formal lineage 解析，不扩大 E02 范围。
+
+- fixed evidence/product baseline：`271dee394bed5ca3dd5c31860c842a8cbfdfa536` / tree `8eea24e3bc3fc5f4c6eed536281799edaebdde40`；当前 repository manifest identities 必须仍精确匹配该 baseline，历史/external identities 必须各自保持 exact。
+- formally delivered authority floor：`1713ba8d0d3279233d702339548a242e40a1e759` / tree `38eddb5ccdbb000eb2048713c4b30a7f4e9e8d9b`；它必须是授权时 live formal 的 ancestor。
+- floor..live scope：完整路径集只能包含 `AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md`；出现产品代码、测试、Skill 或其他路径即停。
+- dynamic lock：`PRE_EXECUTION_REVIEW` 从 live remote ref 解析 exact commit/tree，OwnerTaskExecutionAuthorizationV1 与 E02TakeoverV1 锁定该对象；packet 不嵌入未来 correction commit/tree。
+- carrier hashes：packet `4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4`；input manifest `aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2`。
+- fail-closed：lineage、scope、baseline、path、bytes、token 任一不匹配均为 `STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH`，不得继续 E02 内容审计。

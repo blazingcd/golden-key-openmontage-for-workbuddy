@@ -4387,3 +4387,36 @@ Evidence 必须绑定 exact Git blob 或 external file；`source_locator` 必须
 ### 9. 当前固化状态
 
 本次 Closeout Worker 只固化上述六份 authority docs；E02 `NOT_STARTED / NOT_AUTHORIZED`，`handoff/report/evidence` `NOT_CREATED`，E03/E04 `BLOCKED_BY_E02_CHAIN`。E02 只有在 execution report/evidence index 完整冻结并经独立结果审查后，才能形成下游 candidate boundary；本候选不授权执行、产品改动、客户端操作、测试、Package/Provider/media、cleanup、`FORMAL_DELIVERY` 或下一任务。
+
+## V2-E02-NONRECURSIVE-BINDING-CORRECTION1（2026-08-25，当前绑定纠偏）
+
+本节只纠正 E02 的 formal lineage 绑定，完整 E02 执行合同仍由上方 `V2-E02-EXECUTION-PLAN-FREEZE1`、exact packet 和 exact input manifest 共同提供。旧 `formal_base == live formal` exact-live-equality 规则自本节起被取代；九阶段、十旅程、16-field schema、7 contracts、7 assets、11 inputs、载体、写域、dynamic URL `FORBIDDEN`、`NOT_PROVED`、WorkBuddy sole Agent 和 Shell support/mechanical 边界均不变。
+
+```text
+correction_task: V2-E02-NONRECURSIVE-BINDING-CORRECTION1
+evidence_product_baseline: 271dee394bed5ca3dd5c31860c842a8cbfdfa536 / tree 8eea24e3bc3fc5f4c6eed536281799edaebdde40
+formally_delivered_authority_floor: 1713ba8d0d3279233d702339548a242e40a1e759 / tree 38eddb5ccdbb000eb2048713c4b30a7f4e9e8d9b
+packet_path: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1\packet\E02ExecutionPacketV1.json
+packet_sha256: 4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4
+input_manifest_path: D:\BlazingCD\Temp\Golden_Key_WorkBuddy_V2_E02_User_Journey_Minimal_Change_Audit1\inputs\E02InputManifestV1.json
+input_manifest_sha256: aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2
+live_formal: RESOLVE_LIVE_REMOTE_REF_AT_PRE_EXECUTION_REVIEW; OWNER_TOKEN_AND_E02TAKEOVER_LOCK_EXACT_COMMIT_TREE
+floor_ancestry: authority floor MUST_BE_ANCESTOR_OF_LIVE_FORMAL
+floor_to_live_scope: ONLY_AGENT_GUIDE_MD_PROJECT_STATE_MD_TASK_REGISTER_MD_PROJECT_CHARTER_MD_ACCEPTANCE_MATRIX_MD_DRIFT_GUARD_MD
+manifest_baseline: current repository inputs remain exact at evidence/product baseline; historical/external inputs remain individually frozen exact identities
+future_correction_commit: NOT_EMBEDDED_IN_PACKET
+stop: STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH
+e02_state: NOT_STARTED / NOT_AUTHORIZED
+```
+
+### 非递归绑定硬合同
+
+1. `evidence_product_baseline` is the fixed product/evidence comparison point. It is not the execution-time live formal object and is never rewritten to a future correction commit.
+2. `formally_delivered_authority_floor` is the minimum planning authority. Before `PRE_EXECUTION_REVIEW` can approve, the live formal ref must resolve, the floor must be its ancestor, and the complete `floor..live` path set must be limited to the exact six authority docs listed above. Any product code, test, Skill or other path is `STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH`.
+3. The live formal commit/tree is resolved from the live remote ref immediately before authorization and is recorded exactly in `OwnerTaskExecutionAuthorizationV1` and `E02TakeoverV1`. A packet or chat value cannot substitute for that lock; no future correction commit is embedded here.
+4. All current-repository manifest identities used as evidence must still match the fixed evidence/product baseline. Historical and external inputs remain their own frozen exact commit/tree/path/blob or path/size/SHA256 identities; any drift is `BLOCKED_INPUT_NOT_PROVED`.
+5. The reviewer checks the above lineage and scope before content execution. The Execution Worker repeats it at takeover; failure stops before audit content writes, except the fixed partial stop-report rule already in the packet.
+
+### 前置审查与结果边界更新
+
+`PLAN_REVIEW` binds the exact corrected packet and manifest hashes. `PRE_EXECUTION_REVIEW` is a separate zero-write readiness check of those hashes, the fixed evidence baseline, authority-floor ancestry, exact-six-only `floor..live` scope, dynamically resolved live formal commit/tree, all manifest identities, role write domains and unchanged E02 boundaries. Only after it returns `PRE_EXECUTION_APPROVE / P0=0 / P1=0 / P2=0` may the Owner issue `OwnerTaskExecutionAuthorizationV1`; E02 remains `NOT_STARTED / NOT_AUTHORIZED` until that token and takeover exist. This correction does not authorize E02, E03, E04, product/client/test/Package/Provider/media actions, cleanup, commit, push or `FORMAL_DELIVERY`.

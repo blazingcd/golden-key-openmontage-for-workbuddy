@@ -487,3 +487,23 @@ formal_delivery: NOT_AUTHORIZED_IN_THIS_TASK
 ```
 
 WorkBuddy 仍是唯一运行 Agent、用户对话主体和生产决策者；OpenMontage 仍是生产语义 authority；Shell 仅承担支持性、机械性边界。E02 只允许按 manifest 做 exact 只读检查；产品代码、测试、Skill、历史资产和外部仓库不得执行或修改，外部仓库不得写入、commit 或 push。只有独立 `PRE_EXECUTION_REVIEW` 通过且 `OwnerTaskExecutionAuthorizationV1` 生效后，Execution Worker 才可在固定 task root 写入 exact `reports/` 与 `evidence/` carriers。禁止 WorkBuddy、浏览器/客户端、Package、Registration、Installer、Provider、媒体、视频、测试运行、CI 和 cleanup 动作。九阶段、十条旅程、十六字段、七个输出合同、七组资产、十一组输入及停止规则只路由到 `TASK-REGISTER.md` 同名节和上述 exact packet hash。
+
+## V2-E02-NONRECURSIVE-BINDING-CORRECTION1（2026-08-25，compact route guard）
+
+本节仅修正 E02 的 formal 绑定方式；旧 `formal_base == live formal` exact-live-equality 规则由本节取代。完整 E02 合同仍只在 `docs/workbuddy/v2/TASK-REGISTER.md` 同名节及 exact carriers 中维护，不增加阶段、旅程、字段、资产、输入或载体。
+
+```text
+correction_task: V2-E02-NONRECURSIVE-BINDING-CORRECTION1
+evidence_product_baseline: 271dee394bed5ca3dd5c31860c842a8cbfdfa536 / tree 8eea24e3bc3fc5f4c6eed536281799edaebdde40
+formally_delivered_authority_floor: 1713ba8d0d3279233d702339548a242e40a1e759 / tree 38eddb5ccdbb000eb2048713c4b30a7f4e9e8d9b
+floor_rule: floor must be a live formal ancestor; floor..live path set may contain only the exact six authority docs
+live_formal: resolve at PRE_EXECUTION_REVIEW and lock exact commit/tree only in OwnerTaskExecutionAuthorizationV1 and E02TakeoverV1
+packet_sha256: 4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4
+input_manifest_sha256: aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2
+baseline_inputs: current repository identities remain exact at evidence/product baseline; historical/external identities remain individually frozen
+future_correction_commit: NOT_EMBEDDED_IN_PACKET
+stop: STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH on unresolved live object, non-ancestor floor, non-six-doc delta, baseline-input drift or token mismatch
+e02_state: NOT_STARTED / NOT_AUTHORIZED
+```
+
+WorkBuddy remains the sole Agent and OpenMontage remains semantic authority; Shell remains support/mechanical. All existing E02 read/write/forbidden boundaries, `PRE_EXECUTION_REVIEW`, Owner token, evidence freeze, result review and closeout rules remain unchanged.

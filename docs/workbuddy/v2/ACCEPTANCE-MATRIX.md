@@ -821,3 +821,16 @@ E02 同样要求 Planner/Audit Coordinator、Execution Worker、Closeout Worker�
 | 最小路由 | 只允许 `E03_CANDIDATE`、`E04_CANDIDATE`、`NO_CODE_CHANGE_REQUIRED`、`NOT_PROVED`；E03/E04 candidate-only | 预先授权、扩大 allowlist、把规划当执行 |
 | 角色/载体 | 唯一 E02 root、五个固定 carrier、四方分离、写域固定；Reviewer 全零写 | 多 root、越权写、提前 cleanup |
 | 当前状态 | `NOT_STARTED / NOT_AUTHORIZED`；E03/E04 blocked；不含产品、客户端、测试、Package、Provider、media、formal delivery | 任何执行、推广或成功 overclaim |
+
+## V2-E02-NONRECURSIVE-BINDING-CORRECTION1 验收镜像（2026-08-25）
+
+本节取代旧 exact-live-equality 绑定的验收解释；E02 的内容合同、边界和状态不变。
+
+| 非递归硬门 | 必须满足 | 失败即停止 |
+|---|---|---|
+| 固定证据基线 | `271dee394bed5ca3dd5c31860c842a8cbfdfa536` / tree `8eea24e3bc3fc5f4c6eed536281799edaebdde40`；当前 repository manifest identities 仍精确匹配该基线 | baseline input 漂移或无法重连 |
+| authority floor | 已正式交付 `1713ba8d0d3279233d702339548a242e40a1e759` / tree `38eddb5ccdbb000eb2048713c4b30a7f4e9e8d9b`，且是 live formal ancestor | floor 缺失、非 ancestor 或对象不一致 |
+| floor-to-live scope | floor..live 的完整路径集只能是六份 authority docs：`AGENT_GUIDE.md`、`PROJECT-STATE.md`、`docs/workbuddy/v2/TASK-REGISTER.md`、`docs/workbuddy/v2/PROJECT-CHARTER.md`、`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`、`docs/workbuddy/v2/DRIFT-GUARD.md` | 产品代码、测试、Skill 或其他路径出现 |
+| live lock | `PRE_EXECUTION_REVIEW` 解析 live remote ref；`OwnerTaskExecutionAuthorizationV1` 与 `E02TakeoverV1` 锁定 exact live commit/tree；未来 correction commit 不嵌入 packet | packet 静态值替代 live lock、token mismatch 或未解析 |
+| carrier binding | packet `4120acf17e204d78cedd743d3eb84b6491bbf1aef2b607df49c645e59eb930d4`；manifest `aeeae389aeade2b992efbcf8f46c4f7372c4a5df57b16bb84b87ea57be69cad2` | hash、字节、编码或路径不一致 |
+| stop classification | 上述 lineage/scope/baseline/token 任一失败均为 `STOP_FORMAL_LINEAGE_OR_SCOPE_MISMATCH`；仍不授权 E02/E03/E04 | 继续内容审计或填补证据 |

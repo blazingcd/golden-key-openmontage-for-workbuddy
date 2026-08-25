@@ -769,3 +769,13 @@ builder_boundary: NO_FORMAL_PROMOTION
 当前这套矩阵仍是未提交六文档候选；E02-E07 执行全部未授权。
 
 E02 同样要求 Planner/Audit Coordinator、Execution Worker、Closeout Worker、Independent Reviewer 四方分离。Git 只存在一个 `FORMAL_DELIVERY` 动作：reviewed candidate 在分别取得 commit、push、formal-delivery 授权后，以 ordinary fast-forward 更新 formal ref，核验远端 commit/tree 和适用 CI，之后才是独立 next-task authorization。更早历史节中的旧交付标签不构成多个动作。
+
+### E01 文档正式收口验收（2026-08-25）
+
+| 验收层 | 通过条件 | 当前/失败规则 |
+|---|---|---|
+| 首次正式交付 | formal ref 精确包含 `1ad4aa136b99d73e76a6f8847b7deb7d064649d0` / tree `6db61922d6c07c3ff337dbaa761ca6d65c080bbf`；ordinary fast-forward；CI run `32809470079`、exact `headSha`、`completed/success`、395 passed / 1 skipped | `PASS` |
+| closeout 候选 | 只改 exact six authority docs；`THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`；独立零写 Reviewer `APPROVE / P0=0 / P1=0 / P2=0` | 未复审或越出六文档即 `REJECT` |
+| closeout 正式生效 | live formal ref 包含 `THIS_COMMIT`，远端 tree 精确，exact-head CI 最终 success | 任一条件缺失保持 `NOT_FORMALLY_DELIVERED` |
+| 下游状态 | E01 完成后 `current_task=NONE`；E02-E07 `NOT_STARTED / NOT_AUTHORIZED` | 不得把 closeout、CI 或本次广义文档授权解释为 E02 授权 |
+| 非目标 | WorkBuddy、产品/测试代码、Package、Registration、Installer、Provider、媒体、客户端与 cleanup 均无动作 | 任一发生即 P0/P1 stop |

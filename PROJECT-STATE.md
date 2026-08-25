@@ -1081,3 +1081,27 @@ next: COMPLETE_PACKET_DOCS -> INDEPENDENT_ZERO_WRITE_REVIEW -> OWNER_GIT_DECISIO
 旧的“E01 未提交/未推送”字段是候选首次交付前快照。新的详细合同在 TASK-REGISTER 最后章节：每项必须先通过 formal authority、用户价值、输入身份、exact packet、独立 pre-execution review 和绑定 packet SHA256 的 Owner 单任务执行 token；适用 Package/client/Provider/rollback/cleanup 各自另 token。执行后必须先冻结证据，再审核、再获 Reviewer cleanup verdict 与 Owner cleanup token、再捕获 after-state。
 
 Git 唯一状态机是 `REVIEW_APPROVE -> OWNER_COMMIT_AUTHORIZATION -> CANDIDATE_COMMIT -> OWNER_PUSH_AUTHORIZATION -> CANDIDATE_PUSH -> OWNER_FORMAL_DELIVERY_AUTHORIZATION -> ORDINARY_FAST_FORWARD_FORMAL_REF -> REMOTE_COMMIT_TREE_VERIFICATION -> CI_HEADSHA_SUCCESS_IF_REQUIRED -> FORMALLY_DELIVERED -> OWNER_NEXT_TASK_AUTHORIZATION_SEPARATE`。E 路线不复用更早历史节中的旧交付标签，也不存在额外 Git 动作。
+
+## E01 文档正式收口候选（2026-08-25）
+
+```text
+closeout_task: V2-E01-DOCS-FORMAL-CLOSEOUT1
+scope: DOCS_ONLY / EXACT_SIX_AUTHORITY_FILES / ZERO_PRODUCT_STATE_CHANGE
+planning_delivery_commit: 1ad4aa136b99d73e76a6f8847b7deb7d064649d0
+planning_delivery_tree: 6db61922d6c07c3ff337dbaa761ca6d65c080bbf
+planning_delivery_ref: refs/heads/codex/workbuddy-shell-v2 / VERIFIED
+planning_delivery_method: ORDINARY_FAST_FORWARD / NO_FORCE_NO_MERGE_NO_REBASE
+planning_delivery_ci: run 32809470079 / completed / success / headSha=1ad4aa136b99d73e76a6f8847b7deb7d064649d0 / 395 passed / 1 skipped
+planning_payload_state: FORMALLY_DELIVERED
+closeout_review_gate: INDEPENDENT_ZERO_WRITE_APPROVE_REQUIRED
+closeout_result: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
+closeout_delivery_resolution: INDEPENDENT_ZERO_WRITE_APPROVE + LIVE_FORMAL_REF_CONTAINS_THIS_COMMIT + EXACT_HEAD_CI_SUCCESS
+E01_final_state: FORMALLY_DELIVERED_WHEN_CLOSEOUT_DELIVERY_RESOLUTION_IS_TRUE
+current_task: NONE / NO_ACTIVE_TASK_AFTER_E01_CLOSEOUT
+E02_E07: NOT_STARTED / NOT_AUTHORIZED
+next_authorized_task: NONE / SEPARATE_OWNER_E02_AUTHORIZATION_REQUIRED_IN_NEW_TASK
+local_tests: NOT_RUN_DOCS_ONLY
+cleanup: NOT_INCLUDED / SEPARATE_OWNER_AUTHORIZATION_REQUIRED
+```
+
+本节具有 append-only precedence：上方 `formal_delivery: NOT_DONE`、`UNCOMMITTED_SIX_DOC_CANDIDATE`、`forbidden_now` 中的 Git 动作和旧 formal HEAD 都是首次正式交付前的历史快照，不再描述当前状态。只有本 closeout 候选经独立零写复审、提交、推送、ordinary fast-forward、远端对象核验和 exact-head CI success 后，E01 文档工作才完整闭环；这不授权 E02。

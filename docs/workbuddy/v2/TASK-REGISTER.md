@@ -4159,3 +4159,46 @@ REVIEW_APPROVE
 9. rollback 失败时立即停止 cleanup；`FORMAL_DELIVERY` 前可放弃尚未 delivered 的候选，完成后只能新建独立 reviewed correction，不得改写历史。
 
 本节具有 append-only precedence：此前“E01 未提交/未推送、下一步决定 commit/push”的字段是 `HISTORICAL_PRE_DELIVERY_SNAPSHOT`。当前事实是候选 commit/push 已完成，`FORMAL_DELIVERY` 未完成；本次新增规划仍是未提交工作树，等待新的独立复审和 Owner 后续 Git 决定。
+
+## V2-E01-DOCS-FORMAL-CLOSEOUT1 候选（2026-08-25）
+
+### 1. 首次正式交付事实
+
+```text
+planning_delivery_commit: 1ad4aa136b99d73e76a6f8847b7deb7d064649d0
+planning_delivery_tree: 6db61922d6c07c3ff337dbaa761ca6d65c080bbf
+planning_delivery_parent: 533fb410fda837259afa29e2bb2fdee76caca599
+formal_ref: refs/heads/codex/workbuddy-shell-v2
+delivery_method: ORDINARY_FAST_FORWARD / NO_FORCE_NO_MERGE_NO_REBASE
+remote_commit_tree_verification: PASS
+ci: run 32809470079 / completed / success / headSha=1ad4aa136b99d73e76a6f8847b7deb7d064649d0 / 395 passed / 1 skipped
+planning_payload_state: FORMALLY_DELIVERED
+```
+
+### 2. Closeout 精确合同
+
+```text
+task_id: V2-E01-DOCS-FORMAL-CLOSEOUT1
+task_kind: DOCS_ONLY_STATE_CLOSEOUT / EXACT_SIX_AUTHORITY_FILES / ZERO_PRODUCT_STATE_CHANGE
+baseline: 1ad4aa136b99d73e76a6f8847b7deb7d064649d0 / tree 6db61922d6c07c3ff337dbaa761ca6d65c080bbf
+allowlist: AGENT_GUIDE.md + PROJECT-STATE.md + docs/workbuddy/v2/TASK-REGISTER.md + docs/workbuddy/v2/PROJECT-CHARTER.md + docs/workbuddy/v2/ACCEPTANCE-MATRIX.md + docs/workbuddy/v2/DRIFT-GUARD.md
+forbidden: WORKBUDDY_PRODUCT_TEST_PACKAGE_REGISTRATION_INSTALLER_PROVIDER_MEDIA_CLIENT_E02_E07_EXECUTION
+local_tests: NOT_RUN_DOCS_ONLY
+review_gate: INDEPENDENT_ZERO_WRITE_REVIEW_REQUIRED / ACCEPT_ONLY_IF_APPROVE_AND_P0_P1_P2_ZERO
+candidate_commit: THIS_COMMIT
+candidate_push: TASK_BRANCH_ONLY / ORDINARY_FAST_FORWARD / NO_FORCE
+formal_delivery: OWNER_AUTHORIZED_DOCS_CONTINUATION / ORDINARY_FAST_FORWARD_ONLY
+closeout_result: THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR
+closeout_delivery_resolution: INDEPENDENT_ZERO_WRITE_APPROVE + LIVE_FORMAL_REF_CONTAINS_THIS_COMMIT + REMOTE_TREE_EXACT + EXACT_HEAD_CI_SUCCESS
+E01_final_state: FORMALLY_DELIVERED_WHEN_CLOSEOUT_DELIVERY_RESOLUTION_IS_TRUE
+current_task: NONE / NO_ACTIVE_TASK_AFTER_E01_CLOSEOUT
+E02_E07: NOT_STARTED / NOT_AUTHORIZED
+next_authorized_task: NONE / SEPARATE_OWNER_E02_AUTHORIZATION_REQUIRED_IN_NEW_TASK
+cleanup: NOT_INCLUDED / SEPARATE_OWNER_AUTHORIZATION_REQUIRED
+```
+
+### 3. Append-only precedence 与停止点
+
+本节取代此前 E 节中的实时状态字段，但不删除或改写历史：`formal_delivery: NOT_DONE`、`UNCOMMITTED_SIX_DOC_CANDIDATE`、旧 formal HEAD、`forbidden_now` 中的 commit/push/FORMAL_DELIVERY 以及“等待 Owner Git 决定”均固定为 `HISTORICAL_PRE_CLOSEOUT_SNAPSHOT`。本 closeout 候选只有在独立零写 Reviewer 批准、提交、推送、ordinary fast-forward、远端对象核验和 exact-head CI success 后才自解析为正式 E01 closeout。
+
+E01 最终闭环只说明项目目标、用户旅程、E02-E07 packet、角色分离、证据/清理/回滚和 Git 硬门已成为正式文档 authority；它不证明产品代码、Installer、WorkBuddy、Provider、媒体或真实业务路径已经执行。Closeout 后必须停止，E02 保持 `NOT_STARTED / NOT_AUTHORIZED`，只允许 Owner 在新任务中另行授权。

@@ -622,3 +622,7 @@ E 总路线候选 `533fb410fda837259afa29e2bb2fdee76caca599`、tree `b0b0879cd84
 执行窗口不能自行完善 packet。任何未来身份、manifest、路径或 before-state 未解析时，任务为 `DRAFT_BLOCKED`；任何非 `APPROVE` 结果都阻断下游。失败证据必须先保全和审核，再按 exact manifest 获准清理。Shell 的产品责任仍是降低普通用户门槛和提供可执行引导；本职责分离不能被解释成第二 Agent、第二控制面或把内部技术交给用户。
 
 E 路线只用 `FORMAL_DELIVERY` 表示 candidate commit 以 ordinary fast-forward 更新 formal ref 并完成远端对象/适用 CI 核验。更早历史节中的旧交付标签不再用于 E 路线；`FORMALLY_DELIVERED` 后仍需 Owner 单独授权下一任务。
+
+### E01 文档正式收口（2026-08-25）
+
+E01 路线与执行包已以 commit `1ad4aa136b99d73e76a6f8847b7deb7d064649d0`、tree `6db61922d6c07c3ff337dbaa761ca6d65c080bbf` ordinary fast-forward 到 formal ref，并由 exact-head CI run `32809470079` 成功验证。本 exact-six-doc closeout 使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`：只有独立零写批准、live formal ref 包含本提交、远端 tree 精确和 exact-head CI success 同时成立，E01 才最终 `FORMALLY_DELIVERED`。该状态只固化“Shell 降低普通用户门槛、WorkBuddy 是唯一 Agent、Shell 不成为第二控制面”的路线与各任务硬门；不代表任何产品实现或真实用户路径已完成。E02-E07 仍 `NOT_STARTED / NOT_AUTHORIZED`，下一动作必须是 Owner 在新任务中对 E02 的独立明确授权。

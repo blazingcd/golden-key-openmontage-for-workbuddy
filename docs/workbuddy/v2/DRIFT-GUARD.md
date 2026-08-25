@@ -354,3 +354,10 @@ project_closeout_promotion_cleanup_rule: ONLY_AFTER_D08 + SEPARATE_OWNER_APPROVA
 7. Planner/Audit Coordinator、Execution Worker、Closeout Worker、Reviewer 四方分离，E02 也无例外。Worker 不能写 authority closeout；Closeout Worker 不运行产品；Reviewer 永远零写且与前三者不同。失败回 Planner/named owner，不在下游修。
 
 路线候选 commit `533fb410fda837259afa29e2bb2fdee76caca599` 已在远端专用分支，正式 ref 仍为 `b7bd6bc201f821f83d019c5b7addd8ec198d7ecf`。本次执行包规划是新的未提交六文档 diff；不得据此运行 E02-E07 或进行 Git/清理动作。
+
+### E01 文档正式收口守卫（2026-08-25）
+
+- E 路线和逐任务执行包的首次正式结果固定为 commit `1ad4aa136b99d73e76a6f8847b7deb7d064649d0`、tree `6db61922d6c07c3ff337dbaa761ca6d65c080bbf`；formal ref 已 ordinary fast-forward 并由 CI run `32809470079` 在 exact `headSha` 上 `completed/success`，395 passed / 1 skipped。
+- 上方仍出现的 `formal_delivery: NOT_DONE`、`UNCOMMITTED`、旧 formal HEAD 或禁止 Git 动作均为 `HISTORICAL_PRE_CLOSEOUT_SNAPSHOT`，不得覆盖本节。
+- 本 closeout 只允许 exact six authority docs；结果使用 `THIS_COMMIT / SELF_RESOLVING_FORMAL_MIRROR`。只有独立零写 `APPROVE`、live formal ref 包含该 commit、远端 tree 精确且 exact-head CI success 同时成立，E01 才是最终 `FORMALLY_DELIVERED`。
+- closeout 期间及完成后都不得自动启动 E02；E02-E07 固定 `NOT_STARTED / NOT_AUTHORIZED`，需 Owner 在新任务中单独授权。WorkBuddy、产品/测试代码、Package、Registration、Installer、Provider、媒体、客户端和 cleanup 均不在范围内。

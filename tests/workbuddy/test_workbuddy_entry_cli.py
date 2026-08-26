@@ -188,7 +188,6 @@ def _environment(provider: Mapping[str, str] | None = None) -> dict[str, str]:
         cli._ENV_MODULE_SHA256: module_hash,
         cli._ENV_FIXED_ARGV: cli._FIXED_ARGV_TEXT,
         cli._ENV_FIXED_ARGV_SHA256: hashlib.sha256(cli._FIXED_ARGV_TEXT.encode()).hexdigest(),
-        cli._ENV_INTERPRETER_PATH: str(interpreter),
         cli._ENV_INTERPRETER_SHA256: interpreter_hash,
     }
     for name in cli._runtime_environment_names():
@@ -565,18 +564,14 @@ def test_stdin_read_is_bounded_before_parsing() -> None:
     assert reader.requested == cli._MAX_INPUT_BYTES + 1
 
 
-def test_skill_contains_installer_placeholders_fixed_env_set_and_runtime_rule() -> None:
+def test_skill_exposes_only_opaque_entry_and_installer_identity_placeholders() -> None:
     skill = Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage/SKILL.md"
     source = skill.read_text(encoding="utf-8")
-    for name in cli._FIXED_ENVIRONMENT_NAMES:
-        assert name in source
-    assert "<installer:absolute_package_private_interpreter_path>" in source
-    assert "<installer:canonical_request_schema_descriptor_sha256>" in source
-    assert "<installer:canonical_result_schema_descriptor_sha256>" in source
-    assert "exact allowed name" in source.casefold()
-    for name in cli._WINDOWS_RUNTIME_ENV_NAMES:
-        assert name in source
-    assert "entire host environment" in source
+    assert "<installer:skill_identity>" in source
+    assert "<installer:release_identity>" in source
+    assert "literal message" in source
+    for technical in ("GOLDEN_KEY_WORKBUDDY_INTERPRETER_PATH", "JSON request", "sha256", "result_root"):
+        assert technical.casefold() not in source.casefold()
 
 
 def test_schema_hashes_bind_canonical_closed_descriptors_not_schema_ids() -> None:

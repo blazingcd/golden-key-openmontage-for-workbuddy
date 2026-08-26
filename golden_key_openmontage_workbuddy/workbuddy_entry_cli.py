@@ -231,7 +231,6 @@ _ENV_MODULE_NAME = "GOLDEN_KEY_WORKBUDDY_MODULE_NAME"
 _ENV_MODULE_SHA256 = "GOLDEN_KEY_WORKBUDDY_MODULE_SHA256"
 _ENV_FIXED_ARGV = "GOLDEN_KEY_WORKBUDDY_FIXED_ARGV"
 _ENV_FIXED_ARGV_SHA256 = "GOLDEN_KEY_WORKBUDDY_FIXED_ARGV_SHA256"
-_ENV_INTERPRETER_PATH = "GOLDEN_KEY_WORKBUDDY_INTERPRETER_PATH"
 _ENV_INTERPRETER_SHA256 = "GOLDEN_KEY_WORKBUDDY_INTERPRETER_SHA256"
 _WINDOWS_RUNTIME_ENV_NAMES = ("COMSPEC", "PATHEXT", "SystemRoot", "TEMP", "TMP", "WINDIR")
 _FIXED_ENVIRONMENT_NAMES = (
@@ -239,7 +238,6 @@ _FIXED_ENVIRONMENT_NAMES = (
     _ENV_BRIDGE_CONTRACT_ID,
     _ENV_FIXED_ARGV,
     _ENV_FIXED_ARGV_SHA256,
-    _ENV_INTERPRETER_PATH,
     _ENV_INTERPRETER_SHA256,
     _ENV_MODULE_NAME,
     _ENV_MODULE_SHA256,
@@ -664,12 +662,9 @@ def _load_environment(
         _asset_error()
     if value(_ENV_MODULE_SHA256) != _file_sha256(Path(__file__)):
         _asset_error()
-    interpreter_path = Path(value(_ENV_INTERPRETER_PATH))
-    try:
-        if not interpreter_path.is_absolute() or interpreter_path.resolve() != Path(sys.executable).resolve():
-            _asset_error()
-    except (OSError, RuntimeError, ValueError):
-        _asset_error()
+    # The package may be relocated after assembly. Locator supplies the
+    # current private interpreter; only its immutable bytes are release-bound.
+    interpreter_path = Path(sys.executable)
     if value(_ENV_INTERPRETER_SHA256) != _file_sha256(interpreter_path):
         _asset_error()
 
@@ -706,8 +701,13 @@ def _bind_installer_definition(
     definition = request["package_tool_definition"]
     if not isinstance(definition, Mapping):
         _asset_error()
+    release_identity = installer_identity["release_identity"]
+    package_release = release_identity
+    prefix = "golden-key-openmontage-"
+    if release_identity.startswith(prefix):
+        package_release = release_identity[len(prefix) :]
     expected = {
-        "package_release": installer_identity["release_identity"],
+        "package_release": package_release,
         "authority_owner": installer_identity["authority_owner"],
         "definition_id": installer_identity["definition_id"],
         "definition_sha256": installer_identity["definition_sha256"],

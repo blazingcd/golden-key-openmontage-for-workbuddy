@@ -1672,6 +1672,38 @@ def _atomic_replace_active(
                 pass
 
 
+def _remove_active_locked(paths: _RegistryPaths, expected_current_raw: bytes) -> None:
+    """CAS-remove the active pointer; caller must already hold _active_lock."""
+
+    current_raw = _read_active_raw(paths)
+    if current_raw != expected_current_raw:
+        _fail("ACTIVE_CAS_MISMATCH", "active package pointer changed")
+    try:
+        paths.active.unlink()
+    except OSError as exc:
+        _fail("ATOMIC_WRITE_FAILED", f"cannot remove active package pointer: {exc}")
+    if paths.active.exists():
+        _fail("ATOMIC_WRITE_FAILED", "active package pointer remained after removal")
+
+
+def _restore_active_locked(
+    paths: _RegistryPaths,
+    previous_raw: bytes | None,
+    expected_current_raw: bytes | None,
+) -> None:
+    """Restore an exact pointer image while retaining a CAS boundary."""
+
+    current_raw = _read_active_raw(paths)
+    if current_raw != expected_current_raw:
+        _fail("ACTIVE_CAS_MISMATCH", "active package pointer changed during rollback")
+    if previous_raw is None:
+        if current_raw is not None:
+            _remove_active_locked(paths, current_raw)
+        return
+    _parse_active(previous_raw)
+    _atomic_replace_active(paths.active, previous_raw, current_raw)
+
+
 def _pointer_bytes(registration_sha256: str) -> bytes:
     return _canonical_json(
         {
@@ -1742,6 +1774,35 @@ def activate_package(
         _load_registration(paths, target_sha)
         _atomic_replace_active(paths.active, _pointer_bytes(target_sha), current_raw)
     return target_sha
+
+
+def _deactivate_package(
+    data_root: os.PathLike[str] | str,
+    expected_active_pointer_sha256: str,
+    registration_sha256: str,
+) -> str:
+    """Remove one active pointer under the same CAS/lock boundary as activation.
+
+    The registration object and user DataRoot remain untouched; this is the
+    lifecycle boundary used by the installer before removing package assets.
+    """
+
+    paths = _registry_paths(data_root)
+    _ensure_existing_registry(paths)
+    expected = _validate_expected_pointer(
+        expected_active_pointer_sha256, allow_missing=False
+    )
+    target_sha = _require_sha256(registration_sha256, label="registration_sha256")
+    with _active_lock(paths):
+        current_raw = _read_active_raw(paths)
+        if current_raw is None or _sha256_bytes(current_raw) != expected:
+            _fail("ACTIVE_CAS_MISMATCH", "active package pointer changed")
+        current_pointer = _parse_active(current_raw)
+        if current_pointer["registration_sha256"] != target_sha:
+            _fail("ACTIVE_CAS_MISMATCH", "active registration differs")
+        _load_registration(paths, target_sha)
+        _remove_active_locked(paths, current_raw)
+        return "MISSING"
 
 
 def recover_active_package(

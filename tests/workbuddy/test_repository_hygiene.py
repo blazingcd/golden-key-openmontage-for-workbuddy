@@ -45,9 +45,12 @@ EXPECTED_TRACKED_FILES = frozenset(
         "docs/workbuddy/v2/README.md",
         "docs/workbuddy/v2/TASK-REGISTER.md",
         "golden_key_openmontage_workbuddy/__init__.py",
+        "golden_key_openmontage_workbuddy/fixed_child.py",
+        "golden_key_openmontage_workbuddy/installer.py",
         "golden_key_openmontage_workbuddy/package_registration.py",
         "golden_key_openmontage_workbuddy/runtime_prepare.py",
         "golden_key_openmontage_workbuddy/session_launcher.py",
+        "golden_key_openmontage_workbuddy/user_entry.py",
         "golden_key_openmontage_workbuddy/workbuddy_entry_cli.py",
         "workbuddy-skill/golden-key-openmontage/SKILL.md",
         "pyproject.toml",
@@ -55,6 +58,7 @@ EXPECTED_TRACKED_FILES = frozenset(
         "tests/workbuddy/test_repository_hygiene.py",
         "tests/workbuddy/test_runtime_prepare.py",
         "tests/workbuddy/test_session_launcher.py",
+        "tests/workbuddy/test_installer.py",
         "tests/workbuddy/test_workbuddy_entry_cli.py",
     }
 )
@@ -203,10 +207,10 @@ def _source_inventory() -> tuple[frozenset[str], frozenset[str]]:
     return frozenset(files), frozenset(directories)
 
 
-def test_final_git_index_is_the_fixed_40_file_contract() -> None:
+def test_final_git_index_is_the_fixed_44_file_contract() -> None:
     actual = _git_index_files()
-    assert len(EXPECTED_TRACKED_FILES) == 40
-    assert len(actual) == 40
+    assert len(EXPECTED_TRACKED_FILES) == 44
+    assert len(actual) == 44
     assert actual == EXPECTED_TRACKED_FILES
 
 
@@ -298,9 +302,12 @@ def test_stage2_stage3_and_stage4_are_the_only_public_apis() -> None:
     }
     assert package_sources == {
         "__init__.py",
+        "fixed_child.py",
+        "installer.py",
         "package_registration.py",
         "runtime_prepare.py",
         "session_launcher.py",
+        "user_entry.py",
         "workbuddy_entry_cli.py",
     }
     entry_source = (

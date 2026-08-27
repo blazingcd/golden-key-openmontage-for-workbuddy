@@ -53,6 +53,7 @@ EXPECTED_TRACKED_FILES = frozenset(
         "golden_key_openmontage_workbuddy/user_entry.py",
         "golden_key_openmontage_workbuddy/workbuddy_entry_cli.py",
         "workbuddy-skill/golden-key-openmontage/SKILL.md",
+        "workbuddy-skill/golden-key-openmontage/scripts/run.ps1",
         "pyproject.toml",
         "tests/workbuddy/test_package_registration.py",
         "tests/workbuddy/test_repository_hygiene.py",
@@ -75,6 +76,7 @@ EXPECTED_SOURCE_DIRECTORIES = frozenset(
         "tests/workbuddy",
         "workbuddy-skill",
         "workbuddy-skill/golden-key-openmontage",
+        "workbuddy-skill/golden-key-openmontage/scripts",
     }
 )
 
@@ -207,10 +209,10 @@ def _source_inventory() -> tuple[frozenset[str], frozenset[str]]:
     return frozenset(files), frozenset(directories)
 
 
-def test_final_git_index_is_the_fixed_44_file_contract() -> None:
+def test_final_git_index_is_the_fixed_45_file_contract() -> None:
     actual = _git_index_files()
-    assert len(EXPECTED_TRACKED_FILES) == 44
-    assert len(actual) == 44
+    assert len(EXPECTED_TRACKED_FILES) == 45
+    assert len(actual) == 45
     assert actual == EXPECTED_TRACKED_FILES
 
 
@@ -320,7 +322,7 @@ def test_stage2_stage3_and_stage4_are_the_only_public_apis() -> None:
     assert "from .workbuddy_entry_cli" not in init_source
 
 
-def test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented() -> None:
+def test_runtime_prepare_is_bounded_and_replacement_control_planes_are_not_implemented() -> None:
     assert (REPO_ROOT / "golden_key_openmontage_workbuddy/runtime_prepare.py").is_file()
     assert all(
         not (REPO_ROOT / relative).exists()
@@ -329,8 +331,9 @@ def test_stage3_is_bounded_and_replacement_control_planes_are_not_implemented() 
     task_register = (
         REPO_ROOT / "docs" / "workbuddy" / "v2" / "TASK-REGISTER.md"
     ).read_text(encoding="utf-8")
-    assert "stage3_implementation: PASS_ACCEPTED" in task_register
-    assert "stage_3_implementation_authorization: CONSUMED_COMPLETE" in task_register
+    assert "result_1: COMPLETE" in task_register
+    assert "result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED" in task_register
+    assert "result_3: NEXT / NOT_STARTED / NOT_AUTHORIZED_IN_CLOSEOUT" in task_register
 
     init_source = (
         REPO_ROOT / "golden_key_openmontage_workbuddy" / "__init__.py"
@@ -353,13 +356,11 @@ def test_stage4_is_one_provider_opaque_fixed_tool_launcher() -> None:
 def test_agent_guide_preserves_the_shell_and_verified_package_boundaries() -> None:
     guide = (REPO_ROOT / "AGENT_GUIDE.md").read_text(encoding="utf-8")
     assert guide.startswith("# WorkBuddy Shell V2 Agent Guide\n")
-    assert "This repository owns only the Shell V2 six-module boundary" in guide
-    assert "only after Package Registration identity validation has succeeded" in guide
-    assert "Never scan disks, guess a Package, or read an unverified Guide as authority." in guide
-    assert (
-        "Repository agents must not run a video Pipeline, Provider, media generation, "
-        "or OpenMontage production work from this tree."
-    ) in guide
+    assert "WorkBuddy is the only Agent, conversation owner, and production decision-maker" in guide
+    assert "after a verified PackageRoot has been returned" in guide
+    assert "The Shell is not a second Agent" in guide
+    assert "must not force a preset script" in guide
+    assert "must not start Result 3, WorkBuddy, media generation" in guide
 
 
 def test_ci_targets_only_the_formal_branch_and_the_five_final_tests() -> None:

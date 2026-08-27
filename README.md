@@ -1,32 +1,59 @@
 # Golden Key WorkBuddy Shell V2
 
-WorkBuddy Shell V2 connects Tencent WorkBuddy to a verified, versioned Golden Key OpenMontage Package. WorkBuddy is the only running Agent; after reading the verified Package Guide it assumes the OpenMontage production role. The Shell is limited to six modules: installation/lifecycle, Package Registration/Locator, runtime preparation, session Launcher, WorkBuddy entry, and status/result relay.
+WorkBuddy Shell V2 connects Tencent WorkBuddy to a verified Golden Key OpenMontage
+Package. WorkBuddy is the only Agent, conversation owner, and production
+decision-maker. The Shell is a small mechanical support layer, not a second
+control plane.
 
-Current status:
+## Current product results
 
-- Stage 1: `PASS_ACCEPTED`
-- Stage 2 Registration/Locator implementation: `PASS_ACCEPTED`
-- Stage 2 real temporary-Package validation: `PASS_ACCEPTED`; retained final Release: `NOT_MATERIALIZED`; production Package Registration: `NOT_CREATED`
-- Repository hygiene: `PASS_ACCEPTED`; the historical Wave C anchor `20ddab75825c1b6e7de5a51603afe8b6fd82eceb` had 33 files, and the current accepted tree tracks exactly 40 files
-- Stage 3 planning and implementation: `PASS_ACCEPTED`
-- Stage 4 planning and implementation: `PASS_ACCEPTED`
-- Stage 5: `IN_PROGRESS / ENTRY_CODE_COMPLETE / REAL_INTEGRATION_INCOMPLETE`
-- Stage 6 status/result relay: `NOT_GRANTED`
-- Final Package/PackageRoot/production Registration/Activation/final installed Skill: `NOT_MATERIALIZED / NOT_CREATED`
-- Real WorkBuddy `LauncherReceiptV1`: `NOT_PROVED`
+1. **Installable Shell product — COMPLETE.** Commit
+   `869358810ee41a0a61d10cec10c1b3b93c2c3450`, tree
+   `3a623cb1eab9fee0d90854c0df271450f9779b9a`, Release SHA256
+   `7e5585298e50a5c5713ecd8fc4df57cfb6e88381b39453364cec62fdea1c6280`.
+   Installation, Registration, Activation, Uninstallation, Reinstallation, and
+   user-data protection passed.
+2. **Natural-language WorkBuddy result — COMPLETE.** WorkBuddy `5.3.14` / Hy3
+   actually invoked the single `golden-key-openmontage` Skill and Shell for
+   `用金钥匙智能体给我做新店开业视频`, returned a concrete business reply, and
+   produced a checkable LauncherReceipt. Skill ZIP SHA256:
+   `c96ec03522b744e8771eb16f22f5521102c4007af50ccb27d895efb82b1fe3a6`.
+3. **Real playable Golden Key video — NEXT / NOT_STARTED.** It must use the same
+   ordinary-user path and produce a real playable video plus receipt.
+4. **Ordinary-user acceptance and formal closeout — NOT_STARTED.**
 
-Live status, exact Git objects, and task authorization are recorded only in [`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md). The original R01, Sandbox Refresh1, and Expert Entry Feasibility records remain `HISTORICAL / SUPERSEDED_ACCEPTANCE_CONTRACT`. R01 entry-surface acceptance is preserved, and HY3 remains current-test-only/cost-avoidance and product-model-neutral, while R02 is closed as `BLOCKED_PACKAGE_RELEASE`: the published `blazingcd/golden-key-openmontage` candidate identity matches, but no safe fixed tool or release-specific `PackageToolDefinitionV1`/Manifest/Lock binding is present. No next task is authorized; R03-R08 remain blocked by chain. Stage 5 is still incomplete, and no client, Package, registration, or `LauncherReceiptV1` proof is claimed.
+`INCOMPLETE / RESULT_POINTER_INVALID` in the Result 2 receipt only means that no
+video file was created in that run. A video file/result pointer belongs to Result 3
+and does not invalidate Result 2.
 
-Stage 2 Registration/Locator, Stage 3 runtime preparation, and Stage 4 session Launcher implementations are accepted. Stage 2 also proved one real temporary Package containing Python, FFmpeg, and Node, but that temporary Package was deleted. This does not prove a retained final Release, installed production PackageRoot, production Registration, Installer, or final distribution. The Stage 2 boundary is in [`docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`](docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md).
+## Product boundary
 
-This repository must not run or direct video Pipelines, Providers, or media production. WorkBuddy performs those functions under the validated Package contract; there is no second OpenMontage Agent process.
+The user only writes a natural-language request containing `金钥匙智能体`; the
+rest of the business request and any material paths are open input. WorkBuddy is a
+harness Agent: the same input may produce different internal reasoning, tools,
+steps, wording, and intermediate conclusions. Skills and prompts must not force a
+preset script. Process variation is acceptable unless it causes a required result
+to fail, burdens the ordinary user technically, creates a second control plane, or
+produces a false result.
 
-The Golden Key delivery must bundle and register its complete package-private required toolchain: a usable Python 3.10+ environment with locked core dependencies, FFmpeg plus ffprobe, and Node.js plus npm/npx. Node must satisfy the highest Package requirement, currently 22+ because HyperFrames requires it; freezing only the general README minimum of 18+ is insufficient. The exact `gyan.dev` FFmpeg asset is a Package-assembly supply-chain candidate subject to source, hash, license, and distribution review—not a Stage 3 end-user download.
+The Shell owns installation/lifecycle, Registration/Locator, runtime preparation,
+fixed mechanical invocation, WorkBuddy entry, and status/receipt relay. It does
+not choose production content, Pipeline/Stage, Provider, renderer, recovery, or
+media strategy. The external Package `AGENT_GUIDE.md` is read by WorkBuddy only
+after a verified PackageRoot is returned by Registration/Locator.
 
-Stage 3 has one accepted public entry: `prepare_optional_capabilities(data_root, capability_definitions, user_decisions=None)`. Its result set is exactly `DETECTION_REPORT / CONSENT_REQUIRED / INTEGRATED / SKIPPED / BLOCKED`. It performs bounded detection of optional Remotion and HyperFrames capabilities, produces zero-download plans for missing or incompatible items, and integrates only a capability explicitly approved by the user. It never chooses the renderer, discovers/downloads/replaces Python/FFmpeg/Node, scans drives, or runs video. Optional downloads require approved mainland-China mirrors without automatic overseas fallback.
+## Authority and constraints
 
-Stage 4 has one accepted public entry: `launch_session_tool(data_root, user_message, executor_controls, package_tool_definition, local_capability_evidence=(), cancel_event=None)`. It accepts only a release-specific immutable `PackageToolDefinitionV1` from the approved Package definition/final-delivery Installer owner, spawns exactly one fixed Package tool, and returns a recursively immutable `LauncherReceiptV1` limited to nine outcomes. It remains Provider- and runtime-opaque and never selects Remotion, HyperFrames, or another Provider/runtime.
+The live state is in [`docs/workbuddy/v2/TASK-REGISTER.md`](docs/workbuddy/v2/TASK-REGISTER.md).
+The other authority documents are [`AGENT_GUIDE.md`](AGENT_GUIDE.md),
+[`PROJECT-STATE.md`](PROJECT-STATE.md),
+[`docs/workbuddy/v2/PROJECT-CHARTER.md`](docs/workbuddy/v2/PROJECT-CHARTER.md),
+[`docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`](docs/workbuddy/v2/ACCEPTANCE-MATRIX.md),
+and [`docs/workbuddy/v2/DRIFT-GUARD.md`](docs/workbuddy/v2/DRIFT-GUARD.md).
 
-Stage 5 is not complete: the entry code is delivered, but real integration is incomplete. Completion requires all five evidence classes: a retained final Release/PackageRoot; production Registration+Activation with new-process Locator; one final Installer-stamped Skill with no placeholders; a HY3 real WorkBuddy session yielding a real `LauncherReceiptV1`; and independent review/formal Git/CI plus unambiguous live authority. Provider calls, media/video generation, optional Remotion/HyperFrames installation, Stage 6 conversion code, and full business E2E are not Stage 5 completion prerequisites. After Stage 5, Stage 6 should first attempt direct receipt reuse; the whole-project business E2E remains a separate post-Stage5 effort, not a Stage 7.
-
-Historical evidence may describe superseded Stage 3 signatures, Package-bound capability models, or pre-implementation Stage 4 gates. Those records are historical only and do not override the current accepted interfaces and status above.
+Use only the project Python at
+`D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
+Temporary files belong on D: and must be cleaned up without deleting user data.
+Remotion and HyperFrames may remain deferred; they are not Result 3 prerequisites.
+Formal Git delivery targets `refs/heads/codex/workbuddy-shell-v2` and advances only
+by ordinary fast-forward.

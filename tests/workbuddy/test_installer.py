@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import zipfile
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -139,3 +140,77 @@ def test_handoff_rejects_precreated_reparse_and_skill_is_opaque(tmp_path: Path) 
     assert "GOLDEN_KEY_WORKBUDDY_INTERPRETER_PATH" not in skill
     assert "JSON request" not in skill
     assert "GOLDEN_KEY_WORKBUDDY_PACKAGE_TOOL_DEFINITION_SHA256" not in skill
+
+
+def test_handoff_result_is_not_a_hardlink(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    result_root = tmp_path / "results"
+    result_root.mkdir()
+    request = {
+        "session_id": "session-1",
+        "request_id": "request-1",
+        "message": "literal",
+        "timeout_seconds": 5,
+        "result_root": result_root,
+        "provider_environment_names": [],
+        "registration_sha256": "a" * 64,
+        "openmontage_release": "0.3.25",
+        "openmontage_commit": "0" * 40,
+        "tool_definition_sha256": "b" * 64,
+        "local_capability_evidence_identities": [],
+    }
+
+    monkeypatch.setattr(Path, "unlink", lambda self, missing_ok=False: None)
+    relative, _, _ = fixed_child._write_handoff(request)
+
+    assert os.stat(result_root / relative, follow_symlinks=False).st_nlink == 1
+
+
+def test_installer_builds_stamped_workbuddy_skill_zip(tmp_path: Path) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    package_root = tmp_path / "installed package"
+    skill_root = package_root / "shell-adapter/workbuddy-skill/golden-key-openmontage"
+    (skill_root / "scripts").mkdir(parents=True)
+    (package_root / "bootstrap/python").mkdir(parents=True)
+    (skill_root / "SKILL.md").write_text(
+        "GOLDEN_KEY_WORKBUDDY_SKILL_IDENTITY=golden-key-openmontage\n"
+        'description: exact phrase "金钥匙智能体"\n',
+        encoding="utf-8",
+    )
+    (skill_root / "scripts/run.ps1").write_text(
+        "param([Parameter(ValueFromPipeline = $true)][string]$UserMessage)\n"
+        "$packageRoot = <installer:package_root>\n"
+        "$python = <installer:private_python>\n"
+        "$UserMessage | & $python -I -m golden_key_openmontage_workbuddy.user_entry\n",
+        encoding="utf-8",
+    )
+    (package_root / "bootstrap/python/python.exe").write_bytes(b"python")
+
+    result = installer._build_workbuddy_skill_archive(data_root, package_root)
+
+    archive = Path(result["path"])
+    assert archive == data_root / "Integrations/WorkBuddy/golden-key-openmontage-0.3.25.zip"
+    assert result["sha256"] == installer._sha256(archive)
+    with zipfile.ZipFile(archive) as stream:
+        assert stream.namelist() == ["SKILL.md", "scripts/run.ps1"]
+        skill = stream.read("SKILL.md").decode("utf-8")
+        payload = stream.read("scripts/run.ps1").decode("utf-8")
+    assert 'exact phrase "金钥匙智能体"' in skill
+    assert "<installer:" not in payload
+    assert str(package_root) in payload
+    assert str(package_root / "bootstrap/python/python.exe") in payload
+    assert "ValueFromPipeline = $true" in payload
+    assert "$UserMessage | & $python -I -m golden_key_openmontage_workbuddy.user_entry" in payload
+    assert "System.Diagnostics.Process" not in payload
+
+
+def test_workbuddy_skill_keeps_harness_flexible_with_cold_foreground_entry() -> None:
+    skill = (Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage/SKILL.md").read_text(encoding="utf-8")
+    script = (Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage/scripts/run.ps1").read_text(encoding="utf-8")
+
+    assert "up to `300000`" in skill
+    assert "decides its own reasoning, tools, questions, retries" in skill
+    assert "does not prescribe an internal script" in skill
+    assert "exactly once" not in skill
+    assert "if ($LASTEXITCODE -ne 0)" in script
+    assert "\n    exit $LASTEXITCODE\n" not in script

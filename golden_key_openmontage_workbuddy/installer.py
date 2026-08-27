@@ -41,6 +41,8 @@ DEFINITION_RESULT_HASH = "8a96aceb463da2ea39549de44b06a765a3ac859260001ae277b99d
 RUNTIME_BINDING_RELATIVE_PATH = "shell-adapter/package-runtime-binding.json"
 USER_ENTRY_MODULE = "golden_key_openmontage_workbuddy.user_entry"
 USER_ENTRY_RELATIVE_PATH = "shell-adapter/golden_key_openmontage_workbuddy/user_entry.py"
+WORKBUDDY_SKILL_ARCHIVE_RELATIVE_PATH = f"Integrations/WorkBuddy/{RELEASE_IDENTITY}.zip"
+WORKBUDDY_SKILL_ROOT_RELATIVE_PATH = "shell-adapter/workbuddy-skill/golden-key-openmontage"
 SEVEN_ZIP_SHA256 = "83967f1b02b43c4efeda302795722c809e0e81b8307de73558d10484d5676a7d"
 FFMPEG_ARCHIVE_SHA256 = "49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85"
 MANAGED_CORE_OWNER = "managed_core"
@@ -55,6 +57,7 @@ SHELL_FILES = (
     "golden_key_openmontage_workbuddy/fixed_child.py",
     "golden_key_openmontage_workbuddy/user_entry.py",
     "workbuddy-skill/golden-key-openmontage/SKILL.md",
+    "workbuddy-skill/golden-key-openmontage/scripts/run.ps1",
 )
 
 MANIFEST_AUTHORITY = {
@@ -913,6 +916,46 @@ def _active_pointer_sha(data_root: Path) -> str:
     return _sha256(path) if path.is_file() else "MISSING"
 
 
+def _powershell_literal(value: Path) -> str:
+    return "'" + str(value).replace("'", "''") + "'"
+
+
+def _build_workbuddy_skill_archive(data_root: Path, package_root: Path) -> dict[str, Any]:
+    skill_root = package_root / WORKBUDDY_SKILL_ROOT_RELATIVE_PATH
+    skill_path = skill_root / "SKILL.md"
+    script_path = skill_root / "scripts" / "run.ps1"
+    python_path = package_root / "bootstrap" / "python" / "python.exe"
+    for path in (skill_path, script_path, python_path):
+        _assert_regular(path)
+        _assert_no_reparse_chain(path, boundary=package_root)
+    skill = skill_path.read_text(encoding="utf-8")
+    script = script_path.read_text(encoding="utf-8")
+    script = script.replace("<installer:package_root>", _powershell_literal(package_root))
+    script = script.replace("<installer:private_python>", _powershell_literal(python_path))
+    if "<installer:" in skill or "<installer:" in script:
+        raise InstallerError("workbuddy_skill_placeholder_remaining")
+
+    destination = data_root / Path(*WORKBUDDY_SKILL_ARCHIVE_RELATIVE_PATH.split("/"))
+    _assert_no_reparse_chain(destination.parent, boundary=data_root)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    _assert_no_reparse_chain(destination.parent, boundary=data_root)
+    temporary = destination.with_name(f".{destination.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+            for name, payload in (("SKILL.md", skill.encode("utf-8")), ("scripts/run.ps1", script.encode("utf-8"))):
+                info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+                info.create_system = 0
+                info.external_attr = 0
+                info.compress_type = zipfile.ZIP_DEFLATED
+                archive.writestr(info, payload, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+        digest = _sha256(temporary)
+        size = temporary.stat().st_size
+        os.replace(temporary, destination)
+        return {"path": str(destination), "sha256": digest, "size": size}
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def install_release(
     *,
     data_root: os.PathLike[str] | str,
@@ -988,6 +1031,7 @@ def install_release(
                     _load_registration(paths, registration_sha)
                     _atomic_replace_active(paths.active, _pointer_bytes(registration_sha), current_active_raw)
                     active = registration_sha
+                workbuddy_skill = _build_workbuddy_skill_archive(data, root)
                 return {
                     "package_root": str(root),
                     "registration_sha256": registration_sha,
@@ -997,6 +1041,7 @@ def install_release(
                     "previous_active_pointer_sha256": _sha256_bytes(previous_active_raw) if previous_active_raw else "MISSING",
                     "previous_registration_sha256": previous_registration_sha,
                     "previous_package_root": str(previous_root) if previous_root else None,
+                    "workbuddy_skill": workbuddy_skill,
                 }
             except Exception:
                 # Roll back every write made by this transaction while the

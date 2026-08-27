@@ -13,9 +13,7 @@ import os
 import re
 import stat
 import sys
-import tempfile
 import unicodedata
-import uuid
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -272,36 +270,34 @@ def _write_handoff(request: dict[str, Any]) -> tuple[str, str, int]:
         raise _InputError("handoff-size")
     path = directory / relative.name
     _assert_no_reparse_chain(path, boundary=root)
-    temporary: Path | None = None
+    created = False
+    complete = False
     try:
-        fd, temporary_name = tempfile.mkstemp(
-            prefix=f".{path.stem}.{uuid.uuid4().hex}.", suffix=".tmp", dir=directory
-        )
-        temporary = Path(temporary_name)
-        with os.fdopen(fd, "wb") as stream:
+        # WorkBuddy may retain deleted temporaries in the recycle bin, so a
+        # hard-link publish can leave the result aliased and fail validation.
+        with path.open("xb") as stream:
+            created = True
             stream.write(payload)
             stream.flush()
             os.fsync(stream.fileno())
-        _assert_no_reparse_chain(temporary, boundary=root)
+        _assert_no_reparse_chain(path, boundary=root)
+        if path.read_bytes() != payload:
+            raise _InputError("handoff-readback")
+        complete = True
+    except FileExistsError:
+        _assert_no_reparse_chain(path, boundary=root)
         try:
-            os.link(temporary, path)
-        except FileExistsError:
-            _assert_no_reparse_chain(path, boundary=root)
-            try:
-                if path.read_bytes() != payload:
-                    raise _InputError("handoff-collision")
-            except OSError as exc:
-                raise _InputError("handoff-collision") from exc
-        else:
-            _assert_no_reparse_chain(path, boundary=root)
             if path.read_bytes() != payload:
-                raise _InputError("handoff-readback")
+                raise _InputError("handoff-collision")
+        except OSError as exc:
+            raise _InputError("handoff-collision") from exc
+        complete = True
     except OSError as exc:
         raise _InputError("handoff-write") from exc
     finally:
-        if temporary is not None:
+        if created and not complete:
             try:
-                temporary.unlink(missing_ok=True)
+                path.unlink(missing_ok=True)
             except OSError:
                 pass
     return relative.as_posix(), hashlib.sha256(payload).hexdigest(), len(payload)

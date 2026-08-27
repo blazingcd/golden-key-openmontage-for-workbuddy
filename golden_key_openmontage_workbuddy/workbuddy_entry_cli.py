@@ -620,7 +620,9 @@ def _load_environment(
         if not provider_folds.issubset(allowed_by_fold):
             _environment_error()
         expected = fixed_runtime_folds | provider_folds
-        if set(by_fold) != expected:
+        # WorkBuddy may inject unrelated sandbox names into every child process.
+        # Their values remain unread and are never forwarded; required names stay closed.
+        if not expected.issubset(by_fold):
             _environment_error()
         canonical_names = tuple(sorted(allowed_by_fold[folded] for folded in provider_folds))
         provider_names_to_read = tuple(

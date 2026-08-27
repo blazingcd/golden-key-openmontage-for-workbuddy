@@ -357,19 +357,38 @@ def test_installer_stamped_definition_identity_is_required_before_stage4(
     assert (code, stdout, stderr, calls) == (78, b"", b"BRIDGE_ASSET_INVALID\n", [])
 
 
-def test_missing_extra_and_disallowed_environment_names_are_78(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_missing_and_disallowed_environment_names_are_78(monkeypatch: pytest.MonkeyPatch) -> None:
     request = _request(provider_names=["PROVIDER_SECRET"], allowed=["PROVIDER_SECRET"])
     code, stdout, stderr, calls = _run(monkeypatch, request, provider={})
-    assert (code, stdout, stderr, calls) == (78, b"", b"BRIDGE_ENVIRONMENT_INVALID\n", [])
-
-    code, stdout, stderr, calls = _run(
-        monkeypatch, request, provider={"PROVIDER_SECRET": "secret", "EXTRA": "x"}
-    )
     assert (code, stdout, stderr, calls) == (78, b"", b"BRIDGE_ENVIRONMENT_INVALID\n", [])
 
     disallowed = _request(provider_names=["NOT_ALLOWED"], allowed=[])
     code, stdout, stderr, calls = _run(monkeypatch, disallowed, provider={"NOT_ALLOWED": "x"})
     assert (code, stdout, stderr, calls) == (78, b"", b"BRIDGE_ENVIRONMENT_INVALID\n", [])
+
+
+def test_unrelated_environment_values_are_not_read_or_forwarded(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = _request()
+    receipt = _receipt(provider_names=())
+
+    class _NoExtraRead(dict[str, str]):
+        def __getitem__(self, key: str) -> str:
+            if key.casefold() == "workbuddy_sandbox":
+                raise AssertionError("sandbox value was read")
+            return super().__getitem__(key)
+
+    environment = _NoExtraRead(_environment())
+    environment["WORKBUDDY_SANDBOX"] = "opaque"
+    code, stdout, stderr, calls = _run(
+        monkeypatch, request, environment=environment, result=receipt
+    )
+    assert code == 0
+    assert stderr == b""
+    assert json.loads(stdout)["provider_environment_names"] == []
+    assert len(calls) == 1
+    assert calls[0][2]["provider_environment"] == {}
 
 
 def test_secret_never_reaches_stdout_or_stderr(monkeypatch: pytest.MonkeyPatch) -> None:

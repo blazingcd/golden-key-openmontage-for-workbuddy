@@ -75,6 +75,83 @@ video and checkable receipt. Candidate source directories are:
 These paths and the fuller business wording are candidate inputs, not a frozen
 protocol. R3 is not authorized in the current repository closeout.
 
+#### R3 execution plan — FROZEN / PLANNING_ONLY / EXECUTION_NOT_AUTHORIZED
+
+Owner authorization dated 2026-08-27 freezes this plan only. It does not
+authorize starting WorkBuddy, generating media, changing code, rebuilding the
+Package, running tests/CI, cleaning task objects, or otherwise executing R3. A
+later explicit Owner authorization must open R3 execution.
+
+##### Product result and user input
+
+R3 has one product goal: an ordinary user sends one natural-language business
+request containing `金钥匙智能体` through WorkBuddy and receives a real playable
+Golden Key video, a checkable LauncherReceipt, and a valid result location.
+
+The remaining business wording and material locations are open user input. The
+candidate directories above may be mentioned naturally, but they are not a fixed
+prompt, protocol, command, or required answer. Do not freeze a complete prompt or
+an expected transcript.
+
+##### Execution sequence after separate authorization
+
+1. Re-read the current authority documents and verify that the formal ref and
+   execution authorization are exact and conflict-free. Stop if either is absent.
+2. One executor operates the real visible WorkBuddy path. The user's message is
+   ordinary business language and contains the wake word; it does not prescribe
+   internal commands, Pipeline/Stage order, Provider, renderer, or tool sequence.
+3. WorkBuddy remains the only harness Agent, conversation owner, and production
+   decision-maker. It may ask reasonable business questions, read the verified
+   Package Guide, choose tools, retry, correct itself, and vary its wording or
+   intermediate conclusions. Answer reasonable questions in business language.
+4. After WorkBuddy reports a result, verify only the real product evidence: the
+   single Skill and Shell were actually invoked, the video file exists and plays,
+   the receipt is checkable, the result location identifies that video, and the
+   ordinary user did not perform a technical workaround.
+5. Only after that real user-visible result exists, one independent zero-write
+   reviewer judges it. The reviewer reports `PASS` or `FAIL` plus the exact missing
+   user-visible result and performs no repair.
+6. Preserve the real video, receipt, result location, and minimum user-visible
+   evidence, then stop. R4 requires separate authorization.
+
+WorkBuddy's internal reasoning, tools, steps, wording, retries, and intermediate
+conclusions may vary. They are not failures unless they directly cause the user
+goal to fail, add ordinary-user technical burden, create a second control plane,
+or produce a false result.
+
+##### Result review
+
+The reviewer checks only these product facts:
+
+- one ordinary-language WorkBuddy entry containing `金钥匙智能体`;
+- real WorkBuddy execution and actual invocation of the single Skill and Shell;
+- one real playable video;
+- a checkable receipt and valid location for that video;
+- no manual command/schema/env/argv/pipe workaround by the ordinary user; and
+- no Shell production decision-making or second control plane.
+
+The reviewer must not inspect or require an implicit chain of thought, fixed
+transcript, exact tool choice, command sequence, wording, retry count, imagined
+intermediate output, or evaluator-designed production script. No packet,
+pre-review, multi-round review, repair loop, or extra role is authorized.
+
+##### Hard stops and anti-inflation boundary
+
+Stop and report the exact missing user result if the Skill or Shell is not called,
+the video is absent or unplayable, the receipt/result location is invalid, the
+user must perform technical work, Shell starts making production decisions, the
+authority documents conflict, or continuation requires code/infrastructure work.
+Do not fill a result gap with an old video, fixture, database edit, forged receipt,
+manual bypass, or reviewer-imagined transcript.
+
+R3 does not include revalidating R1/R2, starting R4, reviving E/B/C/D/F routes,
+adding a second Agent/Skill/MCP/router/framework, making Remotion or HyperFrames a
+prerequisite, unrelated tests/CI, Package rebuilds, or old task-object cleanup.
+If project Python is required after execution is authorized, use only
+`D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
+Temporary task files belong only on D: and must be removed precisely without
+deleting user data or retained product evidence.
+
 ### R4 — Ordinary-user acceptance and formal closeout: NOT_STARTED
 
 R4 follows a successful R3 and is not authorized in the current closeout.
@@ -129,8 +206,9 @@ formal_ref: refs/heads/codex/workbuddy-shell-v2
 result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: NEXT / NOT_STARTED / NOT_AUTHORIZED_IN_CLOSEOUT
+r3_plan: FROZEN / PLANNING_ONLY / EXECUTION_NOT_AUTHORIZED
 result_4: NOT_STARTED
-current_task: DOCUMENT_AND_REPOSITORY_CLOSEOUT / COMPLETE_ON_FORMAL_REF
+current_task: R3_EXECUTION_PLAN_SOLIDIFICATION / PLANNING_ONLY
 workbuddy_or_media_in_current_task: FORBIDDEN
 closeout_review: APPROVE / P0=0 / P1=0 / P2=0
 formal_delivery: COMPLETE_WHEN_THIS_REGISTER_COMMIT_IS_EXACT_FORMAL_REF

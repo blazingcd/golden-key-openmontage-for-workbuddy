@@ -39,7 +39,7 @@ questions, call tools, retry, and adjust internal steps. These variations matter
 only if they directly cause product failure, add ordinary-user technical burden,
 create a second control plane, or produce a false result.
 
-## M0 — capability-onboarding execution contract: FROZEN FOR PLANNING / IMPLEMENTATION NOT AUTHORIZED
+## M0 — next-phase master roadmap and execution contract: FROZEN FOR PLANNING / IMPLEMENTATION NOT AUTHORIZED
 
 Owner authorization dated 2026-08-28 permits this M0 contract to be documented,
 independently reviewed once with zero writes, committed once, and pushed on
@@ -48,10 +48,30 @@ code, Skill changes, tests, WorkBuddy execution, capability installation, Provid
 configuration, media production, external evidence mutation, an implementation
 branch, or an implementation branch name.
 
+The initial M0 capability-onboarding contract is preserved at
+`4c0cbd3447546c3dcc0079f2392a3b43e7542e69`. The Owner's later 2026-08-28
+authorization permits one additional documentation-only master-roadmap amendment
+under the same six-path, one-review, one-commit, ordinary-push boundary. It does
+not reopen or rewrite the initial commit.
+
 M0 removes one planning barrier: the next worker must know which ordinary-user
 result to deliver, which route to inspect, where ownership stops, what evidence is
-valid, and when to stop before touching implementation. M0 itself delivers no
-product capability.
+valid, and when to stop before touching implementation. The Owner's later
+2026-08-28 planning authorization also requires the complete Must/Should/Could
+roadmap below to be recorded and the obsolete alternate task labels to be removed. M0 itself
+delivers no product capability.
+
+### Naming and priority authority
+
+- `R1` through `R4` are the completed historical product results. They are frozen
+  identifiers and must never be extended with a new `R` task.
+- `M0` is this planning and execution-contract task. It is not a product feature.
+- `M1` through `M3` are the next-phase Must product tasks.
+- `S1` through `S5` are Should tasks after the minimum product path, with `S5`
+  activated only when a real user goal needs a selected enhancement.
+- `C1` and `C2` are deferred Could tasks.
+- Decimal labels such as `M1.1` are steps owned by their parent task. They are not
+  children of M0 and do not create another task series.
 
 ### Product rule
 
@@ -75,21 +95,32 @@ change, or retest capabilities. The wake phrase remains the only fixed trigger;
 there is no fixed configuration command, transcript, Shell selector, broad scan,
 or second control plane.
 
-### Planned product sequence
+### Master roadmap and dependency order
 
-1. **Capability readiness and configuration entry.** On first use, show the
-   FFmpeg baseline and relevant optional-capability states; let the ordinary user
-   continue or configure. The same flow is available later through natural
-   language.
-2. **Progressive business clarification and material readiness.** Ask only for
-   information genuinely missing from the current business goal and explain any
-   defaults before production.
-3. **Stable production, preview, and delivery.** Produce and present a real result
-   without optional persistence delaying the user-visible answer.
+The executable dependency is `M1.1 -> M1.2`, after which M2 may start. M1.3 is a
+required M1 product capability and representative acceptance path, but a
+particular user may defer configuration until M2 establishes relevance or may
+continue on FFmpeg without using an enhancement. M1.4 closes M1 only after M1.2
+and the representative M1.3 path are proved. M3 starts only after both M1.4 and M2
+are complete.
 
-Each implementation step requires a separately confirmed scope, acceptance rule,
-branch boundary, and action-time authorization. This planning commit is not that
-authorization.
+| Task | Priority | User problem and target result | Boundary and non-goals | Acceptance, dependency, and priority reason |
+|---|---|---|---|---|
+| M1 — first-use guidance and capability readiness | Must | A first-time user understands the product, the FFmpeg-ready basic path, relevant optional-capability states, and the choice to continue or configure. A selected enhancement can be configured, tested, deferred, changed, or retested through WorkBuddy. | No automatic installation of every enhancement, exhaustive Provider catalog, broad disk scan, fixed transcript or configuration language, credential exposure, Shell Provider/model selection, or second control plane. | M1.1–M1.4 below. Depends only on M0 plus separately approved implementation and action-time gates. It is first because the user must know the available path before committing to production choices. |
+| M2 — progressive clarification and material readiness | Must | One incomplete business request becomes a user-confirmed direction covering only genuinely relevant audience, platform, duration, style, brand, materials, budget, and delivery decisions. Missing materials have understandable continue, default, or supply-later choices. | No fixed questionnaire, exhaustive interrogation, hidden paid choice, user-visible internal mechanics, or WorkBuddy making unconfirmed high-impact creative/cost decisions. | Contract coverage for no/partial/complete material states, followed by separately authorized real WorkBuddy acceptance. Depends on M1.2; a user-selected enhancement must finish M1.3 before it is used. It follows readiness because production cannot be judged before the intended result is confirmed. |
+| M3 — stable production, basic quality, and final delivery | Must | The user receives a real playable and findable result, checkable receipt/location, honest basic quality result, and a final answer that is not delayed by optional persistence. | One default production specification first; no second aspect ratio, all-platform matrix, multi-Provider routing, revision system, or direct publishing. | Three separately started ordinary-user cases covering no supplied, partial, and complete user materials must all deliver playable results; one independent review follows the complete result set. Depends on completed M1.4 and M2. It is the minimum proof that success is not a one-off. |
+| S1 — preview, revision, version, and rollback | Should | The user previews a result, requests natural-language changes, receives a new version, and can return to an older version. | No general video editor, unlimited revision promise, request replay, or second edit control plane. | One initial version, two bounded revisions, and one rollback; all versions remain findable and playable. Depends on M3. |
+| S2 — second aspect ratio, platform adaptation, and safe area | Should | After the default format is stable, the user receives one additional platform/aspect version with usable text, logo, subtitles, voice, BGM, encoding, and safe areas. | One additional target first; no all-platform matrix. | Real media review confirms dimensions, duration, decode/audio, and no material title/subtitle/logo clipping. Depends on M3 and, when content changes first, S1. |
+| S3 — export, sharing, and later reuse | Should | The user receives an identifiable shareable file and can later reuse confirmed brand, project, material, or direction facts through natural language. | No default platform publishing, independent project-management product, or Shell-owned business state. | One export/share result and one later reuse result without manual internal-path assembly. Depends on M3; revision-history reuse also depends on S1. |
+| S4 — cross-machine install, upgrade, diagnosis, and rollback | Should; release-blocking before broad distribution | An ordinary user on another supported Windows machine can install or upgrade, retain user data, understand failure, and recover. | No cloud control plane, generic deployment framework, second Agent, or unrelated environment governance. | Clean-machine install, existing-user upgrade, diagnosis/recovery, rollback, and data-retention evidence. Depends on the stable M3 product and S3 data/reuse boundary. |
+| S5 — selected enhancement production qualification | Conditional Should | When a real user goal needs Remotion, HyperFrames, external video generation, TTS, or another enhancement, the selected path produces actual user value. | This is not first-use inventory. Do not install or qualify every capability merely for coverage. | One selected, consented enhancement reaches real production and user-visible review. Depends on M1.3 and M3. Activated only by demonstrated user need. |
+| C1 — broad Provider/model coverage | Could | Cover additional Providers, models, regions, price tiers, and installation combinations after demand is known. | No speculative full matrix or blanket installation. | Requires repeated unmet user demand and a separate cost/risk plan. Depends on successful selected paths under M1.3/S5. |
+| C2 — automatic multi-Provider routing, direct publishing, and generalized automation | Could | Reduce manual choice or delivery work only after the single path is stable. | Must not make Shell a Provider selector, workflow engine, or second control plane. | Requires stable M1–S5 evidence and a separately approved product case. It is last because it is not needed for first success and carries the highest drift risk. |
+
+Each task requires a separately confirmed result scope, exact branch boundary,
+smallest write allowlist, focused checks, action-time authorization for external
+mutation, and one independent result review after the user-visible result. This
+planning commit authorizes none of those implementation actions.
 
 ### M0 evidence map
 
@@ -103,20 +134,20 @@ authorization.
 Static source facts and historical tests are not real WorkBuddy acceptance.
 Likewise, one real historical video does not prove first-use capability onboarding.
 
-### M0 task decomposition and dependency order
+### M1 execution decomposition and dependency order
 
 | Task | Priority | User problem and target result | Boundary and non-goals | Acceptance and dependency |
 |---|---|---|---|---|
-| N1.1 — route and capability fact audit | Must | Prevent the user from receiving invented or stale capability advice. Confirm the current WorkBuddy, verified Package, and Shell surfaces that can supply facts. | Read-only. No code, install, Provider call, credential read, broad disk scan, test, or WorkBuddy run. Do not decide the implementation before tracing the current route. | Produce a fact table, the smallest proposed write allowlist, dependencies, and hard stops. Depends only on the frozen M0 commit and a separately confirmed task/branch boundary. |
-| N1.2 — first-use readiness and continue/configure choice | Must | Let a first-time user understand that FFmpeg-ready basic production works, see the status of Remotion, HyperFrames, external video generation, and TTS, then continue or choose configuration without technical operations. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No exhaustive Provider catalog, automatic installation, fixed transcript, fixed configuration language, or production redesign. | Local contract evidence must prove bounded fact flow and non-blocking optional absence. Depends on N1.1 and a separately approved exact write allowlist. |
-| N1.3 — selected configuration, retest, and recovery | Must | Let the user configure only a selected enhancement, understand credentials/privacy/cost/availability, test it, and recover or defer without losing the FFmpeg path. Later requests containing `金钥匙智能体` can re-enter naturally. | Do not configure every Provider, expose secrets, store credentials in Shell output, make Shell choose Provider/model, or treat a failed optional test as product incapability. | Selected-path evidence must show consent before mutation, secret-safe factual relay, honest failure, defer/continue, and natural-language retest. Depends on N1.2 and explicit action-time authorization for any install, credential entry, or connection test. |
-| N1.4 — user-visible acceptance and closeout | Must | Prove an ordinary user can understand readiness and make a choice without internal mechanics. | No deterministic transcript, evaluator-invented step order, unrelated video-quality work, full CI, or second review system. | Focused local checks first; then, only with separate action-time authorization, one real WorkBuddy result and one independent result review. Depends on N1.2; configuration-path acceptance also depends on N1.3. |
+| M1.1 — route and capability fact audit | Must step of M1 | Prevent the user from receiving invented or stale capability advice. Confirm the current WorkBuddy, verified Package, and Shell surfaces that can supply facts. | Read-only. No code, install, Provider call, credential read, broad disk scan, test, or WorkBuddy run. Do not decide the implementation before tracing the current route. | Produce a fact table, the smallest proposed write allowlist, dependencies, and hard stops. Depends only on the frozen M0 commit and a separately confirmed task/branch boundary. |
+| M1.2 — first-use readiness and continue/configure choice | Must step of M1 | Let a first-time user understand that FFmpeg-ready basic production works, see the status of Remotion, HyperFrames, external video generation, and TTS, then continue or choose configuration without technical operations. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No exhaustive Provider catalog, automatic installation, fixed transcript, fixed configuration language, or production redesign. | Local contract evidence must prove bounded fact flow and non-blocking optional absence. Depends on M1.1 and a separately approved exact write allowlist. |
+| M1.3 — selected configuration, retest, and recovery | Required product-capability step of M1; per-user use is conditional | Let the user configure only a selected enhancement, understand credentials/privacy/cost/availability, test it, and recover or defer without losing the FFmpeg path. Later requests containing `金钥匙智能体` can re-enter naturally. | Do not configure every Provider, expose secrets, store credentials in Shell output, make Shell choose Provider/model, or treat a failed optional test as product incapability. | One representative selected path must show consent before mutation, secret-safe factual relay, honest failure handling, defer/continue, and natural-language retest. Depends on M1.2 and explicit action-time authorization for any install, credential entry, or connection test. A particular user may execute it after M2 establishes relevance or defer it and stay on FFmpeg. |
+| M1.4 — user-visible acceptance and closeout | Must step of M1 | Prove an ordinary user can understand readiness and make a choice without internal mechanics, while the product also supports one representative selected-configuration path. | No deterministic transcript, evaluator-invented step order, unrelated video-quality work, full CI, or second review system. | Focused local checks first; then, only with separate action-time authorization, real WorkBuddy evidence for M1.2 and one representative M1.3 path followed by one independent M1 result review. Depends on M1.2 and M1.3. |
 
-Progressive business clarification, material readiness, production quality,
-revision/versioning, cross-machine upgrade, and broad Provider coverage remain
-downstream tasks. They may inform interfaces but must not enter N1 implementation.
+M2, M3, S1–S5, and C1–C2 may inform M1 interfaces but must not enter M1
+implementation. Capability inventory is M1 Must work; production qualification of
+an actually selected enhancement is separate conditional S5 work.
 
-### N1.1 read-only route boundary
+### M1.1 read-only route boundary
 
 The first implementation task must inspect only the smallest current route needed
 to establish ownership:
@@ -133,15 +164,15 @@ to establish ownership:
 - the Package Guide, Manifest, and capability definitions resolved from the
   verified PackageRoot at execution time; never a guessed or hard-coded path.
 
-This is an inspection boundary, not a write allowlist. N1.1 must recommend the
+This is an inspection boundary, not a write allowlist. M1.1 must recommend the
 smallest existing-file write set. Any implementation path not explicitly approved
 after that audit is a hard stop. A different repository, new file, new dependency,
 or change to WorkBuddy itself requires a new Owner decision; it cannot be absorbed
-into N1.
+into M1.
 
-### N1 user-visible acceptance
+### M1 user-visible acceptance
 
-N1 passes only when the future authorized result demonstrates all of the following
+M1 passes only when the future authorized result demonstrates all of the following
 without requiring a preset WorkBuddy transcript:
 
 1. After verified PackageRoot resolution, the ordinary user is told that the
@@ -165,9 +196,9 @@ action-time authorization.
 
 ### M0 execution and review guard
 
-The future N1 task follows this order: verify the exact M0 commit and clean branch;
-perform N1.1 read-only audit; stop for Owner confirmation of the implementation
-branch name and exact write allowlist; implement only N1.2/N1.3 items authorized
+The future M1 task follows this order: verify the exact M0 commit and clean branch;
+perform M1.1 read-only audit; stop for Owner confirmation of the implementation
+branch name and exact write allowlist; implement only M1.2/M1.3 items authorized
 at that gate; run only named focused checks; obtain action-time authorization
 before any WorkBuddy/install/credential/Provider action; then obtain one
 independent zero-write result review after the real visible result.
@@ -182,8 +213,10 @@ decision.
 ### M0 documentation acceptance
 
 The earlier high-level planning commit `7443fb65349f87bce4d6b4d2de8d6b89c48da825`
-changed the approved 12-path documentation set. The current M0 authorization may
-change only these six authority/state paths:
+changed the approved 12-path documentation set, and the initial M0 contract was
+then frozen at `4c0cbd3447546c3dcc0079f2392a3b43e7542e69`. The later
+master-roadmap amendment authorization may change only these six authority/state
+paths:
 
 - `AGENT_GUIDE.md`
 - `PROJECT-STATE.md`
@@ -194,8 +227,8 @@ change only these six authority/state paths:
 
 The six documents must agree; historical R1-R4 and v2/v3/v4 facts must remain
 intact; no implementation result may be claimed. Read-only Git/diff checks and one
-independent zero-write document review must pass before one commit and ordinary
-fast-forward push. Tests are forbidden in this M0 task. The historical
+independent zero-write document review must pass before the one additional commit
+and ordinary fast-forward push. Tests are forbidden in this M0 amendment. The historical
 `codex/workbuddy-shell-v2` ref must remain at `aa9cabfa...`.
 
 ## Product results
@@ -556,12 +589,15 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M0_CAPABILITY_ONBOARDING_EXECUTION_CONTRACT
+current_task: M0_NEXT_PHASE_MASTER_ROADMAP_AND_M1_EXECUTION_CONTRACT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
 capability_onboarding_implementation: NOT_AUTHORIZED
 implementation_branch_name: NOT_SELECTED
 workbuddy_or_media_in_current_task: FORBIDDEN
+next_phase_must_tasks: M1_M2_M3
+next_phase_should_tasks: S1_S2_S3_S4_S5
+next_phase_could_tasks: C1_C2
 closeout_review: APPROVE / P0=0 / P1=0 / P2=0
 r4_review: APPROVE / P0=0 / P1=0 / P2=0
 historical_formal_delivery: COMPLETE / RETAINED_AT_AA9CABFA0D4F75D93E22317466709B6BAD3BC3B4

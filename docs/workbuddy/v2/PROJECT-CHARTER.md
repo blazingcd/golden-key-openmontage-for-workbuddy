@@ -102,9 +102,14 @@ The next-phase capability-onboarding plan is separate from the completed R1-R4
 baseline. Recording it does not authorize implementation, installation, Provider
 configuration, WorkBuddy execution, or media production.
 
-Its M0 contract is the Task Register's bounded plan for capability readiness and
-configuration entry. M0 requires a read-only route audit before any exact write
-allowlist is proposed, then a separate Owner decision on the implementation branch
-name and scope. Downstream clarification, production quality, revision/versioning,
-cross-machine maintenance, and broad Provider coverage must not be absorbed into
-that first implementation result.
+Its M0 contract is the Task Register's bounded master roadmap. `R1` through `R4`
+remain frozen historical result identifiers; future work uses M1–M3 for Must,
+S1–S5 for Should, and C1–C2 for Could. M1 capability readiness requires a
+read-only route audit before any exact write allowlist is proposed, then a separate
+Owner decision on the implementation branch name and scope. M2 clarification and
+material readiness, M3 production/quality/delivery, S1–S5 maturity work, and
+C1–C2 deferred expansion must not be absorbed into M1.
+
+M2 may begin after M1.2 first-use readiness. M1.3 is nevertheless a required M1
+product capability and representative acceptance path; only its use by a
+particular user is conditional. M3 requires completed M1.4 and M2.

@@ -116,23 +116,31 @@ Owner-authorized record changes documentation status only.
 
 ## Next-phase planned acceptance — not yet authorized for execution
 
-These rows do not alter or reopen R1-R4. They describe the planned order after the
-historical baseline at `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
+These rows do not alter or reopen R1-R4. Those identifiers remain frozen and no
+future task continues the R series. M0 is planning only; M1–M3 are Must, S1–S5 are
+Should, and C1–C2 are Could.
 
-| Planned result | Ordinary-user goal | Minimum observable evidence | Current state |
+| Task | Ordinary-user goal | Minimum observable evidence | Current state |
 |---|---|---|---|
-| Capability readiness and configuration entry | Understand that FFmpeg-ready basic production is available, see relevant optional enhancements, and choose to continue or configure without technical operations. | First-use inventory after verified PackageRoot; honest states for Remotion, HyperFrames, external video generation, and TTS; no optional absence reported as OpenMontage incapability; clear continue/configure choice; WorkBuddy-owned credentials/privacy/cost/consent/test/recovery; later natural-language inspect/configure/change/retest entry; no Shell Provider decision or user-visible internal mechanics. | `M0_CONTRACT_FROZEN / IMPLEMENTATION_NOT_AUTHORIZED` |
-| Progressive business clarification | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | WorkBuddy asks only genuinely missing business questions, explains material/default implications, and keeps internal mechanics hidden. | `DEPENDENT / NOT_AUTHORIZED` |
-| Stable production, preview, and delivery | Receive a real result after choosing the basic or an approved enhanced path. | Real WorkBuddy result, playable output, checkable receipt and location, honest quality check, and no optional persistence delaying final delivery. | `DEPENDENT / NOT_AUTHORIZED` |
+| M1 — first-use guidance and capability readiness | Understand that FFmpeg-ready basic production is available, see relevant optional enhancements, choose to continue or configure, and later inspect/change/retest through natural language. | Verified-PackageRoot inventory; honest Remotion, HyperFrames, external video generation, and TTS states; non-blocking optional absence; WorkBuddy-owned Provider/model, credentials, privacy, cost, consent, test, and recovery; one representative selected configuration path; no secret relay, Shell decision, fixed grammar, or user-visible internal mechanics. | `M0_CONTRACT_FROZEN / IMPLEMENTATION_NOT_AUTHORIZED` |
+| M2 — progressive clarification and material readiness | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | Only genuinely missing audience/platform/duration/style/brand/material/budget/delivery questions; explicit defaults and implications; understandable no/partial/complete-material handling; user correction and confirmation; no internal mechanics. | `DEPENDENT_ON_M1.2 / NOT_AUTHORIZED` |
+| M3 — stable production, basic quality, and final delivery | Receive a real result after choosing the basic or an approved enhanced path, with evidence that delivery is not accidental. | Three separately started cases with no supplied, partial, and complete user materials all produce playable outputs; valid receipts and result locations; decode, dimensions/direction, duration, audio, and visible-text/safe-area checks; prompt final answers without optional persistence delay; one independent review of the result set. | `DEPENDENT_ON_M1.4_AND_M2 / NOT_AUTHORIZED` |
+| S1 — preview, revision, version, and rollback | Review a result, request natural-language changes, receive a new version, and return to an earlier version. | One initial version, two bounded revisions, one rollback; all versions remain identifiable, findable, and playable. | `DEPENDENT_ON_M3 / NOT_AUTHORIZED` |
+| S2 — second aspect ratio, platform adaptation, and safe area | Receive one additional platform/aspect version without clipped text, logo, subtitles, or unusable audio/video. | One real additional format; dimensions, duration, decode/audio, subtitle/title/logo safe-area, voice, BGM, and encoding review. | `DEPENDENT_ON_M3 / NOT_AUTHORIZED` |
+| S3 — export, sharing, and later reuse | Obtain an identifiable shareable file and later reuse confirmed brand/project/material/direction facts through natural language. | One export/share result and one later reuse result without manual internal-path assembly or Shell-owned business state. | `DEPENDENT_ON_M3 / NOT_AUTHORIZED` |
+| S4 — cross-machine install, upgrade, diagnosis, and rollback | Install or upgrade on another supported Windows machine, retain user data, understand failure, and recover. | Clean-machine install, existing-user upgrade, diagnosis/recovery, rollback, and data-retention evidence. This becomes release-blocking before broad distribution. | `DEPENDENT_ON_M3_AND_S3 / NOT_AUTHORIZED` |
+| S5 — selected enhancement production qualification | When a demonstrated user goal requires one enhancement, use that selected path to create real user value. | One selected, consented enhancement reaches production and user-visible review; no blanket installation or qualification matrix. | `CONDITIONAL_ON_M1.3_AND_M3 / NOT_AUTHORIZED` |
+| C1 — broad Provider/model coverage | Expand only after repeated unmet demand proves the need. | Separate cost/risk plan and evidence of repeated unmet user demand. | `DEFERRED` |
+| C2 — automatic routing, direct publishing, and generalized automation | Reduce selection or delivery work only after the single product path is stable. | Separate approved product case; no Shell Provider selector, workflow engine, or second control plane. | `DEFERRED` |
 
 Optional enhancement installation or use may be deferred. Its absence must not
 block the FFmpeg-ready basic path. Provider credentials, cost, privacy, and consent
 remain WorkBuddy-owned user decisions; Shell reports only mechanical facts.
 
-M0 document review proves only that the execution contract is bounded and
-internally consistent. Future focused checks may prove local contracts. Only a
-separately authorized real WorkBuddy result can satisfy the first row's
-ordinary-user acceptance; none of those evidence levels may substitute for
+M0 document review proves only that the roadmap and first execution contract are
+bounded and internally consistent. Future focused checks may prove local
+contracts. Only separately authorized real WorkBuddy results can satisfy the
+corresponding user-visible rows; none of those evidence levels substitutes for
 another.
 
 ## Review rule

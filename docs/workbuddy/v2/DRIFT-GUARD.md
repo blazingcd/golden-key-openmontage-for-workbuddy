@@ -49,11 +49,17 @@ by themselves.
 - Do not turn the inventory into broad disk scanning, a hard-coded capability
   universe, a Shell selector, or a second control plane.
 
-## M0 execution guard
+## M0 roadmap and M1 execution guard
 
 - M0 is a planning contract on `codex/workbuddy-capability-onboarding`; it is not
-  implementation or proof of capability onboarding.
-- The Task Register's N1.1 paths are read-only inspection scope, not a write
+  implementation or proof of any future product task.
+- Preserve the initial M0 commit
+  `4c0cbd3447546c3dcc0079f2392a3b43e7542e69`. The later Owner authorization
+  permits one additional six-document master-roadmap amendment, one independent
+  zero-write review, one commit, and one ordinary push; it authorizes nothing else.
+- `R1` through `R4` are frozen historical result identifiers. Do not add another
+  R-series task. M1–M3 are Must, S1–S5 are Should, and C1–C2 are Could.
+- The Task Register's M1.1 paths are read-only inspection scope, not a write
   allowlist. After that audit, the Owner must confirm the implementation branch
   name and the smallest exact write set before code changes.
 - Existing bounded Remotion/HyperFrames preparation must be evaluated for reuse.
@@ -62,12 +68,33 @@ by themselves.
 - WorkBuddy and the verified Package remain fact and decision owners. Unknown
   WorkBuddy tools, Package definitions, Provider availability, price, credentials,
   or connectivity stay `NOT_VERIFIED`; never fill those gaps with assumptions.
-- N1 excludes progressive business clarification, production quality,
+- M1 excludes M2 progressive business clarification/material readiness, M3
+  production quality/final delivery,
   revision/versioning, cross-machine maintenance, broad Provider coverage, and
   unrelated historical stability work.
 - Tests, WorkBuddy, installation, credential entry, Provider calls, media, and an
   implementation branch remain forbidden until their separately named gate is
   authorized.
+
+## Downstream roadmap guard
+
+- M2 asks only for business information genuinely missing from the current goal;
+  it may start after M1.2 and must not become a fixed questionnaire or expose
+  internal mechanics.
+- M1.3 is a required product-capability and representative-acceptance step, but a
+  particular user may defer configuration or stay on FFmpeg. M1 closes at M1.4
+  only after M1.2 and one representative M1.3 path are proved.
+- M3 proves one default production path, basic media quality, repeatable delivery,
+  a checkable receipt/location, and a prompt final answer. It starts only after
+  M1.4 and M2 and excludes S1–S5 and C1–C2 scope.
+- S1–S4 add revision/version/rollback, one additional platform/aspect, export/
+  share/reuse, and cross-machine lifecycle in that order of dependency. S4 becomes
+  release-blocking before broad distribution.
+- S5 is conditional production qualification for one enhancement required by a
+  demonstrated user goal. It is not permission to install or validate everything.
+- C1 broad Provider/model coverage and C2 automatic routing/direct publishing stay
+  deferred until the minimum and Should paths have evidence and the Owner approves
+  a separate product case.
 
 ## Result guard
 

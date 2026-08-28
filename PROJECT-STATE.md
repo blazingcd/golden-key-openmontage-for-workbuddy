@@ -85,12 +85,19 @@ plan in the Task Register.
 
 ## Next-phase planning
 
-M0 freezes the execution contract for the first next-phase result on
-`codex/workbuddy-capability-onboarding`. It records the evidence gap, dependency
-order, read-only route boundary, user-visible acceptance, anti-inflation stops,
-review method, and the gate that requires the Owner to confirm both the
-implementation branch name and exact write allowlist after the route audit. M0
-does not implement anything and no implementation branch exists.
+M0 freezes the complete next-phase master roadmap and the execution contract for
+the first Must task on `codex/workbuddy-capability-onboarding`. It records the
+evidence gap, dependency order, read-only route boundary, user-visible acceptance,
+anti-inflation stops, review method, and the gate that requires the Owner to
+confirm both the implementation branch name and exact write allowlist after the
+route audit. M0 does not implement anything and no implementation branch exists.
+The initial capability-onboarding contract remains preserved at
+`4c0cbd3447546c3dcc0079f2392a3b43e7542e69`; the later Owner authorization adds
+one documentation-only master-roadmap amendment without rewriting that commit.
+
+`R1` through `R4` remain frozen historical result identifiers; no future task uses
+the R series. M1–M3 are Must tasks, S1–S5 are Should tasks, and C1–C2 are Could
+tasks. M1.1–M1.4 are steps within M1, not M0 subtasks.
 
 The next product path begins with capability readiness, not a claim that
 OpenMontage becomes incapable when an enhancement is absent. FFmpeg is the basic
@@ -107,9 +114,16 @@ mechanical detection and exactly approved integration. Later natural-language
 requests containing `金钥匙智能体` may inspect, configure, change, or retest the
 same capabilities without a fixed configuration grammar.
 
-Planned order: capability readiness and configuration entry; progressive business
-clarification and material readiness; stable production, preview, and delivery.
-Implementation and real-user acceptance require separate Owner authorization.
+Planned dependency: M1.1 fact audit then M1.2 first-use readiness; M2 may start
+after M1.2. M1.3 is still a required product capability and representative
+acceptance path, but a particular user may defer it until M2 establishes relevance
+or continue on FFmpeg without using an enhancement. M3 starts only after M1.4 and
+M2 are complete. S1–S4 then cover revision/version/rollback,
+one additional platform/aspect, export/share/reuse, and cross-machine lifecycle.
+S5 qualifies only an enhancement selected for a real user goal. C1 broad
+Provider/model coverage and C2 automatic routing/direct publishing remain
+deferred. Implementation and real-user acceptance require separate Owner
+authorization.
 
 ## Non-goals
 

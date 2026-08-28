@@ -15,10 +15,12 @@ authorized documentation branch for the next phase is
 `refs/heads/codex/workbuddy-capability-onboarding`. That branch records planning
 only until the Owner separately authorizes implementation.
 
-The M0 execution contract is frozen in `TASK-REGISTER.md`. M0 authorizes only the
-six authority/state documents, one independent zero-write document review, one
-commit, and an ordinary push on the documentation branch. It does not select or
-create an implementation branch, authorize code/tests/WorkBuddy, or turn its
+The initial M0 capability-onboarding contract was frozen at
+`4c0cbd3447546c3dcc0079f2392a3b43e7542e69`. The Owner's later master-roadmap
+authorization permits one additional documentation-only amendment on the same
+planning branch, limited to the six authority/state documents, one independent
+zero-write document review, one commit, and an ordinary push. It does not select
+or create an implementation branch, authorize code/tests/WorkBuddy, or turn its
 read-only route list into a write allowlist.
 
 ## Product boundary
@@ -65,6 +67,25 @@ Later requests containing `金钥匙智能体` may naturally ask to inspect, con
 change, or retest capabilities. Do not introduce a fixed command language,
 prescribed transcript, Shell Provider selector, broad disk scan, or second control
 plane.
+
+## Next-phase task map
+
+`R1` through `R4` are frozen historical result identifiers and must not be
+continued. M0 is planning only. The future product roadmap uses M1–M3 for Must,
+S1–S5 for Should, and C1–C2 for Could. M1.1–M1.4 are execution steps owned by M1;
+they are not M0 subtasks or a separate task series.
+
+The executable dependency is M1.1 fact audit followed by M1.2 first-use readiness.
+M2 clarification may start after M1.2. M1.3 remains a required M1 product
+capability and representative acceptance path, but an individual user may defer
+configuration until M2 establishes relevance or continue on FFmpeg without using
+an enhancement. M3 starts only after both M1.4 and M2 are complete. S1 adds
+revision/version/rollback; S2 adds one additional
+aspect/platform and safe-area quality; S3 adds export/share/reuse; S4 adds
+cross-machine lifecycle; S5 conditionally qualifies one user-needed enhancement.
+C1 broad Provider/model coverage and C2 automatic multi-Provider routing/direct
+publishing remain deferred. The complete dependency and acceptance authority is
+the Task Register.
 
 ## Four product results
 

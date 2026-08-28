@@ -8,8 +8,8 @@ not a user failure.
 |---|---|---|---|
 | R1 | Install the Shell product and complete its lifecycle without losing user data. | Final release identity; installation, Registration, Activation, Uninstallation, Reinstallation, and data-protection evidence. | `COMPLETE` |
 | R2 | Type a natural-language request containing `金钥匙智能体` and start a real WorkBuddy business interaction. | WorkBuddy 5.3.14 / Hy3; the single Skill and Shell actually invoked; concrete business reply; checkable LauncherReceipt. | `COMPLETE` |
-| R3 | Continue the same ordinary-user path to a real Golden Key production result. | One natural-language entry; real WorkBuddy execution; real playable video; checkable receipt and result location; no manual technical workaround. | `NEXT / NOT_STARTED` |
-| R4 | Use the result as an ordinary user and close the product formally. | Ordinary-user acceptance record and formal repository/project closeout. | `NOT_STARTED` |
+| R3 | Continue the same ordinary-user path to a real Golden Key production result. | One natural-language entry; real WorkBuddy execution; real playable video; checkable receipt and result location; no manual technical workaround. | `COMPLETE` |
+| R4 | Close the accepted product formally. | Final authority documents, retained evidence, formal branch state, and explicit closeout record. No new WorkBuddy run. | `REVIEW_APPROVED / COMMIT_PENDING` |
 
 ## R1 evidence
 
@@ -35,7 +35,7 @@ review `REJECT / P0=0 / P1=1 / P2=0` is retained as a mismatched review fact; it
 P1 applied the R3 file-pointer standard. Owner correction makes R2 complete and
 does not require a second review.
 
-## R3 boundary
+## R3 evidence
 
 The only wake condition remains the original-message substring `金钥匙智能体`.
 Do not replace it with one fixed full prompt. Candidate materials are:
@@ -43,14 +43,74 @@ Do not replace it with one fixed full prompt. Candidate materials are:
 - `D:\BlazingCD\Personal\测试素材\头头象花浴头疗素材\店内环境`
 - `D:\BlazingCD\Personal\Golden Key Digital Human\resources\assets\default\_bgm`
 
-They may be supplied by the ordinary user in a natural-language request. Their
-presence is not a new technical protocol.
+They were supplied naturally in the successful run; they are not a fixed prompt
+or technical protocol. WorkBuddy displayed and played
+`D:\BlazingCD\Personal\测试素材\头头象花浴头疗素材\成片\头头象花浴头疗_新店开业宣传.mp4`.
+The file is a 46.6-second H.264/AAC MP4, and the independent review returned
+`PASS / P0=0 / P1=0 / P2=0`.
 
-R3 fails only when a required user-visible condition is absent: the user must
-operate technical commands/paths/schema/env, the Skill/Shell is not actually
-called, no real playable video or checkable receipt exists, or Shell becomes a
-second Agent/production decision-maker. WorkBuddy may choose internal commands,
-tools, retries, and corrections.
+The R3-passing Skill is retained as the usable rollback baseline. Its first
+wrapper invocation did not persist the managed receipt, although WorkBuddy
+recovered within the same user task and completed the product result. The current
+stability candidate is accepted only if it improves that first-call relay without
+adding automatic replay or changing WorkBuddy's production ownership.
+
+The one 2026-08-28 candidate comparison did not satisfy that rule. Its first call
+exited before the diagnostic guard because of an invalid PowerShell `Split-Path`
+parameter combination, wrote no managed receipt/diagnostic, and WorkBuddy bypassed
+the Skill. The later 37.12-second MP4 independently passed the ordinary-user video
+goal (`P0/P1/P2=0/0/0`), but the candidate stability verdict remains `FAIL`.
+Unrequested workspace-memory and user-Skill writes are also visible negative side
+effects, not internal transcript differences.
+
+The Owner subsequently uninstalled both Skills and authorized one new candidate
+derived from the preserved R3 baseline. Its acceptance rule is unchanged: one
+first-call checkable receipt/diagnostic, no WorkBuddy bypass caused by relay loss,
+and no new persistent control plane. Product-result review remains user-visible;
+it does not require a predetermined WorkBuddy transcript.
+
+The v3 comparison produced the checkable first-call receipt and a valid local
+37-second 1920x1080 H.264/AAC MP4. It still does not pass the ordinary-user result
+review: WorkBuddy planned unrequested persistent memory and another user Skill,
+the task was stopped, and the final visible state contains neither a completed
+answer nor an artifact card. Independent review is `TODO`. This does not revoke
+the earlier accepted R3 result; it rejects only the v3 comparison as proof of a
+stable user delivery.
+
+The separately named `delivery-v4` candidate retains v3's proven first-call
+receipt behavior and changes only the result-delivery boundary. Candidate review
+checks that the Skill still leaves production reasoning to WorkBuddy, requires a
+real result before any claim, and prevents optional memory or Skill accumulation
+from delaying the user's result. Local review does not prove WorkBuddy behavior.
+Installation and a real comparison require separate action-time authorization.
+The local candidate review is `APPROVE / P0=0 / P1=0 / P2=0`; this approves the
+bounded Skill artifact only and does not claim real WorkBuddy behavior.
+
+The separately authorized v4 comparison is now complete in WorkBuddy `5.3.14`
+with `Hy3 0.00x`. The first call produced a successful managed receipt, a valid
+result pointer, one spawn, and no retry. WorkBuddy gave a final answer and attached
+a real H.264/AAC MP4. The independent ordinary-user result review is
+`TODO / P0=0 / P1=1 / P2=0` because the closing title is clipped on both sides.
+V4 also fails its separate stability goal: it wrote optional workspace memory
+after validating the video and before the final answer. No extra user Skill was
+created. This comparison does not revoke the earlier accepted R3 result and does
+not authorize another run. The Owner retains v4 for its improved first-call and
+final-delivery mechanics; the one clipped creative output is not treated as proof
+of a Skill regression. R4 reviews the retained state only.
+
+## R4 acceptance
+
+R4 passes only when the six authority/state documents agree, the retained
+baseline/v3/v4 identities are verified, the installed state contains only v4,
+the existing 11-path change set passes its focused checks and one independent
+zero-write review, and the reviewed commit is the exact local and remote formal
+ref by ordinary fast-forward. R4 does not require or permit another WorkBuddy run,
+video repair, Skill installation, Package rebuild, persistent-side-effect cleanup,
+old-route work, or full CI.
+
+The frozen R4 candidate passed its one independent zero-write review with
+`APPROVE / P0=0 / P1=0 / P2=0`. Completion still requires the reviewed commit to
+be the exact local and remote formal ref by ordinary fast-forward.
 
 ## Review rule
 

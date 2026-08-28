@@ -64,17 +64,30 @@ they do not invalidate Result 2. The original independent review fact
 its P1 applied the Result 3 artifact standard. Owner correction is final and no
 second Result 2 review is required.
 
-### Result 3 — NEXT / NOT_STARTED
+### Result 3 — COMPLETE
 
-Use the same ordinary-user path to create a real playable Golden Key video. The
-candidate materials are `D:\BlazingCD\Personal\测试素材\头头象花浴头疗素材\店内环境`
-and `D:\BlazingCD\Personal\Golden Key Digital Human\resources\assets\default\_bgm`.
-These are candidate inputs, not a fixed protocol. Result 3 is not authorized by
-the current documentation closeout task.
+In WorkBuddy 5.3.14 with `Hy3 0.00x`, one ordinary-language request containing
+`金钥匙智能体` produced the real playable 46.6-second video
+`头头象花浴头疗_新店开业宣传.mp4`. WorkBuddy displayed and played the file, and
+the independent result review passed with `PASS / P0=0 / P1=0 / P2=0`.
 
-### Result 4 — NOT_STARTED
+The installed Skill completed the user goal after WorkBuddy recovered within the
+same task, so it is the usable rollback baseline. Its first wrapper invocation
+returned exit code 1 without the managed `latest-launcher-receipt.json`; this is a
+known relay-stability limitation, not a reason to erase the successful baseline.
 
-Ordinary-user acceptance and formal project closeout.
+### Result 4 — REVIEW_APPROVED / COMMIT_PENDING
+
+Formal project closeout only. R3 already contains the ordinary-user product
+acceptance; R4 does not run WorkBuddy or produce another video. Owner authorization
+dated 2026-08-28 retains v4 as the installed Skill with the preserved R3 baseline
+as rollback evidence, freezes the R4 plan in `TASK-REGISTER.md`, and authorizes
+that plan's bounded document, verification, review, commit, and ordinary
+fast-forward push steps only. The exact 11-path gate, retained identities,
+installed-v4 identity, `21 passed, 1 skipped` focused tests, Skill validation,
+and `git diff --check` have passed. The single independent zero-write R4 review
+returned `APPROVE / P0=0 / P1=0 / P2=0`. R4 is complete only after the reviewed
+commit is the exact local and remote formal ref by ordinary fast-forward.
 
 ## Acceptance and execution rules
 
@@ -107,12 +120,76 @@ Ordinary-user acceptance and formal project closeout.
   fast-forward. Before destructive cleanup, resolve exact paths, ensure no
   unmerged or unique work exists, and prefer recoverable deletion.
 
-## Current closeout authorization
+## Current stability-candidate result
 
-Owner authorized the 2026-08-27 repository closeout: slim and align the current
-authority, entry, contract, and work-log documents; verify the existing Result 2
-changes; perform one independent read-only result review; commit/push the candidate
-and ordinarily fast-forward the formal ref; remove only verified abandoned
-branches/worktrees/task directories; and open a clean follow-up Codex task. This
-closeout must not start Result 3, WorkBuddy, media generation, or unrelated code
-work.
+Owner authorization dated 2026-08-28 preserves the R3-passing Skill ZIP as an
+unchanged rollback baseline and permits one separately named receipt-stability
+candidate. Do not overwrite the baseline archive or install two Golden Key Skills
+at once. The candidate may improve first-call stdout/stderr and receipt persistence
+only; it must not add retries, a second control plane, or fixed business reasoning.
+
+The one permitted WorkBuddy `5.3.14` / `Hy3 0.00x` comparison has run. The
+candidate is rejected: `run.ps1` used the incompatible PowerShell combination
+`Split-Path -Parent -LiteralPath` before its protected block, so the first call
+returned exit code 1 without either managed diagnostic. WorkBuddy then bypassed
+the Skill to recover, produced a real 37.12-second H.264/AAC MP4, and the
+independent user-result review returned `PASS / P0=0 / P1=0 / P2=0`; that product
+success does not repair the candidate's failed first-call contract. The same task
+was stopped after it wrote an unrequested workspace memory and user-level
+`golden-key-local-footage-promo` Skill. Do not make another production attempt.
+The preserved baseline archives remain intact. On 2026-08-28 the Owner manually
+uninstalled both the rejected `golden-key-openmontage` candidate and the
+unrequested `golden-key-local-footage-promo` Skill, then authorized one new
+stability candidate derived afresh from the preserved R3 baseline. Do not reuse
+the rejected candidate implementation. The new candidate may make only the
+minimum first-call receipt/diagnostic correction, must remain the single installed
+Golden Key Skill, and gets one WorkBuddy `5.3.14` / `Hy3 0.00x` ordinary-user
+comparison. If it fails, stop and ask the Owner whether to perform the full
+baseline rollback; do not make another production attempt. The unrequested
+workspace memory remains present and is not authorized for deletion. R4 and
+unrelated work remain unauthorized.
+
+The separately named `receipt-v3` candidate has now completed its only permitted
+comparison. Its ZIP SHA256 is
+`aa421dfbb00111392d37da6f6590e456b534a79e308560b441b4afd5d7b044a2`. The first
+Skill call produced a managed `EXITED_SUCCESS` receipt, valid result pointer,
+`spawn_count=1`, and `retry_count=0`, so the first-call receipt relay improved.
+WorkBuddy then produced a valid 37-second 1920x1080 H.264/AAC MP4 at
+`C:\Users\blazi\WorkBuddy\2026-08-28-13-33-53\头头象花浴头疗_新店开业宣传.mp4`.
+Before giving the ordinary user a final result, WorkBuddy planned an unrequested
+workspace-memory update and another user Skill. The task was stopped; the final
+visible state is `用户已取消`, the artifact pane is empty, an empty workspace
+memory file remains, and no extra user Skill was created. Independent result
+review is `TODO`: the valid file was not delivered through a final WorkBuddy
+answer. Do not run a third comparison. The v3 candidate remains installed pending
+Owner direction on full baseline rollback. Historical R3 remains complete; R4
+remains unauthorized.
+
+Fresh Owner authorization dated 2026-08-28 permits one separately named
+`delivery-v4` candidate derived from `receipt-v3`. Preserve the R3 baseline and
+v3 archives byte-for-byte. V4 may change only the WorkBuddy-facing result
+delivery boundary: once a real requested result has received the minimum honest
+validation, present it and finish without optional workspace-memory or new-Skill
+accumulation. It must retain v3's successful first-call receipt behavior, must
+not prescribe production steps, and must not add a second control plane. The v4
+artifact may be built and locally checked now. Do not install it or run another
+WorkBuddy comparison without separate action-time Owner confirmation. R4 remains
+unauthorized.
+
+The v4 artifact is built with SHA256
+`d838cba0735d7a2df3d81029a7d7469551a28219d91f0e8ea2fe08b0f152845d`.
+Focused checks passed and the one independent zero-write candidate review returned
+`APPROVE / P0=0 / P1=0 / P2=0`.
+
+The one action-time-authorized v4 comparison is complete in WorkBuddy `5.3.14`
+with `Hy3 0.00x`. V4 is the only installed Golden Key Skill. Its first call
+produced `EXITED_SUCCESS`, a valid result pointer, `spawn_count=1`, and
+`retry_count=0`. WorkBuddy delivered a 9.6 MB MP4 and its path in the final answer.
+The independent ordinary-user result review is `TODO / P0=0 / P1=1 / P2=0`:
+the closing title is visibly clipped on both sides. Separately, v4 did not satisfy
+its stability boundary because WorkBuddy wrote an optional 978-byte workspace
+memory after validating the video and before the final answer. No extra user Skill
+was created. The Owner now retains v4 because its first-call and final-delivery
+mechanics improved; the clipped creative output from one harness run is not by
+itself a Skill regression. Do not run another comparison, repair the video, delete
+the memory, or roll back the installed Skill. Historical R3 remains complete.

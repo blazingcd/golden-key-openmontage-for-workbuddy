@@ -920,25 +920,83 @@ def _powershell_literal(value: Path) -> str:
     return "'" + str(value).replace("'", "''") + "'"
 
 
-def _build_workbuddy_skill_archive(data_root: Path, package_root: Path) -> dict[str, Any]:
+def _skill_archive_name(value: os.PathLike[str] | str | None) -> str:
+    name = Path(WORKBUDDY_SKILL_ARCHIVE_RELATIVE_PATH).name if value is None else os.fspath(value)
+    if not isinstance(name, str):
+        raise InstallerError("workbuddy_skill_archive_name_invalid")
+    try:
+        relative = _safe_member(name)
+    except InstallerError as exc:
+        raise InstallerError("workbuddy_skill_archive_name_invalid") from exc
+    if len(relative.parts) != 1 or relative.name != name or relative.suffix.casefold() != ".zip":
+        raise InstallerError("workbuddy_skill_archive_name_invalid")
+    return name
+
+
+def _build_workbuddy_skill_archive(
+    data_root: Path,
+    package_root: Path,
+    *,
+    skill_source_root: Path | None = None,
+    archive_name: os.PathLike[str] | str | None = None,
+) -> dict[str, Any]:
+    data_root = Path(data_root).resolve(strict=True)
+    package_root = Path(package_root).resolve(strict=True)
     skill_root = package_root / WORKBUDDY_SKILL_ROOT_RELATIVE_PATH
+    if skill_source_root is not None:
+        skill_root = Path(skill_source_root).resolve(strict=True)
     skill_path = skill_root / "SKILL.md"
     script_path = skill_root / "scripts" / "run.ps1"
     python_path = package_root / "bootstrap" / "python" / "python.exe"
+    active_pointer_sha256 = _active_pointer_sha(data_root)
+    if skill_source_root is not None and active_pointer_sha256 != "MISSING":
+        from .package_registration import PackageRegistrationError, locate_active_package
+
+        try:
+            located = locate_active_package(data_root)
+        except PackageRegistrationError as exc:
+            raise InstallerError("workbuddy_skill_active_package_invalid") from exc
+        if Path(located["package_root"]).resolve(strict=True) != package_root:
+            raise InstallerError("workbuddy_skill_package_root_not_active")
     for path in (skill_path, script_path, python_path):
         _assert_regular(path)
-        _assert_no_reparse_chain(path, boundary=package_root)
+        _assert_no_reparse_chain(path, boundary=skill_root if path in (skill_path, script_path) else package_root)
     skill = skill_path.read_text(encoding="utf-8")
     script = script_path.read_text(encoding="utf-8")
+    if skill_source_root is not None:
+        for marker, value in {
+            "<installer:skill_identity>": "golden-key-openmontage",
+            "<installer:release_identity>": RELEASE_IDENTITY,
+        }.items():
+            skill = skill.replace(marker, value)
+        for field, value in {
+            "GOLDEN_KEY_WORKBUDDY_SKILL_IDENTITY": "golden-key-openmontage",
+            "GOLDEN_KEY_WORKBUDDY_RELEASE_IDENTITY": RELEASE_IDENTITY,
+        }.items():
+            skill, count = re.subn(
+                rf"(?m)^{re.escape(field)}=.*$",
+                lambda _match, field=field, value=value: f"{field}={value}",
+                skill,
+                count=1,
+            )
+            if count != 1:
+                raise InstallerError(f"skill_field_missing:{field}")
     script = script.replace("<installer:package_root>", _powershell_literal(package_root))
     script = script.replace("<installer:private_python>", _powershell_literal(python_path))
+    script = script.replace("<installer:data_root>", _powershell_literal(data_root))
+    receipt_path = data_root / "Results" / "golden-key-openmontage" / "latest-launcher-receipt.json"
+    script = script.replace("<installer:receipt_path>", _powershell_literal(receipt_path))
+    script = script.replace("<installer:active_pointer_sha256>", active_pointer_sha256)
     if "<installer:" in skill or "<installer:" in script:
         raise InstallerError("workbuddy_skill_placeholder_remaining")
 
-    destination = data_root / Path(*WORKBUDDY_SKILL_ARCHIVE_RELATIVE_PATH.split("/"))
+    candidate_archive = archive_name is not None
+    destination = data_root / "Integrations" / "WorkBuddy" / _skill_archive_name(archive_name)
     _assert_no_reparse_chain(destination.parent, boundary=data_root)
     destination.parent.mkdir(parents=True, exist_ok=True)
     _assert_no_reparse_chain(destination.parent, boundary=data_root)
+    if candidate_archive and (destination.exists() or destination.is_symlink()):
+        raise InstallerError(f"workbuddy_skill_archive_already_exists:{destination.name}")
     temporary = destination.with_name(f".{destination.name}.{uuid.uuid4().hex}.tmp")
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -951,7 +1009,14 @@ def _build_workbuddy_skill_archive(data_root: Path, package_root: Path) -> dict[
         digest = _sha256(temporary)
         size = temporary.stat().st_size
         os.replace(temporary, destination)
-        return {"path": str(destination), "sha256": digest, "size": size}
+        return {
+            "path": str(destination),
+            "archive_name": destination.name,
+            "sha256": digest,
+            "size": size,
+            "receipt_path": str(receipt_path),
+            "active_pointer_sha256": active_pointer_sha256,
+        }
     finally:
         temporary.unlink(missing_ok=True)
 

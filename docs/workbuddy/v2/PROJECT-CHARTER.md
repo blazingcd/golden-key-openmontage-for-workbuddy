@@ -48,11 +48,13 @@ Registration/Locator has returned and verified the PackageRoot and Guide identit
    Hy3 run invoked the single Skill and Shell from the ordinary request
    `用金钥匙智能体给我做新店开业视频` and returned a concrete business reply plus
    a checkable LauncherReceipt. No video file was required for this result.
-3. **Real playable Golden Key video — NEXT / NOT_STARTED.** The same user path
-   must produce a real playable video and receipt. This is the next product task,
-   not part of the current document/repository closeout.
-4. **Ordinary-user acceptance and formal closeout — NOT_STARTED.** This follows
-   successful Result 3.
+3. **Real playable Golden Key video — COMPLETE.** WorkBuddy 5.3.14 with
+   `Hy3 0.00x` produced and played a real 46.6-second MP4 through the ordinary-user
+   path; the independent review passed with no findings.
+4. **Formal closeout — REVIEW_APPROVED / COMMIT_PENDING.** R3 already contains
+   ordinary-user product acceptance. The frozen R4 candidate passed its one
+   independent zero-write review; R4 records the final repository/project state
+   and does not run WorkBuddy or produce another video.
 
 ## Acceptance philosophy
 
@@ -68,6 +70,12 @@ by that result.
 
 ## Out of scope
 
-Result 3 may defer Remotion and HyperFrames; neither is a prerequisite. No current
-work should add optional frameworks, a second Agent, a second Skill, or generalized
-orchestration merely to prepare for hypothetical future work.
+The R3-passing Skill remains the rollback baseline. Separately named candidates
+may retain the proven v3 receipt relay while narrowly correcting the
+WorkBuddy-facing result-delivery boundary. This does not authorize optional
+frameworks, a fixed production script, a second Agent, two simultaneously
+installed Golden Key Skills, or generalized orchestration. The v4 comparison did
+not close that stability work: it delivered a real result but still wrote optional
+workspace memory before the final answer. The Owner nevertheless retains v4 for
+its improved first-call and delivery mechanics; the preserved R3 baseline remains
+rollback evidence. Historical R3 remains complete.

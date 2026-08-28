@@ -333,7 +333,7 @@ def test_runtime_prepare_is_bounded_and_replacement_control_planes_are_not_imple
     ).read_text(encoding="utf-8")
     assert "result_1: COMPLETE" in task_register
     assert "result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED" in task_register
-    assert "result_3: NEXT / NOT_STARTED / NOT_AUTHORIZED_IN_CLOSEOUT" in task_register
+    assert "result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS" in task_register
 
     init_source = (
         REPO_ROOT / "golden_key_openmontage_workbuddy" / "__init__.py"
@@ -360,7 +360,8 @@ def test_agent_guide_preserves_the_shell_and_verified_package_boundaries() -> No
     assert "after a verified PackageRoot has been returned" in guide
     assert "The Shell is not a second Agent" in guide
     assert "must not force a preset script" in guide
-    assert "must not start Result 3, WorkBuddy, media generation" in guide
+    assert "## Current stability-candidate result" in guide
+    assert "`Hy3 0.00x`" in guide
 
 
 def test_ci_targets_only_the_formal_branch_and_the_five_final_tests() -> None:

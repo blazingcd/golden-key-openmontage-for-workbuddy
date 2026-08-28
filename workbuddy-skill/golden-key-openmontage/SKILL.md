@@ -18,6 +18,19 @@ Treat the LauncherReceipt as mechanical facts. When it provides a verified
 PackageRoot, the Package Guide is the production-semantic authority. Present
 the actual business result naturally, do not require the user to operate Shell
 mechanics, and do not claim an Artifact or video exists unless it actually does.
+Once the requested business result actually exists and has received the minimum
+validation needed for an honest claim, present that result and finish the current
+reply. Do not delay user-visible delivery for optional workspace memory, Skill
+creation or correction, or other reusable-workflow accumulation. This production
+path is already covered by the installed Skill; a routine result is not a new
+workflow to persist. Perform additional persistent wrap-up only when the user
+explicitly requests it or when it is necessary to complete the requested result.
+The fixed entry also records the complete receipt at the managed
+`Results/golden-key-openmontage/latest-launcher-receipt.json` location. Use that
+receipt as the checkable first-call result when the host does not display native
+stdout. If the first call fails, read the managed
+`Results/golden-key-openmontage/latest-launcher-failure.json` diagnostic when it
+is present; never replay the user's request merely to recover transport output.
 
 The fixed entry owns package lookup, release binding, validation, lifecycle
 state, and receipt delivery. Do not ask the user or model for commands, JSON,

@@ -121,13 +121,19 @@ historical baseline at `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
 
 | Planned result | Ordinary-user goal | Minimum observable evidence | Current state |
 |---|---|---|---|
-| Capability readiness and configuration entry | Understand that FFmpeg-ready basic production is available, see relevant optional enhancements, and choose to continue or configure without technical operations. | First-use inventory after verified PackageRoot; no optional absence reported as OpenMontage incapability; clear continue/configure choice; later natural-language inspect/configure/change/retest entry; no Shell Provider decision. | `PLANNED / IMPLEMENTATION_NOT_AUTHORIZED` |
+| Capability readiness and configuration entry | Understand that FFmpeg-ready basic production is available, see relevant optional enhancements, and choose to continue or configure without technical operations. | First-use inventory after verified PackageRoot; honest states for Remotion, HyperFrames, external video generation, and TTS; no optional absence reported as OpenMontage incapability; clear continue/configure choice; WorkBuddy-owned credentials/privacy/cost/consent/test/recovery; later natural-language inspect/configure/change/retest entry; no Shell Provider decision or user-visible internal mechanics. | `M0_CONTRACT_FROZEN / IMPLEMENTATION_NOT_AUTHORIZED` |
 | Progressive business clarification | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | WorkBuddy asks only genuinely missing business questions, explains material/default implications, and keeps internal mechanics hidden. | `DEPENDENT / NOT_AUTHORIZED` |
 | Stable production, preview, and delivery | Receive a real result after choosing the basic or an approved enhanced path. | Real WorkBuddy result, playable output, checkable receipt and location, honest quality check, and no optional persistence delaying final delivery. | `DEPENDENT / NOT_AUTHORIZED` |
 
 Optional enhancement installation or use may be deferred. Its absence must not
 block the FFmpeg-ready basic path. Provider credentials, cost, privacy, and consent
 remain WorkBuddy-owned user decisions; Shell reports only mechanical facts.
+
+M0 document review proves only that the execution contract is bounded and
+internally consistent. Future focused checks may prove local contracts. Only a
+separately authorized real WorkBuddy result can satisfy the first row's
+ordinary-user acceptance; none of those evidence levels may substitute for
+another.
 
 ## Review rule
 

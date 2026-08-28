@@ -49,6 +49,26 @@ by themselves.
 - Do not turn the inventory into broad disk scanning, a hard-coded capability
   universe, a Shell selector, or a second control plane.
 
+## M0 execution guard
+
+- M0 is a planning contract on `codex/workbuddy-capability-onboarding`; it is not
+  implementation or proof of capability onboarding.
+- The Task Register's N1.1 paths are read-only inspection scope, not a write
+  allowlist. After that audit, the Owner must confirm the implementation branch
+  name and the smallest exact write set before code changes.
+- Existing bounded Remotion/HyperFrames preparation must be evaluated for reuse.
+  Do not add another detector, installer, router, Provider selector, command
+  language, or framework merely because the current production caller is absent.
+- WorkBuddy and the verified Package remain fact and decision owners. Unknown
+  WorkBuddy tools, Package definitions, Provider availability, price, credentials,
+  or connectivity stay `NOT_VERIFIED`; never fill those gaps with assumptions.
+- N1 excludes progressive business clarification, production quality,
+  revision/versioning, cross-machine maintenance, broad Provider coverage, and
+  unrelated historical stability work.
+- Tests, WorkBuddy, installation, credential entry, Provider calls, media, and an
+  implementation branch remain forbidden until their separately named gate is
+  authorized.
+
 ## Result guard
 
 The historical `codex/workbuddy-shell-v2` baseline has exactly four product

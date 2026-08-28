@@ -39,13 +39,19 @@ questions, call tools, retry, and adjust internal steps. These variations matter
 only if they directly cause product failure, add ordinary-user technical burden,
 create a second control plane, or produce a false result.
 
-## Next phase — capability onboarding: PLANNING RECORDED / IMPLEMENTATION NOT AUTHORIZED
+## M0 — capability-onboarding execution contract: FROZEN FOR PLANNING / IMPLEMENTATION NOT AUTHORIZED
 
-Owner authorization dated 2026-08-28 permits documentation, review, commit, and
-push of this bounded planning record on
+Owner authorization dated 2026-08-28 permits this M0 contract to be documented,
+independently reviewed once with zero writes, committed once, and pushed on
 `refs/heads/codex/workbuddy-capability-onboarding`. It does not authorize product
 code, Skill changes, tests, WorkBuddy execution, capability installation, Provider
-configuration, media production, or external evidence mutation.
+configuration, media production, external evidence mutation, an implementation
+branch, or an implementation branch name.
+
+M0 removes one planning barrier: the next worker must know which ordinary-user
+result to deliver, which route to inspect, where ownership stops, what evidence is
+valid, and when to stop before touching implementation. M0 itself delivers no
+product capability.
 
 ### Product rule
 
@@ -85,28 +91,112 @@ Each implementation step requires a separately confirmed scope, acceptance rule,
 branch boundary, and action-time authorization. This planning commit is not that
 authorization.
 
-### Documentation acceptance
+### M0 evidence map
 
-This planning record may change only these 12 paths:
+| Evidence class | Current fact | Consequence |
+|---|---|---|
+| Historical user-visible baseline | R3 proved one real playable FFmpeg-based result through WorkBuddy; R4 closed that historical branch. | Preserve it; do not reopen or advance `codex/workbuddy-shell-v2`. |
+| Existing Shell mechanics | `runtime_prepare.py` contains bounded detection and consent-bound preparation for exactly Remotion and HyperFrames. Package registration, launch, and receipt transport already exist. | Reuse before adding code; do not build another detector, installer, router, or control plane. |
+| Missing production connection | No production caller of `prepare_optional_capabilities` exists outside its definition. The ordinary WorkBuddy entry currently sends the original message with empty local-capability evidence. | Capability readiness is not proved merely because the bounded module exists. The first implementation task must confirm the smallest owning connection. |
+| Not verified in this M0 | WorkBuddy's current tool inventory, the resolved Package's current capability definitions, external video-generation Providers, TTS Providers, first-use dialogue, later natural-language re-entry, and failure recovery. | Record as `NOT_VERIFIED`; do not invent support, credentials, availability, price, or Provider behavior. |
+
+Static source facts and historical tests are not real WorkBuddy acceptance.
+Likewise, one real historical video does not prove first-use capability onboarding.
+
+### M0 task decomposition and dependency order
+
+| Task | Priority | User problem and target result | Boundary and non-goals | Acceptance and dependency |
+|---|---|---|---|---|
+| N1.1 — route and capability fact audit | Must | Prevent the user from receiving invented or stale capability advice. Confirm the current WorkBuddy, verified Package, and Shell surfaces that can supply facts. | Read-only. No code, install, Provider call, credential read, broad disk scan, test, or WorkBuddy run. Do not decide the implementation before tracing the current route. | Produce a fact table, the smallest proposed write allowlist, dependencies, and hard stops. Depends only on the frozen M0 commit and a separately confirmed task/branch boundary. |
+| N1.2 — first-use readiness and continue/configure choice | Must | Let a first-time user understand that FFmpeg-ready basic production works, see the status of Remotion, HyperFrames, external video generation, and TTS, then continue or choose configuration without technical operations. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No exhaustive Provider catalog, automatic installation, fixed transcript, fixed configuration language, or production redesign. | Local contract evidence must prove bounded fact flow and non-blocking optional absence. Depends on N1.1 and a separately approved exact write allowlist. |
+| N1.3 — selected configuration, retest, and recovery | Must | Let the user configure only a selected enhancement, understand credentials/privacy/cost/availability, test it, and recover or defer without losing the FFmpeg path. Later requests containing `金钥匙智能体` can re-enter naturally. | Do not configure every Provider, expose secrets, store credentials in Shell output, make Shell choose Provider/model, or treat a failed optional test as product incapability. | Selected-path evidence must show consent before mutation, secret-safe factual relay, honest failure, defer/continue, and natural-language retest. Depends on N1.2 and explicit action-time authorization for any install, credential entry, or connection test. |
+| N1.4 — user-visible acceptance and closeout | Must | Prove an ordinary user can understand readiness and make a choice without internal mechanics. | No deterministic transcript, evaluator-invented step order, unrelated video-quality work, full CI, or second review system. | Focused local checks first; then, only with separate action-time authorization, one real WorkBuddy result and one independent result review. Depends on N1.2; configuration-path acceptance also depends on N1.3. |
+
+Progressive business clarification, material readiness, production quality,
+revision/versioning, cross-machine upgrade, and broad Provider coverage remain
+downstream tasks. They may inform interfaces but must not enter N1 implementation.
+
+### N1.1 read-only route boundary
+
+The first implementation task must inspect only the smallest current route needed
+to establish ownership:
+
+- `workbuddy-skill/golden-key-openmontage/SKILL.md`
+- `workbuddy-skill/golden-key-openmontage/scripts/run.ps1`
+- `golden_key_openmontage_workbuddy/user_entry.py`
+- `golden_key_openmontage_workbuddy/runtime_prepare.py`
+- `golden_key_openmontage_workbuddy/package_registration.py`
+- `golden_key_openmontage_workbuddy/installer.py`
+- `golden_key_openmontage_workbuddy/session_launcher.py`
+- `golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`
+- their directly corresponding files under `tests/workbuddy/`
+- the Package Guide, Manifest, and capability definitions resolved from the
+  verified PackageRoot at execution time; never a guessed or hard-coded path.
+
+This is an inspection boundary, not a write allowlist. N1.1 must recommend the
+smallest existing-file write set. Any implementation path not explicitly approved
+after that audit is a hard stop. A different repository, new file, new dependency,
+or change to WorkBuddy itself requires a new Owner decision; it cannot be absorbed
+into N1.
+
+### N1 user-visible acceptance
+
+N1 passes only when the future authorized result demonstrates all of the following
+without requiring a preset WorkBuddy transcript:
+
+1. After verified PackageRoot resolution, the ordinary user is told that the
+   FFmpeg-ready basic path is available.
+2. Remotion, HyperFrames, external video generation, and TTS are represented by
+   honest current states such as ready, not configured, unavailable, deferred, or
+   connection not tested. Optional absence never blocks the basic path or becomes
+   an `OpenMontage capability insufficient` message.
+3. The user can continue immediately or select configuration. Provider/model,
+   credentials, privacy, cost/availability, consent, connection testing, and
+   recovery stay in WorkBuddy's conversation.
+4. A later natural-language request containing `金钥匙智能体` can inspect,
+   configure, change, or retest without a fixed configuration grammar.
+5. No user-visible internal path, hash, schema, environment name, argv, pipe, or
+   command is required; no credential value appears in a receipt or status relay.
+
+Local checks may prove contracts and secret handling, but only a real WorkBuddy
+result can prove this ordinary-user acceptance. Installing a capability, entering
+credentials, making a Provider call, or running WorkBuddy always needs separate
+action-time authorization.
+
+### M0 execution and review guard
+
+The future N1 task follows this order: verify the exact M0 commit and clean branch;
+perform N1.1 read-only audit; stop for Owner confirmation of the implementation
+branch name and exact write allowlist; implement only N1.2/N1.3 items authorized
+at that gate; run only named focused checks; obtain action-time authorization
+before any WorkBuddy/install/credential/Provider action; then obtain one
+independent zero-write result review after the real visible result.
+
+Stop without repair or expansion on an authority conflict, unexpected path,
+unverified PackageRoot, need to change WorkBuddy or another repository, need for a
+new dependency or generic framework, secret exposure risk, Shell-side Provider or
+production decision, broad scan, non-fast-forward requirement, or missing
+action-time authorization. Report the exact user-result impact and required Owner
+decision.
+
+### M0 documentation acceptance
+
+The earlier high-level planning commit `7443fb65349f87bce4d6b4d2de8d6b89c48da825`
+changed the approved 12-path documentation set. The current M0 authorization may
+change only these six authority/state paths:
 
 - `AGENT_GUIDE.md`
 - `PROJECT-STATE.md`
-- `README.md`
-- `README_zh-CN.md`
-- `PROJECT_CONTEXT.md`
-- `docs/workbuddy/v2/README.md`
-- `docs/workbuddy/v2/MODULE-DISPOSITION.md`
-- `docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`
 - `docs/workbuddy/v2/TASK-REGISTER.md`
 - `docs/workbuddy/v2/PROJECT-CHARTER.md`
 - `docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`
 - `docs/workbuddy/v2/DRIFT-GUARD.md`
 
-The six authority/state documents must agree; the six entry/context/contract
-documents must no longer report R3 or R4 as not started; historical R1-R4 and
-v2/v3/v4 facts must remain intact; `git diff --check` and one independent
-zero-write review must pass before one commit and ordinary push of the new branch.
-The historical `codex/workbuddy-shell-v2` ref must remain at `aa9cabfa...`.
+The six documents must agree; historical R1-R4 and v2/v3/v4 facts must remain
+intact; no implementation result may be claimed. Read-only Git/diff checks and one
+independent zero-write document review must pass before one commit and ordinary
+fast-forward push. Tests are forbidden in this M0 task. The historical
+`codex/workbuddy-shell-v2` ref must remain at `aa9cabfa...`.
 
 ## Product results
 
@@ -466,10 +556,11 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: CAPABILITY_ONBOARDING_PLANNING_RECORDED
+current_task: M0_CAPABILITY_ONBOARDING_EXECUTION_CONTRACT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
 capability_onboarding_implementation: NOT_AUTHORIZED
+implementation_branch_name: NOT_SELECTED
 workbuddy_or_media_in_current_task: FORBIDDEN
 closeout_review: APPROVE / P0=0 / P1=0 / P2=0
 r4_review: APPROVE / P0=0 / P1=0 / P2=0

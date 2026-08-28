@@ -85,6 +85,13 @@ plan in the Task Register.
 
 ## Next-phase planning
 
+M0 freezes the execution contract for the first next-phase result on
+`codex/workbuddy-capability-onboarding`. It records the evidence gap, dependency
+order, read-only route boundary, user-visible acceptance, anti-inflation stops,
+review method, and the gate that requires the Owner to confirm both the
+implementation branch name and exact write allowlist after the route audit. M0
+does not implement anything and no implementation branch exists.
+
 The next product path begins with capability readiness, not a claim that
 OpenMontage becomes incapable when an enhancement is absent. FFmpeg is the basic
 production baseline. WorkBuddy performs a light first-use inventory, tells the

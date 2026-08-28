@@ -15,6 +15,12 @@ authorized documentation branch for the next phase is
 `refs/heads/codex/workbuddy-capability-onboarding`. That branch records planning
 only until the Owner separately authorizes implementation.
 
+The M0 execution contract is frozen in `TASK-REGISTER.md`. M0 authorizes only the
+six authority/state documents, one independent zero-write document review, one
+commit, and an ordinary push on the documentation branch. It does not select or
+create an implementation branch, authorize code/tests/WorkBuddy, or turn its
+read-only route list into a write allowlist.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:

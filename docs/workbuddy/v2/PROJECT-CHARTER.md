@@ -101,3 +101,10 @@ rollback evidence. Historical R3 remains complete.
 The next-phase capability-onboarding plan is separate from the completed R1-R4
 baseline. Recording it does not authorize implementation, installation, Provider
 configuration, WorkBuddy execution, or media production.
+
+Its M0 contract is the Task Register's bounded plan for capability readiness and
+configuration entry. M0 requires a read-only route audit before any exact write
+allowlist is proposed, then a separate Owner decision on the implementation branch
+name and scope. Downstream clarification, production quality, revision/versioning,
+cross-machine maintenance, and broad Provider coverage must not be absorbed into
+that first implementation result.

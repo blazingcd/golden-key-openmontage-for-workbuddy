@@ -23,6 +23,14 @@ zero-write document review, one commit, and an ordinary push. It does not select
 or create an implementation branch, authorize code/tests/WorkBuddy, or turn its
 read-only route list into a write allowlist.
 
+The master-roadmap amendment was completed and pushed at
+`204d6b36c6b19b8a601f6d791aa2bd9609eabbd1`. The Owner then accepted the M1.1
+fact-audit conclusion and delegated its minimum preservation. That permits one
+documentation-only closeout affecting `AGENT_GUIDE.md`, `PROJECT-STATE.md`, the
+Task Register, Acceptance Matrix, and Drift Guard, followed by one independent
+zero-write document review, one commit, and one ordinary push. It does not
+authorize M1.2 or any implementation action.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -86,6 +94,13 @@ cross-machine lifecycle; S5 conditionally qualifies one user-needed enhancement.
 C1 broad Provider/model coverage and C2 automatic multi-Provider routing/direct
 publishing remain deferred. The complete dependency and acceptance authority is
 the Task Register.
+
+M1.1 is complete as a fact audit and its conclusions are Owner-accepted. It did
+not pass the strict zero-write process gate because an independent sub-audit
+created and then removed `D:\DevCache\Temp\m11-rg.txt`; the repository remained
+clean and the path no longer exists. M1.2 is not started or authorized. It must
+use the accepted M1.1 facts rather than repeat the audit or treat static capability
+definitions as current readiness.
 
 ## Four product results
 

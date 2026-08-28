@@ -170,6 +170,54 @@ after that audit is a hard stop. A different repository, new file, new dependenc
 or change to WorkBuddy itself requires a new Owner decision; it cannot be absorbed
 into M1.
 
+### M1.1 accepted audit record
+
+The Owner accepted the M1.1 factual conclusion on 2026-08-28 and delegated the
+decision to preserve the minimum downstream authority. This permits a
+documentation-only closeout on `codex/workbuddy-capability-onboarding`; it does
+not authorize M1.2, an implementation branch, code, tests, WorkBuddy, installation,
+credentials, Provider calls, or media.
+
+The closeout may change only `AGENT_GUIDE.md`, `PROJECT-STATE.md`, this Task
+Register, `ACCEPTANCE-MATRIX.md`, and `DRIFT-GUARD.md`; it receives one independent
+zero-write document review, one commit, and one ordinary push. Tests are forbidden.
+
+M1.1 state is
+`FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED`:
+
+- Locator revalidated the registered PackageRoot, Manifest/Lock/Guide identities,
+  Package private runtime, and FFmpeg. This proves the FFmpeg-ready basic route
+  exists; it does not prove a new WorkBuddy production result.
+- `runtime_prepare.py` contains bounded Remotion/HyperFrames detection, planning,
+  consent binding, and mechanical preparation, but the authorized production
+  route has no caller of `prepare_optional_capabilities`.
+- `user_entry.py` currently sends `local_capability_evidence=[]`. The verified
+  Package tool definition declares no required local capabilities and no allowed
+  Provider or secret environment names, so the current Launcher route does not
+  receive optional-capability facts and rejects undeclared evidence.
+- The CLI/Launcher capability-evidence wire and secret-suppression contracts exist
+  but are only latent transport capacity, not production onboarding proof.
+- Current WorkBuddy tool inventory, actual Remotion/HyperFrames readiness,
+  external video/TTS Providers, price, credentials, connectivity, first-use
+  continue/configure dialogue, later natural-language re-entry, and failure
+  recovery remain `NOT_VERIFIED`.
+- The verified Package Guide says to start with compact
+  `provider_menu_summary()` and deepen only when necessary, while the Package
+  onboarding skill says to start with full `support_envelope()` and
+  `provider_menu()`. M1.1 did not choose between conflicting Package instructions
+  or mutate the Package.
+- The independent sub-audit violated the absolute zero-write requirement by
+  creating and then deleting `D:\DevCache\Temp\m11-rg.txt`. Final verification
+  found the exact path absent and the repository clean. Preserve the deviation;
+  do not call M1.1 a strict zero-write pass.
+
+M1.2 is related but separate. It consumes the accepted facts to provide the
+first-use readiness explanation and continue/configure choice. It must not repeat
+M1.1, repair its process deviation, install/configure an enhancement, or claim
+that static definitions prove readiness. Before M1.2 implementation, the Package
+instruction conflict, implementation branch name, and exact write allowlist need
+separate Owner resolution. Any M1.1 branch/file suggestion remains advisory only.
+
 ### M1 user-visible acceptance
 
 M1 passes only when the future authorized result demonstrates all of the following
@@ -589,7 +637,7 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M0_NEXT_PHASE_MASTER_ROADMAP_AND_M1_EXECUTION_CONTRACT
+current_task: M1_1_ACCEPTED_FACT_AUDIT_DOCUMENTATION_CLOSEOUT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
 capability_onboarding_implementation: NOT_AUTHORIZED
@@ -598,6 +646,8 @@ workbuddy_or_media_in_current_task: FORBIDDEN
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
+m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
+m1_2: NOT_STARTED / NOT_AUTHORIZED
 closeout_review: APPROVE / P0=0 / P1=0 / P2=0
 r4_review: APPROVE / P0=0 / P1=0 / P2=0
 historical_formal_delivery: COMPLETE / RETAINED_AT_AA9CABFA0D4F75D93E22317466709B6BAD3BC3B4

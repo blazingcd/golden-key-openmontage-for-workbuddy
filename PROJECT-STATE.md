@@ -125,6 +125,23 @@ Provider/model coverage and C2 automatic routing/direct publishing remain
 deferred. Implementation and real-user acceptance require separate Owner
 authorization.
 
+### M1.1 accepted fact audit
+
+The Owner accepted the M1.1 factual conclusion. Locator revalidated the registered
+PackageRoot and FFmpeg baseline. The Shell already contains bounded Remotion/
+HyperFrames preparation, but no production caller uses it; `user_entry` sends an
+empty local-capability evidence list, and the verified Package tool definition
+declares no required local capabilities or Provider/secret allowlist. Current
+WorkBuddy tools, actual optional-capability readiness, external video/TTS
+Providers, prices, credentials, connectivity, first-use dialogue, natural-language
+re-entry, and recovery remain `NOT_VERIFIED`.
+
+M1.1 is `FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED`.
+The deviation is that its independent sub-audit created and removed the exact
+temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and the
+path was confirmed absent at closeout. M1.2 remains `NOT_STARTED / NOT_AUTHORIZED`.
+It must consume these facts; it is not a rerun or repair of the M1.1 report.
+
 ## Non-goals
 
 Do not preserve old route plans, packet/pre-review systems, extra Agents, MCP/

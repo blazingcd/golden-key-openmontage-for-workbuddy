@@ -96,6 +96,21 @@ by themselves.
   deferred until the minimum and Should paths have evidence and the Owner approves
   a separate product case.
 
+## M1.1 evidence and M1.2 entry guard
+
+- M1.1 facts are accepted, but its independent sub-audit created and removed
+  `D:\DevCache\Temp\m11-rg.txt`; retain
+  `ZERO_WRITE_DEVIATION_RECORDED` and never relabel it a strict zero-write pass.
+- M1.2 consumes M1.1 facts; it does not rerun M1.1 or repair that process record.
+- Existing Remotion/HyperFrames preparation is latent until a production caller
+  and trustworthy declared capability facts exist. Empty evidence and static
+  Package files must not be presented as current readiness.
+- Resolve the Package Guide versus onboarding inventory-order conflict before
+  M1.2 implementation. Do not choose by convenience, copy the full Provider menu,
+  mutate PackageRoot, or absorb a Package rebuild into M1.2.
+- M1.2 needs a separately confirmed implementation branch and exact write
+  allowlist. Audit suggestions are not authority.
+
 ## Result guard
 
 The historical `codex/workbuddy-shell-v2` baseline has exactly four product

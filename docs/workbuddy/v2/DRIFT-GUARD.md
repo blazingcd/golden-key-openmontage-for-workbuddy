@@ -48,6 +48,14 @@ by themselves.
   change, or retest capabilities. Do not require a fixed grammar or transcript.
 - Do not turn the inventory into broad disk scanning, a hard-coded capability
   universe, a Shell selector, or a second control plane.
+- The initial mainland external-video set is Seedance, Kling, Vidu, and MiniMax.
+  Seedance is the current default recommendation; the other three are core
+  alternatives. C1 begins beyond this set and cannot be used to omit them from M1.
+- This is a WorkBuddy product/display scope, not a fixed Shell Provider menu,
+  routing table, model-version list, or second control plane.
+- Current static Package routes for Seedance, Kling, and MiniMax do not prove live
+  readiness. No Vidu-specific direct adapter was found, so Vidu must remain an
+  explicit integration gap and must not be shown as ready/configurable.
 
 ## M0 roadmap and M1 execution guard
 
@@ -108,6 +116,11 @@ by themselves.
 - Resolve the Package Guide versus onboarding inventory-order conflict before
   M1.2 implementation. Do not choose by convenience, copy the full Provider menu,
   mutate PackageRoot, or absorb a Package rebuild into M1.2.
+- M1.2 owns one unified scan, ordinary-language explanation, honest state, and
+  continue/configure entry for the initial Provider set. M1.3 owns selected
+  configuration, consent, secret-safe handling, connection testing, recovery, and
+  later retest. Vidu Package work requires separate repository/branch/write
+  authorization before Vidu can become configurable.
 - M1.2 needs a separately confirmed implementation branch and exact write
   allowlist. Audit suggestions are not authority.
 
@@ -214,6 +227,10 @@ change product code, Skill files, tests, or external evidence.
 - Optional capability installation or use may be deferred and is not an R3
   prerequisite. First-use inventory and a natural-language configuration entry
   are planned separately and do not authorize implementation.
+- The 2026-08-29 Provider-scope correction authorizes only the six authority/state
+  documents, one independent zero-write review, one commit, and one ordinary push
+  on `codex/workbuddy-capability-onboarding`; it does not authorize M1 implementation
+  or Package/external mutation.
 - Do not add a second Agent, MCP, router, or generic framework.
 
 ## Git and cleanup guard

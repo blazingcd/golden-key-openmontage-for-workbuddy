@@ -95,6 +95,16 @@ change, or retest capabilities. The wake phrase remains the only fixed trigger;
 there is no fixed configuration command, transcript, Shell selector, broad scan,
 or second control plane.
 
+For the initial mainland-China external-video scope, WorkBuddy represents four
+Provider families in ordinary-user language: Seedance is the current default
+recommendation; Kling, Vidu, and MiniMax are core alternatives. These four belong
+to M1 and are not deferred C1 coverage. Current static Package inspection found
+direct routes for Seedance, Kling, and MiniMax but no Vidu-specific direct adapter.
+Vidu is therefore an explicit M1 integration dependency and must remain honestly
+unavailable for configuration until a separately authorized Package change closes
+and verifies the gap. Static adapters do not prove credentials, account permission,
+balance, connectivity, region, price, or current model availability.
+
 ### Master roadmap and dependency order
 
 The executable dependency is `M1.1 -> M1.2`, after which M2 may start. M1.3 is a
@@ -106,7 +116,7 @@ are complete.
 
 | Task | Priority | User problem and target result | Boundary and non-goals | Acceptance, dependency, and priority reason |
 |---|---|---|---|---|
-| M1 — first-use guidance and capability readiness | Must | A first-time user understands the product, the FFmpeg-ready basic path, relevant optional-capability states, and the choice to continue or configure. A selected enhancement can be configured, tested, deferred, changed, or retested through WorkBuddy. | No automatic installation of every enhancement, exhaustive Provider catalog, broad disk scan, fixed transcript or configuration language, credential exposure, Shell Provider/model selection, or second control plane. | M1.1–M1.4 below. Depends only on M0 plus separately approved implementation and action-time gates. It is first because the user must know the available path before committing to production choices. |
+| M1 — first-use guidance and capability readiness | Must | A first-time user understands the product, the FFmpeg-ready basic path, relevant optional-capability states, and the choice to continue or configure. The initial mainland external-video set is Seedance, Kling, Vidu, and MiniMax; a selected enhancement can be configured, tested, deferred, changed, or retested through WorkBuddy when its integration is actually ready. | No automatic installation of every enhancement, exhaustive Provider catalog beyond the initial set, broad disk scan, fixed transcript or configuration language, credential exposure, Shell Provider/model selection, false ready/configurable state, or second control plane. | M1.1–M1.4 below. Depends only on M0 plus separately approved implementation, Package, and action-time gates. It is first because the user must know the available path before committing to production choices. |
 | M2 — progressive clarification and material readiness | Must | One incomplete business request becomes a user-confirmed direction covering only genuinely relevant audience, platform, duration, style, brand, materials, budget, and delivery decisions. Missing materials have understandable continue, default, or supply-later choices. | No fixed questionnaire, exhaustive interrogation, hidden paid choice, user-visible internal mechanics, or WorkBuddy making unconfirmed high-impact creative/cost decisions. | Contract coverage for no/partial/complete material states, followed by separately authorized real WorkBuddy acceptance. Depends on M1.2; a user-selected enhancement must finish M1.3 before it is used. It follows readiness because production cannot be judged before the intended result is confirmed. |
 | M3 — stable production, basic quality, and final delivery | Must | The user receives a real playable and findable result, checkable receipt/location, honest basic quality result, and a final answer that is not delayed by optional persistence. | One default production specification first; no second aspect ratio, all-platform matrix, multi-Provider routing, revision system, or direct publishing. | Three separately started ordinary-user cases covering no supplied, partial, and complete user materials must all deliver playable results; one independent review follows the complete result set. Depends on completed M1.4 and M2. It is the minimum proof that success is not a one-off. |
 | S1 — preview, revision, version, and rollback | Should | The user previews a result, requests natural-language changes, receives a new version, and can return to an older version. | No general video editor, unlimited revision promise, request replay, or second edit control plane. | One initial version, two bounded revisions, and one rollback; all versions remain findable and playable. Depends on M3. |
@@ -114,7 +124,7 @@ are complete.
 | S3 — export, sharing, and later reuse | Should | The user receives an identifiable shareable file and can later reuse confirmed brand, project, material, or direction facts through natural language. | No default platform publishing, independent project-management product, or Shell-owned business state. | One export/share result and one later reuse result without manual internal-path assembly. Depends on M3; revision-history reuse also depends on S1. |
 | S4 — cross-machine install, upgrade, diagnosis, and rollback | Should; release-blocking before broad distribution | An ordinary user on another supported Windows machine can install or upgrade, retain user data, understand failure, and recover. | No cloud control plane, generic deployment framework, second Agent, or unrelated environment governance. | Clean-machine install, existing-user upgrade, diagnosis/recovery, rollback, and data-retention evidence. Depends on the stable M3 product and S3 data/reuse boundary. |
 | S5 — selected enhancement production qualification | Conditional Should | When a real user goal needs Remotion, HyperFrames, external video generation, TTS, or another enhancement, the selected path produces actual user value. | This is not first-use inventory. Do not install or qualify every capability merely for coverage. | One selected, consented enhancement reaches real production and user-visible review. Depends on M1.3 and M3. Activated only by demonstrated user need. |
-| C1 — broad Provider/model coverage | Could | Cover additional Providers, models, regions, price tiers, and installation combinations after demand is known. | No speculative full matrix or blanket installation. | Requires repeated unmet user demand and a separate cost/risk plan. Depends on successful selected paths under M1.3/S5. |
+| C1 — broad Provider/model coverage beyond the initial set | Could | Cover Providers beyond Seedance, Kling, Vidu, and MiniMax, plus broader model, region, price-tier, and installation combinations after demand is known. | No speculative full matrix or blanket installation. C1 cannot be used to defer or omit the four M1 Provider families. | Requires repeated unmet user demand and a separate cost/risk plan. Depends on successful selected paths under M1.3/S5. |
 | C2 — automatic multi-Provider routing, direct publishing, and generalized automation | Could | Reduce manual choice or delivery work only after the single path is stable. | Must not make Shell a Provider selector, workflow engine, or second control plane. | Requires stable M1–S5 evidence and a separately approved product case. It is last because it is not needed for first success and carries the highest drift risk. |
 
 Each task requires a separately confirmed result scope, exact branch boundary,
@@ -139,8 +149,8 @@ Likewise, one real historical video does not prove first-use capability onboardi
 | Task | Priority | User problem and target result | Boundary and non-goals | Acceptance and dependency |
 |---|---|---|---|---|
 | M1.1 — route and capability fact audit | Must step of M1 | Prevent the user from receiving invented or stale capability advice. Confirm the current WorkBuddy, verified Package, and Shell surfaces that can supply facts. | Read-only. No code, install, Provider call, credential read, broad disk scan, test, or WorkBuddy run. Do not decide the implementation before tracing the current route. | Produce a fact table, the smallest proposed write allowlist, dependencies, and hard stops. Depends only on the frozen M0 commit and a separately confirmed task/branch boundary. |
-| M1.2 — first-use readiness and continue/configure choice | Must step of M1 | Let a first-time user understand that FFmpeg-ready basic production works, see the status of Remotion, HyperFrames, external video generation, and TTS, then continue or choose configuration without technical operations. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No exhaustive Provider catalog, automatic installation, fixed transcript, fixed configuration language, or production redesign. | Local contract evidence must prove bounded fact flow and non-blocking optional absence. Depends on M1.1 and a separately approved exact write allowlist. |
-| M1.3 — selected configuration, retest, and recovery | Required product-capability step of M1; per-user use is conditional | Let the user configure only a selected enhancement, understand credentials/privacy/cost/availability, test it, and recover or defer without losing the FFmpeg path. Later requests containing `金钥匙智能体` can re-enter naturally. | Do not configure every Provider, expose secrets, store credentials in Shell output, make Shell choose Provider/model, or treat a failed optional test as product incapability. | One representative selected path must show consent before mutation, secret-safe factual relay, honest failure handling, defer/continue, and natural-language retest. Depends on M1.2 and explicit action-time authorization for any install, credential entry, or connection test. A particular user may execute it after M2 establishes relevance or defer it and stay on FFmpeg. |
+| M1.2 — first-use readiness and continue/configure choice | Must step of M1 | Let a first-time user understand that FFmpeg-ready basic production works, see the status of Remotion, HyperFrames, external video generation, and TTS, then continue or choose configuration without technical operations. External-video status must cover Seedance, Kling, Vidu, and MiniMax, with Seedance as the current default recommendation and Vidu honestly marked unavailable until integrated. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No exhaustive Provider catalog beyond the initial set, automatic installation, fixed transcript, fixed configuration language, live Provider mutation, or production redesign. | Local contract evidence must prove bounded fact flow, honest Provider-state distinctions, the configuration entry, and non-blocking optional absence. Depends on M1.1 and a separately approved exact write allowlist. |
+| M1.3 — selected configuration, retest, and recovery | Required product-capability step of M1; per-user use is conditional | Let the user configure only a selected enhancement, understand credentials/privacy/cost/availability, test it, and recover or defer without losing the FFmpeg path. Later requests containing `金钥匙智能体` can re-enter naturally. | Do not expose secrets, store credentials in Shell output, make Shell choose Provider/model, call an unintegrated Provider, or treat a failed optional test as product incapability. Supporting Vidu requires a separately authorized Package change; merely displaying Vidu in M1.2 is not integration. | The configuration contract must distinguish Seedance, Kling, Vidu, and MiniMax honestly; one representative selected path must show consent before mutation, secret-safe factual relay, honest failure handling, defer/continue, and natural-language retest. Depends on M1.2, closure of any selected Provider integration gap, and explicit action-time authorization for any install, credential entry, or connection test. A particular user may execute it after M2 establishes relevance or defer it and stay on FFmpeg. |
 | M1.4 — user-visible acceptance and closeout | Must step of M1 | Prove an ordinary user can understand readiness and make a choice without internal mechanics, while the product also supports one representative selected-configuration path. | No deterministic transcript, evaluator-invented step order, unrelated video-quality work, full CI, or second review system. | Focused local checks first; then, only with separate action-time authorization, real WorkBuddy evidence for M1.2 and one representative M1.3 path followed by one independent M1 result review. Depends on M1.2 and M1.3. |
 
 M2, M3, S1–S5, and C1–C2 may inform M1 interfaces but must not enter M1
@@ -197,8 +207,10 @@ M1.1 state is
   receive optional-capability facts and rejects undeclared evidence.
 - The CLI/Launcher capability-evidence wire and secret-suppression contracts exist
   but are only latent transport capacity, not production onboarding proof.
-- Current WorkBuddy tool inventory, actual Remotion/HyperFrames readiness,
-  external video/TTS Providers, price, credentials, connectivity, first-use
+- Static Package inspection found direct Seedance, Kling, and MiniMax routes and
+  no Vidu-specific direct adapter. Current WorkBuddy tool inventory, actual
+  Remotion/HyperFrames readiness, video/TTS Provider account permission, price,
+  credentials, balance, connectivity, regional/model availability, first-use
   continue/configure dialogue, later natural-language re-entry, and failure
   recovery remain `NOT_VERIFIED`.
 - The verified Package Guide says to start with compact
@@ -218,6 +230,33 @@ that static definitions prove readiness. Before M1.2 implementation, the Package
 instruction conflict, implementation branch name, and exact write allowlist need
 separate Owner resolution. Any M1.1 branch/file suggestion remains advisory only.
 
+### Initial mainland video-Provider decision
+
+Owner direction dated 2026-08-29 corrects the planning scope after read-only
+official-document and Package inspection:
+
+| Provider family | M1 product position | Current Package fact | Honest current state |
+|---|---|---|---|
+| Seedance | Current default recommendation | Direct mainland route exists | Static integration only; account, credentials, balance, connection, region, price, and current model availability remain unverified. |
+| Kling | Core goal-dependent alternative | Direct route exists | Static integration only; API entitlement and live availability remain unverified. |
+| Vidu | Core goal-dependent alternative | No Vidu-specific direct adapter found | Explicit M1 integration gap; not ready/configurable and not reducible to API-key entry. |
+| MiniMax | Core goal-dependent alternative | Direct mainland/global routes exist | Static integration only; account, credentials, balance, connection, price, and current model availability remain unverified. |
+
+All four belong to M1 rather than deferred C1 expansion. This product/display
+scope is not a Shell routing table, fixed Provider menu, or instruction to
+hard-code model versions.
+
+- M1.2 owns the single scan/explanation/configuration-entry experience. M1.3 owns
+  selected configuration, consent, secret-safe handling, connection testing,
+  recovery, and later retest. Any Vidu Package work requires a separate exact
+  repository/branch/write authorization before implementation.
+
+This correction authorizes only edits to the six authority/state documents, one
+independent zero-write document review, one commit, and one ordinary push on
+`codex/workbuddy-capability-onboarding`. It authorizes no implementation, Package
+change, test, WorkBuddy run, installation, credential entry, Provider call, or
+media production.
+
 ### M1 user-visible acceptance
 
 M1 passes only when the future authorized result demonstrates all of the following
@@ -229,12 +268,15 @@ without requiring a preset WorkBuddy transcript:
    honest current states such as ready, not configured, unavailable, deferred, or
    connection not tested. Optional absence never blocks the basic path or becomes
    an `OpenMontage capability insufficient` message.
-3. The user can continue immediately or select configuration. Provider/model,
+3. External-video guidance covers Seedance, Kling, Vidu, and MiniMax in
+   ordinary-user language. Seedance is the current default recommendation; Vidu
+   remains unavailable for configuration until its adapter gap is closed.
+4. The user can continue immediately or select configuration. Provider/model,
    credentials, privacy, cost/availability, consent, connection testing, and
    recovery stay in WorkBuddy's conversation.
-4. A later natural-language request containing `金钥匙智能体` can inspect,
+5. A later natural-language request containing `金钥匙智能体` can inspect,
    configure, change, or retest without a fixed configuration grammar.
-5. No user-visible internal path, hash, schema, environment name, argv, pipe, or
+6. No user-visible internal path, hash, schema, environment name, argv, pipe, or
    command is required; no credential value appears in a receipt or status relay.
 
 Local checks may prove contracts and secret handling, but only a real WorkBuddy
@@ -637,7 +679,7 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_1_ACCEPTED_FACT_AUDIT_DOCUMENTATION_CLOSEOUT
+current_task: INITIAL_MAINLAND_VIDEO_PROVIDER_SCOPE_DOCUMENTATION_CLOSEOUT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
 capability_onboarding_implementation: NOT_AUTHORIZED
@@ -648,7 +690,11 @@ next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
 m1_2: NOT_STARTED / NOT_AUTHORIZED
+initial_mainland_video_providers: SEEDANCE_DEFAULT / KLING_VIDU_MINIMAX_CORE_ALTERNATIVES
+vidu_package_integration: GAP / NOT_CONFIGURABLE
+provider_live_readiness: NOT_VERIFIED
 closeout_review: APPROVE / P0=0 / P1=0 / P2=0
+provider_scope_document_review: APPROVE / P0=0 / P1=0 / P2=0
 r4_review: APPROVE / P0=0 / P1=0 / P2=0
 historical_formal_delivery: COMPLETE / RETAINED_AT_AA9CABFA0D4F75D93E22317466709B6BAD3BC3B4
 current_followup_delivery: DOCUMENTATION_BRANCH

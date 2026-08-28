@@ -57,6 +57,16 @@ Later natural-language requests containing `金钥匙智能体` may inspect, con
 change, or retest capabilities. This is an open intent, not a fixed configuration
 language or second control plane.
 
+The initial mainland-China external-video set is Seedance, Kling, Vidu, and
+MiniMax. WorkBuddy uses Seedance as the current default recommendation and explains
+Kling, Vidu, or MiniMax as goal-dependent alternatives without making the user
+operate model identifiers or technical Provider menus. These four belong to M1;
+broad coverage beyond them remains C1. Current Package inspection shows direct
+routes for Seedance, Kling, and MiniMax but no Vidu-specific direct adapter, so
+Vidu remains an explicit integration dependency and cannot be presented as ready
+or configurable. Static adapter presence never proves live account or model
+availability.
+
 ## Four product results
 
 1. **Installable Shell product — COMPLETE.** The final PackageRoot/binding,
@@ -113,3 +123,9 @@ C1–C2 deferred expansion must not be absorbed into M1.
 M2 may begin after M1.2 first-use readiness. M1.3 is nevertheless a required M1
 product capability and representative acceptance path; only its use by a
 particular user is conditional. M3 requires completed M1.4 and M2.
+
+M1.2 owns the unified first-use scan, ordinary-language explanation, honest
+Provider state, and continue/configure entry. M1.3 owns only the selected
+configuration, consent, secret-safe handling, connection test, failure recovery,
+and later retest. Closing the Vidu adapter gap requires a separately authorized
+Package scope before Vidu can enter an M1.3 configurable state.

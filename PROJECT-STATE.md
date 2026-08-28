@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 — Current Project State
 
-Date: 2026-08-28
+Date: 2026-08-29
 
 The live authority is `docs/workbuddy/v2/TASK-REGISTER.md`. This file is a compact
 state snapshot, not a second task ledger.
@@ -106,6 +106,15 @@ ordinary user that basic production is ready when FFmpeg is ready, and presents
 relevant optional enhancements such as Remotion, HyperFrames, external video
 generation, and TTS as choices that may be configured now or later.
 
+The initial mainland-China external-video scope is now fixed for planning:
+Seedance is the default recommendation, while Kling, Vidu, and MiniMax are core
+alternatives. They belong to M1 rather than deferred C1 expansion. Current static
+Package evidence shows direct routes for Seedance, Kling, and MiniMax but no
+Vidu-specific direct adapter. Vidu is therefore an explicit M1 dependency, not a
+currently configurable capability. This inventory does not prove credentials,
+account permission, balance, connectivity, regional availability, or live model
+availability for any Provider.
+
 WorkBuddy remains the only conversation and decision owner. It may use its own
 current capabilities and the verified Package semantics to decide what is
 relevant, explain cost/privacy/credentials, obtain consent, and recover from a
@@ -121,9 +130,15 @@ or continue on FFmpeg without using an enhancement. M3 starts only after M1.4 an
 M2 are complete. S1–S4 then cover revision/version/rollback,
 one additional platform/aspect, export/share/reuse, and cross-machine lifecycle.
 S5 qualifies only an enhancement selected for a real user goal. C1 broad
-Provider/model coverage and C2 automatic routing/direct publishing remain
-deferred. Implementation and real-user acceptance require separate Owner
-authorization.
+Provider/model coverage beyond the initial four-Provider mainland set and C2
+automatic routing/direct publishing remain deferred. Implementation and real-user
+acceptance require separate Owner authorization.
+
+Owner authorization dated 2026-08-29 permits only this six-document Provider-scope
+correction, one independent zero-write document review, one commit, and one
+ordinary push on `codex/workbuddy-capability-onboarding`. It does not authorize
+M1.2/M1.3 implementation or any Package, test, WorkBuddy, installation,
+credential, Provider-call, or media action.
 
 ### M1.1 accepted fact audit
 
@@ -131,9 +146,11 @@ The Owner accepted the M1.1 factual conclusion. Locator revalidated the register
 PackageRoot and FFmpeg baseline. The Shell already contains bounded Remotion/
 HyperFrames preparation, but no production caller uses it; `user_entry` sends an
 empty local-capability evidence list, and the verified Package tool definition
-declares no required local capabilities or Provider/secret allowlist. Current
-WorkBuddy tools, actual optional-capability readiness, external video/TTS
-Providers, prices, credentials, connectivity, first-use dialogue, natural-language
+declares no required local capabilities or Provider/secret allowlist. Later static
+inspection found direct Package routes for Seedance, Kling, and MiniMax and no
+Vidu-specific direct adapter. Current WorkBuddy tools, actual optional-capability
+readiness, video/TTS Provider accounts, prices, credentials, balances,
+connectivity, regional/model availability, first-use dialogue, natural-language
 re-entry, and recovery remain `NOT_VERIFIED`.
 
 M1.1 is `FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED`.

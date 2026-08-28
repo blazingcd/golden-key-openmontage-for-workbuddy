@@ -31,6 +31,13 @@ Task Register, Acceptance Matrix, and Drift Guard, followed by one independent
 zero-write document review, one commit, and one ordinary push. It does not
 authorize M1.2 or any implementation action.
 
+Owner authorization dated 2026-08-29 permits one further documentation-only
+correction on `codex/workbuddy-capability-onboarding` to record the initial
+mainland-China video-Provider scope and its effect on M1.2/M1.3. It is limited to
+the six authority/state documents, one independent zero-write document review,
+one commit, and one ordinary push. It does not authorize implementation, Package
+changes, tests, WorkBuddy, installation, credentials, Provider calls, or media.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -76,6 +83,16 @@ change, or retest capabilities. Do not introduce a fixed command language,
 prescribed transcript, Shell Provider selector, broad disk scan, or second control
 plane.
 
+For the initial mainland-China external-video scope, WorkBuddy must represent
+Seedance, Kling, Vidu, and MiniMax in ordinary-user language. Seedance is the
+current default recommendation; Kling, Vidu, and MiniMax are core alternatives,
+not deferred long-tail coverage. Static Package inspection found direct routes for
+Seedance, Kling, and MiniMax but no Vidu-specific direct adapter. Therefore Vidu
+must remain an explicit M1 integration dependency and must not be shown as ready
+or configurable until that gap is closed and separately verified. Adapter presence
+never proves account permission, credentials, balance, connectivity, regional
+availability, or current model availability.
+
 ## Next-phase task map
 
 `R1` through `R4` are frozen historical result identifiers and must not be
@@ -92,8 +109,9 @@ revision/version/rollback; S2 adds one additional
 aspect/platform and safe-area quality; S3 adds export/share/reuse; S4 adds
 cross-machine lifecycle; S5 conditionally qualifies one user-needed enhancement.
 C1 broad Provider/model coverage and C2 automatic multi-Provider routing/direct
-publishing remain deferred. The complete dependency and acceptance authority is
-the Task Register.
+publishing remain deferred. C1 means coverage beyond the initial Seedance, Kling,
+Vidu, and MiniMax set, not permission to omit those four from M1. The complete
+dependency and acceptance authority is the Task Register.
 
 M1.1 is complete as a fact audit and its conclusions are Owner-accepted. It did
 not pass the strict zero-write process gate because an independent sub-audit

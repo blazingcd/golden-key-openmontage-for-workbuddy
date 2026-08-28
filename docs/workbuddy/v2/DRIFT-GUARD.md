@@ -120,7 +120,10 @@ non-fast-forward, or review finding is a hard stop.
 
 The one independent zero-write R4 review returned
 `APPROVE / P0=0 / P1=0 / P2=0`. Only the frozen commit, ordinary fast-forward,
-push, and final exact-ref verification remain authorized.
+push, and final exact-ref verification remained authorized. Reviewed commit
+`70cf63be51774de9151fb0fee24cf78591ff1993` was fast-forwarded and pushed. The
+Owner authorized one additional documentation-only completion record; it may not
+change product code, Skill files, tests, or external evidence.
 
 ## Engineering guard
 

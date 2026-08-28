@@ -219,7 +219,7 @@ created. V4 remains the single installed Golden Key Skill. Do not retry, repair
 the video, delete the memory, or roll back without fresh Owner authorization.
 Historical R3 remains complete.
 
-### R4 — Formal closeout: REVIEW_APPROVED / COMMIT_PENDING
+### R4 — Formal closeout: COMPLETE
 
 R3 already contains ordinary-user product acceptance. R4 records the final
 authority documents, evidence, and formal Git state only; it does not run
@@ -322,7 +322,20 @@ The one independent zero-write R4 review returned
 11-path scope, retained identities, single installed v4, honest known limits,
 WorkBuddy/Shell ownership, focused checks, and detached-commit to clean-formal-
 worktree fast-forward safety. No second review is required. Only the reviewed
-commit, ordinary fast-forward, push, and final exact-ref verification remain.
+commit, ordinary fast-forward, push, and final exact-ref verification remained at
+that point.
+
+#### Completion record
+
+The reviewed 11-path implementation closeout commit is
+`70cf63be51774de9151fb0fee24cf78591ff1993`. It was ordinarily fast-forwarded to
+`refs/heads/codex/workbuddy-shell-v2` and pushed; execution HEAD, formal worktree
+HEAD, local formal ref, remote-tracking ref, and remote advertised ref all matched,
+and both worktrees were clean. Because that commit still described the state as
+`COMMIT_PENDING`, the Owner explicitly authorized one additional
+documentation-only completion record in the six authority/state documents. This
+record changes no product code, Skill, tests, installation, media, or external
+evidence. R1-R4 are complete.
 
 ## Acceptance rules
 
@@ -375,12 +388,12 @@ formal_ref: refs/heads/codex/workbuddy-shell-v2
 result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
-result_4: REVIEW_APPROVED / COMMIT_PENDING
-current_task: R4_COMMIT_FAST_FORWARD_PUSH
+result_4: COMPLETE
+current_task: COMPLETE
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
 workbuddy_or_media_in_current_task: FORBIDDEN
 closeout_review: APPROVE / P0=0 / P1=0 / P2=0
 r4_review: APPROVE / P0=0 / P1=0 / P2=0
-formal_delivery: COMPLETE_WHEN_THIS_REGISTER_COMMIT_IS_EXACT_FORMAL_REF
+formal_delivery: COMPLETE / THIS_RECORD_COMMIT_IS_EXACT_FORMAL_REF
 ```

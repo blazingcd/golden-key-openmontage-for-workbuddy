@@ -51,10 +51,10 @@ Registration/Locator has returned and verified the PackageRoot and Guide identit
 3. **Real playable Golden Key video — COMPLETE.** WorkBuddy 5.3.14 with
    `Hy3 0.00x` produced and played a real 46.6-second MP4 through the ordinary-user
    path; the independent review passed with no findings.
-4. **Formal closeout — REVIEW_APPROVED / COMMIT_PENDING.** R3 already contains
-   ordinary-user product acceptance. The frozen R4 candidate passed its one
-   independent zero-write review; R4 records the final repository/project state
-   and does not run WorkBuddy or produce another video.
+4. **Formal closeout — COMPLETE.** R3 already contains ordinary-user product
+   acceptance. The frozen R4 candidate passed its one independent zero-write
+   review and was ordinarily fast-forwarded and pushed. R4 records the final
+   repository/project state and does not run WorkBuddy or produce another video.
 
 ## Acceptance philosophy
 

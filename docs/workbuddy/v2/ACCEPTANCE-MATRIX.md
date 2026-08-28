@@ -9,7 +9,7 @@ not a user failure.
 | R1 | Install the Shell product and complete its lifecycle without losing user data. | Final release identity; installation, Registration, Activation, Uninstallation, Reinstallation, and data-protection evidence. | `COMPLETE` |
 | R2 | Type a natural-language request containing `金钥匙智能体` and start a real WorkBuddy business interaction. | WorkBuddy 5.3.14 / Hy3; the single Skill and Shell actually invoked; concrete business reply; checkable LauncherReceipt. | `COMPLETE` |
 | R3 | Continue the same ordinary-user path to a real Golden Key production result. | One natural-language entry; real WorkBuddy execution; real playable video; checkable receipt and result location; no manual technical workaround. | `COMPLETE` |
-| R4 | Close the accepted product formally. | Final authority documents, retained evidence, formal branch state, and explicit closeout record. No new WorkBuddy run. | `REVIEW_APPROVED / COMMIT_PENDING` |
+| R4 | Close the accepted product formally. | Final authority documents, retained evidence, formal branch state, and explicit closeout record. No new WorkBuddy run. | `COMPLETE` |
 
 ## R1 evidence
 
@@ -109,8 +109,10 @@ video repair, Skill installation, Package rebuild, persistent-side-effect cleanu
 old-route work, or full CI.
 
 The frozen R4 candidate passed its one independent zero-write review with
-`APPROVE / P0=0 / P1=0 / P2=0`. Completion still requires the reviewed commit to
-be the exact local and remote formal ref by ordinary fast-forward.
+`APPROVE / P0=0 / P1=0 / P2=0`. Completion required the reviewed commit to be the
+exact local and remote formal ref by ordinary fast-forward. Reviewed commit
+`70cf63be51774de9151fb0fee24cf78591ff1993` reached both refs; this later
+Owner-authorized record changes documentation status only.
 
 ## Review rule
 

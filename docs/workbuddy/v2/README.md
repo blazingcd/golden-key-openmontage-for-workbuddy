@@ -28,13 +28,27 @@ result.
    `用金钥匙智能体给我做新店开业视频` and returned a concrete business reply plus
    a checkable LauncherReceipt. Skill ZIP SHA256
    `c96ec03522b744e8771eb16f22f5521102c4007af50ccb27d895efb82b1fe3a6`.
-3. **R3 — NEXT / NOT_STARTED:** same ordinary-user path to a real playable video
-   and receipt.
-4. **R4 — NOT_STARTED:** ordinary-user acceptance and formal closeout.
+3. **R3 — COMPLETE:** WorkBuddy `5.3.14` / `Hy3 0.00x` displayed and played a
+   real 46.6-second H.264/AAC MP4; independent review passed.
+4. **R4 — COMPLETE:** the reviewed formal closeout reached the historical branch
+   by ordinary fast-forward; no additional WorkBuddy or media run occurred.
 
 The R2 receipt state `INCOMPLETE / RESULT_POINTER_INVALID` only records that no
 video file was produced in that run. It is an R3 artifact condition, not an R2
 failure.
+
+## Planned next phase
+
+The completed historical baseline is `codex/workbuddy-shell-v2` at
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. The authorized planning branch is
+`codex/workbuddy-capability-onboarding`; implementation is not authorized.
+
+FFmpeg is the minimum production baseline. WorkBuddy will perform a light
+first-use inventory of relevant optional enhancements, explain that the basic
+path remains available, and let the user continue or configure. Later messages
+containing `金钥匙智能体` may naturally inspect, configure, change, or retest the
+same capabilities. Shell remains mechanical and does not select Providers,
+models, or renderers.
 
 ## Contract index
 
@@ -50,6 +64,6 @@ failure.
 
 Only the project Python at
 `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`
-may be used. Temporary files belong on D:. Remotion and HyperFrames may be
-deferred and are not R3 prerequisites. No second Agent, MCP, router, or generic
-framework is part of the product.
+may be used. Temporary files belong on D:. Optional enhancement installation or
+use may be deferred and does not block an FFmpeg-ready basic path. No second
+Agent, MCP, router, or generic framework is part of the product.

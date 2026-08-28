@@ -16,12 +16,26 @@ WorkBuddy Shell V2把腾讯 WorkBuddy 连接到经过验证的金钥匙版 OpenM
    `golden-key-openmontage` Skill 和 Shell，返回具体业务回复及可核对
    LauncherReceipt。Skill ZIP SHA256：
    `c96ec03522b744e8771eb16f22f5521102c4007af50ccb27d895efb82b1fe3a6`。
-3. **真实可播放金钥匙视频：NEXT / NOT_STARTED。** 沿同一普通用户路径生成
-   真实可播放视频和回执。
-4. **普通用户验收与正式收口：NOT_STARTED。**
+3. **真实可播放金钥匙视频：COMPLETE。** WorkBuddy `5.3.14` / `Hy3 0.00x`
+   已显示并播放真实 46.6 秒 H.264/AAC MP4，独立评审为
+   `P0/P1/P2=0/0/0`。
+4. **正式收口：COMPLETE。** 已审查的收口提交通过 ordinary fast-forward
+   到达历史正式分支；R4 没有再次运行 WorkBuddy 或生成视频。
 
 Result 2 回执中的 `INCOMPLETE / RESULT_POINTER_INVALID` 只表示当次没有生成
 视频文件。视频文件/result pointer 属于 Result 3，不否定 Result 2。
+
+## 下一阶段规划
+
+已完成的历史基线是 `codex/workbuddy-shell-v2` 分支上的
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`。后续规划在
+`codex/workbuddy-capability-onboarding` 分支进行，当前未授权实现。
+
+FFmpeg 是最低生产基线。首次使用时，WorkBuddy 将盘点与当前目标有关的可选
+增强能力，明确基础制作仍可直接进行，并允许用户选择继续，或者配置 Remotion、
+HyperFrames、外部生视频、TTS 等当前可用能力。之后，用户可用包含
+`金钥匙智能体` 的自然语言再次进入检查、配置、更换或重测流程。Shell 不选择
+Provider、模型或渲染器。
 
 ## 产品边界
 
@@ -46,6 +60,7 @@ WorkBuddy 入口和状态/回执传递；不选择生产内容、Pipeline/Stage�
 
 项目 Python 只能使用
 `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`。
-临时文件只放 D 盘，清理时不得删除用户数据。Remotion 和 HyperFrames 可以延期，
-不是 Result 3 前置条件。正式 Git 目标为 `refs/heads/codex/workbuddy-shell-v2`，
-只允许 ordinary fast-forward。
+临时文件只放 D 盘，清理时不得删除用户数据。可选增强能力的安装或使用可以延期，
+不阻塞 FFmpeg 已就绪的基础生产。历史 Git 基线保留在
+`refs/heads/codex/workbuddy-shell-v2`；当前规划分支为
+`refs/heads/codex/workbuddy-capability-onboarding`。

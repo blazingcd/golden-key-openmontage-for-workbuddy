@@ -39,6 +39,24 @@ control plane, or produces a false result.
 The external OpenMontage `AGENT_GUIDE.md` is read by WorkBuddy only after
 Registration/Locator has returned and verified the PackageRoot and Guide identity.
 
+## Capability readiness
+
+FFmpeg is the minimum production baseline. An ordinary user with an FFmpeg-ready
+installation can continue to basic production even when optional enhancements are
+not installed or configured.
+
+On first use, WorkBuddy performs a light capability inventory after PackageRoot
+verification. It explains the basic readiness state and relevant optional
+enhancements, including Remotion, HyperFrames, external video generation, and
+TTS, then lets the user continue or configure selected items. WorkBuddy owns the
+conversation, relevance, Provider/model choice, cost/privacy explanation,
+credentials, consent, connection testing, and recovery. Shell runtime preparation
+may only detect and apply an exactly approved mechanical plan.
+
+Later natural-language requests containing `金钥匙智能体` may inspect, configure,
+change, or retest capabilities. This is an open intent, not a fixed configuration
+language or second control plane.
+
 ## Four product results
 
 1. **Installable Shell product — COMPLETE.** The final PackageRoot/binding,
@@ -79,3 +97,7 @@ not close that stability work: it delivered a real result but still wrote option
 workspace memory before the final answer. The Owner nevertheless retains v4 for
 its improved first-call and delivery mechanics; the preserved R3 baseline remains
 rollback evidence. Historical R3 remains complete.
+
+The next-phase capability-onboarding plan is separate from the completed R1-R4
+baseline. Recording it does not authorize implementation, installation, Provider
+configuration, WorkBuddy execution, or media production.

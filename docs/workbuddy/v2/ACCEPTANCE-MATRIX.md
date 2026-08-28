@@ -114,6 +114,21 @@ exact local and remote formal ref by ordinary fast-forward. Reviewed commit
 `70cf63be51774de9151fb0fee24cf78591ff1993` reached both refs; this later
 Owner-authorized record changes documentation status only.
 
+## Next-phase planned acceptance — not yet authorized for execution
+
+These rows do not alter or reopen R1-R4. They describe the planned order after the
+historical baseline at `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
+
+| Planned result | Ordinary-user goal | Minimum observable evidence | Current state |
+|---|---|---|---|
+| Capability readiness and configuration entry | Understand that FFmpeg-ready basic production is available, see relevant optional enhancements, and choose to continue or configure without technical operations. | First-use inventory after verified PackageRoot; no optional absence reported as OpenMontage incapability; clear continue/configure choice; later natural-language inspect/configure/change/retest entry; no Shell Provider decision. | `PLANNED / IMPLEMENTATION_NOT_AUTHORIZED` |
+| Progressive business clarification | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | WorkBuddy asks only genuinely missing business questions, explains material/default implications, and keeps internal mechanics hidden. | `DEPENDENT / NOT_AUTHORIZED` |
+| Stable production, preview, and delivery | Receive a real result after choosing the basic or an approved enhanced path. | Real WorkBuddy result, playable output, checkable receipt and location, honest quality check, and no optional persistence delaying final delivery. | `DEPENDENT / NOT_AUTHORIZED` |
+
+Optional enhancement installation or use may be deferred. Its absence must not
+block the FFmpeg-ready basic path. Provider credentials, cost, privacy, and consent
+remain WorkBuddy-owned user decisions; Shell reports only mechanical facts.
+
 ## Review rule
 
 One executor and one independent result reviewer per result. Review occurs after a

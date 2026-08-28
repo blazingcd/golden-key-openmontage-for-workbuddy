@@ -27,7 +27,7 @@ PackageRoot and Guide identity are returned.
 |---|---|---|
 | Installation and lifecycle | `golden_key_openmontage_workbuddy/installer.py` | Assemble the PackageRoot, private toolchain, Manifest/Lock/binding, stamped Skill, and lifecycle operations; never decide production. |
 | Package Registration and Locator | `golden_key_openmontage_workbuddy/package_registration.py` | Validate explicit Package identity and locate one active Package; never scan, repair, download, launch, or choose fallback. |
-| Runtime preparation | `golden_key_openmontage_workbuddy/runtime_prepare.py` | Bounded optional-capability detection/consent/integration; never replace required Python/FFmpeg/Node or choose a renderer. |
+| Runtime preparation | `golden_key_openmontage_workbuddy/runtime_prepare.py` | Bounded optional-capability detection and application of an exactly approved integration plan; never own consent, replace required Python/FFmpeg/Node, or choose a renderer. |
 | Fixed mechanical invocation | `golden_key_openmontage_workbuddy/session_launcher.py`, `fixed_child.py` | Validate the approved binding, perform the fixed transport, and return facts; never become an Agent or production workflow. |
 | WorkBuddy entry | `golden_key_openmontage_workbuddy/user_entry.py`, `workbuddy_entry_cli.py`, `workbuddy-skill/golden-key-openmontage/` | Carry the original user request through the single WorkBuddy Skill; never require user technical operations or rewrite business intent. |
 | Status and result relay | `workbuddy_entry_cli.py`, `user_entry.py`, `session_launcher.py` | Return the mechanical status/receipt to WorkBuddy; never invent an Artifact or claim a result that was not produced. |
@@ -45,9 +45,22 @@ PackageRoot and Guide identity are returned.
    root `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\evidence\product2-workbuddy-user-flow-20260826`.
    `INCOMPLETE / RESULT_POINTER_INVALID` only means no video file was created; the
    file/result-pointer requirement belongs to R3.
-3. **R3 — NEXT / NOT_STARTED.** Same ordinary-user path, real playable video and
-   checkable receipt. Not part of the current document/repository closeout.
-4. **R4 — NOT_STARTED.** Ordinary-user acceptance and formal closeout.
+3. **R3 — COMPLETE.** WorkBuddy `5.3.14` / `Hy3 0.00x` displayed and played a
+   real 46.6-second H.264/AAC MP4; independent review passed with no findings.
+4. **R4 — COMPLETE.** The reviewed formal closeout reached the historical branch
+   by ordinary fast-forward and did not run WorkBuddy or produce another video.
+
+## Planned next phase
+
+The historical baseline is `codex/workbuddy-shell-v2` at
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. The planning branch is
+`codex/workbuddy-capability-onboarding`; implementation is not authorized.
+
+FFmpeg is the minimum production baseline. WorkBuddy owns a light first-use
+inventory of relevant optional enhancements and the natural-language choice to
+continue or configure. Shell runtime preparation stays limited to bounded
+detection, consent-bound integration, and factual relay. Optional absence does
+not block the FFmpeg-ready basic path.
 
 ## Working constraints
 
@@ -60,4 +73,6 @@ PackageRoot and Guide identity are returned.
 - Project Python is only
   `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
   Temporary files are D:-only and user data is preserved.
-- Remotion and HyperFrames may be deferred and are not R3 prerequisites.
+- Optional capability installation or use may be deferred and is not an R3
+  prerequisite. First-use inventory and later natural-language reconfiguration
+  belong to the planned WorkBuddy-owned next phase.

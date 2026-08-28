@@ -31,11 +31,30 @@ ordinary-user technical burden, creates a second control plane, or produces a fa
 result. Internal commands, tool choices, retries, and corrections are not failures
 by themselves.
 
+## Capability-readiness guard
+
+- FFmpeg is the minimum production baseline. When it is ready, basic production
+  remains available.
+- Remotion, HyperFrames, external video generation, TTS, and similar components
+  are optional enhancements. Missing or deferred enhancements must not be labeled
+  as OpenMontage incapability or block the basic path.
+- After verified PackageRoot lookup, WorkBuddy may use its own current tools and
+  Package semantics for a light first-use inventory. It presents relevant status
+  and lets the user continue or configure.
+- WorkBuddy owns relevance, Provider/model choice, credentials, cost/privacy,
+  consent, connection testing, and recovery. Shell remains limited to bounded
+  detection, exactly approved preparation, and factual relay.
+- Later messages containing `金钥匙智能体` may naturally inspect, configure,
+  change, or retest capabilities. Do not require a fixed grammar or transcript.
+- Do not turn the inventory into broad disk scanning, a hard-coded capability
+  universe, a Shell selector, or a second control plane.
+
 ## Result guard
 
-There are exactly four product results: R1 complete installable Shell; R2 complete
-natural-language WorkBuddy invocation/reply/receipt; R3 complete real playable
-video and receipt; R4 formal closeout only. A result's review
+The historical `codex/workbuddy-shell-v2` baseline has exactly four product
+results: R1 complete installable Shell; R2 complete natural-language WorkBuddy
+invocation/reply/receipt; R3 complete real playable video and receipt; R4 formal
+closeout only. A result's review
 must not import another result's gate. In particular, an absent video pointer in
 R2 is not an R2 failure; it is the R3 artifact boundary.
 
@@ -130,12 +149,17 @@ change product code, Skill files, tests, or external evidence.
 - Project Python only:
   `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
 - Temporary files only on D:, with exact post-review cleanup; preserve user data.
-- Remotion and HyperFrames are deferrable and are not R3 prerequisites.
+- Optional capability installation or use may be deferred and is not an R3
+  prerequisite. First-use inventory and a natural-language configuration entry
+  are planned separately and do not authorize implementation.
 - Do not add a second Agent, MCP, router, or generic framework.
 
 ## Git and cleanup guard
 
-- Formal ref: `refs/heads/codex/workbuddy-shell-v2`.
+- Historical baseline ref: `refs/heads/codex/workbuddy-shell-v2` at
+  `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`; do not advance it.
+- Authorized documentation ref:
+  `refs/heads/codex/workbuddy-capability-onboarding`.
 - Never force-push or `reset --hard`.
 - Only ordinary fast-forward may advance the formal ref.
 - Do not delete dirty worktrees, unmerged branches, branches with unique commits,

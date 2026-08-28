@@ -36,10 +36,13 @@ in that run. It is a Result 3 artifact condition, not a Result 2 failure.
 
 ## Repository state
 
-Formal delivery target: `refs/heads/codex/workbuddy-shell-v2`. The current Result 2
-integration and document closeout passed the one independent read-only review:
-`APPROVE / P0=0 / P1=0 / P2=0`. This state is delivered only when the commit
-containing this snapshot is the exact formal ref, reached by ordinary fast-forward.
+The completed historical delivery target is
+`refs/heads/codex/workbuddy-shell-v2` at
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. It is retained unchanged as the
+R1-R4 baseline. The authorized next-phase documentation branch is
+`refs/heads/codex/workbuddy-capability-onboarding`, created from that exact commit.
+No implementation, WorkBuddy run, media production, or capability installation is
+authorized by this planning record.
 
 ## Current task
 
@@ -77,12 +80,34 @@ an optional 978-byte workspace memory before the final answer. No extra user
 Skill was created. The Owner retains v4 for its improved first-call and
 final-delivery mechanics; the clipped output from one harness run is not treated
 as a Skill regression. The preserved R3 baseline remains rollback evidence.
-Historical Result 3 remains complete. Result 4 is authorized under the frozen
+Historical Result 3 and the formal Result 4 closeout are complete under the frozen
 plan in the Task Register.
+
+## Next-phase planning
+
+The next product path begins with capability readiness, not a claim that
+OpenMontage becomes incapable when an enhancement is absent. FFmpeg is the basic
+production baseline. WorkBuddy performs a light first-use inventory, tells the
+ordinary user that basic production is ready when FFmpeg is ready, and presents
+relevant optional enhancements such as Remotion, HyperFrames, external video
+generation, and TTS as choices that may be configured now or later.
+
+WorkBuddy remains the only conversation and decision owner. It may use its own
+current capabilities and the verified Package semantics to decide what is
+relevant, explain cost/privacy/credentials, obtain consent, and recover from a
+failed optional configuration. Shell runtime preparation remains bounded
+mechanical detection and exactly approved integration. Later natural-language
+requests containing `金钥匙智能体` may inspect, configure, change, or retest the
+same capabilities without a fixed configuration grammar.
+
+Planned order: capability readiness and configuration entry; progressive business
+clarification and material readiness; stable production, preview, and delivery.
+Implementation and real-user acceptance require separate Owner authorization.
 
 ## Non-goals
 
 Do not preserve old route plans, packet/pre-review systems, extra Agents, MCP/
-routers, renderer selection, HyperFrames/Remotion integration, or generic
-framework work in the current authority documents. Git history remains the place
-for provenance.
+routers, Shell-side renderer/Provider selection, or generic framework work. The
+planned WorkBuddy capability inventory and optional configuration entry do not
+authorize Shell production decisions or implementation. Git history remains the
+place for provenance.

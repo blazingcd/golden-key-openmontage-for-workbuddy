@@ -18,13 +18,29 @@ control plane.
    `用金钥匙智能体给我做新店开业视频`, returned a concrete business reply, and
    produced a checkable LauncherReceipt. Skill ZIP SHA256:
    `c96ec03522b744e8771eb16f22f5521102c4007af50ccb27d895efb82b1fe3a6`.
-3. **Real playable Golden Key video — NEXT / NOT_STARTED.** It must use the same
-   ordinary-user path and produce a real playable video plus receipt.
-4. **Ordinary-user acceptance and formal closeout — NOT_STARTED.**
+3. **Real playable Golden Key video — COMPLETE.** WorkBuddy `5.3.14` with
+   `Hy3 0.00x` displayed and played a real 46.6-second H.264/AAC MP4; independent
+   review passed with `P0/P1/P2=0/0/0`.
+4. **Formal closeout — COMPLETE.** The reviewed closeout reached the historical
+   formal branch by ordinary fast-forward. R4 did not run WorkBuddy or create a
+   second video.
 
 `INCOMPLETE / RESULT_POINTER_INVALID` in the Result 2 receipt only means that no
 video file was created in that run. A video file/result pointer belongs to Result 3
 and does not invalidate Result 2.
+
+## Planned next phase
+
+The completed historical baseline is `codex/workbuddy-shell-v2` at
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. Planning continues on
+`codex/workbuddy-capability-onboarding`; implementation is not yet authorized.
+
+FFmpeg is the minimum production baseline. WorkBuddy will inventory relevant
+optional enhancements on first use, explain that basic production remains ready,
+and let the user continue or configure Remotion, HyperFrames, external video
+generation, TTS, or other currently available capabilities. Later natural-language
+requests containing `金钥匙智能体` may reopen the same configuration flow. Shell
+does not choose Providers, models, or renderers.
 
 ## Product boundary
 
@@ -54,6 +70,7 @@ and [`docs/workbuddy/v2/DRIFT-GUARD.md`](docs/workbuddy/v2/DRIFT-GUARD.md).
 Use only the project Python at
 `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
 Temporary files belong on D: and must be cleaned up without deleting user data.
-Remotion and HyperFrames may remain deferred; they are not Result 3 prerequisites.
-Formal Git delivery targets `refs/heads/codex/workbuddy-shell-v2` and advances only
-by ordinary fast-forward.
+Optional capability installation or use may remain deferred; it does not block an
+FFmpeg-ready basic path. The historical Git baseline remains
+`refs/heads/codex/workbuddy-shell-v2`; the authorized planning branch is
+`refs/heads/codex/workbuddy-capability-onboarding`.

@@ -7,8 +7,11 @@ Read it together with `AGENT_GUIDE.md`, `PROJECT-CHARTER.md`,
 `ACCEPTANCE-MATRIX.md`, and `DRIFT-GUARD.md`. If any of the six documents conflict,
 stop. Old routes, chat statements, tests, and Git history cannot authorize work.
 
-Formal delivery ref: `refs/heads/codex/workbuddy-shell-v2`.
-No legacy route label or future lettered series is current.
+Completed historical baseline ref: `refs/heads/codex/workbuddy-shell-v2` at
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. Do not advance or rewrite it.
+Authorized next-phase documentation ref:
+`refs/heads/codex/workbuddy-capability-onboarding`, created from that exact
+baseline. No legacy route label or unlisted branch is current authority.
 
 ## Product contract
 
@@ -35,6 +38,75 @@ must not force a preset script. WorkBuddy may read the Package Guide, ask busine
 questions, call tools, retry, and adjust internal steps. These variations matter
 only if they directly cause product failure, add ordinary-user technical burden,
 create a second control plane, or produce a false result.
+
+## Next phase — capability onboarding: PLANNING RECORDED / IMPLEMENTATION NOT AUTHORIZED
+
+Owner authorization dated 2026-08-28 permits documentation, review, commit, and
+push of this bounded planning record on
+`refs/heads/codex/workbuddy-capability-onboarding`. It does not authorize product
+code, Skill changes, tests, WorkBuddy execution, capability installation, Provider
+configuration, media production, or external evidence mutation.
+
+### Product rule
+
+FFmpeg is the minimum production baseline. When FFmpeg is ready, the ordinary
+user can continue through a basic production path. Missing Remotion, HyperFrames,
+external video generation, TTS, or another optional enhancement must be reported
+as unconfigured, unavailable, awaiting consent, or awaiting a connection test;
+it must not be described as OpenMontage lacking production capability or block
+the FFmpeg-ready path.
+
+After verified PackageRoot lookup, WorkBuddy performs a light first-use capability
+inventory using its own current tools and verified Package semantics. It explains
+the basic path and relevant optional enhancements, then offers a natural choice:
+continue now or configure selected enhancements. WorkBuddy owns relevance,
+Provider/model selection, cost and privacy explanation, credentials, consent,
+connection testing, and recovery decisions. Shell owns only bounded mechanical
+detection, exactly approved preparation, and factual relay.
+
+Later messages containing `金钥匙智能体` may naturally ask to inspect, configure,
+change, or retest capabilities. The wake phrase remains the only fixed trigger;
+there is no fixed configuration command, transcript, Shell selector, broad scan,
+or second control plane.
+
+### Planned product sequence
+
+1. **Capability readiness and configuration entry.** On first use, show the
+   FFmpeg baseline and relevant optional-capability states; let the ordinary user
+   continue or configure. The same flow is available later through natural
+   language.
+2. **Progressive business clarification and material readiness.** Ask only for
+   information genuinely missing from the current business goal and explain any
+   defaults before production.
+3. **Stable production, preview, and delivery.** Produce and present a real result
+   without optional persistence delaying the user-visible answer.
+
+Each implementation step requires a separately confirmed scope, acceptance rule,
+branch boundary, and action-time authorization. This planning commit is not that
+authorization.
+
+### Documentation acceptance
+
+This planning record may change only these 12 paths:
+
+- `AGENT_GUIDE.md`
+- `PROJECT-STATE.md`
+- `README.md`
+- `README_zh-CN.md`
+- `PROJECT_CONTEXT.md`
+- `docs/workbuddy/v2/README.md`
+- `docs/workbuddy/v2/MODULE-DISPOSITION.md`
+- `docs/workbuddy/v2/PACKAGE-REGISTRATION-CONTRACT.md`
+- `docs/workbuddy/v2/TASK-REGISTER.md`
+- `docs/workbuddy/v2/PROJECT-CHARTER.md`
+- `docs/workbuddy/v2/ACCEPTANCE-MATRIX.md`
+- `docs/workbuddy/v2/DRIFT-GUARD.md`
+
+The six authority/state documents must agree; the six entry/context/contract
+documents must no longer report R3 or R4 as not started; historical R1-R4 and
+v2/v3/v4 facts must remain intact; `git diff --check` and one independent
+zero-write review must pass before one commit and ordinary push of the new branch.
+The historical `codex/workbuddy-shell-v2` ref must remain at `aa9cabfa...`.
 
 ## Product results
 
@@ -357,7 +429,10 @@ evidence. R1-R4 are complete.
 - Project Python only: `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
 - Temporary task files only on D:; remove exact temporary material after review;
   preserve user data.
-- Remotion and HyperFrames may be deferred and are not R3 prerequisites.
+- Optional capability installation or use may be deferred and is not an R3
+  prerequisite. The planned next phase still inventories relevant optional
+  capabilities early and offers WorkBuddy-owned configuration without blocking
+  the FFmpeg-ready basic path.
 - No second Agent, MCP, router, or generic framework.
 
 ## Repository closeout result
@@ -384,16 +459,20 @@ R3 result and current stability-candidate authorization are recorded above.
 ## Delivery state fields
 
 ```text
-formal_ref: refs/heads/codex/workbuddy-shell-v2
+historical_baseline_ref: refs/heads/codex/workbuddy-shell-v2
+historical_baseline_commit: aa9cabfa0d4f75d93e22317466709b6bad3bc3b4
+current_followup_ref: refs/heads/codex/workbuddy-capability-onboarding
 result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: COMPLETE
+current_task: CAPABILITY_ONBOARDING_PLANNING_RECORDED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
+capability_onboarding_implementation: NOT_AUTHORIZED
 workbuddy_or_media_in_current_task: FORBIDDEN
 closeout_review: APPROVE / P0=0 / P1=0 / P2=0
 r4_review: APPROVE / P0=0 / P1=0 / P2=0
-formal_delivery: COMPLETE / THIS_RECORD_COMMIT_IS_EXACT_FORMAL_REF
+historical_formal_delivery: COMPLETE / RETAINED_AT_AA9CABFA0D4F75D93E22317466709B6BAD3BC3B4
+current_followup_delivery: DOCUMENTATION_BRANCH
 ```

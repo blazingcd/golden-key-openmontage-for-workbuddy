@@ -9,8 +9,11 @@ user-visible acceptance, and `DRIFT-GUARD.md` defines stop and Git rules. If the
 six authority documents disagree, stop and report the conflict; do not infer from
 chat history, old plans, tests, or Git history.
 
-The only formal delivery ref is `refs/heads/codex/workbuddy-shell-v2`. Legacy
-route labels and future lettered series are not execution authority.
+The completed historical baseline is `refs/heads/codex/workbuddy-shell-v2` at
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`; do not advance or rewrite it. The
+authorized documentation branch for the next phase is
+`refs/heads/codex/workbuddy-capability-onboarding`. That branch records planning
+only until the Owner separately authorizes implementation.
 
 ## Product boundary
 
@@ -36,6 +39,26 @@ process, tool path, steps, wording, and intermediate conclusions may vary. A Ski
 or prompt must not force a preset script. WorkBuddy may read the Package Guide, ask
 reasonable business questions, call tools, retry, or adjust internal steps. These
 internal choices are not failures by themselves.
+
+## Capability readiness
+
+FFmpeg is the minimum production baseline. When it is ready, OpenMontage can
+produce a basic result; an absent optional enhancement must never be described as
+OpenMontage lacking production capability or block that basic path.
+
+On first use, after PackageRoot verification, WorkBuddy should perform a light
+capability inventory using its own current tools and the verified Package
+semantics. It explains the FFmpeg baseline and the status of relevant optional
+enhancements such as Remotion, HyperFrames, external video generation, and TTS,
+then lets the user continue immediately or configure selected enhancements.
+WorkBuddy owns the dialogue, relevance, Provider/model choice, cost/privacy
+explanation, consent, and recovery decision. The Shell may only perform bounded
+detection, exactly approved preparation, and factual status relay.
+
+Later requests containing `金钥匙智能体` may naturally ask to inspect, configure,
+change, or retest capabilities. Do not introduce a fixed command language,
+prescribed transcript, Shell Provider selector, broad disk scan, or second control
+plane.
 
 ## Four product results
 
@@ -117,7 +140,10 @@ completion record. No product, Skill, test, or external evidence changed.
 - Use only the project Python: `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
 - Put temporary files only on D: and remove exact temporary task material after
   verification. Preserve user data.
-- Remotion and HyperFrames may remain deferred; they are not Result 3 prerequisites.
+- Remotion, HyperFrames, external video generation, and TTS remain optional
+  enhancements. Their installation or use may be deferred, but first-use
+  inventory and a natural-language configuration entry belong to the planned
+  next phase. Their absence must not block an FFmpeg-ready basic path.
 - Do not add a second Agent, MCP, router, or general framework.
 - Never force-push or reset hard. Advance the formal branch only by ordinary
   fast-forward. Before destructive cleanup, resolve exact paths, ensure no

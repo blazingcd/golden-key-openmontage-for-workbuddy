@@ -130,4 +130,5 @@ a concrete business reply plus LauncherReceipt. R2's
 `INCOMPLETE / RESULT_POINTER_INVALID` only says that no video file was created;
 video/result-pointer validation belongs to R3. R3 consumes a verified PackageRoot
 through this unchanged Registration/Activation/Locator contract and does not add a
-new registration protocol. R4 is `NOT_STARTED`.
+new registration protocol. R3 and the formal R4 closeout are `COMPLETE`; neither
+changes this Registration/Activation/Locator contract.

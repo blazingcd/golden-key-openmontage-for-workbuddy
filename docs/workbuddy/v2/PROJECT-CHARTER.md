@@ -37,6 +37,11 @@ acceptable when actual WorkBuddy behavior, consent, secure secret entry, or
 reliable installation requires it. The user must still begin from ordinary natural
 language and must not operate internal technical mechanics.
 
+For future WorkBuddy runs, use an available `0.00x` model row first. Waiting may
+switch among available `0.00x` rows. Use a positive multiplier only when every
+`0.00x` row is unavailable, choosing the smallest multiplier first and recording
+the reason. Model switching does not authorize replay or a second task.
+
 The external OpenMontage `AGENT_GUIDE.md` is read by WorkBuddy only after
 Registration/Locator has returned and verified the PackageRoot and Guide identity.
 
@@ -154,6 +159,14 @@ is not proof that scanning exists. If the bounded probe cannot prove that fact
 path, the task stops; bounded Shell factual relay is a separately authorized
 fallback design, not work silently absorbed into the probe. M1.4 may integrate the
 M1 result but must not retroactively fill missing M1.2 evidence.
+
+The one authorized WorkBuddy-owned discovery probe did not prove that route.
+WorkBuddy reached the verified Package and attempted its compact summary, but the
+facts did not reach the user conversation; an ad-hoc file carrier is not an
+acceptable product path. A separately authorized zero-write audit may now find
+the smallest existing Shell mechanical factual-relay boundary. It must preserve
+WorkBuddy's explanation, relevance, Provider/model, consent, and recovery
+ownership and cannot itself authorize implementation.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

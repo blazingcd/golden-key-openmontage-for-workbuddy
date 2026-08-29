@@ -164,6 +164,12 @@ be removed. Dirty or unrecorded targets, user data, divergence, or a force
 requirement stop cleanup as `CLEANUP_BLOCKED`. M1 cannot be `COMPLETE` before the
 post-cleanup absence and retained-baseline checks pass.
 
+The Owner's current direction permits this corrected M1.2 contract to be frozen by
+editing only the six authority/state documents, obtaining one independent
+zero-write document review, creating one commit, and ordinarily pushing
+`codex/workbuddy-capability-onboarding`. It does not authorize code, tests,
+WorkBuddy, installation, credentials, Provider calls, media, merge, or cleanup.
+
 Natural-language interaction examples remain planning hypotheses. Real WorkBuddy
 evidence may require different wording, tools, or a bounded fixed confirmation
 sequence. That variation is acceptable when the ordinary user can still start and
@@ -186,19 +192,33 @@ re-entry, and recovery remain `NOT_VERIFIED`.
 M1.1 is `FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED`.
 The deviation is that its independent sub-audit created and removed the exact
 temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and the
-path was confirmed absent at closeout. M1.2 is
-`EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / NOT_AUTHORIZED`. It must
-consume these facts; it is not a rerun or repair of the M1.1 report.
+path was confirmed absent at closeout.
 
-M1.2 is a four-step local-contract task: use the verified Package Guide's
-compact-first inventory order; form honest ordinary-user states; let WorkBuddy
-offer continue, local-configuration, API-key-configuration, or defer handoffs;
-then run only the named focused local checks. The only future implementation write
-path is `workbuddy-skill/golden-key-openmontage/SKILL.md`; the existing focused
-test execution allowlist is `tests/workbuddy/test_workbuddy_entry_cli.py` and
-`tests/workbuddy/test_installer.py`. Real WorkBuddy evidence remains M1.4, while
-installation, credential storage, Provider calls, validation, recovery, and
-retest remain M1.3.
+M1.2 is `CORRECTED_EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_PAUSED /
+WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED`. The contract at
+`f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` incorrectly combined an authoritative
+inventory requirement with a Skill-only write allowlist, despite the accepted
+M1.1 facts that local evidence was empty, optional preparation had no production
+caller, and WorkBuddy's required discovery ability was unverified. Its tests could
+not prove the missing fact flow.
+
+The existing M1 implementation branch
+`codex/workbuddy-m1-capability-onboarding` is retained at
+`4cbf8ff3c15dd686a893842ca189ce49fa83023d`. That commit contains only partial
+Skill guidance and a mechanical task-state update. It is not M1.2 completion,
+must not be promoted, and does not authorize M1.3.
+
+The corrected contract first tests only the smallest existing candidate:
+WorkBuddy-owned discovery through the verified Package and the partial Skill
+guidance already on the retained implementation branch. Before that task resumes,
+the exact pushed planning head must be ordinarily merged into the clean retained
+implementation branch; no rebase, force, rewrite, or sibling branch is allowed.
+The later bounded readiness probe performs no media production, optional-capability
+installation, secret entry, or Provider call. A pass keeps Shell unchanged. A
+failure stops as `NOT_PROVED_WORKBUDDY_DISCOVERY`; Shell factual relay requires a
+new Owner decision and cannot be implemented as an automatic fallback.
+Installation, credential storage, Provider calls, validation, recovery, and retest
+remain M1.3 boundaries.
 
 ## Non-goals
 

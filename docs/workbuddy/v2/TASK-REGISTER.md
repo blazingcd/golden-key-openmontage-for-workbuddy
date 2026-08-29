@@ -154,9 +154,9 @@ Likewise, one real historical video does not prove first-use capability onboardi
 | Task | Priority | User problem and target result | Boundary and non-goals | Acceptance and dependency |
 |---|---|---|---|---|
 | M1.1 — route and capability fact audit | Must step of M1 | Prevent the user from receiving invented or stale capability advice. Confirm the current WorkBuddy, verified Package, and Shell surfaces that can supply facts. | Read-only. No code, install, Provider call, credential read, broad disk scan, test, or WorkBuddy run. Do not decide the implementation before tracing the current route. | Produce a fact table, the smallest proposed write allowlist, dependencies, and hard stops. Depends only on the frozen M0 commit and a separately confirmed task/branch boundary. |
-| M1.2 — first-use readiness and continue/configure choice | Must step of M1 | Let a first-time user understand that FFmpeg-ready basic production works, see honest Remotion, HyperFrames, external-video, and TTS states, then continue or enter local/API configuration without technical operations. Provider display comes from the verified Package; current static evidence includes Seedance, Kling, and MiniMax. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No unsupported Provider catalog, automatic mutation, fixed command language, or production redesign. Planning examples are not a required transcript; bounded ordered interaction is allowed when real WorkBuddy or safety requires it. | Local contract evidence must prove bounded fact flow, honest state, two configuration entries, and non-blocking optional absence. Depends on M1.1 and a separately approved exact write allowlist. |
+| M1.2 — first-use readiness and continue/configure choice | Must step of M1 | Let a first-time user understand that FFmpeg-ready basic production works, see honest Remotion, HyperFrames, external-video, and TTS states, then continue or enter local/API configuration without technical operations. Provider display comes from the verified Package; current static evidence includes Seedance, Kling, and MiniMax. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No unsupported Provider catalog, automatic mutation, fixed command language, or production redesign. Planning examples are not a required transcript; bounded ordered interaction is allowed when real WorkBuddy or safety requires it. | Evidence must prove the selected fact path, honest state formation, all four visible choices, the user's selected non-mutating boundary, and non-blocking optional absence. Skill wording/packaging alone is insufficient. Depends on M1.1 and separately approved branch synchronization plus action-time external paths. |
 | M1.3 — local and API-key configuration, retest, and recovery | Required product-capability step of M1; per-user use is conditional | Let the user configure a selected local capability or API-key Provider from natural language, understand impact, test it, and recover or defer without losing the FFmpeg path. | Local completion requires approved download, managed install, rediscovery, Package recognition, and actual invocation. API completion requires non-chat secure secret input/storage, exact allowlisting, no disclosure, and authorized connection testing. Do not make Shell choose or automatically fall back. | One representative local-install result and one representative API-key result must show consent, honest status, failure handling, defer/continue, and later natural-language retest. Wording and step order may adapt to real WorkBuddy. Depends on M1.2 and explicit action-time authorization. |
-| M1.4 — user-visible acceptance and closeout | Must step of M1 | Prove an ordinary user can understand readiness and complete or defer both configuration mechanisms without internal technical work. | No evaluator-invented transcript, unrelated production-quality work, full CI, or second review system. Necessary fixed safety/confirmation steps are allowed. | Focused local checks first; then separately authorized real WorkBuddy evidence for M1.2, one local M1.3 path, and one API-key M1.3 path, followed by one independent M1 result review. Depends on M1.2 and M1.3. |
+| M1.4 — user-visible acceptance and closeout | Must step of M1 | Prove an ordinary user can understand readiness and complete or defer both configuration mechanisms without internal technical work. | No evaluator-invented transcript, unrelated production-quality work, full CI, or second review system. Necessary fixed safety/confirmation steps are allowed. | Integrates already-proved M1.2 behavior with one local M1.3 path and one API-key M1.3 path, followed by one independent M1 result review. It cannot retroactively replace missing M1.2 fact-flow or choice evidence. Depends on M1.2 and M1.3. |
 
 M2, M3, S1–S5, and C1–C2 may inform M1 interfaces but must not enter M1
 implementation. Capability inventory is M1 Must work; production qualification of
@@ -231,66 +231,127 @@ M1.1 state is
 M1.2 is related but separate. It consumes the accepted facts to provide the
 first-use readiness explanation and continue/configure choice. It must not repeat
 M1.1, repair its process deviation, install/configure an enhancement, or claim
-that static definitions prove readiness. Owner direction dated 2026-08-29 freezes
-the following execution contract as documentation only; implementation remains
-not started and unauthorized.
+that static definitions prove readiness.
 
-### M1.2 execution contract
+### M1.2 corrected execution contract — FROZEN / IMPLEMENTATION PAUSED
 
-The single future M1 implementation branch is
-`codex/workbuddy-m1-capability-onboarding`. It is created only after separate
-action authorization, from the reviewed and pushed commit containing this
-contract. The same branch carries M1.2–M1.4 under separate step authorization,
-write allowlists, commits, checks, and review gates; no branch is created per
-subtask. This planning task does not create or switch to it. The historical
-`codex/workbuddy-shell-v2` ref remains frozen at
-`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
+The contract frozen at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` is retained
+as history but withdrawn as current execution authority. It required a compact
+authoritative inventory while allowing changes only to
+`workbuddy-skill/golden-key-openmontage/SKILL.md`. That was incompatible with the
+accepted M1.1 facts: `prepare_optional_capabilities` had no production caller,
+`user_entry.py` supplied `local_capability_evidence=[]`, and WorkBuddy's ability
+to perform Package discovery with its actual tools was `NOT_VERIFIED`. The named
+tests could prove existing entry/installer packaging and safety behavior but not
+the required inventory, state mapping, or user-choice handoff.
 
-M1.2 has exactly four execution steps:
+The subsequent implementation branch
+`codex/workbuddy-m1-capability-onboarding` exists at
+`4cbf8ff3c15dd686a893842ca189ce49fa83023d` in linked worktree
+`C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`.
+That commit adds only partial Skill guidance plus a mechanical task-state update.
+It is not M1.2 completion or `VERIFIED_LOCAL_CONTRACT`; it must not be merged into
+the formal ref or promoted as complete, deleted, rewritten, or used to authorize
+M1.3. The branch and worktree remain retained and paused.
 
-1. **Compact authoritative inventory.** After verified PackageRoot and Package
-   Guide identity, use registry discovery and read `provider_menu_summary()`
-   first. Read only relevant `provider_menu()` detail when the summary or user
-   choice needs it. `support_envelope()` is diagnostic or deeper evidence, not
-   the default first-user display. This resolves the M1.1 Guide/onboarding-order
-   conflict without changing the external Package.
-2. **Honest ordinary-user states.** Explain the FFmpeg-ready basic path and keep
-   installed, not installed, configurable, not configured, not verified,
-   connection failed, and connected states distinct. Static declarations never
-   become live readiness. Undeclared Provider entries remain absent.
-3. **WorkBuddy-owned choice and handoff.** Offer continue, local configuration,
-   API-key configuration, or defer in ordinary language. These are handoffs to
-   M1.3, not mutations: M1.2 does not download, install, store a secret, call a
-   Provider, validate a selected configuration, recover it, or retest it. Wording,
-   tools, and bounded confirmation order may vary with actual WorkBuddy behavior.
-4. **Focused local contract closeout.** Prove only the Skill instruction and
-   packaging contract, optional-absence non-blocking behavior, absence of Shell
-   decision-making, and unchanged secret/technical-burden boundaries. Record the
-   result as `VERIFIED_LOCAL_CONTRACT`, not real WorkBuddy acceptance. Real
-   WorkBuddy evidence is deferred to M1.4 and needs action-time authorization.
+M1.2's product result remains:
 
-The exact implementation write allowlist is one existing file:
+1. after verified PackageRoot and Guide resolution, obtain trustworthy current
+   facts about FFmpeg, relevant local enhancements, and Package-declared external
+   video/TTS capabilities;
+2. tell the ordinary user that the FFmpeg baseline can continue and translate
+   optional facts into honest, non-overstated states;
+3. let WorkBuddy actually offer and honor continue, local configuration, API-key
+   configuration, or defer without exposing internal technical mechanics;
+4. prove the fact source, state mapping, choice boundary, non-blocking behavior,
+   and absence of a Shell decision plane with evidence matched to each claim.
 
-- `workbuddy-skill/golden-key-openmontage/SKILL.md`
+The corrected contract selects the smallest existing candidate first:
+WorkBuddy-owned discovery through the verified Package, guided by the partial
+Skill change already committed at `4cbf8ff...`. Existing Package registry facts
+are reused; no Shell fact relay is built speculatively.
 
-The exact focused test execution allowlist is:
+#### Execution sequence
 
-- `tests/workbuddy/test_workbuddy_entry_cli.py`
-- `tests/workbuddy/test_installer.py`
-- `git diff --check --`
+1. **Authority and branch synchronization.** In a later separately authorized
+   execution task, verify the historical baseline remains `aa9cabfa...`, the
+   pushed planning ref is clean, and the retained implementation branch/worktree
+   are clean at `4cbf8ff...`. Then ordinary-merge the exact pushed planning head
+   into `codex/workbuddy-m1-capability-onboarding`. Preserve the partial Skill
+   candidate and resolve only the overlapping authority-document state. Do not
+   rebase, force, rewrite, or create a sibling branch.
+2. **Bounded candidate preparation.** Use the existing
+   `workbuddy-skill/golden-key-openmontage/SKILL.md` candidate; do not add product
+   code, another detector, dependency, file, or Provider catalog. Before any
+   external mutation, record the exact candidate archive, installed Skill,
+   WorkBuddy evidence, and D:-temporary paths and obtain action-time Owner
+   authorization. Preserve the installed v4 and R3 rollback identities and keep
+   exactly one Golden Key Skill installed.
+3. **One WorkBuddy readiness probe.** Start from an ordinary-language request
+   containing `金钥匙智能体` that asks what video capabilities are ready and what
+   may need configuration, for example `用金钥匙智能体看看我现在可以做哪些视频，还需要配置什么。`
+   This is an example, not a fixed transcript. Exact wording, tools, and follow-up
+   order are not fixed. The probe verifies PackageRoot/Guide identity, observes whether
+   WorkBuddy can obtain current Package facts, and records the ordinary-user
+   explanation plus the visible continue/local/API-key/defer choices. The user
+   may select one non-mutating boundary; unselected choices need only be clearly
+   available. Do not produce media, install an optional capability, enter a
+   secret, call a Provider, test a connection, or begin M1.3.
+4. **Route decision and closeout.** If the complete M1.2 acceptance row is
+   observed, select WorkBuddy-owned discovery, keep Shell unchanged, obtain one
+   independent zero-write result review, and record M1.2 completion on the
+   implementation branch. The single probe may therefore both select the route
+   and close M1.2. If facts are missing, stale, overstated, or not observable,
+   record `NOT_PROVED_WORKBUDDY_DISCOVERY` and stop. Do not retry, repair the
+   Skill, change Shell, or start M1.3 in that task. A separate Owner decision must
+   authorize any smallest-Shell-relay audit, write set, checks, and new probe.
 
-The test files are execution scope, not write scope. Any need to modify them, add
-a file or dependency, change `run.ps1`, `user_entry.py`, `runtime_prepare.py`,
-`workbuddy_entry_cli.py`, `session_launcher.py`, `package_registration.py`,
-`installer.py`, `fixed_child.py`, the verified Package, WorkBuddy, another
-repository, a protocol, or a receipt is an immediate hard stop requiring a new
-Owner decision. The same hard stop applies to broad disk scanning, hard-coded
-Provider menus, installation, credential handling, Provider calls, media, or a
-real WorkBuddy run.
+#### Paths, writes, and evidence
 
-This contract freeze may change only the six authority/state documents, receives
+- Planning worktree:
+  `C:\Users\blazi\.codex\worktrees\1e09\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`;
+  documentation authority only.
+- Retained implementation worktree:
+  `C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`;
+  later execution occurs only here.
+- Existing product candidate:
+  `workbuddy-skill/golden-key-openmontage/SKILL.md` at `4cbf8ff...`; the route
+  probe has no new product-source write allowlist.
+- The branch-synchronization merge may resolve only
+  `docs/workbuddy/v2/TASK-REGISTER.md` if it conflicts. A successful M1.2
+  closeout may update only `AGENT_GUIDE.md`, `PROJECT-STATE.md`, this Task
+  Register, `ACCEPTANCE-MATRIX.md`, and `DRIFT-GUARD.md`, followed by
+  `git diff --check`, one commit, and an ordinary push of the implementation
+  branch. These later writes remain unauthorized now.
+- PackageRoot, Package files, current installed Skill, R3/v3/v4 archives, and
+  WorkBuddy data are read-only unless an exact action-time path and mutation are
+  separately approved. Any new task-owned temporary directory must be on D:,
+  recorded before use, and removed after the result review.
+
+#### Direct acceptance and hard stops
+
+The probe passes only when evidence shows: verified PackageRoot/Guide; trustworthy
+current FFmpeg/local/Provider/TTS facts reached WorkBuddy; the ordinary user is
+told the FFmpeg basic path can continue; optional states are honest and
+non-blocking; continue, local configuration, API-key configuration, and defer are
+visible; the selected non-mutating choice is honored; no internal mechanics or
+secret appear; and Shell makes no Provider, model, relevance, or recovery
+decision. Skill text, static adapters, packaging, old tests, or a UI claim without
+the fact flow do not substitute for this evidence.
+
+Stop before mutation on ref/worktree drift, an unverified PackageRoot, an
+unresolved exact external path, a second installed Golden Key Skill, need for a
+new source write, test, dependency, Package/WorkBuddy change, secret handling,
+optional installation, Provider call, media action, or Shell decision. The
+corrected contract state is
+`CORRECTED_EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_PAUSED /
+WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED`.
+
+The Owner's current direction authorizes only this six-document contract freeze,
 one independent zero-write document review, one commit, and one ordinary push on
-`codex/workbuddy-capability-onboarding`. It authorizes no implementation or test.
+`codex/workbuddy-capability-onboarding`. It authorizes no code, test, WorkBuddy,
+install, credential, Provider, media, merge, cleanup, or implementation-branch
+push action.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -393,12 +454,13 @@ action-time authorization.
 
 ### M0 execution and review guard
 
-The future M1 task follows this order: verify the exact M0 commit and clean branch;
-perform M1.1 read-only audit; stop for Owner confirmation of the implementation
-branch name and exact write allowlist; implement only M1.2/M1.3 items authorized
-at that gate; run only named focused checks; obtain action-time authorization
-before any WorkBuddy/install/credential/Provider action; then obtain one
-independent zero-write result review after the real visible result.
+The future M1 task follows the frozen corrected sequence above: synchronize the
+retained implementation branch with the exact pushed planning head; prepare only
+the existing Skill candidate; obtain action-time authorization for exact external
+paths; run one bounded WorkBuddy readiness probe; then either close M1.2 after one
+independent result review or stop as `NOT_PROVED_WORKBUDDY_DISCOVERY`. A failed
+probe may not turn into Skill repair, Shell relay, installation, Provider work, or
+M1.3 without a new Owner decision.
 
 Stop without repair or expansion on an authority conflict, unexpected path,
 unverified PackageRoot, need to change WorkBuddy or another repository, need for a
@@ -786,14 +848,14 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_VERIFIED_LOCAL_CONTRACT
+current_task: M1_2_CORRECTED_EXECUTION_CONTRACT_DOCUMENTATION_CLOSEOUT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
-capability_onboarding_implementation: M1_2_VERIFIED_LOCAL_CONTRACT
-implementation_branch_name: codex/workbuddy-m1-capability-onboarding / ACTIVE
+capability_onboarding_implementation: PARTIAL_SKILL_GUIDANCE_ONLY / PAUSED / NOT_AUTHORIZED_TO_CONTINUE
+implementation_branch_name: codex/workbuddy-m1-capability-onboarding / EXISTS_AT_4CBF8FF3C15DD686A893842CA189CE49FA83023D
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
-implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
-task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-3ab9
+implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_PAUSED
+task_owned_temporary_paths: NONE / RECORD_EACH_EXACT_PATH_AT_CREATION
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
 workbuddy_or_media_in_current_task: FORBIDDEN
@@ -801,10 +863,14 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: VERIFIED_LOCAL_CONTRACT / REAL_WORKBUDDY_ACCEPTANCE_DEFERRED_TO_M1_4
-m1_2_write_allowlist: workbuddy-skill/golden-key-openmontage/SKILL.md
-m1_2_focused_tests: test_workbuddy_entry_cli.py / test_installer.py / git_diff_check
-m1_2_execution_contract_document_review: APPROVE / P0=0 / P1=0 / P2=0
+m1_2: CORRECTED_EXECUTION_CONTRACT_FROZEN / PARTIAL_SKILL_GUIDANCE_ONLY / IMPLEMENTATION_PAUSED / WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED
+m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
+m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
+m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
+m1_2_execution_contract_document_review: HISTORICAL_APPROVE / FEASIBILITY_GAP_NOT_DETECTED / NOT_CURRENT_AUTHORITY
+m1_2_corrected_route: WORKBUDDY_PACKAGE_DISCOVERY_FIRST / ONE_BOUNDED_PROBE / SHELL_FALLBACK_REQUIRES_NEW_OWNER_DECISION
+m1_2_probe_product_write_allowlist: NONE / EXISTING_SKILL_CANDIDATE_ONLY
+m1_2_probe_result_review: NOT_STARTED / ACTION_NOT_AUTHORIZED
 package_declared_video_providers: SEEDANCE_DEFAULT / KLING_MINIMAX_CURRENT_STATIC
 provider_live_readiness: NOT_VERIFIED
 configuration_mechanisms: LOCAL_INSTALL_AND_API_KEY

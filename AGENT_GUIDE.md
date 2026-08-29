@@ -65,7 +65,7 @@ branch, and task-owned temporary directories be removed. M1 is not `COMPLETE`
 until that cleanup is verified. This documentation task performs no branch,
 worktree, directory, implementation, test, or external action.
 
-The Owner's current direction accepts the M1.2 hard stop, authorizes exact cleanup
+The Owner's earlier hard-stop direction accepted the M1.2 hard stop and authorized exact cleanup
 of its two task-owned side-effect paths, permits one six-document status/model-
 priority correction with one independent zero-write review, one commit, and one
 ordinary planning-branch push, and authorizes one separate read-only audit of the
@@ -73,7 +73,7 @@ smallest existing Shell factual-relay route. It does not authorize Shell or Skil
 implementation, tests, another WorkBuddy run, installation, credentials, Provider
 calls, media, implementation-branch push, rollback, or branch/worktree deletion.
 
-The Owner's subsequent direction accepts that audit's
+The Owner's earlier relay-only direction accepted that audit's
 `PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY` conclusion and authorizes two consecutive
 steps without another approval pause. First, update only the six authority/state
 documents, obtain one independent zero-write document review, commit once, and
@@ -85,6 +85,9 @@ scope checks, obtain one independent zero-write implementation review, commit
 once, and ordinarily push the implementation branch. This authorizes no
 WorkBuddy rerun, Skill install/build, optional installation, credential,
 Provider, media, M1.3, extra source file, new protocol, or branch/worktree cleanup.
+Those relay-only limits do not override the later package-size checkpoint below;
+that checkpoint is the sole successor-Package exception and does not reopen the
+relay files or WorkBuddy.
 
 The earlier 2026-08-29 action-time direction completed the immutable final
 PackageRoot/Release, registration/activation, and one bound Skill replacement.
@@ -102,7 +105,7 @@ workspace, creating a relay file, persistent memory or Skill creation, optional
 installation, secret handling, Provider/media action, M1.3, fallback, retry, or
 technical burden for the ordinary user.
 
-The Owner's current direction authorizes preparation only up to the next
+The Owner's earlier consumer-correction direction authorized preparation only up to the next
 WorkBuddy action gate: update only the six authority/state documents, obtain one
 independent zero-write document review, commit once, and ordinarily push the
 planning branch; ordinarily merge that exact head into the retained M1 branch;
@@ -112,7 +115,9 @@ valid LauncherReceipt `result_pointer` and consumes the bounded
 workspace copy; build and verify one newly named, uninstalled Skill ZIP bound to
 the already active final PackageRoot; obtain one independent zero-write candidate
 review; commit once and ordinarily push the implementation branch. Do not rebuild,
-reregister, or reactivate the PackageRoot.
+reregister, or reactivate the PackageRoot within that gate. The later
+package-size checkpoint is the sole successor-Package exception and does not
+authorize WorkBuddy or Skill mutation.
 
 That preparation produced the candidate
 `golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`, SHA256
@@ -140,6 +145,28 @@ That correction is now pushed at implementation commit
 `5229964ac681d7b34949480326e6f24a0c53913f`. The newly named candidate is
 independently reviewed `APPROVE / P0=0 / P1=0 / P2=0` and remains uninstalled.
 M1.2 still requires a separately authorized WorkBuddy user-result retest.
+
+The Owner's later 2026-08-29 package-size direction authorizes one bounded
+distribution checkpoint without reopening the WorkBuddy gate. Read-only evidence
+measured the current Release at 207.46 MiB and found that the complete portable
+Remotion route cannot meet the Owner's 80 MiB compressed-increment ceiling: the
+installed external Remotion 4.0.507 core/CLI alone is 66.64 MiB as a level-9 ZIP,
+while the locked Chrome Headless Shell archive alone is 115.33 MiB. Therefore do
+not bundle Remotion into the base Package; M1.3 retains a consent-controlled,
+managed on-demand installation route.
+
+The same direction permits a six-document contract update, one independent
+zero-write document review, one commit, and one ordinary planning-branch push;
+then an ordinary merge into the existing M1 implementation branch, changes only
+to `golden_key_openmontage_workbuddy/installer.py` and
+`tests/workbuddy/test_installer.py`, focused installer checks, one new immutable
+unregistered/unactivated size candidate, one independent zero-write review, one
+commit, and one ordinary implementation-branch push. The implementation may
+remove only proved-unused FFmpeg `ffplay.exe` and bundled HTML documentation while
+retaining ffmpeg, ffprobe, licenses, README, and presets. Do not prune Python,
+Node, or Package source speculatively. Do not mutate or replace the active
+PackageRoot, install a Skill, run WorkBuddy, handle credentials, call a Provider,
+or produce media.
 
 ## Product boundary
 

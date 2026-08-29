@@ -32,6 +32,37 @@ stdout. If the first call fails, read the managed
 `Results/golden-key-openmontage/latest-launcher-failure.json` diagnostic when it
 is present; never replay the user's request merely to recover transport output.
 
+## First-use capability readiness
+
+After the fixed entry returns a verified PackageRoot and verified Package Guide
+identity, establish capability readiness before the first production decision in
+the conversation. Use WorkBuddy's current tools and that verified Guide to
+discover the Package registry, then read `provider_menu_summary()` first. Read
+`provider_menu()` only for a relevant item when the compact summary or the user's
+choice needs more detail. Use `support_envelope()` only for necessary diagnosis
+or detail, not as the default first-use display. Do not dump raw registry data.
+
+Tell the user that the basic production path remains available whenever FFmpeg
+is reported ready. Show only optional capabilities and Providers declared by the
+verified Package, and keep installed, not installed, configurable, not
+configured, not verified, connection failed, and connected states distinct. A
+static declaration or adapter does not prove credentials, account permission,
+balance, connectivity, regional availability, price, or current model
+availability. Missing optional capability must not block the FFmpeg path or be
+described as OpenMontage lacking production capability.
+
+Offer natural-language choices to continue with the FFmpeg path, configure a
+selected local capability, configure a selected API-key Provider, or handle it
+later. WorkBuddy owns relevance, Provider/model choice, cost and privacy
+explanation, consent, and recovery; wording may vary, and a bounded confirmation
+step is allowed when needed for safe or reliable completion. Treat later messages
+containing `金钥匙智能体` that ask to inspect, configure, change, or retest
+capabilities as ordinary intent, not a fixed command language. In this readiness
+step, do not install anything, request or save a secret in ordinary chat, call a
+Provider, test a connection, validate a selected configuration, or retest it;
+the user's selection is only a handoff to the separately authorized
+configuration path.
+
 The fixed entry owns package lookup, release binding, validation, lifecycle
 state, and receipt delivery. Do not ask the user or model for commands, JSON,
 paths, hashes, environment names, evidence records, or internal controls. Do

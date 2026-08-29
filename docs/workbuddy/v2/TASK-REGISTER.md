@@ -786,14 +786,14 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_BRANCH_LIFECYCLE_AND_CLEANUP_DOCUMENTATION_CLOSEOUT
+current_task: M1_2_VERIFIED_LOCAL_CONTRACT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
-capability_onboarding_implementation: NOT_AUTHORIZED
-implementation_branch_name: codex/workbuddy-m1-capability-onboarding / CONFIRMED_NOT_CREATED
+capability_onboarding_implementation: M1_2_VERIFIED_LOCAL_CONTRACT
+implementation_branch_name: codex/workbuddy-m1-capability-onboarding / ACTIVE
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
-implementation_worktree_path: NOT_CREATED / RECORD_EXACT_ABSOLUTE_PATH_AT_CREATION
-task_owned_temporary_paths: NONE / RECORD_EACH_EXACT_PATH_AT_CREATION
+implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2
+task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-3ab9
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
 workbuddy_or_media_in_current_task: FORBIDDEN
@@ -801,7 +801,7 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / NOT_AUTHORIZED
+m1_2: VERIFIED_LOCAL_CONTRACT / REAL_WORKBUDDY_ACCEPTANCE_DEFERRED_TO_M1_4
 m1_2_write_allowlist: workbuddy-skill/golden-key-openmontage/SKILL.md
 m1_2_focused_tests: test_workbuddy_entry_cli.py / test_installer.py / git_diff_check
 m1_2_execution_contract_document_review: APPROVE / P0=0 / P1=0 / P2=0

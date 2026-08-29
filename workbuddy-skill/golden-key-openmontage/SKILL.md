@@ -36,11 +36,15 @@ is present; never replay the user's request merely to recover transport output.
 
 After the fixed entry returns a verified PackageRoot and verified Package Guide
 identity, establish capability readiness before the first production decision in
-the conversation. Use WorkBuddy's current tools and that verified Guide to
-discover the Package registry, then read `provider_menu_summary()` first. Read
-`provider_menu()` only for a relevant item when the compact summary or the user's
-choice needs more detail. Use `support_envelope()` only for necessary diagnosis
-or detail, not as the default first-use display. Do not dump raw registry data.
+the conversation. When LauncherReceipt reports `result_pointer.valid=true`, read
+that exact managed handoff and consume its bounded `package_capability_summary`
+first. Keep it in the managed Results location: do not copy or rewrite the
+handoff or summary into the task workspace and do not create a relay file. Treat
+an absent, invalid, failed, or `NOT_VERIFIED` summary honestly; do not invent a
+ready state. Read `provider_menu()` only for a relevant item when the summary or
+the user's choice needs more detail. Use `support_envelope()` only for necessary
+diagnosis or detail, not as the default first-use display. Do not dump raw
+registry data.
 
 Tell the user that the basic production path remains available whenever FFmpeg
 is reported ready. Show only optional capabilities and Providers declared by the

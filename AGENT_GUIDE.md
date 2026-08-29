@@ -86,32 +86,38 @@ once, and ordinarily push the implementation branch. This authorizes no
 WorkBuddy rerun, Skill install/build, optional installation, credential,
 Provider, media, M1.3, extra source file, new protocol, or branch/worktree cleanup.
 
-The Owner's current 2026-08-29 action-time direction supersedes only the stale
-M1.2 pause/deployment prohibitions below. Planning local/tracking/advertised refs
-are `0b08dfdd238e73c0940f3c2f759c14624dd9d89d`; implementation local/tracking/
-advertised refs are `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the historical baseline remains
-`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. The two-file relay at `33f49fb...`
-is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`, not M1.2 completion.
+The earlier 2026-08-29 action-time direction completed the immutable final
+PackageRoot/Release, registration/activation, and one bound Skill replacement.
+The following WorkBuddy attempt was cancelled immediately after WorkBuddy created
+its normal empty task workspace
+`C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28`. The latest LauncherReceipt stayed
+on the old PackageRoot and old `fixed_child.py`; therefore the newly deployed
+factual relay was never invoked. This attempt is
+`NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`, not evidence that the
+relay or WorkBuddy handoff consumption failed.
 
-This direction authorizes, without another approval pause: one six-document
-planning correction/review/commit/push; an ordinary merge of that exact pushed
-head into the retained M1 branch; one new immutable final assembly from the clean
-OpenMontage checkout at `73cab67322451601a824875c0e426067d736dd44` and Shell
-source `33f49fb...`; registration/activation; one newly named Skill archive bound
-to that root and active pointer; normal WorkBuddy replacement so it is the only
-installed Golden Key Skill; and exactly one WorkBuddy 5.3.14 non-production
-readiness probe followed, only if a complete visible result exists, by one
-independent zero-write result review and six-document implementation closeout.
-The assembly is a new immutable PackageRoot/Release; it may not edit an old
-PackageRoot, Package source/semantics, historical archive, rollback evidence, or
-add a third product/test source path.
+An empty WorkBuddy task directory alone is allowed harness mechanics. The actual
+prohibitions are copying or rewriting the managed handoff/summary into that
+workspace, creating a relay file, persistent memory or Skill creation, optional
+installation, secret handling, Provider/media action, M1.3, fallback, retry, or
+technical burden for the ordinary user.
 
-The exact new paths are frozen in the Task Register. Remotion/HyperFrames install,
-ordinary-chat secrets, Provider/connection calls, media, M1.3, Shell fallback,
-WorkBuddy/Package/Shell source repair, retry, and a second Golden Key Skill remain
-forbidden. Use an available `0.00x` model row. A missing user-visible fact, any
-workspace/file relay, absent four-choice entry, unexpected path, or scope drift is
-terminal `NOT_PROVED`; cancel and stop without retry or repair.
+The Owner's current direction authorizes preparation only up to the next
+WorkBuddy action gate: update only the six authority/state documents, obtain one
+independent zero-write document review, commit once, and ordinarily push the
+planning branch; ordinarily merge that exact head into the retained M1 branch;
+change only `workbuddy-skill/golden-key-openmontage/SKILL.md` so WorkBuddy reads a
+valid LauncherReceipt `result_pointer` and consumes the bounded
+`package_capability_summary` from the existing managed handoff without a
+workspace copy; build and verify one newly named, uninstalled Skill ZIP bound to
+the already active final PackageRoot; obtain one independent zero-write candidate
+review; commit once and ordinarily push the implementation branch. Do not rebuild,
+reregister, or reactivate the PackageRoot.
+
+Installing or replacing the Skill in WorkBuddy, opening or operating WorkBuddy,
+and running the next readiness probe are not authorized by this preparation.
+Stop after the reviewed candidate and exact Git evidence and obtain fresh
+action-time Owner authorization.
 
 ## Product boundary
 
@@ -247,9 +253,11 @@ equal `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the worktree is clean and the
 result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
 M1.2 is now `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT /
-REAL_WORKBUDDY_PROBE_ACTION_TIME_AUTHORIZED / M1_3_BLOCKED`. The local result
-cannot make M1.2 complete by itself. The single authorized WorkBuddy result must
-still prove that facts reach the ordinary-user dialogue, the FFmpeg explanation
+CONSUMER_CANDIDATE_PREPARATION_AUTHORIZED / WORKBUDDY_ACTION_NOT_AUTHORIZED /
+M1_3_BLOCKED`. The local result
+cannot make M1.2 complete by itself. The WorkBuddy result must be separately
+authorized and must still prove that facts reach the ordinary-user dialogue, the
+FFmpeg explanation
 and honest optional states appear, and continue/local/API-key/defer are actually
 available. If completion needs a third source path, new carrier/protocol, live
 repair, Provider/secret/media action, retry, or fallback, stop.

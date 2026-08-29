@@ -177,21 +177,22 @@ the exact two-file implementation and focused local proof. That local contract i
 not M1.2 completion; only later real WorkBuddy evidence can prove that ordinary
 users receive the explanation and four choices.
 
-That two-file implementation is now pushed at `33f49fb...` and is
-`VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`. The Owner's current action-time direction
-authorizes the minimum remaining M1.2 deployment and one real non-production
-readiness probe. The deployment is a new immutable final PackageRoot/Release from
-the same verified OpenMontage `73cab673...` semantics plus exact Shell source; it
-does not modify an old PackageRoot or Package source. Registration/activation and
-one newly bound Skill replacement are mechanical Shell lifecycle work. WorkBuddy
-remains the sole dialogue owner and must itself explain the relayed facts and
-present continue/local/API-key/defer.
+That two-file implementation is pushed at `33f49fb...` and is
+`VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`. The immutable final PackageRoot was later
+assembled, registered, activated, and bound to the single installed Skill. A
+following WorkBuddy attempt was cancelled on creation of a normal empty task
+workspace before the Skill/Shell ran; the unchanged old LauncherReceipt proves
+the new relay was not invoked. That attempt is
+`NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`, not a relay failure.
 
-This authorization does not extend to optional capability installation, chat
-secrets, Provider/connection calls, media, M1.3, a second Skill, Shell fallback,
-retry, or live source repair. Any unapproved workspace/file relay or missing
-user-visible acceptance is terminal `NOT_PROVED`. Exact external paths and
-cleanup limits are authority only in the Task Register.
+An empty task workspace is allowed harness behavior. A workspace relay file,
+copy/rewrite of the managed handoff or summary, persistent memory, or new user
+Skill remains prohibited. The current authorization ends before WorkBuddy: it
+permits only the six-document correction, a one-file Skill consumer instruction,
+an uninstalled candidate ZIP bound to the active PackageRoot, their independent
+zero-write reviews, commits, and ordinary pushes. Installing/replacing the Skill
+or running WorkBuddy needs fresh action-time Owner authorization. Exact paths and
+Git state remain authority only in the Task Register.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

@@ -459,9 +459,9 @@ or branch/worktree cleanup is authorized. A passing implementation and review ma
 be called only `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; M1.2 remains incomplete
 until later real WorkBuddy dialogue evidence passes its acceptance row.
 
-### M1.2 final factual-relay deployment and one real readiness probe — ACTION-TIME AUTHORIZED
+### M1.2 final factual-relay deployment and one real readiness probe — HISTORICAL AUTHORIZATION
 
-The Owner's current 2026-08-29 direction supersedes the preceding M1.2
+The Owner's earlier 2026-08-29 direction superseded the preceding M1.2
 deployment/WorkBuddy prohibitions only for this bounded result. The starting gate
 passed with planning local/tracking/advertised refs at
 `0b08dfdd238e73c0940f3c2f759c14624dd9d89d`, implementation local/tracking/
@@ -560,6 +560,76 @@ object, and evidence directory. After the result/review, remove only the exact
 task-owned D: temporary directory above. Never touch
 `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10`, which remains
 `CLEANUP_BLOCKED_IN_USE`.
+
+### M1.2 premature hard-stop correction and Skill consumer candidate — PREPARATION AUTHORIZED / WORKBUDDY GATED
+
+This current direction supersedes every unspent WorkBuddy install/probe permission
+in the historical authorization immediately above.
+
+The next WorkBuddy attempt used WorkBuddy 5.3.14 with `Hy3 0.00x` and the same
+ordinary input, but it was cancelled immediately after WorkBuddy created the
+normal empty task workspace
+`C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28`. The evidence record is
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\evidence\m1.2-final-factual-relay-33f49fb-workbuddy-20260829\probe-not-proved-result.json`.
+The directory had zero items/files after cancellation and is preserved as
+evidence.
+
+The latest LauncherReceipt remained the older 16:28 receipt for
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\product2-result-pointer-fix-install-20260827\PackageRoot`
+and old `fixed_child.py` SHA256
+`3a1f9c6297745ac4ce4c818d3d656e6e4ab0ec0adc2db8832611131d8ecf174e`.
+The active final PackageRoot instead contains `fixed_child.py` SHA256
+`66defdd34ea984b4b2ccf6d79753f90bf1c45f4b387f226552035c4e2ae136bf`.
+Therefore the new Skill/Shell relay was not invoked. Classify this attempt as
+`NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`; do not call it a relay
+failure or WorkBuddy consumption failure.
+
+Normal creation of an empty WorkBuddy task directory is allowed harness behavior.
+The forbidden behavior is a relay file, copying or rewriting the managed handoff
+or `package_capability_summary` into that workspace, persistent memory, a new user
+Skill, optional installation, secret handling, Provider/media action, M1.3,
+fallback, or retry.
+
+Current exact starting state is planning local/tracking/advertised
+`e0aab40b4500e70d63b058df2d9731415e30fe0d`; implementation local
+`fd0a3f8cac41540ff25a3dd113828c7a5f39f7a6`, tracking/advertised
+`33f49fb385b103489772d3f8ce2f7cb2486b08dc`, clean and ahead two; historical
+baseline local/remote
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. Active registration object is
+`ed52dc2304f9cf6df885de7749aa48854ceab87a69e2fda1722bda686459fa27`
+and points to the immutable final PackageRoot already recorded above.
+
+The Owner authorizes preparation through the next WorkBuddy action gate without
+another pause:
+
+1. Change only the six authority/state documents, obtain one independent
+   `luna_worker` zero-write document review, commit once, ordinarily push the
+   planning branch, and verify local/tracking/advertised equality.
+2. Ordinarily merge that exact pushed head into the retained M1 branch. Change
+   only `workbuddy-skill/golden-key-openmontage/SKILL.md`. The instruction may
+   tell WorkBuddy that when LauncherReceipt has a valid `result_pointer`, it reads
+   that exact managed handoff and consumes the bounded
+   `package_capability_summary`; it must not copy/rewrite it into the task
+   workspace. WorkBuddy still owns interpretation, relevance, Provider/model,
+   explanation, consent, choice, and recovery. Exact dialogue/commands remain
+   flexible.
+3. Build one newly named, uninstalled Skill archive bound to the already active
+   final PackageRoot and active pointer:
+   `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`.
+   Do not rebuild, reregister, reactivate, or modify the PackageRoot.
+4. Run only archive/binding/content checks and `git diff --check`, obtain one
+   independent `luna_worker` zero-write candidate review, commit once, ordinarily
+   push the implementation branch, and verify exact refs and clean state.
+5. Stop. Installing or replacing the Skill in WorkBuddy, opening or operating
+   WorkBuddy, and running the readiness probe require fresh action-time Owner
+   authorization.
+
+The installed Skill remains the single Golden Key Skill during preparation and
+must remain byte-identical at `SKILL.md` SHA256
+`d28a5cd9cbaccedf5c8f4e497ae2cbec2aaaa194d5315991ebd55d610b851689`
+and `run.ps1` SHA256
+`0c8c743404127dbc612bc87c207f307ddbff2ef9a3a071b37c7ff2095383902b`.
+M1.2 remains incomplete and M1.3 remains blocked.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -1057,22 +1127,22 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_FINAL_FACTUAL_RELAY_DEPLOYMENT_AND_ONE_REAL_READINESS_PROBE_ACTION_TIME_AUTHORIZED
+current_task: M1_2_SKILL_CONSUMER_CANDIDATE_PREPARATION_AUTHORIZED / WORKBUDDY_ACTION_NOT_AUTHORIZED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
-candidate_skill: M1_2_READINESS_PROBE_INSTALLED_ONLY_GOLDEN_KEY_SKILL / ZIP_SHA256_709D202EC5F1F78BBD50B015342CB5CCCC28B0C69FA1D10B20A73BCD31A48763 / SKILL_SHA256_D28A5CD9CBACCEDF5C8F4E497AE2CBEC2AAAA194D5315991EBD55D610B851689 / RUN_PS1_SHA256_DE63F07394F517137FBDA3A656EBB9F9DC68B9A391E5C0CD4D10CA251EB7CB3C
+candidate_skill: CURRENT_INSTALLED_SINGLE_GOLDEN_KEY_SKILL / SKILL_SHA256_D28A5CD9CBACCEDF5C8F4E497AE2CBEC2AAAA194D5315991EBD55D610B851689 / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B / NEW_HANDOFF_CONSUMER_ZIP_NOT_YET_BUILT_OR_INSTALLED
 capability_onboarding_implementation: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / REAL_DIALOGUE_NOT_YET_PROVED
-implementation_branch_name: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_33F49FB385B103489772D3F8CE2F7CB2486B08DC / RETAIN_FOR_M1_3_M1_4
+implementation_branch_name: codex/workbuddy-m1-capability-onboarding / LOCAL_FD0A3F8CAC41540FF25A3DD113828C7A5F39F7A6 / TRACKING_ADVERTISED_33F49FB385B103489772D3F8CE2F7CB2486B08DC / AHEAD_2 / RETAIN_FOR_M1_3_M1_4
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
 implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_ACTIVE_M1_2
-task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE
+task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE / C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28 EMPTY_EVIDENCE_DIRECTORY_PRESERVED
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
-workbuddy_or_media_in_current_task: ONE_NONPRODUCTION_WORKBUDDY_5_3_14_READINESS_PROBE_AUTHORIZED / MEDIA_FORBIDDEN
+workbuddy_or_media_in_current_task: WORKBUDDY_NOT_AUTHORIZED_UNTIL_FRESH_ACTION_TIME_APPROVAL / MEDIA_FORBIDDEN
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / FINAL_DEPLOYMENT_AUTHORIZED / ONE_REAL_READINESS_PROBE_AUTHORIZED / M1_3_BLOCKED
+m1_2: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / CONSUMER_CANDIDATE_PREPARATION_AUTHORIZED / WORKBUDDY_ACTION_NOT_AUTHORIZED / M1_3_BLOCKED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
@@ -1080,6 +1150,7 @@ m1_2_execution_contract_document_review: HISTORICAL_APPROVE / FEASIBILITY_GAP_NO
 m1_2_corrected_route: WORKBUDDY_PACKAGE_DISCOVERY_FIRST / ONE_BOUNDED_PROBE / SHELL_FALLBACK_REQUIRES_NEW_OWNER_DECISION
 m1_2_probe_product_write_allowlist: NONE / EXISTING_SKILL_CANDIDATE_ONLY
 m1_2_probe_result: NOT_PROVED_WORKBUDDY_DISCOVERY / CAPABILITY_FACTS_DID_NOT_REACH_USER_DIALOGUE / UNAPPROVED_FILE_CARRIER_STOPPED
+m1_2_latest_attempt: NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED / EMPTY_TASK_WORKSPACE_ALLOWED
 m1_2_probe_result_review: NOT_RUN / PASS_RESULT_ABSENT
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY
 m1_2_shell_factual_relay_write_set: golden_key_openmontage_workbuddy/fixed_child.py / tests/workbuddy/test_installer.py / EXACT_ONLY

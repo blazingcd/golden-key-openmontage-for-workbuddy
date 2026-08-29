@@ -190,7 +190,7 @@ by themselves.
   `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10` remains
   `CLEANUP_BLOCKED_IN_USE`; do not force-delete it or broaden cleanup.
 
-## Current M1.2 final-deployment guard
+## Historical M1.2 final-deployment guard
 
 - Planning local/tracking/advertised must start at `0b08dfdd...`, implementation
   local/tracking/advertised at `33f49fb...`, and the historical baseline at
@@ -217,11 +217,37 @@ by themselves.
   continue/local/API-key/defer entries. If a non-mutating choice is needed,
   choose defer.
 - Any install, secret request/storage, Provider/connection call, media, M1.3,
-  workspace/file relay, missing fact/choice, false readiness, second task, retry,
-  or live repair is terminal `NOT_PROVED`; cancel and stop.
+  workspace relay file or managed-summary copy, missing fact/choice, false
+  readiness, second task, retry, or live repair is terminal `NOT_PROVED`; cancel
+  and stop. Normal empty WorkBuddy task-directory creation alone is allowed.
 - Only a complete visible result permits one independent zero-write result review
   and six-document closeout. Clean only the exact recorded D: temporary directory;
   never touch `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10`.
+
+## Current M1.2 consumer-candidate preparation guard
+
+- The 19:32 WorkBuddy attempt is
+  `NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`. Its empty task
+  directory `C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28` is preserved as
+  evidence. The unchanged old LauncherReceipt is the decisive invocation fact.
+- Preparation may change only the six authority/state documents and, after their
+  exact pushed head is ordinarily merged, only
+  `workbuddy-skill/golden-key-openmontage/SKILL.md`. No Shell, Package, test, or
+  second Skill source file may change.
+- The Skill instruction may only tell WorkBuddy to follow a valid LauncherReceipt
+  `result_pointer`, read the existing managed handoff's bounded
+  `package_capability_summary`, avoid copying it into the workspace, and retain
+  WorkBuddy ownership of interpretation, relevance, choice, and recovery.
+- Build one newly named Skill ZIP at
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`
+  bound to the already active final PackageRoot. Do not rebuild, register, or
+  activate a PackageRoot.
+- Obtain one independent zero-write document review and one independent zero-write
+  candidate review. Commit/push the planning branch once and implementation
+  branch once; verify exact local/tracking/advertised refs and clean worktrees.
+- Stop before WorkBuddy. Do not install/replace the Skill, open or operate
+  WorkBuddy, or run the readiness probe without fresh action-time Owner
+  authorization.
 
 ## Result guard
 

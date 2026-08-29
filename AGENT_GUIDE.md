@@ -65,6 +65,13 @@ branch, and task-owned temporary directories be removed. M1 is not `COMPLETE`
 until that cleanup is verified. This documentation task performs no branch,
 worktree, directory, implementation, test, or external action.
 
+The Owner's current direction permits the corrected M1.2 execution contract to be
+frozen on `codex/workbuddy-capability-onboarding`. This documentation task may
+change only the six authority/state documents, obtain one independent zero-write
+document review, create one commit, and ordinarily push that planning branch. It
+does not authorize implementation, tests, WorkBuddy, installation, credentials,
+Provider calls, media, branch creation/deletion, merge, or cleanup.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -152,22 +159,43 @@ dependency and acceptance authority is the Task Register.
 M1.1 is complete as a fact audit and its conclusions are Owner-accepted. It did
 not pass the strict zero-write process gate because an independent sub-audit
 created and then removed `D:\DevCache\Temp\m11-rg.txt`; the repository remained
-clean and the path no longer exists. M1.2's execution contract is frozen, but its
-implementation is not started or authorized. It must use the accepted M1.1 facts
-rather than repeat the audit or treat static capability definitions as current
-readiness. Its only implementation write path is
-`workbuddy-skill/golden-key-openmontage/SKILL.md`; any need to change Shell,
-tests, the verified Package, another repository, a dependency, or a new file is a
-hard stop requiring a new Owner decision.
+clean and the path no longer exists.
 
-M1.2 uses the verified Package Guide's compact-first order: verify PackageRoot and
-Guide identity, discover the registry, read `provider_menu_summary()` first, and
-deepen with relevant `provider_menu()` detail only when needed. A full
-`support_envelope()` is diagnostic or detail evidence, not the default first-user
-display. M1.2 only explains honest state and offers continue, local-configuration,
-API-key-configuration, or defer handoffs. It does not install, store credentials,
-call a Provider, retest a configured capability, or run real WorkBuddy acceptance;
-those actions remain M1.3/M1.4 work behind separate gates.
+The M1.2 contract frozen at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` is
+withdrawn as an execution authority. It required an authoritative capability
+inventory while allowing changes only to
+`workbuddy-skill/golden-key-openmontage/SKILL.md`, even though M1.1 had already
+proved that the production route had no `prepare_optional_capabilities` caller,
+`user_entry.py` supplied empty local-capability evidence, and WorkBuddy's ability
+to perform the required Package discovery was `NOT_VERIFIED`. The contract's
+focused checks could verify wording and packaging but not the required fact flow.
+
+Commit `4cbf8ff3c15dd686a893842ca189ce49fa83023d` on
+`codex/workbuddy-m1-capability-onboarding` is therefore only a partial Skill
+guidance candidate. It must not be called M1.2 complete or
+`VERIFIED_LOCAL_CONTRACT`, merged into the formal ref, promoted as complete, or
+used to authorize M1.3. Preserve the branch and worktree while M1.2 is paused; do
+not delete or rewrite them.
+
+M1.2 remains the ordinary-user first-use readiness result: after verified
+PackageRoot resolution, WorkBuddy must obtain trustworthy current facts, explain
+that the FFmpeg baseline can continue, show relevant optional capability and
+Package-declared Provider states honestly, and let the user continue, enter local
+configuration, enter API-key configuration, or defer. A Skill instruction alone
+is not evidence that discovery, state formation, or handoff works.
+
+The corrected contract selects WorkBuddy-owned Package discovery as the first and
+only route to probe. A later separately authorized execution task first merges the
+exact pushed planning head into the retained M1 implementation branch, preserving
+its partial Skill candidate, then performs one bounded, non-production WorkBuddy
+readiness probe. If trustworthy Package facts reach the ordinary-user dialogue,
+the WorkBuddy route is selected and Shell remains unchanged. If discovery is
+absent, stale, overstated, or not observable, stop as
+`NOT_PROVED_WORKBUDDY_DISCOVERY`; do not add Shell relay in the same task. A
+separate Owner decision is required before the smallest existing Shell factual
+relay may be audited or changed. M1.2 is
+`CORRECTED_EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_PAUSED /
+WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED`.
 
 ## Four product results
 

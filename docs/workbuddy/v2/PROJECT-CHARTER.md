@@ -136,14 +136,24 @@ and later retest. Planned wording and steps may change after real WorkBuddy
 evidence; acceptance follows the completed user goal and safety boundaries rather
 than exact rehearsal of the planning examples.
 
-M1.2 resolves inventory order by following the verified Package Guide: verify
-PackageRoot and Guide identity, discover the registry, present the compact
-`provider_menu_summary()` first, and request relevant `provider_menu()` detail only
-when needed. `support_envelope()` remains diagnostic or detail evidence rather than
-the default first-user display. The configuration entries are handoffs only:
-M1.2 does not install, save credentials, call a Provider, validate a selected
-configuration, or retest it. Its local implementation is limited to the existing
-WorkBuddy Skill instructions; real WorkBuddy acceptance remains M1.4.
+M1.2 presents a compact current summary and expands only the details relevant to
+the user's goal or choice. The verified Package Guide's
+`provider_menu_summary()` is the leading candidate when WorkBuddy-owned discovery
+is proved feasible; it is not a fixed acceptance step or a requirement imposed on
+a different factual-relay design. Do not dump raw Package data by default. The
+configuration entries are handoffs only: M1.2 does not install, save credentials,
+call a Provider, validate a selected configuration, or retest it.
+
+M1.2 is a user-result contract, not a Skill-text deliverable. It is complete only
+when trustworthy current facts can reach WorkBuddy, those facts are translated
+into an honest ordinary-user explanation, and the continue/local/API-key/defer
+choices actually work at the authorized evidence level. The corrected execution
+contract probes WorkBuddy's verified Package discovery first because the Package
+already exposes compact capability facts. A prompt that tells WorkBuddy to scan
+is not proof that scanning exists. If the bounded probe cannot prove that fact
+path, the task stops; bounded Shell factual relay is a separately authorized
+fallback design, not work silently absorbed into the probe. M1.4 may integrate the
+M1 result but must not retroactively fill missing M1.2 evidence.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

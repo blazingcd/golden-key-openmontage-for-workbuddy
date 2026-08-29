@@ -117,11 +117,20 @@ by themselves.
 - Existing Remotion/HyperFrames preparation is latent until a production caller
   and trustworthy declared capability facts exist. Empty evidence and static
   Package files must not be presented as current readiness.
-- The M1.2 inventory-order decision is compact first: verify PackageRoot and Guide
-  identity, discover the registry, read `provider_menu_summary()`, and deepen with
-  relevant `provider_menu()` detail only when needed. `support_envelope()` is for
-  diagnosis or necessary detail, not the default first-user display. Do not dump
-  raw Package data, mutate PackageRoot, or absorb a Package rebuild into M1.2.
+- The M1.2 contract frozen at
+  `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` is withdrawn as execution
+  authority. It assumed unverified WorkBuddy discovery could satisfy the
+  inventory while allowing only a Skill-file change. Do not reuse its write
+  allowlist, test list, or `VERIFIED_LOCAL_CONTRACT` completion rule.
+- Commit `4cbf8ff3c15dd686a893842ca189ce49fa83023d` is partial Skill guidance only.
+  Keep its branch/worktree intact and paused; do not merge it into the formal ref,
+  promote it as complete, delete, rewrite, call M1.2 complete, or start M1.3 from
+  that status.
+- M1.2 must present compact trustworthy current facts first and deepen only when
+  the user's goal or choice needs it. The verified Package Guide's
+  `provider_menu_summary()` is an existing candidate for a proved WorkBuddy-owned
+  discovery route, not a fixed step for every possible fact path. Do not dump raw
+  Package data, mutate PackageRoot, or absorb a Package rebuild into M1.2.
 - M1.2 owns one unified scan, ordinary-language explanation, honest state, and
   continue/configure entry for the verified Package's formal capability set.
   M1.3 owns selected configuration, consent, validation, recovery, and later
@@ -129,20 +138,32 @@ by themselves.
   recognition, and actual invocation. API-key completion requires non-chat secure
   input/storage, exact allowlisting, no disclosure, and an authorized connection
   test.
-- The future M1 implementation branch is
-  `codex/workbuddy-m1-capability-onboarding`, created only after separate action
-  authorization from the reviewed and pushed planning commit. The same branch
-  carries separately authorized M1.2–M1.4 work; do not create a branch per step.
-  Its M1.2 exact write
-  allowlist is only `workbuddy-skill/golden-key-openmontage/SKILL.md`; its focused
-  test execution allowlist is `tests/workbuddy/test_workbuddy_entry_cli.py` and
-  `tests/workbuddy/test_installer.py`. Any need to change a test, Shell file,
-  Package file, another repository, dependency, protocol, receipt, or new file is
-  a hard stop and requires a new Owner decision.
-- M1.2 stops after a focused local contract candidate. WorkBuddy execution is not
-  implied; real WorkBuddy evidence belongs to M1.4 and needs action-time approval.
-  Installation, credentials, Provider calls, validation, recovery, and retest
-  belong to M1.3 and remain separately gated.
+- The existing M1 implementation branch is
+  `codex/workbuddy-m1-capability-onboarding`; one branch still carries separately
+  authorized M1.2–M1.4 work. No new sibling branch is needed. It remains paused.
+- Before resuming it, ordinarily merge the exact pushed planning head into the
+  clean retained implementation branch. Preserve the partial Skill candidate and
+  resolve only the authority-document overlap; no rebase, force, rewrite, or
+  second branch.
+- The corrected contract probes only WorkBuddy-owned discovery through the
+  verified Package first. It does not authorize Shell detection/relay changes.
+  Do not make Shell decide relevance, Provider, model, or recovery.
+- Every M1.2 step must identify its fact source, owning component, exact write
+  paths, failure state, and direct check. The allowlist must be sufficient for the
+  promised result; a check that only proves wording, packaging, or old behavior
+  cannot close a fact-flow or user-choice requirement.
+- Real WorkBuddy action still needs action-time approval, but M1.2 cannot be
+  declared complete while its core WorkBuddy-owned discovery and choice behavior
+  remains deferred and unproved. M1.4 is integrated M1 acceptance, not a place to
+  repair missing M1.2 evidence. Installation, credentials, Provider calls,
+  validation, recovery, and retest remain M1.3 boundaries.
+- The future probe is one bounded non-production readiness journey. It may vary
+  wording, tools, and confirmation order, but it must not generate media, install
+  an optional capability, accept a secret in chat, call a Provider, or start
+  M1.3. If trustworthy facts do not reach the dialogue, stop as
+  `NOT_PROVED_WORKBUDDY_DISCOVERY`; do not retry, edit the Skill, or add Shell
+  relay in that task. Any fallback requires a new Owner decision and exact write
+  allowlist.
 
 ## Result guard
 

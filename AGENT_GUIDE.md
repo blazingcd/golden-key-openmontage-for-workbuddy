@@ -136,6 +136,11 @@ ordinary commits and pushes, and one newly named uninstalled candidate. This
 does not authorize another WorkBuddy run, installation, Provider/secret/media
 action, PackageRoot change, M1.3, or branch cleanup.
 
+That correction is now pushed at implementation commit
+`5229964ac681d7b34949480326e6f24a0c53913f`. The newly named candidate is
+independently reviewed `APPROVE / P0=0 / P1=0 / P2=0` and remains uninstalled.
+M1.2 still requires a separately authorized WorkBuddy user-result retest.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -278,7 +283,8 @@ equal `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the worktree is clean and the
 result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
 M1.2 is now `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
-USER_RESULT_REJECTED_P1_3 / CONSUMER_CORRECTION_AUTHORIZED / M1_3_BLOCKED`.
+USER_RESULT_REJECTED_P1_3 / CORRECTED_CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED /
+WORKBUDDY_RETEST_NOT_AUTHORIZED / M1_3_BLOCKED`.
 The correction may change only the WorkBuddy-facing Skill instruction: preserve
 the existing handoff, treat composition runtime facts as authoritative for
 runtime readiness, paraphrase configuration without raw environment names,

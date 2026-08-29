@@ -91,6 +91,13 @@ and pushes, and one newly named uninstalled candidate. Another WorkBuddy probe,
 installation, Package mutation, Provider/secret/media action, and M1.3 remain
 unauthorized.
 
+The correction is pushed at
+`5229964ac681d7b34949480326e6f24a0c53913f`. The corrected candidate ZIP,
+SHA256 `116737071d377b67dff6ea93fe18534114c17e762d32116efc5c4b973e000228`,
+passed independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
+uninstalled. It is preparation evidence only; the rejected M1.2 user result is
+unchanged until a separately authorized WorkBuddy retest passes.
+
 The probe passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
 Package-declared Provider states, offers continue/local/API-key/defer, and honors
@@ -260,13 +267,14 @@ temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and th
 path was confirmed absent at closeout.
 
 M1.2 is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
-USER_RESULT_REJECTED_P1_3 / CONSUMER_CORRECTION_AUTHORIZED / M1_3_BLOCKED`.
+USER_RESULT_REJECTED_P1_3 / CORRECTED_CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED /
+WORKBUDDY_RETEST_NOT_AUTHORIZED / M1_3_BLOCKED`.
 The earlier contract at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174`, first
 discovery probe, and prematurely cancelled probe remain historical failed routes;
 they do not define the current result.
 
-The implementation branch is clean and its local, tracking, and advertised head
-are all `f9880c247ed61744b4bba2f83ffa6411eb49c413`. The pushed factual-relay
+The implementation Skill correction is pushed at
+`5229964ac681d7b34949480326e6f24a0c53913f`. The pushed factual-relay
 ceiling is `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the pushed Skill consumer
 commit is `c8eeb91e221ec96a406543c183091eea7ea6ac3c`. The reviewed consumer ZIP is
 installed as the only Golden Key Skill. Its relay reached the ordinary-user
@@ -277,7 +285,8 @@ The corrected Remotion fact is: OpenMontage source integration exists, the activ
 Package lacks project-local dependencies, runtime readiness is false, and a real
 Package-mediated invocation is not verified. The current authorization is only
 the minimal Skill consumer correction, its six-document synchronization, one new
-uninstalled candidate, independent zero-write reviews, commits, and pushes. Shell
+uninstalled candidate, independent zero-write reviews, commits, and pushes; that
+candidate is now reviewed and uninstalled. Shell
 continues to carry bounded facts only; WorkBuddy owns explanation and choice.
 Another WorkBuddy action and M1.3 remain blocked.
 

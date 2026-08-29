@@ -210,6 +210,11 @@ remain authority only in the Task Register. The installed rejected candidate has
 SHA256 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
 its earlier artifact review does not satisfy M1.2 user acceptance.
 
+The corrected one-file consumer is pushed at
+`5229964ac681d7b34949480326e6f24a0c53913f`; its newly named candidate passed
+independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
+uninstalled. This closes correction preparation only, not M1.2 user acceptance.
+
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the
 reviewed head into `codex/workbuddy-capability-onboarding`, then removes the exact

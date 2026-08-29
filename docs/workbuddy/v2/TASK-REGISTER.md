@@ -231,9 +231,64 @@ M1.1 state is
 M1.2 is related but separate. It consumes the accepted facts to provide the
 first-use readiness explanation and continue/configure choice. It must not repeat
 M1.1, repair its process deviation, install/configure an enhancement, or claim
-that static definitions prove readiness. Before M1.2 implementation, the Package
-instruction conflict, implementation branch name, and exact write allowlist need
-separate Owner resolution. Any M1.1 branch/file suggestion remains advisory only.
+that static definitions prove readiness. Owner direction dated 2026-08-29 freezes
+the following execution contract as documentation only; implementation remains
+not started and unauthorized.
+
+### M1.2 execution contract
+
+The future implementation branch is
+`codex/workbuddy-m1-2-first-use-readiness`. It is created only after separate
+action authorization, from the reviewed and pushed commit containing this
+contract. This planning task does not create or switch to it. The historical
+`codex/workbuddy-shell-v2` ref remains frozen at
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
+
+M1.2 has exactly four execution steps:
+
+1. **Compact authoritative inventory.** After verified PackageRoot and Package
+   Guide identity, use registry discovery and read `provider_menu_summary()`
+   first. Read only relevant `provider_menu()` detail when the summary or user
+   choice needs it. `support_envelope()` is diagnostic or deeper evidence, not
+   the default first-user display. This resolves the M1.1 Guide/onboarding-order
+   conflict without changing the external Package.
+2. **Honest ordinary-user states.** Explain the FFmpeg-ready basic path and keep
+   installed, not installed, configurable, not configured, not verified,
+   connection failed, and connected states distinct. Static declarations never
+   become live readiness. Undeclared Provider entries remain absent.
+3. **WorkBuddy-owned choice and handoff.** Offer continue, local configuration,
+   API-key configuration, or defer in ordinary language. These are handoffs to
+   M1.3, not mutations: M1.2 does not download, install, store a secret, call a
+   Provider, validate a selected configuration, recover it, or retest it. Wording,
+   tools, and bounded confirmation order may vary with actual WorkBuddy behavior.
+4. **Focused local contract closeout.** Prove only the Skill instruction and
+   packaging contract, optional-absence non-blocking behavior, absence of Shell
+   decision-making, and unchanged secret/technical-burden boundaries. Record the
+   result as `VERIFIED_LOCAL_CONTRACT`, not real WorkBuddy acceptance. Real
+   WorkBuddy evidence is deferred to M1.4 and needs action-time authorization.
+
+The exact implementation write allowlist is one existing file:
+
+- `workbuddy-skill/golden-key-openmontage/SKILL.md`
+
+The exact focused test execution allowlist is:
+
+- `tests/workbuddy/test_workbuddy_entry_cli.py`
+- `tests/workbuddy/test_installer.py`
+- `git diff --check --`
+
+The test files are execution scope, not write scope. Any need to modify them, add
+a file or dependency, change `run.ps1`, `user_entry.py`, `runtime_prepare.py`,
+`workbuddy_entry_cli.py`, `session_launcher.py`, `package_registration.py`,
+`installer.py`, `fixed_child.py`, the verified Package, WorkBuddy, another
+repository, a protocol, or a receipt is an immediate hard stop requiring a new
+Owner decision. The same hard stop applies to broad disk scanning, hard-coded
+Provider menus, installation, credential handling, Provider calls, media, or a
+real WorkBuddy run.
+
+This contract freeze may change only the six authority/state documents, receives
+one independent zero-write document review, one commit, and one ordinary push on
+`codex/workbuddy-capability-onboarding`. It authorizes no implementation or test.
 
 ### Official Provider scope and two configuration mechanisms
 
@@ -695,17 +750,20 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_FLEXIBLE_CONFIGURATION_DOCUMENTATION_CLOSEOUT
+current_task: M1_2_EXECUTION_CONTRACT_DOCUMENTATION_CLOSEOUT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
 capability_onboarding_implementation: NOT_AUTHORIZED
-implementation_branch_name: NOT_SELECTED
+implementation_branch_name: codex/workbuddy-m1-2-first-use-readiness / CONFIRMED_NOT_CREATED
 workbuddy_or_media_in_current_task: FORBIDDEN
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: NOT_STARTED / NOT_AUTHORIZED
+m1_2: EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / NOT_AUTHORIZED
+m1_2_write_allowlist: workbuddy-skill/golden-key-openmontage/SKILL.md
+m1_2_focused_tests: test_workbuddy_entry_cli.py / test_installer.py / git_diff_check
+m1_2_execution_contract_document_review: APPROVE / P0=0 / P1=0 / P2=0
 package_declared_video_providers: SEEDANCE_DEFAULT / KLING_MINIMAX_CURRENT_STATIC
 provider_live_readiness: NOT_VERIFIED
 configuration_mechanisms: LOCAL_INSTALL_AND_API_KEY

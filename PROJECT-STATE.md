@@ -147,6 +147,13 @@ ordinary push on `codex/workbuddy-capability-onboarding`. It does not authorize
 M1.2/M1.3 implementation or any Package, test, WorkBuddy, installation,
 credential, Provider-call, or media action.
 
+The Owner's later 2026-08-29 direction authorizes one documentation-only M1.2
+execution-contract freeze under the same six-document, one-review, one-commit,
+ordinary-push boundary. The future implementation branch name is
+`codex/workbuddy-m1-2-first-use-readiness`; this task does not create it or
+authorize implementation, tests, WorkBuddy, installation, credentials, Provider
+calls, Package changes, or media.
+
 Natural-language interaction examples remain planning hypotheses. Real WorkBuddy
 evidence may require different wording, tools, or a bounded fixed confirmation
 sequence. That variation is acceptable when the ordinary user can still start and
@@ -169,8 +176,19 @@ re-entry, and recovery remain `NOT_VERIFIED`.
 M1.1 is `FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED`.
 The deviation is that its independent sub-audit created and removed the exact
 temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and the
-path was confirmed absent at closeout. M1.2 remains `NOT_STARTED / NOT_AUTHORIZED`.
-It must consume these facts; it is not a rerun or repair of the M1.1 report.
+path was confirmed absent at closeout. M1.2 is
+`EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / NOT_AUTHORIZED`. It must
+consume these facts; it is not a rerun or repair of the M1.1 report.
+
+M1.2 is a four-step local-contract task: use the verified Package Guide's
+compact-first inventory order; form honest ordinary-user states; let WorkBuddy
+offer continue, local-configuration, API-key-configuration, or defer handoffs;
+then run only the named focused local checks. The only future implementation write
+path is `workbuddy-skill/golden-key-openmontage/SKILL.md`; the existing focused
+test execution allowlist is `tests/workbuddy/test_workbuddy_entry_cli.py` and
+`tests/workbuddy/test_installer.py`. Real WorkBuddy evidence remains M1.4, while
+installation, credential storage, Provider calls, validation, recovery, and
+retest remain M1.3.
 
 ## Non-goals
 

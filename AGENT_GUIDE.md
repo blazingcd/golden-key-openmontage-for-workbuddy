@@ -46,6 +46,13 @@ transcript. Real WorkBuddy evidence may justify a bounded fixed sequence when it
 is needed for security or reliable completion. The same six-document, one-review,
 one-commit, ordinary-push limit applies; implementation remains unauthorized.
 
+The Owner's subsequent 2026-08-29 direction permits one documentation-only freeze
+of the M1.2 execution contract on the same planning branch and under the same
+six-document, one-review, one-commit, ordinary-push limit. The future implementation
+branch is named `codex/workbuddy-m1-2-first-use-readiness` but must not be created
+by this documentation task. M1.2 implementation, tests, WorkBuddy, installation,
+credentials, Provider calls, Package changes, and media remain unauthorized.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -133,9 +140,22 @@ dependency and acceptance authority is the Task Register.
 M1.1 is complete as a fact audit and its conclusions are Owner-accepted. It did
 not pass the strict zero-write process gate because an independent sub-audit
 created and then removed `D:\DevCache\Temp\m11-rg.txt`; the repository remained
-clean and the path no longer exists. M1.2 is not started or authorized. It must
-use the accepted M1.1 facts rather than repeat the audit or treat static capability
-definitions as current readiness.
+clean and the path no longer exists. M1.2's execution contract is frozen, but its
+implementation is not started or authorized. It must use the accepted M1.1 facts
+rather than repeat the audit or treat static capability definitions as current
+readiness. Its only implementation write path is
+`workbuddy-skill/golden-key-openmontage/SKILL.md`; any need to change Shell,
+tests, the verified Package, another repository, a dependency, or a new file is a
+hard stop requiring a new Owner decision.
+
+M1.2 uses the verified Package Guide's compact-first order: verify PackageRoot and
+Guide identity, discover the registry, read `provider_menu_summary()` first, and
+deepen with relevant `provider_menu()` detail only when needed. A full
+`support_envelope()` is diagnostic or detail evidence, not the default first-user
+display. M1.2 only explains honest state and offers continue, local-configuration,
+API-key-configuration, or defer handoffs. It does not install, store credentials,
+call a Provider, retest a configured capability, or run real WorkBuddy acceptance;
+those actions remain M1.3/M1.4 work behind separate gates.
 
 ## Four product results
 

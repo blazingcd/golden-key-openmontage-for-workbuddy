@@ -135,3 +135,12 @@ API-key configuration, consent, secure handling, validation, failure recovery,
 and later retest. Planned wording and steps may change after real WorkBuddy
 evidence; acceptance follows the completed user goal and safety boundaries rather
 than exact rehearsal of the planning examples.
+
+M1.2 resolves inventory order by following the verified Package Guide: verify
+PackageRoot and Guide identity, discover the registry, present the compact
+`provider_menu_summary()` first, and request relevant `provider_menu()` detail only
+when needed. `support_envelope()` remains diagnostic or detail evidence rather than
+the default first-user display. The configuration entries are handoffs only:
+M1.2 does not install, save credentials, call a Provider, validate a selected
+configuration, or retest it. Its local implementation is limited to the existing
+WorkBuddy Skill instructions; real WorkBuddy acceptance remains M1.4.

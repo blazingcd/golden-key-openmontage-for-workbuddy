@@ -117,9 +117,11 @@ by themselves.
 - Existing Remotion/HyperFrames preparation is latent until a production caller
   and trustworthy declared capability facts exist. Empty evidence and static
   Package files must not be presented as current readiness.
-- Resolve the Package Guide versus onboarding inventory-order conflict before
-  M1.2 implementation. Do not choose by convenience, copy the full Provider menu,
-  mutate PackageRoot, or absorb a Package rebuild into M1.2.
+- The M1.2 inventory-order decision is compact first: verify PackageRoot and Guide
+  identity, discover the registry, read `provider_menu_summary()`, and deepen with
+  relevant `provider_menu()` detail only when needed. `support_envelope()` is for
+  diagnosis or necessary detail, not the default first-user display. Do not dump
+  raw Package data, mutate PackageRoot, or absorb a Package rebuild into M1.2.
 - M1.2 owns one unified scan, ordinary-language explanation, honest state, and
   continue/configure entry for the verified Package's formal capability set.
   M1.3 owns selected configuration, consent, validation, recovery, and later
@@ -127,8 +129,18 @@ by themselves.
   recognition, and actual invocation. API-key completion requires non-chat secure
   input/storage, exact allowlisting, no disclosure, and an authorized connection
   test.
-- M1.2 needs a separately confirmed implementation branch and exact write
-  allowlist. Audit suggestions are not authority.
+- The future M1.2 implementation branch is
+  `codex/workbuddy-m1-2-first-use-readiness`, created only after separate action
+  authorization from the reviewed and pushed planning commit. Its exact write
+  allowlist is only `workbuddy-skill/golden-key-openmontage/SKILL.md`; its focused
+  test execution allowlist is `tests/workbuddy/test_workbuddy_entry_cli.py` and
+  `tests/workbuddy/test_installer.py`. Any need to change a test, Shell file,
+  Package file, another repository, dependency, protocol, receipt, or new file is
+  a hard stop and requires a new Owner decision.
+- M1.2 stops after a focused local contract candidate. WorkBuddy execution is not
+  implied; real WorkBuddy evidence belongs to M1.4 and needs action-time approval.
+  Installation, credentials, Provider calls, validation, recovery, and retest
+  belong to M1.3 and remain separately gated.
 
 ## Result guard
 

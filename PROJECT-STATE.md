@@ -52,27 +52,33 @@ WorkBuddy run, media production, and capability installation.
 
 ## Current task
 
-The current action-time-authorized M1.2 result starts from planning
-`0b08dfdd238e73c0940f3c2f759c14624dd9d89d`, implementation
-`33f49fb385b103489772d3f8ce2f7cb2486b08dc`, and historical baseline
-`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`, with all local/tracking/advertised
-refs equal and both worktrees clean. The two-file implementation at `33f49fb...`
-is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; M1.2 still needs the real dialogue.
+At preparation start, planning local/tracking/advertised refs were
+`e0aab40b4500e70d63b058df2d9731415e30fe0d`. The retained implementation branch
+was clean at local `fd0a3f8cac41540ff25a3dd113828c7a5f39f7a6`, two commits ahead
+of tracking/advertised `33f49fb385b103489772d3f8ce2f7cb2486b08dc`. Historical
+baseline local/remote remains
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
 
-The authorized next chain is one six-document planning correction/review/push,
-an ordinary merge into the retained M1 branch, one new immutable final assembly
-from OpenMontage `73cab673...` plus Shell `33f49fb...`, registration/activation,
-one newly bound Skill ZIP installed through WorkBuddy as the only Golden Key
-Skill, and exactly one non-production WorkBuddy 5.3.14 readiness probe on an
-available `0.00x` row. Exact roots, archives, evidence, inputs, and the sole D:
-temporary directory are frozen in the Task Register.
+The immutable final PackageRoot is already registered and active at
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.2-final-factual-relay-33f49fb-20260829\PackageRoot`;
+its `fixed_child.py` SHA256 is
+`66defdd34ea984b4b2ccf6d79753f90bf1c45f4b387f226552035c4e2ae136bf`.
+Do not rebuild, reregister, or reactivate it.
+
+The authorized next chain stops before WorkBuddy: one six-document correction,
+zero-write review, commit, and planning push; ordinary merge into the retained M1
+branch; one minimal `SKILL.md` consumer instruction; one newly named uninstalled
+Skill ZIP bound to the active PackageRoot; zero-write candidate review; one
+implementation commit and ordinary push. Installing/replacing the Skill or
+operating WorkBuddy needs fresh action-time Owner authorization.
 
 The probe passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
 Package-declared Provider states, offers continue/local/API-key/defer, and honors
 the deferred non-mutating boundary. Optional installation, chat secrets,
 Provider/connection calls, media, M1.3, Shell fallback, retry, source repair,
-workspace/file relay, old-root edits, and historical-asset overwrite remain
+workspace relay files or managed-summary copies, old-root edits, and
+historical-asset overwrite remain
 forbidden. Failure is terminal `NOT_PROVED`, not a repair loop.
 
 The rejected v2 candidate ZIP SHA256 is
@@ -235,7 +241,8 @@ temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and th
 path was confirmed absent at closeout.
 
 M1.2 is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT /
-REAL_WORKBUDDY_PROBE_ACTION_TIME_AUTHORIZED / M1_3_BLOCKED`. The contract at
+CONSUMER_CANDIDATE_PREPARATION_AUTHORIZED / WORKBUDDY_ACTION_NOT_AUTHORIZED /
+M1_3_BLOCKED`. The contract at
 `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` incorrectly combined an authoritative
 inventory requirement with a Skill-only write allowlist, despite the accepted
 M1.1 facts that local evidence was empty, optional preparation had no production
@@ -243,9 +250,11 @@ caller, and WorkBuddy's required discovery ability was unverified. Its tests cou
 not prove the missing fact flow.
 
 The implementation branch completed the exact two-file factual relay and is clean;
-its local, tracking, and advertised refs all equal
-`33f49fb385b103489772d3f8ce2f7cb2486b08dc`. The installed readiness candidate
-is still the only Golden Key Skill until the action-time-authorized replacement.
+its pushed relay ceiling is
+`33f49fb385b103489772d3f8ce2f7cb2486b08dc`. Its current local head is
+`fd0a3f8cac41540ff25a3dd113828c7a5f39f7a6`; tracking/advertised remain
+`33f49fb...`. The installed Skill remains the only Golden Key Skill and must not
+be replaced before fresh action-time authorization.
 
 The single bounded probe verified PackageRoot/Guide and reached attempts to call
 `provider_menu_summary()`, but no capability facts reached the ordinary-user
@@ -265,6 +274,15 @@ recommend, sort, or select; WorkBuddy remains the explanation, relevance,
 Provider/model, consent, and recovery owner. The authorized implementation may
 prove only that local carrier contract. M1.3 remains blocked until a later real
 WorkBuddy result completes M1.2.
+
+A later attempt created only the normal empty WorkBuddy task directory
+`C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28` and was cancelled immediately.
+The latest LauncherReceipt remained the older 16:28 receipt for
+`product2-result-pointer-fix-install-20260827\PackageRoot` and old
+`fixed_child.py` SHA256 `3a1f9c...`; the new relay was not invoked. The attempt is
+`NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`. Empty workspace creation
+alone is allowed; copying the managed summary there or creating a relay file is
+not. The empty directory is preserved as evidence.
 
 ## Non-goals
 

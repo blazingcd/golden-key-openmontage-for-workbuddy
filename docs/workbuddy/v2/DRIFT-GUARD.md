@@ -248,6 +248,11 @@ by themselves.
 - Stop before WorkBuddy. Do not install/replace the Skill, open or operate
   WorkBuddy, or run the readiness probe without fresh action-time Owner
   authorization.
+- The resulting uninstalled ZIP has SHA256
+  `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
+  its zero-write candidate review is `APPROVE / P0=0 / P1=0 / P2=0`, and its
+  sole Skill source commit is `c8eeb91e221ec96a406543c183091eea7ea6ac3c`.
+  These facts do not permit WorkBuddy installation or execution.
 
 ## Result guard
 

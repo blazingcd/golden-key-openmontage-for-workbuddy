@@ -72,6 +72,14 @@ Skill ZIP bound to the active PackageRoot; zero-write candidate review; one
 implementation commit and ordinary push. Installing/replacing the Skill or
 operating WorkBuddy needs fresh action-time Owner authorization.
 
+The uninstalled candidate is now built at
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`,
+SHA256 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`.
+Its independent zero-write review passed `APPROVE / P0=0 / P1=0 / P2=0`; the
+single Skill source commit is `c8eeb91e221ec96a406543c183091eea7ea6ac3c`.
+The installed single Golden Key Skill remains byte-identical and no WorkBuddy
+action has been taken.
+
 The probe passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
 Package-declared Provider states, offers continue/local/API-key/defer, and honors

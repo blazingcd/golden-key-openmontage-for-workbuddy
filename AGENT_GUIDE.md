@@ -119,6 +119,13 @@ and running the next readiness probe are not authorized by this preparation.
 Stop after the reviewed candidate and exact Git evidence and obtain fresh
 action-time Owner authorization.
 
+That preparation has produced the uninstalled candidate
+`golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`, SHA256
+`437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`.
+Its independent zero-write review is `APPROVE / P0=0 / P1=0 / P2=0`; the sole
+Skill source change is commit `c8eeb91e221ec96a406543c183091eea7ea6ac3c`.
+The installed Skill remains unchanged. This result does not authorize WorkBuddy.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:

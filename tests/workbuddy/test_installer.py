@@ -4,10 +4,11 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import uuid
 import zipfile
 from pathlib import Path
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
@@ -167,6 +168,175 @@ def test_handoff_result_is_not_a_hardlink(tmp_path: Path, monkeypatch: pytest.Mo
     relative, _, _ = fixed_child._write_handoff(request)
 
     assert os.stat(result_root / relative, follow_symlinks=False).st_nlink == 1
+
+
+def _fake_package_registry(package_root: Path, summary_expression: str, statement: str = "") -> None:
+    tools = package_root / "tools"
+    tools.mkdir(parents=True)
+    (tools / "__init__.py").write_text("", encoding="utf-8")
+    statement_line = f"        {statement}\n" if statement else ""
+    (tools / "tool_registry.py").write_text(
+        "import os\n"
+        "class Registry:\n"
+        "    def provider_menu_summary(self):\n"
+        + statement_line
+        + f"        return {summary_expression}\n"
+        "registry = Registry()\n",
+        encoding="utf-8",
+    )
+
+
+def _handoff_request(result_root: Path, provider_environment_names: list[str] | None = None) -> dict[str, object]:
+    return {
+        "session_id": "session-1",
+        "request_id": str(uuid.uuid4()),
+        "message": "literal",
+        "timeout_seconds": 5,
+        "result_root": result_root,
+        "provider_environment_names": provider_environment_names or [],
+        "registration_sha256": "a" * 64,
+        "openmontage_release": "0.3.25",
+        "openmontage_commit": "0" * 40,
+        "tool_definition_sha256": "b" * 64,
+        "local_capability_evidence_identities": [],
+    }
+
+
+def test_handoff_relays_package_summary_without_changing_ownership(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package_root = tmp_path / "package"
+    result_root = tmp_path / "results"
+    result_root.mkdir()
+    summary = {
+        "composition_runtimes": {"ffmpeg": True, "remotion": False, "hyperframes": False},
+        "capabilities": [{"capability": "video_generation", "configured": 0, "total": 3}],
+        "setup_offers": [{"env_vars": ["SEEDANCE_API_KEY"]}],
+        "runtime_warnings": [],
+    }
+    _fake_package_registry(package_root, repr(summary))
+    monkeypatch.chdir(package_root)
+    monkeypatch.setenv("SEEDANCE_API_KEY", "secret-value-that-must-not-appear")
+
+    relative, digest, size = fixed_child._write_handoff(
+        _handoff_request(result_root, ["SEEDANCE_API_KEY"])
+    )
+
+    payload = (result_root / relative).read_bytes()
+    handoff = json.loads(payload)
+    assert payload == fixed_child._canonical(handoff)
+    assert len(payload) == size
+    assert installer._sha256(result_root / relative) == digest
+    assert b"secret-value-that-must-not-appear" not in payload
+    assert handoff["package_capability_summary"] == {
+        "source": "registry.provider_menu_summary",
+        "status": "REPORTED",
+        "facts": summary,
+        "error_code": None,
+    }
+    assert handoff["schema_version"] == "golden-key-workbuddy-fixed-child-handoff-v1"
+    assert handoff["decision_owner"] == "WorkBuddy"
+    assert handoff["production_decision_made"] is False
+    assert handoff["provider_selected"] is False
+    assert handoff["renderer_selected"] is False
+    assert handoff["media_executed"] is False
+
+
+def test_handoff_reports_unverified_when_package_summary_is_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package_root = tmp_path / "package"
+    result_root = tmp_path / "results"
+    package_root.mkdir()
+    result_root.mkdir()
+    monkeypatch.chdir(package_root)
+
+    relative, _, _ = fixed_child._write_handoff(_handoff_request(result_root))
+
+    handoff = json.loads((result_root / relative).read_bytes())
+    assert handoff["package_capability_summary"] == {
+        "source": "registry.provider_menu_summary",
+        "status": "NOT_VERIFIED",
+        "facts": None,
+        "error_code": "UNAVAILABLE",
+    }
+
+
+@pytest.mark.parametrize(
+    "environment_value,oversized",
+    [
+        ("secret-value-that-must-not-appear", False),
+        ('quote"slash\\line\nsecret', False),
+        ("", True),
+    ],
+)
+def test_handoff_suppresses_unsafe_package_summary(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    environment_value: str,
+    oversized: bool,
+) -> None:
+    package_root = tmp_path / "package"
+    result_root = tmp_path / "results"
+    result_root.mkdir()
+    summary_expression = "{'oversized': 'x' * (512 * 1024)}" if oversized else repr({"leak": environment_value})
+    _fake_package_registry(package_root, summary_expression)
+    monkeypatch.chdir(package_root)
+    names: list[str] = []
+    if environment_value:
+        monkeypatch.setenv("SEEDANCE_API_KEY", environment_value)
+        names.append("SEEDANCE_API_KEY")
+
+    relative, _, _ = fixed_child._write_handoff(_handoff_request(result_root, names))
+
+    payload = (result_root / relative).read_bytes()
+    if environment_value:
+        assert environment_value.encode("utf-8") not in payload
+    assert json.loads(payload)["package_capability_summary"] == {
+        "source": "registry.provider_menu_summary",
+        "status": "NOT_VERIFIED",
+        "facts": None,
+        "error_code": "REJECTED",
+    }
+
+
+def test_package_summary_restores_environment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    package_root = tmp_path / "package"
+    result_root = tmp_path / "results"
+    result_root.mkdir()
+    monkeypatch.delenv("PACKAGE_ONLY_TOKEN", raising=False)
+    _fake_package_registry(
+        package_root,
+        "{'composition_runtimes': {'ffmpeg': True}}",
+        "os.environ['PACKAGE_ONLY_TOKEN'] = 'temporary-secret-value'",
+    )
+    monkeypatch.chdir(package_root)
+
+    fixed_child._write_handoff(_handoff_request(result_root))
+
+    assert "PACKAGE_ONLY_TOKEN" not in os.environ
+
+
+def test_package_summary_rejects_module_outside_package_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package_root = tmp_path / "package"
+    result_root = tmp_path / "results"
+    result_root.mkdir()
+    _fake_package_registry(package_root, "{}")
+    outside = tmp_path / "outside_tool_registry.py"
+    outside.write_text("", encoding="utf-8")
+    tools_module = ModuleType("tools")
+    tools_module.__path__ = [str(package_root / "tools")]
+    registry_module = ModuleType("tools.tool_registry")
+    registry_module.__file__ = str(outside)
+    registry_module.registry = SimpleNamespace(provider_menu_summary=lambda: {})
+    monkeypatch.setitem(sys.modules, "tools", tools_module)
+    monkeypatch.setitem(sys.modules, "tools.tool_registry", registry_module)
+    monkeypatch.chdir(package_root)
+
+    with pytest.raises(fixed_child._InputError, match="package-summary-source"):
+        fixed_child._write_handoff(_handoff_request(result_root))
 
 
 def test_installer_builds_stamped_workbuddy_skill_zip(tmp_path: Path) -> None:

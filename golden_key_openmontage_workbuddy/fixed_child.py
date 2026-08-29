@@ -8,6 +8,7 @@ production pipeline; those decisions remain with WorkBuddy/OpenMontage.
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import os
 import re
@@ -25,10 +26,12 @@ RESULT_SCHEMA = "golden-key-workbuddy-package-tool-result-v1"
 HANDOFF_SCHEMA = "golden-key-workbuddy-fixed-child-handoff-v1"
 MAX_INPUT_BYTES = 4 * 1024 * 1024
 MAX_OUTPUT_BYTES = 1024 * 1024
+MAX_PACKAGE_SUMMARY_BYTES = 512 * 1024
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
 ENV_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+SECRET_NAME_RE = re.compile(r"(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)", re.IGNORECASE)
 REPARSE_ATTRIBUTE = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
 
 
@@ -146,6 +149,88 @@ def _handoff_directory(root: Path) -> Path:
     return directory
 
 
+def _restore_environment(before: dict[str, str]) -> None:
+    for name in tuple(os.environ):
+        if name not in before:
+            os.environ.pop(name, None)
+    os.environ.update(before)
+
+
+def _secret_values(
+    provider_environment_names: list[str],
+    before: dict[str, str],
+    after: dict[str, str],
+) -> set[str]:
+    explicit = set(provider_environment_names)
+    values: set[str] = set()
+    for environment in (before, after):
+        for name, value in environment.items():
+            if not value or (name not in explicit and (len(value) < 8 or SECRET_NAME_RE.search(name) is None)):
+                continue
+            values.add(value)
+    return values
+
+
+def _contains_secret(value: Any, secrets: set[str]) -> bool:
+    if isinstance(value, str):
+        return any(secret in value for secret in secrets)
+    if isinstance(value, dict):
+        return any(
+            _contains_secret(key, secrets) or _contains_secret(item, secrets)
+            for key, item in value.items()
+        )
+    if isinstance(value, (list, tuple)):
+        return any(_contains_secret(item, secrets) for item in value)
+    return False
+
+
+def _unverified_package_summary(source: str, error_code: str = "UNAVAILABLE") -> dict[str, Any]:
+    return {"source": source, "status": "NOT_VERIFIED", "facts": None, "error_code": error_code}
+
+
+def _package_capability_summary(provider_environment_names: list[str]) -> dict[str, Any]:
+    source = "registry.provider_menu_summary"
+    before_environment = dict(os.environ)
+    before_modules = set(sys.modules)
+    package_root = Path.cwd().resolve(strict=True)
+    module_path = package_root / "tools" / "tool_registry.py"
+    if not module_path.is_file():
+        return _unverified_package_summary(source)
+    _assert_no_reparse_chain(module_path, boundary=package_root)
+    sys.path.insert(0, str(package_root))
+    try:
+        try:
+            module = importlib.import_module("tools.tool_registry")
+            loaded_path = Path(module.__file__).resolve(strict=True)
+            if loaded_path != module_path.resolve(strict=True):
+                raise _InputError("package-summary-source")
+            summary = module.registry.provider_menu_summary()
+        except _InputError:
+            raise
+        except Exception:
+            return _unverified_package_summary(source)
+        after_environment = dict(os.environ)
+        try:
+            encoded = _canonical(summary, newline=False)
+            unsafe = not isinstance(summary, dict) or len(encoded) > MAX_PACKAGE_SUMMARY_BYTES
+            unsafe = unsafe or _contains_secret(
+                summary,
+                _secret_values(provider_environment_names, before_environment, after_environment),
+            )
+        except _InputError:
+            unsafe = True
+        if unsafe:
+            return _unverified_package_summary(source, "REJECTED")
+        return {"source": source, "status": "REPORTED", "facts": summary, "error_code": None}
+    finally:
+        _restore_environment(before_environment)
+        if sys.path and sys.path[0] == str(package_root):
+            sys.path.pop(0)
+        for name in tuple(sys.modules):
+            if name not in before_modules and (name == "tools" or name.startswith("tools.")):
+                sys.modules.pop(name, None)
+
+
 def _validate(raw: bytes) -> dict[str, Any]:
     if len(raw) > MAX_INPUT_BYTES or not raw.endswith(b"\n"):
         raise _InputError("wire")
@@ -243,6 +328,7 @@ def _write_handoff(request: dict[str, Any]) -> tuple[str, str, int]:
     relative = PurePosixPath("fixed-child-handoff") / f"{request['session_id']}--{request['request_id']}.json"
     root = request["result_root"]
     directory = _handoff_directory(root)
+    package_capability_summary = _package_capability_summary(request["provider_environment_names"])
     payload = _canonical(
         {
             "schema_version": HANDOFF_SCHEMA,
@@ -259,6 +345,7 @@ def _write_handoff(request: dict[str, Any]) -> tuple[str, str, int]:
             },
             "tool_definition_sha256": request["tool_definition_sha256"],
             "local_capability_evidence_identities": request["local_capability_evidence_identities"],
+            "package_capability_summary": package_capability_summary,
             "decision_owner": "WorkBuddy",
             "production_decision_made": False,
             "provider_selected": False,

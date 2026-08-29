@@ -65,20 +65,31 @@ its `fixed_child.py` SHA256 is
 `66defdd34ea984b4b2ccf6d79753f90bf1c45f4b387f226552035c4e2ae136bf`.
 Do not rebuild, reregister, or reactivate it.
 
-The authorized next chain stops before WorkBuddy: one six-document correction,
-zero-write review, commit, and planning push; ordinary merge into the retained M1
-branch; one minimal `SKILL.md` consumer instruction; one newly named uninstalled
-Skill ZIP bound to the active PackageRoot; zero-write candidate review; one
-implementation commit and ordinary push. Installing/replacing the Skill or
-operating WorkBuddy needs fresh action-time Owner authorization.
-
-The uninstalled candidate is now built at
+The consumer candidate was built at
 `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`,
 SHA256 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`.
 Its independent zero-write review passed `APPROVE / P0=0 / P1=0 / P2=0`; the
 single Skill source commit is `c8eeb91e221ec96a406543c183091eea7ea6ac3c`.
-The installed single Golden Key Skill remains byte-identical and no WorkBuddy
-action has been taken.
+After the Owner manually uninstalled the old same-name Skill, this candidate was
+installed as the only Golden Key Skill. One WorkBuddy 5.3.14 / `Hy3 0.00x`
+readiness probe produced an `EXITED_SUCCESS` receipt, valid result pointer, one
+spawn and no retry against the active final PackageRoot and `fixed_child.py`
+SHA256 `66defdd34ea984b4b2ccf6d79753f90bf1c45f4b387f226552035c4e2ae136bf`.
+The factual summary reached the dialogue; no Provider/renderer was selected, no
+production decision or media occurred, and the task workspace was empty after
+WorkBuddy removed its temporary parsing scripts.
+
+The independent user-result review is `REJECT / P0=0 / P1=3 / P2=0`. WorkBuddy
+incorrectly described Remotion as ready, exposed environment-variable mechanics,
+and did not clearly offer all four continue/local/API-key/defer choices. Read-only
+inspection confirms OpenMontage does integrate Remotion source, adapters, and a
+`4.0.484` dependency lock, but the active Package lacks
+`remotion-composer/node_modules`; it is integrated, not runtime-ready or
+invocation-verified. The Owner authorizes a minimal Skill consumer correction,
+six-document synchronization, independent zero-write reviews, ordinary commits
+and pushes, and one newly named uninstalled candidate. Another WorkBuddy probe,
+installation, Package mutation, Provider/secret/media action, and M1.3 remain
+unauthorized.
 
 The probe passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
@@ -248,49 +259,27 @@ The deviation is that its independent sub-audit created and removed the exact
 temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and the
 path was confirmed absent at closeout.
 
-M1.2 is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT /
-CONSUMER_CANDIDATE_PREPARATION_AUTHORIZED / WORKBUDDY_ACTION_NOT_AUTHORIZED /
-M1_3_BLOCKED`. The contract at
-`f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` incorrectly combined an authoritative
-inventory requirement with a Skill-only write allowlist, despite the accepted
-M1.1 facts that local evidence was empty, optional preparation had no production
-caller, and WorkBuddy's required discovery ability was unverified. Its tests could
-not prove the missing fact flow.
+M1.2 is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+USER_RESULT_REJECTED_P1_3 / CONSUMER_CORRECTION_AUTHORIZED / M1_3_BLOCKED`.
+The earlier contract at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174`, first
+discovery probe, and prematurely cancelled probe remain historical failed routes;
+they do not define the current result.
 
-The implementation branch completed the exact two-file factual relay and is clean;
-its pushed relay ceiling is
-`33f49fb385b103489772d3f8ce2f7cb2486b08dc`. Its current local head is
-`fd0a3f8cac41540ff25a3dd113828c7a5f39f7a6`; tracking/advertised remain
-`33f49fb...`. The installed Skill remains the only Golden Key Skill and must not
-be replaced before fresh action-time authorization.
+The implementation branch is clean and its local, tracking, and advertised head
+are all `f9880c247ed61744b4bba2f83ffa6411eb49c413`. The pushed factual-relay
+ceiling is `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the pushed Skill consumer
+commit is `c8eeb91e221ec96a406543c183091eea7ea6ac3c`. The reviewed consumer ZIP is
+installed as the only Golden Key Skill. Its relay reached the ordinary-user
+dialogue, but the result failed acceptance because it misstated Remotion runtime
+readiness, exposed configuration mechanics, and omitted two clear choices.
 
-The single bounded probe verified PackageRoot/Guide and reached attempts to call
-`provider_menu_summary()`, but no capability facts reached the ordinary-user
-dialogue. The required FFmpeg explanation, honest optional states, and four
-choices were absent. WorkBuddy instead created
-`C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10` and a zero-byte
-`gk_menu_summary.json`, then queued another file write; the task was cancelled.
-The file and exact task directory
-`D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9` were removed under Owner authorization, but
-the now-empty C: directory remains `CLEANUP_BLOCKED_IN_USE` because WorkBuddy
-holds it open. Do not force-delete it.
-
-The zero-write audit confirmed the minimum route: read the verified Package's
-`provider_menu_summary()` at the fixed-child boundary and place the bounded raw
-facts inside the existing handoff/receipt carrier. Shell must not interpret,
-recommend, sort, or select; WorkBuddy remains the explanation, relevance,
-Provider/model, consent, and recovery owner. The authorized implementation may
-prove only that local carrier contract. M1.3 remains blocked until a later real
-WorkBuddy result completes M1.2.
-
-A later attempt created only the normal empty WorkBuddy task directory
-`C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28` and was cancelled immediately.
-The latest LauncherReceipt remained the older 16:28 receipt for
-`product2-result-pointer-fix-install-20260827\PackageRoot` and old
-`fixed_child.py` SHA256 `3a1f9c...`; the new relay was not invoked. The attempt is
-`NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`. Empty workspace creation
-alone is allowed; copying the managed summary there or creating a relay file is
-not. The empty directory is preserved as evidence.
+The corrected Remotion fact is: OpenMontage source integration exists, the active
+Package lacks project-local dependencies, runtime readiness is false, and a real
+Package-mediated invocation is not verified. The current authorization is only
+the minimal Skill consumer correction, its six-document synchronization, one new
+uninstalled candidate, independent zero-write reviews, commits, and pushes. Shell
+continues to carry bounded facts only; WorkBuddy owns explanation and choice.
+Another WorkBuddy action and M1.3 remain blocked.
 
 ## Non-goals
 

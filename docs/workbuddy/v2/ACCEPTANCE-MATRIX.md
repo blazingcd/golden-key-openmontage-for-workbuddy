@@ -118,18 +118,18 @@ exact local and remote formal ref by ordinary fast-forward. Reviewed commit
 `70cf63be51774de9151fb0fee24cf78591ff1993` reached both refs; this later
 Owner-authorized record changes documentation status only.
 
-## Next-phase acceptance — M1.2 consumer candidate preparation authorized; WorkBuddy gated
+## Next-phase acceptance — M1.2 factual relay proved; consumer result correction authorized
 
 These rows do not alter or reopen R1-R4. Those identifiers remain frozen and no
-future task continues the R series. The current gate covers only preparation of a
-bounded M1.2 consumer candidate and stops before any WorkBuddy operation; M1.3
-and all later work remain separately gated. M1–M3 are Must, S1–S5 are Should,
+future task continues the R series. The current gate covers only correction of a
+bounded M1.2 Skill consumer and one newly named uninstalled candidate; another
+WorkBuddy operation, M1.3, and all later work remain separately gated. M1–M3 are Must, S1–S5 are Should,
 and C1–C2 are Could.
 
 | Task | Ordinary-user goal | Minimum observable evidence | Current state |
 |---|---|---|---|
-| M1 — first-use guidance and capability readiness | Start from ordinary natural language, understand that FFmpeg-ready basic production is available, and complete or defer relevant local-install and API-key configuration without internal technical work. Visible Providers come only from the verified Package's formal declarations; current static evidence includes Seedance, Kling, and MiniMax. | Honest Remotion, HyperFrames, external-video, and TTS states; one representative local path proves download, install, recognition, and actual Package invocation; one representative API-key path proves secure non-chat input/storage, exact allowlisting, no disclosure, and authorized connection testing; optional absence remains non-blocking. Wording and step order may differ from planning examples or use a bounded fixed sequence when real WorkBuddy/security requires it. No evaluator-script comparison, Shell decision, fixed command language, false ready state, or user-visible internal mechanics. M1.4 closeout additionally requires the reviewed M1 head fast-forwarded and pushed to the formal capability-onboarding ref, then verified removal of the recorded temporary worktree, local/remote M1 branch, and exact task-owned temporary directories with no unique/unmerged work or user-data deletion. | `M1.1_FACT_AUDIT_COMPLETE / M1.2_LOCAL_RELAY_VERIFIED / CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED` |
-| M1.2 — first-use readiness | Understand the FFmpeg-ready baseline, receive a compact honest enhancement summary based on trustworthy current facts, and choose continue, local configuration, API-key configuration, or defer without technical operations. | One separately authorized bounded WorkBuddy readiness probe uses a verified PackageRoot/Guide and proves current facts can reach the dialogue; the visible result distinguishes honest readiness states, keeps optional absence non-blocking, exposes all four choices, and correctly honors the user's selected non-mutating boundary. Exact wording, tools, and choice order may vary. Skill wording/packaging alone does not pass. A local Shell relay contract or an uninstalled Skill candidate can prove bounded transport/consumption contracts only; neither satisfies this row without later real dialogue evidence. | `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED / WORKBUDDY_ACTION_NOT_AUTHORIZED / M1.3_BLOCKED` |
+| M1 — first-use guidance and capability readiness | Start from ordinary natural language, understand that FFmpeg-ready basic production is available, and complete or defer relevant local-install and API-key configuration without internal technical work. Visible Providers come only from the verified Package's formal declarations; current static evidence includes Seedance, Kling, and MiniMax. | Honest Remotion, HyperFrames, external-video, and TTS states; one representative local path proves download, install, recognition, and actual Package invocation; one representative API-key path proves secure non-chat input/storage, exact allowlisting, no disclosure, and authorized connection testing; optional absence remains non-blocking. Integration/source presence is distinct from installed runtime readiness and real invocation. Wording and step order may differ from planning examples or use a bounded fixed sequence when real WorkBuddy/security requires it. No evaluator-script comparison, Shell decision, fixed command language, false ready state, raw environment/path/command burden, or other user-visible internal mechanics. M1.4 closeout additionally requires the reviewed M1 head fast-forwarded and pushed to the formal capability-onboarding ref, then verified removal of the recorded temporary worktree, local/remote M1 branch, and exact task-owned temporary directories with no unique/unmerged work or user-data deletion. | `M1.1_FACT_AUDIT_COMPLETE / M1.2_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3` |
+| M1.2 — first-use readiness | Understand the FFmpeg-ready baseline, receive a compact honest enhancement summary based on trustworthy current facts, and choose continue, local configuration, API-key configuration, or defer without technical operations. | One separately authorized bounded WorkBuddy readiness probe uses a verified PackageRoot/Guide and proves current facts can reach the dialogue; the visible result distinguishes integrated/not-installed/not-ready/not-verified states, keeps optional absence non-blocking, exposes all four choices, and correctly honors the user's selected non-mutating boundary. Exact wording, tools, and choice order may vary. Skill wording/packaging alone does not pass. | `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CONSUMER_CORRECTION_AUTHORIZED / M1.3_BLOCKED` |
 | M2 — progressive clarification and material readiness | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | Only genuinely missing audience/platform/duration/style/brand/material/budget/delivery questions; explicit defaults and implications; understandable no/partial/complete-material handling; user correction and confirmation; no internal mechanics. | `DEPENDENT_ON_M1.2 / NOT_AUTHORIZED` |
 | M3 — stable production, basic quality, and final delivery | Receive a real result after choosing the basic or an approved enhanced path, with evidence that delivery is not accidental. | Three separately started cases with no supplied, partial, and complete user materials all produce playable outputs; valid receipts and result locations; decode, dimensions/direction, duration, audio, and visible-text/safe-area checks; prompt final answers without optional persistence delay; one independent review of the result set. | `DEPENDENT_ON_M1.4_AND_M2 / NOT_AUTHORIZED` |
 | S1 — preview, revision, version, and rollback | Review a result, request natural-language changes, receive a new version, and return to an earlier version. | One initial version, two bounded revisions, one rollback; all versions remain identifiable, findable, and playable. | `DEPENDENT_ON_M3 / NOT_AUTHORIZED` |
@@ -166,7 +166,7 @@ observed and one independent zero-write result review approves it. Otherwise the
 probe is route-selection evidence only and the task stops without retry, repair,
 Shell changes, or an M1.3 start.
 
-The probe stopped under that rule. WorkBuddy verified PackageRoot/Guide and tried
+The historical first probe stopped under that rule. WorkBuddy verified PackageRoot/Guide and tried
 the Package compact summary, but no capability facts, FFmpeg explanation, honest
 optional states, or choices reached the user. The UI was cancelled after an
 unapproved file-carrier attempt. This is
@@ -176,7 +176,7 @@ its exact two-file implementation and focused local proof. Neither the audit nor
 a passing local carrier test can satisfy this row; real WorkBuddy dialogue and
 choice evidence remain required.
 
-The bounded relay implementation is pushed at `33f49fb...`; its
+The bounded relay implementation was then pushed at `33f49fb...`; its
 `fixed_child.py` SHA256 is
 `66defdd34ea984b4b2ccf6d79753f90bf1c45f4b387f226552035c4e2ae136bf`.
 The immutable final assembly is now registered and active. A later WorkBuddy
@@ -186,21 +186,20 @@ unchanged old LauncherReceipt proves that the new Skill/Shell did not run. This 
 relay. Empty task-directory creation alone is allowed; workspace relay files and
 managed-summary copies remain disqualifying.
 
-The current gate authorizes only a reviewed, uninstalled Skill consumer candidate
-and exact Git closeout. Installing/replacing that candidate or operating WorkBuddy
-requires fresh action-time authorization. A later authorized probe on an available
-`0.00x` row passes this row only if the visible ordinary-user dialogue contains
-the FFmpeg continuation statement, honest local/external/TTS and Package-declared Provider
-states, all four entries, and the honored defer boundary. Installation, secrets,
-Provider/connection calls, media, workspace relay files or managed-summary
-copies, Shell fallback, retry,
-and M1.3 remain disqualifying. A complete result receives one independent
-zero-write review; otherwise record terminal `NOT_PROVED` and stop.
+That consumer candidate was later installed after the Owner manually removed the
+old same-name Skill. Its authorized WorkBuddy probe proved the factual relay
+reached dialogue, but the visible result failed independent review with
+`REJECT / P0=0 / P1=3 / P2=0`. The current gate authorizes only the Skill consumer
+correction, a newly named uninstalled ZIP, independent zero-write review, and
+exact Git closeout. Installing the correction or running WorkBuddy again requires
+fresh action-time authorization. Installation, secrets, Provider/connection
+calls, media, workspace relay files or managed-summary copies, Shell fallback,
+retry, and M1.3 remain disqualifying.
 
-The reviewed uninstalled candidate ZIP SHA256 is
+The installed rejected consumer ZIP SHA256 is
 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
 candidate review is `APPROVE / P0=0 / P1=0 / P2=0`. This proves only the bounded
-consumer artifact, not any user-visible WorkBuddy result.
+artifact identity, not an accepted user-visible WorkBuddy result.
 
 ## Review rule
 

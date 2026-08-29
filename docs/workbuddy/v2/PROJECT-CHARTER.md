@@ -59,6 +59,14 @@ conversation, relevance, Provider/model choice, cost/privacy explanation,
 credentials, consent, connection testing, and recovery. Shell runtime preparation
 may only detect and apply an exactly approved mechanical plan.
 
+Integration is not readiness. A capability may have Package source, an adapter,
+and a dependency lock while its local dependencies are absent; it is then
+"integrated, not ready", not "ready" and not an OpenMontage incapability. For
+composition engines, current runtime facts govern the user-visible state over a
+generic capability/provider rollup. WorkBuddy paraphrases configuration in
+ordinary language and does not expose raw environment names, paths, commands,
+URLs, or installation instructions in first-use guidance.
+
 Later natural-language requests containing `金钥匙智能体` may inspect, configure,
 change, or retest capabilities. This is an open intent, not a fixed configuration
 language or second control plane.
@@ -161,7 +169,7 @@ path, the task stops; bounded Shell factual relay is a separately authorized
 fallback design, not work silently absorbed into the probe. M1.4 may integrate the
 M1 result but must not retroactively fill missing M1.2 evidence.
 
-The one authorized WorkBuddy-owned discovery probe did not prove that route.
+The historical WorkBuddy-owned discovery probe did not prove that route.
 WorkBuddy reached the verified Package and attempted its compact summary, but the
 facts did not reach the user conversation; an ad-hoc file carrier is not an
 acceptable product path. A separately authorized zero-write audit may now find
@@ -169,7 +177,7 @@ the smallest existing Shell mechanical factual-relay boundary. It must preserve
 WorkBuddy's explanation, relevance, Provider/model, consent, and recovery
 ownership and cannot itself authorize implementation.
 
-That zero-write audit is complete. It found that the smallest candidate is not a
+The following historical zero-write audit found that the smallest candidate was not a
 new protocol: extend the existing validated `fixed-child-handoff` with the
 verified Package's bounded compact summary. Shell relays the facts without
 interpreting, recommending, ranking, or selecting them. The Owner has authorized
@@ -177,7 +185,7 @@ the exact two-file implementation and focused local proof. That local contract i
 not M1.2 completion; only later real WorkBuddy evidence can prove that ordinary
 users receive the explanation and four choices.
 
-That two-file implementation is pushed at `33f49fb...` and is
+That two-file implementation was pushed at `33f49fb...` and is
 `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`. The immutable final PackageRoot was later
 assembled, registered, activated, and bound to the single installed Skill. A
 following WorkBuddy attempt was cancelled on creation of a normal empty task
@@ -187,17 +195,20 @@ the new relay was not invoked. That attempt is
 
 An empty task workspace is allowed harness behavior. A workspace relay file,
 copy/rewrite of the managed handoff or summary, persistent memory, or new user
-Skill remains prohibited. The current authorization ends before WorkBuddy: it
-permits only the six-document correction, a one-file Skill consumer instruction,
-an uninstalled candidate ZIP bound to the active PackageRoot, their independent
-zero-write reviews, commits, and ordinary pushes. Installing/replacing the Skill
-or running WorkBuddy needs fresh action-time Owner authorization. Exact paths and
-Git state remain authority only in the Task Register.
+Skill remains prohibited. The reviewed consumer candidate was installed after
+the Owner manually removed the old same-name Skill. Its authorized probe proved
+the factual relay reached dialogue, but independent review rejected the user
+result `REJECT / P0=0 / P1=3 / P2=0` for false Remotion readiness, exposed
+configuration mechanics, and missing choices.
 
-The bounded consumer candidate is now built but uninstalled, with SHA256
-`437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2` and
-independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0`. This preparation
-result does not satisfy M1.2 user acceptance or open the WorkBuddy gate.
+The current authorization permits only the six-document synchronization, a
+one-file Skill consumer correction, one newly named uninstalled candidate ZIP
+bound to the unchanged active PackageRoot, their independent zero-write reviews,
+commits, and ordinary pushes. Installing the correction or running WorkBuddy
+again needs fresh action-time Owner authorization. Exact paths and Git state
+remain authority only in the Task Register. The installed rejected candidate has
+SHA256 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
+its earlier artifact review does not satisfy M1.2 user acceptance.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

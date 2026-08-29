@@ -114,17 +114,27 @@ the already active final PackageRoot; obtain one independent zero-write candidat
 review; commit once and ordinarily push the implementation branch. Do not rebuild,
 reregister, or reactivate the PackageRoot.
 
-Installing or replacing the Skill in WorkBuddy, opening or operating WorkBuddy,
-and running the next readiness probe are not authorized by this preparation.
-Stop after the reviewed candidate and exact Git evidence and obtain fresh
-action-time Owner authorization.
-
-That preparation has produced the uninstalled candidate
+That preparation produced the candidate
 `golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`, SHA256
 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`.
 Its independent zero-write review is `APPROVE / P0=0 / P1=0 / P2=0`; the sole
 Skill source change is commit `c8eeb91e221ec96a406543c183091eea7ea6ac3c`.
-The installed Skill remains unchanged. This result does not authorize WorkBuddy.
+The Owner manually removed the old same-name Skill, after which this candidate
+was installed as the only `golden-key-openmontage` Skill. Its installed
+`SKILL.md` and `run.ps1` SHA256 values are
+`20ab048d8e9cb9edee19f71a8fde81991670d4a571465c558ef1c02d8dd871ff` and
+`0c8c743404127dbc612bc87c207f307ddbff2ef9a3a071b37c7ff2095383902b`.
+
+One action-time-authorized WorkBuddy 5.3.14 / `Hy3 0.00x` readiness probe then
+proved the factual relay reached the ordinary dialogue, but its user result was
+independently rejected `REJECT / P0=0 / P1=3 / P2=0`: it conflated integrated
+Remotion source with current runtime readiness, exposed environment-variable
+mechanics, and omitted a clear defer choice and separate local-configuration
+entry. The Owner now authorizes a bounded correction in the same six authority
+documents and the existing Skill source, independent zero-write reviews,
+ordinary commits and pushes, and one newly named uninstalled candidate. This
+does not authorize another WorkBuddy run, installation, Provider/secret/media
+action, PackageRoot change, M1.3, or branch cleanup.
 
 ## Product boundary
 
@@ -165,6 +175,14 @@ must not replay a user request or create a second task merely to change models.
 FFmpeg is the minimum production baseline. When it is ready, OpenMontage can
 produce a basic result; an absent optional enhancement must never be described as
 OpenMontage lacking production capability or block that basic path.
+
+Keep integration, installation, runtime readiness, and real invocation separate.
+For Remotion, the verified Package contains the composer source, adapters, and
+dependency lock, but the active Package lacks project `node_modules`; therefore
+Remotion is integrated but not currently ready or invocation-verified. When the
+capability rollup and `composition_runtimes` disagree about a composition engine,
+the runtime field controls the ready/not-ready statement. A static tool/provider
+entry must not be upgraded into runtime readiness.
 
 On first use, after PackageRoot verification, WorkBuddy should perform a light
 capability inventory using its own current tools and the verified Package
@@ -259,15 +277,15 @@ its direct installer test. Local/tracking/advertised implementation refs now all
 equal `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the worktree is clean and the
 result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
-M1.2 is now `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT /
-CONSUMER_CANDIDATE_PREPARATION_AUTHORIZED / WORKBUDDY_ACTION_NOT_AUTHORIZED /
-M1_3_BLOCKED`. The local result
-cannot make M1.2 complete by itself. The WorkBuddy result must be separately
-authorized and must still prove that facts reach the ordinary-user dialogue, the
-FFmpeg explanation
-and honest optional states appear, and continue/local/API-key/defer are actually
-available. If completion needs a third source path, new carrier/protocol, live
-repair, Provider/secret/media action, retry, or fallback, stop.
+M1.2 is now `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+USER_RESULT_REJECTED_P1_3 / CONSUMER_CORRECTION_AUTHORIZED / M1_3_BLOCKED`.
+The correction may change only the WorkBuddy-facing Skill instruction: preserve
+the existing handoff, treat composition runtime facts as authoritative for
+runtime readiness, paraphrase configuration without raw environment names,
+paths, commands, URLs, or install instructions, and visibly offer continue,
+local configuration, API-key configuration, and defer. It must not prescribe an
+exact transcript or move interpretation/choice into Shell. Another WorkBuddy
+probe remains separately gated.
 
 ## Four product results
 

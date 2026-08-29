@@ -117,7 +117,11 @@ by themselves.
   deferred until the minimum and Should paths have evidence and the Owner approves
   a separate product case.
 
-## M1.1 evidence and M1.2 entry guard
+## Historical M1.1 evidence and M1.2 entry guard
+
+This section records the route through the factual-relay implementation. Its
+phase-specific write authority is closed; the current correction guard below is
+the only active M1.2 write authority.
 
 - M1.1 facts are accepted, but its independent sub-audit created and removed
   `D:\DevCache\Temp\m11-rg.txt`; retain
@@ -170,7 +174,7 @@ by themselves.
   remains deferred and unproved. M1.4 is integrated M1 acceptance, not a place to
   repair missing M1.2 evidence. Installation, credentials, Provider calls,
   validation, recovery, and retest remain M1.3 boundaries.
-- The Owner now authorizes only
+- The Owner then authorized only
   `golden_key_openmontage_workbuddy/fixed_child.py` and
   `tests/workbuddy/test_installer.py` for the bounded relay implementation, after
   the exact pushed planning head is ordinarily merged into the retained clean M1
@@ -224,13 +228,16 @@ by themselves.
   and six-document closeout. Clean only the exact recorded D: temporary directory;
   never touch `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10`.
 
-## Current M1.2 consumer-candidate preparation guard
+## Current M1.2 consumer-result correction guard
 
 - The 19:32 WorkBuddy attempt is
   `NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`. Its empty task
   directory `C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28` is preserved as
   evidence. The unchanged old LauncherReceipt is the decisive invocation fact.
-- Preparation may change only the six authority/state documents and, after their
+- The installed handoff-consumer candidate completed one `Hy3 0.00x` readiness
+  probe. The factual relay reached dialogue, but independent review rejected the
+  user result `REJECT / P0=0 / P1=3 / P2=0`; M1.2 remains incomplete.
+- Correction may change only the six authority/state documents and, after their
   exact pushed head is ordinarily merged, only
   `workbuddy-skill/golden-key-openmontage/SKILL.md`. No Shell, Package, test, or
   second Skill source file may change.
@@ -238,21 +245,26 @@ by themselves.
   `result_pointer`, read the existing managed handoff's bounded
   `package_capability_summary`, avoid copying it into the workspace, and retain
   WorkBuddy ownership of interpretation, relevance, choice, and recovery.
-- Build one newly named Skill ZIP at
-  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`
-  bound to the already active final PackageRoot. Do not rebuild, register, or
-  activate a PackageRoot.
+- Treat Package integration, installed dependencies, runtime readiness, and real
+  invocation as different facts. For composition engines,
+  `composition_runtimes` governs ready/not-ready wording; the current active
+  Package contains Remotion integration but lacks project `node_modules`.
+- The first-use reply must paraphrase facts without raw environment names, paths,
+  commands, URLs, or install instructions, and must visibly include continue,
+  local configuration, API-key configuration, and defer as four semantic choices.
+- Build one newly named uninstalled Skill ZIP bound to the already active final
+  PackageRoot. Do not rebuild, register, or activate a PackageRoot.
 - Obtain one independent zero-write document review and one independent zero-write
   candidate review. Commit/push the planning branch once and implementation
   branch once; verify exact local/tracking/advertised refs and clean worktrees.
-- Stop before WorkBuddy. Do not install/replace the Skill, open or operate
-  WorkBuddy, or run the readiness probe without fresh action-time Owner
+- Stop before another WorkBuddy action. Do not install/replace the corrected
+  Skill or run another readiness probe without fresh action-time Owner
   authorization.
-- The resulting uninstalled ZIP has SHA256
-  `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
-  its zero-write candidate review is `APPROVE / P0=0 / P1=0 / P2=0`, and its
-  sole Skill source commit is `c8eeb91e221ec96a406543c183091eea7ea6ac3c`.
-  These facts do not permit WorkBuddy installation or execution.
+- The previously reviewed ZIP, SHA256
+  `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`,
+  is the installed candidate whose user result was rejected. The newly named
+  corrected ZIP does not exist yet. Neither fact permits another WorkBuddy
+  installation or execution.
 
 ## Result guard
 

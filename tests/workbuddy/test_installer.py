@@ -46,6 +46,27 @@ def test_archive_listing_and_member_names_fail_closed(monkeypatch: pytest.Monkey
         installer._seven_zip_listing(seven_zip, archive)
 
 
+def test_ffmpeg_distribution_prunes_only_unused_player_and_docs(tmp_path: Path) -> None:
+    root = tmp_path / "ffmpeg"
+    retained = (
+        root / "bin" / "ffmpeg.exe",
+        root / "bin" / "ffprobe.exe",
+        root / "LICENSE",
+        root / "README.txt",
+        root / "presets" / "libx264.ffpreset",
+    )
+    removed = (root / "bin" / "ffplay.exe", root / "doc" / "ffmpeg.html")
+    for path in (*retained, *removed):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"x")
+
+    installer._prune_ffmpeg_distribution(root)
+
+    assert all(path.is_file() for path in retained)
+    assert all(not path.exists() for path in removed)
+    assert not (root / "doc").exists()
+
+
 def test_install_failure_restores_previous_pointer_and_removes_new_root(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

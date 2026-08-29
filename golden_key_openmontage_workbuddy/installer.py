@@ -297,6 +297,14 @@ def _flatten_single_directory(stage: Path, destination: Path) -> None:
     _verify_tree_boundary(destination)
 
 
+def _prune_ffmpeg_distribution(root: Path) -> None:
+    # The product registers ffmpeg/ffprobe; ffplay and upstream HTML docs add about 110 MiB installed.
+    (root / "bin" / "ffplay.exe").unlink(missing_ok=True)
+    docs = root / "doc"
+    if docs.exists():
+        shutil.rmtree(docs)
+
+
 def _verify_package_checkout(checkout: Path) -> dict[str, Any]:
     head = _git(checkout, "rev-parse", "HEAD")
     tree = _git(checkout, "rev-parse", "HEAD^{tree}")
@@ -497,6 +505,7 @@ def _install_toolchain(
         )
         _verify_tree_boundary(ffmpeg_stage)
         _flatten_single_directory(ffmpeg_stage, ffmpeg_root)
+        _prune_ffmpeg_distribution(ffmpeg_root)
     except (OSError, subprocess.CalledProcessError) as exc:
         raise InstallerError("ffmpeg_archive_extract_failed") from exc
     finally:

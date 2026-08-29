@@ -106,31 +106,38 @@ ordinary user that basic production is ready when FFmpeg is ready, and presents
 relevant optional enhancements such as Remotion, HyperFrames, external video
 generation, and TTS as choices that may be configured now or later.
 
-The initial mainland-China external-video scope is now fixed for planning:
-Seedance is the default recommendation, while Kling, Vidu, and MiniMax are core
-alternatives. They belong to M1 rather than deferred C1 expansion. Current static
-Package evidence shows direct routes for Seedance, Kling, and MiniMax but no
-Vidu-specific direct adapter. Vidu is therefore an explicit M1 dependency, not a
-currently configurable capability. This inventory does not prove credentials,
-account permission, balance, connectivity, regional availability, or live model
-availability for any Provider.
+M1 now derives its visible Provider set from the verified Package's formal
+declarations. Current static evidence includes Seedance, Kling, and MiniMax;
+Seedance is the current default recommendation. Undeclared Providers do not appear
+in the M1 user experience or acceptance scope. This snapshot is not a Shell
+routing table and does not prove credentials, account permission,
+balance, connectivity, regional availability, or live model availability.
+
+The configuration journey has two required mechanisms. Local capabilities such
+as Remotion and HyperFrames require approved download, managed installation,
+rediscovery, Package recognition, and actual Package-mediated invocation. API-key
+Providers require a secret-safe input/store path outside ordinary chat, exact
+Package allowlisting, non-disclosing relay, and an authorized connection test.
+M1.3 must obtain one representative result for each mechanism.
 
 WorkBuddy remains the only conversation and decision owner. It may use its own
 current capabilities and the verified Package semantics to decide what is
 relevant, explain cost/privacy/credentials, obtain consent, and recover from a
 failed optional configuration. Shell runtime preparation remains bounded
-mechanical detection and exactly approved integration. Later natural-language
-requests containing `金钥匙智能体` may inspect, configure, change, or retest the
-same capabilities without a fixed configuration grammar.
+mechanical detection and exactly approved integration. Later requests containing
+`金钥匙智能体` may inspect, configure, change, or retest the same capabilities:
+natural language remains the entry and intent carrier, while WorkBuddy may use a
+bounded guided sequence when secure input or reliable installation requires it.
+That sequence must not make the user operate internal commands or technical details.
 
 Planned dependency: M1.1 fact audit then M1.2 first-use readiness; M2 may start
-after M1.2. M1.3 is still a required product capability and representative
-acceptance path, but a particular user may defer it until M2 establishes relevance
-or continue on FFmpeg without using an enhancement. M3 starts only after M1.4 and
-M2 are complete. S1–S4 then cover revision/version/rollback,
+after M1.2. M1.3 is still a required product capability with representative local
+installation and API-key paths, but a particular user may defer configuration
+until M2 establishes relevance or continue on FFmpeg without using an enhancement.
+M3 starts only after M1.4 and M2 are complete. S1–S4 then cover revision/version/rollback,
 one additional platform/aspect, export/share/reuse, and cross-machine lifecycle.
 S5 qualifies only an enhancement selected for a real user goal. C1 broad
-Provider/model coverage beyond the initial four-Provider mainland set and C2
+Provider/model coverage beyond the verified Package's formal declarations and C2
 automatic routing/direct publishing remain deferred. Implementation and real-user
 acceptance require separate Owner authorization.
 
@@ -140,6 +147,12 @@ ordinary push on `codex/workbuddy-capability-onboarding`. It does not authorize
 M1.2/M1.3 implementation or any Package, test, WorkBuddy, installation,
 credential, Provider-call, or media action.
 
+Natural-language interaction examples remain planning hypotheses. Real WorkBuddy
+evidence may require different wording, tools, or a bounded fixed confirmation
+sequence. That variation is acceptable when the ordinary user can still start and
+complete configuration without internal technical work and all safety boundaries
+remain intact.
+
 ### M1.1 accepted fact audit
 
 The Owner accepted the M1.1 factual conclusion. Locator revalidated the registered
@@ -147,8 +160,8 @@ PackageRoot and FFmpeg baseline. The Shell already contains bounded Remotion/
 HyperFrames preparation, but no production caller uses it; `user_entry` sends an
 empty local-capability evidence list, and the verified Package tool definition
 declares no required local capabilities or Provider/secret allowlist. Later static
-inspection found direct Package routes for Seedance, Kling, and MiniMax and no
-Vidu-specific direct adapter. Current WorkBuddy tools, actual optional-capability
+inspection found direct Package routes for Seedance, Kling, and MiniMax. Current
+WorkBuddy tools, actual optional-capability
 readiness, video/TTS Provider accounts, prices, credentials, balances,
 connectivity, regional/model availability, first-use dialogue, natural-language
 re-entry, and recovery remain `NOT_VERIFIED`.

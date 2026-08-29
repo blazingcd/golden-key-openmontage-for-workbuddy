@@ -48,14 +48,17 @@ by themselves.
   change, or retest capabilities. Do not require a fixed grammar or transcript.
 - Do not turn the inventory into broad disk scanning, a hard-coded capability
   universe, a Shell selector, or a second control plane.
-- The initial mainland external-video set is Seedance, Kling, Vidu, and MiniMax.
-  Seedance is the current default recommendation; the other three are core
-  alternatives. C1 begins beyond this set and cannot be used to omit them from M1.
-- This is a WorkBuddy product/display scope, not a fixed Shell Provider menu,
-  routing table, model-version list, or second control plane.
-- Current static Package routes for Seedance, Kling, and MiniMax do not prove live
-  readiness. No Vidu-specific direct adapter was found, so Vidu must remain an
-  explicit integration gap and must not be shown as ready/configurable.
+- M1 shows only Providers formally declared by the verified Package. Current
+  static evidence includes Seedance, Kling, and MiniMax; undeclared Providers are
+  absent from M1. Seedance is the current default recommendation.
+- This is dynamic WorkBuddy product/display scope, not a fixed Shell Provider
+  menu, routing table, model-version list, or second control plane.
+- Static Package routes do not prove live readiness. Do not invent unsupported
+  Provider entries or call a Provider ready before authorized verification.
+- Natural-language examples are not acceptance transcripts. A bounded fixed
+  sequence is allowed when actual WorkBuddy behavior, consent, secure secret
+  entry, or reliable installation requires it; users still must not operate
+  internal commands or configuration grammar.
 
 ## M0 roadmap and M1 execution guard
 
@@ -89,9 +92,10 @@ by themselves.
 - M2 asks only for business information genuinely missing from the current goal;
   it may start after M1.2 and must not become a fixed questionnaire or expose
   internal mechanics.
-- M1.3 is a required product-capability and representative-acceptance step, but a
-  particular user may defer configuration or stay on FFmpeg. M1 closes at M1.4
-  only after M1.2 and one representative M1.3 path are proved.
+- M1.3 is a required product-capability step, but a particular user may defer
+  configuration or stay on FFmpeg. M1 closes at M1.4 only after M1.2, one
+  representative local-install path, and one representative API-key path are
+  proved.
 - M3 proves one default production path, basic media quality, repeatable delivery,
   a checkable receipt/location, and a prompt final answer. It starts only after
   M1.4 and M2 and excludes S1–S5 and C1–C2 scope.
@@ -117,10 +121,12 @@ by themselves.
   M1.2 implementation. Do not choose by convenience, copy the full Provider menu,
   mutate PackageRoot, or absorb a Package rebuild into M1.2.
 - M1.2 owns one unified scan, ordinary-language explanation, honest state, and
-  continue/configure entry for the initial Provider set. M1.3 owns selected
-  configuration, consent, secret-safe handling, connection testing, recovery, and
-  later retest. Vidu Package work requires separate repository/branch/write
-  authorization before Vidu can become configurable.
+  continue/configure entry for the verified Package's formal capability set.
+  M1.3 owns selected configuration, consent, validation, recovery, and later
+  retest. Local completion requires managed install, rediscovery, Package
+  recognition, and actual invocation. API-key completion requires non-chat secure
+  input/storage, exact allowlisting, no disclosure, and an authorized connection
+  test.
 - M1.2 needs a separately confirmed implementation branch and exact write
   allowlist. Audit suggestions are not authority.
 
@@ -231,6 +237,9 @@ change product code, Skill files, tests, or external evidence.
   documents, one independent zero-write review, one commit, and one ordinary push
   on `codex/workbuddy-capability-onboarding`; it does not authorize M1 implementation
   or Package/external mutation.
+- The later 2026-08-29 flexibility correction uses the same documentation-only
+  boundary. It does not authorize implementation or make planning examples into
+  a fixed WorkBuddy transcript.
 - Do not add a second Agent, MCP, router, or generic framework.
 
 ## Git and cleanup guard

@@ -38,6 +38,14 @@ the six authority/state documents, one independent zero-write document review,
 one commit, and one ordinary push. It does not authorize implementation, Package
 changes, tests, WorkBuddy, installation, credentials, Provider calls, or media.
 
+The Owner's later 2026-08-29 direction permits one documentation-only correction
+of that scope: M1 shows only Providers formally declared by the verified Package,
+omits undeclared Providers, and plans both local installation and
+API-key configuration. Natural-language examples are hypotheses, not a required
+transcript. Real WorkBuddy evidence may justify a bounded fixed sequence when it
+is needed for security or reliable completion. The same six-document, one-review,
+one-commit, ordinary-push limit applies; implementation remains unauthorized.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -58,10 +66,12 @@ Registration/Locator.
 The ordinary user never has to construct or operate internal paths, hashes,
 schemas, environment variables, argv, pipes, or commands. WorkBuddy is a harness
 Agent with its own reasoning. For the same natural-language input, its thought
-process, tool path, steps, wording, and intermediate conclusions may vary. A Skill
-or prompt must not force a preset script. WorkBuddy may read the Package Guide, ask
-reasonable business questions, call tools, retry, or adjust internal steps. These
-internal choices are not failures by themselves.
+process, tool path, steps, wording, and intermediate conclusions may vary. Do not
+judge it against an evaluator-invented creative or production transcript.
+Configuration may nevertheless use a bounded ordered sequence when actual
+WorkBuddy behavior, consent, secure secret entry, or reliable installation needs
+one. The sequence must still begin from ordinary natural language and must not make
+the user operate internal commands or turn Shell into a control plane.
 
 ## Capability readiness
 
@@ -83,15 +93,21 @@ change, or retest capabilities. Do not introduce a fixed command language,
 prescribed transcript, Shell Provider selector, broad disk scan, or second control
 plane.
 
-For the initial mainland-China external-video scope, WorkBuddy must represent
-Seedance, Kling, Vidu, and MiniMax in ordinary-user language. Seedance is the
-current default recommendation; Kling, Vidu, and MiniMax are core alternatives,
-not deferred long-tail coverage. Static Package inspection found direct routes for
-Seedance, Kling, and MiniMax but no Vidu-specific direct adapter. Therefore Vidu
-must remain an explicit M1 integration dependency and must not be shown as ready
-or configurable until that gap is closed and separately verified. Adapter presence
-never proves account permission, credentials, balance, connectivity, regional
-availability, or current model availability.
+M1 displays only capabilities and Providers formally declared by the verified
+Package. Current static evidence includes Seedance, Kling, and MiniMax; undeclared
+Providers do not appear in the M1 user experience or acceptance scope. Seedance
+remains the current default recommendation. Do not hard-code this
+snapshot into Shell: future verified Package declarations may change the visible
+set. Adapter presence never proves account permission, credentials, balance,
+connectivity, regional availability, or current model availability.
+
+M1 must plan two configuration mechanisms as one WorkBuddy journey. Local
+capabilities such as Remotion and HyperFrames are complete only after approved
+download, managed installation, rediscovery, Package recognition, and a real
+Package-mediated invocation. API-key configuration is complete only after
+secret-safe input and storage, exact Package allowlisting, non-disclosing relay,
+and an authorized connection test. Natural language owns selection and consent;
+the secret value must never be entered in ordinary chat.
 
 ## Next-phase task map
 
@@ -102,15 +118,16 @@ they are not M0 subtasks or a separate task series.
 
 The executable dependency is M1.1 fact audit followed by M1.2 first-use readiness.
 M2 clarification may start after M1.2. M1.3 remains a required M1 product
-capability and representative acceptance path, but an individual user may defer
+capability with one representative local-install path and one representative
+API-key path, but an individual user may defer
 configuration until M2 establishes relevance or continue on FFmpeg without using
 an enhancement. M3 starts only after both M1.4 and M2 are complete. S1 adds
 revision/version/rollback; S2 adds one additional
 aspect/platform and safe-area quality; S3 adds export/share/reuse; S4 adds
 cross-machine lifecycle; S5 conditionally qualifies one user-needed enhancement.
 C1 broad Provider/model coverage and C2 automatic multi-Provider routing/direct
-publishing remain deferred. C1 means coverage beyond the initial Seedance, Kling,
-Vidu, and MiniMax set, not permission to omit those four from M1. The complete
+publishing remain deferred. C1 covers Providers beyond the verified Package's
+formal declarations; M1 does not invent unsupported Provider entries. The complete
 dependency and acceptance authority is the Task Register.
 
 M1.1 is complete as a fact audit and its conclusions are Owner-accepted. It did

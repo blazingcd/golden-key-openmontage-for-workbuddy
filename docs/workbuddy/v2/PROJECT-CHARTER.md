@@ -31,10 +31,11 @@ prompt. Do not require the user to see or operate path/hash/schema/env/argv/pipe
 or command mechanics.
 
 WorkBuddy is a harness Agent. The same input may lead to different internal
-reasoning, tools, steps, wording, and intermediate conclusions. Skills and prompts
-must not force a preset script. Variation is acceptable unless it directly causes
-the product result to fail, burdens the ordinary user technically, creates a second
-control plane, or produces a false result.
+reasoning, tools, steps, wording, and intermediate conclusions. Do not make an
+evaluator-invented transcript the product contract. A bounded fixed sequence is
+acceptable when actual WorkBuddy behavior, consent, secure secret entry, or
+reliable installation requires it. The user must still begin from ordinary natural
+language and must not operate internal technical mechanics.
 
 The external OpenMontage `AGENT_GUIDE.md` is read by WorkBuddy only after
 Registration/Locator has returned and verified the PackageRoot and Guide identity.
@@ -57,15 +58,18 @@ Later natural-language requests containing `金钥匙智能体` may inspect, con
 change, or retest capabilities. This is an open intent, not a fixed configuration
 language or second control plane.
 
-The initial mainland-China external-video set is Seedance, Kling, Vidu, and
-MiniMax. WorkBuddy uses Seedance as the current default recommendation and explains
-Kling, Vidu, or MiniMax as goal-dependent alternatives without making the user
-operate model identifiers or technical Provider menus. These four belong to M1;
-broad coverage beyond them remains C1. Current Package inspection shows direct
-routes for Seedance, Kling, and MiniMax but no Vidu-specific direct adapter, so
-Vidu remains an explicit integration dependency and cannot be presented as ready
-or configurable. Static adapter presence never proves live account or model
-availability.
+The verified Package's formal declarations determine which Providers M1 shows.
+Current static evidence includes Seedance, Kling, and MiniMax; Seedance is the
+current default recommendation. Undeclared Providers do not appear in M1.
+WorkBuddy explains user value before technical Provider details, while
+Shell remains Provider-opaque. Static adapter presence never proves live account
+or model availability.
+
+Natural language starts and controls both configuration mechanisms. A local
+capability is complete only after approved download, managed installation,
+rediscovery, Package recognition, and actual invocation. An API-key Provider is
+complete only after secure input outside ordinary chat, safe local storage, exact
+allowlisting, non-disclosing relay, and an authorized connection test.
 
 ## Four product results
 
@@ -121,11 +125,13 @@ material readiness, M3 production/quality/delivery, S1–S5 maturity work, and
 C1–C2 deferred expansion must not be absorbed into M1.
 
 M2 may begin after M1.2 first-use readiness. M1.3 is nevertheless a required M1
-product capability and representative acceptance path; only its use by a
-particular user is conditional. M3 requires completed M1.4 and M2.
+product capability with one representative local-install path and one
+representative API-key path; only its use by a particular user is conditional.
+M3 requires completed M1.4 and M2.
 
 M1.2 owns the unified first-use scan, ordinary-language explanation, honest
-Provider state, and continue/configure entry. M1.3 owns only the selected
-configuration, consent, secret-safe handling, connection test, failure recovery,
-and later retest. Closing the Vidu adapter gap requires a separately authorized
-Package scope before Vidu can enter an M1.3 configurable state.
+Provider state, and continue/configure entry. M1.3 owns the selected local or
+API-key configuration, consent, secure handling, validation, failure recovery,
+and later retest. Planned wording and steps may change after real WorkBuddy
+evidence; acceptance follows the completed user goal and safety boundaries rather
+than exact rehearsal of the planning examples.

@@ -144,3 +144,11 @@ the default first-user display. The configuration entries are handoffs only:
 M1.2 does not install, save credentials, call a Provider, validate a selected
 configuration, or retest it. Its local implementation is limited to the existing
 WorkBuddy Skill instructions; real WorkBuddy acceptance remains M1.4.
+
+One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
+separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the
+reviewed head into `codex/workbuddy-capability-onboarding`, then removes the exact
+recorded implementation worktree, local/remote temporary branch, and task-owned
+temporary directories only after clean/ref/unique-work verification. M1 remains
+incomplete until that cleanup is verified; the frozen historical baseline and
+user data are never cleanup targets.

@@ -48,10 +48,22 @@ one-commit, ordinary-push limit applies; implementation remains unauthorized.
 
 The Owner's subsequent 2026-08-29 direction permits one documentation-only freeze
 of the M1.2 execution contract on the same planning branch and under the same
-six-document, one-review, one-commit, ordinary-push limit. The future implementation
-branch is named `codex/workbuddy-m1-2-first-use-readiness` but must not be created
-by this documentation task. M1.2 implementation, tests, WorkBuddy, installation,
-credentials, Provider calls, Package changes, and media remain unauthorized.
+six-document, one-review, one-commit, ordinary-push limit. The single future M1
+implementation branch is named `codex/workbuddy-m1-capability-onboarding` but
+must not be created by this documentation task. It is shared by M1.2–M1.4 rather
+than replaced for every subtask. M1.2 implementation, tests, WorkBuddy,
+installation, credentials, Provider calls, Package changes, and media remain
+unauthorized.
+
+The Owner's later direction requires the M1 branch lifecycle and cleanup gate to
+be authority, not chat memory. This permits one documentation-only six-document
+correction, one independent zero-write review, one commit, and one ordinary push.
+After reviewed M1.4 closeout, the implementation head must ordinary-fast-forward
+`codex/workbuddy-capability-onboarding`; only after exact ref and clean-state
+verification may the recorded implementation worktree, local/remote temporary
+branch, and task-owned temporary directories be removed. M1 is not `COMPLETE`
+until that cleanup is verified. This documentation task performs no branch,
+worktree, directory, implementation, test, or external action.
 
 ## Product boundary
 
@@ -235,8 +247,9 @@ completion record. No product, Skill, test, or external evidence changed.
 ## Engineering and safety constraints
 
 - Use only the project Python: `D:\BlazingCD\Personal\.venvs\golden-key-openmontage-workbuddy-w0\Scripts\python.exe`.
-- Put temporary files only on D: and remove exact temporary task material after
-  verification. Preserve user data.
+- Put temporary files only on D: and record every task-owned temporary directory's
+  exact absolute path when created. Remove those exact paths after final review;
+  preserve user data and never broaden cleanup to a parent/cache/workspace root.
 - Remotion, HyperFrames, external video generation, and TTS remain optional
   enhancements. Their installation or use may be deferred, but first-use
   inventory and a natural-language configuration entry belong to the planned
@@ -245,6 +258,13 @@ completion record. No product, Skill, test, or external evidence changed.
 - Never force-push or reset hard. Advance the formal branch only by ordinary
   fast-forward. Before destructive cleanup, resolve exact paths, ensure no
   unmerged or unique work exists, and prefer recoverable deletion.
+- One temporary implementation branch serves M1.2–M1.4. After M1.4, fast-forward
+  and push the formal capability-onboarding ref first, verify all related worktrees
+  clean and no unique/unmerged commits remain, then remove the exact recorded
+  worktree, local/remote temporary branch, and task directories. Dirty state,
+  user data, an unrecorded path, ref divergence, or any force requirement is
+  `CLEANUP_BLOCKED`; stop without deletion. The historical baseline is never a
+  cleanup target.
 
 ## Current stability-candidate result
 

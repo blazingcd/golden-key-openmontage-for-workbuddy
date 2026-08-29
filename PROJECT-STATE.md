@@ -150,9 +150,19 @@ credential, Provider-call, or media action.
 The Owner's later 2026-08-29 direction authorizes one documentation-only M1.2
 execution-contract freeze under the same six-document, one-review, one-commit,
 ordinary-push boundary. The future implementation branch name is
-`codex/workbuddy-m1-2-first-use-readiness`; this task does not create it or
-authorize implementation, tests, WorkBuddy, installation, credentials, Provider
-calls, Package changes, or media.
+`codex/workbuddy-m1-capability-onboarding`; one branch serves M1.2–M1.4 instead
+of creating a branch per subtask. This task does not create it or authorize
+implementation, tests, WorkBuddy, installation, credentials, Provider calls,
+Package changes, or media.
+
+The same Owner direction requires M1 cleanup to be part of completion. After the
+reviewed M1.4 result, the M1 head first ordinary-fast-forwards and pushes
+`codex/workbuddy-capability-onboarding`. Only after exact refs, clean worktrees,
+and absence of unique/unmerged work are verified may the recorded implementation
+worktree, local/remote temporary branch, and exact task-owned temporary directories
+be removed. Dirty or unrecorded targets, user data, divergence, or a force
+requirement stop cleanup as `CLEANUP_BLOCKED`. M1 cannot be `COMPLETE` before the
+post-cleanup absence and retained-baseline checks pass.
 
 Natural-language interaction examples remain planning hypotheses. Real WorkBuddy
 evidence may require different wording, tools, or a bounded fixed confirmation

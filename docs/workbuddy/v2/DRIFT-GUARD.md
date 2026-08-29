@@ -129,9 +129,11 @@ by themselves.
   recognition, and actual invocation. API-key completion requires non-chat secure
   input/storage, exact allowlisting, no disclosure, and an authorized connection
   test.
-- The future M1.2 implementation branch is
-  `codex/workbuddy-m1-2-first-use-readiness`, created only after separate action
-  authorization from the reviewed and pushed planning commit. Its exact write
+- The future M1 implementation branch is
+  `codex/workbuddy-m1-capability-onboarding`, created only after separate action
+  authorization from the reviewed and pushed planning commit. The same branch
+  carries separately authorized M1.2–M1.4 work; do not create a branch per step.
+  Its M1.2 exact write
   allowlist is only `workbuddy-skill/golden-key-openmontage/SKILL.md`; its focused
   test execution allowlist is `tests/workbuddy/test_workbuddy_entry_cli.py` and
   `tests/workbuddy/test_installer.py`. Any need to change a test, Shell file,
@@ -262,8 +264,23 @@ change product code, Skill files, tests, or external evidence.
   `refs/heads/codex/workbuddy-capability-onboarding`.
 - Never force-push or `reset --hard`.
 - Only ordinary fast-forward may advance the formal ref.
+- At creation time, record the M1 implementation branch's exact linked-worktree
+  absolute path and every task-owned temporary directory. Unrecorded directories
+  are not cleanup targets.
+- M1.4 closeout order is mandatory: final result review; ordinary-fast-forward and
+  push `codex/workbuddy-capability-onboarding` to the exact reviewed M1 head;
+  verify local, remote-tracking, and advertised refs plus all related clean
+  worktrees and no unique/unmerged commits; remove the exact recorded linked
+  worktree; delete the local and remote M1 temporary branch; remove only the exact
+  recorded task-owned temporary directories; verify their absence and retained
+  formal/historical refs; only then mark M1 `COMPLETE`.
 - Do not delete dirty worktrees, unmerged branches, branches with unique commits,
   or directories whose ownership/content has not been verified.
 - Before any destructive action, resolve the exact absolute target, check that it
   is within the intended task scope, and use a recoverable operation when practical.
+- Any dirty state, user data, unrecorded or unresolved path, ref divergence,
+  unique/unmerged work, failed deletion, or need for force is `CLEANUP_BLOCKED`.
+  Stop and report; do not retry with broader or destructive commands.
+- `codex/workbuddy-shell-v2`, its retained evidence, the repository root, parent
+  cache/worktree roots, and unrelated task directories are never cleanup targets.
 - After cleanup, verify the formal ref, worktree state, and retained evidence.

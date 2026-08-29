@@ -237,10 +237,12 @@ not started and unauthorized.
 
 ### M1.2 execution contract
 
-The future implementation branch is
-`codex/workbuddy-m1-2-first-use-readiness`. It is created only after separate
+The single future M1 implementation branch is
+`codex/workbuddy-m1-capability-onboarding`. It is created only after separate
 action authorization, from the reviewed and pushed commit containing this
-contract. This planning task does not create or switch to it. The historical
+contract. The same branch carries M1.2–M1.4 under separate step authorization,
+write allowlists, commits, checks, and review gates; no branch is created per
+subtask. This planning task does not create or switch to it. The historical
 `codex/workbuddy-shell-v2` ref remains frozen at
 `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
 
@@ -289,6 +291,40 @@ real WorkBuddy run.
 This contract freeze may change only the six authority/state documents, receives
 one independent zero-write document review, one commit, and one ordinary push on
 `codex/workbuddy-capability-onboarding`. It authorizes no implementation or test.
+
+### M1 branch lifecycle and mandatory cleanup
+
+The M1 branch is temporary but shared; M1.2, M1.3, and M1.4 do not create sibling
+implementation branches. At branch/worktree creation, the executor must record in
+this register the exact branch ref, linked-worktree absolute path, and every
+task-owned temporary directory created later. Temporary material stays on D: when
+the tooling permits it. An unrecorded path is never an authorized cleanup target.
+
+M1 is not `COMPLETE` when only product review passes. Closeout must follow this
+order:
+
+1. Complete the single independent M1 result review after the required M1.4
+   user-visible evidence.
+2. Ordinary-fast-forward `codex/workbuddy-capability-onboarding` to the exact
+   reviewed M1 head and push it; no merge commit, force-push, rebase, or history
+   rewrite is permitted.
+3. Verify the local formal ref, remote-tracking ref, remote advertised ref, exact
+   M1 head, clean formal and implementation worktrees, and absence of unique or
+   unmerged commits on the temporary branch.
+4. Remove the exact recorded implementation linked worktree, then delete the exact
+   local and remote `codex/workbuddy-m1-capability-onboarding` refs.
+5. Remove only exact task-owned temporary directories recorded in this register;
+   never delete a parent cache/worktree/workspace root, repository root, user data,
+   retained evidence, or an unrelated task directory.
+6. Re-verify removed targets absent, the formal capability-onboarding ref still at
+   the reviewed M1 head, the historical baseline unchanged, and retained evidence
+   present. Only then record `M1_COMPLETE / CLEANUP_VERIFIED`.
+
+Dirty state, an unresolved or unrecorded target, user data, ref divergence,
+unique/unmerged work, a failed deletion, or any need for a force operation is
+`CLEANUP_BLOCKED`. Stop without retrying through a broader command and request an
+Owner decision. Cleanup is a completion gate, not permission to delete anything
+during the current documentation task.
 
 ### Official Provider scope and two configuration mechanisms
 
@@ -750,11 +786,16 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_EXECUTION_CONTRACT_DOCUMENTATION_CLOSEOUT
+current_task: M1_BRANCH_LIFECYCLE_AND_CLEANUP_DOCUMENTATION_CLOSEOUT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
 capability_onboarding_implementation: NOT_AUTHORIZED
-implementation_branch_name: codex/workbuddy-m1-2-first-use-readiness / CONFIRMED_NOT_CREATED
+implementation_branch_name: codex/workbuddy-m1-capability-onboarding / CONFIRMED_NOT_CREATED
+implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
+implementation_worktree_path: NOT_CREATED / RECORD_EXACT_ABSOLUTE_PATH_AT_CREATION
+task_owned_temporary_paths: NONE / RECORD_EACH_EXACT_PATH_AT_CREATION
+implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
+m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
 workbuddy_or_media_in_current_task: FORBIDDEN
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5

@@ -118,8 +118,9 @@ its improved first-call and delivery mechanics; the preserved R3 baseline remain
 rollback evidence. Historical R3 remains complete.
 
 The next-phase capability-onboarding plan is separate from the completed R1-R4
-baseline. Recording it does not authorize implementation, installation, Provider
-configuration, WorkBuddy execution, or media production.
+baseline. Its earlier recording authorized no execution. The current narrow M1.2
+deployment/readiness exception is stated below and in the Task Register; Provider
+configuration and media production remain outside it.
 
 Its M0 contract is the Task Register's bounded master roadmap. `R1` through `R4`
 remain frozen historical result identifiers; future work uses M1–M3 for Must,
@@ -175,6 +176,22 @@ interpreting, recommending, ranking, or selecting them. The Owner has authorized
 the exact two-file implementation and focused local proof. That local contract is
 not M1.2 completion; only later real WorkBuddy evidence can prove that ordinary
 users receive the explanation and four choices.
+
+That two-file implementation is now pushed at `33f49fb...` and is
+`VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`. The Owner's current action-time direction
+authorizes the minimum remaining M1.2 deployment and one real non-production
+readiness probe. The deployment is a new immutable final PackageRoot/Release from
+the same verified OpenMontage `73cab673...` semantics plus exact Shell source; it
+does not modify an old PackageRoot or Package source. Registration/activation and
+one newly bound Skill replacement are mechanical Shell lifecycle work. WorkBuddy
+remains the sole dialogue owner and must itself explain the relayed facts and
+present continue/local/API-key/defer.
+
+This authorization does not extend to optional capability installation, chat
+secrets, Provider/connection calls, media, M1.3, a second Skill, Shell fallback,
+retry, or live source repair. Any unapproved workspace/file relay or missing
+user-visible acceptance is terminal `NOT_PROVED`. Exact external paths and
+cleanup limits are authority only in the Task Register.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

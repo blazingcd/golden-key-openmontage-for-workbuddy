@@ -367,10 +367,10 @@ The single WorkBuddy-owned discovery probe is complete with terminal state
 - Planning local/tracking/advertised refs remained
   `8f5abfd6b3da30020bac16aa33b7a2ba170f5d96`; the historical baseline remained
   `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
-- The implementation worktree ordinarily merged the exact planning head. Its
-  clean local HEAD is `637347b70e09d5b6048507634637d67c10889876`, with parents
-  `4cbf8ff3c15dd686a893842ca189ce49fa83023d` and `8f5abfd...`; origin remains
-  `4cbf8ff...`. The local branch is ahead by two and must remain unpushed.
+- At that probe time, the implementation worktree's clean local HEAD was
+  `637347b70e09d5b6048507634637d67c10889876`, with parents `4cbf8ff...` and
+  `8f5abfd...`, while origin remained `4cbf8ff...`. The later two-file relay
+  implementation advanced local/tracking/advertised refs to `33f49fb...`.
 - Candidate ZIP:
   `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-readiness-probe.zip`,
   SHA256
@@ -458,6 +458,108 @@ credential, Provider, media, M1.3, third source file, new protocol, retry/fallba
 or branch/worktree cleanup is authorized. A passing implementation and review may
 be called only `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; M1.2 remains incomplete
 until later real WorkBuddy dialogue evidence passes its acceptance row.
+
+### M1.2 final factual-relay deployment and one real readiness probe — ACTION-TIME AUTHORIZED
+
+The Owner's current 2026-08-29 direction supersedes the preceding M1.2
+deployment/WorkBuddy prohibitions only for this bounded result. The starting gate
+passed with planning local/tracking/advertised refs at
+`0b08dfdd238e73c0940f3c2f759c14624dd9d89d`, implementation local/tracking/
+advertised refs at `33f49fb385b103489772d3f8ce2f7cb2486b08dc`, and the
+historical baseline at `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
+Commit `33f49fb...` changed only `fixed_child.py` and its direct installer test;
+its candidate `fixed_child.py` SHA256 is
+`66defdd34ea984b4b2ccf6d79753f90bf1c45f4b387f226552035c4e2ae136bf`.
+That result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; it is not yet M1.2.
+
+#### Frozen external paths and immutable inputs
+
+- clean OpenMontage consumer checkout:
+  `D:\BlazingCD\Personal\AIWorkspaces\OpenMontage-golden-key-v0.3.25-73cab673`,
+  commit `73cab67322451601a824875c0e426067d736dd44`, tree
+  `29231e0464fa4bc7533c1928415849e9b3a48e7c`;
+- exact Shell source:
+  `C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`
+  at `33f49fb385b103489772d3f8ce2f7cb2486b08dc` before the ordinary planning merge;
+- production data root:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production`;
+- old active PackageRoot, retained read-only:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\product2-result-pointer-fix-install-20260827\PackageRoot`;
+- new immutable final candidate root:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.2-final-factual-relay-33f49fb-20260829`;
+- new final PackageRoot:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.2-final-factual-relay-33f49fb-20260829\PackageRoot`;
+- new final Release and sidecar:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.2-final-factual-relay-33f49fb-20260829\GoldenKeyOpenMontageForWorkBuddy-0.3.25-m1.2-final-factual-relay-33f49fb.zip`
+  and the same path plus `.sha256`;
+- newly named Skill archive:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-final-factual-relay-33f49fb.zip`;
+- installed Skill target:
+  `C:\Users\blazi\.workbuddy\skills\golden-key-openmontage`;
+- evidence directory:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\evidence\m1.2-final-factual-relay-33f49fb-workbuddy-20260829`;
+- sole task-owned temporary directory:
+  `D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9`.
+
+Assembly uses the existing Installer with project Python only. Fixed inputs are
+`D:\Downloads\Working\python-3.14.7-embed-amd64.zip` SHA256
+`d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15`;
+`https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z` downloaded only
+to the recorded D: temporary directory and accepted only at SHA256
+`49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85`;
+`https://npmmirror.com/mirrors/node/v22.23.2/node-v22.23.2-win-x64.zip`
+downloaded only there and accepted only at SHA256
+`1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97`;
+the fixed `C:\Program Files\7-Zip\7z.exe`; and a D:-temporary wheelhouse rebuilt
+from the old active PackageRoot's exact
+`bootstrap\python\CORE-DEPENDENCIES.lock.json` identity
+`e6e2c39c2db8bab2dda607e8722ffde38e8c4a701ed41eb2d83fc43bf1105048`.
+Any missing input, hash/version drift, unresolved wheel, different checkout, or
+need to substitute an unrecorded source is a hard stop before assembly.
+
+#### Authorized sequence and direct gates
+
+1. On the planning branch, change only the six authority/state documents, obtain
+   one `luna_worker` zero-write document review, commit once, ordinarily push,
+   and verify local/tracking/advertised equality.
+2. Ordinarily merge that exact planning head into the clean retained M1 branch.
+   Do not rebase, force, rewrite, create a branch, or change a third source/test
+   file. Preserve the two-file candidate byte-for-byte.
+3. With `installer.assemble_package`, materialize exactly the new immutable
+   PackageRoot/Release. Register it with `register_package`, CAS-activate it with
+   `activate_package`, then build the newly named Skill archive from the existing
+   repository Skill only after activation so `run.ps1` binds both the new
+   PackageRoot and active-pointer SHA256. This is a new final assembly of frozen
+   Package semantics, not an old-root rebuild or in-place repair.
+4. Before UI mutation, verify Release/sidecar, Registration, Locator,
+   package-tool-definition, binding, Manifest/Lock, Guide, embedded interpreter,
+   active pointer, and the fixed-child SHA256 above. Use WorkBuddy's normal Skill
+   install/replace mechanism; afterward the installed catalog and disk state must
+   contain exactly one `golden-key-openmontage` Skill matching the new archive.
+5. Run exactly one WorkBuddy 5.3.14 non-production readiness task with an
+   available `0.00x` row. Its ordinary-language input contains `金钥匙智能体` and
+   asks what video capability is ready and what needs configuration. WorkBuddy
+   may vary wording/tools/order. The user-visible result must say FFmpeg basic
+   production can continue, state Remotion/HyperFrames/external video/TTS and
+   Package-declared Providers honestly, and visibly offer continue, local
+   configuration, API-key configuration, and defer. Select defer when a
+   non-mutating choice is needed.
+6. The probe must not install anything, request or store a secret, call/test a
+   Provider, generate media, write a relay/workspace file, start M1.3, or use a
+   Shell fallback. Any missing/overstated fact, absent choice, unexpected write,
+   or boundary drift is terminal `NOT_PROVED`; cancel and stop with no retry or
+   live repair.
+7. Only after a complete user-visible result, obtain one `luna_worker` independent
+   zero-write result review. Only `APPROVE / P0=0 / P1=0 / P2=0` permits the
+   necessary six-document M1.2 closeout, minimal text/scope/`git diff --check`
+   checks, one implementation commit, and ordinary push. M1.3 remains separately
+   gated.
+
+Preserve every old PackageRoot, Release/Skill ZIP, rollback artifact, Registration
+object, and evidence directory. After the result/review, remove only the exact
+task-owned D: temporary directory above. Never touch
+`C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10`, which remains
+`CLEANUP_BLOCKED_IN_USE`.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -955,22 +1057,22 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_NOT_PROVED_AND_BOUNDED_SHELL_FACTUAL_RELAY_IMPLEMENTATION_AUTHORIZED
+current_task: M1_2_FINAL_FACTUAL_RELAY_DEPLOYMENT_AND_ONE_REAL_READINESS_PROBE_ACTION_TIME_AUTHORIZED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: M1_2_READINESS_PROBE_INSTALLED_ONLY_GOLDEN_KEY_SKILL / ZIP_SHA256_709D202EC5F1F78BBD50B015342CB5CCCC28B0C69FA1D10B20A73BCD31A48763 / SKILL_SHA256_D28A5CD9CBACCEDF5C8F4E497AE2CBEC2AAAA194D5315991EBD55D610B851689 / RUN_PS1_SHA256_DE63F07394F517137FBDA3A656EBB9F9DC68B9A391E5C0CD4D10CA251EB7CB3C
-capability_onboarding_implementation: PARTIAL_SKILL_GUIDANCE_ONLY / WORKBUDDY_DISCOVERY_NOT_PROVED / BOUNDED_RELAY_IMPLEMENTATION_AUTHORIZED
-implementation_branch_name: codex/workbuddy-m1-capability-onboarding / PRE_IMPLEMENTATION_LOCAL_637347B70E09D5B6048507634637D67C10889876 / ORIGIN_4CBF8FF3C15DD686A893842CA189CE49FA83023D / PUSH_ONLY_AFTER_AUTHORIZED_IMPLEMENTATION_REVIEW
+capability_onboarding_implementation: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / REAL_DIALOGUE_NOT_YET_PROVED
+implementation_branch_name: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_33F49FB385B103489772D3F8CE2F7CB2486B08DC / RETAIN_FOR_M1_3_M1_4
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
-implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_PAUSED
-task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE
+implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_ACTIVE_M1_2
+task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
-workbuddy_or_media_in_current_task: FORBIDDEN
+workbuddy_or_media_in_current_task: ONE_NONPRODUCTION_WORKBUDDY_5_3_14_READINESS_PROBE_AUTHORIZED / MEDIA_FORBIDDEN
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: NOT_PROVED_WORKBUDDY_DISCOVERY / PARTIAL_SKILL_GUIDANCE_ONLY / BOUNDED_RELAY_IMPLEMENTATION_AUTHORIZED / M1_3_BLOCKED
+m1_2: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / FINAL_DEPLOYMENT_AUTHORIZED / ONE_REAL_READINESS_PROBE_AUTHORIZED / M1_3_BLOCKED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
@@ -981,7 +1083,7 @@ m1_2_probe_result: NOT_PROVED_WORKBUDDY_DISCOVERY / CAPABILITY_FACTS_DID_NOT_REA
 m1_2_probe_result_review: NOT_RUN / PASS_RESULT_ABSENT
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY
 m1_2_shell_factual_relay_write_set: golden_key_openmontage_workbuddy/fixed_child.py / tests/workbuddy/test_installer.py / EXACT_ONLY
-m1_2_shell_factual_relay_local_ceiling: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / NOT_M1_2_COMPLETE
+m1_2_shell_factual_relay_local_ceiling: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / COMMIT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / NOT_M1_2_COMPLETE
 workbuddy_model_priority: AVAILABLE_0_00X_FIRST / SWITCH_AMONG_0_00X_WHILE_WAITING / POSITIVE_MULTIPLIER_ASCENDING_ONLY_IF_ALL_0_00X_UNAVAILABLE
 package_declared_video_providers: SEEDANCE_DEFAULT / KLING_MINIMAX_CURRENT_STATIC
 provider_live_readiness: NOT_VERIFIED

@@ -52,6 +52,29 @@ WorkBuddy run, media production, and capability installation.
 
 ## Current task
 
+The current action-time-authorized M1.2 result starts from planning
+`0b08dfdd238e73c0940f3c2f759c14624dd9d89d`, implementation
+`33f49fb385b103489772d3f8ce2f7cb2486b08dc`, and historical baseline
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`, with all local/tracking/advertised
+refs equal and both worktrees clean. The two-file implementation at `33f49fb...`
+is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; M1.2 still needs the real dialogue.
+
+The authorized next chain is one six-document planning correction/review/push,
+an ordinary merge into the retained M1 branch, one new immutable final assembly
+from OpenMontage `73cab673...` plus Shell `33f49fb...`, registration/activation,
+one newly bound Skill ZIP installed through WorkBuddy as the only Golden Key
+Skill, and exactly one non-production WorkBuddy 5.3.14 readiness probe on an
+available `0.00x` row. Exact roots, archives, evidence, inputs, and the sole D:
+temporary directory are frozen in the Task Register.
+
+The probe passes only when the ordinary dialogue visibly explains the continuing
+FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
+Package-declared Provider states, offers continue/local/API-key/defer, and honors
+the deferred non-mutating boundary. Optional installation, chat secrets,
+Provider/connection calls, media, M1.3, Shell fallback, retry, source repair,
+workspace/file relay, old-root edits, and historical-asset overwrite remain
+forbidden. Failure is terminal `NOT_PROVED`, not a repair loop.
+
 The rejected v2 candidate ZIP SHA256 is
 `bd35b98087cd7a03f909dc17bbd6048388a7c46e2251c3893a3f9f056d653249`.
 The preserved baseline ZIP and byte-identical `r3-pass-baseline` copy still have
@@ -211,19 +234,18 @@ The deviation is that its independent sub-audit created and removed the exact
 temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and the
 path was confirmed absent at closeout.
 
-M1.2 is `NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_AUTHORIZED /
-M1_3_BLOCKED`. The contract at
+M1.2 is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT /
+REAL_WORKBUDDY_PROBE_ACTION_TIME_AUTHORIZED / M1_3_BLOCKED`. The contract at
 `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` incorrectly combined an authoritative
 inventory requirement with a Skill-only write allowlist, despite the accepted
 M1.1 facts that local evidence was empty, optional preparation had no production
 caller, and WorkBuddy's required discovery ability was unverified. Its tests could
 not prove the missing fact flow.
 
-The implementation branch locally merged the exact pushed planning head and is
-clean at `637347b70e09d5b6048507634637d67c10889876`; origin remains
-`4cbf8ff3c15dd686a893842ca189ce49fa83023d`, so the local branch is intentionally
-ahead by two commits and unpushed. The installed readiness candidate is still the
-only Golden Key Skill.
+The implementation branch completed the exact two-file factual relay and is clean;
+its local, tracking, and advertised refs all equal
+`33f49fb385b103489772d3f8ce2f7cb2486b08dc`. The installed readiness candidate
+is still the only Golden Key Skill until the action-time-authorized replacement.
 
 The single bounded probe verified PackageRoot/Guide and reached attempts to call
 `provider_menu_summary()`, but no capability facts reached the ordinary-user

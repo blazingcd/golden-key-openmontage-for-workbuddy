@@ -263,8 +263,11 @@ the only active M1.2 write authority.
 - The previously reviewed ZIP, SHA256
   `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`,
   is the installed candidate whose user result was rejected. The newly named
-  corrected ZIP does not exist yet. Neither fact permits another WorkBuddy
-  installation or execution.
+  corrected ZIP has SHA256
+  `116737071d377b67dff6ea93fe18534114c17e762d32116efc5c4b973e000228`,
+  passed zero-write review `APPROVE / P0=0 / P1=0 / P2=0`, and remains
+  uninstalled. Neither artifact permits another WorkBuddy installation or
+  execution.
 
 ## Result guard
 

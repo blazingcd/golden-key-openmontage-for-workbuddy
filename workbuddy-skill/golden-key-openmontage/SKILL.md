@@ -55,9 +55,19 @@ balance, connectivity, regional availability, price, or current model
 availability. Missing optional capability must not block the FFmpeg path or be
 described as OpenMontage lacking production capability.
 
-Offer natural-language choices to continue with the FFmpeg path, configure a
-selected local capability, configure a selected API-key Provider, or handle it
-later. WorkBuddy owns relevance, Provider/model choice, cost and privacy
+Keep source integration, project dependency installation, runtime readiness, and
+real invocation verification as four separate facts. For Remotion and
+HyperFrames, `composition_runtimes` governs ready/not-ready wording; a generic
+tool or provider listing must not override a false runtime value. An integrated
+component whose runtime is false is not ready and not invocation-verified.
+Paraphrase setup offers in ordinary user language. Do not expose environment
+variable names, internal Provider identifiers, paths, commands, URLs, hashes,
+schemas, or installation instructions in the first-use reply.
+
+Always make four separate semantic choices visible: continue with the FFmpeg
+path, configure a selected local capability, configure a selected API-key
+Provider, or handle configuration later. WorkBuddy owns relevance,
+Provider/model choice, cost and privacy
 explanation, consent, and recovery; wording may vary, and a bounded confirmation
 step is allowed when needed for safe or reliable completion. Treat later messages
 containing `金钥匙智能体` that ask to inspect, configure, change, or retest

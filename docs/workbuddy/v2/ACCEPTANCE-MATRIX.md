@@ -118,11 +118,12 @@ exact local and remote formal ref by ordinary fast-forward. Reviewed commit
 `70cf63be51774de9151fb0fee24cf78591ff1993` reached both refs; this later
 Owner-authorized record changes documentation status only.
 
-## Next-phase acceptance — M1.2 factual relay proved; consumer result correction authorized
+## Next-phase acceptance — M1.2 consumer correction and package-size checkpoint
 
 These rows do not alter or reopen R1-R4. Those identifiers remain frozen and no
-future task continues the R series. The current gate covers only correction of a
-bounded M1.2 Skill consumer and one newly named uninstalled candidate; another
+future task continues the R series. The WorkBuddy gate covers only correction of
+a bounded M1.2 Skill consumer and one newly named uninstalled candidate. The
+separate package-size checkpoint affects successor distribution only; another
 WorkBuddy operation, M1.3, and all later work remain separately gated. M1–M3 are Must, S1–S5 are Should,
 and C1–C2 are Could.
 
@@ -143,6 +144,15 @@ and C1–C2 are Could.
 Optional enhancement installation or use may be deferred. Its absence must not
 block the FFmpeg-ready basic path. Provider credentials, cost, privacy, and consent
 remain WorkBuddy-owned user decisions; Shell reports only mechanical facts.
+
+The Owner's package-size gate rejects direct base-Package Remotion bundling when
+the complete portable compressed increment exceeds 80 MiB. Current measurement
+already exceeds that ceiling because the external Remotion core/CLI ZIP is
+66.64 MiB and the locked Headless Shell archive is 115.33 MiB before the remaining
+project dependencies. M1.3 local acceptance therefore uses an approved managed
+on-demand install; it still requires rediscovery, Package recognition, and one
+actual Package-mediated invocation. A global Remotion command or a smaller
+core-only archive does not satisfy that row.
 
 Provider display follows the verified Package's formal declarations and is not
 proof of live availability. Current static inspection finds Seedance, Kling, and
@@ -189,8 +199,8 @@ managed-summary copies remain disqualifying.
 That consumer candidate was later installed after the Owner manually removed the
 old same-name Skill. Its authorized WorkBuddy probe proved the factual relay
 reached dialogue, but the visible result failed independent review with
-`REJECT / P0=0 / P1=3 / P2=0`. The current gate authorizes only the Skill consumer
-correction, a newly named uninstalled ZIP, independent zero-write review, and
+`REJECT / P0=0 / P1=3 / P2=0`. The WorkBuddy result gate authorizes only the Skill
+consumer correction, a newly named uninstalled ZIP, independent zero-write review, and
 exact Git closeout. Installing the correction or running WorkBuddy again requires
 fresh action-time authorization. Installation, secrets, Provider/connection
 calls, media, workspace relay files or managed-summary copies, Shell fallback,

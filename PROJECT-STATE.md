@@ -98,6 +98,24 @@ passed independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
 uninstalled. It is preparation evidence only; the rejected M1.2 user result is
 unchanged until a separately authorized WorkBuddy retest passes.
 
+The Owner then authorized one bounded package-size checkpoint. The active
+PackageRoot remains immutable and active; it is not a slimming target. Its
+Release is 207.46 MiB compressed and 552.17 MiB expanded. FFmpeg contributes
+109.88 MiB compressed / 306.63 MiB expanded because the entire Essentials
+distribution was retained, including unused `ffplay.exe` and 11.06 MiB of HTML
+documentation. The minimum successor-package change removes only those proved
+unused files and retains ffmpeg, ffprobe, licenses, README, and presets. Python,
+Node, and Package source are not pruned without separate proof.
+
+Direct base-Package Remotion bundling is rejected under the Owner's 80 MiB
+compressed-increment ceiling. The machine's external Remotion 4.0.507 core/CLI
+measures 66.64 MiB as a level-9 ZIP but is neither the Package's locked 4.0.484
+project tree nor a complete renderer; the locked Chrome Headless Shell archive is
+115.33 MiB by itself. M1.3 therefore retains managed, consent-controlled
+on-demand installation. This checkpoint does not complete M1.2, start M1.3, or
+authorize WorkBuddy, Skill installation, activation, credentials, Provider calls,
+or media.
+
 The probe passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
 Package-declared Provider states, offers continue/local/API-key/defer, and honors
@@ -232,7 +250,8 @@ factual-relay audit. That audit is complete with
 facts, and the existing validated `fixed-child-handoff` is the smallest reusable
 carrier. No implementation or test occurred in the audit.
 
-The Owner now authorizes this six-document status/contract update, one independent
+The Owner's earlier relay-only direction authorized this six-document
+status/contract update, one independent
 zero-write document review, one commit, and one ordinary planning-branch push,
 followed without another approval pause by the exact two-file implementation in
 the retained M1 branch. Only `golden_key_openmontage_workbuddy/fixed_child.py`
@@ -240,7 +259,9 @@ and `tests/workbuddy/test_installer.py` may change. Only the focused direct test
 text/scope checks, one independent zero-write implementation review, one commit,
 and one ordinary implementation-branch push are authorized. WorkBuddy, Skill
 installation/build, optional installation, credentials, Provider calls, media,
-M1.3, extra source files, new protocols, and cleanup remain unauthorized.
+M1.3, extra source files, new protocols, and cleanup remain unauthorized within
+that relay gate. The later package-size checkpoint is the sole separate
+successor-Package exception and does not reopen `fixed_child.py` or WorkBuddy.
 
 Natural-language interaction examples remain planning hypotheses. Real WorkBuddy
 evidence may require different wording, tools, or a bounded fixed confirmation
@@ -283,10 +304,13 @@ readiness, exposed configuration mechanics, and omitted two clear choices.
 
 The corrected Remotion fact is: OpenMontage source integration exists, the active
 Package lacks project-local dependencies, runtime readiness is false, and a real
-Package-mediated invocation is not verified. The current authorization is only
-the minimal Skill consumer correction, its six-document synchronization, one new
-uninstalled candidate, independent zero-write reviews, commits, and pushes; that
-candidate is now reviewed and uninstalled. Shell
+Package-mediated invocation is not verified. The WorkBuddy consumer-correction
+authorization covers only the minimal Skill correction, its six-document
+synchronization, one new uninstalled candidate, independent zero-write reviews,
+commits, and pushes; that candidate is now reviewed and uninstalled. The separate
+package-size checkpoint may change only the successor distribution installer and
+its focused test; it does not authorize another WorkBuddy operation, activation,
+or M1.3. Shell
 continues to carry bounded facts only; WorkBuddy owns explanation and choice.
 Another WorkBuddy action and M1.3 remain blocked.
 

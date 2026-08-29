@@ -84,6 +84,15 @@ rediscovery, Package recognition, and actual invocation. An API-key Provider is
 complete only after secure input outside ordinary chat, safe local storage, exact
 allowlisting, non-disclosing relay, and an authorized connection test.
 
+Optional local capability distribution follows measured product constraints.
+The Owner's 80 MiB compressed-increment ceiling rejects direct base-Package
+Remotion bundling: measured external Remotion core/CLI is already 66.64 MiB as a
+level-9 ZIP and the required locked Headless Shell archive is 115.33 MiB alone.
+This does not remove Remotion from M1; it selects the managed, consent-controlled
+on-demand installation route. A machine-level external Remotion command is not
+Package readiness until the locked project dependencies, browser, Package
+recognition, and actual invocation are proved.
+
 ## Four product results
 
 1. **Installable Shell product — COMPLETE.** The final PackageRoot/binding,
@@ -201,10 +210,12 @@ the factual relay reached dialogue, but independent review rejected the user
 result `REJECT / P0=0 / P1=3 / P2=0` for false Remotion readiness, exposed
 configuration mechanics, and missing choices.
 
-The current authorization permits only the six-document synchronization, a
-one-file Skill consumer correction, one newly named uninstalled candidate ZIP
-bound to the unchanged active PackageRoot, their independent zero-write reviews,
-commits, and ordinary pushes. Installing the correction or running WorkBuddy
+The WorkBuddy consumer-correction authorization permits only its six-document
+synchronization, a one-file Skill correction, one newly named uninstalled
+candidate ZIP bound to the unchanged active PackageRoot, their independent
+zero-write reviews, commits, and ordinary pushes. The separate package-size
+checkpoint changes only successor distribution assembly and does not authorize
+WorkBuddy or activation. Installing the correction or running WorkBuddy
 again needs fresh action-time Owner authorization. Exact paths and Git state
 remain authority only in the Task Register. The installed rejected candidate has
 SHA256 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;

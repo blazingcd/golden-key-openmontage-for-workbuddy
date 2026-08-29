@@ -117,11 +117,36 @@ by themselves.
   deferred until the minimum and Should paths have evidence and the Owner approves
   a separate product case.
 
+## Package-size checkpoint guard
+
+- Preserve the current active PackageRoot and Release byte-for-byte. Package
+  slimming creates one separately named immutable candidate and must not register,
+  activate, install, or replace anything.
+- Direct base-Package Remotion bundling is closed by the Owner's 80 MiB compressed
+  increment ceiling. The measured external core/CLI is 66.64 MiB as a level-9 ZIP
+  and the locked Headless Shell archive is 115.33 MiB alone. Do not omit the
+  browser or call a core-only archive a complete portable runtime to pass the gate.
+- Remotion remains an M1.3 managed on-demand option. External/global installation
+  is discovery evidence only until locked Package-local dependencies, browser,
+  Package recognition, and actual invocation pass.
+- The package-slimming source write set is exactly
+  `golden_key_openmontage_workbuddy/installer.py` and
+  `tests/workbuddy/test_installer.py` after the reviewed planning head is merged
+  into the existing M1 branch. Remove only proved-unused FFmpeg `ffplay.exe` and
+  bundled HTML documentation. Retain ffmpeg, ffprobe, licenses, README, and
+  presets; do not speculate by pruning Python, Node, or Package source.
+- Only focused installer checks, one new unregistered/unactivated candidate, size
+  comparison, one independent zero-write review, one commit, and one ordinary
+  implementation-branch push are permitted. WorkBuddy, Skill mutation,
+  credentials, Providers, media, active Package mutation, and M1.3 execution stay
+  forbidden.
+
 ## Historical M1.1 evidence and M1.2 entry guard
 
 This section records the route through the factual-relay implementation. Its
-phase-specific write authority is closed; the current correction guard below is
-the only active M1.2 write authority.
+phase-specific write authority is closed; the correction guard below is the only
+active WorkBuddy-consumer write authority. The package-size checkpoint above is a
+separate successor-distribution exception and does not reopen WorkBuddy.
 
 - M1.1 facts are accepted, but its independent sub-audit created and removed
   `D:\DevCache\Temp\m11-rg.txt`; retain
@@ -153,7 +178,9 @@ the only active M1.2 write authority.
   test.
 - The existing M1 implementation branch is
   `codex/workbuddy-m1-capability-onboarding`; one branch still carries separately
-  authorized M1.2–M1.4 work. No new sibling branch is needed. It remains paused.
+  authorized M1.2–M1.4 work. No new sibling branch is needed. WorkBuddy/M1.2
+  result work remains paused; the package-size checkpoint is the sole active
+  successor-distribution exception.
 - Before resuming it, ordinarily merge the exact pushed planning head into the
   clean retained implementation branch. Preserve the partial Skill candidate and
   resolve only the authority-document overlap; no rebase, force, rewrite, or
@@ -174,7 +201,7 @@ the only active M1.2 write authority.
   remains deferred and unproved. M1.4 is integrated M1 acceptance, not a place to
   repair missing M1.2 evidence. Installation, credentials, Provider calls,
   validation, recovery, and retest remain M1.3 boundaries.
-- The Owner then authorized only
+- The Owner's earlier relay-only direction authorized only
   `golden_key_openmontage_workbuddy/fixed_child.py` and
   `tests/workbuddy/test_installer.py` for the bounded relay implementation, after
   the exact pushed planning head is ordinarily merged into the retained clean M1
@@ -182,7 +209,9 @@ the only active M1.2 write authority.
   zero-write review, one commit, and one ordinary implementation-branch push are
   allowed. Do not rerun WorkBuddy, edit the Skill, add a third source path or new
   protocol, install/configure anything, handle a secret, call a Provider, produce
-  media, or start M1.3.
+  media, or start M1.3 within that gate. The later package-size checkpoint is the
+  sole successor-Package exception and does not reopen these relay files or
+  WorkBuddy.
 - The implementation may be labeled only
   `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT` after its checks and review pass. M1.2
   stays `NOT_PROVED` until later real WorkBuddy evidence shows the facts,
@@ -384,10 +413,12 @@ change product code, Skill files, tests, or external evidence.
 - The later 2026-08-29 flexibility correction uses the same documentation-only
   boundary. It does not authorize implementation or make planning examples into
   a fixed WorkBuddy transcript.
-- The later Owner direction authorizes the completed relay-audit record in the
+- The later relay-only Owner direction authorized the completed relay-audit record in the
   six authority documents, then the exact two-file bounded relay implementation,
   focused checks, one independent zero-write review, one commit, and one ordinary
   implementation-branch push. It authorizes no WorkBuddy or external mutation.
+  The separate package-size checkpoint above is the sole successor-distribution
+  exception; it changes only its exact installer/test allowlist and candidate.
 - Do not add a second Agent, MCP, router, or generic framework.
 
 ## Git and cleanup guard

@@ -141,8 +141,9 @@ are complete.
 
 Each task requires a separately confirmed result scope, exact branch boundary,
 smallest write allowlist, focused checks, action-time authorization for external
-mutation, and one independent result review after the user-visible result. This
-planning commit authorizes none of those implementation actions.
+mutation, and one independent result review after the user-visible result. The
+original planning commit authorized none of those implementation actions; later
+explicitly dated checkpoints below are the only exceptions.
 
 ### M0 evidence map
 
@@ -436,7 +437,8 @@ Provider, or media mutation and returned
 - exact future write set: `golden_key_openmontage_workbuddy/fixed_child.py` and
   `tests/workbuddy/test_installer.py` only.
 
-The Owner now authorizes two consecutive steps without another approval pause:
+The Owner's earlier relay-only direction authorized two consecutive steps without
+another approval pause:
 
 1. update only the six authority/state documents, obtain one independent
    zero-write document review, commit once, and ordinarily push
@@ -453,11 +455,13 @@ the existing handoff. It must preserve pointer/hash/size validation and all
 WorkBuddy ownership flags. The test must prove exact fact relay, honest failure,
 secret suppression, canonical/hash/size behavior, and unchanged ownership.
 
-No WorkBuddy rerun, Skill edit/build/install, Package edit, optional installation,
+Within that relay-only gate, no WorkBuddy rerun, Skill edit/build/install, Package edit, optional installation,
 credential, Provider, media, M1.3, third source file, new protocol, retry/fallback,
 or branch/worktree cleanup is authorized. A passing implementation and review may
 be called only `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; M1.2 remains incomplete
-until later real WorkBuddy dialogue evidence passes its acceptance row.
+until later real WorkBuddy dialogue evidence passes its acceptance row. The later
+package-size checkpoint is the sole separate successor-Package exception and does
+not reopen the relay files or WorkBuddy.
 
 ### M1.2 final factual-relay deployment and one real readiness probe — HISTORICAL AUTHORIZATION
 
@@ -688,8 +692,10 @@ The Owner authorizes the following bounded correction and push sequence:
    final PackageRoot, run only archive/content/binding and diff checks, obtain one
    independent zero-write candidate review, commit, ordinarily push, and verify
    clean exact refs.
-5. Stop. Another WorkBuddy run, corrected-Skill installation, Package mutation,
-   test suite, Provider/secret/media action, M1.3, and cleanup remain unauthorized.
+5. Stop that consumer-correction gate. Another WorkBuddy run, corrected-Skill
+   installation, Provider/secret/media action, M1.3, and cleanup remain
+   unauthorized. The separately authorized package-size checkpoint below is the
+   only permitted successor-Package mutation.
 
 Correction result: implementation commit
 `5229964ac681d7b34949480326e6f24a0c53913f` is pushed. The newly named,
@@ -704,6 +710,62 @@ and unchanged `scripts/run.ps1` SHA256
 Archive/content/binding checks passed and the independent candidate review is
 `APPROVE / P0=0 / P1=0 / P2=0`. The archive remains uninstalled; the current
 WorkBuddy user result remains rejected and M1.3 remains blocked.
+
+### M1 package-size checkpoint and Remotion distribution decision — AUTHORIZED
+
+The Owner's later 2026-08-29 direction authorizes package slimming and makes
+80 MiB the hard compressed-increment ceiling for direct Remotion bundling. This
+checkpoint is distribution work inside the existing M1 branch; it does not close
+M1.2, start M1.3 execution, or reopen the WorkBuddy gate.
+
+Read-only measurements are:
+
+- current active Release: 217,533,356 bytes / 207.46 MiB compressed;
+- current active PackageRoot: 578,993,593 bytes / 552.17 MiB expanded;
+- bundled FFmpeg: 109.88 MiB compressed / 306.63 MiB expanded, including unused
+  `ffplay.exe` at 99.51 MiB expanded and `doc/` at 11.06 MiB expanded;
+- machine external Remotion 4.0.507 core plus CLI: 230.70 MiB expanded and
+  69,874,314 bytes / 66.64 MiB as a level-9 ZIP;
+- official locked Chrome Headless Shell 152.0.7928.2 win64 archive:
+  120,932,410 bytes / 115.33 MiB compressed.
+
+The external Remotion tree is not the Package's locked 4.0.484 project tree and
+does not contain a portable browser. A complete portable route is therefore over
+80 MiB before remaining project dependencies. Direct base-Package integration is
+`REJECTED_SIZE_GATE`; M1.3 retains WorkBuddy-consented, managed on-demand
+installation and must still prove rediscovery, Package recognition, and actual
+invocation.
+
+The authorized slimming sequence is:
+
+1. Update only the six authority/state documents, obtain one independent
+   `luna_worker` zero-write document review, commit once, ordinarily push the
+   planning branch, and verify local/tracking/advertised equality.
+2. Ordinarily merge that exact planning head into the retained clean
+   `codex/workbuddy-m1-capability-onboarding` worktree. Change only
+   `golden_key_openmontage_workbuddy/installer.py` and
+   `tests/workbuddy/test_installer.py`.
+3. In the existing full-archive extraction boundary, remove only proved-unused
+   `bootstrap/ffmpeg/bin/ffplay.exe` and `bootstrap/ffmpeg/doc/`. Retain
+   `ffmpeg.exe`, `ffprobe.exe`, `LICENSE`, `README.txt`, and `presets/`. Do not
+   prune Python, Node, or OpenMontage source based only on size.
+4. Run only the focused installer tests, package scope/text checks, and
+   `git diff --check`. Build one separately named immutable candidate at
+   `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1-package-slim-candidate-20260829`
+   using task temporary directory
+   `D:\DevCache\Temp\workbuddy-m1-package-slim-3ab9`. Compare compressed and
+   expanded sizes with the active package.
+5. Obtain one independent zero-write implementation/candidate review. Only an
+   approval permits one implementation commit and one ordinary push. Remove the
+   exact task-owned temporary directory after review; retain the candidate as
+   unregistered/unactivated evidence.
+
+The current active PackageRoot, registration, activation, installed Skill,
+WorkBuddy, credentials, Provider connections, and media are read-only. Do not
+install Remotion, activate the slim candidate, build/install a Skill, run
+WorkBuddy, start M1.3, or create another branch. Any unexpected removed runtime
+file, failed ffmpeg/ffprobe identity, size regression, test/review finding,
+external-path drift, or need for a third source/test path is a hard stop.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -767,11 +829,13 @@ versions.
   Acceptance follows the ordinary user's completed goal and the safety boundary,
   not exact rehearsal of an imagined transcript.
 
-This correction authorizes only edits to the six authority/state documents, one
-independent zero-write document review, one commit, and one ordinary push on
-`codex/workbuddy-capability-onboarding`. It authorizes no implementation, Package
-change, test, WorkBuddy run, installation, credential entry, Provider call, or
-media production. The later flexibility correction retains the same boundary.
+This earlier Provider-scope correction authorized only edits to the six
+authority/state documents, one independent zero-write document review, one
+commit, and one ordinary push on `codex/workbuddy-capability-onboarding`. It
+authorized no implementation, Package change, test, WorkBuddy run, installation,
+credential entry, Provider call, or media production. The later flexibility
+correction retained the same boundary; the later package-size checkpoint is the
+sole successor-Package exception.
 
 ### M1 user-visible acceptance
 
@@ -1233,6 +1297,8 @@ m1_2_latest_probe_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256
 m1_2_probe_result_review: REJECT / P0=0 / P1=3 / P2=0
 m1_2_remotion_truth: SOURCE_INTEGRATED / PROJECT_DEPENDENCIES_ABSENT / RUNTIME_NOT_READY / PACKAGE_INVOCATION_NOT_VERIFIED
 m1_2_consumer_correction: PUSHED_COMMIT_5229964AC681D7B34949480326E6F24A0C53913F / CORRECTED_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED
+package_size_checkpoint: AUTHORIZED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_PENDING
+remotion_distribution: ON_DEMAND_MANAGED_M1_3 / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY
 m1_2_shell_factual_relay_write_set: golden_key_openmontage_workbuddy/fixed_child.py / tests/workbuddy/test_installer.py / EXACT_ONLY
 m1_2_shell_factual_relay_local_ceiling: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / COMMIT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / NOT_M1_2_COMPLETE

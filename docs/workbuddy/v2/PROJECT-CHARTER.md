@@ -168,6 +168,14 @@ the smallest existing Shell mechanical factual-relay boundary. It must preserve
 WorkBuddy's explanation, relevance, Provider/model, consent, and recovery
 ownership and cannot itself authorize implementation.
 
+That zero-write audit is complete. It found that the smallest candidate is not a
+new protocol: extend the existing validated `fixed-child-handoff` with the
+verified Package's bounded compact summary. Shell relays the facts without
+interpreting, recommending, ranking, or selecting them. The Owner has authorized
+the exact two-file implementation and focused local proof. That local contract is
+not M1.2 completion; only later real WorkBuddy evidence can prove that ordinary
+users receive the explanation and four choices.
+
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the
 reviewed head into `codex/workbuddy-capability-onboarding`, then removes the exact

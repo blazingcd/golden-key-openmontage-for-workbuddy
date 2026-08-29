@@ -46,8 +46,9 @@ The completed historical delivery target is
 `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. It is retained unchanged as the
 R1-R4 baseline. The authorized next-phase documentation branch is
 `refs/heads/codex/workbuddy-capability-onboarding`, created from that exact commit.
-No implementation, WorkBuddy run, media production, or capability installation is
-authorized by this planning record.
+That branch creation record alone authorized no implementation. The later exact
+two-file implementation authorization is recorded below; it still excludes a
+WorkBuddy run, media production, and capability installation.
 
 ## Current task
 
@@ -170,12 +171,21 @@ be removed. Dirty or unrecorded targets, user data, divergence, or a force
 requirement stop cleanup as `CLEANUP_BLOCKED`. M1 cannot be `COMPLETE` before the
 post-cleanup absence and retained-baseline checks pass.
 
-The Owner's current direction accepts the failed probe, authorizes exact cleanup
-of its two recorded task paths, this six-document status/model-priority correction
-with one independent zero-write review, one commit, and one ordinary planning-
-branch push, plus one separate read-only Shell factual-relay audit. It authorizes
-no implementation, test, WorkBuddy rerun, installation, credential, Provider,
-media, implementation-branch push, rollback, or branch/worktree deletion.
+The Owner accepted the failed probe and authorized a separate zero-write Shell
+factual-relay audit. That audit is complete with
+`PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`: the Package already exposes the compact
+facts, and the existing validated `fixed-child-handoff` is the smallest reusable
+carrier. No implementation or test occurred in the audit.
+
+The Owner now authorizes this six-document status/contract update, one independent
+zero-write document review, one commit, and one ordinary planning-branch push,
+followed without another approval pause by the exact two-file implementation in
+the retained M1 branch. Only `golden_key_openmontage_workbuddy/fixed_child.py`
+and `tests/workbuddy/test_installer.py` may change. Only the focused direct test,
+text/scope checks, one independent zero-write implementation review, one commit,
+and one ordinary implementation-branch push are authorized. WorkBuddy, Skill
+installation/build, optional installation, credentials, Provider calls, media,
+M1.3, extra source files, new protocols, and cleanup remain unauthorized.
 
 Natural-language interaction examples remain planning hypotheses. Real WorkBuddy
 evidence may require different wording, tools, or a bounded fixed confirmation
@@ -201,8 +211,8 @@ The deviation is that its independent sub-audit created and removed the exact
 temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and the
 path was confirmed absent at closeout.
 
-M1.2 is `NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_PAUSED /
-SHELL_FACTUAL_RELAY_READ_ONLY_AUDIT_AUTHORIZED`. The contract at
+M1.2 is `NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_AUTHORIZED /
+M1_3_BLOCKED`. The contract at
 `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` incorrectly combined an authoritative
 inventory requirement with a Skill-only write allowlist, despite the accepted
 M1.1 facts that local evidence was empty, optional preparation had no production
@@ -226,10 +236,13 @@ The file and exact task directory
 the now-empty C: directory remains `CLEANUP_BLOCKED_IN_USE` because WorkBuddy
 holds it open. Do not force-delete it.
 
-The next task is a separate zero-write audit of the smallest existing Shell
-factual-relay route. It may determine the current Package fact source, mechanical
-carrier, exact possible write paths, direct checks, and hard stops. It may not
-implement the route or run WorkBuddy. M1.3 remains blocked on M1.2.
+The zero-write audit confirmed the minimum route: read the verified Package's
+`provider_menu_summary()` at the fixed-child boundary and place the bounded raw
+facts inside the existing handoff/receipt carrier. Shell must not interpret,
+recommend, sort, or select; WorkBuddy remains the explanation, relevance,
+Provider/model, consent, and recovery owner. The authorized implementation may
+prove only that local carrier contract. M1.3 remains blocked until a later real
+WorkBuddy result completes M1.2.
 
 ## Non-goals
 

@@ -157,10 +157,10 @@ by themselves.
 - The corrected contract probed WorkBuddy-owned discovery through the verified
   Package once. It reached the Package summary attempt but did not deliver facts
   to the user, so the result is `NOT_PROVED_WORKBUDDY_DISCOVERY`.
-- The next authorized task is a separate read-only audit of the smallest existing
-  Shell factual-relay route. It may identify fact source, carrier, possible exact
-  future writes, direct checks, and hard stops only. Do not make Shell decide
-  relevance, Provider, model, explanation, consent, or recovery.
+- The separate zero-write audit of the smallest existing Shell factual-relay route
+  completed as `PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`. It found the existing
+  validated `fixed-child-handoff` to be the minimum carrier for the verified
+  Package compact summary. This is feasibility evidence, not M1.2 completion.
 - Every M1.2 step must identify its fact source, owning component, exact write
   paths, failure state, and direct check. The allowlist must be sufficient for the
   promised result; a check that only proves wording, packaging, or old behavior
@@ -170,10 +170,20 @@ by themselves.
   remains deferred and unproved. M1.4 is integrated M1 acceptance, not a place to
   repair missing M1.2 evidence. Installation, credentials, Provider calls,
   validation, recovery, and retest remain M1.3 boundaries.
-- The bounded non-production probe has ended. Do not rerun it, edit the Skill,
-  push the local implementation merge, add Shell relay, or start M1.3. The
-  read-only audit conclusion requires a new Owner decision before any write set,
-  test, or WorkBuddy action is authorized.
+- The Owner now authorizes only
+  `golden_key_openmontage_workbuddy/fixed_child.py` and
+  `tests/workbuddy/test_installer.py` for the bounded relay implementation, after
+  the exact pushed planning head is ordinarily merged into the retained clean M1
+  branch. Only the focused direct test, text/scope checks, one independent
+  zero-write review, one commit, and one ordinary implementation-branch push are
+  allowed. Do not rerun WorkBuddy, edit the Skill, add a third source path or new
+  protocol, install/configure anything, handle a secret, call a Provider, produce
+  media, or start M1.3.
+- The implementation may be labeled only
+  `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT` after its checks and review pass. M1.2
+  stays `NOT_PROVED` until later real WorkBuddy evidence shows the facts,
+  explanation, honest states, and four choices in the dialogue. Stop if WorkBuddy
+  does not consume the existing handoff rather than adding an ad-hoc fallback.
 - Exact task directory
   `D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9` and the zero-byte
   unexpected file were removed under Owner authorization. The empty exact workspace directory
@@ -295,6 +305,10 @@ change product code, Skill files, tests, or external evidence.
 - The later 2026-08-29 flexibility correction uses the same documentation-only
   boundary. It does not authorize implementation or make planning examples into
   a fixed WorkBuddy transcript.
+- The later Owner direction authorizes the completed relay-audit record in the
+  six authority documents, then the exact two-file bounded relay implementation,
+  focused checks, one independent zero-write review, one commit, and one ordinary
+  implementation-branch push. It authorizes no WorkBuddy or external mutation.
 - Do not add a second Agent, MCP, router, or generic framework.
 
 ## Git and cleanup guard

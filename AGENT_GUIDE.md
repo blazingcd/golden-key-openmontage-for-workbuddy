@@ -73,6 +73,19 @@ smallest existing Shell factual-relay route. It does not authorize Shell or Skil
 implementation, tests, another WorkBuddy run, installation, credentials, Provider
 calls, media, implementation-branch push, rollback, or branch/worktree deletion.
 
+The Owner's subsequent direction accepts that audit's
+`PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY` conclusion and authorizes two consecutive
+steps without another approval pause. First, update only the six authority/state
+documents, obtain one independent zero-write document review, commit once, and
+ordinarily push `codex/workbuddy-capability-onboarding`. Then ordinarily merge
+that exact pushed head into the retained clean M1 implementation branch and
+change only `golden_key_openmontage_workbuddy/fixed_child.py` and
+`tests/workbuddy/test_installer.py`. Run only the focused direct test plus text/
+scope checks, obtain one independent zero-write implementation review, commit
+once, and ordinarily push the implementation branch. This authorizes no
+WorkBuddy rerun, Skill install/build, optional installation, credential,
+Provider, media, M1.3, extra source file, new protocol, or branch/worktree cleanup.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -204,12 +217,20 @@ or Shell fallback occurred.
 The implementation branch is locally at merge commit
 `637347b70e09d5b6048507634637d67c10889876`, with parents `4cbf8ff...` and the
 pushed planning commit `8f5abfd...`; its remote remains `4cbf8ff...`. Keep the
-local branch clean and unpushed. M1.2 is
-`NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_PAUSED /
-SHELL_FACTUAL_RELAY_READ_ONLY_AUDIT_AUTHORIZED`. That audit may identify an
-existing fact source, carrier boundary, exact future write set, checks, and hard
-stops only. It may not change Shell, Skill, Package, WorkBuddy, tests, or external
-state, and its conclusion does not authorize implementation.
+local branch clean until the exact pushed planning head is ordinarily merged.
+The completed zero-write audit found one bounded candidate: place the verified
+Package's compact summary in the existing validated `fixed-child-handoff` and
+prove that extension in the existing direct installer test. It created no files
+and returned `PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`; this proves feasibility only.
+
+M1.2 remains `NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_AUTHORIZED /
+M1_3_BLOCKED`. The authorized two-file implementation may reach only
+`VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; it cannot make M1.2 complete. A later
+separately authorized WorkBuddy result must still prove that the facts reach the
+ordinary-user dialogue, the FFmpeg explanation and honest optional states appear,
+and continue/local/API-key/defer are actually available. If implementation needs
+a third source path, a new carrier/protocol, Skill repair, WorkBuddy change,
+Package change, Provider/model decision, secret, install, retry, or fallback, stop.
 
 ## Four product results
 

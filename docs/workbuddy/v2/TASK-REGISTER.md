@@ -39,6 +39,13 @@ may use a bounded ordered sequence when actual WorkBuddy behavior, consent, secu
 secret entry, or reliable installation requires one. The user must still start
 from ordinary natural language and must not operate internal technical mechanics.
 
+For all future WorkBuddy execution tasks, select an available model row marked
+`0.00x` first. Waiting may switch among available `0.00x` rows. Only when every
+`0.00x` row is unavailable may the executor choose a positive multiplier, from
+the smallest upward. Record the selected row and, for a non-`0.00x` choice, the
+reason every `0.00x` row was unavailable. Model switching does not authorize
+request replay, a second task, or bypass of another gate.
+
 ## M0 — next-phase master roadmap and execution contract: FROZEN FOR PLANNING / IMPLEMENTATION NOT AUTHORIZED
 
 Owner authorization dated 2026-08-28 permits this M0 contract to be documented,
@@ -245,14 +252,15 @@ to perform Package discovery with its actual tools was `NOT_VERIFIED`. The named
 tests could prove existing entry/installer packaging and safety behavior but not
 the required inventory, state mapping, or user-choice handoff.
 
-The subsequent implementation branch
-`codex/workbuddy-m1-capability-onboarding` exists at
+At contract freeze, the newly created implementation branch
+`codex/workbuddy-m1-capability-onboarding` started at
 `4cbf8ff3c15dd686a893842ca189ce49fa83023d` in linked worktree
 `C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2`.
 That commit adds only partial Skill guidance plus a mechanical task-state update.
 It is not M1.2 completion or `VERIFIED_LOCAL_CONTRACT`; it must not be merged into
 the formal ref or promoted as complete, deleted, rewritten, or used to authorize
-M1.3. The branch and worktree remain retained and paused.
+M1.3. The branch and worktree remain retained and paused; their current local and
+remote identities after the probe are recorded in the execution record below.
 
 M1.2's product result remains:
 
@@ -343,15 +351,113 @@ Stop before mutation on ref/worktree drift, an unverified PackageRoot, an
 unresolved exact external path, a second installed Golden Key Skill, need for a
 new source write, test, dependency, Package/WorkBuddy change, secret handling,
 optional installation, Provider call, media action, or Shell decision. The
-corrected contract state is
+pre-probe corrected contract state was
 `CORRECTED_EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_PAUSED /
 WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED`.
 
-The Owner's current direction authorizes only this six-document contract freeze,
-one independent zero-write document review, one commit, and one ordinary push on
-`codex/workbuddy-capability-onboarding`. It authorizes no code, test, WorkBuddy,
-install, credential, Provider, media, merge, cleanup, or implementation-branch
-push action.
+The earlier direction authorized only the six-document contract freeze and did
+not itself authorize execution. The later Owner authorization ran the frozen
+probe once; its result and the new audit gate are recorded below.
+
+### M1.2 probe result and Shell factual-relay audit gate
+
+The single WorkBuddy-owned discovery probe is complete with terminal state
+`NOT_PROVED_WORKBUDDY_DISCOVERY`:
+
+- Planning local/tracking/advertised refs remained
+  `8f5abfd6b3da30020bac16aa33b7a2ba170f5d96`; the historical baseline remained
+  `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
+- The implementation worktree ordinarily merged the exact planning head. Its
+  clean local HEAD is `637347b70e09d5b6048507634637d67c10889876`, with parents
+  `4cbf8ff3c15dd686a893842ca189ce49fa83023d` and `8f5abfd...`; origin remains
+  `4cbf8ff...`. The local branch is ahead by two and must remain unpushed.
+- Candidate ZIP:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-readiness-probe.zip`,
+  SHA256
+  `709d202ec5f1f78bbd50b015342cb5cccc28b0c69fa1d10b20a73bcd31a48763`.
+  It remains the only installed Golden Key Skill and matched the installed
+  `SKILL.md` and `run.ps1` identities at probe time.
+- The ordinary input was
+  `用金钥匙智能体看看我现在可以做哪些视频，还需要配置什么。` WorkBuddy
+  5.3.14 invoked the single Skill, verified PackageRoot/Guide, and attempted
+  `provider_menu_summary()`. LauncherReceipt was `EXITED_SUCCESS`, with a valid
+  result pointer, one spawn, no retry, and handoff fields keeping WorkBuddy as
+  decision owner with no media, production decision, Provider, or renderer
+  selection.
+- No Package capability facts reached the ordinary-user dialogue. The FFmpeg
+  baseline explanation, optional-capability states, and all four choices were
+  absent. WorkBuddy created
+  `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json` as a
+  zero-byte file and queued another workspace-file relay outside the authorized
+  paths. The task was cancelled before that write.
+- The probe started before the Owner's general `0.00x` priority instruction. Its
+  turn receipt identifies Auto (`GLM-5.3`); switching the UI to `Hy3 0.00x` after
+  cancellation does not relabel the completed turn.
+- No media, optional installation, credential, Provider/connection test, M1.3,
+  Skill repair, Shell fallback, independent pass review, closeout-document write,
+  closeout commit, or implementation-branch push occurred.
+
+Under later Owner cleanup authorization, exact task directory
+`D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9` and the zero-byte unexpected
+file were removed. The exact now-empty directory
+`C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10` remains
+`CLEANUP_BLOCKED_IN_USE` because WorkBuddy holds it open. Do not force-delete it,
+terminate WorkBuddy, or broaden the target without a new decision.
+
+The Owner now authorizes one separate Shell factual-relay audit with an absolute
+zero-write boundary. It may inspect the existing Package summary source, Shell
+entry/handoff/receipt carriers, direct callers, and corresponding existing tests
+only far enough to return:
+
+1. the smallest existing fact source and carrier that could put trustworthy
+   mechanical facts into the WorkBuddy dialogue;
+2. the exact minimum future source write set, if any;
+3. the smallest direct checks and separately required WorkBuddy evidence;
+4. failure states and hard stops that preserve WorkBuddy as relevance,
+   explanation, Provider/model, consent, and recovery owner.
+
+The audit may not write a file, create a temporary directory, modify a branch,
+run tests or WorkBuddy, build/install/uninstall, enter credentials, call a
+Provider, produce media, push the local implementation merge, or implement any
+route. If no existing bounded relay is feasible, it returns
+`NOT_PROVED_BOUNDED_SHELL_FACTUAL_RELAY` and stops. Its report is a planning input,
+not implementation authorization.
+
+The zero-write audit completed without file, test, branch, WorkBuddy, install,
+Provider, or media mutation and returned
+`PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`. It found:
+
+- fact source: verified Package `registry.provider_menu_summary()`;
+- missing production path: no Shell caller; `user_entry.py` sends empty local
+  evidence, `prepare_optional_capabilities()` has only test callers, and the
+  existing handoff contains no compact summary;
+- minimum carrier: the existing validated `fixed-child-handoff` addressed by the
+  LauncherReceipt result pointer;
+- exact future write set: `golden_key_openmontage_workbuddy/fixed_child.py` and
+  `tests/workbuddy/test_installer.py` only.
+
+The Owner now authorizes two consecutive steps without another approval pause:
+
+1. update only the six authority/state documents, obtain one independent
+   zero-write document review, commit once, and ordinarily push
+   `codex/workbuddy-capability-onboarding`;
+2. ordinarily merge that exact pushed head into the retained clean
+   `codex/workbuddy-m1-capability-onboarding` worktree, change only the two files
+   above, run only the focused direct test plus text/scope checks, obtain one
+   independent zero-write implementation review, commit once, and ordinarily
+   push the implementation branch.
+
+`fixed_child.py` may read the compact summary only after the existing verified
+PackageRoot/cwd boundary and place bounded canonical, secret-suppressed facts in
+the existing handoff. It must preserve pointer/hash/size validation and all
+WorkBuddy ownership flags. The test must prove exact fact relay, honest failure,
+secret suppression, canonical/hash/size behavior, and unchanged ownership.
+
+No WorkBuddy rerun, Skill edit/build/install, Package edit, optional installation,
+credential, Provider, media, M1.3, third source file, new protocol, retry/fallback,
+or branch/worktree cleanup is authorized. A passing implementation and review may
+be called only `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; M1.2 remains incomplete
+until later real WorkBuddy dialogue evidence passes its acceptance row.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -384,8 +490,9 @@ order:
 Dirty state, an unresolved or unrecorded target, user data, ref divergence,
 unique/unmerged work, a failed deletion, or any need for a force operation is
 `CLEANUP_BLOCKED`. Stop without retrying through a broader command and request an
-Owner decision. Cleanup is a completion gate, not permission to delete anything
-during the current documentation task.
+Owner decision. Cleanup is a completion gate. The two exact probe paths recorded
+above were separately authorized for cleanup; that exception does not authorize
+branch, worktree, user-data, parent-directory, or unrelated cleanup.
 
 ### Official Provider scope and two configuration mechanisms
 
@@ -454,13 +561,11 @@ action-time authorization.
 
 ### M0 execution and review guard
 
-The future M1 task follows the frozen corrected sequence above: synchronize the
-retained implementation branch with the exact pushed planning head; prepare only
-the existing Skill candidate; obtain action-time authorization for exact external
-paths; run one bounded WorkBuddy readiness probe; then either close M1.2 after one
-independent result review or stop as `NOT_PROVED_WORKBUDDY_DISCOVERY`. A failed
-probe may not turn into Skill repair, Shell relay, installation, Provider work, or
-M1.3 without a new Owner decision.
+The frozen WorkBuddy-discovery sequence ended as
+`NOT_PROVED_WORKBUDDY_DISCOVERY`. Its separately authorized zero-write Shell
+factual-relay audit is complete and the Owner authorized the exact two-file
+implementation above. That implementation must not turn into Skill repair,
+installation, Provider work, a WorkBuddy rerun, or M1.3.
 
 Stop without repair or expansion on an authority conflict, unexpected path,
 unverified PackageRoot, need to change WorkBuddy or another repository, need for a
@@ -651,7 +756,8 @@ WorkBuddy comparison without separate action-time Owner confirmation. Historical
 R3 remains complete and R4 remains unauthorized.
 
 The Owner then gave action-time confirmation to install v4 and run once. WorkBuddy
-`5.3.14` visibly used `Hy3 0.00x`; v4 remained the only installed Golden Key Skill.
+`5.3.14` visibly used `Hy3 0.00x`; v4 was the only installed Golden Key Skill for
+that historical comparison.
 The first call produced `EXITED_SUCCESS`, a valid result pointer,
 `spawn_count=1`, and `retry_count=0`. The handoff retained
 `decision_owner=WorkBuddy` and `media_executed=false`.
@@ -669,7 +775,8 @@ Keep that result review separate from v4's stability verdict. V4 is not accepted
 as the stable Skill because WorkBuddy wrote the optional 978-byte
 `C:\Users\blazi\WorkBuddy\2026-08-28-15-40-28\.workbuddy\memory\2026-08-28.md`
 after validating the video and before its final reply. No extra user Skill was
-created. V4 remains the single installed Golden Key Skill. Do not retry, repair
+created. V4 remained the single installed Golden Key Skill at that comparison
+point. Do not retry, repair
 the video, delete the memory, or roll back without fresh Owner authorization.
 Historical R3 remains complete.
 
@@ -848,14 +955,14 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_CORRECTED_EXECUTION_CONTRACT_DOCUMENTATION_CLOSEOUT
+current_task: M1_2_NOT_PROVED_AND_BOUNDED_SHELL_FACTUAL_RELAY_IMPLEMENTATION_AUTHORIZED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
-candidate_skill: V4_INSTALLED / RETAINED_WITH_KNOWN_WORKSPACE_MEMORY_LIMIT
-capability_onboarding_implementation: PARTIAL_SKILL_GUIDANCE_ONLY / PAUSED / NOT_AUTHORIZED_TO_CONTINUE
-implementation_branch_name: codex/workbuddy-m1-capability-onboarding / EXISTS_AT_4CBF8FF3C15DD686A893842CA189CE49FA83023D
+candidate_skill: M1_2_READINESS_PROBE_INSTALLED_ONLY_GOLDEN_KEY_SKILL / ZIP_SHA256_709D202EC5F1F78BBD50B015342CB5CCCC28B0C69FA1D10B20A73BCD31A48763 / SKILL_SHA256_D28A5CD9CBACCEDF5C8F4E497AE2CBEC2AAAA194D5315991EBD55D610B851689 / RUN_PS1_SHA256_DE63F07394F517137FBDA3A656EBB9F9DC68B9A391E5C0CD4D10CA251EB7CB3C
+capability_onboarding_implementation: PARTIAL_SKILL_GUIDANCE_ONLY / WORKBUDDY_DISCOVERY_NOT_PROVED / BOUNDED_RELAY_IMPLEMENTATION_AUTHORIZED
+implementation_branch_name: codex/workbuddy-m1-capability-onboarding / PRE_IMPLEMENTATION_LOCAL_637347B70E09D5B6048507634637D67C10889876 / ORIGIN_4CBF8FF3C15DD686A893842CA189CE49FA83023D / PUSH_ONLY_AFTER_AUTHORIZED_IMPLEMENTATION_REVIEW
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
 implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_PAUSED
-task_owned_temporary_paths: NONE / RECORD_EACH_EXACT_PATH_AT_CREATION
+task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
 workbuddy_or_media_in_current_task: FORBIDDEN
@@ -863,14 +970,19 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: CORRECTED_EXECUTION_CONTRACT_FROZEN / PARTIAL_SKILL_GUIDANCE_ONLY / IMPLEMENTATION_PAUSED / WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED
+m1_2: NOT_PROVED_WORKBUDDY_DISCOVERY / PARTIAL_SKILL_GUIDANCE_ONLY / BOUNDED_RELAY_IMPLEMENTATION_AUTHORIZED / M1_3_BLOCKED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
 m1_2_execution_contract_document_review: HISTORICAL_APPROVE / FEASIBILITY_GAP_NOT_DETECTED / NOT_CURRENT_AUTHORITY
 m1_2_corrected_route: WORKBUDDY_PACKAGE_DISCOVERY_FIRST / ONE_BOUNDED_PROBE / SHELL_FALLBACK_REQUIRES_NEW_OWNER_DECISION
 m1_2_probe_product_write_allowlist: NONE / EXISTING_SKILL_CANDIDATE_ONLY
-m1_2_probe_result_review: NOT_STARTED / ACTION_NOT_AUTHORIZED
+m1_2_probe_result: NOT_PROVED_WORKBUDDY_DISCOVERY / CAPABILITY_FACTS_DID_NOT_REACH_USER_DIALOGUE / UNAPPROVED_FILE_CARRIER_STOPPED
+m1_2_probe_result_review: NOT_RUN / PASS_RESULT_ABSENT
+m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY
+m1_2_shell_factual_relay_write_set: golden_key_openmontage_workbuddy/fixed_child.py / tests/workbuddy/test_installer.py / EXACT_ONLY
+m1_2_shell_factual_relay_local_ceiling: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / NOT_M1_2_COMPLETE
+workbuddy_model_priority: AVAILABLE_0_00X_FIRST / SWITCH_AMONG_0_00X_WHILE_WAITING / POSITIVE_MULTIPLIER_ASCENDING_ONLY_IF_ALL_0_00X_UNAVAILABLE
 package_declared_video_providers: SEEDANCE_DEFAULT / KLING_MINIMAX_CURRENT_STATIC
 provider_live_readiness: NOT_VERIFIED
 configuration_mechanisms: LOCAL_INSTALL_AND_API_KEY

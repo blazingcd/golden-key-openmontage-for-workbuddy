@@ -31,6 +31,15 @@ ordinary-user technical burden, creates a second control plane, or produces a fa
 result. Internal commands, tool choices, retries, and corrections are not failures
 by themselves.
 
+## WorkBuddy model-selection guard
+
+- Prefer any available model row marked `0.00x` for every future WorkBuddy task.
+- While waiting, switching among available `0.00x` rows is allowed.
+- Use a positive multiplier only when all `0.00x` rows are unavailable, selecting
+  from the smallest upward and recording the unavailable evidence.
+- Do not replay a user request, create a second task, or bypass another gate only
+  to change the selected model.
+
 ## Capability-readiness guard
 
 - FFmpeg is the minimum production baseline. When it is ready, basic production
@@ -145,9 +154,13 @@ by themselves.
   clean retained implementation branch. Preserve the partial Skill candidate and
   resolve only the authority-document overlap; no rebase, force, rewrite, or
   second branch.
-- The corrected contract probes only WorkBuddy-owned discovery through the
-  verified Package first. It does not authorize Shell detection/relay changes.
-  Do not make Shell decide relevance, Provider, model, or recovery.
+- The corrected contract probed WorkBuddy-owned discovery through the verified
+  Package once. It reached the Package summary attempt but did not deliver facts
+  to the user, so the result is `NOT_PROVED_WORKBUDDY_DISCOVERY`.
+- The separate zero-write audit of the smallest existing Shell factual-relay route
+  completed as `PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`. It found the existing
+  validated `fixed-child-handoff` to be the minimum carrier for the verified
+  Package compact summary. This is feasibility evidence, not M1.2 completion.
 - Every M1.2 step must identify its fact source, owning component, exact write
   paths, failure state, and direct check. The allowlist must be sufficient for the
   promised result; a check that only proves wording, packaging, or old behavior
@@ -157,13 +170,25 @@ by themselves.
   remains deferred and unproved. M1.4 is integrated M1 acceptance, not a place to
   repair missing M1.2 evidence. Installation, credentials, Provider calls,
   validation, recovery, and retest remain M1.3 boundaries.
-- The future probe is one bounded non-production readiness journey. It may vary
-  wording, tools, and confirmation order, but it must not generate media, install
-  an optional capability, accept a secret in chat, call a Provider, or start
-  M1.3. If trustworthy facts do not reach the dialogue, stop as
-  `NOT_PROVED_WORKBUDDY_DISCOVERY`; do not retry, edit the Skill, or add Shell
-  relay in that task. Any fallback requires a new Owner decision and exact write
-  allowlist.
+- The Owner now authorizes only
+  `golden_key_openmontage_workbuddy/fixed_child.py` and
+  `tests/workbuddy/test_installer.py` for the bounded relay implementation, after
+  the exact pushed planning head is ordinarily merged into the retained clean M1
+  branch. Only the focused direct test, text/scope checks, one independent
+  zero-write review, one commit, and one ordinary implementation-branch push are
+  allowed. Do not rerun WorkBuddy, edit the Skill, add a third source path or new
+  protocol, install/configure anything, handle a secret, call a Provider, produce
+  media, or start M1.3.
+- The implementation may be labeled only
+  `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT` after its checks and review pass. M1.2
+  stays `NOT_PROVED` until later real WorkBuddy evidence shows the facts,
+  explanation, honest states, and four choices in the dialogue. Stop if WorkBuddy
+  does not consume the existing handoff rather than adding an ad-hoc fallback.
+- Exact task directory
+  `D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9` and the zero-byte
+  unexpected file were removed under Owner authorization. The empty exact workspace directory
+  `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10` remains
+  `CLEANUP_BLOCKED_IN_USE`; do not force-delete it or broaden cleanup.
 
 ## Result guard
 
@@ -237,11 +262,16 @@ pointer, one spawn, and no retry; WorkBuddy delivered a real MP4 and final answe
 The independent ordinary-user result review is `TODO / P0=0 / P1=1 / P2=0`
 because the closing title is clipped. V4 is also not accepted as the stability
 solution because WorkBuddy wrote optional workspace memory before the final
-answer. No extra user Skill was created. V4 remains the only installed Golden Key
-Skill. The Owner retains v4 for its improved first-call and final-delivery
+answer. No extra user Skill was created. V4 was the only installed Golden Key
+Skill at that comparison point. The Owner retains v4 for its improved first-call and final-delivery
 mechanics; the clipped creative output from one harness run is not a Skill
 regression by itself. Do not retry, repair the video, delete the memory, or roll
 back. Historical R3 remains complete.
+
+The later authorized M1.2 readiness probe installed its separately named
+candidate as the only Golden Key Skill. That is the current installed identity;
+the Task Register records its exact hashes. Do not relabel it v4 or roll it back
+without a new Owner decision.
 
 ## R4 closeout guard
 
@@ -275,6 +305,10 @@ change product code, Skill files, tests, or external evidence.
 - The later 2026-08-29 flexibility correction uses the same documentation-only
   boundary. It does not authorize implementation or make planning examples into
   a fixed WorkBuddy transcript.
+- The later Owner direction authorizes the completed relay-audit record in the
+  six authority documents, then the exact two-file bounded relay implementation,
+  focused checks, one independent zero-write review, one commit, and one ordinary
+  implementation-branch push. It authorizes no WorkBuddy or external mutation.
 - Do not add a second Agent, MCP, router, or generic framework.
 
 ## Git and cleanup guard

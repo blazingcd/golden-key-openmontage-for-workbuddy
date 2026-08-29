@@ -65,12 +65,26 @@ branch, and task-owned temporary directories be removed. M1 is not `COMPLETE`
 until that cleanup is verified. This documentation task performs no branch,
 worktree, directory, implementation, test, or external action.
 
-The Owner's current direction permits the corrected M1.2 execution contract to be
-frozen on `codex/workbuddy-capability-onboarding`. This documentation task may
-change only the six authority/state documents, obtain one independent zero-write
-document review, create one commit, and ordinarily push that planning branch. It
-does not authorize implementation, tests, WorkBuddy, installation, credentials,
-Provider calls, media, branch creation/deletion, merge, or cleanup.
+The Owner's current direction accepts the M1.2 hard stop, authorizes exact cleanup
+of its two task-owned side-effect paths, permits one six-document status/model-
+priority correction with one independent zero-write review, one commit, and one
+ordinary planning-branch push, and authorizes one separate read-only audit of the
+smallest existing Shell factual-relay route. It does not authorize Shell or Skill
+implementation, tests, another WorkBuddy run, installation, credentials, Provider
+calls, media, implementation-branch push, rollback, or branch/worktree deletion.
+
+The Owner's subsequent direction accepts that audit's
+`PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY` conclusion and authorizes two consecutive
+steps without another approval pause. First, update only the six authority/state
+documents, obtain one independent zero-write document review, commit once, and
+ordinarily push `codex/workbuddy-capability-onboarding`. Then ordinarily merge
+that exact pushed head into the retained clean M1 implementation branch and
+change only `golden_key_openmontage_workbuddy/fixed_child.py` and
+`tests/workbuddy/test_installer.py`. Run only the focused direct test plus text/
+scope checks, obtain one independent zero-write implementation review, commit
+once, and ordinarily push the implementation branch. This authorizes no
+WorkBuddy rerun, Skill install/build, optional installation, credential,
+Provider, media, M1.3, extra source file, new protocol, or branch/worktree cleanup.
 
 ## Product boundary
 
@@ -98,6 +112,13 @@ Configuration may nevertheless use a bounded ordered sequence when actual
 WorkBuddy behavior, consent, secure secret entry, or reliable installation needs
 one. The sequence must still begin from ordinary natural language and must not make
 the user operate internal commands or turn Shell into a control plane.
+
+For every future WorkBuddy execution in this project, prefer an available model
+row marked `0.00x`. While waiting, the executor may switch among available
+`0.00x` rows. Only when every `0.00x` row is unavailable may it choose a positive
+multiplier, from the smallest upward. Record the selected row; a non-`0.00x`
+choice must also record why all `0.00x` rows were unavailable. Model switching
+must not replay a user request or create a second task merely to change models.
 
 ## Capability readiness
 
@@ -184,18 +205,32 @@ Package-declared Provider states honestly, and let the user continue, enter loca
 configuration, enter API-key configuration, or defer. A Skill instruction alone
 is not evidence that discovery, state formation, or handoff works.
 
-The corrected contract selects WorkBuddy-owned Package discovery as the first and
-only route to probe. A later separately authorized execution task first merges the
-exact pushed planning head into the retained M1 implementation branch, preserving
-its partial Skill candidate, then performs one bounded, non-production WorkBuddy
-readiness probe. If trustworthy Package facts reach the ordinary-user dialogue,
-the WorkBuddy route is selected and Shell remains unchanged. If discovery is
-absent, stale, overstated, or not observable, stop as
-`NOT_PROVED_WORKBUDDY_DISCOVERY`; do not add Shell relay in the same task. A
-separate Owner decision is required before the smallest existing Shell factual
-relay may be audited or changed. M1.2 is
-`CORRECTED_EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_PAUSED /
-WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED`.
+The corrected WorkBuddy-owned discovery probe has run once and stopped as
+`NOT_PROVED_WORKBUDDY_DISCOVERY`. WorkBuddy verified PackageRoot/Guide and tried
+to call `provider_menu_summary()`, but no capability facts, FFmpeg explanation,
+optional-capability states, or continue/local/API-key/defer choices reached the
+ordinary-user dialogue. WorkBuddy instead created an unapproved workspace and
+attempted file-based relay, so the task was cancelled before further writes. No
+media, optional installation, secret, Provider call, M1.3 action, Skill repair,
+or Shell fallback occurred.
+
+The implementation branch is locally at merge commit
+`637347b70e09d5b6048507634637d67c10889876`, with parents `4cbf8ff...` and the
+pushed planning commit `8f5abfd...`; its remote remains `4cbf8ff...`. Keep the
+local branch clean until the exact pushed planning head is ordinarily merged.
+The completed zero-write audit found one bounded candidate: place the verified
+Package's compact summary in the existing validated `fixed-child-handoff` and
+prove that extension in the existing direct installer test. It created no files
+and returned `PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`; this proves feasibility only.
+
+M1.2 remains `NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_AUTHORIZED /
+M1_3_BLOCKED`. The authorized two-file implementation may reach only
+`VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; it cannot make M1.2 complete. A later
+separately authorized WorkBuddy result must still prove that the facts reach the
+ordinary-user dialogue, the FFmpeg explanation and honest optional states appear,
+and continue/local/API-key/defer are actually available. If implementation needs
+a third source path, a new carrier/protocol, Skill repair, WorkBuddy change,
+Package change, Provider/model decision, secret, install, retry, or fallback, stop.
 
 ## Four product results
 
@@ -356,7 +391,8 @@ Focused checks passed and the one independent zero-write candidate review return
 `APPROVE / P0=0 / P1=0 / P2=0`.
 
 The one action-time-authorized v4 comparison is complete in WorkBuddy `5.3.14`
-with `Hy3 0.00x`. V4 is the only installed Golden Key Skill. Its first call
+with `Hy3 0.00x`. V4 was the only installed Golden Key Skill for that comparison.
+Its first call
 produced `EXITED_SUCCESS`, a valid result pointer, `spawn_count=1`, and
 `retry_count=0`. WorkBuddy delivered a 9.6 MB MP4 and its path in the final answer.
 The independent ordinary-user result review is `TODO / P0=0 / P1=1 / P2=0`:
@@ -367,3 +403,9 @@ was created. The Owner now retains v4 because its first-call and final-delivery
 mechanics improved; the clipped creative output from one harness run is not by
 itself a Skill regression. Do not run another comparison, repair the video, delete
 the memory, or roll back the installed Skill. Historical R3 remains complete.
+
+The later M1.2 readiness authorization replaced the installed v4 artifact with
+the separately named readiness-probe candidate. That candidate, not v4, is now the
+only installed Golden Key Skill; its exact identities are recorded in the Task
+Register. This does not change the historical v4 comparison facts or authorize a
+rollback.

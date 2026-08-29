@@ -19,6 +19,11 @@ not force a preset internal script. Acceptance follows the user's observed resul
 process variation is acceptable unless it causes product failure, technical burden,
 a second control plane, or a false result.
 
+Future WorkBuddy executions prefer any available `0.00x` model row. Waiting may
+switch among `0.00x` rows. A positive multiplier is allowed only when every
+`0.00x` row is unavailable, and is selected from the smallest upward. Record the
+chosen row and, for any non-`0.00x` choice, the unavailable `0.00x` evidence.
+
 ## Four results
 
 | Result | Current state | Evidence / next boundary |
@@ -41,8 +46,9 @@ The completed historical delivery target is
 `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. It is retained unchanged as the
 R1-R4 baseline. The authorized next-phase documentation branch is
 `refs/heads/codex/workbuddy-capability-onboarding`, created from that exact commit.
-No implementation, WorkBuddy run, media production, or capability installation is
-authorized by this planning record.
+That branch creation record alone authorized no implementation. The later exact
+two-file implementation authorization is recorded below; it still excludes a
+WorkBuddy run, media production, and capability installation.
 
 ## Current task
 
@@ -59,8 +65,8 @@ WorkBuddy created a valid 37-second 1920x1080 H.264/AAC MP4 at
 but planned an unrequested workspace-memory update and another user Skill before
 the final reply. The task was stopped. Final UI state is `用户已取消` with no
 artifact card or final path; independent result review is `TODO`. An empty new
-workspace-memory file remains, no extra user Skill was created, and v3 remains
-the only installed Golden Key Skill.
+workspace-memory file remains, no extra user Skill was created, and v3 was the
+only installed Golden Key Skill at that historical comparison point.
 
 Fresh Owner authorization permits a separately named `delivery-v4` candidate
 derived from v3 while preserving the R3 baseline and v3 archives. V4 changes only
@@ -90,7 +96,8 @@ the first Must task on `codex/workbuddy-capability-onboarding`. It records the
 evidence gap, dependency order, read-only route boundary, user-visible acceptance,
 anti-inflation stops, review method, and the gate that requires the Owner to
 confirm both the implementation branch name and exact write allowlist after the
-route audit. M0 does not implement anything and no implementation branch exists.
+route audit. At the M0 freeze, no implementation branch existed; the later M1
+branch history is recorded below.
 The initial capability-onboarding contract remains preserved at
 `4c0cbd3447546c3dcc0079f2392a3b43e7542e69`; the later Owner authorization adds
 one documentation-only master-roadmap amendment without rewriting that commit.
@@ -164,11 +171,21 @@ be removed. Dirty or unrecorded targets, user data, divergence, or a force
 requirement stop cleanup as `CLEANUP_BLOCKED`. M1 cannot be `COMPLETE` before the
 post-cleanup absence and retained-baseline checks pass.
 
-The Owner's current direction permits this corrected M1.2 contract to be frozen by
-editing only the six authority/state documents, obtaining one independent
-zero-write document review, creating one commit, and ordinarily pushing
-`codex/workbuddy-capability-onboarding`. It does not authorize code, tests,
-WorkBuddy, installation, credentials, Provider calls, media, merge, or cleanup.
+The Owner accepted the failed probe and authorized a separate zero-write Shell
+factual-relay audit. That audit is complete with
+`PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`: the Package already exposes the compact
+facts, and the existing validated `fixed-child-handoff` is the smallest reusable
+carrier. No implementation or test occurred in the audit.
+
+The Owner now authorizes this six-document status/contract update, one independent
+zero-write document review, one commit, and one ordinary planning-branch push,
+followed without another approval pause by the exact two-file implementation in
+the retained M1 branch. Only `golden_key_openmontage_workbuddy/fixed_child.py`
+and `tests/workbuddy/test_installer.py` may change. Only the focused direct test,
+text/scope checks, one independent zero-write implementation review, one commit,
+and one ordinary implementation-branch push are authorized. WorkBuddy, Skill
+installation/build, optional installation, credentials, Provider calls, media,
+M1.3, extra source files, new protocols, and cleanup remain unauthorized.
 
 Natural-language interaction examples remain planning hypotheses. Real WorkBuddy
 evidence may require different wording, tools, or a bounded fixed confirmation
@@ -194,31 +211,38 @@ The deviation is that its independent sub-audit created and removed the exact
 temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and the
 path was confirmed absent at closeout.
 
-M1.2 is `CORRECTED_EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_PAUSED /
-WORKBUDDY_ROUTE_PROBE_NOT_AUTHORIZED`. The contract at
+M1.2 is `NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_AUTHORIZED /
+M1_3_BLOCKED`. The contract at
 `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` incorrectly combined an authoritative
 inventory requirement with a Skill-only write allowlist, despite the accepted
 M1.1 facts that local evidence was empty, optional preparation had no production
 caller, and WorkBuddy's required discovery ability was unverified. Its tests could
 not prove the missing fact flow.
 
-The existing M1 implementation branch
-`codex/workbuddy-m1-capability-onboarding` is retained at
-`4cbf8ff3c15dd686a893842ca189ce49fa83023d`. That commit contains only partial
-Skill guidance and a mechanical task-state update. It is not M1.2 completion,
-must not be promoted, and does not authorize M1.3.
+The implementation branch locally merged the exact pushed planning head and is
+clean at `637347b70e09d5b6048507634637d67c10889876`; origin remains
+`4cbf8ff3c15dd686a893842ca189ce49fa83023d`, so the local branch is intentionally
+ahead by two commits and unpushed. The installed readiness candidate is still the
+only Golden Key Skill.
 
-The corrected contract first tests only the smallest existing candidate:
-WorkBuddy-owned discovery through the verified Package and the partial Skill
-guidance already on the retained implementation branch. Before that task resumes,
-the exact pushed planning head must be ordinarily merged into the clean retained
-implementation branch; no rebase, force, rewrite, or sibling branch is allowed.
-The later bounded readiness probe performs no media production, optional-capability
-installation, secret entry, or Provider call. A pass keeps Shell unchanged. A
-failure stops as `NOT_PROVED_WORKBUDDY_DISCOVERY`; Shell factual relay requires a
-new Owner decision and cannot be implemented as an automatic fallback.
-Installation, credential storage, Provider calls, validation, recovery, and retest
-remain M1.3 boundaries.
+The single bounded probe verified PackageRoot/Guide and reached attempts to call
+`provider_menu_summary()`, but no capability facts reached the ordinary-user
+dialogue. The required FFmpeg explanation, honest optional states, and four
+choices were absent. WorkBuddy instead created
+`C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10` and a zero-byte
+`gk_menu_summary.json`, then queued another file write; the task was cancelled.
+The file and exact task directory
+`D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9` were removed under Owner authorization, but
+the now-empty C: directory remains `CLEANUP_BLOCKED_IN_USE` because WorkBuddy
+holds it open. Do not force-delete it.
+
+The zero-write audit confirmed the minimum route: read the verified Package's
+`provider_menu_summary()` at the fixed-child boundary and place the bounded raw
+facts inside the existing handoff/receipt carrier. Shell must not interpret,
+recommend, sort, or select; WorkBuddy remains the explanation, relevance,
+Provider/model, consent, and recovery owner. The authorized implementation may
+prove only that local carrier contract. M1.3 remains blocked until a later real
+WorkBuddy result completes M1.2.
 
 ## Non-goals
 

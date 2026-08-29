@@ -190,6 +190,39 @@ by themselves.
   `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10` remains
   `CLEANUP_BLOCKED_IN_USE`; do not force-delete it or broaden cleanup.
 
+## Current M1.2 final-deployment guard
+
+- Planning local/tracking/advertised must start at `0b08dfdd...`, implementation
+  local/tracking/advertised at `33f49fb...`, and the historical baseline at
+  `aa9cabfa...`; any mismatch stops before writing.
+- `33f49fb...` is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`. Preserve its two
+  source/test files byte-for-byte while ordinarily merging the newly reviewed
+  planning head. A third product/test source path is forbidden.
+- The only Package materialization exception is one new immutable final
+  PackageRoot/Release assembled from clean OpenMontage `73cab673...` and exact
+  Shell source. Never modify an old PackageRoot, Package source/semantics,
+  historical ZIP, registration history, rollback artifact, or evidence.
+- Use only the exact candidate, Release, Skill ZIP, evidence, input, and sole D:
+  temporary paths frozen in the Task Register. Missing or drifted input identity,
+  an unrecorded path, or a substitute source is a hard stop.
+- Register and CAS-activate the new root before building the newly named Skill
+  archive so its wrapper binds the new PackageRoot and active pointer. Install it
+  only through WorkBuddy's normal mechanism, replacing the existing Golden Key
+  Skill; two Golden Key Skills at any point after installation is a hard stop.
+- Exactly one WorkBuddy 5.3.14 non-production readiness probe is authorized on
+  an available `0.00x` row. WorkBuddy may vary reasoning and wording; Shell must
+  not explain, recommend, select, retry, or fall back.
+- The visible result must contain the continuing FFmpeg path, honest Remotion/
+  HyperFrames/external-video/TTS and Package-declared Provider states, and
+  continue/local/API-key/defer entries. If a non-mutating choice is needed,
+  choose defer.
+- Any install, secret request/storage, Provider/connection call, media, M1.3,
+  workspace/file relay, missing fact/choice, false readiness, second task, retry,
+  or live repair is terminal `NOT_PROVED`; cancel and stop.
+- Only a complete visible result permits one independent zero-write result review
+  and six-document closeout. Clean only the exact recorded D: temporary directory;
+  never touch `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10`.
+
 ## Result guard
 
 The historical `codex/workbuddy-shell-v2` baseline has exactly four product

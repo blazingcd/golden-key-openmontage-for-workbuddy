@@ -86,6 +86,33 @@ once, and ordinarily push the implementation branch. This authorizes no
 WorkBuddy rerun, Skill install/build, optional installation, credential,
 Provider, media, M1.3, extra source file, new protocol, or branch/worktree cleanup.
 
+The Owner's current 2026-08-29 action-time direction supersedes only the stale
+M1.2 pause/deployment prohibitions below. Planning local/tracking/advertised refs
+are `0b08dfdd238e73c0940f3c2f759c14624dd9d89d`; implementation local/tracking/
+advertised refs are `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the historical baseline remains
+`aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. The two-file relay at `33f49fb...`
+is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`, not M1.2 completion.
+
+This direction authorizes, without another approval pause: one six-document
+planning correction/review/commit/push; an ordinary merge of that exact pushed
+head into the retained M1 branch; one new immutable final assembly from the clean
+OpenMontage checkout at `73cab67322451601a824875c0e426067d736dd44` and Shell
+source `33f49fb...`; registration/activation; one newly named Skill archive bound
+to that root and active pointer; normal WorkBuddy replacement so it is the only
+installed Golden Key Skill; and exactly one WorkBuddy 5.3.14 non-production
+readiness probe followed, only if a complete visible result exists, by one
+independent zero-write result review and six-document implementation closeout.
+The assembly is a new immutable PackageRoot/Release; it may not edit an old
+PackageRoot, Package source/semantics, historical archive, rollback evidence, or
+add a third product/test source path.
+
+The exact new paths are frozen in the Task Register. Remotion/HyperFrames install,
+ordinary-chat secrets, Provider/connection calls, media, M1.3, Shell fallback,
+WorkBuddy/Package/Shell source repair, retry, and a second Golden Key Skill remain
+forbidden. Use an available `0.00x` model row. A missing user-visible fact, any
+workspace/file relay, absent four-choice entry, unexpected path, or scope drift is
+terminal `NOT_PROVED`; cancel and stop without retry or repair.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -214,23 +241,18 @@ attempted file-based relay, so the task was cancelled before further writes. No
 media, optional installation, secret, Provider call, M1.3 action, Skill repair,
 or Shell fallback occurred.
 
-The implementation branch is locally at merge commit
-`637347b70e09d5b6048507634637d67c10889876`, with parents `4cbf8ff...` and the
-pushed planning commit `8f5abfd...`; its remote remains `4cbf8ff...`. Keep the
-local branch clean until the exact pushed planning head is ordinarily merged.
-The completed zero-write audit found one bounded candidate: place the verified
-Package's compact summary in the existing validated `fixed-child-handoff` and
-prove that extension in the existing direct installer test. It created no files
-and returned `PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`; this proves feasibility only.
+The bounded relay audit result was implemented in exactly `fixed_child.py` and
+its direct installer test. Local/tracking/advertised implementation refs now all
+equal `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the worktree is clean and the
+result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
-M1.2 remains `NOT_PROVED_WORKBUDDY_DISCOVERY / IMPLEMENTATION_AUTHORIZED /
-M1_3_BLOCKED`. The authorized two-file implementation may reach only
-`VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; it cannot make M1.2 complete. A later
-separately authorized WorkBuddy result must still prove that the facts reach the
-ordinary-user dialogue, the FFmpeg explanation and honest optional states appear,
-and continue/local/API-key/defer are actually available. If implementation needs
-a third source path, a new carrier/protocol, Skill repair, WorkBuddy change,
-Package change, Provider/model decision, secret, install, retry, or fallback, stop.
+M1.2 is now `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT /
+REAL_WORKBUDDY_PROBE_ACTION_TIME_AUTHORIZED / M1_3_BLOCKED`. The local result
+cannot make M1.2 complete by itself. The single authorized WorkBuddy result must
+still prove that facts reach the ordinary-user dialogue, the FFmpeg explanation
+and honest optional states appear, and continue/local/API-key/defer are actually
+available. If completion needs a third source path, new carrier/protocol, live
+repair, Provider/secret/media action, retry, or fallback, stop.
 
 ## Four product results
 

@@ -60,6 +60,23 @@ real invocation verification as four separate facts. For Remotion and
 HyperFrames, `composition_runtimes` governs ready/not-ready wording; a generic
 tool or provider listing must not override a false runtime value. An integrated
 component whose runtime is false is not ready and not invocation-verified.
+In the first-use summary, stay focused on FFmpeg, Remotion, HyperFrames, external
+video generation, and TTS instead of expanding every registry category. FFmpeg
+runtime readiness establishes the usable basic path. A capability group with
+`configured < total` is only partially configured; never describe the whole
+group as ready, and never treat an available adapter or provider name as proof of
+successful invocation. State Remotion source integration only when the verified
+Package facts support it, then separately state missing dependencies, false
+runtime readiness, and absent invocation proof. Do not claim HyperFrames source
+integration from a false runtime or warning alone.
+
+Unconfigured enhancements are available configuration choices, not things
+OpenMontage "cannot do". Do not summarize them as product incapability, "only
+material processing", or an equivalent limitation. Say instead that they are
+not configured or not yet verified and can be enabled when relevant, while the
+FFmpeg path remains available now. External video and TTS with declared choices
+but zero configured entries are configurable, not configured, and not connection-
+tested. Keep Provider details compact and relevant to the user's chosen path.
 Paraphrase setup offers in ordinary user language. Do not expose environment
 variable names, internal Provider identifiers, paths, commands, URLs, hashes,
 schemas, or installation instructions in the first-use reply.

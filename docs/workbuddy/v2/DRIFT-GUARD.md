@@ -140,6 +140,36 @@ by themselves.
   implementation-branch push are permitted. WorkBuddy, Skill mutation,
   credentials, Providers, media, active Package mutation, and M1.3 execution stay
   forbidden.
+- That checkpoint is complete at implementation commit `d94d90c...`. The reviewed
+  candidate ZIP is exactly 177,241,928 bytes with SHA256
+  `0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`; it
+  remains unregistered and unactivated. Do not rebuild or relabel it.
+
+## M1.2 final-readiness execution guard
+
+- Reuse the existing M1 branch. Merge the exact pushed planning head ordinarily;
+  no new branch, rebase, force, history rewrite, or unrelated change.
+- Revalidate and reuse the exact reviewed slim candidate. Preserve the old active
+  Package, Registration history, Releases, Skill archives, evidence, and baseline
+  for rollback. Do not rebuild the candidate.
+- Registration and activation may use only the existing CAS Registration/Locator
+  path. Then build one newly named corrected Skill bound to the new active root;
+  do not edit product or Skill source in this gate.
+- Inspect installed Skills before Package registration or activation and recheck
+  immediately before Skill installation. WorkBuddy cannot overwrite a same-name
+  Skill. If `golden-key-openmontage` exists, stop for Owner manual uninstall;
+  never silently overwrite or uninstall it.
+- Run exactly one non-production WorkBuddy 5.3.14 readiness task on an available
+  `0.00x` row. Do not use a positive multiplier without a separate Owner decision.
+  WorkBuddy wording and tools may vary, but the visible result must show the
+  continuing FFmpeg path, honest optional/Provider states, all four semantic
+  choices, and a non-mutating defer result.
+- Optional installation, credentials, connection tests, Provider calls, media,
+  workspace relay files, retries, live repair, source edits, fallback, and M1.3
+  are forbidden. Any failure is terminal `NOT_PROVED`.
+- Only a complete visible result receives one independent zero-write user-result
+  review. Only `APPROVE / P0=0 / P1=0 / P2=0` permits six-document closeout,
+  one implementation-branch commit/push, and exact ref/cleanliness verification.
 
 ## Historical M1.1 evidence and M1.2 entry guard
 
@@ -291,12 +321,15 @@ separate successor-distribution exception and does not reopen WorkBuddy.
   authorization.
 - The previously reviewed ZIP, SHA256
   `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`,
-  is the installed candidate whose user result was rejected. The newly named
+  is the candidate installed for the rejected historical probe. The newly named
   corrected ZIP has SHA256
   `116737071d377b67dff6ea93fe18534114c17e762d32116efc5c4b973e000228`,
   passed zero-write review `APPROVE / P0=0 / P1=0 / P2=0`, and remains
   uninstalled. Neither artifact permits another WorkBuddy installation or
   execution.
+- The Owner later manually uninstalled the same-name Skill. Do not treat that
+  report as a permanent state: inspect the exact installed Skill set at execution
+  time and stop for manual uninstall if the name is present.
 
 ## Result guard
 
@@ -377,9 +410,9 @@ regression by itself. Do not retry, repair the video, delete the memory, or roll
 back. Historical R3 remains complete.
 
 The later authorized M1.2 readiness probe installed its separately named
-candidate as the only Golden Key Skill. That is the current installed identity;
-the Task Register records its exact hashes. Do not relabel it v4 or roll it back
-without a new Owner decision.
+candidate as the only Golden Key Skill for that historical run. The Owner later
+manually uninstalled it. Do not infer future installed state from either record;
+inspect it at the next action gate and never overwrite a same-name Skill.
 
 ## R4 closeout guard
 
@@ -427,6 +460,10 @@ change product code, Skill files, tests, or external evidence.
   `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`; do not advance it.
 - Authorized documentation ref:
   `refs/heads/codex/workbuddy-capability-onboarding`.
+- Codex task `01a04312-2e47-73e3-bd16-747407cf54f8` is frozen historical
+  distribution context. Do not report project status/results to it, wake it,
+  follow it up, or hand work to it unless the Owner explicitly reauthorizes that
+  exact communication.
 - Never force-push or `reset --hard`.
 - Only ordinary fast-forward may advance the formal ref.
 - At creation time, record the M1 implementation branch's exact linked-worktree

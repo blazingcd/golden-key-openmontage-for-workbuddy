@@ -15,6 +15,11 @@ authorized documentation branch for the next phase is
 `refs/heads/codex/workbuddy-capability-onboarding`. That branch records planning
 only until the Owner separately authorizes implementation.
 
+Codex task `01a04312-2e47-73e3-bd16-747407cf54f8` is a frozen historical
+distribution task. It may be read as evidence only. Do not send it project
+status, outcomes, follow-ups, wake-ups, or handoffs unless the Owner explicitly
+reactivates that exact reporting route.
+
 The initial M0 capability-onboarding contract was frozen at
 `4c0cbd3447546c3dcc0079f2392a3b43e7542e69`. The Owner's later master-roadmap
 authorization permits one additional documentation-only amendment on the same
@@ -168,6 +173,25 @@ Node, or Package source speculatively. Do not mutate or replace the active
 PackageRoot, install a Skill, run WorkBuddy, handle credentials, call a Provider,
 or produce media.
 
+That size checkpoint is complete on the M1 implementation branch at
+`d94d90c486f1d72452a6f65b71b7c2e7c55f1d04`. Focused checks passed `18 passed,
+1 skipped`; independent review returned `APPROVE / P0=0 / P1=0 / P2=0`. The
+unregistered and unactivated successor ZIP is 177,241,928 bytes with SHA256
+`0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`; its
+PackageRoot is 463,051,387 bytes. The active Package, registration, and installed
+state remain unchanged.
+
+The next M1.2 action is frozen as one final readiness-acceptance sequence in the
+Task Register, but is not executed by this documentation task. It reuses the
+reviewed slim candidate, activates it only through the existing Registration/
+Locator path, builds and normally installs one newly named corrected Skill bound
+to that active root, runs exactly one non-production WorkBuddy readiness task,
+and obtains one independent zero-write user-result review. Do not edit product
+source, install optional capabilities, handle credentials, call Providers,
+produce media, retry, or repair live. A same-name installed Skill is a hard stop
+before Package activation and again before Skill installation; the Owner must
+uninstall it manually because WorkBuddy Skills cannot be overwritten.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -311,7 +335,7 @@ result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
 M1.2 is now `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 USER_RESULT_REJECTED_P1_3 / CORRECTED_CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED /
-WORKBUDDY_RETEST_NOT_AUTHORIZED / M1_3_BLOCKED`.
+FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / M1_3_BLOCKED`.
 The correction may change only the WorkBuddy-facing Skill instruction: preserve
 the existing handoff, treat composition runtime facts as authoritative for
 runtime readiness, paraphrase configuration without raw environment names,
@@ -493,7 +517,8 @@ itself a Skill regression. Do not run another comparison, repair the video, dele
 the memory, or roll back the installed Skill. Historical R3 remains complete.
 
 The later M1.2 readiness authorization replaced the installed v4 artifact with
-the separately named readiness-probe candidate. That candidate, not v4, is now the
-only installed Golden Key Skill; its exact identities are recorded in the Task
-Register. This does not change the historical v4 comparison facts or authorize a
-rollback.
+the separately named readiness-probe candidate. That candidate was the only
+installed Golden Key Skill for that historical run; the Owner later manually
+uninstalled it. This does not change the historical v4 comparison facts. The next
+execution must inspect installed state and stop before Package activation if the
+same name is present.

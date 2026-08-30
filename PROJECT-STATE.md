@@ -98,14 +98,18 @@ passed independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
 uninstalled. It is preparation evidence only; the rejected M1.2 user result is
 unchanged until a separately authorized WorkBuddy retest passes.
 
-The Owner then authorized one bounded package-size checkpoint. The active
-PackageRoot remains immutable and active; it is not a slimming target. Its
-Release is 207.46 MiB compressed and 552.17 MiB expanded. FFmpeg contributes
-109.88 MiB compressed / 306.63 MiB expanded because the entire Essentials
-distribution was retained, including unused `ffplay.exe` and 11.06 MiB of HTML
-documentation. The minimum successor-package change removes only those proved
-unused files and retains ffmpeg, ffprobe, licenses, README, and presets. Python,
-Node, and Package source are not pruned without separate proof.
+The bounded package-size checkpoint is complete and pushed on the M1 branch at
+`d94d90c486f1d72452a6f65b71b7c2e7c55f1d04`. The active PackageRoot and Release
+remain unchanged. The separately named successor ZIP is 177,241,928 bytes
+(169.03 MiB), SHA256
+`0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`; its
+PackageRoot is 463,051,387 bytes. Compared with the active package, this saves
+40,291,428 compressed bytes and 115,942,206 expanded bytes. It removes only
+unused FFmpeg `ffplay.exe` and HTML documentation and retains ffmpeg, ffprobe,
+licenses, README, and presets. Focused checks passed `18 passed, 1 skipped`, the
+independent review returned `APPROVE / P0=0 / P1=0 / P2=0`, and the exact task
+temporary directory was removed. The candidate remains unregistered and
+unactivated.
 
 Direct base-Package Remotion bundling is rejected under the Owner's 80 MiB
 compressed-increment ceiling. The machine's external Remotion 4.0.507 core/CLI
@@ -115,6 +119,18 @@ project tree nor a complete renderer; the locked Chrome Headless Shell archive i
 on-demand installation. This checkpoint does not complete M1.2, start M1.3, or
 authorize WorkBuddy, Skill installation, activation, credentials, Provider calls,
 or media.
+
+The next M1.2 final-readiness contract is now frozen but not executed. It uses the
+existing M1 branch and the reviewed slim candidate; preserves the current active
+root, Release, registration, Skill archives, and evidence as rollback material;
+then, under a later action-time execution, activates the slim candidate, creates
+one newly named corrected Skill bound to it, normally installs that Skill, runs
+one `0.00x` non-production readiness task, and obtains one independent zero-write
+user-result review. If a same-name Skill is installed, execution stops for Owner
+manual uninstall before Package activation because WorkBuddy cannot overwrite a
+Skill; absence is checked again immediately before installation. No optional
+install, credential, Provider call, media, retry, or live repair belongs to this
+sequence.
 
 The probe passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
@@ -289,7 +305,7 @@ path was confirmed absent at closeout.
 
 M1.2 is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 USER_RESULT_REJECTED_P1_3 / CORRECTED_CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED /
-WORKBUDDY_RETEST_NOT_AUTHORIZED / M1_3_BLOCKED`.
+FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / M1_3_BLOCKED`.
 The earlier contract at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174`, first
 discovery probe, and prematurely cancelled probe remain historical failed routes;
 they do not define the current result.
@@ -298,9 +314,11 @@ The implementation Skill correction is pushed at
 `5229964ac681d7b34949480326e6f24a0c53913f`. The pushed factual-relay
 ceiling is `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the pushed Skill consumer
 commit is `c8eeb91e221ec96a406543c183091eea7ea6ac3c`. The reviewed consumer ZIP is
-installed as the only Golden Key Skill. Its relay reached the ordinary-user
-dialogue, but the result failed acceptance because it misstated Remotion runtime
-readiness, exposed configuration mechanics, and omitted two clear choices.
+the historical candidate used by the rejected probe. Its relay reached the
+ordinary-user dialogue, but the result failed acceptance because it misstated
+Remotion runtime readiness, exposed configuration mechanics, and omitted two
+clear choices. The Owner later manually uninstalled the same-name Skill; the next
+execution must still inspect the actual installed state rather than infer it.
 
 The corrected Remotion fact is: OpenMontage source integration exists, the active
 Package lacks project-local dependencies, runtime readiness is false, and a real

@@ -711,7 +711,7 @@ Archive/content/binding checks passed and the independent candidate review is
 `APPROVE / P0=0 / P1=0 / P2=0`. The archive remains uninstalled; the current
 WorkBuddy user result remains rejected and M1.3 remains blocked.
 
-### M1 package-size checkpoint and Remotion distribution decision — AUTHORIZED
+### M1 package-size checkpoint and Remotion distribution decision — COMPLETE
 
 The Owner's later 2026-08-29 direction authorizes package slimming and makes
 80 MiB the hard compressed-increment ceiling for direct Remotion bundling. This
@@ -766,6 +766,96 @@ install Remotion, activate the slim candidate, build/install a Skill, run
 WorkBuddy, start M1.3, or create another branch. Any unexpected removed runtime
 file, failed ffmpeg/ffprobe identity, size regression, test/review finding,
 external-path drift, or need for a third source/test path is a hard stop.
+
+Completed result:
+
+- implementation commit `d94d90c486f1d72452a6f65b71b7c2e7c55f1d04` is pushed on
+  `codex/workbuddy-m1-capability-onboarding`;
+- focused checks passed `18 passed, 1 skipped`; the independent implementation
+  and candidate review returned `APPROVE / P0=0 / P1=0 / P2=0`;
+- candidate directory is
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1-package-slim-candidate-20260829`;
+- candidate ZIP is
+  `GoldenKeyOpenMontageForWorkBuddy-0.3.25-m1-package-slim.zip`, size
+  `177241928` bytes / 169.03 MiB, SHA256
+  `0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`;
+- candidate PackageRoot is `463051387` bytes; savings versus the active package
+  are `40291428` compressed bytes and `115942206` expanded bytes;
+- `ffmpeg.exe`, `ffprobe.exe`, `LICENSE`, `README.txt`, and `presets/` remain;
+  `ffplay.exe` and `doc/` are absent;
+- ZIP integrity and sidecar identity passed; the candidate is not registered,
+  activated, installed, or used by WorkBuddy;
+- exact task temporary directory
+  `D:\DevCache\Temp\workbuddy-m1-package-slim-3ab9` was removed and verified
+  absent; the active PackageRoot, Release, registration, and installed state did
+  not change.
+
+### M1.2 final readiness acceptance — EXECUTION CONTRACT FROZEN / NOT EXECUTED
+
+This is the smallest next product gate. The present documentation task freezes
+the contract only; it does not activate a Package, build or install a Skill, run
+WorkBuddy, or satisfy M1.2.
+
+#### Preconditions and fixed inputs
+
+1. Use the existing branch `codex/workbuddy-m1-capability-onboarding` and linked
+   worktree recorded below; do not create another branch. Before execution,
+   ordinarily merge the exact pushed planning head into its clean head. No
+   rebase, force, rewrite, or unrelated conflict resolution is allowed.
+2. Revalidate the exact slim ZIP path, size, SHA256, sidecar, PackageRoot
+   manifests/tool identities, the current active Registration/Locator facts, and
+   clean local/tracking/advertised refs. Do not rebuild the slim candidate.
+3. Preserve the current active PackageRoot, Release, registration history,
+   previous Skill ZIPs, WorkBuddy evidence, and historical baseline as rollback
+   material. Any missing or drifted identity is terminal `NOT_PROVED`.
+4. Inspect the exact WorkBuddy installed-Skill state before any Registration or
+   activation change. If `golden-key-openmontage` exists, stop and ask the Owner
+   to uninstall it manually; do not overwrite or silently uninstall it. Resume
+   only through a new action after absence is confirmed.
+
+#### Single execution sequence
+
+1. Register the reviewed slim PackageRoot and change the active pointer only
+   through the existing compare-and-swap Registration/Locator mechanism. Verify
+   the active root, binding, manifest, tool identities, and rollback target.
+2. Build one newly named corrected Skill archive from the already reviewed Skill
+   source, bound to the newly active slim PackageRoot and active-pointer identity.
+   No product-source or Skill-source edit is allowed in this sequence; an
+   unexpected source issue is a hard stop.
+3. Recheck the exact WorkBuddy installed-Skill state immediately before
+   installation. WorkBuddy Skills cannot be overwritten. If
+   `golden-key-openmontage` exists, stop again for Owner manual uninstall. After
+   absence is confirmed, use the normal WorkBuddy installation path and prove
+   exactly one installed Golden Key Skill matches the new archive.
+4. Run exactly one WorkBuddy 5.3.14 non-production readiness task using an
+   available `0.00x` row. The ordinary request may be
+   `用金钥匙智能体看看我现在可以做哪些视频，还需要配置什么。`; it is an
+   example intent, not a fixed transcript. If every `0.00x` row is unavailable,
+   stop before using a paid multiplier unless the Owner separately directs it.
+5. The visible dialogue must state that the FFmpeg basic path can continue,
+   honestly distinguish Remotion, HyperFrames, external-video, TTS, and formally
+   Package-declared Provider states, and offer four semantic choices: continue,
+   local configuration, API-key configuration, or defer. Use defer if WorkBuddy
+   requires one choice, and verify that the result remains non-mutating.
+6. A complete visible result permits one independent zero-write ordinary-user
+   review. Only `APPROVE / P0=0 / P1=0 / P2=0` permits the six authority documents
+   to close M1.2 on the implementation branch, followed by one commit, one
+   ordinary push, and exact local/tracking/advertised and clean-worktree checks.
+
+#### Hard stops and non-goals
+
+- No Remotion, HyperFrames, or other optional local installation; no API-key
+  entry, storage, or connection test; no Provider call; no TTS, render, media,
+  export, or M1.3 work.
+- Shell may relay bounded verified facts only. It must not explain relevance,
+  recommend or select Provider/model/renderer, collect consent or secrets, or
+  become a fallback control plane.
+- No workspace relay file, managed-summary copy, second WorkBuddy task, retry,
+  live repair, source patch, candidate rebuild, or acceptance-by-static-check.
+- Any missing fact or choice, false readiness, internal path/command/credential
+  burden, extra mutation, invocation ambiguity, or review finding ends the run as
+  `NOT_PROVED`; preserve evidence and stop.
+- M1.3 remains `BLOCKED` until this user-visible result is independently accepted.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -1265,9 +1355,9 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED
+current_task: M1_2_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
-candidate_skill: HANDOFF_CONSUMER_INSTALLED_AS_ONLY_GOLDEN_KEY_SKILL / ZIP_SHA256_437B02C60AA234197FB419275AC64C5DF804C5F477FDBA16FDE3278F772E68D2 / SKILL_SHA256_20AB048D8E9CB9EDEE19F71A8FDE81991670D4A571465C558EF1C02D8DD871FF / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B / USER_RESULT_REJECTED
+candidate_skill: HISTORICAL_HANDOFF_CONSUMER_USED_FOR_REJECTED_PROBE / OWNER_MANUAL_UNINSTALL_RECORDED / EXECUTION_TIME_STATE_RECHECK_REQUIRED / ZIP_SHA256_437B02C60AA234197FB419275AC64C5DF804C5F477FDBA16FDE3278F772E68D2 / SKILL_SHA256_20AB048D8E9CB9EDEE19F71A8FDE81991670D4A571465C558EF1C02D8DD871FF / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B
 capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / USER_RESULT_REJECTED_P1_3
 implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_F9880C247ED61744B4BBA2F83FFA6411EB49C413 / CLEAN
 implementation_skill_commit: C8EEB91E221EC96A406543C183091EEA7EA6AC3C / AUTHORITY_MERGE_F9880C247ED61744B4BBA2F83FFA6411EB49C413
@@ -1283,7 +1373,7 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED / M1_3_BLOCKED
+m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / M1_3_BLOCKED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
@@ -1297,7 +1387,10 @@ m1_2_latest_probe_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256
 m1_2_probe_result_review: REJECT / P0=0 / P1=3 / P2=0
 m1_2_remotion_truth: SOURCE_INTEGRATED / PROJECT_DEPENDENCIES_ABSENT / RUNTIME_NOT_READY / PACKAGE_INVOCATION_NOT_VERIFIED
 m1_2_consumer_correction: PUSHED_COMMIT_5229964AC681D7B34949480326E6F24A0C53913F / CORRECTED_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED
-package_size_checkpoint: AUTHORIZED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_PENDING
+package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F65B71B7C2E7C55F1D04_PUSHED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNREGISTERED / UNACTIVATED
+package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
+m1_2_next_gate: FINAL_READINESS_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / ONE_WORKBUDDY_RESULT_THEN_ONE_ZERO_WRITE_REVIEW
+frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING
 remotion_distribution: ON_DEMAND_MANAGED_M1_3 / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY
 m1_2_shell_factual_relay_write_set: golden_key_openmontage_workbuddy/fixed_child.py / tests/workbuddy/test_installer.py / EXACT_ONLY

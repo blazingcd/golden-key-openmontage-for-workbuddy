@@ -51,14 +51,16 @@ FFmpeg is the minimum production baseline. An ordinary user with an FFmpeg-ready
 installation can continue to basic production even when optional enhancements are
 not installed or configured.
 
-On first use, WorkBuddy performs a light capability inventory after PackageRoot
-verification. Its initial summary is limited to FFmpeg, Remotion, HyperFrames,
-external video generation, and TTS, then lets the user continue or configure a
-selected item. It does not expand unrelated capability rows, raw setup offers, a
-broad Provider catalogue, or a readiness dashboard. WorkBuddy owns the
-conversation, relevance, later Provider/model choice, cost/privacy explanation,
-credentials, consent, connection testing, and recovery. Shell runtime preparation
-may only detect and apply an exactly approved mechanical plan.
+On first use, WorkBuddy consumes a purpose-specific readiness projection after
+PackageRoot verification. It tells the user that the FFmpeg basic path can work
+now and summarizes only three optional user-facing categories: local animation/
+layout enhancement, AI image/video generation, and TTS. Remotion and HyperFrames
+may be named secondarily under local enhancement. It does not expand unrelated
+capability rows, raw setup offers, a broad Provider catalogue, or a readiness
+dashboard. WorkBuddy owns the conversation, relevance, later Provider/model
+choice, cost/privacy explanation, credentials, consent, connection testing, and
+recovery. Shell runtime preparation may only detect and apply an exactly approved
+mechanical plan.
 
 Integration is not readiness. A capability may have Package source, an adapter,
 and a dependency lock while its local dependencies are absent; it is then
@@ -66,8 +68,10 @@ and a dependency lock while its local dependencies are absent; it is then
 requires necessary dependencies, a true runtime state, and real Package invocation
 evidence; partial counts, adapter presence, and available Provider names are not
 enough. Remotion and HyperFrames each keep source integration, project
-dependencies, runtime readiness, and real invocation verification separate.
-WorkBuddy paraphrases configuration in ordinary language and does not expose raw
+dependencies, runtime readiness, and real invocation verification separate in
+the internal truth model. First-use guidance compresses those layers into an
+ordinary status such as “本机动画增强尚未配置完成”; it expands technical detail
+only after the user asks or chooses that path. WorkBuddy does not expose raw
 environment names, paths, commands, URLs, or installation instructions in
 first-use guidance.
 
@@ -76,12 +80,18 @@ change, or retest capabilities. This is an open intent, not a fixed configuratio
 language or second control plane.
 
 The verified Package's formal declarations determine which Providers M1 may show.
-Current static evidence includes Seedance, Kling, and MiniMax; Seedance is the
-current default recommendation. Undeclared Providers do not appear in M1, and
-Provider names/details wait until they are relevant to a selected configuration
-path rather than becoming the first-use inventory. WorkBuddy explains user value
-before technical Provider details, while Shell remains Provider-opaque. Static
-adapter presence never proves live account or model availability.
+Undeclared Providers do not appear in M1, and Provider names/details wait until
+they are relevant to a selected configuration path rather than becoming the
+first-use inventory. Even then, WorkBuddy first offers only a short recommended
+set suited to the confirmed goal: normally two or three image/video-generation
+choices and one or two TTS choices. It expands to the complete declared list only
+when the user explicitly asks for more choices. If the short set cannot meet the
+confirmed need, WorkBuddy first asks whether to expand it. Current static evidence
+includes Seedance, Kling, and MiniMax;
+the actual recommendation must come from current verified facts and user context,
+not a Shell ranking table. WorkBuddy explains user value before technical
+Provider details, while Shell remains Provider-opaque. Static adapter presence
+never proves live account or model availability.
 
 Natural language starts and controls both configuration mechanisms. A local
 capability is complete only after approved download, managed installation,
@@ -101,9 +111,11 @@ recognition, and actual invocation are proved.
 The corresponding base-package slimming is complete as one independently
 reviewed, unregistered, and unactivated successor candidate. It removes only
 unused FFmpeg player/documentation payload and leaves the current active package
-and rollback material unchanged. M1.2 may promote that exact candidate only in
-its separately frozen final-readiness sequence; slimming itself is not capability
-or user-result acceptance.
+and rollback material unchanged. Its historical final-readiness promotion route
+was executed and superseded. The current documentation-only reset authorizes no
+candidate promotion, activation, installation, or WorkBuddy action; any future
+use requires a new Owner-approved implementation gate. Slimming itself is not
+capability or user-result acceptance.
 
 ## Four product results
 
@@ -147,9 +159,10 @@ its improved first-call and delivery mechanics; the preserved R3 baseline remain
 rollback evidence. Historical R3 remains complete.
 
 The next-phase capability-onboarding plan is separate from the completed R1-R4
-baseline. Its earlier recording authorized no execution. The current narrow M1.2
-deployment/readiness exception is stated below and in the Task Register; Provider
-configuration and media production remain outside it.
+baseline. Its earlier recording authorized no execution. The current M1.2 gate is
+the documentation-only product-flow reset stated below and in the Task Register;
+implementation, Provider configuration, WorkBuddy, and media production remain
+outside it.
 
 Its M0 contract is the Task Register's bounded master roadmap. `R1` through `R4`
 remain frozen historical result identifiers; future work uses M1–M3 for Must,
@@ -164,44 +177,45 @@ product capability with one representative local-install path and one
 representative API-key path; only its use by a particular user is conditional.
 M3 requires completed M1.4 and M2.
 
-M1.2 owns the unified first-use scan, ordinary-language explanation, honest
-Provider state, and continue/configure entry. M1.3 owns the selected local or
-API-key configuration, consent, secure handling, validation, failure recovery,
-and later retest. Planned wording and steps may change after real WorkBuddy
-evidence; acceptance follows the completed user goal and safety boundaries rather
-than exact rehearsal of the planning examples.
+M1.2 owns the first-use readiness projection, ordinary-language explanation, and
+next-intent handoff. It does not own a Provider catalogue or technical readiness
+report. M1.3 owns the selected local or API-key configuration, short recommended
+Provider menu, consent, secure handling, validation, failure recovery, and later
+retest. Planned wording and steps may change after real WorkBuddy evidence;
+acceptance follows the completed user goal and safety boundaries rather than exact
+rehearsal of the planning examples.
 
 M1.2 presents a compact current summary and expands only the details relevant to
-the user's goal or choice. The verified Package Guide's
-`provider_menu_summary()` is the leading candidate when WorkBuddy-owned discovery
-is proved feasible; it is not a fixed acceptance step or a requirement imposed on
-a different factual-relay design. Do not dump raw Package data by default. The
-configuration entries are handoffs only: M1.2 does not install, save credentials,
-call a Provider, validate a selected configuration, or retest it.
+the user's question or choice. The full `provider_menu_summary()` is not a valid
+first-use display surface: the latest relay was about 25.95 KB with 24 capability
+rows and 63 setup offers. A later implementation must derive a purpose-specific
+projection before WorkBuddy explanation while preserving the existing handoff and
+Shell's mechanical role. The configuration entries are handoffs only: M1.2 does
+not install, save credentials, call a Provider, validate a selected configuration,
+or retest it.
 
 M1.2 is a user-result contract, not a Skill-text deliverable. It is complete only
-when trustworthy current facts can reach WorkBuddy, those facts are translated
-into an honest ordinary-user explanation, and the continue/local/API-key/defer
-choices actually work at the authorized evidence level. The corrected execution
-contract probes WorkBuddy's verified Package discovery first because the Package
-already exposes compact capability facts. A prompt that tells WorkBuddy to scan
-is not proof that scanning exists. If the bounded probe cannot prove that fact
-path, the task stops; bounded Shell factual relay is a separately authorized
-fallback design, not work silently absorbed into the probe. M1.4 may integrate the
-M1 result but must not retroactively fill missing M1.2 evidence.
+when trustworthy current facts can reach WorkBuddy through the reduced first-use
+projection, the user understands that basic production works now, optional
+enhancements are explained without technical burden, and a natural-language
+continue/local/API-key/defer or category-question intent is handed off correctly.
+One real defer choice proves the non-mutating M1.2 boundary; M1.3 later proves the
+two configuration mechanisms, and M2 proves direct continuation into business
+clarification. M1.4 may integrate the M1 result but must not retroactively fill
+missing M1.2 evidence.
 
 The historical WorkBuddy-owned discovery probe did not prove that route.
-WorkBuddy reached the verified Package and attempted its compact summary, but the
+WorkBuddy reached the verified Package and attempted its raw registry summary, but the
 facts did not reach the user conversation; an ad-hoc file carrier is not an
-acceptable product path. A separately authorized zero-write audit may now find
+acceptable product path. A later separately authorized zero-write audit was allowed to find
 the smallest existing Shell mechanical factual-relay boundary. It must preserve
 WorkBuddy's explanation, relevance, Provider/model, consent, and recovery
 ownership and cannot itself authorize implementation.
 
-The following historical zero-write audit found that the smallest candidate was not a
+The following historical zero-write audit found that the smallest carrier was not a
 new protocol: extend the existing validated `fixed-child-handoff` with the
-verified Package's bounded compact summary. Shell relays the facts without
-interpreting, recommending, ranking, or selecting them. The Owner has authorized
+verified Package's raw factual summary. Shell relays the facts without
+interpreting, recommending, ranking, or selecting them. The Owner then authorized
 the exact two-file implementation and focused local proof. That local contract is
 not M1.2 completion; only later real WorkBuddy evidence can prove that ordinary
 users receive the explanation and four choices.
@@ -222,7 +236,7 @@ the factual relay reached dialogue, but independent review rejected the user
 result `REJECT / P0=0 / P1=3 / P2=0` for false Remotion readiness, exposed
 configuration mechanics, and missing choices.
 
-The WorkBuddy consumer-correction authorization permits only its six-document
+The historical WorkBuddy consumer-correction authorization permitted only its six-document
 synchronization, a one-file Skill correction, one newly named uninstalled
 candidate ZIP bound to the unchanged active PackageRoot, their independent
 zero-write reviews, commits, and ordinary pushes. The separate package-size
@@ -249,13 +263,15 @@ configuration catalogue, and Remotion/HyperFrames were not separately explained
 across source, dependency, runtime, and invocation layers. M1.2 is therefore
 `NOT_PROVED` and M1.3 remains blocked.
 
-The next bounded correction changes only the WorkBuddy-facing Skill instruction
-and one newly named uninstalled candidate. It may tighten the initial-summary
-scope, ready-state threshold, and four-layer explanation, but it must not
-prescribe a fixed answer, interpret facts in Shell, overwrite or automatically
-uninstall the currently installed Skill, or change Package, Shell, tests,
-Providers, credentials, media, or M1.3. Another WorkBuddy result remains a
-separate action gate.
+That next bounded correction was executed at `666c9d4...` and is now superseded.
+Its tighter Skill wording did not prevent WorkBuddy from exposing technical and
+unrelated catalogue detail because the underlying first-use payload remained
+about 25.95 KB with 24 capability rows and 63 setup offers. Independent review
+returned `REJECT / P0=0 / P1=1 / P2=1`. The current authority
+is the documentation-only product-flow reset: no implementation, candidate,
+installation, or WorkBuddy action is authorized. A later separately authorized
+implementation must keep the existing mechanical handoff but create a
+purpose-specific first-use fact surface before WorkBuddy explanation.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

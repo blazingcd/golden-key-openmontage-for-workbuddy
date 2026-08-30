@@ -118,19 +118,20 @@ exact local and remote formal ref by ordinary fast-forward. Reviewed commit
 `70cf63be51774de9151fb0fee24cf78591ff1993` reached both refs; this later
 Owner-authorized record changes documentation status only.
 
-## Next-phase acceptance — M1.2 consumer correction and package-size checkpoint
+## Next-phase acceptance — M1.2 final readiness and later tasks
 
 These rows do not alter or reopen R1-R4. Those identifiers remain frozen and no
 future task continues the R series. The WorkBuddy gate covers only correction of
 a bounded M1.2 Skill consumer and one newly named uninstalled candidate. The
-separate package-size checkpoint affects successor distribution only; another
-WorkBuddy operation, M1.3, and all later work remain separately gated. M1–M3 are Must, S1–S5 are Should,
+package-size checkpoint is complete as a reviewed but unregistered and
+unactivated successor distribution. The frozen M1.2 final-readiness contract has
+not been executed; M1.3 and all later work remain blocked. M1–M3 are Must, S1–S5 are Should,
 and C1–C2 are Could.
 
 | Task | Ordinary-user goal | Minimum observable evidence | Current state |
 |---|---|---|---|
 | M1 — first-use guidance and capability readiness | Start from ordinary natural language, understand that FFmpeg-ready basic production is available, and complete or defer relevant local-install and API-key configuration without internal technical work. Visible Providers come only from the verified Package's formal declarations; current static evidence includes Seedance, Kling, and MiniMax. | Honest Remotion, HyperFrames, external-video, and TTS states; one representative local path proves download, install, recognition, and actual Package invocation; one representative API-key path proves secure non-chat input/storage, exact allowlisting, no disclosure, and authorized connection testing; optional absence remains non-blocking. Integration/source presence is distinct from installed runtime readiness and real invocation. Wording and step order may differ from planning examples or use a bounded fixed sequence when real WorkBuddy/security requires it. No evaluator-script comparison, Shell decision, fixed command language, false ready state, raw environment/path/command burden, or other user-visible internal mechanics. M1.4 closeout additionally requires the reviewed M1 head fast-forwarded and pushed to the formal capability-onboarding ref, then verified removal of the recorded temporary worktree, local/remote M1 branch, and exact task-owned temporary directories with no unique/unmerged work or user-data deletion. | `M1.1_FACT_AUDIT_COMPLETE / M1.2_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3` |
-| M1.2 — first-use readiness | Understand the FFmpeg-ready baseline, receive a compact honest enhancement summary based on trustworthy current facts, and choose continue, local configuration, API-key configuration, or defer without technical operations. | One separately authorized bounded WorkBuddy readiness probe uses a verified PackageRoot/Guide and proves current facts can reach the dialogue; the visible result distinguishes integrated/not-installed/not-ready/not-verified states, keeps optional absence non-blocking, exposes all four choices, and correctly honors the user's selected non-mutating boundary. Exact wording, tools, and choice order may vary. Skill wording/packaging alone does not pass. | `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED / M1.3_BLOCKED` |
+| M1.2 — first-use readiness | Understand the FFmpeg-ready baseline, receive a compact honest enhancement summary based on trustworthy current facts, and choose continue, local configuration, API-key configuration, or defer without technical operations. | One bounded WorkBuddy readiness result from the reviewed slim Package and corrected bound Skill proves current facts reach the dialogue; the visible result distinguishes integrated/not-installed/not-ready/not-verified states, keeps optional absence non-blocking, exposes all four choices, and honors defer without mutation. Exact wording, tools, and choice order may vary. Package/Skill preparation and static checks alone do not pass; one independent zero-write ordinary-user review must approve the visible result. | `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / M1.3_BLOCKED` |
 | M2 — progressive clarification and material readiness | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | Only genuinely missing audience/platform/duration/style/brand/material/budget/delivery questions; explicit defaults and implications; understandable no/partial/complete-material handling; user correction and confirmation; no internal mechanics. | `DEPENDENT_ON_M1.2 / NOT_AUTHORIZED` |
 | M3 — stable production, basic quality, and final delivery | Receive a real result after choosing the basic or an approved enhanced path, with evidence that delivery is not accidental. | Three separately started cases with no supplied, partial, and complete user materials all produce playable outputs; valid receipts and result locations; decode, dimensions/direction, duration, audio, and visible-text/safe-area checks; prompt final answers without optional persistence delay; one independent review of the result set. | `DEPENDENT_ON_M1.4_AND_M2 / NOT_AUTHORIZED` |
 | S1 — preview, revision, version, and rollback | Review a result, request natural-language changes, receive a new version, and return to an earlier version. | One initial version, two bounded revisions, one rollback; all versions remain identifiable, findable, and playable. | `DEPENDENT_ON_M3 / NOT_AUTHORIZED` |
@@ -158,6 +159,13 @@ Provider display follows the verified Package's formal declarations and is not
 proof of live availability. Current static inspection finds Seedance, Kling, and
 MiniMax routes. Any installation, credential handling, actual invocation, or
 connection evidence requires separate action-time authorization.
+
+The completed slim candidate is distribution evidence only: ZIP `177241928`
+bytes, PackageRoot `463051387` bytes, SHA256
+`0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`,
+independent review `APPROVE / P0=0 / P1=0 / P2=0`, unregistered and unactivated.
+It does not advance the M1.2 row until the frozen one-run dialogue and result
+review pass.
 
 M0 document review proves only that the roadmap and first execution contract are
 bounded and internally consistent. Future focused checks may prove local
@@ -206,10 +214,11 @@ fresh action-time authorization. Installation, secrets, Provider/connection
 calls, media, workspace relay files or managed-summary copies, Shell fallback,
 retry, and M1.3 remain disqualifying.
 
-The installed rejected consumer ZIP SHA256 is
+The consumer ZIP installed for the rejected historical probe has SHA256
 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
 candidate review is `APPROVE / P0=0 / P1=0 / P2=0`. This proves only the bounded
-artifact identity, not an accepted user-visible WorkBuddy result.
+artifact identity, not an accepted user-visible WorkBuddy result. The Owner later
+manually uninstalled the same-name Skill; execution must recheck current state.
 
 The corrected consumer candidate is independently reviewed
 `APPROVE / P0=0 / P1=0 / P2=0`, remains uninstalled, and still does not satisfy

@@ -93,6 +93,13 @@ on-demand installation route. A machine-level external Remotion command is not
 Package readiness until the locked project dependencies, browser, Package
 recognition, and actual invocation are proved.
 
+The corresponding base-package slimming is complete as one independently
+reviewed, unregistered, and unactivated successor candidate. It removes only
+unused FFmpeg player/documentation payload and leaves the current active package
+and rollback material unchanged. M1.2 may promote that exact candidate only in
+its separately frozen final-readiness sequence; slimming itself is not capability
+or user-result acceptance.
+
 ## Four product results
 
 1. **Installable Shell product — COMPLETE.** The final PackageRoot/binding,
@@ -217,14 +224,25 @@ zero-write reviews, commits, and ordinary pushes. The separate package-size
 checkpoint changes only successor distribution assembly and does not authorize
 WorkBuddy or activation. Installing the correction or running WorkBuddy
 again needs fresh action-time Owner authorization. Exact paths and Git state
-remain authority only in the Task Register. The installed rejected candidate has
+remain authority only in the Task Register. The candidate installed for the
+rejected historical probe has
 SHA256 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
-its earlier artifact review does not satisfy M1.2 user acceptance.
+its earlier artifact review does not satisfy M1.2 user acceptance. The Owner later
+manually uninstalled that same-name Skill; execution must inspect current state.
 
 The corrected one-file consumer is pushed at
 `5229964ac681d7b34949480326e6f24a0c53913f`; its newly named candidate passed
 independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
 uninstalled. This closes correction preparation only, not M1.2 user acceptance.
+
+The frozen next M1.2 sequence is deliberately one path: promote the reviewed slim
+Package through existing Registration/Locator controls, build and normally install
+one corrected Skill bound to it, obtain one non-production WorkBuddy readiness
+result, then obtain one independent zero-write user-result review. WorkBuddy owns
+all explanation and choice. A same-name installed Skill stops for Owner manual
+uninstall before Package activation and is checked again before Skill
+installation; no overwrite, optional installation, secret, Provider call, media,
+retry, or live repair belongs to this gate.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

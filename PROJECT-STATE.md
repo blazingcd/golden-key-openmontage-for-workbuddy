@@ -359,7 +359,7 @@ path was confirmed absent at closeout.
 
 M1.2 is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
-COMPLETE / M1_3_NOT_STARTED`.
+COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`.
 The earlier contract at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174`, first
 discovery probe, and prematurely cancelled probe remain historical failed routes;
 they do not define the current result.
@@ -381,8 +381,28 @@ truth and later diagnostic/configuration evidence; they are no longer mandatory
 first-use prose. The latest compact-readiness run reached the user with the core
 guidance and entries but also exposed excessive technical/catalogue detail. That
 is a recorded UX finding, not an M1.2 blocker. Shell continues to carry mechanical
-facts only; WorkBuddy owns explanation and choice. M1.3 is not started and still
+facts only; WorkBuddy owns explanation and choice. M1.3 implementation is not started and still
 requires its own bounded implementation and action authorization.
+
+### M1.3 execution-contract state
+
+The Owner has now authorized and frozen the planning contract only. Current code
+evidence shows two reusable but disconnected primitives: bounded Remotion/
+HyperFrames detection and consent-bound managed preparation in
+`runtime_prepare.py`, and fail-closed exact environment allowlisting plus secret
+suppression in the launch path. No production caller currently reaches the local
+preparation function; the production entry supplies empty local-capability
+evidence and empty Provider environment names. No verified non-chat credential
+input/store or Package-owned connection-test path has been found. These are
+implementation prerequisites, not proof of configuration.
+
+The next implementation must reuse `codex/workbuddy-m1-capability-onboarding` and
+start with a read-only interface gate. It must prove a private structured
+WorkBuddy-to-Shell action carrier and one secure non-chat credential-entry route,
+then freeze the exact smallest write allowlist. Only after that gate may the
+separately authorized execution proceed through one representative managed local
+path and one representative Package-declared API-key path. M1.3 state is
+`EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED`.
 
 ## Non-goals
 

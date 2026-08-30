@@ -391,7 +391,7 @@ result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
 M1.2 is now `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
-COMPLETE / M1_3_NOT_STARTED`. The latest implementation head `666c9d4...` and its
+COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`. The latest implementation head `666c9d4...` and its
 compact-readiness candidate carried an approximately 26 KB handoff summary with
 24 capability rows and 63 setup offers. WorkBuddy exposed technical runtime/setup
 detail and more options than desirable, so the historical independent review
@@ -583,3 +583,22 @@ installed Golden Key Skill for that historical run; the Owner later manually
 uninstalled it. This does not change the historical v4 comparison facts. The next
 execution must inspect installed state and stop before Package activation if the
 same name is present.
+
+## Current M1.3 planning authority
+
+The Owner's 2026-08-30 direction starts only the M1.3 execution-contract freeze
+on `codex/workbuddy-capability-onboarding`. It may update exactly the six
+authority/state documents, receive one independent zero-write document review,
+commit once, and ordinarily push without another approval pause. It must not
+merge into `codex/workbuddy-m1-capability-onboarding`, change product/Skill/test
+files, run tests or WorkBuddy, install anything, accept or read a credential,
+call a Provider, or produce media.
+
+M1.3 does not repeat M1.2 inventory. It begins after the user selects one local
+capability or one Package-declared online Provider. WorkBuddy owns ordinary-
+language explanation, relevance, consent, cost/privacy, and recovery. Shell may
+only validate and execute a bounded structured action; it must not parse user
+prose into a choice. Before implementation, a read-only interface gate must prove
+how WorkBuddy can carry that private action and how a secret can be entered
+outside chat. If either route is absent, stop instead of adding a workspace file,
+fixed user command, second control plane, or plaintext fallback.

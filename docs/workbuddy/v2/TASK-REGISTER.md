@@ -972,16 +972,94 @@ reduction as a UX improvement, not an uncompleted M1.2 implementation gate.
 
 Current state is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
-COMPLETE / M1_3_NOT_STARTED`.
+COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`.
 
-The present authorization changes only the six authority/state documents,
+The completed M1.2 correction authorization changed only the six authority/state documents,
 requires one independent zero-write document review, one commit, and one ordinary
-push on `codex/workbuddy-capability-onboarding`, then stops. Do not merge into the
+push on `codex/workbuddy-capability-onboarding`, then stopped. It did not merge into the
 M1 implementation branch, edit Skill/Shell/Package/tests, build or install a
 candidate, run WorkBuddy, install an enhancement, handle a secret, call a
-Provider, produce media, start M1.3, retry, or repair live. M1.3 needs its own
-bounded execution contract and separate action authorization; M1.2 must not be
+Provider, produce media, start M1.3 implementation, retry, or repair live. The later
+contract below supersedes only the M1.3 planning gap; M1.2 must not be
 reopened solely to optimize catalogue size or wording.
+
+### M1.3 execution contract — FROZEN / IMPLEMENTATION NOT STARTED
+
+#### User result and interaction
+
+M1.3 starts only after the user selects one capability from ordinary language.
+WorkBuddy first explains its user value and only the facts needed for that choice.
+For a local capability it must show the expected download/disk impact, source or
+license facts, and that FFmpeg production remains available. For an API-key path
+it must explain the account/key requirement, likely cost/privacy/region limits,
+and that a connection check is not media production. The user may approve,
+decline, defer, ask for detail, change the selection, or later ask to recheck.
+These are semantic outcomes, not required phrases or a fixed transcript.
+
+WorkBuddy converts a confirmed choice into a private bounded action. Shell
+validates that action against current Package identity, declarations, plan hash,
+and consent, but does not infer intent from the user's prose. A fixed confirmation
+or secure-entry step is acceptable when needed for safety; an internal command,
+configuration grammar, workspace relay file, or Shell-owned menu is not.
+
+#### Execution stages and hard gates
+
+1. **Interface and authority gate.** Read only the retained M1 branch, installed
+   Skill state, verified Package Tool Definition, and current WorkBuddy invocation
+   surface. Prove one private structured action carrier and one secure input route
+   outside ordinary chat. Record the exact existing-file write allowlist before
+   editing. If either carrier is absent, or a new dependency/repository/second UI
+   is required, stop and request a revised product decision.
+2. **Representative local path.** Prefer Remotion for the first proof because its
+   Package integration and distribution-size decision are already evidenced;
+   HyperFrames remains selectable but need not be installed merely for coverage.
+   Reuse `runtime_prepare.py`: detect, create a source/hash/size/license/version-
+   bound plan, explain impact, obtain consent, download into managed D: storage,
+   atomically install, rediscover, obtain Package recognition, and perform one
+   minimal Package-mediated invocation. Direct base-Package bundling and reliance
+   on an unrelated global command remain forbidden.
+3. **Representative API-key path.** Use only a Provider formally declared by the
+   verified Package. Seedance is the preferred first candidate only when the
+   execution-time declaration and an Owner-supplied usable credential exist; do
+   not silently substitute Kling, MiniMax, or an undeclared Provider. Enter and
+   store the secret outside chat using the single secure route proved in stage 1,
+   expose only exact Package-declared names to the child process, suppress it from
+   requests, arguments, receipts, handoffs, logs, and errors, and run one explicit
+   Package-owned connection test. A media generation call is not a connection
+   test and belongs outside M1.3.
+4. **Recovery and retest.** A declined, deferred, unavailable, failed, or changed
+   optional configuration leaves FFmpeg production usable. WorkBuddy explains the
+   ordinary-user consequence and offers retry only after a new user choice; Shell
+   never auto-falls back or selects another Provider. A later natural-language
+   request must rediscover or retest the chosen path without requiring the user to
+   know commands, paths, environment names, or stored secret values.
+5. **Evidence and closeout.** Focused checks may establish only a local contract.
+   M1.3 needs one real managed local result through actual Package invocation and
+   one real secure API-key result through an authorized connection test. Each
+   result records consent binding, Package identity, honest final state, secret-
+   absence checks, and recovery/defer behavior. One independent zero-write result
+   review follows the complete pair; M1.4, media quality, and branch cleanup do not
+   occur inside M1.3.
+
+Hard-stop conditions are Package identity/declaration drift; plan, source, hash,
+size, license, target, or consent mismatch; no private action or secure-input
+route; any secret in ordinary chat or observable transport; undeclared Provider;
+unexpected paid/media call; failed rediscovery, Package recognition, or Package-
+mediated invocation; automatic retry/substitution; a need for a new branch,
+dependency, general framework, workspace carrier, second Agent, or Shell decision
+logic. Preserve the evidence and the FFmpeg route; do not broaden the task.
+
+#### Boundary and authorization
+
+This contract does not authorize implementation. The later executor reuses
+`codex/workbuddy-m1-capability-onboarding`; it does not create an M1.3 branch.
+Stage 1 must freeze the exact smallest write set before any code edit. Stages 2
+and 3 require separate action-time permission immediately before installation,
+credential handling, or a Provider/network call. This planning task changes only
+the six authority/state documents, receives one independent zero-write review,
+commits once, and ordinarily pushes the planning branch without another pause.
+It runs no tests or WorkBuddy and performs no installation, secret, Provider,
+Package mutation, candidate, media, merge, or cleanup action.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -1487,10 +1565,10 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_CORRECTED_RESULT_DOCUMENTATION / CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / STOP_BEFORE_M1_3_IMPLEMENTATION
+current_task: M1_3_EXECUTION_CONTRACT_DOCUMENTATION / CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: COMPACT_READINESS_CURRENTLY_INSTALLED / USED_FOR_M1_2_PROOF / UX_OVERLOAD_RECORDED / ZIP_SHA256_4CAF57CFCF5D298F0DED1098D4FDA5BB482A699F57A72B02BC61F1CD3DBF2DD1 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL / RECHECK_AT_EXECUTION
-capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_NOT_STARTED
+capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_CONTRACT_FROZEN_IMPLEMENTATION_NOT_STARTED
 implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_666C9D4CDBBC0A2AEB57C0B94598F4501E246C4F / CLEAN
 implementation_skill_commit: C8EEB91E221EC96A406543C183091EEA7EA6AC3C / AUTHORITY_MERGE_F9880C247ED61744B4BBA2F83FFA6411EB49C413
 implementation_consumer_correction_commit: 5229964AC681D7B34949480326E6F24A0C53913F / PUSHED
@@ -1506,7 +1584,7 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED / COMPLETE / M1_3_NOT_STARTED
+m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED / COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
@@ -1523,7 +1601,13 @@ m1_2_consumer_correction: PUSHED_COMMIT_5229964AC681D7B34949480326E6F24A0C53913F
 package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F65B71B7C2E7C55F1D04_PUSHED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNREGISTERED / UNACTIVATED
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
 m1_2_semantic_readiness_result: HISTORICAL / WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
-m1_2_next_gate: M1_3_SCOPE_AND_EXECUTION_CONTRACT_REQUIRED / M1_3_NOT_STARTED / NEW_OWNER_GATE_REQUIRED
+m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_IMPLEMENTATION_NOT_STARTED
+m1_3: EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED
+m1_3_existing_local_primitive: RUNTIME_PREPARE_REUSE_REQUIRED / NO_PRODUCTION_CALLER_PROVED
+m1_3_existing_secret_transport: FAIL_CLOSED_ALLOWLIST_AND_REDACTION_REUSE_REQUIRED / PRODUCTION_ALLOWLIST_EMPTY
+m1_3_missing_prerequisites: PRIVATE_STRUCTURED_ACTION_CARRIER / NON_CHAT_SECURE_INPUT_AND_STORE / PACKAGE_OWNED_CONNECTION_TEST
+m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRAMES_NOT_REQUIRED_FOR_COVERAGE
+m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING
 remotion_distribution: ON_DEMAND_MANAGED_M1_3 / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY

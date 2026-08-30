@@ -367,17 +367,54 @@ WorkBuddy.
   shown, and configuration entries were understandable.
 - M1.2 is `CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / COMPLETE`.
   Do not claim that this proves an actual Remotion/HyperFrames installation or
-  API-key configuration. Those belong to `M1_3_NOT_STARTED`.
-- The current Owner authorization is documentation-only: update the six
-  authority/state documents, obtain one independent zero-write document review,
-  make one commit, and ordinarily push the planning branch. Do not merge it into
-  the M1 implementation branch, edit product/Skill/test files, build/install a
-  candidate, run WorkBuddy, install an enhancement, handle a secret, call a
-  Provider, produce media, start M1.3, retry, or repair live.
+  API-key configuration. Those belong to `M1_3_IMPLEMENTATION_NOT_STARTED`.
+- The completed M1.2 correction authorization was documentation-only: it updated
+  the six authority/state documents, received one independent zero-write document
+  review, committed once, and ordinarily pushed the planning branch. It did not
+  merge into the M1 implementation branch, edit product/Skill/test files,
+  build/install a candidate, run WorkBuddy, install an enhancement, handle a
+  secret, call a Provider, produce media, start M1.3 implementation, retry, or
+  repair live. The later section supersedes only its M1.3 planning gap.
 - Do not reopen M1.2 solely to optimize catalogue size or wording. Carry those UX
   findings into M1.3 only where they affect the selected configuration journey.
   Shell may mechanically relay facts but must not explain, rank, recommend, or
   select; WorkBuddy remains the conversation owner.
+
+## Current M1.3 execution-contract guard
+
+- M1.3 does not reopen M1.2 inventory or optimize its first-use prose. It begins
+  only after one local capability or Package-declared Provider is selected.
+- Before code changes, prove a private structured WorkBuddy action carrier and a
+  secure non-chat secret-input route, then freeze the smallest existing-file write
+  set. Shell must not parse user prose; do not use a workspace file, fixed user
+  command, environment-name instruction, or second control plane as a substitute.
+- Reuse `runtime_prepare.py` for local detection, consent-bound planning, managed
+  installation, and rediscovery. Do not add another detector/installer, bundle
+  Remotion, or treat a global command as Package readiness.
+- Reuse the fail-closed exact environment allowlist and secret-suppression launch
+  path. Current empty production allowlists and the absence of a verified secure
+  input/store are gaps, not evidence that API configuration works.
+- Local proof requires managed installation, rediscovery, Package recognition,
+  and actual Package-mediated invocation. API proof requires a formally declared
+  Provider, secure storage, exact allowlisting, no secret in observable transport,
+  and one authorized Package-owned non-media connection test.
+- Remotion is the preferred representative local path; HyperFrames remains
+  available but is not installed merely for coverage. Seedance is the preferred
+  representative API path only when the execution-time declaration and an Owner-
+  supplied credential exist. Never silently substitute Kling, MiniMax, or an
+  undeclared Provider.
+- Missing, declined, deferred, or failed optional configuration preserves the
+  FFmpeg path. Retry or selection change requires a new user choice; Shell never
+  auto-falls back or ranks alternatives.
+- Stop on identity/declaration/plan/consent/source/hash/size/license drift, absent
+  private or secure input route, any secret disclosure, unexpected paid/media
+  call, failed Package recognition/invocation, or need for a new dependency,
+  branch, repository, generic framework, workspace carrier, second Agent, or
+  Shell decision logic.
+- Current authority is documentation-only: exactly six authority/state files,
+  one independent zero-write review, one commit, and one ordinary planning-branch
+  push. No merge, implementation, test, WorkBuddy, candidate, install, credential,
+  Provider/network, Package mutation, media, or cleanup action is authorized.
 
 ## Result guard
 

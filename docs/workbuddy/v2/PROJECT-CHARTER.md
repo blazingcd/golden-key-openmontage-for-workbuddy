@@ -186,6 +186,17 @@ retest. Planned wording and steps may change after real WorkBuddy evidence;
 acceptance follows the completed user goal and safety boundaries rather than exact
 rehearsal of the planning examples.
 
+M1.3 is one product journey with two mechanisms, not two new task series. Its
+first implementation gate must prove a private structured action carrier from
+WorkBuddy and a secure non-chat credential-entry route. Shell may validate and
+execute an approved action but may not parse prose, explain value, rank Providers,
+or silently substitute. The local representative reuses the existing bounded
+Remotion/HyperFrames preparation and proves managed installation through actual
+Package invocation. The API representative uses only a verified Package
+declaration and proves secure storage, exact allowlisting, non-disclosure, and a
+Package-owned connection test. Missing optional configuration never removes the
+FFmpeg baseline.
+
 M1.2 presents trustworthy current facts and the next available intents. The latest
 relay was about 25.95 KB with 24 capability rows and 63 setup offers; the resulting
 technical/catalogue overload is a UX finding, not proof that the user cannot
@@ -268,11 +279,17 @@ about 25.95 KB with 24 capability rows and 63 setup offers. Independent review
 returned `REJECT / P0=0 / P1=1 / P2=1` under the superseded hard-compactness
 contract. The Owner now retains the excessive catalogue and technical wording as
 non-blocking UX findings while accepting that the run proved M1.2 core guidance
-and its configuration entries. M1.3 remains unproved and not started: it must
+and its configuration entries. M1.3 implementation remains unproved and not started: it must
 separately demonstrate that WorkBuddy can take a natural-language selection into
 one completed local-install path and one completed API-key path. This document
 correction authorizes no implementation, candidate, installation, or WorkBuddy
 action.
+
+The Owner's later planning direction freezes that M1.3 contract in the six
+authority/state documents only. Implementation remains not started. The retained
+M1 branch is reused after an exact write set is frozen; action-time permission is
+still required before WorkBuddy, installation, secret handling, Provider/network
+calls, or actual Package invocation.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

@@ -235,14 +235,19 @@ The corrected one-file consumer is pushed at
 independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
 uninstalled. This closes correction preparation only, not M1.2 user acceptance.
 
-The frozen next M1.2 sequence is deliberately one path: promote the reviewed slim
-Package through existing Registration/Locator controls, build and normally install
-one corrected Skill bound to it, obtain one non-production WorkBuddy readiness
-result, then obtain one independent zero-write user-result review. WorkBuddy owns
-all explanation and choice. A same-name installed Skill stops for Owner manual
-uninstall before Package activation and is checked again before Skill
-installation; no overwrite, optional installation, secret, Provider call, media,
-retry, or live repair belongs to this gate.
+The frozen M1.2 sequence ran once. It proved the managed factual relay, FFmpeg
+baseline, and four choices, but the ordinary-user result was independently
+rejected `REJECT / P0=0 / P1=3 / P2=0`: unconfigured enhancements were framed as
+product incapability, partially configured groups were overstated, and the
+Remotion/HyperFrames state layers were not kept distinct. M1.2 is therefore
+`NOT_PROVED` and M1.3 remains blocked.
+
+The bounded successor correction changes only the WorkBuddy-facing Skill
+instruction and one newly named uninstalled candidate. It may tighten factual
+mapping and ordinary-language constraints, but it must not prescribe a fixed
+answer, interpret facts in Shell, or change Package, Shell, tests, Providers,
+credentials, media, or M1.3. Another WorkBuddy result remains a separate action
+gate.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

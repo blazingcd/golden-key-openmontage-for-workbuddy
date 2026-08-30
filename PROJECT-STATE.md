@@ -120,19 +120,32 @@ on-demand installation. This checkpoint does not complete M1.2, start M1.3, or
 authorize WorkBuddy, Skill installation, activation, credentials, Provider calls,
 or media.
 
-The next M1.2 final-readiness contract is now frozen but not executed. It uses the
-existing M1 branch and the reviewed slim candidate; preserves the current active
-root, Release, registration, Skill archives, and evidence as rollback material;
-then, under a later action-time execution, activates the slim candidate, creates
-one newly named corrected Skill bound to it, normally installs that Skill, runs
-one `0.00x` non-production readiness task, and obtains one independent zero-write
-user-result review. If a same-name Skill is installed, execution stops for Owner
-manual uninstall before Package activation because WorkBuddy cannot overwrite a
-Skill; absence is checked again immediately before installation. No optional
-install, credential, Provider call, media, retry, or live repair belongs to this
-sequence.
+The frozen M1.2 final-readiness sequence was executed once with WorkBuddy 5.3.14 /
+`Hy4 preview 0.00x`. The slim Package was active and the corrected Skill was the
+only installed Golden Key Skill. LauncherReceipt SHA256 is
+`16f9623f5ebe75586cc8ddbb34d2b3ef6fbb8aaef925fad9ea749cf941020211`;
+the valid managed handoff SHA256 is
+`7df7b54ac1366acd14a20da6cf53d0e4e3dfac9758a85f110f7ac88e144c61ed`.
+The run exited successfully with one spawn, no retry, no media, no Provider or
+renderer selection, and no production decision. Its exact empty WorkBuddy task
+directory is `C:\Users\blazi\WorkBuddy\2026-08-30-15-17-44`.
 
-The probe passes only when the ordinary dialogue visibly explains the continuing
+The dialogue proved the factual relay, continuing FFmpeg baseline, and all four
+choices. Independent review nevertheless returned
+`REJECT / P0=0 / P1=3 / P2=0`: it overstated partial capability groups, described
+unconfigured enhancements as things the product "cannot do", and failed to keep
+Remotion/HyperFrames integration, dependency, runtime, and invocation states
+separate. The result is terminal `NOT_PROVED`; M1.3 remains blocked.
+
+The Owner then manually uninstalled the same-name Skill and authorized one
+bounded correction through reviewed, pushed documents and one reviewed, pushed,
+newly named uninstalled Skill candidate. Only
+`workbuddy-skill/golden-key-openmontage/SKILL.md` may change after the exact
+planning head is merged. WorkBuddy, Shell, Package, tests, optional installation,
+credentials, Provider calls, media, M1.3, retry, and live repair remain outside
+this correction. The next WorkBuddy action remains separately gated.
+
+M1.2 passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
 Package-declared Provider states, offers continue/local/API-key/defer, and honors
 the deferred non-mutating boundary. Optional installation, chat secrets,
@@ -304,8 +317,7 @@ temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and th
 path was confirmed absent at closeout.
 
 M1.2 is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
-USER_RESULT_REJECTED_P1_3 / CORRECTED_CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED /
-FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / M1_3_BLOCKED`.
+FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
 The earlier contract at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174`, first
 discovery probe, and prematurely cancelled probe remain historical failed routes;
 they do not define the current result.

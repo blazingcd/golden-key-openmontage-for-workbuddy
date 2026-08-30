@@ -48,8 +48,14 @@ by themselves.
   are optional enhancements. Missing or deferred enhancements must not be labeled
   as OpenMontage incapability or block the basic path.
 - After verified PackageRoot lookup, WorkBuddy may use its own current tools and
-  Package semantics for a light first-use inventory. It presents relevant status
-  and lets the user continue or configure.
+  Package semantics for a light first-use inventory. The initial result is a
+  compact conversation limited to FFmpeg, Remotion, HyperFrames, external video,
+  and TTS; do not expand unrelated capability rows, raw setup offers, a broad
+  Provider catalogue, or a readiness dashboard.
+- Only necessary dependencies plus a true runtime state and real Package
+  invocation evidence permit “ready”. Partial counts, adapter presence, and
+  available Provider names do not. Remotion and HyperFrames each preserve
+  separate source-integration, dependency, runtime, and invocation states.
 - WorkBuddy owns relevance, Provider/model choice, credentials, cost/privacy,
   consent, connection testing, and recovery. Shell remains limited to bounded
   detection, exactly approved preparation, and factual relay.
@@ -330,22 +336,29 @@ separate successor-distribution exception and does not reopen WorkBuddy.
 - The Owner later manually uninstalled the same-name Skill. Do not treat that
   report as a permanent state: inspect the exact installed Skill set at execution
   time and stop for manual uninstall if the name is present.
-- The later final-readiness run used the active slim Package and one `Hy4 preview
-  0.00x` task. The factual relay, FFmpeg baseline, and four choices reached the
-  user, but review returned `REJECT / P0=0 / P1=3 / P2=0`. Its state is
+- The latest semantic-correction run used the active slim Package, implementation
+  commit `a884124718eab4bcdb0f98c59ae67acc7008f2fd`, and one `Hy4 preview 0.00x`
+  task. The factual relay, FFmpeg baseline, and four choices reached the user,
+  but review returned `REJECT / P0=0 / P1=3 / P2=0`: partial groups were shown
+  as ready, a broad Provider/configuration catalogue was expanded, and Remotion/
+  HyperFrames were not separately expressed across four readiness layers. Its
+  state is
   `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
   FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
 - The next correction may update only the six authority/state documents and,
   after their exact pushed head is ordinarily merged, only
-  `workbuddy-skill/golden-key-openmontage/SKILL.md`. The instruction may prevent
-  partial counts from becoming whole-group readiness, prevent "cannot do" or
-  equivalent incapability framing for unconfigured enhancements, and require
-  separate integration/dependency/runtime/invocation states. It must not hard-code
-  a transcript or move interpretation into Shell.
+  `workbuddy-skill/golden-key-openmontage/SKILL.md`. The instruction must limit
+  the initial summary to the five named themes, forbid raw setup offers, unrelated
+  capability rows, broad Provider catalogues, and readiness dashboards, require
+  dependencies plus true runtime plus real Package invocation before “ready”, and
+  require separate Remotion and HyperFrames four-layer explanations. It must not
+  hard-code a transcript or move interpretation into Shell.
 - Build one newly named uninstalled candidate, obtain one zero-write document
   review and one zero-write candidate review, make one ordinary commit/push on
-  each branch, and stop before WorkBuddy. No Package, Shell, test, optional
-  install, secret, Provider, media, M1.3, retry, or live repair is authorized.
+  each branch, and stop before WorkBuddy. The currently installed same-name Skill
+  must not be overwritten or automatically uninstalled. No Package, Shell, test,
+  optional install, secret, Provider, media, M1.3, retry, or live repair is
+  authorized.
 
 ## Result guard
 

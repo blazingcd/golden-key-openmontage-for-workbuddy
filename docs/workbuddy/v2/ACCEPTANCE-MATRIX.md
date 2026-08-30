@@ -168,13 +168,14 @@ independent review `APPROVE / P0=0 / P1=0 / P2=0`, unregistered and unactivated.
 It does not advance the M1.2 row until the frozen one-run dialogue and result
 review pass.
 
-The final-readiness run reached the dialogue with valid managed facts and all
-four choices, but its independent review returned
-`REJECT / P0=0 / P1=3 / P2=0`. Partial capability groups were overstated,
-unconfigured enhancements were called things the product could not do, and the
-Remotion/HyperFrames state layers were not separated. The bounded correction may
-prepare a new Skill candidate only; it cannot advance this row without a later
-accepted WorkBuddy result.
+The latest semantic-correction run reached the dialogue with valid managed facts,
+the FFmpeg baseline, and all four choices, but its independent review returned
+`REJECT / P0=0 / P1=3 / P2=0`. Partially configured groups were shown as ready,
+the first-use result expanded a broad Provider/configuration catalogue, and
+Remotion/HyperFrames were not separately explained across source integration,
+project dependencies, runtime readiness, and real invocation verification. The
+bounded correction may prepare a new Skill candidate only; it cannot advance this
+row without a later accepted WorkBuddy result.
 
 M0 document review proves only that the roadmap and first execution contract are
 bounded and internally consistent. Future focused checks may prove local
@@ -232,6 +233,16 @@ manually uninstalled the same-name Skill; execution must recheck current state.
 The corrected consumer candidate is independently reviewed
 `APPROVE / P0=0 / P1=0 / P2=0`, remains uninstalled, and still does not satisfy
 this row without a separately authorized passing WorkBuddy user result.
+
+The later semantic-correction candidate was installed for the latest rejected
+run and remains installed. A successor candidate may be built and reviewed but
+must remain uninstalled. M1.2 acceptance requires a compact conversational
+first-use result limited to FFmpeg, Remotion, HyperFrames, external video, and
+TTS; no unrelated capability rows, setup-offer dump, broad Provider catalogue,
+or readiness dashboard. “Ready” requires necessary dependencies, a true runtime
+state, and real Package invocation evidence. Remotion and HyperFrames must each
+show separate source, dependency, runtime, and invocation states. The currently
+installed Skill must not be overwritten or automatically uninstalled.
 
 ## Review rule
 

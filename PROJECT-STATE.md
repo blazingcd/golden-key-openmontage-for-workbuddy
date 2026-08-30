@@ -1,6 +1,6 @@
 # WorkBuddy Shell V2 — Current Project State
 
-Date: 2026-08-29
+Date: 2026-08-30
 
 The live authority is `docs/workbuddy/v2/TASK-REGISTER.md`. This file is a compact
 state snapshot, not a second task ledger.
@@ -59,11 +59,15 @@ of tracking/advertised `33f49fb385b103489772d3f8ce2f7cb2486b08dc`. Historical
 baseline local/remote remains
 `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`.
 
-The immutable final PackageRoot is already registered and active at
-`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.2-final-factual-relay-33f49fb-20260829\PackageRoot`;
-its `fixed_child.py` SHA256 is
+The historical factual-relay PackageRoot is retained read-only at
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.2-final-factual-relay-33f49fb-20260829\PackageRoot`.
+The current active Registration SHA256
+`b726ff695ad2171048f5048d390a5ae27740715680889bad2c613ada97c08bfe`
+points to
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1-package-slim-candidate-20260829\PackageRoot`;
+its `fixed_child.py` SHA256 remains
 `66defdd34ea984b4b2ccf6d79753f90bf1c45f4b387f226552035c4e2ae136bf`.
-Do not rebuild, reregister, or reactivate it.
+Do not rebuild, reregister, or reactivate either retained root in this correction.
 
 The consumer candidate was built at
 `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-m1.2-handoff-consumer-33f49fb.zip`,
@@ -99,8 +103,9 @@ uninstalled. It is preparation evidence only; the rejected M1.2 user result is
 unchanged until a separately authorized WorkBuddy retest passes.
 
 The bounded package-size checkpoint is complete and pushed on the M1 branch at
-`d94d90c486f1d72452a6f65b71b7c2e7c55f1d04`. The active PackageRoot and Release
-remain unchanged. The separately named successor ZIP is 177,241,928 bytes
+`d94d90c486f1d72452a6f65b71b7c2e7c55f1d04`. At that checkpoint, the then-active
+PackageRoot and Release remained unchanged. The separately named successor ZIP
+is 177,241,928 bytes
 (169.03 MiB), SHA256
 `0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`; its
 PackageRoot is 463,051,387 bytes. Compared with the active package, this saves
@@ -108,8 +113,9 @@ PackageRoot is 463,051,387 bytes. Compared with the active package, this saves
 unused FFmpeg `ffplay.exe` and HTML documentation and retains ffmpeg, ffprobe,
 licenses, README, and presets. Focused checks passed `18 passed, 1 skipped`, the
 independent review returned `APPROVE / P0=0 / P1=0 / P2=0`, and the exact task
-temporary directory was removed. The candidate remains unregistered and
-unactivated.
+temporary directory was removed. The later final-readiness sequence registered
+and activated this exact slim PackageRoot; it is the current active root recorded
+above.
 
 Direct base-Package Remotion bundling is rejected under the Owner's 80 MiB
 compressed-increment ceiling. The machine's external Remotion 4.0.507 core/CLI
@@ -120,30 +126,39 @@ on-demand installation. This checkpoint does not complete M1.2, start M1.3, or
 authorize WorkBuddy, Skill installation, activation, credentials, Provider calls,
 or media.
 
-The frozen M1.2 final-readiness sequence was executed once with WorkBuddy 5.3.14 /
-`Hy4 preview 0.00x`. The slim Package was active and the corrected Skill was the
-only installed Golden Key Skill. LauncherReceipt SHA256 is
-`16f9623f5ebe75586cc8ddbb34d2b3ef6fbb8aaef925fad9ea749cf941020211`;
+The later semantic-correction candidate is implementation commit
+`a884124718eab4bcdb0f98c59ae67acc7008f2fd` and ZIP
+`golden-key-openmontage-0.3.25-m1.2-semantic-correction-20260830.zip`, SHA256
+`c2b91d30aade188a133626b578e976857a10abd57f3f24efd4100bab2820f293`.
+It was the only installed Golden Key Skill for one WorkBuddy 5.3.14 / `Hy4
+preview 0.00x` task at 19:50 local time. Its installed `SKILL.md` SHA256 is
+`1dfdb2f24758aaf97560c035a01310987709ad202d307c35c9e27642802b40c0` and
+`run.ps1` SHA256 is
+`bfe8692bac206c556274013a1be25f544985329d3203e552145edf003fd5a190`.
+LauncherReceipt SHA256 is
+`2da272dac5e5326c6d784fbdc867ffb1f5c413cc1e4aa1938f392df5f6274e87`;
 the valid managed handoff SHA256 is
-`7df7b54ac1366acd14a20da6cf53d0e4e3dfac9758a85f110f7ac88e144c61ed`.
+`cbf32ae738d42346381ec41f465d7cf52a360a149dbdaf7779ce29eb72cf26c5`.
 The run exited successfully with one spawn, no retry, no media, no Provider or
-renderer selection, and no production decision. Its exact empty WorkBuddy task
-directory is `C:\Users\blazi\WorkBuddy\2026-08-30-15-17-44`.
+renderer selection, and no production decision. Its exact task directory
+`C:\Users\blazi\WorkBuddy\2026-08-30-19-50-10` is empty.
 
-The dialogue proved the factual relay, continuing FFmpeg baseline, and all four
-choices. Independent review nevertheless returned
-`REJECT / P0=0 / P1=3 / P2=0`: it overstated partial capability groups, described
-unconfigured enhancements as things the product "cannot do", and failed to keep
-Remotion/HyperFrames integration, dependency, runtime, and invocation states
-separate. The result is terminal `NOT_PROVED`; M1.3 remains blocked.
+The dialogue again proved the factual relay, continuing FFmpeg baseline, and all
+four choices. Independent review nevertheless returned
+`REJECT / P0=0 / P1=3 / P2=0`: partially configured groups were shown as ready,
+the first-use result expanded a broad Provider/configuration catalogue, and
+Remotion/HyperFrames were not separately explained across source integration,
+project dependencies, runtime readiness, and real invocation verification. The
+result remains terminal `NOT_PROVED`; M1.3 remains blocked.
 
-The Owner then manually uninstalled the same-name Skill and authorized one
-bounded correction through reviewed, pushed documents and one reviewed, pushed,
-newly named uninstalled Skill candidate. Only
-`workbuddy-skill/golden-key-openmontage/SKILL.md` may change after the exact
-planning head is merged. WorkBuddy, Shell, Package, tests, optional installation,
-credentials, Provider calls, media, M1.3, retry, and live repair remain outside
-this correction. The next WorkBuddy action remains separately gated.
+The Owner authorizes one further bounded correction through reviewed, pushed
+documents and one reviewed, pushed, newly named uninstalled Skill candidate.
+Only `workbuddy-skill/golden-key-openmontage/SKILL.md` may change after the exact
+planning head is merged. The installed same-name Skill must not be overwritten
+or automatically uninstalled. WorkBuddy, Shell, Package, tests, optional
+installation, credentials, Provider calls, media, M1.3, retry, and live repair
+remain outside this correction. The next WorkBuddy action remains separately
+gated.
 
 M1.2 passes only when the ordinary dialogue visibly explains the continuing
 FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and

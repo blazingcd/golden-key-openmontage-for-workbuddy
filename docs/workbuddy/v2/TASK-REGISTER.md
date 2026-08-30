@@ -790,11 +790,10 @@ Completed result:
   absent; the active PackageRoot, Release, registration, and installed state did
   not change.
 
-### M1.2 final readiness acceptance — EXECUTION CONTRACT FROZEN / NOT EXECUTED
+### M1.2 final readiness acceptance — EXECUTED / USER RESULT REJECTED
 
-This is the smallest next product gate. The present documentation task freezes
-the contract only; it does not activate a Package, build or install a Skill, run
-WorkBuddy, or satisfy M1.2.
+This contract was executed once. It did not satisfy M1.2 and is retained as the
+exact evidence boundary for the correction below.
 
 #### Preconditions and fixed inputs
 
@@ -856,6 +855,46 @@ WorkBuddy, or satisfy M1.2.
   burden, extra mutation, invocation ambiguity, or review finding ends the run as
   `NOT_PROVED`; preserve evidence and stop.
 - M1.3 remains `BLOCKED` until this user-visible result is independently accepted.
+
+#### Executed result
+
+- WorkBuddy 5.3.14 used `Hy4 preview 0.00x` for the single ordinary request at
+  2026-08-30 15:17 local time. LauncherReceipt SHA256 is
+  `16f9623f5ebe75586cc8ddbb34d2b3ef6fbb8aaef925fad9ea749cf941020211`;
+  managed handoff SHA256 is
+  `7df7b54ac1366acd14a20da6cf53d0e4e3dfac9758a85f110f7ac88e144c61ed`.
+- Receipt state is `EXITED_SUCCESS`, `spawn_count=1`, `retry_count=0`, valid
+  result pointer, empty local-capability identities, and no media, Provider,
+  renderer, or production decision. The only new task workspace is the empty
+  `C:\Users\blazi\WorkBuddy\2026-08-30-15-17-44` directory.
+- The dialogue correctly exposed the FFmpeg baseline and four choices, but review
+  returned `REJECT / P0=0 / P1=3 / P2=0`: partial capability groups were
+  overstated, unconfigured enhancements were described as things OpenMontage
+  could not do, and Remotion/HyperFrames state layers were not separated.
+- Exact state: `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+  FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
+
+#### Authorized bounded correction
+
+1. The Owner reports that the same-name WorkBuddy Skill has been manually
+   uninstalled. Verify absence; never overwrite or uninstall it automatically.
+2. Update only the six authority/state documents, obtain one independent
+   zero-write review, commit once, and ordinarily push
+   `codex/workbuddy-capability-onboarding`.
+3. Ordinarily merge that exact pushed head into the retained M1 branch, then
+   change only `workbuddy-skill/golden-key-openmontage/SKILL.md`. Do not change
+   Shell, Package, tests, or another Skill source.
+4. The instruction must keep FFmpeg as the ready minimum, avoid whole-group
+   readiness from partial counts, frame unconfigured enhancements as available
+   after configuration rather than product incapability, keep integration,
+   dependency, runtime, and invocation states separate, and retain the four
+   choices without a fixed transcript.
+5. Build one newly named uninstalled Skill ZIP bound to the active slim
+   PackageRoot, obtain one independent zero-write candidate review, commit once,
+   and ordinarily push the M1 branch.
+6. Stop before WorkBuddy. No install, WorkBuddy run, optional capability,
+   credential, Provider, media, M1.3, retry, or live repair is authorized in this
+   correction. A later WorkBuddy action requires a fresh action-time gate.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -1355,7 +1394,7 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED
+current_task: M1_2_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / BOUNDED_SKILL_CORRECTION_AUTHORIZED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: HISTORICAL_HANDOFF_CONSUMER_USED_FOR_REJECTED_PROBE / OWNER_MANUAL_UNINSTALL_RECORDED / EXECUTION_TIME_STATE_RECHECK_REQUIRED / ZIP_SHA256_437B02C60AA234197FB419275AC64C5DF804C5F477FDBA16FDE3278F772E68D2 / SKILL_SHA256_20AB048D8E9CB9EDEE19F71A8FDE81991670D4A571465C558EF1C02D8DD871FF / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B
 capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / USER_RESULT_REJECTED_P1_3
@@ -1373,7 +1412,7 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / USER_RESULT_REJECTED_P1_3 / CORRECTED_CANDIDATE_REVIEWED_UNINSTALLED / FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / M1_3_BLOCKED
+m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / BOUNDED_SKILL_CORRECTION_AUTHORIZED / M1_3_BLOCKED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
@@ -1389,7 +1428,8 @@ m1_2_remotion_truth: SOURCE_INTEGRATED / PROJECT_DEPENDENCIES_ABSENT / RUNTIME_N
 m1_2_consumer_correction: PUSHED_COMMIT_5229964AC681D7B34949480326E6F24A0C53913F / CORRECTED_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED
 package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F65B71B7C2E7C55F1D04_PUSHED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNREGISTERED / UNACTIVATED
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
-m1_2_next_gate: FINAL_READINESS_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / ONE_WORKBUDDY_RESULT_THEN_ONE_ZERO_WRITE_REVIEW
+m1_2_final_readiness_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_16F9623F5EBE75586CC8DDBB34D2B3EF6FBB8AAEF925FAD9EA749CF941020211 / HANDOFF_SHA256_7DF7B54AC1366ACD14A20DA6CF53D0E4E3DFAC9758A85F110F7AC88E144C61ED / REJECT_P0_0_P1_3_P2_0
+m1_2_next_gate: BOUNDED_SKILL_CORRECTION_AUTHORIZED / STOP_BEFORE_WORKBUDDY / NEW_ACTION_GATE_REQUIRED
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING
 remotion_distribution: ON_DEMAND_MANAGED_M1_3 / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY

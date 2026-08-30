@@ -330,6 +330,22 @@ separate successor-distribution exception and does not reopen WorkBuddy.
 - The Owner later manually uninstalled the same-name Skill. Do not treat that
   report as a permanent state: inspect the exact installed Skill set at execution
   time and stop for manual uninstall if the name is present.
+- The later final-readiness run used the active slim Package and one `Hy4 preview
+  0.00x` task. The factual relay, FFmpeg baseline, and four choices reached the
+  user, but review returned `REJECT / P0=0 / P1=3 / P2=0`. Its state is
+  `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+  FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
+- The next correction may update only the six authority/state documents and,
+  after their exact pushed head is ordinarily merged, only
+  `workbuddy-skill/golden-key-openmontage/SKILL.md`. The instruction may prevent
+  partial counts from becoming whole-group readiness, prevent "cannot do" or
+  equivalent incapability framing for unconfigured enhancements, and require
+  separate integration/dependency/runtime/invocation states. It must not hard-code
+  a transcript or move interpretation into Shell.
+- Build one newly named uninstalled candidate, obtain one zero-write document
+  review and one zero-write candidate review, make one ordinary commit/push on
+  each branch, and stop before WorkBuddy. No Package, Shell, test, optional
+  install, secret, Provider, media, M1.3, retry, or live repair is authorized.
 
 ## Result guard
 

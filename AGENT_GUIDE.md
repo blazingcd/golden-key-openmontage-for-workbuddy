@@ -192,6 +192,27 @@ produce media, retry, or repair live. A same-name installed Skill is a hard stop
 before Package activation and again before Skill installation; the Owner must
 uninstall it manually because WorkBuddy Skills cannot be overwritten.
 
+That sequence was later executed once with WorkBuddy 5.3.14 / `Hy4 preview
+0.00x`. The factual relay, FFmpeg baseline, and four choices reached the user,
+but the independent review rejected the result `REJECT / P0=0 / P1=3 / P2=0`:
+the reply turned unconfigured enhancements into a broad "cannot do" statement,
+overstated partially configured capability groups, and did not keep Remotion and
+HyperFrames integration, dependency, runtime, and invocation states distinct.
+The exact result is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
+
+The Owner's 2026-08-30 direction and manual uninstall of the same-name Skill now
+authorize one bounded correction without another approval pause: synchronize
+only the six authority/state documents, obtain one independent zero-write
+document review, commit and ordinarily push the planning branch, merge that
+exact head into the retained M1 branch, change only
+`workbuddy-skill/golden-key-openmontage/SKILL.md`, build one newly named
+uninstalled candidate bound to the active slim PackageRoot, obtain one
+independent zero-write candidate review, commit and ordinarily push the M1
+branch, then stop before WorkBuddy. No Shell, Package, test, optional install,
+credential, Provider, media, M1.3, second Skill source, retry, or live repair is
+authorized. A later WorkBuddy action still requires a fresh action-time gate.
+
 ## Product boundary
 
 The product goal is one ordinary-user path:
@@ -334,15 +355,15 @@ equal `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the worktree is clean and the
 result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
 M1.2 is now `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
-USER_RESULT_REJECTED_P1_3 / CORRECTED_CONSUMER_CANDIDATE_REVIEWED_UNINSTALLED /
-FINAL_ACCEPTANCE_CONTRACT_FROZEN / NOT_EXECUTED / M1_3_BLOCKED`.
-The correction may change only the WorkBuddy-facing Skill instruction: preserve
-the existing handoff, treat composition runtime facts as authoritative for
-runtime readiness, paraphrase configuration without raw environment names,
-paths, commands, URLs, or install instructions, and visibly offer continue,
-local configuration, API-key configuration, and defer. It must not prescribe an
-exact transcript or move interpretation/choice into Shell. Another WorkBuddy
-probe remains separately gated.
+FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
+The newly authorized correction may change only the WorkBuddy-facing Skill
+instruction. It must preserve the existing handoff, use the FFmpeg runtime as the
+minimum ready path, avoid upgrading partial capability counts into whole-group
+readiness, describe unconfigured enhancements as available after configuration
+rather than product incapability, and keep Remotion/HyperFrames integration,
+dependency, runtime, and invocation facts separate. It must retain all four
+choices without prescribing an exact transcript or moving interpretation into
+Shell. Another WorkBuddy probe remains separately gated.
 
 ## Four product results
 

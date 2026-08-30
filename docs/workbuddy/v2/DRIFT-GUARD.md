@@ -47,11 +47,11 @@ by themselves.
 - Remotion, HyperFrames, external video generation, TTS, and similar components
   are optional enhancements. Missing or deferred enhancements must not be labeled
   as OpenMontage incapability or block the basic path.
-- After verified PackageRoot lookup, WorkBuddy receives a purpose-specific
-  first-use projection, not the full capability/setup catalogue. The initial
-  result says that FFmpeg-backed basic production works now and summarizes only
-  local animation/layout, AI image/video, and TTS categories. Remotion and
-  HyperFrames may appear as secondary names under local enhancement.
+- After verified PackageRoot lookup, the initial result says that FFmpeg-backed
+  basic production works now and explicitly introduces Remotion and HyperFrames
+  as optional local enhancements plus external AI image/video and TTS as optional
+  online enhancements. Do not hide Remotion or HyperFrames behind only a generic
+  category name.
 - Only necessary dependencies plus a true runtime state and real Package
   invocation evidence permit “ready”. Partial counts, adapter presence, and
   available Provider names do not. Remotion and HyperFrames preserve separate
@@ -65,12 +65,11 @@ by themselves.
   change, or retest capabilities. Do not require a fixed grammar or transcript.
 - Do not turn the inventory into broad disk scanning, a hard-coded capability
   universe, a Shell selector, or a second control plane.
-- M1 shows only Providers formally declared by the verified Package, and only
-  after the user selects the relevant category. The first menu normally shows
-  two or three relevant image/video choices or one or two TTS choices. Show the
-  complete declared list only when the user explicitly asks for more choices. If
-  the short set cannot satisfy the confirmed need, ask whether to expand before
-  showing more. Current static evidence
+- M1 shows only Providers formally declared by the verified Package. After the
+  relevant category is selected, normally lead with two or three relevant image/
+  video choices or one or two TTS choices and offer more. These counts are a UX
+  default, not a hard acceptance gate; additional relevant declared choices do
+  not by themselves stop configuration. Current static evidence
   includes Seedance, Kling, and MiniMax; undeclared Providers remain absent.
 - This is dynamic WorkBuddy product/display scope, not a fixed Shell Provider
   menu, routing table, model-version list, or second control plane.
@@ -311,7 +310,8 @@ WorkBuddy.
   evidence. The unchanged old LauncherReceipt is the decisive invocation fact.
 - The installed handoff-consumer candidate completed one `Hy3 0.00x` readiness
   probe. The factual relay reached dialogue, but independent review rejected the
-  user result `REJECT / P0=0 / P1=3 / P2=0`; M1.2 remains incomplete.
+  user result `REJECT / P0=0 / P1=3 / P2=0`; at that historical checkpoint M1.2
+  remained incomplete. The corrected current classification is recorded below.
 - Correction may change only the six authority/state documents and, after their
   exact pushed head is ordinarily merged, only
   `workbuddy-skill/golden-key-openmontage/SKILL.md`. No Shell, Package, test, or
@@ -352,29 +352,32 @@ WorkBuddy.
   but review returned `REJECT / P0=0 / P1=3 / P2=0`: partial groups were shown
   as ready, a broad Provider/configuration catalogue was expanded, and Remotion/
   HyperFrames were not separately expressed across four readiness layers. Its
-  state is
+  state at that checkpoint was
   `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
   FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
-## Current M1.2 product-flow reset guard
+## Current M1.2 corrected-result guard
 
 - The later compact-readiness candidate at implementation commit `666c9d4...`,
   ZIP SHA256
   `4caf57cfcf5d298f0ded1098d4fda5bb482a699f57a72b02bc61f1cd3dbf2dd1`,
-  was also rejected. Its reply still exposed npm/registry/runtime and unrelated
-  capability details; independent review returned
-  `REJECT / P0=0 / P1=1 / P2=1`. This supersedes “make another Skill-only wording patch” as
-  the next route.
+  received historical review `REJECT / P0=0 / P1=1 / P2=1` because its reply
+  exposed npm/registry/runtime and unrelated capability details. The Owner's
+  correction retains those as non-blocking UX findings: the same run proved facts
+  reached WorkBuddy, the FFmpeg baseline and required optional capabilities were
+  shown, and configuration entries were understandable.
+- M1.2 is `CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / COMPLETE`.
+  Do not claim that this proves an actual Remotion/HyperFrames installation or
+  API-key configuration. Those belong to `M1_3_NOT_STARTED`.
 - The current Owner authorization is documentation-only: update the six
   authority/state documents, obtain one independent zero-write document review,
   make one commit, and ordinarily push the planning branch. Do not merge it into
   the M1 implementation branch, edit product/Skill/test files, build/install a
   candidate, run WorkBuddy, install an enhancement, handle a secret, call a
   Provider, produce media, start M1.3, retry, or repair live.
-- A later implementation needs a separately authorized smallest fact-surface
-  change. Reuse the existing mechanical handoff; do not create a new relay
-  protocol. Shell may mechanically relay or allowlist facts but must not explain,
-  rank, recommend, or select. WorkBuddy owns the short recommendation set and
-  explicit expansion after user choice.
+- Do not reopen M1.2 solely to optimize catalogue size or wording. Carry those UX
+  findings into M1.3 only where they affect the selected configuration journey.
+  Shell may mechanically relay facts but must not explain, rank, recommend, or
+  select; WorkBuddy remains the conversation owner.
 
 ## Result guard
 

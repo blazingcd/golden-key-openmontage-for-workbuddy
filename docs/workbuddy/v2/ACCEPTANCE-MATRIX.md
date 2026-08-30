@@ -121,21 +121,22 @@ Owner-authorized record changes documentation status only.
 ## Next-phase acceptance — M1.2 final readiness and later tasks
 
 These rows do not alter or reopen R1-R4. Those identifiers remain frozen and no
-future task continues the R series. The current gate is documentation-only product
-flow reset; it authorizes no Skill/Shell/Package/test change, candidate, install,
-or WorkBuddy action. The
+future task continues the R series. The current gate is a documentation-only
+classification correction; it authorizes no Skill/Shell/Package/test change,
+candidate, install, or WorkBuddy action. The
 package-size checkpoint is complete as a reviewed but unregistered and
-unactivated successor distribution. The semantic-correction result was rejected
-`P1=3`, and the later compact-readiness result was also rejected after tighter
-Skill wording failed to contain the over-broad factual payload. M1.2 remains
-`NOT_PROVED`; M1.3 and all later work remain blocked. M1–M3 are Must, S1–S5 are Should,
+unactivated successor distribution. Earlier reviews rejected the semantic and
+compact-readiness results under a superseded hard-compactness contract. The Owner
+now accepts the latest run as proof of M1.2 core first-use guidance and visible
+configuration entries, while retaining its excessive detail as a UX finding.
+M1.3 remains unproved and not started. M1–M3 are Must, S1–S5 are Should,
 and C1–C2 are Could.
 
 | Task | Ordinary-user goal | Minimum observable evidence | Current state |
 |---|---|---|---|
-| M1 — first-use guidance and capability readiness | Start from ordinary natural language, understand that FFmpeg-ready basic production is available, and complete or defer relevant local-install and API-key configuration without internal technical work. Provider display is progressive and limited to formally declared options. | M1.2 gives a short category-level readiness result and intent handoff. M1.3 proves one representative local path and one representative API-key path. A selected Provider menu starts with only two or three relevant image/video choices or one or two TTS choices; the full declared list appears only after the user explicitly asks for more. If the short set does not fit, WorkBuddy first asks whether to expand it. No evaluator-script comparison, Shell decision, fixed command language, false ready state, catalogue dump, raw environment/path/command burden, or other user-visible internal mechanics. M1.4 closeout additionally requires the reviewed M1 head fast-forwarded and pushed to the formal capability-onboarding ref, then verified removal of the recorded temporary worktree, local/remote M1 branch, and exact task-owned temporary directories with no unique/unmerged work or user-data deletion. | `M1.1_FACT_AUDIT_COMPLETE / M1.2_PRODUCT_FLOW_RESET / M1.2_NOT_PROVED` |
-| M1.2 — first-use readiness | Understand that the FFmpeg-ready basic path works now, receive a short ordinary-language summary of local animation/layout, AI image/video, and TTS enhancements, then naturally continue, choose local configuration, choose online AI configuration, defer, or ask about one category. | A purpose-specific factual projection reaches WorkBuddy without the full capability/setup catalogue. The visible result keeps optional absence non-blocking, exposes no technical readiness layers or Provider catalogue, and one actual defer response is acknowledged without mutation. Exact wording and order may vary. Package/Skill preparation and static checks alone do not pass; one independent zero-write ordinary-user review must approve the visible result. | `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / COMPACT_READINESS_USER_RESULT_REJECTED / PRODUCT_FLOW_RESET_DOCUMENTATION / NOT_PROVED / M1.3_BLOCKED` |
-| M2 — progressive clarification and material readiness | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | Only genuinely missing audience/platform/duration/style/brand/material/budget/delivery questions; explicit defaults and implications; understandable no/partial/complete-material handling; user correction and confirmation; no internal mechanics. | `DEPENDENT_ON_M1.2 / NOT_AUTHORIZED` |
+| M1 — first-use guidance and capability readiness | Start from ordinary natural language, understand that FFmpeg-ready basic production is available, and complete or defer relevant local-install and API-key configuration without internal technical work. Provider display is progressive and limited to formally declared options. | M1.2 explicitly introduces Remotion, HyperFrames, external AI image/video, and TTS and provides understandable configuration entries. M1.3 proves one representative local path and one representative API-key path. A selected Provider menu should normally lead with two or three relevant image/video choices or one or two TTS choices and offer more; these counts are UX guidance, not a hard gate. No evaluator-script comparison, Shell decision, fixed command language, false ready state, secret disclosure, raw command burden, or second control plane. M1.4 performs formal ref and cleanup closeout. | `M1.1_FACT_AUDIT_COMPLETE / M1.2_CORE_COMPLETE / M1.3_NOT_STARTED` |
+| M1.2 — first-use readiness | Understand that the FFmpeg-ready basic path works now, be explicitly introduced to Remotion, HyperFrames, external AI image/video, and TTS, then see understandable ways to continue, configure local capabilities, configure API-key capabilities, defer, or ask for detail. | Verified Package facts reach WorkBuddy; optional absence remains non-blocking; WorkBuddy exposes the relevant next intents and does not falsely claim readiness, disclose secrets, require internal commands, or make Shell the decision-maker. An actual local installation or API-key configuration is not an M1.2 requirement; it belongs to M1.3. Extra technical/catalogue detail is recorded as a UX finding unless it prevents understanding or safe continuation. | `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED / COMPLETE / M1.3_NOT_STARTED` |
+| M2 — progressive clarification and material readiness | Turn an incomplete business request into a confirmed direction without a fixed transcript or unnecessary interrogation. | Only genuinely missing audience/platform/duration/style/brand/material/budget/delivery questions; explicit defaults and implications; understandable no/partial/complete-material handling; user correction and confirmation; no internal mechanics. | `M1_2_DEPENDENCY_SATISFIED / NOT_AUTHORIZED` |
 | M3 — stable production, basic quality, and final delivery | Receive a real result after choosing the basic or an approved enhanced path, with evidence that delivery is not accidental. | Three separately started cases with no supplied, partial, and complete user materials all produce playable outputs; valid receipts and result locations; decode, dimensions/direction, duration, audio, and visible-text/safe-area checks; prompt final answers without optional persistence delay; one independent review of the result set. | `DEPENDENT_ON_M1.4_AND_M2 / NOT_AUTHORIZED` |
 | S1 — preview, revision, version, and rollback | Review a result, request natural-language changes, receive a new version, and return to an earlier version. | One initial version, two bounded revisions, one rollback; all versions remain identifiable, findable, and playable. | `DEPENDENT_ON_M3 / NOT_AUTHORIZED` |
 | S2 — second aspect ratio, platform adaptation, and safe area | Receive one additional platform/aspect version without clipped text, logo, subtitles, or unusable audio/video. | One real additional format; dimensions, duration, decode/audio, subtitle/title/logo safe-area, voice, BGM, and encoding review. | `DEPENDENT_ON_M3 / NOT_AUTHORIZED` |
@@ -167,17 +168,19 @@ The completed slim candidate is distribution evidence only: ZIP `177241928`
 bytes, PackageRoot `463051387` bytes, SHA256
 `0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`,
 independent review `APPROVE / P0=0 / P1=0 / P2=0`, unregistered and unactivated.
-It does not advance the M1.2 row until the frozen one-run dialogue and result
-review pass.
+At that package-size checkpoint the candidate alone did not advance M1.2; the
+later compact-readiness WorkBuddy result supplies the corrected M1.2 proof.
 
 The semantic-correction run reached the dialogue with valid managed facts, the
 FFmpeg baseline, and four choices, but its independent review returned
 `REJECT / P0=0 / P1=3 / P2=0`. The later compact-readiness candidate at
 implementation commit `666c9d4...` tightened Skill wording but still produced a
-technical, over-broad first-use answer and was rejected
-`REJECT / P0=0 / P1=1 / P2=1`. The decisive structural
-evidence is the managed first-use payload: about 25.95 KB, 24 capability rows,
-and 63 setup offers. Requiring a separate four-layer Remotion/HyperFrames
+technical, over-broad first-use answer and was historically rejected
+`REJECT / P0=0 / P1=1 / P2=1`. The managed first-use payload was about 25.95 KB,
+with 24 capability rows and 63 setup offers. The Owner's correction retains this
+as a non-blocking UX-overload finding because the same result also visibly proved
+the FFmpeg baseline, optional capability guidance, and configuration entries.
+Requiring a separate four-layer Remotion/HyperFrames
 explanation in the visible first-use answer was itself an incorrect acceptance
 constraint. Those layers remain internal truth and later configuration/
 diagnostic evidence; they no longer define the user-visible M1.2 result.
@@ -194,12 +197,10 @@ write allowlist prohibited connecting the existing Shell evidence path. Commit
 `4cbf8ff3c15dd686a893842ca189ce49fa83023d` therefore proves partial Skill
 guidance only, not this M1.2 acceptance row.
 
-The next separately authorized readiness probe may close M1.2 only when the
-complete revised row above is observed and one independent zero-write result
-review approves it. The real non-mutating selection is defer; the presence and
-natural-language meaning of the other entries are visible, while their execution
-belongs to M1.3 or M2. Otherwise the probe is route-selection evidence only and
-the task stops without retry, live repair, or an M1.3 start.
+No additional readiness probe is required to close corrected M1.2. The latest run
+proved the row's core first-use guidance and visible configuration entries. It did
+not exercise a user's selected configuration; that execution and its safety,
+validation, and recovery evidence belong to M1.3.
 
 The historical first probe stopped under that rule. WorkBuddy verified PackageRoot/Guide and tried
 the Package raw registry summary, but no capability facts, FFmpeg explanation, honest
@@ -227,9 +228,9 @@ reached dialogue, but the visible result failed independent review with
 `REJECT / P0=0 / P1=3 / P2=0`. The historical WorkBuddy result gate authorized only the Skill
 consumer correction, a newly named uninstalled ZIP, independent zero-write review, and
 exact Git closeout at that historical checkpoint. That authority is superseded by
-the current documentation-only product-flow reset. Installation, secrets, Provider/connection
-calls, media, workspace relay files or managed-summary copies, Shell fallback,
-retry, and M1.3 remain disqualifying.
+the current documentation-only classification correction. Installation, secrets,
+Provider/connection calls, media, workspace relay files or managed-summary copies,
+Shell fallback, retry, and M1.3 work are not authorized in this documentation task.
 
 The consumer ZIP installed for the rejected historical probe has SHA256
 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`;
@@ -237,19 +238,19 @@ candidate review is `APPROVE / P0=0 / P1=0 / P2=0`. This proves only the bounded
 artifact identity, not an accepted user-visible WorkBuddy result. The Owner later
 manually uninstalled the same-name Skill; execution must recheck current state.
 
-The corrected consumer candidate is independently reviewed
-`APPROVE / P0=0 / P1=0 / P2=0`, remains uninstalled, and still does not satisfy
-this row without a separately authorized passing WorkBuddy user result.
+The corrected consumer candidate was independently reviewed
+`APPROVE / P0=0 / P1=0 / P2=0` and remained uninstalled; at that checkpoint it did
+not satisfy this row without a separately authorized WorkBuddy user result.
 
-The semantic-correction and compact-readiness candidates remain rejected history.
+The semantic-correction review and the compact-readiness review remain historical
+evidence against their then-current contracts.
 The latest compact candidate is ZIP SHA256
 `4caf57cfcf5d298f0ded1098d4fda5bb482a699f57a72b02bc61f1cd3dbf2dd1`
-at implementation commit `666c9d4...`. Another Skill-only wording patch is not
-the next route. M1.2 acceptance requires a purpose-specific first-use projection,
-not the full `provider_menu_summary()`. Internal truth still distinguishes source,
-dependency, runtime, and invocation; the ordinary first-use answer compresses
-that truth into user value and configuration status. Provider menus appear only
-after a relevant selection and use the short-set/explicit-expansion rule above.
+at implementation commit `666c9d4...`. It proved corrected M1.2 core guidance and
+configuration entries; its excessive technical/catalogue detail remains a UX
+finding. Internal truth still distinguishes source, dependency, runtime, and
+invocation. Provider menus should use progressive disclosure, but exact shortlist
+counts do not decide whether the user can continue.
 
 ## Review rule
 

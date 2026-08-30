@@ -51,13 +51,12 @@ FFmpeg is the minimum production baseline. An ordinary user with an FFmpeg-ready
 installation can continue to basic production even when optional enhancements are
 not installed or configured.
 
-On first use, WorkBuddy consumes a purpose-specific readiness projection after
-PackageRoot verification. It tells the user that the FFmpeg basic path can work
-now and summarizes only three optional user-facing categories: local animation/
-layout enhancement, AI image/video generation, and TTS. Remotion and HyperFrames
-may be named secondarily under local enhancement. It does not expand unrelated
-capability rows, raw setup offers, a broad Provider catalogue, or a readiness
-dashboard. WorkBuddy owns the conversation, relevance, later Provider/model
+On first use, verified current facts reach WorkBuddy after PackageRoot
+verification. It tells the user that the FFmpeg basic path can work now and
+explicitly introduces Remotion, HyperFrames, external AI image/video, and TTS as
+optional capabilities that may be configured. Extra catalogue or technical detail
+is a UX issue unless it prevents understanding or safe continuation. WorkBuddy
+owns the conversation, relevance, later Provider/model
 choice, cost/privacy explanation, credentials, consent, connection testing, and
 recovery. Shell runtime preparation may only detect and apply an exactly approved
 mechanical plan.
@@ -67,11 +66,13 @@ and a dependency lock while its local dependencies are absent; it is then
 "integrated, not ready", not "ready" and not an OpenMontage incapability. “Ready”
 requires necessary dependencies, a true runtime state, and real Package invocation
 evidence; partial counts, adapter presence, and available Provider names are not
-enough. Remotion and HyperFrames each keep source integration, project
-dependencies, runtime readiness, and real invocation verification separate in
+enough. First-use guidance explicitly names Remotion and HyperFrames as optional
+local enhancements the user may choose to configure. Each still keeps source
+integration, project dependencies, runtime readiness, and real invocation separate in
 the internal truth model. First-use guidance compresses those layers into an
-ordinary status such as “本机动画增强尚未配置完成”; it expands technical detail
-only after the user asks or chooses that path. WorkBuddy does not expose raw
+ordinary status such as “本机动画增强尚未配置完成”. It should normally expand
+technical detail only after the user asks or chooses that path; earlier technical
+detail is a UX finding unless it prevents safe continuation. WorkBuddy does not expose raw
 environment names, paths, commands, URLs, or installation instructions in
 first-use guidance.
 
@@ -82,11 +83,11 @@ language or second control plane.
 The verified Package's formal declarations determine which Providers M1 may show.
 Undeclared Providers do not appear in M1, and Provider names/details wait until
 they are relevant to a selected configuration path rather than becoming the
-first-use inventory. Even then, WorkBuddy first offers only a short recommended
-set suited to the confirmed goal: normally two or three image/video-generation
-choices and one or two TTS choices. It expands to the complete declared list only
-when the user explicitly asks for more choices. If the short set cannot meet the
-confirmed need, WorkBuddy first asks whether to expand it. Current static evidence
+first-use inventory. WorkBuddy should normally lead with a short recommended set
+suited to the confirmed goal—two or three image/video-generation choices or one
+or two TTS choices—and offer more choices. This is a progressive-disclosure
+default, not a hard acceptance count; additional relevant declared choices do not
+prevent the user from continuing configuration. Current static evidence
 includes Seedance, Kling, and MiniMax;
 the actual recommendation must come from current verified facts and user context,
 not a Shell ranking table. WorkBuddy explains user value before technical
@@ -185,24 +186,20 @@ retest. Planned wording and steps may change after real WorkBuddy evidence;
 acceptance follows the completed user goal and safety boundaries rather than exact
 rehearsal of the planning examples.
 
-M1.2 presents a compact current summary and expands only the details relevant to
-the user's question or choice. The full `provider_menu_summary()` is not a valid
-first-use display surface: the latest relay was about 25.95 KB with 24 capability
-rows and 63 setup offers. A later implementation must derive a purpose-specific
-projection before WorkBuddy explanation while preserving the existing handoff and
-Shell's mechanical role. The configuration entries are handoffs only: M1.2 does
-not install, save credentials, call a Provider, validate a selected configuration,
-or retest it.
+M1.2 presents trustworthy current facts and the next available intents. The latest
+relay was about 25.95 KB with 24 capability rows and 63 setup offers; the resulting
+technical/catalogue overload is a UX finding, not proof that the user cannot
+continue. Shell preserves its mechanical role. The configuration entries are
+handoffs only: M1.2 does not install, save credentials, call a Provider, validate
+a selected configuration, or retest it.
 
-M1.2 is a user-result contract, not a Skill-text deliverable. It is complete only
-when trustworthy current facts can reach WorkBuddy through the reduced first-use
-projection, the user understands that basic production works now, optional
-enhancements are explained without technical burden, and a natural-language
-continue/local/API-key/defer or category-question intent is handed off correctly.
-One real defer choice proves the non-mutating M1.2 boundary; M1.3 later proves the
-two configuration mechanisms, and M2 proves direct continuation into business
-clarification. M1.4 may integrate the M1 result but must not retroactively fill
-missing M1.2 evidence.
+M1.2 is a user-result contract, not a Skill-text deliverable. It is complete when
+trustworthy facts reach WorkBuddy, the user understands that basic production
+works now, Remotion, HyperFrames, external AI image/video, and TTS are explicitly
+introduced, and understandable continue/local/API-key/defer or detail entries are
+visible. A particular defer reply is not required. The latest run proved this core
+boundary; M1.3 later proves the two configuration mechanisms, and M2 proves direct
+continuation into business clarification. M1.4 integrates and closes the M1 result.
 
 The historical WorkBuddy-owned discovery probe did not prove that route.
 WorkBuddy reached the verified Package and attempted its raw registry summary, but the
@@ -252,7 +249,8 @@ manually uninstalled that same-name Skill; execution must inspect current state.
 The corrected one-file consumer is pushed at
 `5229964ac681d7b34949480326e6f24a0c53913f`; its newly named candidate passed
 independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
-uninstalled. This closes correction preparation only, not M1.2 user acceptance.
+uninstalled. At that historical checkpoint this closed correction preparation
+only, not M1.2 user acceptance.
 
 The later semantic-correction candidate at implementation commit
 `a884124718eab4bcdb0f98c59ae67acc7008f2fd` reached the managed facts, FFmpeg
@@ -260,18 +258,21 @@ baseline, and four choices in one WorkBuddy run. Independent review still reject
 the ordinary-user result `REJECT / P0=0 / P1=3 / P2=0`: partially configured
 groups were shown as ready, the first-use response expanded a broad Provider/
 configuration catalogue, and Remotion/HyperFrames were not separately explained
-across source, dependency, runtime, and invocation layers. M1.2 is therefore
-`NOT_PROVED` and M1.3 remains blocked.
+across source, dependency, runtime, and invocation layers. That was the historical
+review outcome under the then-current contract.
 
-That next bounded correction was executed at `666c9d4...` and is now superseded.
+That next bounded correction was executed at `666c9d4...`.
 Its tighter Skill wording did not prevent WorkBuddy from exposing technical and
 unrelated catalogue detail because the underlying first-use payload remained
 about 25.95 KB with 24 capability rows and 63 setup offers. Independent review
-returned `REJECT / P0=0 / P1=1 / P2=1`. The current authority
-is the documentation-only product-flow reset: no implementation, candidate,
-installation, or WorkBuddy action is authorized. A later separately authorized
-implementation must keep the existing mechanical handoff but create a
-purpose-specific first-use fact surface before WorkBuddy explanation.
+returned `REJECT / P0=0 / P1=1 / P2=1` under the superseded hard-compactness
+contract. The Owner now retains the excessive catalogue and technical wording as
+non-blocking UX findings while accepting that the run proved M1.2 core guidance
+and its configuration entries. M1.3 remains unproved and not started: it must
+separately demonstrate that WorkBuddy can take a natural-language selection into
+one completed local-install path and one completed API-key path. This document
+correction authorizes no implementation, candidate, installation, or WorkBuddy
+action.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

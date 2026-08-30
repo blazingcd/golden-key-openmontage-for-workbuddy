@@ -41,34 +41,39 @@ that exact managed handoff and consume its bounded `package_capability_summary`
 first. Keep it in the managed Results location: do not copy or rewrite the
 handoff or summary into the task workspace and do not create a relay file. Treat
 an absent, invalid, failed, or `NOT_VERIFIED` summary honestly; do not invent a
-ready state. Read `provider_menu()` only for a relevant item when the summary or
-the user's choice needs more detail. Use `support_envelope()` only for necessary
-diagnosis or detail, not as the default first-use display. Do not dump raw
-registry data.
+ready state. For a broad first-use inventory request, the summary is the complete
+display source: do not call `provider_menu()`, enumerate `setup_offers`, read a
+visualization guide, or create a table, dashboard, SVG, or other artifact. Use
+compact conversational prose. Read `provider_menu()` only after the user selects
+a relevant configuration path and more detail is needed. Use `support_envelope()`
+only for necessary diagnosis or detail, not as the default first-use display. Do
+not dump raw registry data.
 
 Tell the user that the basic production path remains available whenever FFmpeg
-is reported ready. Show only optional capabilities and Providers declared by the
-verified Package, and keep installed, not installed, configurable, not
-configured, not verified, connection failed, and connected states distinct. A
-static declaration or adapter does not prove credentials, account permission,
-balance, connectivity, regional availability, price, or current model
-availability. Missing optional capability must not block the FFmpeg path or be
-described as OpenMontage lacking production capability.
+is reported ready. The visible first-use summary covers exactly five topics:
+FFmpeg, Remotion, HyperFrames, external video generation, and TTS. Do not mention
+or label other capability rows even when the summary contains them. Keep
+installed, not installed, configurable, not configured, not verified,
+connection failed, and connected states distinct. A static declaration or
+adapter does not prove credentials, account permission, balance, connectivity,
+regional availability, price, or current model availability. Missing optional
+capability must not block the FFmpeg path or be described as OpenMontage lacking
+production capability.
 
 Keep source integration, project dependency installation, runtime readiness, and
-real invocation verification as four separate facts. For Remotion and
-HyperFrames, `composition_runtimes` governs ready/not-ready wording; a generic
-tool or provider listing must not override a false runtime value. An integrated
-component whose runtime is false is not ready and not invocation-verified.
-In the first-use summary, stay focused on FFmpeg, Remotion, HyperFrames, external
-video generation, and TTS instead of expanding every registry category. FFmpeg
-runtime readiness establishes the usable basic path. A capability group with
-`configured < total` is only partially configured; never describe the whole
-group as ready, and never treat an available adapter or provider name as proof of
-successful invocation. State Remotion source integration only when the verified
-Package facts support it, then separately state missing dependencies, false
-runtime readiness, and absent invocation proof. Do not claim HyperFrames source
-integration from a false runtime or warning alone.
+real invocation verification as four separate facts. Give Remotion and
+HyperFrames separate compact explanations; for each one, state those four layers
+without merging the two engines. `composition_runtimes` governs runtime wording
+over any generic tool or Provider rollup. State Remotion source integration only
+when verified Package facts support it, and state HyperFrames source integration
+as not verified unless equally direct facts support it.
+
+FFmpeg runtime readiness establishes the usable basic path. An optional
+capability may be called ready only when verified facts show its necessary
+dependencies present, runtime true, and a real Package-mediated invocation
+verified. If any layer is absent or unknown, state that layer honestly and do not
+use “ready” for the capability. `configured < total`, adapter presence, or an
+available Provider name can never make a whole group ready.
 
 Unconfigured enhancements are available configuration choices, not things
 OpenMontage "cannot do". Do not summarize them as product incapability, "only
@@ -76,8 +81,9 @@ material processing", or an equivalent limitation. Say instead that they are
 not configured or not yet verified and can be enabled when relevant, while the
 FFmpeg path remains available now. External video and TTS with declared choices
 but zero configured entries are configurable, not configured, and not connection-
-tested. Keep Provider details compact and relevant to the user's chosen path.
-Paraphrase setup offers in ordinary user language. Do not expose environment
+tested. Before the user selects API-key configuration, do not name Providers or
+show setup offers; Provider details wait for that selected path and then remain
+limited to relevant verified Package declarations. Do not expose environment
 variable names, internal Provider identifiers, paths, commands, URLs, hashes,
 schemas, or installation instructions in the first-use reply.
 

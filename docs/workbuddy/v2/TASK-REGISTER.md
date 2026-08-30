@@ -856,43 +856,55 @@ exact evidence boundary for the correction below.
   `NOT_PROVED`; preserve evidence and stop.
 - M1.3 remains `BLOCKED` until this user-visible result is independently accepted.
 
-#### Executed result
+#### Latest executed result
 
-- WorkBuddy 5.3.14 used `Hy4 preview 0.00x` for the single ordinary request at
-  2026-08-30 15:17 local time. LauncherReceipt SHA256 is
-  `16f9623f5ebe75586cc8ddbb34d2b3ef6fbb8aaef925fad9ea749cf941020211`;
+- The semantic-correction candidate at implementation commit
+  `a884124718eab4bcdb0f98c59ae67acc7008f2fd`, ZIP SHA256
+  `c2b91d30aade188a133626b578e976857a10abd57f3f24efd4100bab2820f293`,
+  was the only installed Golden Key Skill for one WorkBuddy 5.3.14 / `Hy4 preview
+  0.00x` ordinary request at 2026-08-30 19:50 local time.
+- LauncherReceipt SHA256 is
+  `2da272dac5e5326c6d784fbdc867ffb1f5c413cc1e4aa1938f392df5f6274e87`;
   managed handoff SHA256 is
-  `7df7b54ac1366acd14a20da6cf53d0e4e3dfac9758a85f110f7ac88e144c61ed`.
-- Receipt state is `EXITED_SUCCESS`, `spawn_count=1`, `retry_count=0`, valid
+  `cbf32ae738d42346381ec41f465d7cf52a360a149dbdaf7779ce29eb72cf26c5`.
+  Receipt state is `EXITED_SUCCESS`, `spawn_count=1`, `retry_count=0`, valid
   result pointer, empty local-capability identities, and no media, Provider,
-  renderer, or production decision. The only new task workspace is the empty
-  `C:\Users\blazi\WorkBuddy\2026-08-30-15-17-44` directory.
+  renderer, or production decision. The exact task directory
+  `C:\Users\blazi\WorkBuddy\2026-08-30-19-50-10` is empty.
 - The dialogue correctly exposed the FFmpeg baseline and four choices, but review
-  returned `REJECT / P0=0 / P1=3 / P2=0`: partial capability groups were
-  overstated, unconfigured enhancements were described as things OpenMontage
-  could not do, and Remotion/HyperFrames state layers were not separated.
+  returned `REJECT / P0=0 / P1=3 / P2=0`: partial capability groups were shown
+  as ready, the first-use result expanded a broad Provider/configuration
+  catalogue, and Remotion/HyperFrames were not separately explained across
+  source integration, project dependencies, runtime readiness, and real
+  invocation verification.
 - Exact state: `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
   FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
 
 #### Authorized bounded correction
 
-1. The Owner reports that the same-name WorkBuddy Skill has been manually
-   uninstalled. Verify absence; never overwrite or uninstall it automatically.
-2. Update only the six authority/state documents, obtain one independent
+1. Update only the six authority/state documents, obtain one independent
    zero-write review, commit once, and ordinarily push
    `codex/workbuddy-capability-onboarding`.
-3. Ordinarily merge that exact pushed head into the retained M1 branch, then
+2. Ordinarily merge that exact pushed head into the retained M1 branch, then
    change only `workbuddy-skill/golden-key-openmontage/SKILL.md`. Do not change
    Shell, Package, tests, or another Skill source.
-4. The instruction must keep FFmpeg as the ready minimum, avoid whole-group
-   readiness from partial counts, frame unconfigured enhancements as available
-   after configuration rather than product incapability, keep integration,
-   dependency, runtime, and invocation states separate, and retain the four
-   choices without a fixed transcript.
-5. Build one newly named uninstalled Skill ZIP bound to the active slim
+3. The initial readiness summary is limited to FFmpeg, Remotion, HyperFrames,
+   external video generation, and TTS. It must not expand raw setup offers,
+   unrelated capability rows, a broad Provider catalogue, or a readiness
+   dashboard.
+4. “Ready” requires the necessary dependencies, a true runtime state, and real
+   Package invocation evidence. Partial counts, adapter presence, or available
+   Provider names cannot make a whole group ready. Remotion and HyperFrames each
+   keep source integration, dependency, runtime, and invocation states separate.
+5. Keep unconfigured enhancements configurable rather than product incapability,
+   retain all four choices, and do not prescribe an exact transcript. Provider
+   details remain for a relevant later configuration choice, not the first-use
+   inventory.
+6. Build one newly named uninstalled Skill ZIP bound to the active slim
    PackageRoot, obtain one independent zero-write candidate review, commit once,
-   and ordinarily push the M1 branch.
-6. Stop before WorkBuddy. No install, WorkBuddy run, optional capability,
+   and ordinarily push the M1 branch. The currently installed same-name Skill
+   must not be overwritten or automatically uninstalled.
+7. Stop before WorkBuddy. No install, WorkBuddy run, optional capability,
    credential, Provider, media, M1.3, retry, or live repair is authorized in this
    correction. A later WorkBuddy action requires a fresh action-time gate.
 
@@ -1394,25 +1406,26 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / BOUNDED_SKILL_CORRECTION_AUTHORIZED
+current_task: M1_2_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / SECOND_BOUNDED_SKILL_CORRECTION_AUTHORIZED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
-candidate_skill: HISTORICAL_HANDOFF_CONSUMER_USED_FOR_REJECTED_PROBE / OWNER_MANUAL_UNINSTALL_RECORDED / EXECUTION_TIME_STATE_RECHECK_REQUIRED / ZIP_SHA256_437B02C60AA234197FB419275AC64C5DF804C5F477FDBA16FDE3278F772E68D2 / SKILL_SHA256_20AB048D8E9CB9EDEE19F71A8FDE81991670D4A571465C558EF1C02D8DD871FF / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B
+candidate_skill: SEMANTIC_CORRECTION_INSTALLED_FOR_LATEST_REJECTED_PROBE / ZIP_SHA256_C2B91D30AADE188A133626B578E976857A10ABD57F3F24EFD4100BAB2820F293 / SKILL_SHA256_1DFDB2F24758AAF97560C035A01310987709AD202D307C35C9E27642802B40C0 / RUN_PS1_SHA256_BFE8692BAC206C556274013A1BE25F544985329D3203E552145EDF003FD5A190 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL
 capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / USER_RESULT_REJECTED_P1_3
-implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_F9880C247ED61744B4BBA2F83FFA6411EB49C413 / CLEAN
+implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_A884124718EAB4BCDB0F98C59AE67ACC7008F2FD / CLEAN
 implementation_skill_commit: C8EEB91E221EC96A406543C183091EEA7EA6AC3C / AUTHORITY_MERGE_F9880C247ED61744B4BBA2F83FFA6411EB49C413
 implementation_consumer_correction_commit: 5229964AC681D7B34949480326E6F24A0C53913F / PUSHED
 corrected_candidate_skill: REVIEWED_UNINSTALLED / ZIP_SHA256_116737071D377B67DFF6EA93FE18534114C17E762D32116EFC5C4B973E000228 / SKILL_SHA256_7D285376B2F3531C1891B2EBF40D6D612B9B7531BE6776FDF5C8C72524041753 / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B
+semantic_correction_skill: IMPLEMENTATION_COMMIT_A884124718EAB4BCDB0F98C59AE67ACC7008F2FD / INSTALLED_FOR_REJECTED_PROBE / ZIP_SHA256_C2B91D30AADE188A133626B578E976857A10ABD57F3F24EFD4100BAB2820F293
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
 implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_ACTIVE_M1_2
 task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE / C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28 EMPTY_EVIDENCE_DIRECTORY_PRESERVED / C:\Users\blazi\WorkBuddy\2026-08-29-20-41-51 EMPTY_AFTER_WORKBUDDY_TEMP_PARSE_CLEANUP
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
-workbuddy_or_media_in_current_task: ONE_AUTHORIZED_WORKBUDDY_PROBE_COMPLETE / FURTHER_WORKBUDDY_NOT_AUTHORIZED / MEDIA_FORBIDDEN
+workbuddy_or_media_in_current_task: LATEST_AUTHORIZED_WORKBUDDY_PROBE_COMPLETE / FURTHER_WORKBUDDY_NOT_AUTHORIZED / MEDIA_FORBIDDEN
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / BOUNDED_SKILL_CORRECTION_AUTHORIZED / M1_3_BLOCKED
+m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / SECOND_BOUNDED_SKILL_CORRECTION_AUTHORIZED / M1_3_BLOCKED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
@@ -1422,14 +1435,14 @@ m1_2_probe_product_write_allowlist: NONE / EXISTING_SKILL_CANDIDATE_ONLY
 m1_2_first_discovery_probe_result: NOT_PROVED_WORKBUDDY_DISCOVERY / CAPABILITY_FACTS_DID_NOT_REACH_USER_DIALOGUE / UNAPPROVED_FILE_CARRIER_STOPPED
 m1_2_premature_attempt: NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED / EMPTY_TASK_WORKSPACE_ALLOWED
 m1_2_handoff_consumer_candidate_review: APPROVE / P0=0 / P1=0 / P2=0 / ZIP_SHA256_437B02C60AA234197FB419275AC64C5DF804C5F477FDBA16FDE3278F772E68D2
-m1_2_latest_probe_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_B0CC669BE0EEE9049F538821C66E179F8142784D9741BD58831AD5F5B5C4109F / HANDOFF_SHA256_DA3196B7536A54453C27BEA67FD3C339EB6AD4F4AB855836908D7FFB6706365C
+m1_2_latest_probe_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / TASK_DIRECTORY_EMPTY
 m1_2_probe_result_review: REJECT / P0=0 / P1=3 / P2=0
 m1_2_remotion_truth: SOURCE_INTEGRATED / PROJECT_DEPENDENCIES_ABSENT / RUNTIME_NOT_READY / PACKAGE_INVOCATION_NOT_VERIFIED
 m1_2_consumer_correction: PUSHED_COMMIT_5229964AC681D7B34949480326E6F24A0C53913F / CORRECTED_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED
 package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F65B71B7C2E7C55F1D04_PUSHED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNREGISTERED / UNACTIVATED
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
-m1_2_final_readiness_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_16F9623F5EBE75586CC8DDBB34D2B3EF6FBB8AAEF925FAD9EA749CF941020211 / HANDOFF_SHA256_7DF7B54AC1366ACD14A20DA6CF53D0E4E3DFAC9758A85F110F7AC88E144C61ED / REJECT_P0_0_P1_3_P2_0
-m1_2_next_gate: BOUNDED_SKILL_CORRECTION_AUTHORIZED / STOP_BEFORE_WORKBUDDY / NEW_ACTION_GATE_REQUIRED
+m1_2_final_readiness_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
+m1_2_next_gate: SECOND_BOUNDED_SKILL_CORRECTION_AUTHORIZED / STOP_BEFORE_WORKBUDDY / NEW_ACTION_GATE_REQUIRED
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING
 remotion_distribution: ON_DEMAND_MANAGED_M1_3 / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY

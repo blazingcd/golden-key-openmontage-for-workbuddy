@@ -52,31 +52,36 @@ installation can continue to basic production even when optional enhancements ar
 not installed or configured.
 
 On first use, WorkBuddy performs a light capability inventory after PackageRoot
-verification. It explains the basic readiness state and relevant optional
-enhancements, including Remotion, HyperFrames, external video generation, and
-TTS, then lets the user continue or configure selected items. WorkBuddy owns the
-conversation, relevance, Provider/model choice, cost/privacy explanation,
+verification. Its initial summary is limited to FFmpeg, Remotion, HyperFrames,
+external video generation, and TTS, then lets the user continue or configure a
+selected item. It does not expand unrelated capability rows, raw setup offers, a
+broad Provider catalogue, or a readiness dashboard. WorkBuddy owns the
+conversation, relevance, later Provider/model choice, cost/privacy explanation,
 credentials, consent, connection testing, and recovery. Shell runtime preparation
 may only detect and apply an exactly approved mechanical plan.
 
 Integration is not readiness. A capability may have Package source, an adapter,
 and a dependency lock while its local dependencies are absent; it is then
-"integrated, not ready", not "ready" and not an OpenMontage incapability. For
-composition engines, current runtime facts govern the user-visible state over a
-generic capability/provider rollup. WorkBuddy paraphrases configuration in
-ordinary language and does not expose raw environment names, paths, commands,
-URLs, or installation instructions in first-use guidance.
+"integrated, not ready", not "ready" and not an OpenMontage incapability. “Ready”
+requires necessary dependencies, a true runtime state, and real Package invocation
+evidence; partial counts, adapter presence, and available Provider names are not
+enough. Remotion and HyperFrames each keep source integration, project
+dependencies, runtime readiness, and real invocation verification separate.
+WorkBuddy paraphrases configuration in ordinary language and does not expose raw
+environment names, paths, commands, URLs, or installation instructions in
+first-use guidance.
 
 Later natural-language requests containing `金钥匙智能体` may inspect, configure,
 change, or retest capabilities. This is an open intent, not a fixed configuration
 language or second control plane.
 
-The verified Package's formal declarations determine which Providers M1 shows.
+The verified Package's formal declarations determine which Providers M1 may show.
 Current static evidence includes Seedance, Kling, and MiniMax; Seedance is the
-current default recommendation. Undeclared Providers do not appear in M1.
-WorkBuddy explains user value before technical Provider details, while
-Shell remains Provider-opaque. Static adapter presence never proves live account
-or model availability.
+current default recommendation. Undeclared Providers do not appear in M1, and
+Provider names/details wait until they are relevant to a selected configuration
+path rather than becoming the first-use inventory. WorkBuddy explains user value
+before technical Provider details, while Shell remains Provider-opaque. Static
+adapter presence never proves live account or model availability.
 
 Natural language starts and controls both configuration mechanisms. A local
 capability is complete only after approved download, managed installation,
@@ -235,19 +240,22 @@ The corrected one-file consumer is pushed at
 independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
 uninstalled. This closes correction preparation only, not M1.2 user acceptance.
 
-The frozen M1.2 sequence ran once. It proved the managed factual relay, FFmpeg
-baseline, and four choices, but the ordinary-user result was independently
-rejected `REJECT / P0=0 / P1=3 / P2=0`: unconfigured enhancements were framed as
-product incapability, partially configured groups were overstated, and the
-Remotion/HyperFrames state layers were not kept distinct. M1.2 is therefore
+The later semantic-correction candidate at implementation commit
+`a884124718eab4bcdb0f98c59ae67acc7008f2fd` reached the managed facts, FFmpeg
+baseline, and four choices in one WorkBuddy run. Independent review still rejected
+the ordinary-user result `REJECT / P0=0 / P1=3 / P2=0`: partially configured
+groups were shown as ready, the first-use response expanded a broad Provider/
+configuration catalogue, and Remotion/HyperFrames were not separately explained
+across source, dependency, runtime, and invocation layers. M1.2 is therefore
 `NOT_PROVED` and M1.3 remains blocked.
 
-The bounded successor correction changes only the WorkBuddy-facing Skill
-instruction and one newly named uninstalled candidate. It may tighten factual
-mapping and ordinary-language constraints, but it must not prescribe a fixed
-answer, interpret facts in Shell, or change Package, Shell, tests, Providers,
-credentials, media, or M1.3. Another WorkBuddy result remains a separate action
-gate.
+The next bounded correction changes only the WorkBuddy-facing Skill instruction
+and one newly named uninstalled candidate. It may tighten the initial-summary
+scope, ready-state threshold, and four-layer explanation, but it must not
+prescribe a fixed answer, interpret facts in Shell, overwrite or automatically
+uninstall the currently installed Skill, or change Package, Shell, tests,
+Providers, credentials, media, or M1.3. Another WorkBuddy result remains a
+separate action gate.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

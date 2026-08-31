@@ -1969,6 +1969,25 @@ def test_33_os_spawn_failure_is_priority_level_04_and_reports_zero_spawn(tmp_pat
     _assert(receipt, "SPAWN_FAILED", "SPAWN_OS_ERROR", 0)
 
 
+def test_m13_ark_secret_canary_is_never_returned_by_fixed_child_boundary(tmp_path: Path) -> None:
+    code = r'''import json,os,sys
+r=json.load(sys.stdin); s=os.environ["ARK_API_KEY"]
+o={"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"FAILED","result_pointer":None,"error":{"code":"SAFE","origin":"SAFE","message":s}}
+sys.stdout.write(json.dumps(o,sort_keys=True,separators=(",",":"))+"\n")'''
+    fixture = _fixture(
+        tmp_path,
+        code=code,
+        allowed=("ARK_API_KEY",),
+        secrets=("ARK_API_KEY",),
+    )
+    fixture["controls"]["provider_environment"] = {"ARK_API_KEY": "m13-secret-canary"}
+
+    receipt = _launch(fixture)
+
+    _assert(receipt, "INCOMPLETE", "SECRET_DISCLOSURE_DETECTED", 1)
+    assert "m13-secret-canary" not in repr(receipt)
+
+
 def test_28_cancel_after_spawn_terminates_without_retry_at_priority_level_07(tmp_path: Path) -> None:
     fixture = _fixture(tmp_path, code="import sys,time; sys.stdin.buffer.read(); time.sleep(30)")
     event = threading.Event()

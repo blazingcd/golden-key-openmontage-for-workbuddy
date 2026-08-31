@@ -96,9 +96,46 @@ step is allowed when needed for safe or reliable completion. Treat later message
 containing `金钥匙智能体` that ask to inspect, configure, change, or retest
 capabilities as ordinary intent, not a fixed command language. In this readiness
 step, do not install anything, request or save a secret in ordinary chat, call a
-Provider, test a connection, validate a selected configuration, or retest it;
-the user's selection is only a handoff to the separately authorized
-configuration path.
+Provider, test a connection, validate a selected configuration, or retest it.
+
+## Confirmed configuration action
+
+After WorkBuddy has selected the relevant Package-declared option, explained
+cost and privacy, and obtained explicit consent, invoke this same Skill entry a
+second time with one private canonical configuration action instead of ordinary
+chat. Never display that action or ask the user to supply its fields. Bind
+`package_release`, `package_commit`, and `package_definition_sha256` to the exact
+verified handoff facts. The action is compact UTF-8 JSON with alphabetically
+sorted keys, no whitespace, and exactly these fields:
+`action`, `capability`, `capability_definitions`, `consent`, `package_commit`,
+`package_definition_sha256`, `package_release`, `provider`, `schema_version`, and
+`user_decisions`. Its schema is
+`golden-key-workbuddy-configuration-action-v1`. It never contains a credential.
+
+For local composition readiness, use
+`action=prepare_optional_capabilities`, `capability=composition_runtime`, and
+`provider=null`. Pass the exact closed two-definition sequence only when it is
+already present in verified Package facts; never invent URLs, hashes, sizes, or
+versions. Use `consent=inspect` with `user_decisions=null` for detection and plan
+creation. After the user confirms, use `consent=confirmed` with only the exact
+plan-bound approve, decline, or defer decisions returned by the prior result.
+The entry reuses the existing bounded optional-capability preparation contract.
+Decline, defer, cancellation, or failure leaves the FFmpeg path available and
+must not trigger retry, substitution, or installation outside that contract.
+
+For an API-key path, select only a Provider present in the verified Package
+declaration. The current declaration permits `provider=seedance_ark`,
+`capability=video_generation`, `consent=confirmed`, and either
+`action=configure_provider` or `action=retest_provider`; both optional list
+fields are null. Configure opens the native masked Windows credential prompt
+and stores the secret for the current Windows user. Retest reads that stored
+credential. The Package then performs its single declared read-only non-media
+connection check. Never put the secret in chat, JSON, arguments, output,
+receipts, handoffs, logs, or error text. Report success only as the exact check
+proved by `configuration_result`; it does not prove balance, generation access,
+model availability, price, output quality, or a usable media result. A later
+ordinary-language request to change the Provider follows the same selection,
+explanation, consent, and private-action flow.
 
 The fixed entry owns package lookup, release binding, validation, lifecycle
 state, and receipt delivery. Do not ask the user or model for commands, JSON,

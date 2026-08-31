@@ -23,7 +23,9 @@ sys.dont_write_bytecode = True
 
 REQUEST_SCHEMA = "golden-key-workbuddy-package-tool-request-v1"
 RESULT_SCHEMA = "golden-key-workbuddy-package-tool-result-v1"
-HANDOFF_SCHEMA = "golden-key-workbuddy-fixed-child-handoff-v1"
+HANDOFF_SCHEMA = "golden-key-workbuddy-fixed-child-handoff-v2"
+CONFIGURATION_DISPATCH_SCHEMA = "golden-key-workbuddy-configuration-dispatch-v1"
+CONFIGURATION_ACTION_SCHEMA = "golden-key-workbuddy-configuration-action-v1"
 MAX_INPUT_BYTES = 4 * 1024 * 1024
 MAX_OUTPUT_BYTES = 1024 * 1024
 MAX_PACKAGE_SUMMARY_BYTES = 512 * 1024
@@ -231,6 +233,146 @@ def _package_capability_summary(provider_environment_names: list[str]) -> dict[s
                 sys.modules.pop(name, None)
 
 
+def _configuration_action(request: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any] | None] | None:
+    try:
+        value = json.loads(request["message"], object_pairs_hook=_pairs)
+    except (json.JSONDecodeError, _InputError):
+        return None
+    if not isinstance(value, dict) or value.get("schema_version") != CONFIGURATION_DISPATCH_SCHEMA:
+        return None
+    envelope = _mapping(value, {"schema_version", "request_id", "action", "configuration_result"})
+    if envelope["request_id"] != request["request_id"]:
+        raise _InputError("configuration-request")
+    action = _mapping(
+        envelope["action"],
+        {
+            "schema_version",
+            "action",
+            "capability",
+            "provider",
+            "package_release",
+            "package_commit",
+            "package_definition_sha256",
+            "consent",
+            "capability_definitions",
+            "user_decisions",
+        },
+    )
+    if (
+        action["schema_version"] != CONFIGURATION_ACTION_SCHEMA
+        or action["package_release"] != request["openmontage_release"]
+        or action["package_commit"] != request["openmontage_commit"]
+        or action["package_definition_sha256"] != request["tool_definition_sha256"]
+    ):
+        raise _InputError("configuration-binding")
+    result = envelope["configuration_result"]
+    if result is not None and not isinstance(result, dict):
+        raise _InputError("configuration-result")
+    return dict(action), result
+
+
+def _package_connection_test(request: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
+    if (
+        action["action"] not in {"configure_provider", "retest_provider"}
+        or action["capability"] != "video_generation"
+        or action["provider"] != "seedance_ark"
+        or action["consent"] != "confirmed"
+        or action["capability_definitions"] is not None
+        or action["user_decisions"] is not None
+        or request["provider_environment_names"] != ["ARK_API_KEY"]
+    ):
+        raise _InputError("configuration-provider")
+    package_root = Path.cwd().resolve(strict=True)
+    release_path = package_root / "GOLDEN_KEY_OPENMONTAGE_RELEASE.json"
+    module_path = package_root / "tools" / "video" / "seedance_ark.py"
+    for path in (release_path, module_path):
+        if not path.is_file():
+            raise _InputError("configuration-package")
+        _assert_no_reparse_chain(path, boundary=package_root)
+    try:
+        release = json.loads(release_path.read_text(encoding="utf-8"), object_pairs_hook=_pairs)
+        declarations = release["workbuddy_configuration_actions"]
+    except (OSError, UnicodeError, json.JSONDecodeError, KeyError, _InputError) as exc:
+        raise _InputError("configuration-declaration") from exc
+    expected = {
+        "action": "provider_connection_test",
+        "capability": "video_generation",
+        "provider": "seedance_ark",
+        "credential_environment_name": "ARK_API_KEY",
+        "implementation": "tools.video.seedance_ark:SeedanceArkVideo.connection_test",
+        "request_kind": "READ_ONLY_NON_MEDIA",
+        "endpoint_contract": "GET https://ark.cn-beijing.volces.com/ping",
+        "official_documentation": "https://www.volcengine.com/docs/82379/1339360?lang=zh",
+        "success_proves": "ark_documented_ping_succeeded",
+        "retry": "forbidden",
+    }
+    if declarations != [expected]:
+        raise _InputError("configuration-declaration")
+    before_modules = set(sys.modules)
+    sys.path.insert(0, str(package_root))
+    try:
+        module = importlib.import_module("tools.video.seedance_ark")
+        if Path(module.__file__).resolve(strict=True) != module_path.resolve(strict=True):
+            raise _InputError("configuration-package")
+        result = module.SeedanceArkVideo().connection_test()
+    except _InputError:
+        raise
+    except Exception as exc:
+        raise _InputError("configuration-execution") from exc
+    finally:
+        if sys.path and sys.path[0] == str(package_root):
+            sys.path.pop(0)
+        for name in tuple(sys.modules):
+            if name not in before_modules and (name == "tools" or name.startswith("tools.")):
+                sys.modules.pop(name, None)
+    fields = {
+        "status",
+        "error_code",
+        "check",
+        "request_kind",
+        "media_executed",
+        "paid_task_created",
+        "proves",
+        "does_not_prove",
+    }
+    result = _mapping(result, fields)
+    if (
+        result["status"] not in {"CHECK_SUCCEEDED", "NOT_CONNECTED"}
+        or result["check"] != "ARK_DOCUMENTED_PING"
+        or result["request_kind"] != "READ_ONLY_NON_MEDIA"
+        or result["media_executed"] is not False
+        or result["paid_task_created"] is not False
+        or not isinstance(result["proves"], list)
+        or not isinstance(result["does_not_prove"], list)
+    ):
+        raise _InputError("configuration-result")
+    return dict(result)
+
+
+def _configuration_result(request: dict[str, Any]) -> dict[str, Any] | None:
+    parsed = _configuration_action(request)
+    if parsed is None:
+        return None
+    action, result = parsed
+    if result is None:
+        result = _package_connection_test(request, action)
+    elif request["provider_environment_names"]:
+        raise _InputError("configuration-provider")
+    secrets = _secret_values(request["provider_environment_names"], dict(os.environ), dict(os.environ))
+    if _contains_secret(result, secrets) or len(_canonical(result, newline=False)) > MAX_PACKAGE_SUMMARY_BYTES:
+        raise _InputError("configuration-result")
+    return {
+        "action": action["action"],
+        "capability": action["capability"],
+        "provider": action["provider"],
+        "consent": action["consent"],
+        "package_release": action["package_release"],
+        "package_commit": action["package_commit"],
+        "package_definition_sha256": action["package_definition_sha256"],
+        "outcome": result,
+    }
+
+
 def _validate(raw: bytes) -> dict[str, Any]:
     if len(raw) > MAX_INPUT_BYTES or not raw.endswith(b"\n"):
         raise _InputError("wire")
@@ -329,6 +471,7 @@ def _write_handoff(request: dict[str, Any]) -> tuple[str, str, int]:
     root = request["result_root"]
     directory = _handoff_directory(root)
     package_capability_summary = _package_capability_summary(request["provider_environment_names"])
+    configuration_result = _configuration_result(request)
     payload = _canonical(
         {
             "schema_version": HANDOFF_SCHEMA,
@@ -346,6 +489,7 @@ def _write_handoff(request: dict[str, Any]) -> tuple[str, str, int]:
             "tool_definition_sha256": request["tool_definition_sha256"],
             "local_capability_evidence_identities": request["local_capability_evidence_identities"],
             "package_capability_summary": package_capability_summary,
+            "configuration_result": configuration_result,
             "decision_owner": "WorkBuddy",
             "production_decision_made": False,
             "provider_selected": False,

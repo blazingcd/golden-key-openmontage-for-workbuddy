@@ -12,7 +12,7 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 
-from golden_key_openmontage_workbuddy import fixed_child, installer, package_registration
+from golden_key_openmontage_workbuddy import fixed_child, installer, package_registration, user_entry
 from golden_key_openmontage_workbuddy.installer import InstallerError
 
 
@@ -255,12 +255,272 @@ def test_handoff_relays_package_summary_without_changing_ownership(
         "facts": summary,
         "error_code": None,
     }
-    assert handoff["schema_version"] == "golden-key-workbuddy-fixed-child-handoff-v1"
+    assert handoff["schema_version"] == "golden-key-workbuddy-fixed-child-handoff-v2"
     assert handoff["decision_owner"] == "WorkBuddy"
     assert handoff["production_decision_made"] is False
     assert handoff["provider_selected"] is False
     assert handoff["renderer_selected"] is False
     assert handoff["media_executed"] is False
+
+
+def _configuration_action(definition: dict[str, str], **overrides: object) -> dict[str, object]:
+    value: dict[str, object] = {
+        "schema_version": "golden-key-workbuddy-configuration-action-v1",
+        "action": "configure_provider",
+        "capability": "video_generation",
+        "provider": "seedance_ark",
+        "package_release": definition["package_release"],
+        "package_commit": definition["package_commit"],
+        "package_definition_sha256": definition["definition_sha256"],
+        "consent": "confirmed",
+        "capability_definitions": None,
+        "user_decisions": None,
+    }
+    value.update(overrides)
+    return value
+
+
+def test_private_configuration_action_binds_package_and_reuses_local_prepare(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    definition = {
+        "package_release": "0.3.25",
+        "package_commit": "1" * 40,
+        "definition_sha256": "2" * 64,
+    }
+    local = _configuration_action(
+        definition,
+        action="prepare_optional_capabilities",
+        capability="composition_runtime",
+        provider=None,
+        consent="inspect",
+        capability_definitions=[{"capability": "remotion"}, {"capability": "hyperframes"}],
+    )
+    message = user_entry._canonical(local).decode("utf-8")
+    assert user_entry._configuration_action(message, definition) == local
+    captured: dict[str, object] = {}
+
+    def fake_prepare(data_root, definitions, decisions):
+        captured.update(data_root=data_root, definitions=definitions, decisions=decisions)
+        return {"result": "CONSENT_REQUIRED", "capabilities": [], "plans": []}
+
+    monkeypatch.setattr(user_entry.runtime_prepare, "prepare_optional_capabilities", fake_prepare)
+    secret, result, evidence = user_entry._prepare_action(local, tmp_path)
+
+    assert secret is None
+    assert result == {"result": "CONSENT_REQUIRED", "capabilities": [], "plans": []}
+    assert evidence == []
+    assert captured == {
+        "data_root": tmp_path,
+        "definitions": local["capability_definitions"],
+        "decisions": None,
+    }
+
+
+def test_provider_configuration_uses_native_credential_boundaries_without_chat_secret(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    definition = {
+        "package_release": "0.3.25",
+        "package_commit": "1" * 40,
+        "definition_sha256": "2" * 64,
+        "authority_owner": "managed_core",
+        "definition_id": "fixture-definition",
+        "definition_relative_path": "shell-adapter/package-tool-definition.json",
+    }
+    action = _configuration_action(definition)
+    writes: list[str] = []
+    monkeypatch.setattr(user_entry, "_prompt_api_key", lambda: "secret-canary")
+    monkeypatch.setattr(user_entry, "_write_credential", writes.append)
+
+    secret, result, evidence = user_entry._prepare_action(action, Path("D:/bounded-data"))
+
+    assert secret == "secret-canary"
+    assert result is None
+    assert evidence == []
+    assert writes == ["secret-canary"]
+    assert "secret-canary" not in user_entry._canonical(action).decode("utf-8")
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    monkeypatch.setattr(user_entry.bridge, "_runtime_environment_names", lambda: ())
+    environment, payload = user_entry._request(
+        tmp_path,
+        data_root,
+        definition,
+        "unused",
+        action=action,
+        provider_secret=secret,
+    )
+    assert environment["ARK_API_KEY"] == "secret-canary"
+    assert b"secret-canary" not in payload
+    assert "secret-canary" not in user_entry.bridge._FIXED_ARGV_TEXT
+    assert json.loads(payload)["executor_controls"]["provider_environment_names"] == [
+        "ARK_API_KEY"
+    ]
+
+
+def test_package_declaration_is_validated_before_configuration_side_effects(
+    tmp_path: Path,
+) -> None:
+    declaration = {
+        "action": "provider_connection_test",
+        "capability": "video_generation",
+        "provider": "seedance_ark",
+        "credential_environment_name": "ARK_API_KEY",
+        "implementation": "tools.video.seedance_ark:SeedanceArkVideo.connection_test",
+        "request_kind": "READ_ONLY_NON_MEDIA",
+        "endpoint_contract": "GET https://ark.cn-beijing.volces.com/ping",
+        "official_documentation": "https://www.volcengine.com/docs/82379/1339360?lang=zh",
+        "success_proves": "ark_documented_ping_succeeded",
+        "retry": "forbidden",
+    }
+    release = {
+        "release_version": "0.3.25",
+        "workbuddy_configuration_actions": [declaration],
+        "workbuddy_optional_capability_definitions": [],
+    }
+    (tmp_path / "GOLDEN_KEY_OPENMONTAGE_RELEASE.json").write_text(
+        json.dumps(release), encoding="utf-8"
+    )
+    definition = {
+        "package_release": "0.3.25",
+        "package_commit": "1" * 40,
+        "definition_sha256": "2" * 64,
+        "allowed_environment_names": ["ARK_API_KEY"],
+        "secret_environment_names": ["ARK_API_KEY"],
+    }
+    provider = _configuration_action(definition)
+    user_entry._validate_package_action(tmp_path, definition, provider)
+    local = _configuration_action(
+        definition,
+        action="prepare_optional_capabilities",
+        capability="composition_runtime",
+        provider=None,
+        consent="inspect",
+        capability_definitions=[],
+    )
+    user_entry._validate_package_action(tmp_path, definition, local)
+
+    local["capability_definitions"] = [{"capability": "invented"}]
+    with pytest.raises(ValueError, match="configuration-package-definition"):
+        user_entry._validate_package_action(tmp_path, definition, local)
+    definition["allowed_environment_names"] = []
+    with pytest.raises(ValueError, match="configuration-package-declaration"):
+        user_entry._validate_package_action(tmp_path, definition, provider)
+
+
+def test_configuration_handoff_keeps_ark_secret_out_and_dispatches_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package_root = tmp_path / "package"
+    result_root = tmp_path / "results"
+    package_root.mkdir()
+    result_root.mkdir()
+    monkeypatch.chdir(package_root)
+    monkeypatch.setenv("ARK_API_KEY", "secret-canary")
+    request = _handoff_request(result_root, ["ARK_API_KEY"])
+    definition = {
+        "package_release": request["openmontage_release"],
+        "package_commit": request["openmontage_commit"],
+        "definition_sha256": request["tool_definition_sha256"],
+    }
+    action = _configuration_action(definition)
+    request["message"] = fixed_child._canonical(
+        {
+            "schema_version": "golden-key-workbuddy-configuration-dispatch-v1",
+            "request_id": request["request_id"],
+            "action": action,
+            "configuration_result": None,
+        },
+        newline=False,
+    ).decode("utf-8")
+    calls: list[dict[str, object]] = []
+
+    def fake_connection(_request, selected):
+        calls.append(selected)
+        return {
+            "status": "CHECK_SUCCEEDED",
+            "error_code": None,
+            "check": "ARK_DOCUMENTED_PING",
+            "request_kind": "READ_ONLY_NON_MEDIA",
+            "media_executed": False,
+            "paid_task_created": False,
+            "proves": ["ark_documented_ping_succeeded"],
+            "does_not_prove": ["seedance_generation"],
+        }
+
+    monkeypatch.setattr(fixed_child, "_package_connection_test", fake_connection)
+    relative, _, _ = fixed_child._write_handoff(request)
+
+    payload = (result_root / relative).read_bytes()
+    handoff = json.loads(payload)
+    assert len(calls) == 1
+    assert b"secret-canary" not in payload
+    assert handoff["configuration_result"]["outcome"]["status"] == "CHECK_SUCCEEDED"
+    assert handoff["configuration_result"]["outcome"]["media_executed"] is False
+
+
+def test_package_declaration_owns_the_fixed_non_media_dispatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package_root = tmp_path / "package"
+    module_path = package_root / "tools" / "video" / "seedance_ark.py"
+    module_path.parent.mkdir(parents=True)
+    module_path.write_text("# package-owned test double\n", encoding="utf-8")
+    declaration = {
+        "action": "provider_connection_test",
+        "capability": "video_generation",
+        "provider": "seedance_ark",
+        "credential_environment_name": "ARK_API_KEY",
+        "implementation": "tools.video.seedance_ark:SeedanceArkVideo.connection_test",
+        "request_kind": "READ_ONLY_NON_MEDIA",
+        "endpoint_contract": "GET https://ark.cn-beijing.volces.com/ping",
+        "official_documentation": "https://www.volcengine.com/docs/82379/1339360?lang=zh",
+        "success_proves": "ark_documented_ping_succeeded",
+        "retry": "forbidden",
+    }
+    (package_root / "GOLDEN_KEY_OPENMONTAGE_RELEASE.json").write_text(
+        json.dumps({"workbuddy_configuration_actions": [declaration]}),
+        encoding="utf-8",
+    )
+    monkeypatch.chdir(package_root)
+    monkeypatch.setenv("ARK_API_KEY", "secret-canary")
+    calls = 0
+
+    class FakeSeedance:
+        def connection_test(self):
+            nonlocal calls
+            calls += 1
+            return {
+                "status": "CHECK_SUCCEEDED",
+                "error_code": None,
+                "check": "ARK_DOCUMENTED_PING",
+                "request_kind": "READ_ONLY_NON_MEDIA",
+                "media_executed": False,
+                "paid_task_created": False,
+                "proves": ["ark_documented_ping_succeeded"],
+                "does_not_prove": ["seedance_generation"],
+            }
+
+    monkeypatch.setattr(
+        fixed_child.importlib,
+        "import_module",
+        lambda name: SimpleNamespace(__file__=str(module_path), SeedanceArkVideo=FakeSeedance),
+    )
+    request = _handoff_request(tmp_path / "results", ["ARK_API_KEY"])
+    action = _configuration_action(
+        {
+            "package_release": request["openmontage_release"],
+            "package_commit": request["openmontage_commit"],
+            "definition_sha256": request["tool_definition_sha256"],
+        }
+    )
+
+    result = fixed_child._package_connection_test(request, action)
+
+    assert calls == 1
+    assert result["status"] == "CHECK_SUCCEEDED"
+    assert "secret-canary" not in repr(result)
 
 
 def test_handoff_reports_unverified_when_package_summary_is_unavailable(

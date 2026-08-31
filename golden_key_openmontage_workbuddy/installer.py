@@ -27,8 +27,8 @@ from typing import Any
 
 
 OPENMONTAGE_RELEASE = "0.3.25"
-OPENMONTAGE_COMMIT = "73cab67322451601a824875c0e426067d736dd44"
-OPENMONTAGE_TREE = "29231e0464fa4bc7533c1928415849e9b3a48e7c"
+OPENMONTAGE_COMMIT = "503f09677db36bad0deb74e94b06401f8f94e215"
+OPENMONTAGE_TREE = "48aab7d5798f0691eae4ff33a388648c23da9ff4"
 RELEASE_IDENTITY = f"golden-key-openmontage-{OPENMONTAGE_RELEASE}"
 DEFINITION_ID = f"{RELEASE_IDENTITY}-fixed-child-v1"
 MANIFEST_NAME = "BUNDLE-MANIFEST.json"
@@ -643,8 +643,8 @@ def _definition_and_skill(root: Path) -> dict[str, Any]:
         "fixed_argv_placeholders": ["{verified_tool_path}"],
         "request_schema_sha256": DEFINITION_REQUEST_HASH,
         "result_schema_sha256": DEFINITION_RESULT_HASH,
-        "allowed_environment_names": [],
-        "secret_environment_names": [],
+        "allowed_environment_names": ["ARK_API_KEY"],
+        "secret_environment_names": ["ARK_API_KEY"],
         "required_local_capabilities": [],
     }
     definition["definition_sha256"] = _sha256_bytes(_canonical(definition))

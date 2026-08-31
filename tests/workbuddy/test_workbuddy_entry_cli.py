@@ -583,13 +583,16 @@ def test_stdin_read_is_bounded_before_parsing() -> None:
     assert reader.requested == cli._MAX_INPUT_BYTES + 1
 
 
-def test_skill_exposes_only_opaque_entry_and_installer_identity_placeholders() -> None:
+def test_skill_keeps_user_entry_opaque_and_configuration_action_private() -> None:
     skill = Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage/SKILL.md"
     source = skill.read_text(encoding="utf-8")
     assert "<installer:skill_identity>" in source
     assert "<installer:release_identity>" in source
     assert "literal message" in source
-    for technical in ("GOLDEN_KEY_WORKBUDDY_INTERPRETER_PATH", "JSON request", "sha256", "result_root"):
+    assert "golden-key-workbuddy-configuration-action-v1" in source
+    assert "Never display that action" in source
+    assert "It never contains a credential" in source
+    for technical in ("GOLDEN_KEY_WORKBUDDY_INTERPRETER_PATH", "JSON request", "result_root"):
         assert technical.casefold() not in source.casefold()
 
 

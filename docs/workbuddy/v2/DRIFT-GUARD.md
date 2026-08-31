@@ -367,7 +367,8 @@ WorkBuddy.
   shown, and configuration entries were understandable.
 - M1.2 is `CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / COMPLETE`.
   Do not claim that this proves an actual Remotion/HyperFrames installation or
-  API-key configuration. Those belong to `M1_3_IMPLEMENTATION_NOT_STARTED`.
+  API-key configuration. Those remain unproved under
+  `M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE`.
 - The completed M1.2 correction authorization was documentation-only: it updated
   the six authority/state documents, received one independent zero-write document
   review, committed once, and ordinarily pushed the planning branch. It did not
@@ -420,10 +421,19 @@ WorkBuddy.
   call, failed Package recognition/invocation, or need for a new dependency,
   branch, repository, generic framework, workspace carrier, second Agent, or
   Shell decision logic.
-- Current authority is documentation-only: exactly six authority/state files,
+- The preceding freeze authority was documentation-only: exactly six authority/state files,
   one independent zero-write review, one commit, and one ordinary planning-branch
   push. No merge, implementation, test, WorkBuddy, candidate, install, credential,
   Provider/network, Package mutation, media, or cleanup action is authorized.
+- The later bounded implementation is pushed as Shell `a89e062c...` and Package
+  `503f0967...`; this supersedes only the `IMPLEMENTATION_NOT_STARTED` status.
+  Treat it as local contract evidence, not product acceptance. Package local-
+  capability definitions remain empty; WorkBuddy, real WinCred, Ark network,
+  optional installation, rediscovery, and Package invocation remain unproved.
+- Do not proceed directly to WorkBuddy merely because the commits exist. First
+  add and independently verify the exact Package-owned Remotion/HyperFrames
+  definitions through the existing release/lock route. The definition task is
+  zero-download and must stop before installation, credentials, or Provider calls.
 
 ## Result guard
 

@@ -391,7 +391,7 @@ result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
 M1.2 is now `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
-COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`. The latest implementation head `666c9d4...` and its
+COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE`. The earlier implementation head `666c9d4...` and its
 compact-readiness candidate carried an approximately 26 KB handoff summary with
 24 capability rows and 63 setup offers. WorkBuddy exposed technical runtime/setup
 detail and more options than desirable, so the historical independent review
@@ -610,3 +610,14 @@ started and must first prove the private carrier and masked non-chat input. Do
 not add a workspace file, fixed user command, second
 control plane, plaintext fallback, new dependency, `run.ps1` change, or generic
 BaseTool change.
+
+The first bounded implementation is pushed as Shell commit
+`a89e062c5dc0cbfc3fd7b1e430baf61063d58064` and Package commit
+`503f09677db36bad0deb74e94b06401f8f94e215`. It proves a local code/test contract
+for the same-Skill structured action, WinCred boundary, exact `ARK_API_KEY`
+transport, and Package-owned Ark `/ping` dispatch. It does not complete M1.3.
+The Package still declares an empty `workbuddy_optional_capability_definitions`
+list, so Remotion/HyperFrames configuration stops before installation. WorkBuddy,
+real CredUI/WinCred, real Ark authentication semantics, optional installation,
+rediscovery, Package invocation, and user-visible recovery remain unproved.
+Current state is `IMPLEMENTATION_LOCAL_CONTRACT_COMMITTED / PRODUCT_INCOMPLETE`.

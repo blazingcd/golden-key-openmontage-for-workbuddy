@@ -386,8 +386,9 @@ requires its own bounded implementation and action authorization.
 
 ### M1.3 execution-contract state
 
-The Owner has now authorized and frozen the planning contract only. Current code
-evidence shows two reusable but disconnected primitives: bounded Remotion/
+The Owner has now authorized and frozen the planning contract and smallest
+implementation write set only. Current code evidence shows two reusable but
+disconnected primitives: bounded Remotion/
 HyperFrames detection and consent-bound managed preparation in
 `runtime_prepare.py`, and fail-closed exact environment allowlisting plus secret
 suppression in the launch path. No production caller currently reaches the local
@@ -396,13 +397,18 @@ evidence and empty Provider environment names. No verified non-chat credential
 input/store or Package-owned connection-test path has been found. These are
 implementation prerequisites, not proof of configuration.
 
-The next implementation must reuse `codex/workbuddy-m1-capability-onboarding` and
-start with a read-only interface gate. It must prove a private structured
-WorkBuddy-to-Shell action carrier and one secure non-chat credential-entry route,
-then freeze the exact smallest write allowlist. Only after that gate may the
-separately authorized execution proceed through one representative managed local
-path and one representative Package-declared API-key path. M1.3 state is
-`EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED`.
+The completed read-only prerequisite review found that current WorkBuddy 5.3.14's
+built-in `library` Skill proves a similar fixed-mode/canonical-stdin script
+pattern is supported. Windows native credential UI plus current-user Credential
+Manager are the candidate non-chat secret route, and Seedance can be extended
+with a formally declared Package-owned read-only connection test. Golden Key has
+not yet proved its carrier or credential flow, and that connection test does not
+yet exist. An independent minimality review removed
+`run.ps1` and `tools/base_tool.py` from the candidate write set. The next
+implementation reuses `codex/workbuddy-m1-capability-onboarding` and the exact
+write set frozen in the Task Register; the freeze itself is not implementation
+authorization. M1.3 state is `PREREQUISITE_ROUTE_REVIEWED /
+WRITE_SET_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED`.
 
 ## Non-goals
 

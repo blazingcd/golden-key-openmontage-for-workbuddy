@@ -384,10 +384,19 @@ WorkBuddy.
 
 - M1.3 does not reopen M1.2 inventory or optimize its first-use prose. It begins
   only after one local capability or Package-declared Provider is selected.
-- Before code changes, prove a private structured WorkBuddy action carrier and a
-  secure non-chat secret-input route, then freeze the smallest existing-file write
-  set. Shell must not parse user prose; do not use a workspace file, fixed user
-  command, environment-name instruction, or second control plane as a substitute.
+- The read-only prerequisite review found a feasible candidate route: the built-in
+  `library` Skill proves a similar fixed-mode/canonical-stdin pattern; Windows
+  native credential UI/current-user Credential Manager is the candidate secret
+  route; and the Package may be extended to declare and own a non-media connection
+  test. Golden Key has not proved its carrier or masked input, and the connection
+  test does not yet exist.
+- The exact reduced write set is frozen in the Task Register. Do not change
+  `run.ps1`, `tools/base_tool.py`, or `runtime_prepare.py`; the first already pipes
+  stdin, the second would be premature generalization, and the third must be
+  reused. Any extra path is a hard stop and requires a new planning decision. The
+  scope freeze is not implementation authorization.
+- Shell must not parse user prose; do not use a workspace file, fixed user command,
+  environment-name instruction, or second control plane as a substitute.
 - Reuse `runtime_prepare.py` for local detection, consent-bound planning, managed
   installation, and rediscovery. Do not add another detector/installer, bundle
   Remotion, or treat a global command as Package readiness.

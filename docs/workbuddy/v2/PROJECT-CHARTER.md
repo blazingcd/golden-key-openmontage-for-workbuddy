@@ -285,11 +285,18 @@ one completed local-install path and one completed API-key path. This document
 correction authorizes no implementation, candidate, installation, or WorkBuddy
 action.
 
-The Owner's later planning direction freezes that M1.3 contract in the six
-authority/state documents only. Implementation remains not started. The retained
-M1 branch is reused after an exact write set is frozen; action-time permission is
-still required before WorkBuddy, installation, secret handling, Provider/network
-calls, or actual Package invocation.
+The later read-only prerequisite review found a feasible candidate route within
+current WorkBuddy: its built-in `library` Skill proves a similar fixed-mode/
+canonical-stdin script pattern; Windows native credential entry/current-user
+Credential Manager is the candidate secret route; and the Package can be
+extended to declare and own a non-media connection test. Golden Key has not yet
+proved the first two routes, and the connection test does not yet exist. An
+independent minimality review froze the reduced existing-file write set and
+removed `run.ps1` and `tools/base_tool.py`. This scope freeze is planning evidence,
+not implementation authorization. Implementation remains not started, the
+retained M1 branch is reused, and action-time permission is still
+required before WorkBuddy, installation, secret handling, Provider/network calls,
+or actual Package invocation.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

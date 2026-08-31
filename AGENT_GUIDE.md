@@ -598,7 +598,15 @@ M1.3 does not repeat M1.2 inventory. It begins after the user selects one local
 capability or one Package-declared online Provider. WorkBuddy owns ordinary-
 language explanation, relevance, consent, cost/privacy, and recovery. Shell may
 only validate and execute a bounded structured action; it must not parse user
-prose into a choice. Before implementation, a read-only interface gate must prove
-how WorkBuddy can carry that private action and how a secret can be entered
-outside chat. If either route is absent, stop instead of adding a workspace file,
-fixed user command, second control plane, or plaintext fallback.
+prose into a choice. The read-only prerequisite review found a bounded candidate
+route in current WorkBuddy 5.3.14: the built-in `library` Skill proves a similar
+fixed-mode/canonical-stdin script pattern is supported; Windows native credential
+UI plus current-user Credential Manager are the candidate non-chat secret route;
+and the verified Package can be extended to declare and own a non-media
+connection test. Golden Key has not yet proved any of those product paths. The
+reduced exact write set is frozen in `docs/workbuddy/v2/TASK-REGISTER.md`, but
+that freeze is not implementation authorization. Implementation remains not
+started and must first prove the private carrier and masked non-chat input. Do
+not add a workspace file, fixed user command, second
+control plane, plaintext fallback, new dependency, `run.ps1` change, or generic
+BaseTool change.

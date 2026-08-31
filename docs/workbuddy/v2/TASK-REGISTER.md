@@ -1061,6 +1061,43 @@ commits once, and ordinarily pushes the planning branch without another pause.
 It runs no tests or WorkBuddy and performs no installation, secret, Provider,
 Package mutation, candidate, media, merge, or cleanup action.
 
+#### Read-only prerequisite result and frozen write set
+
+The stage-1 read-only feasibility review is complete. Current WorkBuddy 5.3.14's
+built-in `library` Skill proves a similar fixed-mode/canonical-stdin script
+pattern is supported; it does not prove Golden Key already has a private action
+carrier. Windows native credential UI plus current-user Credential Manager are
+the candidate non-chat route, which implementation must prove as a masked,
+user-usable flow. The verified Package may be extended to formally declare and
+own a read-only, non-media Seedance connection test; that action does not yet
+exist. Golden Key has not implemented or proved its carrier, credential flow,
+connection test, local installation, or user-visible recovery.
+
+The independently reduced implementation write set is frozen as follows:
+
+- Shell source: `workbuddy-skill/golden-key-openmontage/SKILL.md`,
+  `golden_key_openmontage_workbuddy/user_entry.py`,
+  `golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`,
+  `golden_key_openmontage_workbuddy/session_launcher.py`,
+  `golden_key_openmontage_workbuddy/fixed_child.py`, and
+  `golden_key_openmontage_workbuddy/installer.py`.
+- Shell tests: `tests/workbuddy/test_installer.py`,
+  `tests/workbuddy/test_workbuddy_entry_cli.py`, and
+  `tests/workbuddy/test_session_launcher.py`.
+- Package source/test: `GOLDEN_KEY_OPENMONTAGE_RELEASE.json`,
+  `tools/video/seedance_ark.py`, and
+  `tests/contracts/test_seedance_ark_video.py`.
+- Generated Package lock: `GOLDEN_KEY_OPENMONTAGE.lock.json`; regenerate it from
+  the approved Package sources and never edit it by hand.
+
+This allowlist explicitly excludes `run.ps1`, because its existing stdin pipe is
+sufficient unless execution evidence disproves that, and `tools/base_tool.py`,
+because one representative Provider does not justify a generalized interface.
+It also excludes `runtime_prepare.py`: the existing managed local-capability path
+must be reused. Any required path outside this list is a hard stop and requires a
+new planning decision, not opportunistic expansion. Freezing this list records
+scope only; it does not itself authorize implementation or any action-time gate.
+
 ### M1 branch lifecycle and mandatory cleanup
 
 The M1 branch is temporary but shared; M1.2, M1.3, and M1.4 do not create sibling
@@ -1602,10 +1639,12 @@ package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F6
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
 m1_2_semantic_readiness_result: HISTORICAL / WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
 m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_IMPLEMENTATION_NOT_STARTED
-m1_3: EXECUTION_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED
+m1_3: PREREQUISITE_ROUTE_REVIEWED / WRITE_SET_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED
 m1_3_existing_local_primitive: RUNTIME_PREPARE_REUSE_REQUIRED / NO_PRODUCTION_CALLER_PROVED
 m1_3_existing_secret_transport: FAIL_CLOSED_ALLOWLIST_AND_REDACTION_REUSE_REQUIRED / PRODUCTION_ALLOWLIST_EMPTY
-m1_3_missing_prerequisites: PRIVATE_STRUCTURED_ACTION_CARRIER / NON_CHAT_SECURE_INPUT_AND_STORE / PACKAGE_OWNED_CONNECTION_TEST
+m1_3_candidate_route: BUILTIN_LIBRARY_SKILL_PATTERN_FOR_FIXED_MODE_AND_CANONICAL_STDIN_JSON / WINDOWS_NATIVE_CREDENTIAL_UI_AND_CURRENT_USER_CREDENTIAL_MANAGER_TO_BE_PROVED / PACKAGE_OWNED_NON_MEDIA_CONNECTION_TEST_TO_BE_DECLARED_AND_IMPLEMENTED
+m1_3_unproved_product_results: GOLDEN_KEY_PRIVATE_ACTION_CARRIER / GOLDEN_KEY_CREDENTIAL_FLOW / PACKAGE_CONNECTION_TEST / LOCAL_INSTALL_AND_INVOCATION / USER_VISIBLE_RECOVERY
+m1_3_write_set_review: REJECT_ORIGINAL_15_PATHS_P0_0_P1_3_P2_1 / REMOVE_RUN_PS1_AND_TOOLS_BASE_TOOL_PY / REDUCED_ALLOWLIST_FROZEN
 m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRAMES_NOT_REQUIRED_FOR_COVERAGE
 m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING

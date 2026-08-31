@@ -983,7 +983,7 @@ Provider, produce media, start M1.3 implementation, retry, or repair live. The l
 contract below supersedes only the M1.3 planning gap; M1.2 must not be
 reopened solely to optimize catalogue size or wording.
 
-### M1.3 execution contract — FROZEN / IMPLEMENTATION NOT STARTED
+### M1.3 execution contract — CORRECTED PLANNING FREEZE / PRODUCT INCOMPLETE
 
 #### User result and interaction
 
@@ -1013,11 +1013,15 @@ configuration grammar, workspace relay file, or Shell-owned menu is not.
 2. **Representative local path.** Prefer Remotion for the first proof because its
    Package integration and distribution-size decision are already evidenced;
    HyperFrames remains selectable but need not be installed merely for coverage.
-   Reuse `runtime_prepare.py`: detect, create a source/hash/size/license/version-
-   bound plan, explain impact, obtain consent, download into managed D: storage,
-   atomically install, rediscover, obtain Package recognition, and perform one
-   minimal Package-mediated invocation. Direct base-Package bundling and reliance
-   on an unrelated global command remain forbidden.
+   System-wide is the default product route. WorkBuddy explains any permission
+   need; current-user scope is used only after the user explicitly chooses it.
+   Shell asks Windows for the standard location for the approved scope at
+   execution time; it never fixes `C:`, `D:`, or any other drive and never silently
+   changes scope. Bind the exact resolved target, source, complete dependency lock,
+   size, license, version, integrity, Package identity, and consent; install
+   atomically, record the resolved path, rediscover it, obtain Package recognition,
+   and perform one minimal Package-mediated invocation. Direct base-Package
+   bundling and reliance on an unrelated global command remain forbidden.
 3. **Representative API-key path.** Use only a Provider formally declared by the
    verified Package. Seedance is the preferred first candidate only when the
    execution-time declaration and an Owner-supplied usable credential exist; do
@@ -1030,7 +1034,8 @@ configuration grammar, workspace relay file, or Shell-owned menu is not.
 4. **Recovery and retest.** A declined, deferred, unavailable, failed, or changed
    optional configuration leaves FFmpeg production usable. WorkBuddy explains the
    ordinary-user consequence and offers retry only after a new user choice; Shell
-   never auto-falls back or selects another Provider. A later natural-language
+   never auto-falls back, changes install scope or drive, uses an overseas registry,
+   or selects another Provider. A later natural-language
    request must rediscover or retest the chosen path without requiring the user to
    know commands, paths, environment names, or stored secret values.
 5. **Evidence and closeout.** Focused checks may establish only a local contract.
@@ -1041,8 +1046,8 @@ configuration grammar, workspace relay file, or Shell-owned menu is not.
    review follows the complete pair; M1.4, media quality, and branch cleanup do not
    occur inside M1.3.
 
-Hard-stop conditions are Package identity/declaration drift; plan, source, hash,
-size, license, target, or consent mismatch; no private action or secure-input
+Hard-stop conditions are Package identity/declaration drift; plan, source, lock,
+hash, size, license, install scope, resolved target, or consent mismatch; no private action or secure-input
 route; any secret in ordinary chat or observable transport; undeclared Provider;
 unexpected paid/media call; failed rediscovery, Package recognition, or Package-
 mediated invocation; automatic retry/substitution; a need for a new branch,
@@ -1061,7 +1066,7 @@ commits once, and ordinarily pushes the planning branch without another pause.
 It runs no tests or WorkBuddy and performs no installation, secret, Provider,
 Package mutation, candidate, media, merge, or cleanup action.
 
-#### Read-only prerequisite result and frozen write set
+#### Read-only prerequisite result and first implementation write set
 
 The stage-1 read-only feasibility review is complete. Current WorkBuddy 5.3.14's
 built-in `library` Skill proves a similar fixed-mode/canonical-stdin script
@@ -1073,7 +1078,8 @@ own a read-only, non-media Seedance connection test; that action does not yet
 exist. Golden Key has not implemented or proved its carrier, credential flow,
 connection test, local installation, or user-visible recovery.
 
-The independently reduced implementation write set is frozen as follows:
+The independently reduced write set used for the first local-contract
+implementation was:
 
 - Shell source: `workbuddy-skill/golden-key-openmontage/SKILL.md`,
   `golden_key_openmontage_workbuddy/user_entry.py`,
@@ -1090,13 +1096,13 @@ The independently reduced implementation write set is frozen as follows:
 - Generated Package lock: `GOLDEN_KEY_OPENMONTAGE.lock.json`; regenerate it from
   the approved Package sources and never edit it by hand.
 
-This allowlist explicitly excludes `run.ps1`, because its existing stdin pipe is
+That historical allowlist excluded `run.ps1`, because its existing stdin pipe is
 sufficient unless execution evidence disproves that, and `tools/base_tool.py`,
 because one representative Provider does not justify a generalized interface.
-It also excludes `runtime_prepare.py`: the existing managed local-capability path
-must be reused. Any required path outside this list is a hard stop and requires a
-new planning decision, not opportunistic expansion. Freezing this list records
-scope only; it does not itself authorize implementation or any action-time gate.
+It also excluded `runtime_prepare.py` on the then-current assumption that its
+asset-download route was sufficient. The later npm/path audit disproved that
+assumption for the local route. The old list remains the history of the completed
+first implementation; it is not authority for the corrected local-install work.
 
 #### First implementation result — LOCAL CONTRACT ONLY / PRODUCT INCOMPLETE
 
@@ -1126,13 +1132,79 @@ test; its real 200/401/403 semantics require the later action-time-authorized
 network result and must not be upgraded into model, balance, generation, or
 quality proof.
 
-The next smallest task is to add only verified, source/hash/size/license/version-
-bound Remotion and HyperFrames Package definitions through the existing Package
-release/lock route and prove the resulting Shell plan remains zero-download and
-consent-bound. Do not run WorkBuddy or install either capability in that task.
-After that local prerequisite is independently reviewed and pushed, the action-
-time user gate may build/install the candidate and separately prove one local
-path and one API-key path.
+#### Corrected local-install route — PLANNING ONLY / ZERO INSTALL
+
+The completed audit found two blocking facts. `runtime_prepare.py` can publish
+fixed downloaded assets but cannot run and verify Remotion's complete locked npm
+installation. Package `video_compose.py` recognizes only
+`remotion-composer/node_modules` below PackageRoot, so a separately managed Shell
+runtime would still be invisible. Adding capability definitions alone would
+therefore create a plan that cannot complete the user goal.
+
+The corrected product route is:
+
+1. Detect existing registered readiness without assuming a drive.
+2. Explain value, download/disk impact, source, license, version, install scope,
+   and any Windows permission need; ask for consent.
+3. Let Windows resolve the standard location for the approved scope. System-wide
+   is the default; current-user is an explicitly chosen alternative. The
+   development preference for temporary files on `D:`
+   does not apply to end users.
+4. In mainland China, install the exact locked npm closure only through
+   `registry.npmmirror.com`; do not fall back overseas. A search/index result is
+   discovery evidence only, not install proof.
+5. Atomically publish the complete runtime, record its resolved path and scope,
+   pass that verified path to Package, rediscover it, and run one minimal real
+   Package-mediated Remotion invocation.
+6. On decline or failure, leave FFmpeg usable, report the honest state, and allow
+   a later natural-language retry. Do not silently change scope, drive, source, or
+   runtime.
+
+Shell owns location resolution, installation, registration, and rediscovery.
+Package only consumes the verified registered path; it must not choose, guess, or
+write an installation location. HyperFrames follows the same location, consent,
+source, and recovery rules, but it is not implemented or marked ready by the first
+candidate below. Remotion through Package `video_compose.py` is the one required
+representative local proof. Other Remotion consumers also remain unqualified and
+must not inherit a ready state from that single proof.
+
+The smallest future implementation candidate is frozen to these existing files:
+
+- Shell source: `workbuddy-skill/golden-key-openmontage/SKILL.md`,
+  `golden_key_openmontage_workbuddy/runtime_prepare.py`,
+  `golden_key_openmontage_workbuddy/user_entry.py`,
+  `golden_key_openmontage_workbuddy/session_launcher.py`,
+  `golden_key_openmontage_workbuddy/fixed_child.py`,
+  `golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`, and
+  `golden_key_openmontage_workbuddy/installer.py`.
+- Shell tests: `tests/workbuddy/test_runtime_prepare.py`,
+  `tests/workbuddy/test_session_launcher.py`,
+  `tests/workbuddy/test_workbuddy_entry_cli.py`, and
+  `tests/workbuddy/test_installer.py`.
+- Package source: `remotion-composer/package.json`,
+  `remotion-composer/package-lock.json`,
+  `GOLDEN_KEY_OPENMONTAGE_RELEASE.json`, and
+  `tools/video/video_compose.py`.
+- Generated Package lock: `GOLDEN_KEY_OPENMONTAGE.lock.json`; regenerate it and
+  never edit it by hand.
+- Package tests: `tests/tools/test_cinematic_remotion_adapter.py` and
+  `tests/contracts/test_phase3_contracts.py`.
+
+The Package lock is mandatory because its current 244 resolved dependencies use
+`registry.npmjs.org`; definitions or a registry setting alone cannot prove a
+complete mainland-mirror closure. `installer.py` is included because it stamps the
+exact Package commit/tree and the WorkBuddy Skill contract. The Skill/action path
+must carry the user's approved install scope and the resolved runtime identity.
+`run.ps1`, `tools/base_tool.py`, HyperFrames consumers, other Remotion consumers,
+new files, new dependencies, and a second installer/control plane remain outside
+this first candidate. Any directly required path outside this list is a planning
+hard stop, not permission to expand during implementation.
+
+The future implementation is staged. First, focused local checks prove location
+resolution, mirror-only locked installation, path handoff, and Package recognition
+without a real download. Second, separate action-time authorization permits one
+real WorkBuddy Remotion install and invocation. The API-key result remains a
+separate authorized result. This documentation task stops before every stage.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -1638,7 +1710,7 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_3_LOCAL_CAPABILITY_DEFINITION_PREREQUISITE / NOT_STARTED / ZERO_DOWNLOAD
+current_task: M1_3_LOCAL_INSTALL_ROUTE_CORRECTION / PLANNING_FROZEN / ZERO_INSTALL
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: COMPACT_READINESS_CURRENTLY_INSTALLED / USED_FOR_M1_2_PROOF / UX_OVERLOAD_RECORDED / ZIP_SHA256_4CAF57CFCF5D298F0DED1098D4FDA5BB482A699F57A72B02BC61F1CD3DBF2DD1 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL / RECHECK_AT_EXECUTION
 capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
@@ -1675,18 +1747,18 @@ package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F6
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
 m1_2_semantic_readiness_result: HISTORICAL / WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
 m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
-m1_3: PREREQUISITE_ROUTE_REVIEWED / WRITE_SET_FROZEN / IMPLEMENTATION_LOCAL_CONTRACT_COMMITTED / PRODUCT_INCOMPLETE / ACTION_TIME_GATES_REQUIRED
-m1_3_existing_local_primitive: RUNTIME_PREPARE_REUSE_REQUIRED / NO_PRODUCTION_CALLER_PROVED
+m1_3: PREREQUISITE_ROUTE_REVIEWED / FIRST_LOCAL_CONTRACT_COMMITTED / LOCAL_INSTALL_ROUTE_CORRECTED_IN_PLAN / PRODUCT_INCOMPLETE / ACTION_TIME_GATES_REQUIRED
+m1_3_existing_local_primitive: FIXED_ASSET_PREPARE_PRESENT / LOCKED_NPM_INSTALL_AND_PACKAGE_PATH_HANDOFF_ABSENT
 m1_3_existing_secret_transport: FAIL_CLOSED_ALLOWLIST_AND_REDACTION_REUSE_REQUIRED / PRODUCTION_ALLOWLIST_EMPTY
 m1_3_candidate_route: BUILTIN_LIBRARY_SKILL_PATTERN_FOR_FIXED_MODE_AND_CANONICAL_STDIN_JSON / WINDOWS_NATIVE_CREDENTIAL_UI_AND_CURRENT_USER_CREDENTIAL_MANAGER_TO_BE_PROVED / PACKAGE_OWNED_NON_MEDIA_CONNECTION_TEST_TO_BE_DECLARED_AND_IMPLEMENTED
 m1_3_unproved_product_results: GOLDEN_KEY_PRIVATE_ACTION_CARRIER / GOLDEN_KEY_CREDENTIAL_FLOW / PACKAGE_CONNECTION_TEST / LOCAL_INSTALL_AND_INVOCATION / USER_VISIBLE_RECOVERY
-m1_3_write_set_review: REJECT_ORIGINAL_15_PATHS_P0_0_P1_3_P2_1 / REMOVE_RUN_PS1_AND_TOOLS_BASE_TOOL_PY / REDUCED_ALLOWLIST_FROZEN
+m1_3_write_set_review: FIRST_IMPLEMENTATION_ALLOWLIST_HISTORICAL / RUNTIME_PREPARE_EXCLUSION_SUPERSEDED_BY_LOCAL_ROUTE_AUDIT / CORRECTED_ROUTE_PLANNING_ONLY
 m1_3_implementation: SHELL_A89E062C5DC0CBFC3FD7B1E430BAF61063D58064 / PACKAGE_503F09677DB36BAD0DEB74E94B06401F8F94E215 / PUSHED_CLEAN
-m1_3_result: LOCAL_CONTRACT_ONLY / LOCAL_ROUTE_BLOCKED_EMPTY_PACKAGE_DEFINITIONS / API_ROUTE_REAL_AUTH_NOT_PROVED / WORKBUDDY_NOT_RUN / M1_4_BLOCKED
+m1_3_result: LOCAL_CONTRACT_ONLY / LOCAL_ROUTE_REQUIRES_WINDOWS_LOCATION_NPM_CLOSURE_AND_PACKAGE_PATH_HANDOFF / API_ROUTE_REAL_AUTH_NOT_PROVED / WORKBUDDY_NOT_RUN / M1_4_BLOCKED
 m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRAMES_NOT_REQUIRED_FOR_COVERAGE
 m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING
-remotion_distribution: ON_DEMAND_MANAGED_M1_3 / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
+remotion_distribution: ON_DEMAND_SYSTEM_SCOPE_DEFAULT / WINDOWS_RESOLVED_LOCATION / NPMMIRROR_LOCKED_CLOSURE_REQUIRED / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY
 m1_2_shell_factual_relay_write_set: golden_key_openmontage_workbuddy/fixed_child.py / tests/workbuddy/test_installer.py / EXACT_ONLY
 m1_2_shell_factual_relay_local_ceiling: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / COMMIT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / NOT_M1_2_COMPLETE

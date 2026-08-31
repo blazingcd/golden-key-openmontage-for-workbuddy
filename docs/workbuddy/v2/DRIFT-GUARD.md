@@ -391,16 +391,21 @@ WorkBuddy.
   route; and the Package may be extended to declare and own a non-media connection
   test. Golden Key has not proved its carrier or masked input, and the connection
   test does not yet exist.
-- The exact reduced write set is frozen in the Task Register. Do not change
-  `run.ps1`, `tools/base_tool.py`, or `runtime_prepare.py`; the first already pipes
-  stdin, the second would be premature generalization, and the third must be
-  reused. Any extra path is a hard stop and requires a new planning decision. The
-  scope freeze is not implementation authorization.
+- The reduced write set in the earlier section records the completed first local-
+  contract implementation. Its exclusion of `runtime_prepare.py` is superseded
+  for the local-install route: the later audit proved the existing fixed-asset
+  publisher cannot install Remotion's npm closure. `run.ps1` and
+  `tools/base_tool.py` remain excluded unless direct execution evidence later
+  disproves the current route. The corrected scope freeze is not implementation
+  authorization.
 - Shell must not parse user prose; do not use a workspace file, fixed user command,
   environment-name instruction, or second control plane as a substitute.
-- Reuse `runtime_prepare.py` for local detection, consent-bound planning, managed
-  installation, and rediscovery. Do not add another detector/installer, bundle
-  Remotion, or treat a global command as Package readiness.
+- Extend the existing `runtime_prepare.py` boundary rather than add another
+  detector/installer. It must use the user-approved Windows install scope and the
+  standard location Windows resolves at execution time, with no fixed drive. It
+  must install and verify the complete locked npm closure from
+  `registry.npmmirror.com`, record the resolved path, and rediscover it. Do not
+  bundle Remotion or treat a global command as Package readiness.
 - Reuse the fail-closed exact environment allowlist and secret-suppression launch
   path. Current empty production allowlists and the absence of a verified secure
   input/store are gaps, not evidence that API configuration works.
@@ -415,7 +420,7 @@ WorkBuddy.
   undeclared Provider.
 - Missing, declined, deferred, or failed optional configuration preserves the
   FFmpeg path. Retry or selection change requires a new user choice; Shell never
-  auto-falls back or ranks alternatives.
+  auto-falls back, changes install scope/drive/source, or ranks alternatives.
 - Stop on identity/declaration/plan/consent/source/hash/size/license drift, absent
   private or secure input route, any secret disclosure, unexpected paid/media
   call, failed Package recognition/invocation, or need for a new dependency,
@@ -430,10 +435,18 @@ WorkBuddy.
   Treat it as local contract evidence, not product acceptance. Package local-
   capability definitions remain empty; WorkBuddy, real WinCred, Ark network,
   optional installation, rediscovery, and Package invocation remain unproved.
-- Do not proceed directly to WorkBuddy merely because the commits exist. First
-  add and independently verify the exact Package-owned Remotion/HyperFrames
-  definitions through the existing release/lock route. The definition task is
-  zero-download and must stop before installation, credentials, or Provider calls.
+- Do not proceed directly to WorkBuddy merely because the commits exist. Package
+  definitions alone are insufficient. First implement and independently verify
+  the corrected Windows-location, mirror-only locked npm installation, registered-
+  path handoff, Package recognition, and invocation contract with zero real
+  download. A separate action-time gate is required before installation,
+  credentials, Provider calls, or WorkBuddy execution.
+
+- The repository preference for development temporary files on `D:` is not an
+  end-user installation rule. Never assume that `C:` or `D:` exists. System-wide
+  is the default product route; current-user scope requires an explicit informed
+  choice. Never silently switch between them. Shell owns the resolved location
+  and Package only consumes it.
 
 ## Result guard
 

@@ -605,8 +605,9 @@ UI plus current-user Credential Manager are the candidate non-chat secret route;
 and the verified Package can be extended to declare and own a non-media
 connection test. Golden Key has not yet proved any of those product paths. The
 reduced exact write set is frozen in `docs/workbuddy/v2/TASK-REGISTER.md`, but
-that freeze is not implementation authorization. Implementation remains not
-started and must first prove the private carrier and masked non-chat input. Do
+that freeze is not implementation authorization. At that historical checkpoint,
+implementation had not started and still had to prove the private carrier and
+masked non-chat input. Do
 not add a workspace file, fixed user command, second
 control plane, plaintext fallback, new dependency, `run.ps1` change, or generic
 BaseTool change.
@@ -621,3 +622,25 @@ list, so Remotion/HyperFrames configuration stops before installation. WorkBuddy
 real CredUI/WinCred, real Ark authentication semantics, optional installation,
 rediscovery, Package invocation, and user-visible recovery remain unproved.
 Current state is `IMPLEMENTATION_LOCAL_CONTRACT_COMMITTED / PRODUCT_INCOMPLETE`.
+
+The Owner's 2026-09-01 correction is planning-only and supersedes the earlier
+local-install assumptions. No end-user drive letter is fixed: the later WorkBuddy
+flow must let Windows resolve the standard location for the user-approved install
+scope at execution time. System-wide is the default product route. A current-user
+install is an explicit alternative only after WorkBuddy explains the difference
+and the user chooses it; Shell must never
+silently switch scope or assume that `C:` or `D:` exists. The repository rule that
+development temporary files prefer `D:` is not an end-user installation rule.
+
+Remotion and HyperFrames are optional shared runtimes outside immutable
+PackageRoot. Shell owns resolving, installing, recording, and rediscovering the
+approved location; Package consumes the verified recorded path and does not choose
+or guess an installation directory. The completed audit also proves that Package
+definitions alone are insufficient: Remotion needs its full locked npm dependency
+closure from `registry.npmmirror.com`, Package recognition of the managed runtime,
+and one actual Package-mediated invocation. Search results or a global command do
+not prove readiness. The exact corrected route and future candidate write set are
+frozen in the Task Register. This correction may update only the six authority/
+state documents, receive one independent zero-write review, commit once, and push
+the planning branch. It performs no installation, WorkBuddy run, code/test change,
+credential, Provider call, or media action.

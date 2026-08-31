@@ -293,7 +293,8 @@ extended to declare and own a non-media connection test. Golden Key has not yet
 proved the first two routes, and the connection test did not yet exist. An
 independent minimality review froze the reduced existing-file write set and
 removed `run.ps1` and `tools/base_tool.py`. This scope freeze is planning evidence,
-not implementation authorization. Implementation remains not started, the
+not implementation authorization. At that historical checkpoint, implementation
+had not started, the
 retained M1 branch is reused, and action-time permission is still
 required before WorkBuddy, installation, secret handling, Provider/network calls,
 or actual Package invocation.
@@ -304,8 +305,25 @@ action, WinCred boundary, secret-safe environment injection, and Ark `/ping`
 dispatch. It is not an M1.3 product result: Package optional-capability
 definitions are still empty, so Remotion/HyperFrames stop before installation,
 and no real WorkBuddy, credential, Provider, installation, rediscovery, or Package
-invocation occurred. The next product prerequisite is the smallest verified
-Package definition update for the two advertised local capabilities.
+invocation occurred.
+
+The later local-route audit supersedes the idea that the next prerequisite is
+only a Package definition update. Remotion needs a complete version-locked npm
+installation, while the current Shell preparation handles only fixed downloaded
+assets and the current Package renderer recognizes only dependencies below
+PackageRoot. Definitions alone cannot complete installation or use.
+
+The corrected M1.3 plan lets Windows resolve the standard location for the
+user-approved scope at execution time. System-wide is the default; current-user
+scope requires an explicit informed choice. No product
+rule assumes `C:`, `D:`, or the developer machine layout. WorkBuddy explains and
+confirms scope and permission impact; Shell installs, records, and rediscovers the
+resolved runtime path; Package consumes that verified path without choosing a
+location. Mainland npm installation uses the complete locked closure from
+`registry.npmmirror.com` without silent overseas fallback. Success still requires
+Package recognition and one real Package-mediated invocation. This correction is
+planning only and runs no WorkBuddy, installation, product code, test, credential,
+Provider, or media action.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

@@ -89,10 +89,13 @@ as unconfigured, unavailable, awaiting consent, or awaiting a connection test;
 it must not be described as OpenMontage lacking production capability or block
 the FFmpeg-ready path.
 
-After verified PackageRoot lookup, WorkBuddy performs a light first-use capability
-inventory using its own current tools and verified Package semantics. It explains
-the basic path and relevant optional enhancements, then offers a natural choice:
-continue now or configure selected enhancements. WorkBuddy owns relevance,
+After verified PackageRoot lookup, WorkBuddy explains that the basic path works
+now and explicitly introduces Remotion, HyperFrames, external AI image/video, and
+TTS, then offers a natural choice: continue now, configure a selected category,
+defer, or ask for detail. A concise first-use answer is the preferred UX; extra
+catalogue or technical detail is a finding rather than a failure unless it blocks
+understanding or safe continuation.
+WorkBuddy owns relevance,
 Provider/model selection, cost and privacy explanation, credentials, consent,
 connection testing, and recovery decisions. Shell owns only bounded mechanical
 detection, exactly approved preparation, and factual relay.
@@ -103,9 +106,14 @@ there is no fixed configuration command, transcript, Shell selector, broad scan,
 or second control plane.
 
 M1 displays only capabilities and Providers formally declared by the verified
-Package. Current static inspection finds Seedance, Kling, and MiniMax routes;
-Seedance is the current default recommendation. Undeclared Providers do not appear
-in M1. This snapshot is not a Shell routing table. Static adapters
+Package. After the user selects a relevant configuration category, WorkBuddy
+should normally lead with two or three image/video choices or one or two TTS
+choices and offer more. Those counts are progressive-disclosure guidance, not a
+hard acceptance gate; additional relevant declared choices do not prevent the
+user from continuing. Current static
+inspection finds Seedance, Kling, and MiniMax
+routes; undeclared Providers do not appear in M1. This snapshot is not a Shell
+routing or ranking table. Static adapters
 do not prove credentials, account permission, balance, connectivity, region,
 price, or current model availability.
 
@@ -128,7 +136,7 @@ are complete.
 
 | Task | Priority | User problem and target result | Boundary and non-goals | Acceptance, dependency, and priority reason |
 |---|---|---|---|---|
-| M1 — first-use guidance and capability readiness | Must | A first-time user understands the FFmpeg-ready basic path and can start, complete, defer, change, or retest relevant local-install and API-key configuration from ordinary natural language. Provider display follows the verified Package's formal declarations; current static evidence includes Seedance, Kling, and MiniMax. | No automatic installation of every enhancement, unsupported Provider entries, broad disk scan, fixed command language, credential exposure, Shell Provider/model selection, false ready state, or second control plane. Bounded fixed confirmation/security steps are allowed when real WorkBuddy requires them. | M1.1–M1.4 below. One representative local-install path and one representative API-key path are required. Depends on separately approved implementation, Package, and action-time gates. |
+| M1 — first-use guidance and capability readiness | Must | A first-time user understands the FFmpeg-ready basic path and can start, defer, configure, change, or retest relevant local-install and API-key capabilities from ordinary natural language. Provider display should normally lead with a short relevant set and offer more; the shortlist size is UX guidance, not a hard gate. | No automatic installation of every enhancement, unsupported Provider entries, broad disk scan, fixed command language, credential exposure, Shell Provider/model selection, false ready state, or second control plane. Catalogue overload is recorded as a UX finding unless it prevents safe continuation. Bounded fixed confirmation/security steps are allowed when real WorkBuddy requires them. | M1.1–M1.4 below. One representative local-install path and one representative API-key path are required. Depends on separately approved implementation, Package, and action-time gates. |
 | M2 — progressive clarification and material readiness | Must | One incomplete business request becomes a user-confirmed direction covering only genuinely relevant audience, platform, duration, style, brand, materials, budget, and delivery decisions. Missing materials have understandable continue, default, or supply-later choices. | No fixed questionnaire, exhaustive interrogation, hidden paid choice, user-visible internal mechanics, or WorkBuddy making unconfirmed high-impact creative/cost decisions. | Contract coverage for no/partial/complete material states, followed by separately authorized real WorkBuddy acceptance. Depends on M1.2; a user-selected enhancement must finish M1.3 before it is used. It follows readiness because production cannot be judged before the intended result is confirmed. |
 | M3 — stable production, basic quality, and final delivery | Must | The user receives a real playable and findable result, checkable receipt/location, honest basic quality result, and a final answer that is not delayed by optional persistence. | One default production specification first; no second aspect ratio, all-platform matrix, multi-Provider routing, revision system, or direct publishing. | Three separately started ordinary-user cases covering no supplied, partial, and complete user materials must all deliver playable results; one independent review follows the complete result set. Depends on completed M1.4 and M2. It is the minimum proof that success is not a one-off. |
 | S1 — preview, revision, version, and rollback | Should | The user previews a result, requests natural-language changes, receives a new version, and can return to an older version. | No general video editor, unlimited revision promise, request replay, or second edit control plane. | One initial version, two bounded revisions, and one rollback; all versions remain findable and playable. Depends on M3. |
@@ -162,7 +170,7 @@ Likewise, one real historical video does not prove first-use capability onboardi
 | Task | Priority | User problem and target result | Boundary and non-goals | Acceptance and dependency |
 |---|---|---|---|---|
 | M1.1 — route and capability fact audit | Must step of M1 | Prevent the user from receiving invented or stale capability advice. Confirm the current WorkBuddy, verified Package, and Shell surfaces that can supply facts. | Read-only. No code, install, Provider call, credential read, broad disk scan, test, or WorkBuddy run. Do not decide the implementation before tracing the current route. | Produce a fact table, the smallest proposed write allowlist, dependencies, and hard stops. Depends only on the frozen M0 commit and a separately confirmed task/branch boundary. |
-| M1.2 — first-use readiness and continue/configure choice | Must step of M1 | Let a first-time user understand that FFmpeg-ready basic production works, see honest Remotion, HyperFrames, external-video, and TTS states, then continue or enter local/API configuration without technical operations. Provider display comes from the verified Package; current static evidence includes Seedance, Kling, and MiniMax. | WorkBuddy owns relevance and wording. Shell may return bounded facts only. No unsupported Provider catalog, automatic mutation, fixed command language, or production redesign. Planning examples are not a required transcript; bounded ordered interaction is allowed when real WorkBuddy or safety requires it. | Evidence must prove the selected fact path, honest state formation, all four visible choices, the user's selected non-mutating boundary, and non-blocking optional absence. Skill wording/packaging alone is insufficient. Depends on M1.1 and separately approved branch synchronization plus action-time external paths. |
+| M1.2 — first-use readiness and next-intent handoff | Must step of M1 | Let a first-time user understand that FFmpeg-ready basic production works now, be explicitly introduced to Remotion, HyperFrames, external AI image/video, and TTS, then naturally continue, enter local/API configuration, defer, or ask for detail. | WorkBuddy owns relevance and wording. Shell relays facts only. No false readiness, secret disclosure, internal-command burden, automatic mutation, fixed command language, or production redesign. Extra relevant options or technical wording are UX findings unless they prevent safe continuation. | Evidence must prove trusted facts reached WorkBuddy, honest user-facing states, understandable next intents, and non-blocking optional absence. Actual installation and API-key configuration belong to M1.3; a specific defer reply is not required to complete M1.2. |
 | M1.3 — local and API-key configuration, retest, and recovery | Required product-capability step of M1; per-user use is conditional | Let the user configure a selected local capability or API-key Provider from natural language, understand impact, test it, and recover or defer without losing the FFmpeg path. | Local completion requires approved download, managed install, rediscovery, Package recognition, and actual invocation. API completion requires non-chat secure secret input/storage, exact allowlisting, no disclosure, and authorized connection testing. Do not make Shell choose or automatically fall back. | One representative local-install result and one representative API-key result must show consent, honest status, failure handling, defer/continue, and later natural-language retest. Wording and step order may adapt to real WorkBuddy. Depends on M1.2 and explicit action-time authorization. |
 | M1.4 — user-visible acceptance and closeout | Must step of M1 | Prove an ordinary user can understand readiness and complete or defer both configuration mechanisms without internal technical work. | No evaluator-invented transcript, unrelated production-quality work, full CI, or second review system. Necessary fixed safety/confirmation steps are allowed. | Integrates already-proved M1.2 behavior with one local M1.3 path and one API-key M1.3 path, followed by one independent M1 result review. It cannot retroactively replace missing M1.2 fact-flow or choice evidence. Depends on M1.2 and M1.3. |
 
@@ -226,11 +234,12 @@ M1.1 state is
   credentials, balance, connectivity, regional/model availability, first-use
   continue/configure dialogue, later natural-language re-entry, and failure
   recovery remain `NOT_VERIFIED`.
-- The verified Package Guide says to start with compact
-  `provider_menu_summary()` and deepen only when necessary, while the Package
+- The verified Package Guide historically described `provider_menu_summary()` as
+  compact and said to deepen only when necessary, while the Package
   onboarding skill says to start with full `support_envelope()` and
   `provider_menu()`. M1.1 did not choose between conflicting Package instructions
-  or mutate the Package.
+  or mutate the Package. Later evidence proves that this raw summary is not a
+  compact first-use display surface.
 - The independent sub-audit violated the absolute zero-write requirement by
   creating and then deleting `D:\DevCache\Temp\m11-rg.txt`. Final verification
   found the exact path absent and the repository clean. Preserve the deviation;
@@ -241,7 +250,7 @@ first-use readiness explanation and continue/configure choice. It must not repea
 M1.1, repair its process deviation, install/configure an enhancement, or claim
 that static definitions prove readiness.
 
-### M1.2 corrected execution contract — FROZEN / IMPLEMENTATION PAUSED
+### Historical M1.2 corrected execution contract — WITHDRAWN / SUPERSEDED
 
 The contract frozen at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174` is retained
 as history but withdrawn as current execution authority. It required a compact
@@ -263,7 +272,7 @@ the formal ref or promoted as complete, deleted, rewritten, or used to authorize
 M1.3. The branch and worktree remain retained and paused; their current local and
 remote identities after the probe are recorded in the execution record below.
 
-M1.2's product result remains:
+At that historical checkpoint, M1.2's proposed product result was:
 
 1. after verified PackageRoot and Guide resolution, obtain trustworthy current
    facts about FFmpeg, relevant local enhancements, and Package-declared external
@@ -275,10 +284,12 @@ M1.2's product result remains:
 4. prove the fact source, state mapping, choice boundary, non-blocking behavior,
    and absence of a Shell decision plane with evidence matched to each claim.
 
-The corrected contract selects the smallest existing candidate first:
+The historical corrected contract selected the smallest existing candidate first:
 WorkBuddy-owned discovery through the verified Package, guided by the partial
 Skill change already committed at `4cbf8ff...`. Existing Package registry facts
-are reused; no Shell fact relay is built speculatively.
+were reused; no Shell fact relay was built speculatively. This sequence is
+retained as history and is not current execution authority; the product-flow reset
+later in this register defines the current result and gate.
 
 #### Execution sequence
 
@@ -360,7 +371,7 @@ The earlier direction authorized only the six-document contract freeze and did
 not itself authorize execution. The later Owner authorization ran the frozen
 probe once; its result and the new audit gate are recorded below.
 
-### M1.2 probe result and Shell factual-relay audit gate
+### Historical M1.2 probe result and Shell factual-relay audit gate — COMPLETE
 
 The single WorkBuddy-owned discovery probe is complete with terminal state
 `NOT_PROVED_WORKBUDDY_DISCOVERY`:
@@ -431,7 +442,7 @@ Provider, or media mutation and returned
 - fact source: verified Package `registry.provider_menu_summary()`;
 - missing production path: no Shell caller; `user_entry.py` sends empty local
   evidence, `prepare_optional_capabilities()` has only test callers, and the
-  existing handoff contains no compact summary;
+  existing handoff contains no Package factual summary;
 - minimum carrier: the existing validated `fixed-child-handoff` addressed by the
   LauncherReceipt result pointer;
 - exact future write set: `golden_key_openmontage_workbuddy/fixed_child.py` and
@@ -449,7 +460,7 @@ another approval pause:
    independent zero-write implementation review, commit once, and ordinarily
    push the implementation branch.
 
-`fixed_child.py` may read the compact summary only after the existing verified
+`fixed_child.py` may read the raw Package summary only after the existing verified
 PackageRoot/cwd boundary and place bounded canonical, secret-suppressed facts in
 the existing handoff. It must preserve pointer/hash/size validation and all
 WorkBuddy ownership flags. The test must prove exact fact relay, honest failure,
@@ -458,8 +469,9 @@ secret suppression, canonical/hash/size behavior, and unchanged ownership.
 Within that relay-only gate, no WorkBuddy rerun, Skill edit/build/install, Package edit, optional installation,
 credential, Provider, media, M1.3, third source file, new protocol, retry/fallback,
 or branch/worktree cleanup is authorized. A passing implementation and review may
-be called only `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; M1.2 remains incomplete
-until later real WorkBuddy dialogue evidence passes its acceptance row. The later
+be called only `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`; at that checkpoint M1.2
+remained incomplete until later real WorkBuddy dialogue evidence passed its
+acceptance row. The later
 package-size checkpoint is the sole separate successor-Package exception and does
 not reopen the relay files or WorkBuddy.
 
@@ -632,7 +644,7 @@ Key Skill and was required to stay byte-identical at `SKILL.md` SHA256
 `d28a5cd9cbaccedf5c8f4e497ae2cbec2aaaa194d5315991ebd55d610b851689`
 and `run.ps1` SHA256
 `0c8c743404127dbc612bc87c207f307ddbff2ef9a3a071b37c7ff2095383902b`.
-M1.2 remains incomplete and M1.3 remains blocked.
+At that preparation checkpoint M1.2 remained incomplete and M1.3 was blocked.
 
 Preparation result: the uninstalled archive above is now built at SHA256
 `437b02c60aa234197fb419275ac64c5df804c5f477fdba16fde3278f772e68d2`, size
@@ -646,7 +658,7 @@ review is `APPROVE / P0=0 / P1=0 / P2=0`; the sole Skill source commit is
 `c8eeb91e221ec96a406543c183091eea7ea6ac3c`. At that checkpoint, the installed
 Skill remained unchanged and the WorkBuddy gate remained closed.
 
-### M1.2 factual-relay user result and authorized consumer correction
+### Historical M1.2 factual-relay user result and consumer correction — EXECUTED
 
 After the Owner manually uninstalled the old same-name Skill, the reviewed
 handoff-consumer archive was installed as the only `golden-key-openmontage`.
@@ -708,8 +720,8 @@ It contains exactly `SKILL.md` SHA256
 and unchanged `scripts/run.ps1` SHA256
 `0c8c743404127dbc612bc87c207f307ddbff2ef9a3a071b37c7ff2095383902b`.
 Archive/content/binding checks passed and the independent candidate review is
-`APPROVE / P0=0 / P1=0 / P2=0`. The archive remains uninstalled; the current
-WorkBuddy user result remains rejected and M1.3 remains blocked.
+`APPROVE / P0=0 / P1=0 / P2=0`. The archive remained uninstalled; at that
+checkpoint the WorkBuddy user result was rejected and M1.3 was blocked.
 
 ### M1 package-size checkpoint and Remotion distribution decision — COMPLETE
 
@@ -790,7 +802,7 @@ Completed result:
   absent; the active PackageRoot, Release, registration, and installed state did
   not change.
 
-### M1.2 final readiness acceptance — EXECUTED / USER RESULT REJECTED
+### Historical M1.2 final readiness acceptance — EXECUTED / USER RESULT REJECTED
 
 This contract was executed once. It did not satisfy M1.2 and is retained as the
 exact evidence boundary for the correction below.
@@ -877,10 +889,10 @@ exact evidence boundary for the correction below.
   catalogue, and Remotion/HyperFrames were not separately explained across
   source integration, project dependencies, runtime readiness, and real
   invocation verification.
-- Exact state: `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+- Exact state at that checkpoint: `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
   FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
 
-#### Authorized bounded correction
+#### Historical authorized bounded correction — EXECUTED / SUPERSEDED
 
 1. Update only the six authority/state documents, obtain one independent
    zero-write review, commit once, and ordinarily push
@@ -907,6 +919,184 @@ exact evidence boundary for the correction below.
 7. Stop before WorkBuddy. No install, WorkBuddy run, optional capability,
    credential, Provider, media, M1.3, retry, or live repair is authorized in this
    correction. A later WorkBuddy action requires a fresh action-time gate.
+
+That historical correction produced implementation commit
+`666c9d4cdbbc0a2aeb57c0b94598f4501e246c4f` and candidate
+`golden-key-openmontage-0.3.25-m1.2-compact-readiness-20260830.zip`, SHA256
+`4caf57cfcf5d298f0ded1098d4fda5bb482a699f57a72b02bc61f1cd3dbf2dd1`.
+One later WorkBuddy result exposed npm/registry/runtime
+mechanics, HTML/CSS/GSAP and other unrelated capability detail, and large
+image/video/TTS catalogues. Independent review returned
+`REJECT / P0=0 / P1=1 / P2=1`. The managed handoff was 26,809 bytes; its
+`package_capability_summary` was about 25.95 KB and contained 24 capability rows
+and 63 setup offers. This showed that Skill wording alone did not control answer
+size. Under the Owner's corrected product classification below, the same run
+proves M1.2 core guidance and configuration entries while retaining the review
+findings as UX evidence.
+
+### M1.2 corrected result — COMPLETE / M1.3 NOT STARTED
+
+The Owner's 2026-08-30 correction judges the completed run by this product
+contract:
+
+1. **Trustworthy first-use facts.** After verified PackageRoot resolution, the
+   user learns that the FFmpeg basic path is ready and is explicitly introduced
+   to Remotion, HyperFrames, external AI image/video, and TTS. Internal source,
+   dependency, runtime, and invocation layers remain distinct, but are not a
+   mandatory first-use technical report.
+2. **Understandable ordinary-user result.** WorkBuddy must not falsely claim
+   readiness, expose secrets, require internal commands, block the FFmpeg path,
+   or transfer business decisions to Shell. Extra technical wording or additional
+   relevant declared options are UX findings unless they prevent safe continuation.
+3. **Natural next intent.** Accept ordinary-language continue, local
+   configuration, online AI configuration, defer, or a question about one
+   category. Direct continuation belongs to M2; selected configuration belongs
+   to M1.3; defer changes nothing; a question expands only that category.
+4. **Progressive Provider disclosure.** After an online category is selected,
+   WorkBuddy should normally lead with two or three relevant image/video choices
+   or one or two TTS choices and offer more. These counts are defaults rather than
+   pass/fail thresholds. Shell never owns the recommendation or ranking.
+
+M1.2 acceptance requires one ordinary readiness task in which trusted facts reach
+WorkBuddy and the user can understand the baseline, optional capabilities, and
+available next intents. It does not require executing a local installation, API-
+key configuration, or a particular defer reply. Exact wording and order remain
+variable; acceptance judges user understanding and the correct next boundary, not
+an evaluator transcript.
+
+The earlier reset corrected the prior requirement that Remotion and HyperFrames each be
+explained across four technical layers in the first-use reply. The four layers
+remain internal truth and later configuration/diagnostic evidence. It also proved
+that `provider_menu_summary()` is broad. The current correction treats answer-size
+reduction as a UX improvement, not an uncompleted M1.2 implementation gate.
+
+Current state is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
+COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`.
+
+The completed M1.2 correction authorization changed only the six authority/state documents,
+requires one independent zero-write document review, one commit, and one ordinary
+push on `codex/workbuddy-capability-onboarding`, then stopped. It did not merge into the
+M1 implementation branch, edit Skill/Shell/Package/tests, build or install a
+candidate, run WorkBuddy, install an enhancement, handle a secret, call a
+Provider, produce media, start M1.3 implementation, retry, or repair live. The later
+contract below supersedes only the M1.3 planning gap; M1.2 must not be
+reopened solely to optimize catalogue size or wording.
+
+### M1.3 execution contract — FROZEN / IMPLEMENTATION NOT STARTED
+
+#### User result and interaction
+
+M1.3 starts only after the user selects one capability from ordinary language.
+WorkBuddy first explains its user value and only the facts needed for that choice.
+For a local capability it must show the expected download/disk impact, source or
+license facts, and that FFmpeg production remains available. For an API-key path
+it must explain the account/key requirement, likely cost/privacy/region limits,
+and that a connection check is not media production. The user may approve,
+decline, defer, ask for detail, change the selection, or later ask to recheck.
+These are semantic outcomes, not required phrases or a fixed transcript.
+
+WorkBuddy converts a confirmed choice into a private bounded action. Shell
+validates that action against current Package identity, declarations, plan hash,
+and consent, but does not infer intent from the user's prose. A fixed confirmation
+or secure-entry step is acceptable when needed for safety; an internal command,
+configuration grammar, workspace relay file, or Shell-owned menu is not.
+
+#### Execution stages and hard gates
+
+1. **Interface and authority gate.** Read only the retained M1 branch, installed
+   Skill state, verified Package Tool Definition, and current WorkBuddy invocation
+   surface. Prove one private structured action carrier and one secure input route
+   outside ordinary chat. Record the exact existing-file write allowlist before
+   editing. If either carrier is absent, or a new dependency/repository/second UI
+   is required, stop and request a revised product decision.
+2. **Representative local path.** Prefer Remotion for the first proof because its
+   Package integration and distribution-size decision are already evidenced;
+   HyperFrames remains selectable but need not be installed merely for coverage.
+   Reuse `runtime_prepare.py`: detect, create a source/hash/size/license/version-
+   bound plan, explain impact, obtain consent, download into managed D: storage,
+   atomically install, rediscover, obtain Package recognition, and perform one
+   minimal Package-mediated invocation. Direct base-Package bundling and reliance
+   on an unrelated global command remain forbidden.
+3. **Representative API-key path.** Use only a Provider formally declared by the
+   verified Package. Seedance is the preferred first candidate only when the
+   execution-time declaration and an Owner-supplied usable credential exist; do
+   not silently substitute Kling, MiniMax, or an undeclared Provider. Enter and
+   store the secret outside chat using the single secure route proved in stage 1,
+   expose only exact Package-declared names to the child process, suppress it from
+   requests, arguments, receipts, handoffs, logs, and errors, and run one explicit
+   Package-owned connection test. A media generation call is not a connection
+   test and belongs outside M1.3.
+4. **Recovery and retest.** A declined, deferred, unavailable, failed, or changed
+   optional configuration leaves FFmpeg production usable. WorkBuddy explains the
+   ordinary-user consequence and offers retry only after a new user choice; Shell
+   never auto-falls back or selects another Provider. A later natural-language
+   request must rediscover or retest the chosen path without requiring the user to
+   know commands, paths, environment names, or stored secret values.
+5. **Evidence and closeout.** Focused checks may establish only a local contract.
+   M1.3 needs one real managed local result through actual Package invocation and
+   one real secure API-key result through an authorized connection test. Each
+   result records consent binding, Package identity, honest final state, secret-
+   absence checks, and recovery/defer behavior. One independent zero-write result
+   review follows the complete pair; M1.4, media quality, and branch cleanup do not
+   occur inside M1.3.
+
+Hard-stop conditions are Package identity/declaration drift; plan, source, hash,
+size, license, target, or consent mismatch; no private action or secure-input
+route; any secret in ordinary chat or observable transport; undeclared Provider;
+unexpected paid/media call; failed rediscovery, Package recognition, or Package-
+mediated invocation; automatic retry/substitution; a need for a new branch,
+dependency, general framework, workspace carrier, second Agent, or Shell decision
+logic. Preserve the evidence and the FFmpeg route; do not broaden the task.
+
+#### Boundary and authorization
+
+This contract does not authorize implementation. The later executor reuses
+`codex/workbuddy-m1-capability-onboarding`; it does not create an M1.3 branch.
+Stage 1 must freeze the exact smallest write set before any code edit. Stages 2
+and 3 require separate action-time permission immediately before installation,
+credential handling, or a Provider/network call. This planning task changes only
+the six authority/state documents, receives one independent zero-write review,
+commits once, and ordinarily pushes the planning branch without another pause.
+It runs no tests or WorkBuddy and performs no installation, secret, Provider,
+Package mutation, candidate, media, merge, or cleanup action.
+
+#### Read-only prerequisite result and frozen write set
+
+The stage-1 read-only feasibility review is complete. Current WorkBuddy 5.3.14's
+built-in `library` Skill proves a similar fixed-mode/canonical-stdin script
+pattern is supported; it does not prove Golden Key already has a private action
+carrier. Windows native credential UI plus current-user Credential Manager are
+the candidate non-chat route, which implementation must prove as a masked,
+user-usable flow. The verified Package may be extended to formally declare and
+own a read-only, non-media Seedance connection test; that action does not yet
+exist. Golden Key has not implemented or proved its carrier, credential flow,
+connection test, local installation, or user-visible recovery.
+
+The independently reduced implementation write set is frozen as follows:
+
+- Shell source: `workbuddy-skill/golden-key-openmontage/SKILL.md`,
+  `golden_key_openmontage_workbuddy/user_entry.py`,
+  `golden_key_openmontage_workbuddy/workbuddy_entry_cli.py`,
+  `golden_key_openmontage_workbuddy/session_launcher.py`,
+  `golden_key_openmontage_workbuddy/fixed_child.py`, and
+  `golden_key_openmontage_workbuddy/installer.py`.
+- Shell tests: `tests/workbuddy/test_installer.py`,
+  `tests/workbuddy/test_workbuddy_entry_cli.py`, and
+  `tests/workbuddy/test_session_launcher.py`.
+- Package source/test: `GOLDEN_KEY_OPENMONTAGE_RELEASE.json`,
+  `tools/video/seedance_ark.py`, and
+  `tests/contracts/test_seedance_ark_video.py`.
+- Generated Package lock: `GOLDEN_KEY_OPENMONTAGE.lock.json`; regenerate it from
+  the approved Package sources and never edit it by hand.
+
+This allowlist explicitly excludes `run.ps1`, because its existing stdin pipe is
+sufficient unless execution evidence disproves that, and `tools/base_tool.py`,
+because one representative Provider does not justify a generalized interface.
+It also excludes `runtime_prepare.py`: the existing managed local-capability path
+must be reused. Any required path outside this list is a hard stop and requires a
+new planning decision, not opportunistic expansion. Freezing this list records
+scope only; it does not itself authorize implementation or any action-time gate.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -955,12 +1145,15 @@ read-only official-document and Package inspection:
 | MiniMax | Core goal-dependent alternative | Direct mainland/global routes exist | Static integration only; account, credentials, balance, connection, price, and current model availability remain unverified. |
 
 Provider display follows the verified Package's current formal declarations.
-Providers absent from those declarations are not shown or offered in M1. This is
-not a Shell routing table, fixed Provider menu, or instruction to hard-code model
-versions.
+Providers absent from those declarations are not shown or offered in M1. After a
+user selects a category, WorkBuddy should normally lead with two or three relevant
+image/video choices or one or two TTS choices and offer more. This is a UX default,
+not a hard gate or a Shell routing table,
+fixed Provider menu, ranking rule, or instruction to hard-code model versions.
 
-- M1.2 owns the single scan, ordinary-language explanation, and entry into either
-  local-install or API-key configuration.
+- M1.2 owns trustworthy first-use facts, ordinary-language capability guidance,
+  and entry into continue, local-install, API-key configuration, defer,
+  or a category question.
 - M1.3 owns the selected mutation, consent, validation, recovery, and later
   retest. Local completion requires install, rediscovery, Package recognition,
   and actual invocation. API-key completion requires secure non-chat input and
@@ -985,14 +1178,17 @@ Planning examples are not a required WorkBuddy transcript:
 
 1. After verified PackageRoot resolution, the ordinary user is told that the
    FFmpeg-ready basic path is available.
-2. Remotion, HyperFrames, external video generation, and TTS are represented by
-   honest current states such as ready, not configured, unavailable, deferred, or
-   connection not tested. Optional absence never blocks the basic path or becomes
+2. Remotion, HyperFrames, external AI image/video, and TTS are explicitly named
+   and represented by honest ordinary-language states such as ready, not
+   configured, deferred, or connection not tested. Their
+   four technical layers remain internal. Optional absence never blocks the basic path or becomes
    an `OpenMontage capability insufficient` message.
-3. Provider guidance comes only from the verified Package's formal declarations;
-   current static evidence covers Seedance, Kling, and MiniMax. Seedance is the
-   current default recommendation.
-4. The user can continue immediately or select configuration. Provider/model,
+3. Provider guidance comes only from the verified Package's formal declarations.
+   After a relevant selection, the preferred first menu normally contains two or
+   three image/video choices or one or two TTS choices and offers more. These
+   counts guide UX quality but do not decide whether configuration can continue.
+4. The user can continue immediately, select local or online configuration,
+   defer without mutation, or ask about one category. Provider/model,
    credentials, privacy, cost/availability, consent, connection testing, and
    recovery stay in WorkBuddy's conversation.
 5. One representative local capability is installed, rediscovered, recognized,
@@ -1406,15 +1602,15 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_2_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / SECOND_BOUNDED_SKILL_CORRECTION_AUTHORIZED
+current_task: M1_3_EXECUTION_CONTRACT_DOCUMENTATION / CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
-candidate_skill: SEMANTIC_CORRECTION_INSTALLED_FOR_LATEST_REJECTED_PROBE / ZIP_SHA256_C2B91D30AADE188A133626B578E976857A10ABD57F3F24EFD4100BAB2820F293 / SKILL_SHA256_1DFDB2F24758AAF97560C035A01310987709AD202D307C35C9E27642802B40C0 / RUN_PS1_SHA256_BFE8692BAC206C556274013A1BE25F544985329D3203E552145EDF003FD5A190 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL
-capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / USER_RESULT_REJECTED_P1_3
-implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_A884124718EAB4BCDB0F98C59AE67ACC7008F2FD / CLEAN
+candidate_skill: COMPACT_READINESS_CURRENTLY_INSTALLED / USED_FOR_M1_2_PROOF / UX_OVERLOAD_RECORDED / ZIP_SHA256_4CAF57CFCF5D298F0DED1098D4FDA5BB482A699F57A72B02BC61F1CD3DBF2DD1 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL / RECHECK_AT_EXECUTION
+capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_CONTRACT_FROZEN_IMPLEMENTATION_NOT_STARTED
+implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_666C9D4CDBBC0A2AEB57C0B94598F4501E246C4F / CLEAN
 implementation_skill_commit: C8EEB91E221EC96A406543C183091EEA7EA6AC3C / AUTHORITY_MERGE_F9880C247ED61744B4BBA2F83FFA6411EB49C413
 implementation_consumer_correction_commit: 5229964AC681D7B34949480326E6F24A0C53913F / PUSHED
 corrected_candidate_skill: REVIEWED_UNINSTALLED / ZIP_SHA256_116737071D377B67DFF6EA93FE18534114C17E762D32116EFC5C4B973E000228 / SKILL_SHA256_7D285376B2F3531C1891B2EBF40D6D612B9B7531BE6776FDF5C8C72524041753 / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B
-semantic_correction_skill: IMPLEMENTATION_COMMIT_A884124718EAB4BCDB0F98C59AE67ACC7008F2FD / INSTALLED_FOR_REJECTED_PROBE / ZIP_SHA256_C2B91D30AADE188A133626B578E976857A10ABD57F3F24EFD4100BAB2820F293
+semantic_correction_skill: HISTORICAL_PROBE_ONLY / IMPLEMENTATION_COMMIT_A884124718EAB4BCDB0F98C59AE67ACC7008F2FD / ZIP_SHA256_C2B91D30AADE188A133626B578E976857A10ABD57F3F24EFD4100BAB2820F293
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
 implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_ACTIVE_M1_2
 task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE / C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28 EMPTY_EVIDENCE_DIRECTORY_PRESERVED / C:\Users\blazi\WorkBuddy\2026-08-29-20-41-51 EMPTY_AFTER_WORKBUDDY_TEMP_PARSE_CLEANUP
@@ -1425,31 +1621,39 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / SECOND_BOUNDED_SKILL_CORRECTION_AUTHORIZED / M1_3_BLOCKED
+m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED / COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
 m1_2_execution_contract_document_review: HISTORICAL_APPROVE / FEASIBILITY_GAP_NOT_DETECTED / NOT_CURRENT_AUTHORITY
-m1_2_corrected_route: WORKBUDDY_PACKAGE_DISCOVERY_FIRST / ONE_BOUNDED_PROBE / SHELL_FALLBACK_REQUIRES_NEW_OWNER_DECISION
-m1_2_probe_product_write_allowlist: NONE / EXISTING_SKILL_CANDIDATE_ONLY
+m1_2_corrected_route: CORE_RESULT_ACCEPTED / EXISTING_MECHANICAL_HANDOFF_REUSED / NO_FURTHER_M1_2_IMPLEMENTATION
+m1_2_probe_product_write_allowlist: SIX_AUTHORITY_DOCUMENTS_ONLY / STOP_BEFORE_IMPLEMENTATION
 m1_2_first_discovery_probe_result: NOT_PROVED_WORKBUDDY_DISCOVERY / CAPABILITY_FACTS_DID_NOT_REACH_USER_DIALOGUE / UNAPPROVED_FILE_CARRIER_STOPPED
 m1_2_premature_attempt: NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED / EMPTY_TASK_WORKSPACE_ALLOWED
 m1_2_handoff_consumer_candidate_review: APPROVE / P0=0 / P1=0 / P2=0 / ZIP_SHA256_437B02C60AA234197FB419275AC64C5DF804C5F477FDBA16FDE3278F772E68D2
-m1_2_latest_probe_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / TASK_DIRECTORY_EMPTY
-m1_2_probe_result_review: REJECT / P0=0 / P1=3 / P2=0
+m1_2_latest_probe_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / CORE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED / RECEIPT_SHA256_3D9F8F866F4910230B2C248CFD9519F00F495EC72380B24918DA4604B096AC52 / HANDOFF_SHA256_71265F6B469BEEDA1D4AE234B36CDF353A0F1A42023FDE262E060CF35BFDEC80 / HANDOFF_26809_BYTES / CAPABILITY_ROWS_24 / SETUP_OFFERS_63
+m1_2_probe_result_review: HISTORICAL_COMPACT_REJECT_P0_0_P1_1_P2_1_RECLASSIFIED_AS_NONBLOCKING_UX_FINDINGS / PREVIOUS_SEMANTIC_RESULT_REJECT_P0_0_P1_3_P2_0
 m1_2_remotion_truth: SOURCE_INTEGRATED / PROJECT_DEPENDENCIES_ABSENT / RUNTIME_NOT_READY / PACKAGE_INVOCATION_NOT_VERIFIED
 m1_2_consumer_correction: PUSHED_COMMIT_5229964AC681D7B34949480326E6F24A0C53913F / CORRECTED_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNINSTALLED / WORKBUDDY_RETEST_NOT_AUTHORIZED
 package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F65B71B7C2E7C55F1D04_PUSHED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNREGISTERED / UNACTIVATED
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
-m1_2_final_readiness_result: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
-m1_2_next_gate: SECOND_BOUNDED_SKILL_CORRECTION_AUTHORIZED / STOP_BEFORE_WORKBUDDY / NEW_ACTION_GATE_REQUIRED
+m1_2_semantic_readiness_result: HISTORICAL / WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
+m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_IMPLEMENTATION_NOT_STARTED
+m1_3: PREREQUISITE_ROUTE_REVIEWED / WRITE_SET_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED
+m1_3_existing_local_primitive: RUNTIME_PREPARE_REUSE_REQUIRED / NO_PRODUCTION_CALLER_PROVED
+m1_3_existing_secret_transport: FAIL_CLOSED_ALLOWLIST_AND_REDACTION_REUSE_REQUIRED / PRODUCTION_ALLOWLIST_EMPTY
+m1_3_candidate_route: BUILTIN_LIBRARY_SKILL_PATTERN_FOR_FIXED_MODE_AND_CANONICAL_STDIN_JSON / WINDOWS_NATIVE_CREDENTIAL_UI_AND_CURRENT_USER_CREDENTIAL_MANAGER_TO_BE_PROVED / PACKAGE_OWNED_NON_MEDIA_CONNECTION_TEST_TO_BE_DECLARED_AND_IMPLEMENTED
+m1_3_unproved_product_results: GOLDEN_KEY_PRIVATE_ACTION_CARRIER / GOLDEN_KEY_CREDENTIAL_FLOW / PACKAGE_CONNECTION_TEST / LOCAL_INSTALL_AND_INVOCATION / USER_VISIBLE_RECOVERY
+m1_3_write_set_review: REJECT_ORIGINAL_15_PATHS_P0_0_P1_3_P2_1 / REMOVE_RUN_PS1_AND_TOOLS_BASE_TOOL_PY / REDUCED_ALLOWLIST_FROZEN
+m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRAMES_NOT_REQUIRED_FOR_COVERAGE
+m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING
 remotion_distribution: ON_DEMAND_MANAGED_M1_3 / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY
 m1_2_shell_factual_relay_write_set: golden_key_openmontage_workbuddy/fixed_child.py / tests/workbuddy/test_installer.py / EXACT_ONLY
 m1_2_shell_factual_relay_local_ceiling: VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT / COMMIT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / NOT_M1_2_COMPLETE
 workbuddy_model_priority: AVAILABLE_0_00X_FIRST / SWITCH_AMONG_0_00X_WHILE_WAITING / POSITIVE_MULTIPLIER_ASCENDING_ONLY_IF_ALL_0_00X_UNAVAILABLE
-package_declared_video_providers: SEEDANCE_DEFAULT / KLING_MINIMAX_CURRENT_STATIC
+package_declared_video_providers: SEEDANCE_KLING_MINIMAX_CURRENT_STATIC / WORKBUDDY_PROGRESSIVE_RECOMMENDATION_DEFAULT_NOT_HARD_COUNT / NO_SHELL_RANKING
 provider_live_readiness: NOT_VERIFIED
 configuration_mechanisms: LOCAL_INSTALL_AND_API_KEY
 flexible_configuration_document_review: APPROVE / P0=0 / P1=0 / P2=0

@@ -89,7 +89,7 @@ and did not clearly offer all four continue/local/API-key/defer choices. Read-on
 inspection confirms OpenMontage does integrate Remotion source, adapters, and a
 `4.0.484` dependency lock, but the active Package lacks
 `remotion-composer/node_modules`; it is integrated, not runtime-ready or
-invocation-verified. The Owner authorizes a minimal Skill consumer correction,
+invocation-verified. The Owner then authorized a minimal Skill consumer correction,
 six-document synchronization, independent zero-write reviews, ordinary commits
 and pushes, and one newly named uninstalled candidate. Another WorkBuddy probe,
 installation, Package mutation, Provider/secret/media action, and M1.3 remain
@@ -99,8 +99,9 @@ The correction is pushed at
 `5229964ac681d7b34949480326e6f24a0c53913f`. The corrected candidate ZIP,
 SHA256 `116737071d377b67dff6ea93fe18534114c17e762d32116efc5c4b973e000228`,
 passed independent zero-write review `APPROVE / P0=0 / P1=0 / P2=0` and remains
-uninstalled. It is preparation evidence only; the rejected M1.2 user result is
-unchanged until a separately authorized WorkBuddy retest passes.
+uninstalled. At that historical checkpoint it was preparation evidence only; the
+rejected M1.2 user result was unchanged until a separately authorized WorkBuddy
+retest passed.
 
 The bounded package-size checkpoint is complete and pushed on the M1 branch at
 `d94d90c486f1d72452a6f65b71b7c2e7c55f1d04`. At that checkpoint, the then-active
@@ -143,31 +144,51 @@ The run exited successfully with one spawn, no retry, no media, no Provider or
 renderer selection, and no production decision. Its exact task directory
 `C:\Users\blazi\WorkBuddy\2026-08-30-19-50-10` is empty.
 
-The dialogue again proved the factual relay, continuing FFmpeg baseline, and all
-four choices. Independent review nevertheless returned
+The dialogue proved the factual relay, continuing FFmpeg baseline, and all four
+choices. At that historical checkpoint, independent review returned
 `REJECT / P0=0 / P1=3 / P2=0`: partially configured groups were shown as ready,
 the first-use result expanded a broad Provider/configuration catalogue, and
 Remotion/HyperFrames were not separately explained across source integration,
 project dependencies, runtime readiness, and real invocation verification. The
-result remains terminal `NOT_PROVED`; M1.3 remains blocked.
+result was recorded as `NOT_PROVED`; the later Owner correction below supersedes
+that product classification without changing the raw evidence.
 
-The Owner authorizes one further bounded correction through reviewed, pushed
-documents and one reviewed, pushed, newly named uninstalled Skill candidate.
-Only `workbuddy-skill/golden-key-openmontage/SKILL.md` may change after the exact
-planning head is merged. The installed same-name Skill must not be overwritten
-or automatically uninstalled. WorkBuddy, Shell, Package, tests, optional
-installation, credentials, Provider calls, media, M1.3, retry, and live repair
-remain outside this correction. The next WorkBuddy action remains separately
-gated.
+The subsequent compact-readiness implementation is commit
+`666c9d4cdbbc0a2aeb57c0b94598f4501e246c4f`; its candidate ZIP is
+`golden-key-openmontage-0.3.25-m1.2-compact-readiness-20260830.zip`, SHA256
+`4caf57cfcf5d298f0ded1098d4fda5bb482a699f57a72b02bc61f1cd3dbf2dd1`.
+The one later WorkBuddy result still exposed npm/registry/runtime details,
+unrelated HTML/CSS/GSAP and other capability descriptions, and the large video/
+TTS catalogues. Independent review rejected that ordinary-user result with
+`REJECT / P0=0 / P1=1 / P2=1`. The
+managed handoff was 26,809 bytes; its `package_capability_summary` was about
+25.95 KB and contained 24 capability rows plus 63 setup offers. Tightening Skill
+wording did not make the over-broad fact surface stable.
 
-M1.2 passes only when the ordinary dialogue visibly explains the continuing
-FFmpeg basic path, gives honest Remotion/HyperFrames/external-video/TTS and
-Package-declared Provider states, offers continue/local/API-key/defer, and honors
-the deferred non-mutating boundary. Optional installation, chat secrets,
+The Owner therefore superseded the next Skill-only correction with a
+documentation-only product-flow reset. That task changed only the six authority/
+state documents, obtained one independent zero-write document review, committed
+once, and ordinarily pushed the planning branch. It did not merge into the M1
+implementation branch, modify Skill/Shell/Package/tests, build or install a
+candidate, run WorkBuddy, configure anything, call a Provider, produce media, or
+start M1.3.
+
+The Owner's latest correction judges M1.2 by whether the ordinary user learns that
+the FFmpeg basic path is usable now, is explicitly introduced to Remotion,
+HyperFrames, external AI image/video, and TTS, and receives understandable entries
+to continue or configure. The latest run proved that core result. Remotion/
+HyperFrames four-layer facts remain internal truth. A small relevant Provider set
+is still the preferred default after an online category is selected—normally two
+or three image/video choices or one or two TTS choices—but the count is not a hard
+acceptance threshold. Extra relevant declared choices are a UX issue, not proof
+that the configuration entry failed. Optional installation, chat secrets,
 Provider/connection calls, media, M1.3, Shell fallback, retry, source repair,
-workspace relay files or managed-summary copies, old-root edits, and
-historical-asset overwrite remain
-forbidden. Failure is terminal `NOT_PROVED`, not a repair loop.
+workspace relay files or managed-summary copies, old-root edits, and historical-
+asset overwrite remain forbidden in this documentation task. False readiness,
+secret exposure, a blocked FFmpeg path, unusable configuration entries, internal-
+command burden, unsafe mutation, or Shell-owned choice would be a real M1.2
+failure; catalogue length or technical wording alone is a UX finding. This latest
+classification correction has the same documentation-only boundary.
 
 The rejected v2 candidate ZIP SHA256 is
 `bd35b98087cd7a03f909dc17bbd6048388a7c46e2251c3893a3f9f056d653249`.
@@ -225,17 +246,21 @@ tasks. M1.1–M1.4 are steps within M1, not M0 subtasks.
 
 The next product path begins with capability readiness, not a claim that
 OpenMontage becomes incapable when an enhancement is absent. FFmpeg is the basic
-production baseline. WorkBuddy performs a light first-use inventory, tells the
-ordinary user that basic production is ready when FFmpeg is ready, and presents
-relevant optional enhancements such as Remotion, HyperFrames, external video
-generation, and TTS as choices that may be configured now or later.
+production baseline. Verified first-use facts reach WorkBuddy, which tells the
+ordinary user that basic production is ready when FFmpeg is ready, and
+explicitly presents Remotion and HyperFrames as optional local enhancements and AI
+image/video and TTS as optional online enhancements that may be configured now or
+later. Their internal technical layers are not a mandatory first-use report.
 
 M1 now derives its visible Provider set from the verified Package's formal
-declarations. Current static evidence includes Seedance, Kling, and MiniMax;
-Seedance is the current default recommendation. Undeclared Providers do not appear
-in the M1 user experience or acceptance scope. This snapshot is not a Shell
-routing table and does not prove credentials, account permission,
-balance, connectivity, regional availability, or live model availability.
+declarations. Current static evidence includes Seedance, Kling, and MiniMax.
+After a relevant category is selected, the preferred first menu normally contains
+two or three relevant image/video choices or one or two TTS choices and offers to
+show more. This is a progressive-disclosure default, not an exact pass/fail count.
+Undeclared Providers do not appear in M1. This snapshot is
+not a Shell routing or ranking table and does not prove credentials, account
+permission, balance, connectivity, regional availability, price, or live model
+availability.
 
 The configuration journey has two required mechanisms. Local capabilities such
 as Remotion and HyperFrames require approved download, managed installation,
@@ -290,9 +315,10 @@ post-cleanup absence and retained-baseline checks pass.
 
 The Owner accepted the failed probe and authorized a separate zero-write Shell
 factual-relay audit. That audit is complete with
-`PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`: the Package already exposes the compact
-facts, and the existing validated `fixed-child-handoff` is the smallest reusable
-carrier. No implementation or test occurred in the audit.
+`PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`: the Package already exposes a raw factual
+summary, and the existing validated `fixed-child-handoff` is the smallest reusable
+carrier. Current evidence proves the raw summary is too broad for first-use
+display. No implementation or test occurred in the audit.
 
 The Owner's earlier relay-only direction authorized this six-document
 status/contract update, one independent
@@ -332,7 +358,8 @@ temporary file `D:\DevCache\Temp\m11-rg.txt`; the repository stayed clean and th
 path was confirmed absent at closeout.
 
 M1.2 is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
-FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
+CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
+COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`.
 The earlier contract at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174`, first
 discovery probe, and prematurely cancelled probe remain historical failed routes;
 they do not define the current result.
@@ -349,15 +376,39 @@ execution must still inspect the actual installed state rather than infer it.
 
 The corrected Remotion fact is: OpenMontage source integration exists, the active
 Package lacks project-local dependencies, runtime readiness is false, and a real
-Package-mediated invocation is not verified. The WorkBuddy consumer-correction
-authorization covers only the minimal Skill correction, its six-document
-synchronization, one new uninstalled candidate, independent zero-write reviews,
-commits, and pushes; that candidate is now reviewed and uninstalled. The separate
-package-size checkpoint may change only the successor distribution installer and
-its focused test; it does not authorize another WorkBuddy operation, activation,
-or M1.3. Shell
-continues to carry bounded facts only; WorkBuddy owns explanation and choice.
-Another WorkBuddy action and M1.3 remain blocked.
+Package-mediated invocation is not verified. Those four layers remain internal
+truth and later diagnostic/configuration evidence; they are no longer mandatory
+first-use prose. The latest compact-readiness run reached the user with the core
+guidance and entries but also exposed excessive technical/catalogue detail. That
+is a recorded UX finding, not an M1.2 blocker. Shell continues to carry mechanical
+facts only; WorkBuddy owns explanation and choice. M1.3 implementation is not started and still
+requires its own bounded implementation and action authorization.
+
+### M1.3 execution-contract state
+
+The Owner has now authorized and frozen the planning contract and smallest
+implementation write set only. Current code evidence shows two reusable but
+disconnected primitives: bounded Remotion/
+HyperFrames detection and consent-bound managed preparation in
+`runtime_prepare.py`, and fail-closed exact environment allowlisting plus secret
+suppression in the launch path. No production caller currently reaches the local
+preparation function; the production entry supplies empty local-capability
+evidence and empty Provider environment names. No verified non-chat credential
+input/store or Package-owned connection-test path has been found. These are
+implementation prerequisites, not proof of configuration.
+
+The completed read-only prerequisite review found that current WorkBuddy 5.3.14's
+built-in `library` Skill proves a similar fixed-mode/canonical-stdin script
+pattern is supported. Windows native credential UI plus current-user Credential
+Manager are the candidate non-chat secret route, and Seedance can be extended
+with a formally declared Package-owned read-only connection test. Golden Key has
+not yet proved its carrier or credential flow, and that connection test does not
+yet exist. An independent minimality review removed
+`run.ps1` and `tools/base_tool.py` from the candidate write set. The next
+implementation reuses `codex/workbuddy-m1-capability-onboarding` and the exact
+write set frozen in the Task Register; the freeze itself is not implementation
+authorization. M1.3 state is `PREREQUISITE_ROUTE_REVIEWED /
+WRITE_SET_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED`.
 
 ## Non-goals
 

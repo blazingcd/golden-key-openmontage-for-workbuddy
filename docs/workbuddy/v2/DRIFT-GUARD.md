@@ -47,15 +47,17 @@ by themselves.
 - Remotion, HyperFrames, external video generation, TTS, and similar components
   are optional enhancements. Missing or deferred enhancements must not be labeled
   as OpenMontage incapability or block the basic path.
-- After verified PackageRoot lookup, WorkBuddy may use its own current tools and
-  Package semantics for a light first-use inventory. The initial result is a
-  compact conversation limited to FFmpeg, Remotion, HyperFrames, external video,
-  and TTS; do not expand unrelated capability rows, raw setup offers, a broad
-  Provider catalogue, or a readiness dashboard.
+- After verified PackageRoot lookup, the initial result says that FFmpeg-backed
+  basic production works now and explicitly introduces Remotion and HyperFrames
+  as optional local enhancements plus external AI image/video and TTS as optional
+  online enhancements. Do not hide Remotion or HyperFrames behind only a generic
+  category name.
 - Only necessary dependencies plus a true runtime state and real Package
   invocation evidence permit “ready”. Partial counts, adapter presence, and
-  available Provider names do not. Remotion and HyperFrames each preserve
-  separate source-integration, dependency, runtime, and invocation states.
+  available Provider names do not. Remotion and HyperFrames preserve separate
+  source-integration, dependency, runtime, and invocation states internally;
+  first-use copy compresses them into an ordinary configuration status and does
+  not expose a four-layer technical report.
 - WorkBuddy owns relevance, Provider/model choice, credentials, cost/privacy,
   consent, connection testing, and recovery. Shell remains limited to bounded
   detection, exactly approved preparation, and factual relay.
@@ -63,9 +65,12 @@ by themselves.
   change, or retest capabilities. Do not require a fixed grammar or transcript.
 - Do not turn the inventory into broad disk scanning, a hard-coded capability
   universe, a Shell selector, or a second control plane.
-- M1 shows only Providers formally declared by the verified Package. Current
-  static evidence includes Seedance, Kling, and MiniMax; undeclared Providers are
-  absent from M1. Seedance is the current default recommendation.
+- M1 shows only Providers formally declared by the verified Package. After the
+  relevant category is selected, normally lead with two or three relevant image/
+  video choices or one or two TTS choices and offer more. These counts are a UX
+  default, not a hard acceptance gate; additional relevant declared choices do
+  not by themselves stop configuration. Current static evidence
+  includes Seedance, Kling, and MiniMax; undeclared Providers remain absent.
 - This is dynamic WorkBuddy product/display scope, not a fixed Shell Provider
   menu, routing table, model-version list, or second control plane.
 - Static Package routes do not prove live readiness. Do not invent unsupported
@@ -151,7 +156,7 @@ by themselves.
   `0d71485772c6afd59b925c1ef9012a3b320ccf1dcbe398b6edb1abfb0f02c7ab`; it
   remains unregistered and unactivated. Do not rebuild or relabel it.
 
-## M1.2 final-readiness execution guard
+## Historical M1.2 final-readiness execution guard — EXECUTED / SUPERSEDED
 
 - Reuse the existing M1 branch. Merge the exact pushed planning head ordinarily;
   no new branch, rebase, force, history rewrite, or unrelated change.
@@ -180,9 +185,10 @@ by themselves.
 ## Historical M1.1 evidence and M1.2 entry guard
 
 This section records the route through the factual-relay implementation. Its
-phase-specific write authority is closed; the correction guard below is the only
-active WorkBuddy-consumer write authority. The package-size checkpoint above is a
-separate successor-distribution exception and does not reopen WorkBuddy.
+phase-specific write authority is closed. The product-flow reset below is the only
+current authority and is documentation-only. The package-size checkpoint above
+is a closed historical successor-distribution exception and does not reopen
+WorkBuddy.
 
 - M1.1 facts are accepted, but its independent sub-audit created and removed
   `D:\DevCache\Temp\m11-rg.txt`; retain
@@ -201,12 +207,13 @@ separate successor-distribution exception and does not reopen WorkBuddy.
   promote it as complete, delete, rewrite, call M1.2 complete, or start M1.3 from
   that status.
 - M1.2 must present compact trustworthy current facts first and deepen only when
-  the user's goal or choice needs it. The verified Package Guide's
-  `provider_menu_summary()` is an existing candidate for a proved WorkBuddy-owned
-  discovery route, not a fixed step for every possible fact path. Do not dump raw
-  Package data, mutate PackageRoot, or absorb a Package rebuild into M1.2.
-- M1.2 owns one unified scan, ordinary-language explanation, honest state, and
-  continue/configure entry for the verified Package's formal capability set.
+  the user's question or choice needs it. The full `provider_menu_summary()` is
+  not an acceptable first-use projection: current evidence shows about 25.95 KB,
+  24 capability rows, and 63 setup offers. Do not dump raw Package data, mutate
+  PackageRoot, or absorb a Package rebuild into M1.2.
+- M1.2 owns the purpose-specific readiness projection, ordinary-language
+  explanation, and next-intent handoff. It does not own a Provider catalogue or
+  a user-visible technical readiness audit.
   M1.3 owns selected configuration, consent, validation, recovery, and later
   retest. Local completion requires managed install, rediscovery, Package
   recognition, and actual invocation. API-key completion requires non-chat secure
@@ -227,7 +234,9 @@ separate successor-distribution exception and does not reopen WorkBuddy.
 - The separate zero-write audit of the smallest existing Shell factual-relay route
   completed as `PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY`. It found the existing
   validated `fixed-child-handoff` to be the minimum carrier for the verified
-  Package compact summary. This is feasibility evidence, not M1.2 completion.
+  Package raw factual summary. Current evidence proves that raw summary is not a
+  compact first-use display surface. This is carrier feasibility evidence, not
+  M1.2 completion.
 - Every M1.2 step must identify its fact source, owning component, exact write
   paths, failure state, and direct check. The allowlist must be sufficient for the
   promised result; a check that only proves wording, packaging, or old behavior
@@ -293,7 +302,7 @@ separate successor-distribution exception and does not reopen WorkBuddy.
   and six-document closeout. Clean only the exact recorded D: temporary directory;
   never touch `C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10`.
 
-## Current M1.2 consumer-result correction guard
+## Historical M1.2 consumer-result correction guard
 
 - The 19:32 WorkBuddy attempt is
   `NOT_PROVED_PREMATURE_HARD_STOP / NEW_SKILL_NOT_INVOKED`. Its empty task
@@ -301,7 +310,8 @@ separate successor-distribution exception and does not reopen WorkBuddy.
   evidence. The unchanged old LauncherReceipt is the decisive invocation fact.
 - The installed handoff-consumer candidate completed one `Hy3 0.00x` readiness
   probe. The factual relay reached dialogue, but independent review rejected the
-  user result `REJECT / P0=0 / P1=3 / P2=0`; M1.2 remains incomplete.
+  user result `REJECT / P0=0 / P1=3 / P2=0`; at that historical checkpoint M1.2
+  remained incomplete. The corrected current classification is recorded below.
 - Correction may change only the six authority/state documents and, after their
   exact pushed head is ordinarily merged, only
   `workbuddy-skill/golden-key-openmontage/SKILL.md`. No Shell, Package, test, or
@@ -342,23 +352,78 @@ separate successor-distribution exception and does not reopen WorkBuddy.
   but review returned `REJECT / P0=0 / P1=3 / P2=0`: partial groups were shown
   as ready, a broad Provider/configuration catalogue was expanded, and Remotion/
   HyperFrames were not separately expressed across four readiness layers. Its
-  state is
+  state at that checkpoint was
   `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
   FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
-- The next correction may update only the six authority/state documents and,
-  after their exact pushed head is ordinarily merged, only
-  `workbuddy-skill/golden-key-openmontage/SKILL.md`. The instruction must limit
-  the initial summary to the five named themes, forbid raw setup offers, unrelated
-  capability rows, broad Provider catalogues, and readiness dashboards, require
-  dependencies plus true runtime plus real Package invocation before “ready”, and
-  require separate Remotion and HyperFrames four-layer explanations. It must not
-  hard-code a transcript or move interpretation into Shell.
-- Build one newly named uninstalled candidate, obtain one zero-write document
-  review and one zero-write candidate review, make one ordinary commit/push on
-  each branch, and stop before WorkBuddy. The currently installed same-name Skill
-  must not be overwritten or automatically uninstalled. No Package, Shell, test,
-  optional install, secret, Provider, media, M1.3, retry, or live repair is
-  authorized.
+## Current M1.2 corrected-result guard
+
+- The later compact-readiness candidate at implementation commit `666c9d4...`,
+  ZIP SHA256
+  `4caf57cfcf5d298f0ded1098d4fda5bb482a699f57a72b02bc61f1cd3dbf2dd1`,
+  received historical review `REJECT / P0=0 / P1=1 / P2=1` because its reply
+  exposed npm/registry/runtime and unrelated capability details. The Owner's
+  correction retains those as non-blocking UX findings: the same run proved facts
+  reached WorkBuddy, the FFmpeg baseline and required optional capabilities were
+  shown, and configuration entries were understandable.
+- M1.2 is `CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / COMPLETE`.
+  Do not claim that this proves an actual Remotion/HyperFrames installation or
+  API-key configuration. Those belong to `M1_3_IMPLEMENTATION_NOT_STARTED`.
+- The completed M1.2 correction authorization was documentation-only: it updated
+  the six authority/state documents, received one independent zero-write document
+  review, committed once, and ordinarily pushed the planning branch. It did not
+  merge into the M1 implementation branch, edit product/Skill/test files,
+  build/install a candidate, run WorkBuddy, install an enhancement, handle a
+  secret, call a Provider, produce media, start M1.3 implementation, retry, or
+  repair live. The later section supersedes only its M1.3 planning gap.
+- Do not reopen M1.2 solely to optimize catalogue size or wording. Carry those UX
+  findings into M1.3 only where they affect the selected configuration journey.
+  Shell may mechanically relay facts but must not explain, rank, recommend, or
+  select; WorkBuddy remains the conversation owner.
+
+## Current M1.3 execution-contract guard
+
+- M1.3 does not reopen M1.2 inventory or optimize its first-use prose. It begins
+  only after one local capability or Package-declared Provider is selected.
+- The read-only prerequisite review found a feasible candidate route: the built-in
+  `library` Skill proves a similar fixed-mode/canonical-stdin pattern; Windows
+  native credential UI/current-user Credential Manager is the candidate secret
+  route; and the Package may be extended to declare and own a non-media connection
+  test. Golden Key has not proved its carrier or masked input, and the connection
+  test does not yet exist.
+- The exact reduced write set is frozen in the Task Register. Do not change
+  `run.ps1`, `tools/base_tool.py`, or `runtime_prepare.py`; the first already pipes
+  stdin, the second would be premature generalization, and the third must be
+  reused. Any extra path is a hard stop and requires a new planning decision. The
+  scope freeze is not implementation authorization.
+- Shell must not parse user prose; do not use a workspace file, fixed user command,
+  environment-name instruction, or second control plane as a substitute.
+- Reuse `runtime_prepare.py` for local detection, consent-bound planning, managed
+  installation, and rediscovery. Do not add another detector/installer, bundle
+  Remotion, or treat a global command as Package readiness.
+- Reuse the fail-closed exact environment allowlist and secret-suppression launch
+  path. Current empty production allowlists and the absence of a verified secure
+  input/store are gaps, not evidence that API configuration works.
+- Local proof requires managed installation, rediscovery, Package recognition,
+  and actual Package-mediated invocation. API proof requires a formally declared
+  Provider, secure storage, exact allowlisting, no secret in observable transport,
+  and one authorized Package-owned non-media connection test.
+- Remotion is the preferred representative local path; HyperFrames remains
+  available but is not installed merely for coverage. Seedance is the preferred
+  representative API path only when the execution-time declaration and an Owner-
+  supplied credential exist. Never silently substitute Kling, MiniMax, or an
+  undeclared Provider.
+- Missing, declined, deferred, or failed optional configuration preserves the
+  FFmpeg path. Retry or selection change requires a new user choice; Shell never
+  auto-falls back or ranks alternatives.
+- Stop on identity/declaration/plan/consent/source/hash/size/license drift, absent
+  private or secure input route, any secret disclosure, unexpected paid/media
+  call, failed Package recognition/invocation, or need for a new dependency,
+  branch, repository, generic framework, workspace carrier, second Agent, or
+  Shell decision logic.
+- Current authority is documentation-only: exactly six authority/state files,
+  one independent zero-write review, one commit, and one ordinary planning-branch
+  push. No merge, implementation, test, WorkBuddy, candidate, install, credential,
+  Provider/network, Package mutation, media, or cleanup action is authorized.
 
 ## Result guard
 

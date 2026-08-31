@@ -140,7 +140,7 @@ proved the factual relay reached the ordinary dialogue, but its user result was
 independently rejected `REJECT / P0=0 / P1=3 / P2=0`: it conflated integrated
 Remotion source with current runtime readiness, exposed environment-variable
 mechanics, and omitted a clear defer choice and separate local-configuration
-entry. The Owner now authorizes a bounded correction in the same six authority
+entry. The Owner then authorized a bounded correction in the same six authority
 documents and the existing Skill source, independent zero-write reviews,
 ordinary commits and pushes, and one newly named uninstalled candidate. This
 does not authorize another WorkBuddy run, installation, Provider/secret/media
@@ -149,7 +149,8 @@ action, PackageRoot change, M1.3, or branch cleanup.
 That correction is now pushed at implementation commit
 `5229964ac681d7b34949480326e6f24a0c53913f`. The newly named candidate is
 independently reviewed `APPROVE / P0=0 / P1=0 / P2=0` and remains uninstalled.
-M1.2 still requires a separately authorized WorkBuddy user-result retest.
+At that historical checkpoint, M1.2 still required a separately authorized
+WorkBuddy user-result retest.
 
 The Owner's later 2026-08-29 package-size direction authorizes one bounded
 distribution checkpoint without reopening the WorkBuddy gate. Read-only evidence
@@ -181,13 +182,14 @@ unregistered and unactivated successor ZIP is 177,241,928 bytes with SHA256
 PackageRoot is 463,051,387 bytes. The active Package, registration, and installed
 state remain unchanged.
 
-The next M1.2 action is frozen as one final readiness-acceptance sequence in the
-Task Register, but is not executed by this documentation task. It reuses the
-reviewed slim candidate, activates it only through the existing Registration/
-Locator path, builds and normally installs one newly named corrected Skill bound
-to that active root, runs exactly one non-production WorkBuddy readiness task,
-and obtains one independent zero-write user-result review. Do not edit product
-source, install optional capabilities, handle credentials, call Providers,
+The historical next M1.2 action was frozen as one final readiness-acceptance
+sequence in the Task Register. It reused the
+reviewed slim candidate, activated it only through the existing Registration/
+Locator path, built and normally installed one newly named corrected Skill bound
+to that active root, ran one non-production WorkBuddy readiness task,
+and obtained an independent zero-write user-result review. That sequence and its
+later Skill-only correction are superseded by the product-flow reset. Do not edit
+product source, install optional capabilities, handle credentials, call Providers,
 produce media, retry, or repair live. A same-name installed Skill is a hard stop
 before Package activation and again before Skill installation; the Owner must
 uninstall it manually because WorkBuddy Skills cannot be overwritten.
@@ -199,8 +201,8 @@ four choices reached the user, but independent review again rejected the result
 `REJECT / P0=0 / P1=3 / P2=0`: partially configured groups were shown as ready,
 the first-use reply expanded a broad Provider/configuration catalogue, and
 Remotion and HyperFrames were not separately explained across source integration,
-project dependencies, runtime readiness, and real invocation verification. The
-exact result remains `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
+project dependencies, runtime readiness, and real invocation verification. At
+that checkpoint the exact result was `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
 
 The Owner's 2026-08-30 direction now authorizes one further bounded correction:
@@ -215,6 +217,26 @@ not be overwritten or automatically uninstalled. No Shell, Package, test,
 optional install, credential, Provider, media, M1.3, second Skill source, retry,
 or live repair is authorized. A later WorkBuddy action still requires a fresh
 action-time gate.
+
+The Owner's later product-flow reset superseded that Skill-only correction. It
+permitted only a six-document planning correction, one
+independent zero-write document review, one commit, and one ordinary push on
+`codex/workbuddy-capability-onboarding`. Do not merge this documentation task into
+the M1 implementation branch, edit Skill/Shell/Package/tests, build or install a
+candidate, run WorkBuddy, handle credentials, call a Provider, produce media, or
+start M1.3.
+
+The Owner's subsequent 2026-08-30 correction reclassifies the latest compact
+readiness result against the actual product goal. That run proved the M1.2 core:
+trusted facts reached WorkBuddy, the FFmpeg baseline and Remotion, HyperFrames,
+external AI video, and TTS were presented, and the user received understandable
+entries to continue or configure. Its catalogue size and technical wording remain
+non-blocking UX findings, not proof that the user cannot proceed. M1.2 is therefore
+complete at the first-use guidance/configuration-entry boundary. It does not prove
+that WorkBuddy can finish a selected local installation or API-key configuration;
+that work belongs to M1.3, which is now `NOT_STARTED` rather than blocked by M1.2.
+This correction retains the same six-document, one-review, one-commit, ordinary-
+push limit and authorizes no implementation or product execution.
 
 ## Product boundary
 
@@ -264,11 +286,15 @@ capability rollup and `composition_runtimes` disagree about a composition engine
 the runtime field controls the ready/not-ready statement. A static tool/provider
 entry must not be upgraded into runtime readiness.
 
-On first use, after PackageRoot verification, WorkBuddy should perform a light
-capability inventory using its own current tools and the verified Package
-semantics. It explains the FFmpeg baseline and the status of relevant optional
-enhancements such as Remotion, HyperFrames, external video generation, and TTS,
-then lets the user continue immediately or configure selected enhancements.
+On first use, after PackageRoot verification, WorkBuddy explains that the FFmpeg
+baseline can produce a basic video now and explicitly introduces Remotion and
+HyperFrames as optional local enhancements, plus external AI image/video and TTS
+as optional online enhancements. Remotion and HyperFrames are not hidden behind a
+generic category label: the user should know that they can choose and configure
+either one. Their detailed
+source/dependency/runtime/invocation layers remain internal truth and diagnostic
+evidence, not mandatory first-use copy. WorkBuddy then lets the user continue
+immediately, configure one selected category, defer, or ask for more detail.
 WorkBuddy owns the dialogue, relevance, Provider/model choice, cost/privacy
 explanation, consent, and recovery decision. The Shell may only perform bounded
 detection, exactly approved preparation, and factual status relay.
@@ -279,12 +305,17 @@ prescribed transcript, Shell Provider selector, broad disk scan, or second contr
 plane.
 
 M1 displays only capabilities and Providers formally declared by the verified
-Package. Current static evidence includes Seedance, Kling, and MiniMax; undeclared
-Providers do not appear in the M1 user experience or acceptance scope. Seedance
-remains the current default recommendation. Do not hard-code this
-snapshot into Shell: future verified Package declarations may change the visible
-set. Adapter presence never proves account permission, credentials, balance,
-connectivity, regional availability, or current model availability.
+Package. Progressive disclosure is the default UX: after a relevant selection,
+WorkBuddy should normally lead with two or three image/video-generation choices
+or one or two TTS choices suited to the user's goal and offer more on request.
+Those counts are guidance, not a pass/fail threshold; showing additional relevant
+declared choices is an information-design issue, not evidence that configuration
+cannot proceed. Current static evidence includes
+Seedance, Kling, and MiniMax; undeclared Providers do not appear in M1. Do not
+hard-code this snapshot or ranking into Shell: WorkBuddy owns relevance and
+recommendation using current verified Package facts. Adapter presence never
+proves account permission, credentials, balance, connectivity, regional
+availability, price, or current model availability.
 
 M1 must plan two configuration mechanisms as one WorkBuddy journey. Local
 capabilities such as Remotion and HyperFrames are complete only after approved
@@ -331,17 +362,18 @@ focused checks could verify wording and packaging but not the required fact flow
 
 Commit `4cbf8ff3c15dd686a893842ca189ce49fa83023d` on
 `codex/workbuddy-m1-capability-onboarding` is therefore only a partial Skill
-guidance candidate. It must not be called M1.2 complete or
+guidance candidate. At that checkpoint it could not be called M1.2 complete or
 `VERIFIED_LOCAL_CONTRACT`, merged into the formal ref, promoted as complete, or
-used to authorize M1.3. Preserve the branch and worktree while M1.2 is paused; do
-not delete or rewrite them.
+used to authorize M1.3. The shared M1 branch and worktree remain preserved for
+M1.3/M1.4 and their required closeout; do not delete or rewrite them.
 
-M1.2 remains the ordinary-user first-use readiness result: after verified
-PackageRoot resolution, WorkBuddy must obtain trustworthy current facts, explain
-that the FFmpeg baseline can continue, show relevant optional capability and
-Package-declared Provider states honestly, and let the user continue, enter local
-configuration, enter API-key configuration, or defer. A Skill instruction alone
-is not evidence that discovery, state formation, or handoff works.
+M1.2 is the ordinary-user first-use readiness result: after verified PackageRoot
+resolution, trustworthy current facts reach WorkBuddy; WorkBuddy explains that
+the FFmpeg baseline can continue, explicitly introduces Remotion, HyperFrames,
+external AI image/video, and TTS, and gives understandable next entries to
+continue, configure local capabilities, configure API-key capabilities, defer, or
+ask for detail. A Skill instruction alone is not evidence that discovery, state
+formation, or the user-visible entries work.
 
 The corrected WorkBuddy-owned discovery probe has run once and stopped as
 `NOT_PROVED_WORKBUDDY_DISCOVERY`. WorkBuddy verified PackageRoot/Guide and tried
@@ -358,19 +390,20 @@ equal `33f49fb385b103489772d3f8ce2f7cb2486b08dc`; the worktree is clean and the
 result is `VERIFIED_LOCAL_FACTUAL_RELAY_CONTRACT`.
 
 M1.2 is now `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
-FINAL_READINESS_USER_RESULT_REJECTED_P1_3 / NOT_PROVED / M1_3_BLOCKED`.
-The newly authorized correction may change only the WorkBuddy-facing Skill
-instruction. It must preserve the existing handoff, use the FFmpeg runtime as the
-minimum ready path, and limit the initial summary to FFmpeg, Remotion,
-HyperFrames, external video generation, and TTS. It must not expand raw setup
-offers, unrelated capability rows, a Provider catalogue, or a readiness
-dashboard. Only present dependencies, a true runtime state, and real Package
-invocation evidence permit “ready”; partial counts, adapter presence, and
-available Provider names do not. Remotion and HyperFrames must each keep source
-integration, dependency, runtime, and invocation facts separate. Unconfigured
-enhancements remain configurable, not product incapability. All four choices
-remain visible without prescribing an exact transcript or moving interpretation
-into Shell. Another WorkBuddy probe remains separately gated.
+CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
+COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`. The latest implementation head `666c9d4...` and its
+compact-readiness candidate carried an approximately 26 KB handoff summary with
+24 capability rows and 63 setup offers. WorkBuddy exposed technical runtime/setup
+detail and more options than desirable, so the historical independent review
+returned `REJECT / P0=0 / P1=1 / P2=1` under the superseded hard-compactness
+contract. The Owner's correction retains those P1/P2 observations as UX findings
+but removes them as blockers of the proved core flow. No rerun is required to
+close corrected M1.2. M1.3 must separately prove that a user's natural-language
+selection can complete one local-install path and one API-key path.
+Internal integration/dependency/runtime/invocation facts remain required for
+truth. The preferred first-use UX compresses them into understandable status and
+expands technical detail after the user's question or choice; earlier expansion
+is a UX finding unless it prevents understanding or safe continuation.
 
 ## Four product results
 
@@ -550,3 +583,30 @@ installed Golden Key Skill for that historical run; the Owner later manually
 uninstalled it. This does not change the historical v4 comparison facts. The next
 execution must inspect installed state and stop before Package activation if the
 same name is present.
+
+## Current M1.3 planning authority
+
+The Owner's 2026-08-30 direction starts only the M1.3 execution-contract freeze
+on `codex/workbuddy-capability-onboarding`. It may update exactly the six
+authority/state documents, receive one independent zero-write document review,
+commit once, and ordinarily push without another approval pause. It must not
+merge into `codex/workbuddy-m1-capability-onboarding`, change product/Skill/test
+files, run tests or WorkBuddy, install anything, accept or read a credential,
+call a Provider, or produce media.
+
+M1.3 does not repeat M1.2 inventory. It begins after the user selects one local
+capability or one Package-declared online Provider. WorkBuddy owns ordinary-
+language explanation, relevance, consent, cost/privacy, and recovery. Shell may
+only validate and execute a bounded structured action; it must not parse user
+prose into a choice. The read-only prerequisite review found a bounded candidate
+route in current WorkBuddy 5.3.14: the built-in `library` Skill proves a similar
+fixed-mode/canonical-stdin script pattern is supported; Windows native credential
+UI plus current-user Credential Manager are the candidate non-chat secret route;
+and the verified Package can be extended to declare and own a non-media
+connection test. Golden Key has not yet proved any of those product paths. The
+reduced exact write set is frozen in `docs/workbuddy/v2/TASK-REGISTER.md`, but
+that freeze is not implementation authorization. Implementation remains not
+started and must first prove the private carrier and masked non-chat input. Do
+not add a workspace file, fixed user command, second
+control plane, plaintext fallback, new dependency, `run.ps1` change, or generic
+BaseTool change.

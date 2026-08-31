@@ -972,7 +972,7 @@ reduction as a UX improvement, not an uncompleted M1.2 implementation gate.
 
 Current state is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
-COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`.
+COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE`.
 
 The completed M1.2 correction authorization changed only the six authority/state documents,
 requires one independent zero-write document review, one commit, and one ordinary
@@ -1097,6 +1097,42 @@ It also excludes `runtime_prepare.py`: the existing managed local-capability pat
 must be reused. Any required path outside this list is a hard stop and requires a
 new planning decision, not opportunistic expansion. Freezing this list records
 scope only; it does not itself authorize implementation or any action-time gate.
+
+#### First implementation result — LOCAL CONTRACT ONLY / PRODUCT INCOMPLETE
+
+The bounded implementation is pushed on the retained branches:
+
+- Shell `codex/workbuddy-m1-capability-onboarding` at
+  `a89e062c5dc0cbfc3fd7b1e430baf61063d58064`.
+- Package `codex/golden-key-openmontage-v0.3.25` at
+  `503f09677db36bad0deb74e94b06401f8f94e215`.
+
+The implementation reused the existing stdin route and changed 7 Shell files and
+4 Package files within the 13-file ceiling. It added the same-Skill canonical
+configuration action, Package/release/hash/consent binding, native WinCred wrapper,
+exact `ARK_API_KEY` injection, secret suppression, and Package-owned documented
+Ark `/ping` dispatch. Package checks passed `51`; the focused Shell result passed,
+while the longer Shell set finished `220 passed, 1 skipped` with one existing
+timing test first timing out and then passing its single bounded rerun. The final
+independent implementation review was `APPROVE_ZERO_WRITE_FINAL`.
+
+This is not M1.3 product acceptance. The Package release still has
+`workbuddy_optional_capability_definitions=[]`, so the required Remotion/
+HyperFrames local route stops before install, rediscovery, recognition, or actual
+Package invocation. WorkBuddy, native interactive credential entry/storage, real
+Ark `/ping` authentication behavior, Provider network, and recovery/retest were
+not run. The official `/ping` request remains a candidate non-media connection
+test; its real 200/401/403 semantics require the later action-time-authorized
+network result and must not be upgraded into model, balance, generation, or
+quality proof.
+
+The next smallest task is to add only verified, source/hash/size/license/version-
+bound Remotion and HyperFrames Package definitions through the existing Package
+release/lock route and prove the resulting Shell plan remains zero-download and
+consent-bound. Do not run WorkBuddy or install either capability in that task.
+After that local prerequisite is independently reviewed and pushed, the action-
+time user gate may build/install the candidate and separately prove one local
+path and one API-key path.
 
 ### M1 branch lifecycle and mandatory cleanup
 
@@ -1602,10 +1638,10 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_3_EXECUTION_CONTRACT_DOCUMENTATION / CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED
+current_task: M1_3_LOCAL_CAPABILITY_DEFINITION_PREREQUISITE / NOT_STARTED / ZERO_DOWNLOAD
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: COMPACT_READINESS_CURRENTLY_INSTALLED / USED_FOR_M1_2_PROOF / UX_OVERLOAD_RECORDED / ZIP_SHA256_4CAF57CFCF5D298F0DED1098D4FDA5BB482A699F57A72B02BC61F1CD3DBF2DD1 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL / RECHECK_AT_EXECUTION
-capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_CONTRACT_FROZEN_IMPLEMENTATION_NOT_STARTED
+capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
 implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_666C9D4CDBBC0A2AEB57C0B94598F4501E246C4F / CLEAN
 implementation_skill_commit: C8EEB91E221EC96A406543C183091EEA7EA6AC3C / AUTHORITY_MERGE_F9880C247ED61744B4BBA2F83FFA6411EB49C413
 implementation_consumer_correction_commit: 5229964AC681D7B34949480326E6F24A0C53913F / PUSHED
@@ -1621,7 +1657,7 @@ next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
 m1_1: FACT_AUDIT_COMPLETE / OWNER_ACCEPTED / ZERO_WRITE_DEVIATION_RECORDED
-m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED / COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED
+m1_2: WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED / COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
 m1_2_attempt_commit: 4cbf8ff3c15dd686a893842ca189ce49fa83023d / NOT_M1_2_COMPLETE / DO_NOT_PROMOTE
 m1_2_previous_write_allowlist: WITHDRAWN_AS_INSUFFICIENT
 m1_2_previous_focused_tests: HISTORICAL_ONLY / DID_NOT_PROVE_FACT_FLOW_OR_USER_CHOICE
@@ -1638,13 +1674,15 @@ m1_2_consumer_correction: PUSHED_COMMIT_5229964AC681D7B34949480326E6F24A0C53913F
 package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F65B71B7C2E7C55F1D04_PUSHED / DIRECT_REMOTION_BUNDLE_REJECTED_SIZE_GATE / SLIM_CANDIDATE_REVIEW_APPROVE_P0_0_P1_0_P2_0 / UNREGISTERED / UNACTIVATED
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
 m1_2_semantic_readiness_result: HISTORICAL / WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
-m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_IMPLEMENTATION_NOT_STARTED
-m1_3: PREREQUISITE_ROUTE_REVIEWED / WRITE_SET_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED
+m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
+m1_3: PREREQUISITE_ROUTE_REVIEWED / WRITE_SET_FROZEN / IMPLEMENTATION_LOCAL_CONTRACT_COMMITTED / PRODUCT_INCOMPLETE / ACTION_TIME_GATES_REQUIRED
 m1_3_existing_local_primitive: RUNTIME_PREPARE_REUSE_REQUIRED / NO_PRODUCTION_CALLER_PROVED
 m1_3_existing_secret_transport: FAIL_CLOSED_ALLOWLIST_AND_REDACTION_REUSE_REQUIRED / PRODUCTION_ALLOWLIST_EMPTY
 m1_3_candidate_route: BUILTIN_LIBRARY_SKILL_PATTERN_FOR_FIXED_MODE_AND_CANONICAL_STDIN_JSON / WINDOWS_NATIVE_CREDENTIAL_UI_AND_CURRENT_USER_CREDENTIAL_MANAGER_TO_BE_PROVED / PACKAGE_OWNED_NON_MEDIA_CONNECTION_TEST_TO_BE_DECLARED_AND_IMPLEMENTED
 m1_3_unproved_product_results: GOLDEN_KEY_PRIVATE_ACTION_CARRIER / GOLDEN_KEY_CREDENTIAL_FLOW / PACKAGE_CONNECTION_TEST / LOCAL_INSTALL_AND_INVOCATION / USER_VISIBLE_RECOVERY
 m1_3_write_set_review: REJECT_ORIGINAL_15_PATHS_P0_0_P1_3_P2_1 / REMOVE_RUN_PS1_AND_TOOLS_BASE_TOOL_PY / REDUCED_ALLOWLIST_FROZEN
+m1_3_implementation: SHELL_A89E062C5DC0CBFC3FD7B1E430BAF61063D58064 / PACKAGE_503F09677DB36BAD0DEB74E94B06401F8F94E215 / PUSHED_CLEAN
+m1_3_result: LOCAL_CONTRACT_ONLY / LOCAL_ROUTE_BLOCKED_EMPTY_PACKAGE_DEFINITIONS / API_ROUTE_REAL_AUTH_NOT_PROVED / WORKBUDDY_NOT_RUN / M1_4_BLOCKED
 m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRAMES_NOT_REQUIRED_FOR_COVERAGE
 m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING

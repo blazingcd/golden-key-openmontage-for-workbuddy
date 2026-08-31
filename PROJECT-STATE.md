@@ -359,7 +359,7 @@ path was confirmed absent at closeout.
 
 M1.2 is `WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE /
 CORE_FIRST_USE_GUIDANCE_AND_CONFIGURATION_ENTRY_PROVED / UX_OVERLOAD_RECORDED /
-COMPLETE / M1_3_IMPLEMENTATION_NOT_STARTED`.
+COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE`.
 The earlier contract at `f11e7118e2f652b6e0ceb31b1bc88e617dcf8174`, first
 discovery probe, and prematurely cancelled probe remain historical failed routes;
 they do not define the current result.
@@ -381,8 +381,9 @@ truth and later diagnostic/configuration evidence; they are no longer mandatory
 first-use prose. The latest compact-readiness run reached the user with the core
 guidance and entries but also exposed excessive technical/catalogue detail. That
 is a recorded UX finding, not an M1.2 blocker. Shell continues to carry mechanical
-facts only; WorkBuddy owns explanation and choice. M1.3 implementation is not started and still
-requires its own bounded implementation and action authorization.
+facts only; WorkBuddy owns explanation and choice. M1.3 now has a bounded local
+implementation contract but still requires the missing Package definitions and
+separate action-time user-result authorization.
 
 ### M1.3 execution-contract state
 
@@ -408,7 +409,19 @@ yet exist. An independent minimality review removed
 implementation reuses `codex/workbuddy-m1-capability-onboarding` and the exact
 write set frozen in the Task Register; the freeze itself is not implementation
 authorization. M1.3 state is `PREREQUISITE_ROUTE_REVIEWED /
-WRITE_SET_FROZEN / IMPLEMENTATION_NOT_STARTED / ACTION_TIME_GATES_REQUIRED`.
+WRITE_SET_FROZEN / IMPLEMENTATION_LOCAL_CONTRACT_COMMITTED / PRODUCT_INCOMPLETE /
+ACTION_TIME_GATES_REQUIRED`.
+
+The first implementation result is Shell commit
+`a89e062c5dc0cbfc3fd7b1e430baf61063d58064` and Package commit
+`503f09677db36bad0deb74e94b06401f8f94e215`, both pushed and clean. Focused local
+checks and the implementation review establish the structured-action, secret-
+suppression, WinCred-wrapper, exact environment, and Package `/ping` code paths.
+They are not a user-visible configuration result. Package optional-capability
+definitions remain empty, so the local route is blocked before any Remotion or
+HyperFrames installation; WorkBuddy, real Windows credential behavior, real Ark
+authentication, optional installation, rediscovery, and Package invocation were
+not run. M1.4 remains blocked by the incomplete M1.3 product result.
 
 ## Non-goals
 

@@ -423,6 +423,24 @@ HyperFrames installation; WorkBuddy, real Windows credential behavior, real Ark
 authentication, optional installation, rediscovery, and Package invocation were
 not run. M1.4 remains blocked by the incomplete M1.3 product result.
 
+The 2026-09-01 local-route audit supersedes the earlier assumption that adding
+Package definitions is the next complete prerequisite. Current preparation can
+publish fixed downloaded assets, but it cannot install Remotion's locked npm
+dependency closure; the Package renderer also looks only under PackageRoot and
+cannot use the Shell-managed runtime. The current `../../data/production`
+relationship is a development/package relationship, not a real-user Windows
+installation policy.
+
+The corrected plan is `PLANNING_FROZEN / ZERO_INSTALL`. At later execution,
+Windows resolves the standard application/runtime location for the install scope
+the user approves; no drive letter is assumed. System-wide is the default route;
+WorkBuddy offers current-user scope only after explaining the difference and any permission need. Shell installs and records the
+resolved path, and Package uses that verified path. Mainland installation uses
+the complete version-locked npm closure from `registry.npmmirror.com` with no
+silent overseas fallback. Success still requires rediscovery, Package recognition,
+and one real Package-mediated invocation. No local installation, WorkBuddy run,
+product code, or test ran for this planning correction.
+
 ## Non-goals
 
 Do not preserve old route plans, packet/pre-review systems, extra Agents, MCP/

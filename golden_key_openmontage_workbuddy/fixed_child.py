@@ -35,6 +35,19 @@ IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
 ENV_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 SECRET_NAME_RE = re.compile(r"(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)", re.IGNORECASE)
 REPARSE_ATTRIBUTE = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+MANAGED_REMOTION_RUNTIME_FIELDS = frozenset(
+    {
+        "status",
+        "source",
+        "runtime_root",
+        "verified_entrypoint",
+        "version",
+        "install_scope",
+        "definition_sha256",
+        "manifest_sha256",
+        "lockfile_sha256",
+    }
+)
 
 
 class _InputError(ValueError):
@@ -133,6 +146,53 @@ def _assert_no_reparse_chain(path: Path, *, boundary: Path | None = None) -> Non
         if parent == current:
             break
         current = parent
+
+
+def _validate_managed_remotion_runtime(value: Any) -> dict[str, str] | None:
+    """Keep the managed runtime fact closed while writing the handoff."""
+
+    if value is None:
+        return None
+    if not isinstance(value, dict) or set(value) != MANAGED_REMOTION_RUNTIME_FIELDS:
+        raise _InputError("managed-remotion-runtime")
+    if value["status"] != "PRESENT" or value["source"] != "managed":
+        raise _InputError("managed-remotion-runtime")
+    if (
+        not isinstance(value["version"], str)
+        or not value["version"]
+        or value["install_scope"] not in {"system", "current-user"}
+    ):
+        raise _InputError("managed-remotion-runtime")
+    for field in ("runtime_root", "verified_entrypoint"):
+        if not isinstance(value[field], str) or not value[field]:
+            raise _InputError("managed-remotion-runtime")
+    for field in ("definition_sha256", "manifest_sha256", "lockfile_sha256"):
+        if not isinstance(value[field], str) or SHA256_RE.fullmatch(value[field]) is None:
+            raise _InputError("managed-remotion-runtime")
+    try:
+        root = Path(value["runtime_root"])
+        entrypoint = Path(value["verified_entrypoint"])
+        if not root.is_absolute() or not entrypoint.is_absolute():
+            raise _InputError("managed-remotion-runtime")
+        _assert_no_reparse_chain(root)
+        _assert_no_reparse_chain(entrypoint)
+        resolved_root = root.resolve(strict=True)
+        resolved_entrypoint = entrypoint.resolve(strict=True)
+        if not resolved_root.is_dir() or not resolved_entrypoint.is_file():
+            raise _InputError("managed-remotion-runtime")
+        if resolved_entrypoint == resolved_root:
+            raise _InputError("managed-remotion-runtime")
+        resolved_entrypoint.relative_to(resolved_root)
+        metadata = os.stat(entrypoint, follow_symlinks=False)
+        if not stat.S_ISREG(metadata.st_mode) or bool(
+            getattr(metadata, "st_file_attributes", 0) & REPARSE_ATTRIBUTE
+        ):
+            raise _InputError("managed-remotion-runtime")
+    except _InputError:
+        raise
+    except (OSError, RuntimeError, ValueError, TypeError) as exc:
+        raise _InputError("managed-remotion-runtime") from exc
+    return dict(value)
 
 
 def _handoff_directory(root: Path) -> Path:
@@ -393,6 +453,7 @@ def _validate(raw: bytes) -> dict[str, Any]:
             "package",
             "tool_definition_sha256",
             "local_capability_evidence_identities",
+            "managed_remotion_runtime",
         },
     )
     if request["schema_version"] != REQUEST_SCHEMA:
@@ -451,6 +512,7 @@ def _validate(raw: bytes) -> dict[str, Any]:
         normalized.append(dict(identity))
     if normalized != sorted(normalized, key=lambda item: (item["capability_id"], item["definition_sha256"])):
         raise _InputError("local-identities")
+    managed_runtime = _validate_managed_remotion_runtime(request["managed_remotion_runtime"])
     return {
         "session_id": request["session_id"],
         "request_id": request["request_id"],
@@ -463,6 +525,7 @@ def _validate(raw: bytes) -> dict[str, Any]:
         "openmontage_commit": commit,
         "tool_definition_sha256": definition,
         "local_capability_evidence_identities": normalized,
+        "managed_remotion_runtime": managed_runtime,
     }
 
 
@@ -488,6 +551,7 @@ def _write_handoff(request: dict[str, Any]) -> tuple[str, str, int]:
             },
             "tool_definition_sha256": request["tool_definition_sha256"],
             "local_capability_evidence_identities": request["local_capability_evidence_identities"],
+            "managed_remotion_runtime": request.get("managed_remotion_runtime"),
             "package_capability_summary": package_capability_summary,
             "configuration_result": configuration_result,
             "decision_owner": "WorkBuddy",

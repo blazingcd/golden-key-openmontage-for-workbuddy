@@ -10,6 +10,7 @@ import subprocess
 import sys
 import threading
 import time
+from collections.abc import Mapping
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
@@ -17,6 +18,7 @@ from typing import Any
 import pytest
 
 from golden_key_openmontage_workbuddy import launch_session_tool
+from golden_key_openmontage_workbuddy import fixed_child
 from golden_key_openmontage_workbuddy import package_registration as registration
 from golden_key_openmontage_workbuddy import session_launcher as launcher_module
 from tests.workbuddy.test_package_registration import (
@@ -191,9 +193,22 @@ def _fixture(
     return {"candidate": candidate, "definition": definition, "controls": controls, "result_root": result_root}
 
 
-def _launch(fixture: dict[str, Any], *, message: str = "原样业务请求", evidence: Any = (), event: threading.Event | None = None):
+def _launch(
+    fixture: dict[str, Any],
+    *,
+    message: str = "原样业务请求",
+    evidence: Any = (),
+    event: threading.Event | None = None,
+    managed_runtime: Mapping[str, Any] | None = None,
+):
     return launch_session_tool(
-        fixture["candidate"].data_root, message, fixture["controls"], fixture["definition"], evidence, event
+        fixture["candidate"].data_root,
+        message,
+        fixture["controls"],
+        fixture["definition"],
+        evidence,
+        event,
+        managed_remotion_runtime=managed_runtime,
     )
 
 
@@ -240,6 +255,24 @@ def _assert_secret_safe_receipt_types(receipt: Any, canary: str) -> None:
     }
     assert not launcher_module._dynamic_value_contains_secret(dynamic_domains, (canary,))
     assert canary not in repr(receipt)
+
+
+def _managed_runtime(tmp_path: Path) -> dict[str, str]:
+    root = tmp_path / "managed-remotion-runtime"
+    entrypoint = root / "node_modules" / ".bin" / "remotion.cmd"
+    entrypoint.parent.mkdir(parents=True)
+    entrypoint.write_text("managed remotion", encoding="utf-8")
+    return {
+        "status": "PRESENT",
+        "source": "managed",
+        "runtime_root": str(root.resolve()),
+        "verified_entrypoint": str(entrypoint.resolve()),
+        "version": "4.0.0",
+        "install_scope": "system",
+        "definition_sha256": "a" * 64,
+        "manifest_sha256": "b" * 64,
+        "lockfile_sha256": "c" * 64,
+    }
 
 
 def _rehash_stage3_evidence(evidence: dict[str, Any]) -> dict[str, Any]:
@@ -538,6 +571,54 @@ def test_37_real_stage2_roundtrip_and_priority_level_11_success(tmp_path: Path) 
     assert receipt["provider_environment_names"] == ()
 
 
+def test_managed_remotion_runtime_reaches_child_stdin_and_receipt(tmp_path: Path) -> None:
+    runtime = _managed_runtime(tmp_path)
+    expected = repr(runtime)
+    code = f'''import hashlib,json,pathlib,sys
+r=json.load(sys.stdin)
+assert r["managed_remotion_runtime"] == {expected}
+p=pathlib.Path(r["executor_controls"]["result_root"])/"result.bin"; p.write_bytes(b"ok")
+o={{"schema_version":"golden-key-workbuddy-package-tool-result-v1","session_id":r["session_id"],"request_id":r["request_id"],"outcome":"SUCCEEDED","result_pointer":{{"relative_path":"result.bin","sha256":hashlib.sha256(b"ok").hexdigest(),"size":2}},"error":None}}
+sys.stdout.buffer.write((json.dumps(o,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\\n").encode())'''
+    receipt = _launch(_fixture(tmp_path, code=code), managed_runtime=runtime)
+    _assert(receipt, "EXITED_SUCCESS", "NONE", 1)
+    assert receipt["managed_remotion_runtime"] == runtime
+
+
+def test_invalid_managed_remotion_runtime_blocks_before_spawn(tmp_path: Path) -> None:
+    fixture = _fixture(tmp_path)
+    invalid = dict(_managed_runtime(tmp_path))
+    invalid["runtime_root"] = "relative-runtime-root"
+    receipt = _launch(fixture, managed_runtime=invalid)
+    _assert(receipt, "PRELAUNCH_BLOCKED", "MANAGED_REMOTION_RUNTIME_INVALID", 0)
+
+
+def test_fixed_child_handoff_preserves_managed_remotion_runtime_fact(tmp_path: Path) -> None:
+    runtime = _managed_runtime(tmp_path)
+    result_root = tmp_path / "handoff-results"
+    result_root.mkdir()
+    request = {
+        "session_id": "session-1",
+        "request_id": "request-1",
+        "message": "ordinary request",
+        "timeout_seconds": 10,
+        "provider_environment_names": [],
+        "registration_sha256": "d" * 64,
+        "openmontage_release": "release-1",
+        "openmontage_commit": "0" * 40,
+        "tool_definition_sha256": "e" * 64,
+        "local_capability_evidence_identities": [],
+        "managed_remotion_runtime": runtime,
+        "result_root": result_root,
+    }
+    relative, _digest, _size = fixed_child._write_handoff(request)
+    handoff = result_root / Path(relative)
+    payload = json.loads(handoff.read_text(encoding="utf-8"))
+    assert payload["managed_remotion_runtime"] == runtime
+    assert payload["renderer_selected"] is False
+    assert payload["media_executed"] is False
+
+
 def test_10_literal_user_message_bytes_reach_child_unchanged(tmp_path: Path) -> None:
     message = "  原样\r\n业务请求：A/B + ①  "
     expected = message.encode("utf-8")
@@ -636,7 +717,7 @@ def test_1_no_active_registration_returns_full_receipt(tmp_path: Path) -> None:
     data.mkdir()
     receipt = launch_session_tool(data, "x", {}, {})
     _assert(receipt, "PRELAUNCH_BLOCKED", "LOCATOR_FAILED", 0)
-    assert len(receipt) == 30
+    assert len(receipt) == 31
 
 
 def test_32_entry_cancel_precedes_locator_and_priority_level_02(tmp_path: Path) -> None:
@@ -2129,7 +2210,7 @@ def test_28_portable_windows_lifecycle_abstraction_has_no_skip(
         assert receipt["residual_process"]["termination_succeeded"] is True
 
 
-def test_34_nine_outcomes_and_twenty_three_reasons_are_closed() -> None:
+def test_34_nine_outcomes_and_twenty_four_reasons_are_closed() -> None:
     assert launcher_module._OUTCOMES == {
         "PRELAUNCH_BLOCKED", "SPAWN_FAILED", "EXITED_SUCCESS", "EXITED_NONZERO",
         "CHILD_REPORTED_FAILURE", "TIMED_OUT", "CANCELLED", "INCOMPLETE", "RESIDUAL_PROCESS",
@@ -2139,6 +2220,7 @@ def test_34_nine_outcomes_and_twenty_three_reasons_are_closed() -> None:
         "TOOL_DEFINITION_INVALID", "TOOL_DEFINITION_UNBOUND", "TOOL_PATH_VIOLATION",
         "TOOL_IDENTITY_MISMATCH", "INTERPRETER_IDENTITY_MISMATCH",
         "LOCAL_CAPABILITY_EVIDENCE_REQUIRED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH",
+        "MANAGED_REMOTION_RUNTIME_INVALID",
         "ENVIRONMENT_NOT_ALLOWED", "SPAWN_OS_ERROR", "EXITED_NONZERO", "TIMEOUT", "CANCELLED",
         "CHILD_REPORTED_FAILURE", "OUTPUT_INVALID", "RESULT_POINTER_INVALID",
         "SECRET_DISCLOSURE_DETECTED", "EVIDENCE_INCOMPLETE", "RESIDUAL_PROCESS_DETECTED",
@@ -2273,7 +2355,7 @@ def test_31_unreadable_input_still_returns_full_receipt_with_none_hints(tmp_path
         {},
     )
     _assert(receipt, "PRELAUNCH_BLOCKED", "INVALID_INPUT", 0)
-    assert len(receipt) == 30
+    assert len(receipt) == 31
     assert receipt["session"]["session_id"] is None
     assert receipt["request"]["request_id"] is None
     assert receipt["user_message"]["sha256"] is None

@@ -11,11 +11,12 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from . import package_registration
 from . import runtime_prepare
@@ -45,6 +46,20 @@ _ACTION_FIELDS = {
     "capability_definitions",
     "user_decisions",
 }
+_MANAGED_RUNTIME_FIELDS = frozenset(
+    {
+        "status",
+        "source",
+        "runtime_root",
+        "verified_entrypoint",
+        "version",
+        "install_scope",
+        "definition_sha256",
+        "manifest_sha256",
+        "lockfile_sha256",
+    }
+)
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical(value: Any) -> bytes:
@@ -288,14 +303,22 @@ def _read_credential() -> str | None:
 
 
 def _prepare_action(
-    action: dict[str, Any], data_root: Path
+    action: dict[str, Any], data_root: Path, package_root: Path | None = None
 ) -> tuple[str | None, dict[str, Any] | None, list[dict[str, Any]]]:
     if action["action"] == "prepare_optional_capabilities":
-        result = runtime_prepare.prepare_optional_capabilities(
-            data_root,
-            action["capability_definitions"],
-            action["user_decisions"],
-        )
+        if package_root is None:
+            result = runtime_prepare.prepare_optional_capabilities(
+                data_root,
+                action["capability_definitions"],
+                action["user_decisions"],
+            )
+        else:
+            result = runtime_prepare.prepare_optional_capabilities(
+                data_root,
+                action["capability_definitions"],
+                action["user_decisions"],
+                package_root=package_root,
+            )
         return None, result, []
     try:
         if action["action"] == "configure_provider":
@@ -310,6 +333,47 @@ def _prepare_action(
         return secret, None, []
     except OSError:
         return None, {"status": "NOT_CONNECTED", "error_code": "CREDENTIAL_STORE_UNAVAILABLE"}, []
+
+
+def _managed_remotion_runtime(result: Mapping[str, Any] | None) -> dict[str, str] | None:
+    if not isinstance(result, Mapping):
+        return None
+    if result.get("result") not in {"DETECTION_REPORT", "INTEGRATED"}:
+        return None
+    value = result.get("managed_remotion_runtime")
+    if value is None:
+        return None
+    if not isinstance(value, Mapping) or not _MANAGED_RUNTIME_FIELDS.issubset(value):
+        raise ValueError("managed-remotion-runtime")
+    if set(value) - _MANAGED_RUNTIME_FIELDS:
+        # Integration adds plan/reuse bookkeeping; Package receives only the
+        # stable runtime identity it consumes.
+        value = {key: value[key] for key in _MANAGED_RUNTIME_FIELDS}
+    else:
+        value = dict(value)
+    if value["status"] != "PRESENT" or value["source"] != "managed":
+        raise ValueError("managed-remotion-runtime")
+    if value["install_scope"] not in {"system", "current-user"}:
+        raise ValueError("managed-remotion-runtime")
+    if not isinstance(value["version"], str) or not value["version"]:
+        raise ValueError("managed-remotion-runtime")
+    for field in ("definition_sha256", "manifest_sha256", "lockfile_sha256"):
+        if not isinstance(value[field], str) or _SHA256_RE.fullmatch(value[field]) is None:
+            raise ValueError("managed-remotion-runtime")
+    try:
+        root = Path(value["runtime_root"])
+        entrypoint = Path(value["verified_entrypoint"])
+        if (
+            not root.is_absolute()
+            or not entrypoint.is_absolute()
+            or not root.is_dir()
+            or not entrypoint.is_file()
+            or entrypoint.resolve(strict=True).relative_to(root.resolve(strict=True)) is None
+        ):
+            raise ValueError("managed-remotion-runtime")
+    except (OSError, RuntimeError, ValueError, TypeError):
+        raise ValueError("managed-remotion-runtime") from None
+    return value
 
 
 def _package_root() -> Path:
@@ -382,6 +446,7 @@ def _request(
     configuration_result: dict[str, Any] | None = None,
     provider_secret: str | None = None,
     local_evidence: list[dict[str, Any]] | None = None,
+    managed_remotion_runtime: dict[str, str] | None = None,
 ) -> tuple[dict[str, str], bytes]:
     session_id = f"workbuddy-{uuid.uuid4().hex}"
     request_id = f"request-{uuid.uuid4().hex}"
@@ -443,6 +508,7 @@ def _request(
         },
         "package_tool_definition": definition,
         "local_capability_evidence": local_evidence or [],
+        "managed_remotion_runtime": managed_remotion_runtime,
         "cancel_requested": False,
         "continuation": {"mode": "NONE", "prior_request_id": None},
     }
@@ -463,9 +529,13 @@ def main() -> int:
         provider_secret = None
         configuration_result = None
         local_evidence: list[dict[str, Any]] = []
+        managed_remotion_runtime = None
         if action is not None:
             _validate_package_action(package_root, definition, action)
-            provider_secret, configuration_result, local_evidence = _prepare_action(action, data_root)
+            provider_secret, configuration_result, local_evidence = _prepare_action(
+                action, data_root, package_root
+            )
+            managed_remotion_runtime = _managed_remotion_runtime(configuration_result)
         environment, payload = _request(
             package_root,
             data_root,
@@ -475,6 +545,7 @@ def main() -> int:
             configuration_result=configuration_result,
             provider_secret=provider_secret,
             local_evidence=local_evidence,
+            managed_remotion_runtime=managed_remotion_runtime,
         )
         command = [str(Path(sys.executable).resolve()), *binding["entry_argv"]]
         completed = subprocess.run(

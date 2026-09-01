@@ -41,6 +41,7 @@ _REQUEST_ROOT_FIELDS = [
     "data_root",
     "executor_controls",
     "local_capability_evidence",
+    "managed_remotion_runtime",
     "package_tool_definition",
     "schema_version",
     "user_message",
@@ -86,6 +87,19 @@ _REQUEST_LOCAL_EVIDENCE_FIELDS = [
     "original_stage3_fact_sha256",
     "schema_version",
 ]
+_MANAGED_REMOTION_RUNTIME_FIELDS = frozenset(
+    {
+        "status",
+        "source",
+        "runtime_root",
+        "verified_entrypoint",
+        "version",
+        "install_scope",
+        "definition_sha256",
+        "manifest_sha256",
+        "lockfile_sha256",
+    }
+)
 _RESULT_ROOT_FIELDS = [
     "cancelled",
     "duration_ms",
@@ -95,6 +109,7 @@ _RESULT_ROOT_FIELDS = [
     "interpreter",
     "launched",
     "local_capability_evidence_identities",
+    "managed_remotion_runtime",
     "lock",
     "manifest",
     "outcome",
@@ -149,6 +164,17 @@ _RESULT_NESTED_FIELDS = {
         "source",
         "status",
     ],
+    "managed_remotion_runtime": [
+        "definition_sha256",
+        "install_scope",
+        "lockfile_sha256",
+        "manifest_sha256",
+        "runtime_root",
+        "source",
+        "status",
+        "verified_entrypoint",
+        "version",
+    ],
 }
 
 
@@ -190,6 +216,11 @@ _REQUEST_SCHEMA_DESCRIPTOR = {
             "wire_type": "JSON list of mapping wires",
             "semantic_owner": "Stage4",
             "bridge_validation": "list-and-mapping-item-shape-only",
+        },
+        "managed_remotion_runtime": {
+            "wire_type": "null or exact mapping",
+            "semantic_owner": "Stage4",
+            "bridge_validation": "closed field set; Stage4 owns path and hash semantics",
         },
         "user_message": "literal;NFC-required;no-normalization",
     },
@@ -265,6 +296,7 @@ _REQUEST_FIELDS = frozenset(
         "executor_controls",
         "package_tool_definition",
         "local_capability_evidence",
+        "managed_remotion_runtime",
         "cancel_requested",
         "continuation",
     }
@@ -299,6 +331,7 @@ _RECEIPT_FIELDS = frozenset(
         "user_message",
         "provider_environment_names",
         "local_capability_evidence_identities",
+        "managed_remotion_runtime",
         "launched",
         "spawn_count",
         "pid",
@@ -476,6 +509,30 @@ def _mapping(value: Any, fields: frozenset[str]) -> dict[str, Any]:
     return dict(value)
 
 
+def _validate_managed_remotion_runtime(value: Any) -> dict[str, Any] | None:
+    """Keep the optional Package-owned runtime fact closed in the bridge wire."""
+
+    if value is None:
+        return None
+    runtime = _mapping(value, _MANAGED_REMOTION_RUNTIME_FIELDS)
+    if runtime["status"] != "PRESENT" or runtime["source"] != "managed":
+        _input_error()
+    for field in (
+        "runtime_root",
+        "verified_entrypoint",
+        "version",
+        "install_scope",
+    ):
+        _text(runtime[field])
+    if runtime["install_scope"] not in {"system", "current-user"}:
+        _input_error()
+    for field in ("definition_sha256", "manifest_sha256", "lockfile_sha256"):
+        digest = _text(runtime[field])
+        if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+            _input_error()
+    return runtime
+
+
 def _env_names(value: Any) -> tuple[str, ...]:
     if not isinstance(value, list):
         _input_error()
@@ -525,6 +582,9 @@ def _validate_request(value: dict[str, Any]) -> dict[str, Any]:
         _input_error()
     if not all(isinstance(item, Mapping) for item in request["local_capability_evidence"]):
         _input_error()
+    request["managed_remotion_runtime"] = _validate_managed_remotion_runtime(
+        request["managed_remotion_runtime"]
+    )
     if type(request["cancel_requested"]) is not bool:
         _input_error()
     continuation = _mapping(request["continuation"], _CONTINUATION_FIELDS)
@@ -803,6 +863,12 @@ def _receipt_identity_matches(
     partial_prelaunch = wire["outcome"] == "PRELAUNCH_BLOCKED" or (
         wire["outcome"] == "CANCELLED" and wire["reason_code"] == "CANCELLED_BEFORE_SPAWN"
     )
+    expected_runtime = request["managed_remotion_runtime"]
+    actual_runtime = wire["managed_remotion_runtime"]
+    if (actual_runtime is not None and actual_runtime != expected_runtime) or (
+        not partial_prelaunch and actual_runtime != expected_runtime
+    ):
+        _output_error()
 
     def match_scalar(container: Any, field: str, expected_value: Any) -> bool:
         if not isinstance(container, Mapping) or field not in container:
@@ -890,6 +956,7 @@ def _validate_receipt(
         _output_error()
     if wire["provider_environment_names"] != list(provider_names):
         _output_error()
+    _validate_managed_remotion_runtime(wire["managed_remotion_runtime"])
     _receipt_identity_matches(wire, request)
     if _secret_occurs(wire, secrets):
         _output_error()
@@ -957,6 +1024,7 @@ def main() -> int:
                 request["package_tool_definition"],
                 request["local_capability_evidence"],
                 cancel_event=cancel_event,
+                managed_remotion_runtime=request["managed_remotion_runtime"],
             )
         except Exception:
             _internal_error()

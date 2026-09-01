@@ -53,6 +53,7 @@ def _request(
     allowed: list[str] | None = None,
     cancel: bool = False,
     continuation: dict[str, Any] | None = None,
+    managed_remotion_runtime: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     provider_names = [] if provider_names is None else provider_names
     allowed = provider_names if allowed is None else allowed
@@ -73,6 +74,7 @@ def _request(
         },
         "package_tool_definition": _definition(allowed=allowed),
         "local_capability_evidence": [],
+        "managed_remotion_runtime": managed_remotion_runtime,
         "cancel_requested": cancel,
         "continuation": continuation or {"mode": "NONE", "prior_request_id": None},
     }
@@ -85,6 +87,7 @@ def _receipt(
     provider_names: tuple[str, ...] = (),
     secret: str | None = None,
     partial_identity: bool = False,
+    managed_remotion_runtime: dict[str, Any] | None = None,
 ) -> MappingProxyType:
     definition = _definition()
     partial_prelaunch = outcome == "PRELAUNCH_BLOCKED" or (
@@ -139,6 +142,7 @@ def _receipt(
             ),
             "provider_environment_names": provider_names,
             "local_capability_evidence_identities": (),
+            "managed_remotion_runtime": managed_remotion_runtime,
             "launched": False if partial_prelaunch or spawn_failed else True,
             "spawn_count": 0 if partial_prelaunch or spawn_failed else 1,
             "pid": None if partial_prelaunch or spawn_failed else 1234,
@@ -207,7 +211,10 @@ def _run(
 ) -> tuple[int, bytes, bytes, list[tuple[Any, ...]]]:
     calls: list[tuple[Any, ...]] = []
     if result is None:
-        result = _receipt(provider_names=tuple(request["executor_controls"]["provider_environment_names"]))
+        result = _receipt(
+            provider_names=tuple(request["executor_controls"]["provider_environment_names"]),
+            managed_remotion_runtime=request["managed_remotion_runtime"],
+        )
 
     def fake_launch(*args: Any, **kwargs: Any) -> Any:
         calls.append((*args, kwargs))
@@ -237,6 +244,51 @@ def test_success_receipt_is_canonical_and_calls_stage4_once(monkeypatch: pytest.
     assert calls[0][2]["provider_environment"] == {}
     assert isinstance(calls[0][5]["cancel_event"], type(__import__("threading").Event()))
     assert not calls[0][5]["cancel_event"].is_set()
+    assert calls[0][5]["managed_remotion_runtime"] is None
+
+
+def test_managed_remotion_runtime_is_transported_as_one_fact(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    runtime = {
+        "status": "PRESENT",
+        "source": "managed",
+        "runtime_root": str(tmp_path),
+        "verified_entrypoint": str(tmp_path / "remotion.cmd"),
+        "version": "4.0.0",
+        "install_scope": "system",
+        "definition_sha256": "a" * 64,
+        "manifest_sha256": "b" * 64,
+        "lockfile_sha256": "c" * 64,
+    }
+    request = _request(managed_remotion_runtime=runtime)
+    code, stdout, stderr, calls = _run(monkeypatch, request)
+    assert code == 0
+    assert stderr == b""
+    assert json.loads(stdout)["managed_remotion_runtime"] == runtime
+    assert calls[0][5]["managed_remotion_runtime"] == runtime
+
+
+def test_invalid_managed_remotion_runtime_is_rejected_at_bridge_boundary(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = _request(
+        managed_remotion_runtime={
+            "status": "PRESENT",
+            "source": "managed",
+            "runtime_root": "C:/runtime",
+            "verified_entrypoint": "C:/runtime/remotion.cmd",
+            "version": "4.0.0",
+            "install_scope": "system",
+            "definition_sha256": "a" * 64,
+            "manifest_sha256": "b" * 64,
+        }
+    )
+    code, stdout, stderr, calls = _run(monkeypatch, request)
+    assert (code, stdout, stderr, calls) == (
+        64,
+        b"",
+        b"BRIDGE_INPUT_INVALID\n",
+        [],
+    )
 
 
 def test_failure_receipt_is_transport_success_without_rewrite(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -614,6 +666,7 @@ def test_schema_hashes_bind_canonical_closed_descriptors_not_schema_ids() -> Non
         "data_root",
         "executor_controls",
         "local_capability_evidence",
+        "managed_remotion_runtime",
         "package_tool_definition",
         "schema_version",
         "user_message",
@@ -664,6 +717,7 @@ def test_schema_hashes_bind_canonical_closed_descriptors_not_schema_ids() -> Non
         "error",
         "interpreter",
         "local_capability_evidence_identity",
+        "managed_remotion_runtime",
         "lock",
         "manifest",
         "package",
@@ -687,6 +741,17 @@ def test_schema_hashes_bind_canonical_closed_descriptors_not_schema_ids() -> Non
     assert nested["tool_file"] == ["owner", "path", "relative_path", "sha256", "size", "tool_id"]
     assert nested["interpreter"] == ["binding", "path", "sha256", "size"]
     assert nested["user_message"] == ["byte_length", "sha256"]
+    assert nested["managed_remotion_runtime"] == [
+        "definition_sha256",
+        "install_scope",
+        "lockfile_sha256",
+        "manifest_sha256",
+        "runtime_root",
+        "source",
+        "status",
+        "verified_entrypoint",
+        "version",
+    ]
     assert nested["stream"] == ["sha256", "size", "truncated"]
     assert nested["result_pointer"] == ["path", "sha256", "size", "valid"]
     assert nested["error"] == ["code", "origin", "sanitized_message"]

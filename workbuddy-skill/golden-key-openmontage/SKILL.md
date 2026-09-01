@@ -112,9 +112,21 @@ sorted keys, no whitespace, and exactly these fields:
 `user_decisions`. Its schema is
 `golden-key-workbuddy-configuration-action-v1`. It never contains a credential.
 
+For a local Remotion choice, detect first, then explain that Windows resolves
+the standard location for the selected scope, `registry.npmmirror.com` is the
+approved npm source, the applicable license applies, and the download size is
+unknown. Ask for explicit consent for each selected capability and reconfirm
+immediately before any real download or installation. System scope is the
+default; mention current-user scope only as an explicit user-selected
+alternative and never hard-code a drive letter. After installation, rediscover
+and verify the managed runtime. HyperFrames is not implemented in this route.
+Only when OpenMontage decides to use Remotion may WorkBuddy pass the non-null
+managed runtime object unchanged to `video_compose` as
+`managed_remotion_runtime`; if it is absent, Remotion is not ready.
+
 For local composition readiness, use
 `action=prepare_optional_capabilities`, `capability=composition_runtime`, and
-`provider=null`. Pass the exact closed two-definition sequence only when it is
+`provider=null`. Pass the exact closed Package-declared definition sequence only when it is
 already present in verified Package facts; never invent URLs, hashes, sizes, or
 versions. Use `consent=inspect` with `user_decisions=null` for detection and plan
 creation. After the user confirms, use `consent=confirmed` with only the exact

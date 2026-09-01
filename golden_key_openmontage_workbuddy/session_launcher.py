@@ -94,6 +94,19 @@ _LOCAL_EVIDENCE_FIELDS = frozenset(
         "original_stage3_fact_sha256",
     }
 )
+_MANAGED_REMOTION_RUNTIME_FIELDS = frozenset(
+    {
+        "status",
+        "source",
+        "runtime_root",
+        "verified_entrypoint",
+        "version",
+        "install_scope",
+        "definition_sha256",
+        "manifest_sha256",
+        "lockfile_sha256",
+    }
+)
 _CAPABILITY_DEFINITION_REQUIRED = frozenset(
     {"capability", "definition_sha256", "version", "verified_entrypoint", "approved_mainland_sources", "assets"}
 )
@@ -119,6 +132,7 @@ _REASON_CODES = frozenset(
         "TOOL_DEFINITION_INVALID", "TOOL_DEFINITION_UNBOUND", "TOOL_PATH_VIOLATION",
         "TOOL_IDENTITY_MISMATCH", "INTERPRETER_IDENTITY_MISMATCH",
         "LOCAL_CAPABILITY_EVIDENCE_REQUIRED", "LOCAL_CAPABILITY_EVIDENCE_MISMATCH",
+        "MANAGED_REMOTION_RUNTIME_INVALID",
         "ENVIRONMENT_NOT_ALLOWED", "SPAWN_OS_ERROR", "EXITED_NONZERO", "TIMEOUT", "CANCELLED",
         "CHILD_REPORTED_FAILURE", "OUTPUT_INVALID", "RESULT_POINTER_INVALID",
         "SECRET_DISCLOSURE_DETECTED", "EVIDENCE_INCOMPLETE", "RESIDUAL_PROCESS_DETECTED",
@@ -484,6 +498,7 @@ def _empty_receipt(start_ns: int) -> dict[str, Any]:
         "user_message": {"sha256": None, "byte_length": None},
         "provider_environment_names": (),
         "local_capability_evidence_identities": (),
+        "managed_remotion_runtime": None,
         "launched": False,
         "spawn_count": 0,
         "pid": None,
@@ -1312,6 +1327,9 @@ def _sanitize_dynamic_receipt_fields(
     if _dynamic_value_contains_secret(receipt["local_capability_evidence_identities"], canaries):
         receipt["local_capability_evidence_identities"] = ()
         propagated = True
+    if _dynamic_value_contains_secret(receipt["managed_remotion_runtime"], canaries):
+        receipt["managed_remotion_runtime"] = None
+        propagated = True
     if _dynamic_value_contains_secret(receipt["result_pointer"], canaries):
         receipt["result_pointer"] = {
             "path": None, "sha256": None, "size": None, "valid": False,
@@ -1334,6 +1352,59 @@ def _reject_dynamic_secret_values(
         _fail("INVALID_INPUT")
 
 
+def _validate_managed_remotion_runtime(
+    value: Any, provider_canaries: Sequence[str] = ()
+) -> dict[str, str] | None:
+    """Validate the optional managed runtime fact before child handoff.
+
+    The Shell only carries this Package-owned identity; it never derives a
+    runtime path or makes a renderer decision from it.
+    """
+
+    if value is None:
+        return None
+    if not isinstance(value, Mapping) or frozenset(value) != _MANAGED_REMOTION_RUNTIME_FIELDS:
+        _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    if _dynamic_value_contains_secret(value, provider_canaries):
+        _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    runtime = dict(value)
+    if runtime["status"] != "PRESENT" or runtime["source"] != "managed":
+        _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    if (
+        not isinstance(runtime["version"], str)
+        or _VERSION_RE.fullmatch(runtime["version"]) is None
+        or runtime["install_scope"] not in {"system", "current-user"}
+    ):
+        _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    for field in ("runtime_root", "verified_entrypoint"):
+        if not isinstance(runtime[field], (str, os.PathLike)):
+            _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    try:
+        root = Path(runtime["runtime_root"])
+        entrypoint = Path(runtime["verified_entrypoint"])
+        if not root.is_absolute() or not entrypoint.is_absolute():
+            _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+        _validate_components(root)
+        _validate_components(entrypoint)
+        resolved_root = root.resolve(strict=True)
+        resolved_entrypoint = entrypoint.resolve(strict=True)
+        if not resolved_root.is_dir() or not resolved_entrypoint.is_file():
+            _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+        if resolved_entrypoint == resolved_root:
+            _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+        resolved_entrypoint.relative_to(resolved_root)
+        if not _regular_unaliased(os.stat(entrypoint, follow_symlinks=False)):
+            _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    except _LaunchError:
+        raise
+    except (OSError, RuntimeError, TypeError, ValueError):
+        _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    for field in ("definition_sha256", "manifest_sha256", "lockfile_sha256"):
+        if not isinstance(runtime[field], str) or _SHA256_RE.fullmatch(runtime[field]) is None:
+            _fail("MANAGED_REMOTION_RUNTIME_INVALID")
+    return runtime
+
+
 def _located_snapshot(located: Mapping[str, Any]) -> bytes:
     return _canonical_json(_thaw(located), newline=True)
 
@@ -1345,6 +1416,7 @@ def _preflight(
     executor_controls: Any,
     package_tool_definition: Any,
     local_capability_evidence: Any,
+    managed_remotion_runtime: Any,
     receipt: dict[str, Any],
     canary_state: dict[str, Any],
 ) -> dict[str, Any]:
@@ -1397,6 +1469,10 @@ def _preflight(
         controls["timeout_seconds"],
         str(controls["result_root"]),
     )
+    managed_runtime = _validate_managed_remotion_runtime(
+        managed_remotion_runtime, secret_text
+    )
+    receipt["managed_remotion_runtime"] = managed_runtime
     message_identity = {
         "sha256": hashlib.sha256(message_bytes).hexdigest(),
         "byte_length": len(message_bytes),
@@ -1418,6 +1494,7 @@ def _preflight(
         "located": located, "located_snapshot": _located_snapshot(located),
         "package_root": package_root, "definition": definition, "controls": controls,
         "local_identities": local_identities, "local_evidence_input": _thaw(local_capability_evidence),
+        "managed_remotion_runtime": managed_runtime,
         "secret_text": secret_text, "secret_bytes": secret_bytes,
     }
 
@@ -1460,6 +1537,11 @@ def _second_preflight(first: Mapping[str, Any]) -> None:
             first["secret_text"],
         )
         if local_identities != first["local_identities"]:
+            _fail("REGISTRATION_DRIFT")
+        managed_runtime = _validate_managed_remotion_runtime(
+            first["managed_remotion_runtime"], first["secret_text"]
+        )
+        if managed_runtime != first["managed_remotion_runtime"]:
             _fail("REGISTRATION_DRIFT")
     except _LaunchError:
         _fail("REGISTRATION_DRIFT")
@@ -1744,6 +1826,7 @@ def _request_payload(first: Mapping[str, Any]) -> bytes:
         },
         "tool_definition_sha256": first["definition"]["definition_sha256"],
         "local_capability_evidence_identities": [_thaw(item) for item in first["local_identities"]],
+        "managed_remotion_runtime": _thaw(first["managed_remotion_runtime"]),
     }
     return _canonical_json(request, newline=True)
 
@@ -1905,6 +1988,8 @@ def launch_session_tool(
     package_tool_definition: Mapping[str, Any],
     local_capability_evidence: Sequence[Mapping[str, Any]] = (),
     cancel_event: threading.Event | None = None,
+    *,
+    managed_remotion_runtime: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
     """Launch one definition-bound Package tool and always return a frozen receipt."""
 
@@ -1971,6 +2056,7 @@ def launch_session_tool(
             executor_controls=executor_controls,
             package_tool_definition=package_tool_definition,
             local_capability_evidence=local_capability_evidence,
+            managed_remotion_runtime=managed_remotion_runtime,
             receipt=receipt,
             canary_state=canary_state,
         )

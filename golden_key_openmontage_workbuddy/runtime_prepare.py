@@ -56,6 +56,45 @@ _VERSION_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9.+_-]{0,127}$")
 _LICENSE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .()+_-]{0,127}$")
 _LOCK_TIMEOUT_SECONDS = 5.0
 _LOCK_RETRY_SECONDS = 0.05
+_NPM_MIRROR = "https://registry.npmmirror.com"
+_PACKAGE_DEFINITION_FIELDS = frozenset(
+    {
+        "capability",
+        "version",
+        "license",
+        "runtime_license",
+        "source",
+        "registry",
+        "install_scope",
+        "install_target",
+        "package",
+        "project_root",
+        "verified_entrypoint",
+        "command",
+        "definition_sha256",
+    }
+)
+_PACKAGE_FIELDS = frozenset(
+    {"name", "version", "manifest", "manifest_sha256", "lockfile", "lockfile_sha256"}
+)
+_PACKAGE_RUNTIME_RECORD_SCHEMA = "golden-key-workbuddy-managed-runtime-v1"
+_PACKAGE_RUNTIME_RECORD_FIELDS = frozenset(
+    {
+        "schema_version",
+        "capability",
+        "definition_sha256",
+        "version",
+        "install_scope",
+        "runtime_root",
+        "verified_entrypoint",
+        "manifest_sha256",
+        "lockfile_sha256",
+    }
+)
+_PACKAGE_DECISION_FIELDS = frozenset(
+    {"decision", "capability", "definition_sha256", "plan_sha256"}
+)
+_PACKAGE_DECISION_OPTIONAL_FIELDS = frozenset({"install_scope"})
 _WINDOWS_RESERVED_STEMS = frozenset(
     {
         "con",
@@ -100,6 +139,14 @@ def _canonical_hash(value: Mapping[str, Any]) -> str:
     except (TypeError, ValueError, UnicodeEncodeError) as exc:
         _fail("INVALID_DEFINITION", f"value is not canonical JSON: {exc}")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _require_mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -960,6 +1007,435 @@ def _withdraw_owned_publication(
     return True
 
 
+def _is_package_definition_catalog(value: Any) -> bool:
+    return (
+        isinstance(value, Sequence)
+        and not isinstance(value, (str, bytes))
+        and any(isinstance(item, Mapping) and "package" in item for item in value)
+    )
+
+
+def _validate_package_definition(value: Any) -> dict[str, Any]:
+    if isinstance(value, (str, bytes)) or not isinstance(value, Sequence) or len(value) != 1:
+        _fail("INVALID_DEFINITION", "Package capability definitions must contain Remotion exactly once")
+    raw = _require_mapping(value[0], "capability_definitions[0]")
+    _require_exact_fields(raw, _PACKAGE_DEFINITION_FIELDS, frozenset(), "capability_definitions[0]")
+    if raw["capability"] != "remotion":
+        _fail("INVALID_CAPABILITY", "the first managed Package capability is Remotion")
+    for field in ("version", "license", "runtime_license", "source"):
+        if not isinstance(raw[field], str) or not raw[field]:
+            _fail("INVALID_DEFINITION", f"{field} must be a non-empty string")
+    if raw["registry"] != _NPM_MIRROR:
+        _fail("UNAPPROVED_SOURCE", "Remotion npm installation is restricted to npmmirror")
+    if raw["install_scope"] != "system" or raw["install_target"] != "windows_default_for_scope":
+        _fail("INVALID_DEFINITION", "Remotion must use the Windows default system install target")
+    package = _require_mapping(raw["package"], "capability_definitions[0].package")
+    _require_exact_fields(package, _PACKAGE_FIELDS, frozenset(), "capability package")
+    for field in ("name", "version"):
+        if not isinstance(package[field], str) or not package[field]:
+            _fail("INVALID_DEFINITION", f"package {field} must be a non-empty string")
+    manifest = _relative_path(package["manifest"], "package manifest")
+    lockfile = _relative_path(package["lockfile"], "package lockfile")
+    project_root = _relative_path(raw["project_root"], "project_root")
+    entrypoint = _relative_path(raw["verified_entrypoint"], "verified_entrypoint")
+    for child, parent, label in ((manifest, project_root, "package manifest"), (lockfile, project_root, "package lockfile")):
+        try:
+            PurePosixPath(child).relative_to(PurePosixPath(parent))
+        except ValueError:
+            _fail("PATH_VIOLATION", f"{label} must stay inside project_root")
+    command = raw["command"]
+    if command != ["npx", "remotion", "render"]:
+        _fail("INVALID_DEFINITION", "Remotion command is fixed to npx remotion render")
+    if not isinstance(raw["definition_sha256"], str) or not _SHA256_RE.fullmatch(raw["definition_sha256"]):
+        _fail("INVALID_DEFINITION", "definition_sha256 must be lowercase SHA-256")
+    for field in ("manifest_sha256", "lockfile_sha256"):
+        if not isinstance(package[field], str) or not _SHA256_RE.fullmatch(package[field]):
+            _fail("INVALID_DEFINITION", f"{field} must be lowercase SHA-256")
+    body = {key: raw[key] for key in _PACKAGE_DEFINITION_FIELDS if key != "definition_sha256"}
+    if _canonical_hash(body) != raw["definition_sha256"]:
+        _fail("INVALID_DEFINITION", "definition_sha256 does not match the Package declaration")
+    return {
+        "capability": "remotion",
+        "version": raw["version"],
+        "license": raw["license"],
+        "runtime_license": raw["runtime_license"],
+        "source": raw["source"],
+        "registry": raw["registry"],
+        "install_scope": raw["install_scope"],
+        "install_target": raw["install_target"],
+        "package": dict(package),
+        "project_root": project_root,
+        "verified_entrypoint": entrypoint,
+        "command": list(command),
+        "definition_sha256": raw["definition_sha256"],
+    }
+
+
+def _package_root(data_root: Path, package_root: str | os.PathLike[str] | None) -> Path:
+    if package_root is None:
+        try:
+            from .package_registration import locate_active_package
+
+            package_root = locate_active_package(data_root)["package_root"]
+        except Exception as exc:
+            _fail("PACKAGE_NOT_FOUND", f"active Package cannot be located: {exc}")
+    root = Path(package_root)
+    if not root.is_absolute() or not root.is_dir() or _is_link_or_reparse(root):
+        _fail("PACKAGE_NOT_FOUND", "PackageRoot must be an existing safe directory")
+    return root.resolve(strict=True)
+
+
+def _package_paths(package_root: Path, definition: Mapping[str, Any]) -> tuple[Path, Path, Path]:
+    project = package_root.joinpath(*PurePosixPath(definition["project_root"]).parts)
+    manifest = package_root.joinpath(*PurePosixPath(definition["package"]["manifest"]).parts)
+    lockfile = package_root.joinpath(*PurePosixPath(definition["package"]["lockfile"]).parts)
+    for path in (project, manifest, lockfile):
+        try:
+            path.resolve(strict=False).relative_to(package_root.resolve(strict=True))
+        except (OSError, ValueError):
+            _fail("PATH_VIOLATION", "Package capability path escapes PackageRoot")
+    if not project.is_dir() or not manifest.is_file() or not lockfile.is_file():
+        _fail("PACKAGE_DEFINITION_MISMATCH", "Package Remotion project files are incomplete")
+    if _sha256(manifest) != definition["package"]["manifest_sha256"]:
+        _fail("PACKAGE_DEFINITION_MISMATCH", "Package manifest hash does not match declaration")
+    if _sha256(lockfile) != definition["package"]["lockfile_sha256"]:
+        _fail("PACKAGE_DEFINITION_MISMATCH", "Package lockfile hash does not match declaration")
+    try:
+        manifest_value = json.loads(manifest.read_text(encoding="utf-8"))
+        lock_value = json.loads(lockfile.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        _fail("PACKAGE_DEFINITION_MISMATCH", f"Package manifest or lockfile is not valid JSON: {exc}")
+    if (
+        not isinstance(manifest_value, Mapping)
+        or manifest_value.get("name") != definition["package"]["name"]
+        or manifest_value.get("version") != definition["package"]["version"]
+        or not isinstance(lock_value, Mapping)
+        or not isinstance(lock_value.get("packages"), Mapping)
+    ):
+        _fail("PACKAGE_DEFINITION_MISMATCH", "Package manifest and lockfile do not describe the declared project")
+    return project, manifest, lockfile
+
+
+def _scope_base(scope: str) -> Path:
+    if scope == "system":
+        names = ("ProgramFiles", "ProgramW6432", "ProgramData")
+    elif scope == "current-user":
+        names = ("LocalAppData",)
+    else:
+        _fail("INVALID_DECISION", "install_scope must be system or current-user")
+    for name in names:
+        value = os.environ.get(name)
+        if value:
+            base = Path(value)
+            if base.is_absolute() and base != Path(base.anchor):
+                if base.exists() and _is_link_or_reparse(base):
+                    _fail("PATH_VIOLATION", f"{name} is a reparse point")
+                return base.resolve(strict=False)
+    _fail("STANDARD_LOCATION_UNAVAILABLE", f"Windows standard location {scope} is unavailable")
+
+
+def _runtime_target(definition: Mapping[str, Any], scope: str) -> Path:
+    base = _scope_base(scope)
+    return (
+        base
+        / "OpenMontage"
+        / "Runtimes"
+        / "Remotion"
+        / definition["version"]
+        / definition["package"]["name"]
+    ).resolve(strict=False)
+
+
+def _runtime_record_path(data_root: Path, definition: Mapping[str, Any]) -> Path:
+    return data_root / "State" / "OptionalRuntime" / f"{definition['capability']}-{definition['definition_sha256']}.json"
+
+
+def _runtime_evidence(definition: Mapping[str, Any], root: Path, scope: str) -> dict[str, Any]:
+    entrypoint = root.joinpath(*PurePosixPath(definition["verified_entrypoint"]).parts).resolve(strict=False)
+    return {
+        "status": "PRESENT",
+        "source": "managed",
+        "runtime_root": str(root.resolve(strict=True)),
+        "verified_entrypoint": str(entrypoint),
+        "version": definition["version"],
+        "install_scope": scope,
+        "definition_sha256": definition["definition_sha256"],
+        "manifest_sha256": definition["package"]["manifest_sha256"],
+        "lockfile_sha256": definition["package"]["lockfile_sha256"],
+    }
+
+
+def _probe_package_runtime(root: Path, definition: Mapping[str, Any], scope: str) -> dict[str, Any] | None:
+    try:
+        manifest = root / Path(definition["package"]["manifest"]).name
+        lockfile = root / Path(definition["package"]["lockfile"]).name
+        if not manifest.is_file() or not lockfile.is_file():
+            return None
+        if _sha256(manifest) != definition["package"]["manifest_sha256"] or _sha256(lockfile) != definition["package"]["lockfile_sha256"]:
+            return None
+        entrypoint = root.joinpath(*PurePosixPath(definition["verified_entrypoint"]).parts)
+        if not entrypoint.is_file() or not (root / "node_modules").is_dir():
+            return None
+        compatible, _probe_result = _probe(entrypoint, definition["version"])
+        if not compatible:
+            return None
+        return _runtime_evidence(definition, root, scope)
+    except (_ContractError, OSError, ValueError, RuntimeError):
+        return None
+
+
+def _read_runtime_record(data_root: Path, definition: Mapping[str, Any]) -> dict[str, Any] | None:
+    path = _runtime_record_path(data_root, definition)
+    if not path.is_file() or _is_link_or_reparse(path):
+        return None
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        _require_exact_fields(value, _PACKAGE_RUNTIME_RECORD_FIELDS, frozenset(), "runtime record")
+        if value["schema_version"] != _PACKAGE_RUNTIME_RECORD_SCHEMA:
+            return None
+        if value["capability"] != definition["capability"] or value["definition_sha256"] != definition["definition_sha256"]:
+            return None
+        if value["version"] != definition["version"] or value["install_scope"] not in {"system", "current-user"}:
+            return None
+        for field in ("runtime_root", "verified_entrypoint"):
+            if not isinstance(value[field], str) or not Path(value[field]).is_absolute():
+                return None
+        if value["manifest_sha256"] != definition["package"]["manifest_sha256"] or value["lockfile_sha256"] != definition["package"]["lockfile_sha256"]:
+            return None
+        return dict(value)
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError, TypeError):
+        return None
+
+
+def _detect_package_capability(data_root: Path, definition: Mapping[str, Any]) -> dict[str, Any]:
+    record = _read_runtime_record(data_root, definition)
+    if record is None:
+        return {"capability": "remotion", "status": "MISSING"}
+    root = Path(record["runtime_root"])
+    entrypoint = Path(record["verified_entrypoint"])
+    try:
+        if entrypoint.resolve(strict=False) != root.joinpath(*PurePosixPath(definition["verified_entrypoint"]).parts).resolve(strict=False):
+            return {"capability": "remotion", "status": "INCOMPATIBLE", "reason": "RUNTIME_ENTRYPOINT_MISMATCH"}
+    except (OSError, RuntimeError):
+        return {"capability": "remotion", "status": "INCOMPATIBLE", "reason": "RUNTIME_PATH_INVALID"}
+    evidence = _probe_package_runtime(root, definition, record["install_scope"])
+    if evidence is None:
+        return {"capability": "remotion", "status": "INCOMPATIBLE", "reason": "RUNTIME_NOT_VERIFIED"}
+    return {"capability": "remotion", "status": "PRESENT", "evidence": evidence}
+
+
+def _package_plan(data_root: Path, definition: Mapping[str, Any], fact: Mapping[str, Any], package_root: Path) -> dict[str, Any]:
+    _package_paths(package_root, definition)
+    locations: list[dict[str, Any]] = []
+    for scope in ("system", "current-user"):
+        try:
+            target = _runtime_target(definition, scope)
+            locations.append({"install_scope": scope, "runtime_root": str(target), "resolution": "windows_default_for_scope"})
+        except _ContractError as exc:
+            locations.append({"install_scope": scope, "runtime_root": None, "resolution": "unavailable", "reason_code": exc.code})
+    packages = json.loads((package_root / Path(*PurePosixPath(definition["package"]["lockfile"]).parts)).read_text(encoding="utf-8"))["packages"]
+    body = {
+        "capability": "remotion",
+        "definition_sha256": definition["definition_sha256"],
+        "detected_status": fact["status"],
+        "version": definition["version"],
+        "license": definition["license"],
+        "runtime_license": definition["runtime_license"],
+        "source": definition["source"],
+        "registry": _NPM_MIRROR,
+        "package": dict(definition["package"]),
+        "dependency_count": max(len(packages) - 1, 0) if isinstance(packages, Mapping) else None,
+        "download_size_bytes": None,
+        "download_size": "unknown",
+        "total_download_size": None,
+        "total_download_size_status": "unknown",
+        "install_scopes": locations,
+        "install_command": ["npm.cmd" if os.name == "nt" else "npm", "ci", "--ignore-scripts", "--no-audit", "--no-fund", f"--registry={_NPM_MIRROR}"],
+        "network_policy": "npmmirror_only_no_overseas_fallback",
+        "publish_policy": "same_volume_atomic_replace",
+    }
+    return {**body, "plan_sha256": _canonical_hash(body)}
+
+
+def _ensure_external_parent(path: Path) -> None:
+    current = Path(path.anchor)
+    for part in path.relative_to(Path(path.anchor)).parts:
+        current /= part
+        if current.exists():
+            if not current.is_dir() or _is_link_or_reparse(current):
+                _fail("PATH_VIOLATION", "install location contains an unsafe path")
+        else:
+            try:
+                current.mkdir()
+            except OSError as exc:
+                _fail("INSTALL_FAILED", f"cannot create standard install location: {exc}")
+
+
+def _npm_executor(command: Sequence[str], cwd: Path, environment: Mapping[str, str]) -> None:
+    completed = subprocess.run(list(command), cwd=str(cwd), env=dict(environment), check=False)
+    if completed.returncode != 0:
+        _fail("INSTALL_FAILED", f"npm ci returned exit code {completed.returncode}")
+
+
+def _write_runtime_record(data_root: Path, definition: Mapping[str, Any], evidence: Mapping[str, Any]) -> None:
+    record_path = _runtime_record_path(data_root, definition)
+    _ensure_owned_directory_chain(data_root, record_path.parent, [])
+    payload = json.dumps(
+        {
+            "schema_version": _PACKAGE_RUNTIME_RECORD_SCHEMA,
+            "capability": definition["capability"],
+            "definition_sha256": definition["definition_sha256"],
+            "version": definition["version"],
+            "install_scope": evidence["install_scope"],
+            "runtime_root": evidence["runtime_root"],
+            "verified_entrypoint": evidence["verified_entrypoint"],
+            "manifest_sha256": definition["package"]["manifest_sha256"],
+            "lockfile_sha256": definition["package"]["lockfile_sha256"],
+        },
+        allow_nan=False,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8") + b"\n"
+    temporary = record_path.with_name(f".{record_path.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        temporary.write_bytes(payload)
+        os.replace(temporary, record_path)
+    except OSError as exc:
+        temporary.unlink(missing_ok=True)
+        _fail("INSTALL_FAILED", f"cannot record managed runtime: {exc}")
+
+
+def _remove_owned_runtime_record(data_root: Path, definition: Mapping[str, Any], evidence: Mapping[str, Any]) -> None:
+    path = _runtime_record_path(data_root, definition)
+    expected = {
+        "schema_version": _PACKAGE_RUNTIME_RECORD_SCHEMA,
+        "capability": definition["capability"],
+        "definition_sha256": definition["definition_sha256"],
+        "version": definition["version"],
+        "install_scope": evidence["install_scope"],
+        "runtime_root": evidence["runtime_root"],
+        "verified_entrypoint": evidence["verified_entrypoint"],
+        "manifest_sha256": definition["package"]["manifest_sha256"],
+        "lockfile_sha256": definition["package"]["lockfile_sha256"],
+    }
+    try:
+        if path.is_file() and not _is_link_or_reparse(path) and json.loads(path.read_text(encoding="utf-8")) == expected:
+            path.unlink()
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError):
+        return
+
+
+def _withdraw_package_publication(target: Path, expected_identity: tuple[int, int]) -> bool:
+    try:
+        if _directory_identity(target) != expected_identity:
+            return False
+        withdrawn = target.with_name(f".{target.name}.withdrawn-{uuid.uuid4().hex}")
+        os.replace(target, withdrawn)
+        if _directory_identity(withdrawn) != expected_identity:
+            os.replace(withdrawn, target)
+            return False
+        shutil.rmtree(withdrawn, ignore_errors=False)
+        return True
+    except (OSError, _ContractError):
+        return False
+
+
+def _integrate_package_capability(
+    data_root: Path,
+    package_root: Path,
+    definition: Mapping[str, Any],
+    plan: Mapping[str, Any],
+    decision: Mapping[str, Any],
+) -> dict[str, Any]:
+    scope = decision.get("install_scope", "system")
+    if scope not in {"system", "current-user"}:
+        _fail("INVALID_DECISION", "install_scope must be system or current-user")
+    target = _runtime_target(definition, scope)
+    planned = next((item for item in plan["install_scopes"] if item["install_scope"] == scope), None)
+    if not planned or planned.get("runtime_root") != str(target):
+        _fail("STALE_DECISION", "standard install location changed after consent")
+    project_source, _manifest, _lockfile = _package_paths(package_root, definition)
+    _ensure_external_parent(target.parent)
+    if target.exists():
+        _fail("FOREIGN_TARGET", "standard install location already contains an unverified runtime")
+    staging: Path | None = None
+    published_identity: tuple[int, int] | None = None
+    evidence: dict[str, Any] | None = None
+    record_written = False
+    completed = False
+    try:
+        staging = Path(tempfile.mkdtemp(prefix=".remotion-", dir=str(target.parent)))
+        shutil.copytree(project_source, staging, dirs_exist_ok=True)
+        command = list(plan["install_command"])
+        environment = os.environ.copy()
+        environment["NPM_CONFIG_REGISTRY"] = _NPM_MIRROR
+        environment["npm_config_registry"] = _NPM_MIRROR
+        _npm_executor(command, staging, environment)
+        if _probe_package_runtime(staging, definition, scope) is None:
+            _fail("PROBE_FAILED", "published Remotion runtime did not pass final verification")
+        os.replace(staging, target)
+        staging = None
+        published_identity = _directory_identity(target)
+        evidence = _probe_package_runtime(target, definition, scope)
+        if evidence is None:
+            _fail("PROBE_FAILED", "published Remotion runtime did not pass rediscovery")
+        _write_runtime_record(data_root, definition, evidence)
+        record_written = True
+        rediscovered = _detect_package_capability(data_root, definition)
+        if rediscovered.get("status") != "PRESENT":
+            _fail("PROBE_FAILED", "registered Remotion runtime did not pass rediscovery")
+        completed = True
+        return dict(rediscovered["evidence"], plan_sha256=plan["plan_sha256"], reused=False)
+    finally:
+        if staging is not None:
+            shutil.rmtree(staging, ignore_errors=True)
+        if not completed and published_identity is not None:
+            if record_written and evidence is not None:
+                _remove_owned_runtime_record(data_root, definition, evidence)
+            _withdraw_package_publication(target, published_identity)
+
+
+def _prepare_package_optional_capabilities(
+    data_root: str | os.PathLike[str],
+    capability_definitions: Sequence[Mapping[str, Any]],
+    user_decisions: Sequence[Mapping[str, Any]] | None,
+    package_root: str | os.PathLike[str] | None,
+) -> dict[str, Any]:
+    try:
+        root = Path(data_root).resolve(strict=False)
+        if not root.is_absolute() or root == Path(root.anchor):
+            _fail("PATH_VIOLATION", "data_root must be an absolute non-root path")
+        definition = _validate_package_definition(capability_definitions)
+        package = _package_root(root, package_root)
+        fact = _detect_package_capability(root, definition)
+        hyperframes = {"capability": "hyperframes", "status": "NOT_INTEGRATED", "reason": "UNIMPLEMENTED"}
+        if fact["status"] == "PRESENT":
+            return {"result": "DETECTION_REPORT", "capabilities": [fact, hyperframes], "plans": [], "managed_remotion_runtime": fact["evidence"]}
+        plan = _package_plan(root, definition, fact, package)
+        if user_decisions is None:
+            return {"result": "CONSENT_REQUIRED", "capabilities": [fact, hyperframes], "plans": [plan]}
+        if isinstance(user_decisions, (str, bytes)) or not isinstance(user_decisions, Sequence) or len(user_decisions) != 1:
+            _fail("INVALID_DECISION", "Remotion requires one explicit decision")
+        decision = _require_mapping(user_decisions[0], "user_decisions[0]")
+        keys = frozenset(decision)
+        if keys - _PACKAGE_DECISION_FIELDS - _PACKAGE_DECISION_OPTIONAL_FIELDS or not _PACKAGE_DECISION_FIELDS.issubset(keys):
+            _fail("INVALID_DECISION", "Remotion decision fields are incomplete")
+        if decision["capability"] != "remotion" or decision["definition_sha256"] != definition["definition_sha256"] or decision["plan_sha256"] != plan["plan_sha256"]:
+            _fail("STALE_DECISION", "Remotion decision does not match the current plan")
+        if not isinstance(decision["decision"], str) or decision["decision"] not in _DECISIONS:
+            _fail("INVALID_DECISION", "decision must be approve, decline, or defer")
+        if decision["decision"] in {"decline", "defer"}:
+            return {"result": "SKIPPED", "capabilities": [{"capability": "remotion", "status": "NOT_INTEGRATED", "decision": decision["decision"], "definition_sha256": definition["definition_sha256"], "plan_sha256": plan["plan_sha256"]}, hyperframes], "plans": [plan]}
+        evidence = _integrate_package_capability(root, package, definition, plan, decision)
+        present = {"capability": "remotion", "status": "PRESENT", "evidence": evidence}
+        return {"result": "INTEGRATED", "capabilities": [present, hyperframes], "integrated": [evidence], "plans": [plan], "managed_remotion_runtime": evidence}
+    except _ContractError as exc:
+        return _blocked(exc.code, exc.message)
+    except (OSError, ValueError, UnicodeError, TypeError) as exc:
+        return _blocked("DETECTION_FAILED", f"bounded Package capability preparation failed: {exc}")
+
+
 def _integrate_one(data_root: Path, definition: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str, Any]:
     target = _managed_root(data_root, definition)
     cache_root = data_root / "Caches" / "optional-runtime"
@@ -1101,12 +1577,18 @@ def prepare_optional_capabilities(
     data_root: str | os.PathLike[str],
     capability_definitions: Sequence[Mapping[str, Any]],
     user_decisions: Sequence[Mapping[str, Any]] | None = None,
+    *,
+    package_root: str | os.PathLike[str] | None = None,
 ) -> dict[str, Any]:
     """Detect optional capabilities and integrate only exactly approved plans.
 
     Invalid inputs and authorized preparation failures are returned as ``BLOCKED``;
     ordinary absence and decline/defer decisions are not failures.
     """
+    if _is_package_definition_catalog(capability_definitions):
+        return _prepare_package_optional_capabilities(
+            data_root, capability_definitions, user_decisions, package_root
+        )
     try:
         if not isinstance(data_root, (str, os.PathLike)):
             _fail("PATH_VIOLATION", "data_root must be path-like")

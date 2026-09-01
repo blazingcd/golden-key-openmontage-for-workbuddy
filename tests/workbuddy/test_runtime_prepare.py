@@ -992,3 +992,197 @@ def test_stage2_sources_and_toolchain_paths_are_untouched(tmp_path: Path, defini
     result = prepare_optional_capabilities(data_root, catalog, decisions)
     assert result["result"] == "INTEGRATED"
     assert {path: path.read_bytes() for path in sentinels} == sentinels
+
+
+def _package_definition_fixture(tmp_path: Path) -> tuple[Path, dict]:
+    package_root = tmp_path / "PackageRoot"
+    project = package_root / "remotion-composer"
+    project.mkdir(parents=True)
+    manifest = {"name": "openmontage-remotion-composer", "version": "1.0.0", "dependencies": {"remotion": "4.0.484"}}
+    lock = {"name": manifest["name"], "version": manifest["version"], "lockfileVersion": 3, "packages": {"": {"dependencies": manifest["dependencies"]}}}
+    manifest_path = project / "package.json"
+    lock_path = project / "package-lock.json"
+    manifest_path.write_text(json.dumps(manifest, separators=(",", ":")), encoding="utf-8")
+    lock_path.write_text(json.dumps(lock, separators=(",", ":")), encoding="utf-8")
+    (project / "src").mkdir()
+    (project / "src" / "index.tsx").write_text("export {}\n", encoding="utf-8")
+    definition = {
+        "capability": "remotion",
+        "version": "4.0.484",
+        "license": "AGPL-3.0-only",
+        "runtime_license": "SEE LICENSE IN LICENSE.md",
+        "source": "https://www.npmjs.com/package/remotion/v/4.0.484",
+        "registry": "https://registry.npmmirror.com",
+        "install_scope": "system",
+        "install_target": "windows_default_for_scope",
+        "package": {
+            "name": manifest["name"],
+            "version": manifest["version"],
+            "manifest": "remotion-composer/package.json",
+            "manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+            "lockfile": "remotion-composer/package-lock.json",
+            "lockfile_sha256": hashlib.sha256(lock_path.read_bytes()).hexdigest(),
+        },
+        "project_root": "remotion-composer",
+        "verified_entrypoint": "node_modules/.bin/remotion.cmd",
+        "command": ["npx", "remotion", "render"],
+        "definition_sha256": "0" * 64,
+    }
+    body = {key: value for key, value in definition.items() if key != "definition_sha256"}
+    definition["definition_sha256"] = hashlib.sha256(json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    return package_root, definition
+
+
+def test_package_remotion_plan_is_mirror_only_and_does_not_download(tmp_path: Path, monkeypatch) -> None:
+    package_root, definition = _package_definition_fixture(tmp_path)
+    data_root = tmp_path / "data"
+    monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
+    monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
+
+    result = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+
+    assert result["result"] == "CONSENT_REQUIRED"
+    assert result["capabilities"] == [
+        {"capability": "remotion", "status": "MISSING"},
+        {"capability": "hyperframes", "status": "NOT_INTEGRATED", "reason": "UNIMPLEMENTED"},
+    ]
+    plan = result["plans"][0]
+    assert plan["registry"] == "https://registry.npmmirror.com"
+    assert plan["download_size_bytes"] is None
+    assert plan["download_size"] == "unknown"
+    assert plan["install_command"][1:2] == ["ci"]
+    assert "--registry=https://registry.npmmirror.com" in plan["install_command"]
+    assert {item["install_scope"] for item in plan["install_scopes"]} == {"system", "current-user"}
+    assert not data_root.exists()
+
+
+def test_package_remotion_fake_npm_ci_publishes_and_rediscoveries(tmp_path: Path, monkeypatch) -> None:
+    package_root, definition = _package_definition_fixture(tmp_path)
+    data_root = tmp_path / "data"
+    monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
+    monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
+    probe_calls: list[Path] = []
+    npm_calls: list[tuple[list[str], Path, str]] = []
+
+    def fake_probe(entrypoint: Path, version: str) -> tuple[bool, dict]:
+        probe_calls.append(entrypoint)
+        return True, {"reason": "COMPATIBLE", "entrypoint": str(entrypoint.resolve()), "exit_code": 0, "version_output": f"remotion {version}"}
+
+    def fake_npm(command, cwd: Path, environment) -> None:
+        npm_calls.append((list(command), cwd, environment["NPM_CONFIG_REGISTRY"]))
+        assert environment["npm_config_registry"] == "https://registry.npmmirror.com"
+        entrypoint = cwd / "node_modules" / ".bin" / "remotion.cmd"
+        entrypoint.parent.mkdir(parents=True)
+        entrypoint.write_text("@echo off\necho remotion 4.0.484\n", encoding="utf-8")
+
+    monkeypatch.setattr(runtime_prepare, "_probe", fake_probe)
+    monkeypatch.setattr(runtime_prepare, "_npm_executor", fake_npm)
+    first = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+    plan = first["plans"][0]
+    decision = {"decision": "approve", "capability": "remotion", "definition_sha256": definition["definition_sha256"], "plan_sha256": plan["plan_sha256"], "install_scope": "system"}
+
+    result = prepare_optional_capabilities(data_root, [definition], [decision], package_root=package_root)
+
+    assert result["result"] == "INTEGRATED"
+    runtime = result["managed_remotion_runtime"]
+    assert runtime["status"] == "PRESENT"
+    assert runtime["source"] == "managed"
+    assert Path(runtime["runtime_root"]).is_absolute()
+    assert Path(runtime["verified_entrypoint"]).is_relative_to(Path(runtime["runtime_root"]))
+    assert runtime["version"] == "4.0.484"
+    assert runtime["install_scope"] == "system"
+    assert npm_calls and npm_calls[0][0][1] == "ci"
+    assert npm_calls[0][2] == "https://registry.npmmirror.com"
+    assert len(probe_calls) >= 2
+    record = data_root / "State" / "OptionalRuntime" / f"remotion-{definition['definition_sha256']}.json"
+    assert record.is_file()
+    rediscovered = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+    assert rediscovered["result"] == "DETECTION_REPORT"
+    assert rediscovered["managed_remotion_runtime"]["runtime_root"] == runtime["runtime_root"]
+    assert rediscovered["capabilities"][1]["status"] == "NOT_INTEGRATED"
+
+
+def test_package_remotion_invalid_decision_does_not_call_npm_or_create_target(
+    tmp_path: Path, monkeypatch
+) -> None:
+    package_root, definition = _package_definition_fixture(tmp_path)
+    data_root = tmp_path / "data"
+    monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
+    monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
+    npm_calls: list[tuple[list[str], Path]] = []
+
+    def fake_npm(command, cwd: Path, environment) -> None:
+        npm_calls.append((list(command), cwd))
+
+    monkeypatch.setattr(runtime_prepare, "_npm_executor", fake_npm)
+    first = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+    plan = first["plans"][0]
+    decision = {
+        "decision": "approve-without-consent",
+        "capability": "remotion",
+        "definition_sha256": definition["definition_sha256"],
+        "plan_sha256": plan["plan_sha256"],
+        "install_scope": "system",
+    }
+
+    result = prepare_optional_capabilities(
+        data_root, [definition], [decision], package_root=package_root
+    )
+
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "INVALID_DECISION"
+    assert npm_calls == []
+    target = Path(plan["install_scopes"][0]["runtime_root"])
+    assert not target.exists()
+
+
+def test_package_remotion_record_write_failure_withdraws_target_and_is_retryable(
+    tmp_path: Path, monkeypatch
+) -> None:
+    package_root, definition = _package_definition_fixture(tmp_path)
+    data_root = tmp_path / "data"
+    monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
+    monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
+
+    def fake_probe(entrypoint: Path, version: str) -> tuple[bool, dict]:
+        return True, {
+            "reason": "COMPATIBLE",
+            "entrypoint": str(entrypoint.resolve()),
+            "exit_code": 0,
+            "version_output": f"remotion {version}",
+        }
+
+    def fake_npm(command, cwd: Path, environment) -> None:
+        entrypoint = cwd / "node_modules" / ".bin" / "remotion.cmd"
+        entrypoint.parent.mkdir(parents=True)
+        entrypoint.write_text("@echo off\necho remotion 4.0.484\n", encoding="utf-8")
+
+    def fail_record(data_root_arg, definition_arg, evidence_arg) -> None:
+        raise runtime_prepare._ContractError("INSTALL_FAILED", "forced record failure")
+
+    monkeypatch.setattr(runtime_prepare, "_probe", fake_probe)
+    monkeypatch.setattr(runtime_prepare, "_npm_executor", fake_npm)
+    monkeypatch.setattr(runtime_prepare, "_write_runtime_record", fail_record)
+    first = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+    plan = first["plans"][0]
+    decision = {
+        "decision": "approve",
+        "capability": "remotion",
+        "definition_sha256": definition["definition_sha256"],
+        "plan_sha256": plan["plan_sha256"],
+        "install_scope": "system",
+    }
+
+    result = prepare_optional_capabilities(
+        data_root, [definition], [decision], package_root=package_root
+    )
+
+    assert result["result"] == "BLOCKED"
+    assert result["reason_code"] == "INSTALL_FAILED"
+    target = Path(plan["install_scopes"][0]["runtime_root"])
+    assert not target.exists()
+    record = data_root / "State" / "OptionalRuntime" / f"remotion-{definition['definition_sha256']}.json"
+    assert not record.exists()
+    retry = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+    assert retry["result"] == "CONSENT_REQUIRED"
+    assert retry["plans"][0]["plan_sha256"] == plan["plan_sha256"]

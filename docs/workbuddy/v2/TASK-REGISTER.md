@@ -1204,6 +1204,20 @@ Skill or Remotion, run WorkBuddy, handle credentials, call a Provider, change th
 Package, or produce media. A later real WorkBuddy test needs a fresh action-time
 confirmation.
 
+The local candidate is now built and remains uninstalled:
+
+- archive:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-workbuddy-guidance-v1.zip`;
+- size: `1785` bytes;
+- SHA-256:
+  `c2d1062412e0a37d04cd30c377f96d1688e40eb2c524c9cbb6d6cb94c796aefd`;
+- contents: exactly `SKILL.md`;
+- checks: six focused tests passed, Skill validation passed, and the ZIP has no
+  installer placeholder, `run.ps1`, or machine path.
+
+This proves only the guidance-only package contract. It does not prove WorkBuddy
+will follow the guidance or that Remotion can be installed and invoked.
+
 The earlier frozen implementation candidate below is historical and must not be
 executed after this correction.
 
@@ -1245,7 +1259,11 @@ without a real download. Second, separate action-time authorization permits one
 real WorkBuddy Remotion install and invocation. The API-key result remains a
 separate authorized result. This documentation task stops before every stage.
 
-#### Remotion stability correction — OWNER AUTHORIZED / IN PROGRESS
+#### Remotion stability correction — SUPERSEDED / HISTORICAL
+
+The WorkBuddy-led guidance correction above supersedes this Shell-executed route.
+The details below remain historical evidence and must not be used to install the
+new candidate or run another WorkBuddy task.
 
 Owner authorization on `2026-09-02` starts the bounded correction after the first
 real WorkBuddy attempt exposed a false-negative Remotion probe, a manually patched
@@ -1319,9 +1337,10 @@ SHA-256 `872ffcde5f33039fad52fd8daef21611ef61431fcacb38f72db9e42f85012eb4`.
 The old manual runtime, obsolete duplicate runtime, and old manual registration
 were removed after the local gate; the prior PackageRoot and Registration remain
 available for rollback. The assembly `inputs` child was removed after verification.
-WorkBuddy `5.4.7` is open with no old Skill installed; action-time confirmation is
-required before installing the new Skill through its UI. No WorkBuddy prompt or
-new Remotion installation has run yet.
+At that historical checkpoint WorkBuddy `5.4.7` was open with no old Skill
+installed. The old action-time installation step is withdrawn. The guidance-only
+candidate above remains uninstalled and needs a fresh Owner confirmation before
+any WorkBuddy action.
 
 ### M1 branch lifecycle and mandatory cleanup
 

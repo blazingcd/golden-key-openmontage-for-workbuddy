@@ -3,8 +3,9 @@
 ## Product path
 
 ```text
-ordinary user -> WorkBuddy conversation -> one Golden Key Skill -> Shell mechanics
-             -> verified OpenMontage Package -> WorkBuddy presents the result
+ordinary user -> WorkBuddy conversation -> Golden Key guidance Skill
+             -> WorkBuddy uses verified OpenMontage rules and its own tools
+             -> WorkBuddy presents the result
 ```
 
 WorkBuddy is the only harness Agent, conversation owner, and production
@@ -15,9 +16,10 @@ required product result to fail, adds technical burden to the ordinary user,
 creates a second control plane, or produces a false result.
 
 The OpenMontage Package is the production-semantic source. Shell V2 is limited to
-installation/lifecycle, Registration/Locator, runtime preparation, fixed mechanical
-invocation, WorkBuddy entry, and status/receipt relay. Shell does not choose or run
-creative production, Pipeline/Stage, Provider, renderer, or media strategy. The
+Golden Key application lifecycle, Registration/Locator, fixed mechanical
+invocation, and status/result relay. Optional configuration is guided by the Skill
+and executed live by WorkBuddy. Shell does not choose or run creative production,
+Pipeline/Stage, Provider, renderer, or media strategy. The
 external Package `AGENT_GUIDE.md` is read by WorkBuddy only after a verified
 PackageRoot and Guide identity are returned.
 
@@ -25,11 +27,11 @@ PackageRoot and Guide identity are returned.
 
 | Responsibility | Main implementation | Boundary |
 |---|---|---|
-| Installation and lifecycle | `golden_key_openmontage_workbuddy/installer.py` | Assemble the PackageRoot, private toolchain, Manifest/Lock/binding, stamped Skill, and lifecycle operations; never decide production. |
+| Installation and lifecycle | `golden_key_openmontage_workbuddy/installer.py` | Assemble the PackageRoot, private toolchain, Manifest/Lock/binding, one-file guidance Skill, and lifecycle operations; never decide production. |
 | Package Registration and Locator | `golden_key_openmontage_workbuddy/package_registration.py` | Validate explicit Package identity and locate one active Package; never scan, repair, download, launch, or choose fallback. |
-| Runtime preparation | `golden_key_openmontage_workbuddy/runtime_prepare.py` | Bounded optional-capability detection and application of an exactly approved integration plan; never own consent, replace required Python/FFmpeg/Node, or choose a renderer. |
+| Historical runtime preparation | `golden_key_openmontage_workbuddy/runtime_prepare.py` | Preserved internal Shell source; the guidance-only Skill does not invoke it for optional configuration. |
 | Fixed mechanical invocation | `golden_key_openmontage_workbuddy/session_launcher.py`, `fixed_child.py` | Validate the approved binding, perform the fixed transport, and return facts; never become an Agent or production workflow. |
-| WorkBuddy entry | `golden_key_openmontage_workbuddy/user_entry.py`, `workbuddy_entry_cli.py`, `workbuddy-skill/golden-key-openmontage/` | Carry the original user request through the single WorkBuddy Skill; never require user technical operations or rewrite business intent. |
+| WorkBuddy guidance | `workbuddy-skill/golden-key-openmontage/SKILL.md` | Give WorkBuddy product rules and success criteria only; no machine-bound script, private action, receipt, or cached result. |
 | Status and result relay | `workbuddy_entry_cli.py`, `user_entry.py`, `session_launcher.py` | Return the mechanical status/receipt to WorkBuddy; never invent an Artifact or claim a result that was not produced. |
 
 ## Current results
@@ -54,13 +56,15 @@ PackageRoot and Guide identity are returned.
 
 The historical baseline is `codex/workbuddy-shell-v2` at
 `aa9cabfa0d4f75d93e22317466709b6bad3bc3b4`. The planning branch is
-`codex/workbuddy-capability-onboarding`; implementation is not authorized.
+`codex/workbuddy-capability-onboarding`; the current guidance-only candidate is
+authorized on `codex/workbuddy-m1-capability-onboarding` and remains uninstalled.
 
-FFmpeg is the minimum production baseline. WorkBuddy owns a light first-use
-inventory of relevant optional enhancements and the natural-language choice to
-continue or configure. Shell runtime preparation stays limited to bounded
-detection, consent-bound integration, and factual relay. Optional absence does
-not block the FFmpeg-ready basic path.
+FFmpeg is the minimum production baseline. WorkBuddy owns live inspection of
+relevant optional enhancements and the natural-language choice to continue or
+configure. The Skill supplies mirror, compatibility, consent, Windows-location,
+and acceptance rules; WorkBuddy performs installation and verification with its
+own available system abilities. Optional absence does not block the FFmpeg-ready
+basic path.
 
 ## Working constraints
 

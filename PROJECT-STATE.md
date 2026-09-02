@@ -443,9 +443,12 @@ or integrated source are not readiness evidence.
 The authorized candidate changes the current authority/entry documents,
 `SKILL.md`, the one-file ZIP builder, and directly affected focused tests. It
 keeps `run.ps1` only as historical Shell source and excludes it from the new Skill
-ZIP. The candidate remains uninstalled; no WorkBuddy or Remotion execution is
-authorized by this build gate. M1.3 remains `PRODUCT_INCOMPLETE` until a later
-real WorkBuddy result is reviewed.
+ZIP. The uninstalled candidate is
+`golden-key-openmontage-0.3.25-workbuddy-guidance-v1.zip`, size `1785` bytes,
+SHA-256 `c2d1062412e0a37d04cd30c377f96d1688e40eb2c524c9cbb6d6cb94c796aefd`.
+It contains exactly `SKILL.md`; six focused tests and Skill validation passed.
+No WorkBuddy or Remotion execution is authorized by this build gate. M1.3 remains
+`PRODUCT_INCOMPLETE` until a later real WorkBuddy result is reviewed.
 
 ## Non-goals
 

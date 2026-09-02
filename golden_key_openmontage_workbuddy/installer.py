@@ -13,7 +13,6 @@ import hashlib
 import importlib.util
 import json
 import os
-import re
 import shutil
 import stat
 import subprocess
@@ -655,28 +654,8 @@ def _definition_and_skill(root: Path) -> dict[str, Any]:
     fixed_argv_text = json.dumps(fixed_argv, ensure_ascii=False, separators=(",", ":"))
     skill_path = root / "shell-adapter" / "workbuddy-skill" / "golden-key-openmontage" / "SKILL.md"
     skill = skill_path.read_text(encoding="utf-8")
-    replacements = {
-        "<installer:skill_identity>": "golden-key-openmontage",
-        "<installer:release_identity>": RELEASE_IDENTITY,
-    }
-    for marker, value in replacements.items():
-        skill = skill.replace(marker, value)
-    if any(marker in skill for marker in replacements):
+    if "<installer:" in skill:
         raise InstallerError("skill_placeholder_remaining")
-    fields = {
-        "GOLDEN_KEY_WORKBUDDY_SKILL_IDENTITY": "golden-key-openmontage",
-        "GOLDEN_KEY_WORKBUDDY_RELEASE_IDENTITY": RELEASE_IDENTITY,
-    }
-    for field, value in fields.items():
-        skill, count = re.subn(
-            rf"(?m)^{re.escape(field)}=.*$",
-            lambda _match, field=field, value=value: f"{field}={value}",
-            skill,
-            count=1,
-        )
-        if count != 1:
-            raise InstallerError(f"skill_field_missing:{field}")
-    skill_path.write_text(skill, encoding="utf-8", newline="")
     binding = {
         "schema_version": "golden-key-workbuddy-user-entry-binding-v1",
         "data_root_relative": "../../data/production",
@@ -920,15 +899,6 @@ def _extract_release(archive: Path, destination: Path) -> None:
     _verify_tree_boundary(destination)
 
 
-def _active_pointer_sha(data_root: Path) -> str:
-    path = data_root / "State" / "PackageRegistration" / "v1" / "active.json"
-    return _sha256(path) if path.is_file() else "MISSING"
-
-
-def _powershell_literal(value: Path) -> str:
-    return "'" + str(value).replace("'", "''") + "'"
-
-
 def _skill_archive_name(value: os.PathLike[str] | str | None) -> str:
     name = Path(WORKBUDDY_SKILL_ARCHIVE_RELATIVE_PATH).name if value is None else os.fspath(value)
     if not isinstance(name, str):
@@ -955,48 +925,10 @@ def _build_workbuddy_skill_archive(
     if skill_source_root is not None:
         skill_root = Path(skill_source_root).resolve(strict=True)
     skill_path = skill_root / "SKILL.md"
-    script_path = skill_root / "scripts" / "run.ps1"
-    python_path = package_root / "bootstrap" / "python" / "python.exe"
-    active_pointer_sha256 = _active_pointer_sha(data_root)
-    if skill_source_root is not None and active_pointer_sha256 != "MISSING":
-        from .package_registration import PackageRegistrationError, locate_active_package
-
-        try:
-            located = locate_active_package(data_root)
-        except PackageRegistrationError as exc:
-            raise InstallerError("workbuddy_skill_active_package_invalid") from exc
-        if Path(located["package_root"]).resolve(strict=True) != package_root:
-            raise InstallerError("workbuddy_skill_package_root_not_active")
-    for path in (skill_path, script_path, python_path):
-        _assert_regular(path)
-        _assert_no_reparse_chain(path, boundary=skill_root if path in (skill_path, script_path) else package_root)
+    _assert_regular(skill_path)
+    _assert_no_reparse_chain(skill_path, boundary=skill_root)
     skill = skill_path.read_text(encoding="utf-8")
-    script = script_path.read_text(encoding="utf-8")
-    if skill_source_root is not None:
-        for marker, value in {
-            "<installer:skill_identity>": "golden-key-openmontage",
-            "<installer:release_identity>": RELEASE_IDENTITY,
-        }.items():
-            skill = skill.replace(marker, value)
-        for field, value in {
-            "GOLDEN_KEY_WORKBUDDY_SKILL_IDENTITY": "golden-key-openmontage",
-            "GOLDEN_KEY_WORKBUDDY_RELEASE_IDENTITY": RELEASE_IDENTITY,
-        }.items():
-            skill, count = re.subn(
-                rf"(?m)^{re.escape(field)}=.*$",
-                lambda _match, field=field, value=value: f"{field}={value}",
-                skill,
-                count=1,
-            )
-            if count != 1:
-                raise InstallerError(f"skill_field_missing:{field}")
-    script = script.replace("<installer:package_root>", _powershell_literal(package_root))
-    script = script.replace("<installer:private_python>", _powershell_literal(python_path))
-    script = script.replace("<installer:data_root>", _powershell_literal(data_root))
-    receipt_path = data_root / "Results" / "golden-key-openmontage" / "latest-launcher-receipt.json"
-    script = script.replace("<installer:receipt_path>", _powershell_literal(receipt_path))
-    script = script.replace("<installer:active_pointer_sha256>", active_pointer_sha256)
-    if "<installer:" in skill or "<installer:" in script:
+    if "<installer:" in skill:
         raise InstallerError("workbuddy_skill_placeholder_remaining")
 
     candidate_archive = archive_name is not None
@@ -1009,12 +941,11 @@ def _build_workbuddy_skill_archive(
     temporary = destination.with_name(f".{destination.name}.{uuid.uuid4().hex}.tmp")
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-            for name, payload in (("SKILL.md", skill.encode("utf-8")), ("scripts/run.ps1", script.encode("utf-8"))):
-                info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
-                info.create_system = 0
-                info.external_attr = 0
-                info.compress_type = zipfile.ZIP_DEFLATED
-                archive.writestr(info, payload, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+            info = zipfile.ZipInfo("SKILL.md", date_time=(1980, 1, 1, 0, 0, 0))
+            info.create_system = 0
+            info.external_attr = 0
+            info.compress_type = zipfile.ZIP_DEFLATED
+            archive.writestr(info, skill.encode("utf-8"), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
         digest = _sha256(temporary)
         size = temporary.stat().st_size
         os.replace(temporary, destination)
@@ -1023,8 +954,6 @@ def _build_workbuddy_skill_archive(
             "archive_name": destination.name,
             "sha256": digest,
             "size": size,
-            "receipt_path": str(receipt_path),
-            "active_pointer_sha256": active_pointer_sha256,
         }
     finally:
         temporary.unlink(missing_ok=True)

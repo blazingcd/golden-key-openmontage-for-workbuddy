@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
-import subprocess
 import sys
 import uuid
 import zipfile
@@ -625,26 +623,16 @@ def test_package_summary_rejects_module_outside_package_root(
         fixed_child._write_handoff(_handoff_request(result_root))
 
 
-def test_installer_builds_stamped_workbuddy_skill_zip(tmp_path: Path) -> None:
+def test_installer_builds_guidance_only_workbuddy_skill_zip(tmp_path: Path) -> None:
     data_root = tmp_path / "data"
     data_root.mkdir()
     package_root = tmp_path / "installed package"
     skill_root = package_root / "shell-adapter/workbuddy-skill/golden-key-openmontage"
-    (skill_root / "scripts").mkdir(parents=True)
-    (package_root / "bootstrap/python").mkdir(parents=True)
+    skill_root.mkdir(parents=True)
     (skill_root / "SKILL.md").write_text(
-        "GOLDEN_KEY_WORKBUDDY_SKILL_IDENTITY=golden-key-openmontage\n"
-        'description: exact phrase "金钥匙智能体"\n',
+        'description: exact phrase "金钥匙智能体"\nWorkBuddy performs the live check.\n',
         encoding="utf-8",
     )
-    (skill_root / "scripts/run.ps1").write_text(
-        "param([Parameter(ValueFromPipeline = $true)][string]$UserMessage)\n"
-        "$packageRoot = <installer:package_root>\n"
-        "$python = <installer:private_python>\n"
-        "$UserMessage | & $python -I -m golden_key_openmontage_workbuddy.user_entry\n",
-        encoding="utf-8",
-    )
-    (package_root / "bootstrap/python/python.exe").write_bytes(b"python")
 
     result = installer._build_workbuddy_skill_archive(data_root, package_root)
 
@@ -652,24 +640,44 @@ def test_installer_builds_stamped_workbuddy_skill_zip(tmp_path: Path) -> None:
     assert archive == data_root / "Integrations/WorkBuddy/golden-key-openmontage-0.3.25.zip"
     assert result["sha256"] == installer._sha256(archive)
     with zipfile.ZipFile(archive) as stream:
-        assert stream.namelist() == ["SKILL.md", "scripts/run.ps1"]
+        assert stream.namelist() == ["SKILL.md"]
         skill = stream.read("SKILL.md").decode("utf-8")
-        payload = stream.read("scripts/run.ps1").decode("utf-8")
     assert 'exact phrase "金钥匙智能体"' in skill
-    assert "<installer:" not in payload
-    assert str(package_root) in payload
-    assert str(package_root / "bootstrap/python/python.exe") in payload
-    assert "ValueFromPipeline = $true" in payload
-    assert "$UserMessage | & $python -I -m golden_key_openmontage_workbuddy.user_entry" in payload
-    assert "System.Diagnostics.Process" not in payload
+    assert "WorkBuddy performs the live check" in skill
+    assert str(package_root) not in skill
+    assert str(data_root) not in skill
 
 
-def test_installer_can_stamp_repository_skill_for_current_package(tmp_path: Path) -> None:
+def test_package_assembly_accepts_guidance_only_skill(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    files = {
+        "shell-adapter/golden_key_openmontage_workbuddy/fixed_child.py": b"child",
+        "shell-adapter/golden_key_openmontage_workbuddy/workbuddy_entry_cli.py": b"entry",
+        "shell-adapter/golden_key_openmontage_workbuddy/user_entry.py": b"user",
+        "bootstrap/python/python.exe": b"python",
+    }
+    for relative, payload in files.items():
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(payload)
+    skill = tmp_path / "shell-adapter/workbuddy-skill/golden-key-openmontage/SKILL.md"
+    skill.parent.mkdir(parents=True)
+    source = "---\nname: golden-key-openmontage\n---\nWorkBuddy executes live.\n"
+    skill.write_text(source, encoding="utf-8")
+    monkeypatch.setattr(installer, "_bridge_schema_hashes", lambda _root: ("1" * 64, "2" * 64))
+
+    result = installer._definition_and_skill(tmp_path)
+
+    assert skill.read_text(encoding="utf-8") == source
+    assert result["skill_sha256"] == installer._sha256(skill)
+
+
+def test_installer_can_build_repository_guidance_skill(tmp_path: Path) -> None:
     data_root = tmp_path / "data"
     data_root.mkdir()
     package_root = tmp_path / "installed package"
-    (package_root / "bootstrap/python").mkdir(parents=True)
-    (package_root / "bootstrap/python/python.exe").write_bytes(b"python")
+    package_root.mkdir()
     source_root = Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage"
 
     result = installer._build_workbuddy_skill_archive(
@@ -679,15 +687,13 @@ def test_installer_can_stamp_repository_skill_for_current_package(tmp_path: Path
     )
 
     with zipfile.ZipFile(result["path"]) as stream:
-        script = stream.read("scripts/run.ps1").decode("utf-8")
+        assert stream.namelist() == ["SKILL.md"]
         skill = stream.read("SKILL.md").decode("utf-8")
-    assert "<installer:" not in script
     assert "<installer:" not in skill
-    assert str(data_root) in script
-    receipt_path = data_root / "Results/golden-key-openmontage/latest-launcher-receipt.json"
-    assert str(receipt_path) in script
-    assert result["receipt_path"] == str(receipt_path)
-    assert "'MISSING'" in script
+    assert "registry.npmmirror.com" in skill
+    assert str(data_root) not in skill
+    assert str(package_root) not in skill
+    assert set(result) == {"path", "archive_name", "sha256", "size"}
 
 
 def test_skill_candidate_archive_preserves_existing_baseline(tmp_path: Path) -> None:
@@ -695,15 +701,8 @@ def test_skill_candidate_archive_preserves_existing_baseline(tmp_path: Path) -> 
     data_root.mkdir()
     package_root = tmp_path / "installed package"
     skill_root = package_root / "shell-adapter/workbuddy-skill/golden-key-openmontage"
-    (skill_root / "scripts").mkdir(parents=True)
-    (package_root / "bootstrap/python").mkdir(parents=True)
+    skill_root.mkdir(parents=True)
     (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
-    (skill_root / "scripts/run.ps1").write_text(
-        "$packageRoot = <installer:package_root>\n"
-        "$python = <installer:private_python>\n",
-        encoding="utf-8",
-    )
-    (package_root / "bootstrap/python/python.exe").write_bytes(b"python")
 
     baseline = installer._build_workbuddy_skill_archive(data_root, package_root)
     baseline_path = Path(baseline["path"])
@@ -729,83 +728,3 @@ def test_skill_archive_name_is_a_single_zip_basename() -> None:
     for name in ("nested/candidate.zip", "candidate", "../candidate.zip", "C:/candidate.zip"):
         with pytest.raises(InstallerError, match="archive_name_invalid"):
             installer._skill_archive_name(name)
-
-
-def test_skill_archive_rejects_non_active_package_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    data_root = tmp_path / "data"
-    active_path = data_root / "State/PackageRegistration/v1/active.json"
-    active_path.parent.mkdir(parents=True)
-    active_path.write_bytes(b"active")
-    package_root = tmp_path / "stale package"
-    active_root = tmp_path / "active package"
-    package_root.mkdir()
-    active_root.mkdir()
-    monkeypatch.setattr(
-        package_registration,
-        "locate_active_package",
-        lambda _data_root: {"package_root": str(active_root)},
-    )
-    source_root = Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage"
-
-    with pytest.raises(InstallerError, match="package_root_not_active"):
-        installer._build_workbuddy_skill_archive(
-            data_root,
-            package_root,
-            skill_source_root=source_root,
-        )
-
-
-def test_workbuddy_skill_wrapper_records_controlled_failure_with_real_pwsh() -> None:
-    repo_root = Path(__file__).resolve().parents[2]
-    skill = (repo_root / "workbuddy-skill/golden-key-openmontage/SKILL.md").read_text(encoding="utf-8")
-    template = (repo_root / "workbuddy-skill/golden-key-openmontage/scripts/run.ps1").read_text(encoding="utf-8")
-    pwsh = shutil.which("pwsh")
-    assert pwsh is not None
-
-    task_root = Path("D:/BlazingCD/Temp") / f"workbuddy-v3-pwsh-{uuid.uuid4().hex}"
-    results_root = task_root / "results"
-    receipt_path = results_root / "latest-launcher-receipt.json"
-    probe_message = "用户原文 secret message"
-    missing_package = task_root / probe_message
-    data_root = task_root / "data"
-    script_path = task_root / "run.ps1"
-
-    def ps_literal(path: Path) -> str:
-        return "'" + str(path).replace("'", "''") + "'"
-
-    task_root.mkdir(parents=True)
-    data_root.mkdir()
-    script = (
-        template.replace("<installer:package_root>", ps_literal(missing_package))
-        .replace("<installer:private_python>", ps_literal(task_root / "python.exe"))
-        .replace("<installer:data_root>", ps_literal(data_root))
-        .replace("<installer:active_pointer_sha256>", "MISSING")
-        .replace("<installer:receipt_path>", ps_literal(receipt_path))
-    )
-    script_path.write_text(script, encoding="utf-8")
-    try:
-        result = subprocess.run(
-            [pwsh, "-NoProfile", "-NonInteractive", "-File", str(script_path), "-UserMessage", probe_message],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            check=False,
-        )
-        failure_path = results_root / "latest-launcher-failure.json"
-        assert result.returncode != 0
-        assert failure_path.is_file(), f"stdout={result.stdout!r} stderr={result.stderr!r}"
-        payload = json.loads(failure_path.read_text(encoding="utf-8"))
-        assert payload["schema_version"] == "golden-key-workbuddy-failure-diagnostic-v1"
-        assert payload["exit_code"] == result.returncode
-        assert payload["stage"] == "preflight"
-        assert probe_message not in failure_path.read_text(encoding="utf-8")
-        assert not receipt_path.exists()
-        assert "Split-Path -Parent -LiteralPath" not in script
-        assert "latest-launcher-failure.json" in skill
-        assert "never replay" in skill
-        assert "decides its own reasoning, tools, questions, retries" in skill
-        assert "Do not delay user-visible delivery for optional workspace memory" in skill
-        assert "routine result is not a new\nworkflow to persist" in skill
-        assert script.count("golden_key_openmontage_workbuddy.user_entry") == 1
-    finally:
-        shutil.rmtree(task_root, ignore_errors=True)

@@ -643,7 +643,7 @@ def test_skill_keeps_optional_setup_guidance_only() -> None:
     assert "Keep the complete original message and business goal" in normalized
     assert "the Package Guide is the production-semantic authority" in normalized
     assert "Present the actual business result naturally" in normalized
-    assert "do not claim that an Artifact, video, file" in normalized
+    assert "do not claim an Artifact or video exists unless it actually does" in normalized
     assert "Do not delay delivery to create workspace memory, another Skill" in normalized
     assert "registry.npmmirror.com" in normalized
     assert "Never assume a drive letter" in normalized

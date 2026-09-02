@@ -246,8 +246,10 @@ The product goal is one ordinary-user path:
 2. The request contains the wake word `金钥匙智能体`.
 3. WorkBuddy is the only Agent, conversation owner, and production decision-maker.
 4. WorkBuddy uses the verified OpenMontage Package as the production-semantic source.
-5. The Shell supplies only installation/lifecycle, Registration/Locator, runtime
-   preparation, fixed mechanical invocation, WorkBuddy entry, and status/receipt relay.
+5. The Shell supplies Golden Key application lifecycle, Registration/Locator,
+   fixed mechanical invocation, and status/result relay. For optional capability
+   configuration, the Skill supplies guidance and WorkBuddy itself performs the
+   live inspection, consented installation, rediscovery, and verification.
 
 The Shell is not a second Agent, conversation owner, Director, workflow engine,
 provider/renderer selector, media control plane, MCP/router, or general framework.
@@ -296,8 +298,9 @@ source/dependency/runtime/invocation layers remain internal truth and diagnostic
 evidence, not mandatory first-use copy. WorkBuddy then lets the user continue
 immediately, configure one selected category, defer, or ask for more detail.
 WorkBuddy owns the dialogue, relevance, Provider/model choice, cost/privacy
-explanation, consent, and recovery decision. The Shell may only perform bounded
-detection, exactly approved preparation, and factual status relay.
+explanation, consent, live detection, installation, verification, and recovery
+decision. The Skill supplies verified rules and success criteria; it does not
+run or conceal an optional-capability installation workflow.
 
 Later requests containing `金钥匙智能体` may naturally ask to inspect, configure,
 change, or retest capabilities. Do not introduce a fixed command language,
@@ -633,14 +636,17 @@ silently switch scope or assume that `C:` or `D:` exists. The repository rule th
 development temporary files prefer `D:` is not an end-user installation rule.
 
 Remotion and HyperFrames are optional shared runtimes outside immutable
-PackageRoot. Shell owns resolving, installing, recording, and rediscovering the
-approved location; Package consumes the verified recorded path and does not choose
-or guess an installation directory. The completed audit also proves that Package
-definitions alone are insufficient: Remotion needs its full locked npm dependency
-closure from `registry.npmmirror.com`, Package recognition of the managed runtime,
-and one actual Package-mediated invocation. Search results or a global command do
-not prove readiness. The exact corrected route and future candidate write set are
-frozen in the Task Register. This correction may update only the six authority/
-state documents, receive one independent zero-write review, commit once, and push
-the planning branch. It performs no installation, WorkBuddy run, code/test change,
-credential, Provider call, or media action.
+PackageRoot. The Skill tells WorkBuddy the verified compatibility, mainland
+mirror, consent, Windows-location, and success rules. WorkBuddy uses its own
+available system abilities to inspect the current machine, explain the plan,
+obtain consent, install, rediscover, and perform a real invocation. It must not
+reuse an old receipt or treat a search result, global command, or source
+integration as proof of readiness.
+
+The Owner's 2026-09-02 correction supersedes the Shell-owned optional-runtime
+route. The next candidate changes only the authority/current-entry documents,
+the Golden Key Skill, its one-file ZIP builder, and directly affected focused
+tests. The candidate ZIP contains only `SKILL.md`; it has no machine-bound script,
+path, private action, receipt, or cached result. This authorization builds and
+reviews an uninstalled candidate only. It does not install a Skill or Remotion,
+run WorkBuddy, handle a credential, call a Provider, or produce media.

@@ -10,8 +10,9 @@ internal technical work? If not, stop and report the exact missing user result.
 
 - WorkBuddy is the only Agent, dialogue owner, and production decision-maker.
 - OpenMontage Package is the production-semantic source.
-- Shell is only installation/lifecycle, Registration/Locator, runtime preparation,
-  fixed mechanical invocation, WorkBuddy entry, and status/receipt relay.
+- Shell is only Golden Key application lifecycle, Registration/Locator, fixed
+  mechanical invocation, and status/result relay. The Skill guides optional
+  configuration; WorkBuddy performs its live execution and verification.
 - Shell must not become a second Agent, Director, workflow engine, provider/
   renderer selector, media control plane, MCP, router, or generic framework.
 - The external Package `AGENT_GUIDE.md` is read only by WorkBuddy after a verified
@@ -400,12 +401,10 @@ WorkBuddy.
   authorization.
 - Shell must not parse user prose; do not use a workspace file, fixed user command,
   environment-name instruction, or second control plane as a substitute.
-- Extend the existing `runtime_prepare.py` boundary rather than add another
-  detector/installer. It must use the user-approved Windows install scope and the
-  standard location Windows resolves at execution time, with no fixed drive. It
-  must install and verify the complete locked npm closure from
-  `registry.npmmirror.com`, record the resolved path, and rediscover it. Do not
-  bundle Remotion or treat a global command as Package readiness.
+- Do not route optional configuration through `runtime_prepare.py`, `run.ps1`, a
+  receipt, or another hidden installer. The Skill supplies guidance only;
+  WorkBuddy performs the live check, explanation, consent, install, rediscovery,
+  and verification with its own available system abilities.
 - Reuse the fail-closed exact environment allowlist and secret-suppression launch
   path. Current empty production allowlists and the absence of a verified secure
   input/store are gaps, not evidence that API configuration works.
@@ -445,8 +444,14 @@ WorkBuddy.
 - The repository preference for development temporary files on `D:` is not an
   end-user installation rule. Never assume that `C:` or `D:` exists. System-wide
   is the default product route; current-user scope requires an explicit informed
-  choice. Never silently switch between them. Shell owns the resolved location
-  and Package only consumes it.
+  choice. Never silently switch between them. WorkBuddy must verify the location
+  Windows resolves for the approved scope.
+
+- The Owner's 2026-09-02 correction authorizes one guidance-only Skill candidate.
+  Its ZIP contains only `SKILL.md` and no machine-bound script, path, private
+  action, receipt, or cached-result dependency. Build and focused review are
+  allowed; Skill/Remotion installation, WorkBuddy, credentials, Providers, and
+  media remain outside this gate.
 
 ## Result guard
 

@@ -1263,6 +1263,27 @@ manual runtime. Package commit `201675c0e550d417654b752f3945f229fb5ceeee`
 (tree `f5915fdda3448fed509ed8741563643493c1613f`) is pushed and advertised on
 `codex/golden-key-openmontage-v0.3.25`. Cleanup and installation have not started.
 
+Assembly completed at the recorded root. The deterministic Release is
+`golden-key-openmontage-for-workbuddy-0.3.25-remotion-stable-2670641.zip`,
+size `177261865`, SHA-256
+`aa8c6df3cf7da5023c01a0d452d6feb7e3f204fdc49e405a174257e578822563`.
+Before activation, the install destination is recorded as
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.3-remotion-stability-install-2670641`.
+It is the new immutable PackageRoot destination; the prior active PackageRoot is
+retained for rollback.
+
+The Release was installed and activated as Registration
+`1de2935dee199a0a2b630e90baf9707758f86fb6a4e9dd637203aca6dc0188e8` at the
+recorded destination. The generated WorkBuddy Skill archive is
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25.zip`,
+SHA-256 `872ffcde5f33039fad52fd8daef21611ef61431fcacb38f72db9e42f85012eb4`.
+The old manual runtime, obsolete duplicate runtime, and old manual registration
+were removed after the local gate; the prior PackageRoot and Registration remain
+available for rollback. The assembly `inputs` child was removed after verification.
+WorkBuddy `5.4.7` is open with no old Skill installed; action-time confirmation is
+required before installing the new Skill through its UI. No WorkBuddy prompt or
+new Remotion installation has run yet.
+
 ### M1 branch lifecycle and mandatory cleanup
 
 The M1 branch is temporary but shared; M1.2, M1.3, and M1.4 do not create sibling
@@ -1767,7 +1788,7 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_3_REMOTION_STABILITY_CORRECTION / LOCAL_CHECKS_PASSED / PACKAGE_ASSEMBLY_NEXT
+current_task: M1_3_REMOTION_STABILITY_CORRECTION / PACKAGE_ACTIVATED_AND_OLD_RUNTIME_CLEANED / AWAITING_WORKBUDDY_SKILL_INSTALL_CONFIRMATION
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: COMPACT_READINESS_CURRENTLY_INSTALLED / USED_FOR_M1_2_PROOF / UX_OVERLOAD_RECORDED / ZIP_SHA256_4CAF57CFCF5D298F0DED1098D4FDA5BB482A699F57A72B02BC61F1CD3DBF2DD1 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL / RECHECK_AT_EXECUTION
 capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE

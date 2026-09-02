@@ -20,6 +20,7 @@ import time
 import urllib.request
 import unicodedata
 import uuid
+import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping, Sequence
 from urllib.parse import urlsplit
@@ -71,8 +72,12 @@ _PACKAGE_DEFINITION_FIELDS = frozenset(
         "project_root",
         "verified_entrypoint",
         "command",
+        "browser",
         "definition_sha256",
     }
+)
+_BROWSER_FIELDS = frozenset(
+    {"version", "source_url", "archive_size", "archive_sha256", "executable"}
 )
 _PACKAGE_FIELDS = frozenset(
     {"name", "version", "manifest", "manifest_sha256", "lockfile", "lockfile_sha256"}
@@ -216,6 +221,29 @@ def _approved_url(value: Any) -> str:
         or parsed.fragment
     ):
         _fail("UNAPPROVED_SOURCE", "optional assets require an exact npmmirror HTTPS URL")
+    return value
+
+
+def _approved_browser_url(value: Any) -> str:
+    if not isinstance(value, str):
+        _fail("INVALID_DEFINITION", "browser source URL must be a string")
+    parsed = urlsplit(value)
+    try:
+        port = parsed.port
+    except ValueError:
+        _fail("UNAPPROVED_SOURCE", "browser source URL has an invalid port")
+    if (
+        parsed.scheme != "https"
+        or parsed.hostname != "cdn.npmmirror.com"
+        or port not in {None, 443}
+        or parsed.username is not None
+        or parsed.password is not None
+        or not parsed.path.startswith("/")
+        or parsed.path == "/"
+        or parsed.query
+        or parsed.fragment
+    ):
+        _fail("UNAPPROVED_SOURCE", "browser assets require an exact npmmirror CDN HTTPS URL")
     return value
 
 
@@ -1025,6 +1053,28 @@ def _validate_package_definition(value: Any) -> dict[str, Any]:
     for field in ("version", "license", "runtime_license", "source"):
         if not isinstance(raw[field], str) or not raw[field]:
             _fail("INVALID_DEFINITION", f"{field} must be a non-empty string")
+    browser = _require_mapping(raw["browser"], "capability_definitions[0].browser")
+    _require_exact_fields(browser, _BROWSER_FIELDS, frozenset(), "browser")
+    browser_version = browser["version"]
+    if not isinstance(browser_version, str) or not _VERSION_RE.fullmatch(browser_version):
+        _fail("INVALID_DEFINITION", "browser version is missing or unsafe")
+    browser_source_url = _approved_browser_url(browser["source_url"])
+    archive_size = browser["archive_size"]
+    if isinstance(archive_size, bool) or not isinstance(archive_size, int) or archive_size <= 0:
+        _fail("INVALID_DEFINITION", "browser archive_size must be a positive integer")
+    archive_sha256 = browser["archive_sha256"]
+    if not isinstance(archive_sha256, str) or not _SHA256_RE.fullmatch(archive_sha256):
+        _fail("INVALID_DEFINITION", "browser archive_sha256 must be lowercase SHA-256")
+    browser_executable = _relative_path(browser["executable"], "browser executable")
+    if not browser_executable.casefold().endswith(".exe"):
+        _fail("INVALID_DEFINITION", "browser executable must be a Windows executable")
+    browser_value = {
+        "version": browser_version,
+        "source_url": browser_source_url,
+        "archive_size": archive_size,
+        "archive_sha256": archive_sha256,
+        "executable": browser_executable,
+    }
     if raw["registry"] != _NPM_MIRROR:
         _fail("UNAPPROVED_SOURCE", "Remotion npm installation is restricted to npmmirror")
     if raw["install_scope"] != "system" or raw["install_target"] != "windows_default_for_scope":
@@ -1067,6 +1117,7 @@ def _validate_package_definition(value: Any) -> dict[str, Any]:
         "project_root": project_root,
         "verified_entrypoint": entrypoint,
         "command": list(command),
+        "browser": browser_value,
         "definition_sha256": raw["definition_sha256"],
     }
 
@@ -1150,8 +1201,181 @@ def _runtime_record_path(data_root: Path, definition: Mapping[str, Any]) -> Path
     return data_root / "State" / "OptionalRuntime" / f"{definition['capability']}-{definition['definition_sha256']}.json"
 
 
+def _package_toolchain(package_root: Path) -> tuple[Path, Path]:
+    node = package_root / "bootstrap" / "node" / "node.exe"
+    npm = package_root / "bootstrap" / "node" / "npm.cmd"
+    for path, label in ((node, "Node"), (npm, "npm")):
+        if not path.is_file() or _is_link_or_reparse(path):
+            _fail("PACKAGE_DEFINITION_MISMATCH", f"Package-private {label} is missing or unsafe")
+    return node.resolve(strict=True), npm.resolve(strict=True)
+
+
+def _private_node_environment(node: Path) -> dict[str, str]:
+    environment = os.environ.copy()
+    environment["PATH"] = str(node.parent)
+    environment["NODE"] = str(node)
+    environment["npm_node_execpath"] = str(node)
+    return environment
+
+
+def _browser_paths(root: Path, definition: Mapping[str, Any]) -> tuple[Path, Path, PurePosixPath]:
+    executable_relative = PurePosixPath(definition["browser"]["executable"])
+    if len(executable_relative.parts) < 3:
+        _fail("INVALID_DEFINITION", "browser executable layout is incomplete")
+    extract_root_relative = executable_relative.parent.parent
+    archive_member = executable_relative.relative_to(extract_root_relative)
+    executable = root.joinpath(*executable_relative.parts)
+    version_file = root.joinpath(*extract_root_relative.parent.parts) / "VERSION"
+    try:
+        executable.resolve(strict=False).relative_to(root.resolve(strict=True))
+        version_file.resolve(strict=False).relative_to(root.resolve(strict=True))
+    except (OSError, ValueError):
+        _fail("PATH_VIOLATION", "browser executable escapes the runtime root")
+    return executable, version_file, archive_member
+
+
+def _browser_runtime_evidence(root: Path, definition: Mapping[str, Any]) -> dict[str, Any] | None:
+    try:
+        executable, version_file, _archive_member = _browser_paths(root, definition)
+        if (
+            not executable.is_file()
+            or _is_link_or_reparse(executable)
+            or not version_file.is_file()
+            or _is_link_or_reparse(version_file)
+        ):
+            return None
+        version = version_file.read_text(encoding="ascii").strip()
+        if version != definition["browser"]["version"]:
+            return None
+        return {
+            "version": version,
+            "executable": str(executable.resolve(strict=True)),
+        }
+    except (OSError, UnicodeError, ValueError, RuntimeError):
+        return None
+
+
+def _safe_extract_browser(archive: Path, root: Path, definition: Mapping[str, Any]) -> None:
+    executable, version_file, archive_member = _browser_paths(root, definition)
+    expected_member = archive_member.as_posix()
+    extract_root = executable.parent.parent
+    if not _safe_path_below(root, extract_root):
+        _fail("PATH_VIOLATION", "browser archive destination is unsafe")
+    extract_root.mkdir(parents=True, exist_ok=True)
+    try:
+        with zipfile.ZipFile(archive) as package:
+            names: set[str] = set()
+            expected_present = False
+            for info in package.infolist():
+                name = info.filename
+                is_directory = name.endswith("/")
+                relative = PurePosixPath(name[:-1] if is_directory else name)
+                if (
+                    not name
+                    or "\\" in name
+                    or "\x00" in name
+                    or relative.is_absolute()
+                    or name != relative.as_posix() + ("/" if is_directory else "")
+                    or any(part in {"", ".", ".."} or ":" in part for part in relative.parts)
+                ):
+                    _fail("PATH_VIOLATION", "browser archive contains an unsafe path")
+                normalized_name = relative.as_posix()
+                if normalized_name in names:
+                    _fail("INTEGRATION_FAILED", "browser archive contains duplicate paths")
+                names.add(normalized_name)
+                if normalized_name == expected_member:
+                    expected_present = True
+                mode = (info.external_attr >> 16) & 0o170000
+                if mode == stat.S_IFLNK:
+                    _fail("PATH_VIOLATION", "browser archive contains a symbolic link")
+                destination = extract_root / Path(*relative.parts)
+                if not _safe_path_below(extract_root, destination):
+                    _fail("PATH_VIOLATION", "browser archive escapes its managed directory")
+                if info.is_dir() or is_directory:
+                    destination.mkdir(parents=True, exist_ok=True)
+                    continue
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                try:
+                    with package.open(info) as source, destination.open("xb") as output:
+                        shutil.copyfileobj(source, output, length=1024 * 1024)
+                except OSError as exc:
+                    _fail("INTEGRATION_FAILED", f"cannot extract browser asset: {exc}")
+            if not expected_present:
+                _fail("INTEGRATION_FAILED", "browser archive does not contain its declared executable")
+    except zipfile.BadZipFile as exc:
+        _fail("INTEGRATION_FAILED", f"browser archive is not a valid ZIP: {exc}")
+    version_file.parent.mkdir(parents=True, exist_ok=True)
+    if version_file.exists() and _is_link_or_reparse(version_file):
+        _fail("PATH_VIOLATION", "browser VERSION path is unsafe")
+    try:
+        version_file.write_text(definition["browser"]["version"] + "\n", encoding="ascii", newline="\n")
+    except OSError as exc:
+        _fail("INTEGRATION_FAILED", f"cannot write browser VERSION: {exc}")
+
+
+def _install_browser(root: Path, definition: Mapping[str, Any]) -> None:
+    browser = definition["browser"]
+    archive = root / f".browser-{uuid.uuid4().hex}.zip"
+    try:
+        final_url = _download_asset(browser["source_url"], archive, browser["archive_size"])
+        if final_url != browser["source_url"]:
+            _fail("UNAPPROVED_SOURCE", "browser transport redirected outside the exact approved source")
+        try:
+            size = archive.stat().st_size
+        except OSError as exc:
+            _fail("INTEGRATION_FAILED", f"cannot identify downloaded browser archive: {exc}")
+        if size != browser["archive_size"]:
+            _fail("SIZE_MISMATCH", "browser archive size does not match the approved asset")
+        if _sha256(archive) != browser["archive_sha256"]:
+            _fail("HASH_MISMATCH", "browser archive hash does not match the approved asset")
+        _safe_extract_browser(archive, root, definition)
+        if _browser_runtime_evidence(root, definition) is None:
+            _fail("PROBE_FAILED", "installed browser did not pass final verification")
+    finally:
+        archive.unlink(missing_ok=True)
+
+
+def _probe_remotion_runtime(
+    root: Path, definition: Mapping[str, Any], package_root: Path
+) -> tuple[bool, dict[str, Any]]:
+    node, _npm = _package_toolchain(package_root)
+    cli = root / "node_modules" / "@remotion" / "cli" / "remotion-cli.js"
+    browser = _browser_runtime_evidence(root, definition)
+    if not cli.is_file() or _is_link_or_reparse(cli):
+        return False, {"reason": "REMOTION_CLI_MISSING", "cli": str(cli)}
+    if browser is None:
+        return False, {"reason": "BROWSER_MISSING_OR_INVALID", "executable": definition["browser"]["executable"]}
+    try:
+        completed = subprocess.run(
+            [str(node), str(cli), "versions"],
+            cwd=str(root),
+            env=_private_node_environment(node),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            shell=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return False, {"reason": "PROBE_FAILED", "node": str(node), "cli": str(cli), "detail": str(exc)}
+    output = (completed.stdout + "\n" + completed.stderr).strip()
+    version_pattern = re.compile(
+        rf"(?<![A-Za-z0-9]){re.escape(definition['version'])}(?![A-Za-z0-9])"
+    )
+    compatible = completed.returncode == 0 and version_pattern.search(output) is not None
+    return compatible, {
+        "reason": "COMPATIBLE" if compatible else "VERSION_OR_PROBE_MISMATCH",
+        "node": str(node),
+        "cli": str(cli.resolve(strict=False)),
+        "exit_code": completed.returncode,
+        "version_output": output[:512],
+        "browser": browser,
+    }
+
+
 def _runtime_evidence(definition: Mapping[str, Any], root: Path, scope: str) -> dict[str, Any]:
     entrypoint = root.joinpath(*PurePosixPath(definition["verified_entrypoint"]).parts).resolve(strict=False)
+    browser = _browser_runtime_evidence(root, definition)
     return {
         "status": "PRESENT",
         "source": "managed",
@@ -1162,10 +1386,16 @@ def _runtime_evidence(definition: Mapping[str, Any], root: Path, scope: str) -> 
         "definition_sha256": definition["definition_sha256"],
         "manifest_sha256": definition["package"]["manifest_sha256"],
         "lockfile_sha256": definition["package"]["lockfile_sha256"],
+        "browser": browser,
     }
 
 
-def _probe_package_runtime(root: Path, definition: Mapping[str, Any], scope: str) -> dict[str, Any] | None:
+def _probe_package_runtime(
+    root: Path,
+    definition: Mapping[str, Any],
+    scope: str,
+    package_root: Path,
+) -> dict[str, Any] | None:
     try:
         manifest = root / Path(definition["package"]["manifest"]).name
         lockfile = root / Path(definition["package"]["lockfile"]).name
@@ -1176,7 +1406,7 @@ def _probe_package_runtime(root: Path, definition: Mapping[str, Any], scope: str
         entrypoint = root.joinpath(*PurePosixPath(definition["verified_entrypoint"]).parts)
         if not entrypoint.is_file() or not (root / "node_modules").is_dir():
             return None
-        compatible, _probe_result = _probe(entrypoint, definition["version"])
+        compatible, _probe_result = _probe_remotion_runtime(root, definition, package_root)
         if not compatible:
             return None
         return _runtime_evidence(definition, root, scope)
@@ -1200,6 +1430,9 @@ def _read_runtime_record(data_root: Path, definition: Mapping[str, Any]) -> dict
         for field in ("runtime_root", "verified_entrypoint"):
             if not isinstance(value[field], str) or not Path(value[field]).is_absolute():
                 return None
+        expected_root = _runtime_target(definition, value["install_scope"])
+        if Path(value["runtime_root"]).resolve(strict=False) != expected_root:
+            return None
         if value["manifest_sha256"] != definition["package"]["manifest_sha256"] or value["lockfile_sha256"] != definition["package"]["lockfile_sha256"]:
             return None
         return dict(value)
@@ -1207,7 +1440,9 @@ def _read_runtime_record(data_root: Path, definition: Mapping[str, Any]) -> dict
         return None
 
 
-def _detect_package_capability(data_root: Path, definition: Mapping[str, Any]) -> dict[str, Any]:
+def _detect_package_capability(
+    data_root: Path, definition: Mapping[str, Any], package_root: Path
+) -> dict[str, Any]:
     record = _read_runtime_record(data_root, definition)
     if record is None:
         return {"capability": "remotion", "status": "MISSING"}
@@ -1218,7 +1453,7 @@ def _detect_package_capability(data_root: Path, definition: Mapping[str, Any]) -
             return {"capability": "remotion", "status": "INCOMPATIBLE", "reason": "RUNTIME_ENTRYPOINT_MISMATCH"}
     except (OSError, RuntimeError):
         return {"capability": "remotion", "status": "INCOMPATIBLE", "reason": "RUNTIME_PATH_INVALID"}
-    evidence = _probe_package_runtime(root, definition, record["install_scope"])
+    evidence = _probe_package_runtime(root, definition, record["install_scope"], package_root)
     if evidence is None:
         return {"capability": "remotion", "status": "INCOMPATIBLE", "reason": "RUNTIME_NOT_VERIFIED"}
     return {"capability": "remotion", "status": "PRESENT", "evidence": evidence}
@@ -1226,6 +1461,7 @@ def _detect_package_capability(data_root: Path, definition: Mapping[str, Any]) -
 
 def _package_plan(data_root: Path, definition: Mapping[str, Any], fact: Mapping[str, Any], package_root: Path) -> dict[str, Any]:
     _package_paths(package_root, definition)
+    _package_toolchain(package_root)
     locations: list[dict[str, Any]] = []
     for scope in ("system", "current-user"):
         try:
@@ -1248,11 +1484,14 @@ def _package_plan(data_root: Path, definition: Mapping[str, Any], fact: Mapping[
         "download_size_bytes": None,
         "download_size": "unknown",
         "total_download_size": None,
-        "total_download_size_status": "unknown",
         "install_scopes": locations,
         "install_command": ["npm.cmd" if os.name == "nt" else "npm", "ci", "--ignore-scripts", "--no-audit", "--no-fund", f"--registry={_NPM_MIRROR}"],
+        "browser": dict(definition["browser"]),
+        "browser_download_size_bytes": definition["browser"]["archive_size"],
+        "browser_download_size": f"{definition['browser']['archive_size']} bytes",
         "network_policy": "npmmirror_only_no_overseas_fallback",
         "publish_policy": "same_volume_atomic_replace",
+        "total_download_size_status": "npm_dependencies_unknown_browser_size_known",
     }
     return {**body, "plan_sha256": _canonical_hash(body)}
 
@@ -1356,6 +1595,7 @@ def _integrate_package_capability(
     if not planned or planned.get("runtime_root") != str(target):
         _fail("STALE_DECISION", "standard install location changed after consent")
     project_source, _manifest, _lockfile = _package_paths(package_root, definition)
+    node, npm = _package_toolchain(package_root)
     _ensure_external_parent(target.parent)
     if target.exists():
         _fail("FOREIGN_TARGET", "standard install location already contains an unverified runtime")
@@ -1367,22 +1607,23 @@ def _integrate_package_capability(
     try:
         staging = Path(tempfile.mkdtemp(prefix=".remotion-", dir=str(target.parent)))
         shutil.copytree(project_source, staging, dirs_exist_ok=True)
-        command = list(plan["install_command"])
-        environment = os.environ.copy()
+        command = [str(npm), *list(plan["install_command"])[1:]]
+        environment = _private_node_environment(node)
         environment["NPM_CONFIG_REGISTRY"] = _NPM_MIRROR
         environment["npm_config_registry"] = _NPM_MIRROR
         _npm_executor(command, staging, environment)
-        if _probe_package_runtime(staging, definition, scope) is None:
+        _install_browser(staging, definition)
+        if _probe_package_runtime(staging, definition, scope, package_root) is None:
             _fail("PROBE_FAILED", "published Remotion runtime did not pass final verification")
         os.replace(staging, target)
         staging = None
         published_identity = _directory_identity(target)
-        evidence = _probe_package_runtime(target, definition, scope)
+        evidence = _probe_package_runtime(target, definition, scope, package_root)
         if evidence is None:
             _fail("PROBE_FAILED", "published Remotion runtime did not pass rediscovery")
         _write_runtime_record(data_root, definition, evidence)
         record_written = True
-        rediscovered = _detect_package_capability(data_root, definition)
+        rediscovered = _detect_package_capability(data_root, definition, package_root)
         if rediscovered.get("status") != "PRESENT":
             _fail("PROBE_FAILED", "registered Remotion runtime did not pass rediscovery")
         completed = True
@@ -1408,7 +1649,7 @@ def _prepare_package_optional_capabilities(
             _fail("PATH_VIOLATION", "data_root must be an absolute non-root path")
         definition = _validate_package_definition(capability_definitions)
         package = _package_root(root, package_root)
-        fact = _detect_package_capability(root, definition)
+        fact = _detect_package_capability(root, definition, package)
         hyperframes = {"capability": "hyperframes", "status": "NOT_INTEGRATED", "reason": "UNIMPLEMENTED"}
         if fact["status"] == "PRESENT":
             return {"result": "DETECTION_REPORT", "capabilities": [fact, hyperframes], "plans": [], "managed_remotion_runtime": fact["evidence"]}

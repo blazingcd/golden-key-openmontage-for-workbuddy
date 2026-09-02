@@ -17,8 +17,8 @@ from golden_key_openmontage_workbuddy.installer import InstallerError
 
 
 def test_installer_binds_verified_m13_package_commit_and_tree() -> None:
-    assert installer.OPENMONTAGE_COMMIT == "3019a1fb35da084981f788560dba7f349f699eb6"
-    assert installer.OPENMONTAGE_TREE == "69db363e8d41e6484790765bf43ec411d1a998bc"
+    assert installer.OPENMONTAGE_COMMIT == "201675c0e550d417654b752f3945f229fb5ceeee"
+    assert installer.OPENMONTAGE_TREE == "f5915fdda3448fed509ed8741563643493c1613f"
 
 
 def _registry_with_pointer(data_root: Path, registration_sha256: str) -> bytes:

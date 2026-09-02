@@ -1,13 +1,14 @@
 ---
 name: golden-key-openmontage
-description: Use whenever the user's literal message contains the exact phrase "金钥匙智能体"; send that complete request through the installed Golden Key OpenMontage WorkBuddy entry.
+description: Use whenever the user's message contains the exact phrase "金钥匙智能体" or directly asks to configure Remotion, including "请帮我配置 Remotion"; send that complete request through the installed Golden Key OpenMontage WorkBuddy entry.
 ---
 
 # Golden Key OpenMontage WorkBuddy entry
 
 WorkBuddy remains the sole Agent and the sole user conversation entry. Invoke
 this Skill whenever the user's message contains the exact phrase
-`金钥匙智能体`, and pass the complete original message to the bundled entry.
+`金钥匙智能体` or directly asks to configure Remotion, and pass the complete
+original message to the bundled entry.
 Do not remove the wake phrase or reinterpret a user-provided material path as
 an internal Shell path. Allow the foreground PowerShell call up to `300000`
 milliseconds so cold Package validation can finish.
@@ -114,12 +115,13 @@ sorted keys, no whitespace, and exactly these fields:
 
 For a local Remotion choice, detect first, then explain that Windows resolves
 the standard location for the selected scope, `registry.npmmirror.com` is the
-approved npm source, the applicable license applies, and the download size is
-unknown. Ask for explicit consent for each selected capability and reconfirm
-immediately before any real download or installation. System scope is the
-default; mention current-user scope only as an explicit user-selected
-alternative and never hard-code a drive letter. After installation, rediscover
-and verify the managed runtime. HyperFrames is not implemented in this route.
+approved npm source, the applicable license applies, npm dependency size may be
+unknown, and the plan gives the exact browser archive size and mainland mirror.
+Ask for explicit consent for each selected capability and reconfirm immediately
+before any real download or installation. System scope is the default; mention
+current-user scope only as an explicit user-selected alternative and never
+hard-code a drive letter. After installation, rediscover and verify the managed
+runtime. HyperFrames is not implemented in this route.
 Only when OpenMontage decides to use Remotion may WorkBuddy pass the non-null
 managed runtime object unchanged to `video_compose` as
 `managed_remotion_runtime`; if it is absent, Remotion is not ready.

@@ -1206,6 +1206,63 @@ without a real download. Second, separate action-time authorization permits one
 real WorkBuddy Remotion install and invocation. The API-key result remains a
 separate authorized result. This documentation task stops before every stage.
 
+#### Remotion stability correction — OWNER AUTHORIZED / IN PROGRESS
+
+Owner authorization on `2026-09-02` starts the bounded correction after the first
+real WorkBuddy attempt exposed a false-negative Remotion probe, a manually patched
+entrypoint and runtime record, reliance on a machine-global Node installation, and
+a browser download outside the managed mainland-mirror plan. The end-user entry is
+only the ordinary-language request `请帮我配置 Remotion`; version, paths, drives,
+registry, commands, and evidence remain internal. The Package definition selects
+and locks the current recommended compatible stable version for each release, so a
+future Package update may change it without changing the user request.
+
+The exact Shell write set is:
+
+- `workbuddy-skill/golden-key-openmontage/SKILL.md`;
+- `golden_key_openmontage_workbuddy/runtime_prepare.py`;
+- `golden_key_openmontage_workbuddy/installer.py`;
+- `tests/workbuddy/test_runtime_prepare.py`;
+- `tests/workbuddy/test_installer.py`;
+- this `docs/workbuddy/v2/TASK-REGISTER.md` state record.
+
+The exact Package write set, only if the browser must become a definition-bound
+managed asset, is `GOLDEN_KEY_OPENMONTAGE_RELEASE.json` plus its generated
+`GOLDEN_KEY_OPENMONTAGE.lock.json`. No Remotion source, renderer policy, Provider,
+API-key route, HyperFrames consumer, second installer, dependency, or unrelated
+media path is authorized.
+
+`installer.py` and its focused test are included only because a definition-bound
+browser changes the exact Package commit/tree that the portable bundle must pin;
+they may update that binding and nothing else.
+
+The correction must use the Package-private Node/npm, use a Remotion-supported
+version check without patching generated command files, reject a runtime record
+whose path does not equal the Windows-resolved standard target for its recorded
+scope, and include the compatible headless browser in the consent-bound
+mainland-mirror plan before reporting readiness. Focused local checks run before
+any cleanup or real installation. After those checks pass, the already evidenced
+manual runtime/record and separately confirmed obsolete duplicate may be removed;
+then one real WorkBuddy install, Package-mediated minimal render, new-session
+rediscovery, and same-request reuse are authorized. No other media work is.
+
+The Package source checkout for this bounded correction is recorded before
+creation as
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.3-remotion-stability-package-20260902`.
+It is task-owned and may be removed only after its reviewed commits are pushed and
+verified reachable. The current manual Remotion runtime and registration remain
+preserved until the corrected local checks pass.
+
+The new assembly root is recorded before creation as
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\m1.3-remotion-stability-build-20260902`;
+its `inputs` child is task-owned temporary material and must be removed after the
+new PackageRoot, Release, Registration, and Skill archive are verified. The local
+correction gate passed with 64 focused Shell tests, exact Package lock verification,
+and a real read-only private-Node Remotion `versions` probe against the preserved
+manual runtime. Package commit `201675c0e550d417654b752f3945f229fb5ceeee`
+(tree `f5915fdda3448fed509ed8741563643493c1613f`) is pushed and advertised on
+`codex/golden-key-openmontage-v0.3.25`. Cleanup and installation have not started.
+
 ### M1 branch lifecycle and mandatory cleanup
 
 The M1 branch is temporary but shared; M1.2, M1.3, and M1.4 do not create sibling
@@ -1710,7 +1767,7 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_3_LOCAL_INSTALL_ROUTE_CORRECTION / PLANNING_FROZEN / ZERO_INSTALL
+current_task: M1_3_REMOTION_STABILITY_CORRECTION / LOCAL_CHECKS_PASSED / PACKAGE_ASSEMBLY_NEXT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: COMPACT_READINESS_CURRENTLY_INSTALLED / USED_FOR_M1_2_PROOF / UX_OVERLOAD_RECORDED / ZIP_SHA256_4CAF57CFCF5D298F0DED1098D4FDA5BB482A699F57A72B02BC61F1CD3DBF2DD1 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL / RECHECK_AT_EXECUTION
 capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
@@ -1724,7 +1781,7 @@ implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_Op
 task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE / C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28 EMPTY_EVIDENCE_DIRECTORY_PRESERVED / C:\Users\blazi\WorkBuddy\2026-08-29-20-41-51 EMPTY_AFTER_WORKBUDDY_TEMP_PARSE_CLEANUP
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
-workbuddy_or_media_in_current_task: LATEST_AUTHORIZED_WORKBUDDY_PROBE_COMPLETE / FURTHER_WORKBUDDY_NOT_AUTHORIZED / MEDIA_FORBIDDEN
+workbuddy_or_media_in_current_task: REMOTION_REPAIR_AUTHORIZED / ONE_INSTALL_AND_ONE_MINIMAL_PACKAGE_RENDER_AFTER_LOCAL_CHECKS / OTHER_MEDIA_FORBIDDEN
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2
@@ -1747,7 +1804,7 @@ package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F6
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
 m1_2_semantic_readiness_result: HISTORICAL / WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
 m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
-m1_3: PREREQUISITE_ROUTE_REVIEWED / FIRST_LOCAL_CONTRACT_COMMITTED / LOCAL_INSTALL_ROUTE_CORRECTED_IN_PLAN / PRODUCT_INCOMPLETE / ACTION_TIME_GATES_REQUIRED
+m1_3: REMOTION_STABILITY_CORRECTION_OWNER_AUTHORIZED / IMPLEMENTATION_IN_PROGRESS / PRODUCT_INCOMPLETE / CLEANUP_AND_REAL_RETEST_AFTER_LOCAL_CHECKS
 m1_3_existing_local_primitive: FIXED_ASSET_PREPARE_PRESENT / LOCKED_NPM_INSTALL_AND_PACKAGE_PATH_HANDOFF_ABSENT
 m1_3_existing_secret_transport: FAIL_CLOSED_ALLOWLIST_AND_REDACTION_REUSE_REQUIRED / PRODUCTION_ALLOWLIST_EMPTY
 m1_3_candidate_route: BUILTIN_LIBRARY_SKILL_PATTERN_FOR_FIXED_MODE_AND_CANONICAL_STDIN_JSON / WINDOWS_NATIVE_CREDENTIAL_UI_AND_CURRENT_USER_CREDENTIAL_MANAGER_TO_BE_PROVED / PACKAGE_OWNED_NON_MEDIA_CONNECTION_TEST_TO_BE_DECLARED_AND_IMPLEMENTED

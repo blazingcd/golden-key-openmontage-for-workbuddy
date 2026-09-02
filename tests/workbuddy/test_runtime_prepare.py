@@ -4,11 +4,13 @@ import copy
 import errno
 import hashlib
 import importlib
+import io
 import json
 import os
 import shutil
 import threading
 import time
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -994,10 +996,14 @@ def test_stage2_sources_and_toolchain_paths_are_untouched(tmp_path: Path, defini
     assert {path: path.read_bytes() for path in sentinels} == sentinels
 
 
-def _package_definition_fixture(tmp_path: Path) -> tuple[Path, dict]:
+def _package_definition_fixture(tmp_path: Path) -> tuple[Path, dict, bytes]:
     package_root = tmp_path / "PackageRoot"
     project = package_root / "remotion-composer"
     project.mkdir(parents=True)
+    private_node = package_root / "bootstrap" / "node"
+    private_node.mkdir(parents=True)
+    (private_node / "node.exe").write_bytes(b"private node")
+    (private_node / "npm.cmd").write_text("@echo off\r\n", encoding="ascii")
     manifest = {"name": "openmontage-remotion-composer", "version": "1.0.0", "dependencies": {"remotion": "4.0.484"}}
     lock = {"name": manifest["name"], "version": manifest["version"], "lockfileVersion": 3, "packages": {"": {"dependencies": manifest["dependencies"]}}}
     manifest_path = project / "package.json"
@@ -1006,6 +1012,10 @@ def _package_definition_fixture(tmp_path: Path) -> tuple[Path, dict]:
     lock_path.write_text(json.dumps(lock, separators=(",", ":")), encoding="utf-8")
     (project / "src").mkdir()
     (project / "src" / "index.tsx").write_text("export {}\n", encoding="utf-8")
+    browser_archive = io.BytesIO()
+    with zipfile.ZipFile(browser_archive, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("chrome-headless-shell-win64/chrome-headless-shell.exe", b"headless shell")
+    browser_bytes = browser_archive.getvalue()
     definition = {
         "capability": "remotion",
         "version": "4.0.484",
@@ -1026,15 +1036,22 @@ def _package_definition_fixture(tmp_path: Path) -> tuple[Path, dict]:
         "project_root": "remotion-composer",
         "verified_entrypoint": "node_modules/.bin/remotion.cmd",
         "command": ["npx", "remotion", "render"],
+        "browser": {
+            "version": "149.0.7790.0",
+            "source_url": "https://cdn.npmmirror.com/binaries/chrome-for-testing/149.0.7790.0/win64/chrome-headless-shell-win64.zip",
+            "archive_size": len(browser_bytes),
+            "archive_sha256": hashlib.sha256(browser_bytes).hexdigest(),
+            "executable": "node_modules/.remotion/chrome-headless-shell/win64/chrome-headless-shell-win64/chrome-headless-shell.exe",
+        },
         "definition_sha256": "0" * 64,
     }
     body = {key: value for key, value in definition.items() if key != "definition_sha256"}
     definition["definition_sha256"] = hashlib.sha256(json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
-    return package_root, definition
+    return package_root, definition, browser_bytes
 
 
 def test_package_remotion_plan_is_mirror_only_and_does_not_download(tmp_path: Path, monkeypatch) -> None:
-    package_root, definition = _package_definition_fixture(tmp_path)
+    package_root, definition, _browser_archive = _package_definition_fixture(tmp_path)
     data_root = tmp_path / "data"
     monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
     monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
@@ -1050,6 +1067,10 @@ def test_package_remotion_plan_is_mirror_only_and_does_not_download(tmp_path: Pa
     assert plan["registry"] == "https://registry.npmmirror.com"
     assert plan["download_size_bytes"] is None
     assert plan["download_size"] == "unknown"
+    assert plan["browser"]["source_url"].startswith("https://cdn.npmmirror.com/")
+    assert plan["browser_download_size_bytes"] == definition["browser"]["archive_size"]
+    assert plan["browser_download_size"] == f"{definition['browser']['archive_size']} bytes"
+    assert plan["total_download_size_status"] == "npm_dependencies_unknown_browser_size_known"
     assert plan["install_command"][1:2] == ["ci"]
     assert "--registry=https://registry.npmmirror.com" in plan["install_command"]
     assert {item["install_scope"] for item in plan["install_scopes"]} == {"system", "current-user"}
@@ -1057,26 +1078,36 @@ def test_package_remotion_plan_is_mirror_only_and_does_not_download(tmp_path: Pa
 
 
 def test_package_remotion_fake_npm_ci_publishes_and_rediscoveries(tmp_path: Path, monkeypatch) -> None:
-    package_root, definition = _package_definition_fixture(tmp_path)
+    package_root, definition, browser_archive = _package_definition_fixture(tmp_path)
     data_root = tmp_path / "data"
     monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
     monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
     probe_calls: list[Path] = []
-    npm_calls: list[tuple[list[str], Path, str]] = []
+    npm_calls: list[tuple[list[str], Path, str, str]] = []
 
-    def fake_probe(entrypoint: Path, version: str) -> tuple[bool, dict]:
-        probe_calls.append(entrypoint)
-        return True, {"reason": "COMPATIBLE", "entrypoint": str(entrypoint.resolve()), "exit_code": 0, "version_output": f"remotion {version}"}
+    def fake_probe(root: Path, _definition: dict, _package_root: Path) -> tuple[bool, dict]:
+        probe_calls.append(root)
+        return True, {"reason": "COMPATIBLE", "entrypoint": str((root / "node_modules" / ".bin" / "remotion.cmd").resolve()), "exit_code": 0, "version_output": "remotion 4.0.484"}
 
     def fake_npm(command, cwd: Path, environment) -> None:
-        npm_calls.append((list(command), cwd, environment["NPM_CONFIG_REGISTRY"]))
+        npm_calls.append((list(command), cwd, environment["NPM_CONFIG_REGISTRY"], environment["PATH"]))
         assert environment["npm_config_registry"] == "https://registry.npmmirror.com"
         entrypoint = cwd / "node_modules" / ".bin" / "remotion.cmd"
         entrypoint.parent.mkdir(parents=True)
         entrypoint.write_text("@echo off\necho remotion 4.0.484\n", encoding="utf-8")
+        cli = cwd / "node_modules" / "@remotion" / "cli" / "remotion-cli.js"
+        cli.parent.mkdir(parents=True)
+        cli.write_text("", encoding="ascii")
 
-    monkeypatch.setattr(runtime_prepare, "_probe", fake_probe)
+    def fake_download(url: str, destination: Path, expected_size: int) -> str:
+        assert url == definition["browser"]["source_url"]
+        assert expected_size == len(browser_archive)
+        destination.write_bytes(browser_archive)
+        return url
+
+    monkeypatch.setattr(runtime_prepare, "_probe_remotion_runtime", fake_probe)
     monkeypatch.setattr(runtime_prepare, "_npm_executor", fake_npm)
+    monkeypatch.setattr(runtime_prepare, "_download_asset", fake_download)
     first = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
     plan = first["plans"][0]
     decision = {"decision": "approve", "capability": "remotion", "definition_sha256": definition["definition_sha256"], "plan_sha256": plan["plan_sha256"], "install_scope": "system"}
@@ -1091,9 +1122,18 @@ def test_package_remotion_fake_npm_ci_publishes_and_rediscoveries(tmp_path: Path
     assert Path(runtime["verified_entrypoint"]).is_relative_to(Path(runtime["runtime_root"]))
     assert runtime["version"] == "4.0.484"
     assert runtime["install_scope"] == "system"
-    assert npm_calls and npm_calls[0][0][1] == "ci"
+    assert npm_calls and npm_calls[0][0][0] == str(package_root / "bootstrap" / "node" / "npm.cmd")
+    assert npm_calls[0][0][1] == "ci"
     assert npm_calls[0][2] == "https://registry.npmmirror.com"
+    assert npm_calls[0][3] == str(package_root / "bootstrap" / "node")
     assert len(probe_calls) >= 2
+    assert (
+        Path(runtime["runtime_root"])
+        / "node_modules"
+        / ".remotion"
+        / "chrome-headless-shell"
+        / "VERSION"
+    ).read_text(encoding="ascii").strip() == definition["browser"]["version"]
     record = data_root / "State" / "OptionalRuntime" / f"remotion-{definition['definition_sha256']}.json"
     assert record.is_file()
     rediscovered = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
@@ -1102,10 +1142,118 @@ def test_package_remotion_fake_npm_ci_publishes_and_rediscoveries(tmp_path: Path
     assert rediscovered["capabilities"][1]["status"] == "NOT_INTEGRATED"
 
 
+def test_package_remotion_probe_uses_private_node_and_versions(
+    tmp_path: Path, monkeypatch
+) -> None:
+    package_root, definition, _browser_archive = _package_definition_fixture(tmp_path)
+    runtime_root = tmp_path / "runtime"
+    runtime_root.mkdir()
+    cli = runtime_root / "node_modules" / "@remotion" / "cli" / "remotion-cli.js"
+    cli.parent.mkdir(parents=True)
+    cli.write_text("", encoding="ascii")
+    executable = runtime_root / Path(definition["browser"]["executable"])
+    executable.parent.mkdir(parents=True)
+    executable.write_bytes(b"headless shell")
+    executable.parent.parent.parent.joinpath("VERSION").write_text(
+        definition["browser"]["version"] + "\n", encoding="ascii"
+    )
+    calls: list[tuple[list[str], dict]] = []
+
+    def fake_run(command, **kwargs):
+        calls.append((list(command), kwargs))
+        return type("Completed", (), {"returncode": 0, "stdout": "remotion 4.0.484\n", "stderr": ""})()
+
+    monkeypatch.setattr(runtime_prepare.subprocess, "run", fake_run)
+
+    compatible, evidence = runtime_prepare._probe_remotion_runtime(
+        runtime_root, definition, package_root
+    )
+
+    private_node = package_root / "bootstrap" / "node" / "node.exe"
+    assert compatible
+    assert calls[0][0] == [str(private_node), str(cli), "versions"]
+    assert calls[0][1]["cwd"] == str(runtime_root)
+    assert calls[0][1]["env"]["PATH"] == str(private_node.parent)
+    assert calls[0][1]["env"]["NODE"] == str(private_node)
+    assert evidence["reason"] == "COMPATIBLE"
+
+
+def test_package_remotion_missing_browser_is_not_ready(tmp_path: Path, monkeypatch) -> None:
+    package_root, definition, _browser_archive = _package_definition_fixture(tmp_path)
+    data_root = tmp_path / "data"
+    monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
+    monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
+    target = runtime_prepare._runtime_target(definition, "system")
+    target.mkdir(parents=True)
+    project = package_root / "remotion-composer"
+    shutil.copy2(project / "package.json", target / "package.json")
+    shutil.copy2(project / "package-lock.json", target / "package-lock.json")
+    (target / "node_modules" / "@remotion" / "cli").mkdir(parents=True)
+    (target / "node_modules" / "@remotion" / "cli" / "remotion-cli.js").write_text(
+        "", encoding="ascii"
+    )
+    (target / "node_modules" / ".bin").mkdir()
+    (target / "node_modules" / ".bin" / "remotion.cmd").write_text(
+        "", encoding="ascii"
+    )
+    record = {
+        "schema_version": runtime_prepare._PACKAGE_RUNTIME_RECORD_SCHEMA,
+        "capability": "remotion",
+        "definition_sha256": definition["definition_sha256"],
+        "version": definition["version"],
+        "install_scope": "system",
+        "runtime_root": str(target),
+        "verified_entrypoint": str(target / Path(definition["verified_entrypoint"])),
+        "manifest_sha256": definition["package"]["manifest_sha256"],
+        "lockfile_sha256": definition["package"]["lockfile_sha256"],
+    }
+    record_path = data_root / "State" / "OptionalRuntime" / f"remotion-{definition['definition_sha256']}.json"
+    record_path.parent.mkdir(parents=True)
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+
+    result = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+
+    assert result["result"] == "CONSENT_REQUIRED"
+    assert result["capabilities"][0] == {
+        "capability": "remotion",
+        "status": "INCOMPATIBLE",
+        "reason": "RUNTIME_NOT_VERIFIED",
+    }
+
+
+def test_package_remotion_nonstandard_runtime_record_is_rejected(
+    tmp_path: Path, monkeypatch
+) -> None:
+    package_root, definition, _browser_archive = _package_definition_fixture(tmp_path)
+    data_root = tmp_path / "data"
+    monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
+    monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
+    foreign_root = tmp_path / "D-drive-manual-remotion"
+    record = {
+        "schema_version": runtime_prepare._PACKAGE_RUNTIME_RECORD_SCHEMA,
+        "capability": "remotion",
+        "definition_sha256": definition["definition_sha256"],
+        "version": definition["version"],
+        "install_scope": "system",
+        "runtime_root": str(foreign_root),
+        "verified_entrypoint": str(foreign_root / Path(definition["verified_entrypoint"])),
+        "manifest_sha256": definition["package"]["manifest_sha256"],
+        "lockfile_sha256": definition["package"]["lockfile_sha256"],
+    }
+    record_path = data_root / "State" / "OptionalRuntime" / f"remotion-{definition['definition_sha256']}.json"
+    record_path.parent.mkdir(parents=True)
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+
+    result = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
+
+    assert result["result"] == "CONSENT_REQUIRED"
+    assert result["capabilities"][0] == {"capability": "remotion", "status": "MISSING"}
+
+
 def test_package_remotion_invalid_decision_does_not_call_npm_or_create_target(
     tmp_path: Path, monkeypatch
 ) -> None:
-    package_root, definition = _package_definition_fixture(tmp_path)
+    package_root, definition, _browser_archive = _package_definition_fixture(tmp_path)
     data_root = tmp_path / "data"
     monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
     monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
@@ -1139,29 +1287,39 @@ def test_package_remotion_invalid_decision_does_not_call_npm_or_create_target(
 def test_package_remotion_record_write_failure_withdraws_target_and_is_retryable(
     tmp_path: Path, monkeypatch
 ) -> None:
-    package_root, definition = _package_definition_fixture(tmp_path)
+    package_root, definition, browser_archive = _package_definition_fixture(tmp_path)
     data_root = tmp_path / "data"
     monkeypatch.setenv("ProgramFiles", str(tmp_path / "Windows" / "Program Files"))
     monkeypatch.setenv("LocalAppData", str(tmp_path / "Windows" / "Users" / "Local"))
 
-    def fake_probe(entrypoint: Path, version: str) -> tuple[bool, dict]:
+    def fake_probe(root: Path, _definition: dict, _package_root: Path) -> tuple[bool, dict]:
         return True, {
             "reason": "COMPATIBLE",
-            "entrypoint": str(entrypoint.resolve()),
+            "entrypoint": str((root / "node_modules" / ".bin" / "remotion.cmd").resolve()),
             "exit_code": 0,
-            "version_output": f"remotion {version}",
+            "version_output": "remotion 4.0.484",
         }
 
     def fake_npm(command, cwd: Path, environment) -> None:
         entrypoint = cwd / "node_modules" / ".bin" / "remotion.cmd"
         entrypoint.parent.mkdir(parents=True)
         entrypoint.write_text("@echo off\necho remotion 4.0.484\n", encoding="utf-8")
+        cli = cwd / "node_modules" / "@remotion" / "cli" / "remotion-cli.js"
+        cli.parent.mkdir(parents=True)
+        cli.write_text("", encoding="ascii")
+
+    def fake_download(url: str, destination: Path, expected_size: int) -> str:
+        assert url == definition["browser"]["source_url"]
+        assert expected_size == len(browser_archive)
+        destination.write_bytes(browser_archive)
+        return url
 
     def fail_record(data_root_arg, definition_arg, evidence_arg) -> None:
         raise runtime_prepare._ContractError("INSTALL_FAILED", "forced record failure")
 
-    monkeypatch.setattr(runtime_prepare, "_probe", fake_probe)
+    monkeypatch.setattr(runtime_prepare, "_probe_remotion_runtime", fake_probe)
     monkeypatch.setattr(runtime_prepare, "_npm_executor", fake_npm)
+    monkeypatch.setattr(runtime_prepare, "_download_asset", fake_download)
     monkeypatch.setattr(runtime_prepare, "_write_runtime_record", fail_record)
     first = prepare_optional_capabilities(data_root, [definition], package_root=package_root)
     plan = first["plans"][0]

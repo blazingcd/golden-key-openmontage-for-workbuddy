@@ -14,9 +14,9 @@ WorkBuddy and the verified Package, not to the user.
   semantics, asks business questions, chooses tools and steps, and presents results.
 - **OpenMontage Package:** source of production meaning: Guide, Manifest, Pipeline,
   Stage, Artifact, Checkpoint, Reviewer, Tool, and Provider contracts.
-- **Shell V2:** installation/lifecycle, Package Registration/Locator, runtime
-  preparation, fixed mechanical invocation, WorkBuddy entry, and status/receipt
-  relay.
+- **Shell V2:** Golden Key application lifecycle, Package Registration/Locator,
+  fixed mechanical invocation, and status/result relay. Optional capability
+  configuration is guided by the Skill and executed live by WorkBuddy.
 
 Shell is not a second Agent or control plane. It does not decide creative content,
 Pipeline/Stage order, Provider, renderer, recovery, or business acceptance. Do not
@@ -186,14 +186,12 @@ retest. Planned wording and steps may change after real WorkBuddy evidence;
 acceptance follows the completed user goal and safety boundaries rather than exact
 rehearsal of the planning examples.
 
-M1.3 is one product journey with two mechanisms, not two new task series. Its
-first implementation gate must prove a private structured action carrier from
-WorkBuddy and a secure non-chat credential-entry route. Shell may validate and
-execute an approved action but may not parse prose, explain value, rank Providers,
-or silently substitute. The local representative reuses the existing bounded
-Remotion/HyperFrames preparation and proves managed installation through actual
-Package invocation. The API representative uses only a verified Package
-declaration and proves secure storage, exact allowlisting, non-disclosure, and a
+M1.3 is one product journey with two mechanisms, not two new task series. The
+earlier private-action and Shell-executed local route is superseded for optional
+configuration. The Skill gives WorkBuddy the rules; WorkBuddy itself performs
+live local inspection, consented installation, rediscovery, and real invocation.
+The API representative still requires a secure non-chat credential route, a
+verified Package declaration, exact allowlisting, non-disclosure, and a
 Package-owned connection test. Missing optional configuration never removes the
 FFmpeg baseline.
 
@@ -315,15 +313,17 @@ PackageRoot. Definitions alone cannot complete installation or use.
 
 The corrected M1.3 plan lets Windows resolve the standard location for the
 user-approved scope at execution time. System-wide is the default; current-user
-scope requires an explicit informed choice. No product
-rule assumes `C:`, `D:`, or the developer machine layout. WorkBuddy explains and
-confirms scope and permission impact; Shell installs, records, and rediscovers the
-resolved runtime path; Package consumes that verified path without choosing a
-location. Mainland npm installation uses the complete locked closure from
-`registry.npmmirror.com` without silent overseas fallback. Success still requires
-Package recognition and one real Package-mediated invocation. This correction is
-planning only and runs no WorkBuddy, installation, product code, test, credential,
-Provider, or media action.
+scope requires an explicit informed choice. No product rule assumes `C:`, `D:`,
+or the developer machine layout. The Skill supplies the compatibility, mirror,
+consent, and acceptance rules. WorkBuddy itself checks the live machine, explains
+and confirms scope and permission impact, installs through
+`registry.npmmirror.com`, rediscovers the result, and proves one real invocation.
+The Skill and Shell do not cache or announce readiness on WorkBuddy's behalf.
+
+The Owner's 2026-09-02 correction authorizes a guidance-only Skill candidate and
+its directly affected one-file ZIP builder/tests after the authority documents
+are synchronized. The candidate remains uninstalled and no WorkBuddy,
+installation, credential, Provider, or media action occurs in its build gate.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

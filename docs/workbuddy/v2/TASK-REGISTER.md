@@ -1160,13 +1160,52 @@ The corrected product route is:
    a later natural-language retry. Do not silently change scope, drive, source, or
    runtime.
 
-Shell owns location resolution, installation, registration, and rediscovery.
-Package only consumes the verified registered path; it must not choose, guess, or
-write an installation location. HyperFrames follows the same location, consent,
-source, and recovery rules, but it is not implemented or marked ready by the first
-candidate below. Remotion through Package `video_compose.py` is the one required
-representative local proof. Other Remotion consumers also remain unqualified and
-must not inherit a ready state from that single proof.
+This Shell-owned local route is superseded by the Owner's 2026-09-02 correction
+below. It remains historical evidence only.
+
+#### WorkBuddy-led optional configuration — OWNER AUTHORIZED / IN PROGRESS
+
+The user-facing entry remains only ordinary language such as
+`请帮我配置 Remotion`. The Golden Key Skill supplies guidance and verified rules;
+it does not call a bundled entry, read or write a receipt, carry a private action,
+choose a path, install software, or announce readiness. WorkBuddy uses its own
+available system abilities to:
+
+1. inspect the current machine live and distinguish unrelated/global presence
+   from actual usability;
+2. explain the plan and obtain consent before mutation;
+3. let Windows resolve the standard location for the approved scope, with
+   system-wide as the default and current-user only after explicit choice;
+4. obtain the current compatible stable Remotion packages through
+   `registry.npmmirror.com` without a hard-coded version or drive;
+5. rediscover the installed result and complete one real minimal invocation;
+6. report failure honestly while preserving the FFmpeg-ready basic path.
+
+An old receipt, search page, source integration, global command, or version output
+alone is not acceptance evidence. The candidate Skill ZIP contains only
+`SKILL.md`; `scripts/run.ps1` remains historical Shell source but is not packaged
+or invoked by this candidate.
+
+The exact implementation write set is:
+
+- `workbuddy-skill/golden-key-openmontage/SKILL.md`;
+- `golden_key_openmontage_workbuddy/installer.py`;
+- `tests/workbuddy/test_installer.py`;
+- `tests/workbuddy/test_workbuddy_entry_cli.py`;
+- `tests/workbuddy/test_repository_hygiene.py`;
+- `PROJECT_CONTEXT.md` and `docs/workbuddy/v2/MODULE-DISPOSITION.md` for the two
+  stale current-entry descriptions;
+- these six authority/state documents.
+
+The gate permits focused local checks, one newly named uninstalled Skill ZIP,
+one independent zero-write review, one commit on the planning branch, one merge
+and implementation commit, and ordinary pushes. It does not install/uninstall a
+Skill or Remotion, run WorkBuddy, handle credentials, call a Provider, change the
+Package, or produce media. A later real WorkBuddy test needs a fresh action-time
+confirmation.
+
+The earlier frozen implementation candidate below is historical and must not be
+executed after this correction.
 
 The smallest future implementation candidate is frozen to these existing files:
 

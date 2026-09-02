@@ -9,9 +9,11 @@ state snapshot, not a second task ledger.
 
 An ordinary user writes a natural-language request in WorkBuddy containing
 `金钥匙智能体`. WorkBuddy is the only Agent and production decision-maker. The
-OpenMontage Package supplies production semantics. Shell V2 supplies installation,
-lifecycle, Registration/Locator, runtime preparation, fixed mechanical invocation,
-WorkBuddy entry, and status/receipt relay. Shell is never a second control plane.
+OpenMontage Package supplies production semantics. Shell V2 supplies Golden Key
+application lifecycle, Registration/Locator, fixed mechanical invocation, and
+status/result relay. The Skill guides optional configuration; WorkBuddy performs
+its live inspection, consented installation, rediscovery, and verification. Shell
+is never a second control plane.
 
 WorkBuddy is a harness Agent: the same input may yield different internal thoughts,
 tool paths, steps, wording, and intermediate conclusions. Skills and prompts must
@@ -431,15 +433,19 @@ cannot use the Shell-managed runtime. The current `../../data/production`
 relationship is a development/package relationship, not a real-user Windows
 installation policy.
 
-The corrected plan is `PLANNING_FROZEN / ZERO_INSTALL`. At later execution,
-Windows resolves the standard application/runtime location for the install scope
-the user approves; no drive letter is assumed. System-wide is the default route;
-WorkBuddy offers current-user scope only after explaining the difference and any permission need. Shell installs and records the
-resolved path, and Package uses that verified path. Mainland installation uses
-the complete version-locked npm closure from `registry.npmmirror.com` with no
-silent overseas fallback. Success still requires rediscovery, Package recognition,
-and one real Package-mediated invocation. No local installation, WorkBuddy run,
-product code, or test ran for this planning correction.
+The Owner's 2026-09-02 correction supersedes that Shell-owned route. The Skill
+now only supplies rules: current compatible stable version, mainland mirror,
+Windows-resolved standard location, consent, and success criteria. WorkBuddy
+uses its own available system abilities for live inspection, explanation,
+installation, rediscovery, and a real invocation. Old receipts, a global command,
+or integrated source are not readiness evidence.
+
+The authorized candidate changes the current authority/entry documents,
+`SKILL.md`, the one-file ZIP builder, and directly affected focused tests. It
+keeps `run.ps1` only as historical Shell source and excludes it from the new Skill
+ZIP. The candidate remains uninstalled; no WorkBuddy or Remotion execution is
+authorized by this build gate. M1.3 remains `PRODUCT_INCOMPLETE` until a later
+real WorkBuddy result is reviewed.
 
 ## Non-goals
 

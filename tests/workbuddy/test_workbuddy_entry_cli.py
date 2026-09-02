@@ -644,6 +644,12 @@ def test_skill_keeps_optional_setup_guidance_only() -> None:
     assert "Never assume a drive letter" in normalized
     assert "Remotion invocation" in normalized
     assert "version print alone is not final proof" in normalized.casefold()
+    assert "Locate and verify the current OpenMontage Package" in normalized
+    assert "On the first relevant use after Package verification" in normalized
+    assert "external AI image/video generation" in normalized
+    assert "ask for more detail" in normalized
+    assert "two or three image/video choices or one or two TTS choices" in normalized
+    assert "verify that the current OpenMontage Package recognizes it" in normalized
     for technical in (
         "<installer:",
         "LauncherReceipt",

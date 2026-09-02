@@ -1,20 +1,40 @@
 ---
 name: golden-key-openmontage
-description: Use whenever the user's message contains "金钥匙智能体" or directly asks WorkBuddy to inspect, configure, change, or retest an OpenMontage capability such as Remotion or HyperFrames.
+description: Use whenever the user's literal message contains the exact phrase "金钥匙智能体" or directly asks WorkBuddy to inspect, configure, change, or retest an OpenMontage capability such as Remotion or HyperFrames; keep the complete original request under the single WorkBuddy-owned OpenMontage production path.
 ---
 
-# Golden Key OpenMontage guidance
+# Golden Key OpenMontage WorkBuddy guidance
 
-WorkBuddy is the only Agent, conversation owner, and executor. Keep the user's
-complete natural-language request and business goal. Do not reduce an OpenMontage
-production request to an environment check or a Remotion setup task.
+WorkBuddy remains the sole Agent and the sole user conversation entry. Use this
+Skill whenever the user's message contains the exact phrase `金钥匙智能体` or
+directly asks WorkBuddy to configure a named OpenMontage capability. Keep the
+complete original message and business goal under the existing Golden Key
+OpenMontage production path. Do not remove the wake phrase, reinterpret a user-
+provided material path as an internal product path, or reduce a production request
+to an environment check or a Remotion setup task.
 
-Locate and verify the current OpenMontage Package and its Package Guide before
-using them as the production source. If that identity cannot be verified, report
-it as not verified instead of guessing from an old result or another installation.
-WorkBuddy still owns its reasoning, tools, questions, creative choices, recovery,
-and final wording. This Skill supplies product rules and acceptance criteria; it
-does not prescribe a transcript or take over execution.
+WorkBuddy decides its own reasoning, tools, questions, retries, and business
+steps; this Skill does not prescribe an internal script, fixed transcript, or
+expected wording. Before making a production decision, locate and verify the
+current OpenMontage Package root and Package Guide. When verified, the Package
+Guide is the production-semantic authority. If that identity cannot be verified,
+report it as not verified instead of guessing from an old result or another
+installation.
+
+Present the actual business result naturally. Do not require the user to operate
+internal product mechanics, and do not claim that an Artifact, video, file,
+connection, or capability exists unless it actually does. Once the requested
+business result exists and has received the minimum honest validation, present it
+and finish the reply. Do not delay delivery to create workspace memory, another
+Skill, a reusable workflow, or optional cleanup that the user did not request.
+
+WorkBuddy owns Package lookup and Guide reading, live inspection, consented
+installation, Provider/model selection, recovery, and final delivery. This Skill
+does not invoke a bundled entry, read or write a receipt, issue a private action,
+or reuse a cached result. Do not ask the user for commands, JSON, internal paths,
+hashes, environment names, evidence records, or hidden controls. Do not create
+another Agent, Skill, installer, router, MCP surface, retry/replay path, hidden
+control path, or second production workflow.
 
 ## Preserve the proven OpenMontage path
 
@@ -22,15 +42,8 @@ does not prescribe a transcript or take over execution.
   schemas, environment names, or hidden control messages.
 - Keep the user's material paths and requested outcome unchanged. Do not reinterpret
   a material path as an internal product path.
-- Do not claim that a video, file, connection, or capability is ready unless it
-  has actually been checked to the degree required for that claim.
-- Once the requested business result exists and has received the minimum honest
-  validation, present it to the user and finish the reply. Do not delay delivery
-  to create workspace memory, another Skill, a reusable workflow, or optional
-  cleanup that the user did not request.
-- Do not create another Agent, installer, router, MCP surface, hidden control path,
-  or second production workflow. Missing optional capabilities must not replace
-  the user's original business task with an engineering project.
+- Missing optional capabilities must not replace the user's original business
+  task with an engineering project.
 
 ## Capability readiness
 

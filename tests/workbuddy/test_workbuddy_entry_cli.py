@@ -639,12 +639,17 @@ def test_skill_keeps_optional_setup_guidance_only() -> None:
     skill = Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage/SKILL.md"
     source = skill.read_text(encoding="utf-8")
     normalized = " ".join(source.split())
-    assert "WorkBuddy is the only Agent, conversation owner, and executor" in normalized
+    assert "WorkBuddy remains the sole Agent and the sole user conversation entry" in normalized
+    assert "Keep the complete original message and business goal" in normalized
+    assert "the Package Guide is the production-semantic authority" in normalized
+    assert "Present the actual business result naturally" in normalized
+    assert "do not claim that an Artifact, video, file" in normalized
+    assert "Do not delay delivery to create workspace memory, another Skill" in normalized
     assert "registry.npmmirror.com" in normalized
     assert "Never assume a drive letter" in normalized
     assert "Remotion invocation" in normalized
     assert "version print alone is not final proof" in normalized.casefold()
-    assert "Locate and verify the current OpenMontage Package" in normalized
+    assert "locate and verify the current OpenMontage Package root and Package Guide" in normalized
     assert "On the first relevant use after Package verification" in normalized
     assert "external AI image/video generation" in normalized
     assert "ask for more detail" in normalized

@@ -45,6 +45,8 @@ WORKBUDDY_SKILL_ROOT_RELATIVE_PATH = "shell-adapter/workbuddy-skill/golden-key-o
 WORKBUDDY_DATA_ROOT_PLACEHOLDER = "{{WORKBUDDY_DATA_ROOT}}"
 WORKBUDDY_GUIDE_PATH_PLACEHOLDER = "{{WORKBUDDY_GUIDE_PATH}}"
 WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER = "{{WORKBUDDY_PACKAGE_ROOT}}"
+INSTALLER_CMD_NAME = "安装到WorkBuddy.cmd"
+INSTALL_PRODUCT_DIRECTORY = "GoldenKeyOpenMontageForWorkBuddy"
 SEVEN_ZIP_SHA256 = "83967f1b02b43c4efeda302795722c809e0e81b8307de73558d10484d5676a7d"
 FFMPEG_ARCHIVE_SHA256 = "49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85"
 MANAGED_CORE_OWNER = "managed_core"
@@ -52,6 +54,7 @@ TOOLCHAIN_OWNER = "workbuddy_required_toolchain"
 CONTRACT_OWNER = "core_contract"
 SHELL_FILES = (
     "golden_key_openmontage_workbuddy/__init__.py",
+    "golden_key_openmontage_workbuddy/installer.py",
     "golden_key_openmontage_workbuddy/package_registration.py",
     "golden_key_openmontage_workbuddy/runtime_prepare.py",
     "golden_key_openmontage_workbuddy/session_launcher.py",
@@ -815,6 +818,35 @@ def _build_release(root: Path, destination: Path) -> dict[str, Any]:
     return {"path": str(destination), "sha256": digest, "size": destination.stat().st_size, "sidecar": str(sidecar)}
 
 
+def _build_formal_release(inner_release: Path, installer_cmd: Path) -> dict[str, Any]:
+    sidecar = inner_release.with_name(inner_release.name + ".sha256")
+    for path in (inner_release, sidecar, installer_cmd):
+        if not path.is_file() or path.is_symlink():
+            raise InstallerError(f"formal_release_input_invalid:{path.name}")
+    destination = inner_release.with_name(f"{inner_release.stem}-installer.zip")
+    if destination.exists() or destination.is_symlink():
+        raise InstallerError(f"formal_release_already_exists:{destination}")
+    entries = (
+        (INSTALLER_CMD_NAME, installer_cmd),
+        (inner_release.name, inner_release),
+        (sidecar.name, sidecar),
+    )
+    with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for name, path in entries:
+            info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            info.create_system = 0
+            info.external_attr = 0
+            info.compress_type = zipfile.ZIP_DEFLATED
+            with path.open("rb") as source, archive.open(info, "w", force_zip64=True) as target:
+                shutil.copyfileobj(source, target, length=1024 * 1024)
+    return {
+        "path": str(destination),
+        "sha256": _sha256(destination),
+        "size": destination.stat().st_size,
+        "members": [name for name, _path in entries],
+    }
+
+
 def assemble_package(
     *,
     package_checkout: os.PathLike[str] | str,
@@ -857,11 +889,13 @@ def assemble_package(
         dependency_lock = _dependency_lock(staging, checkout, toolchain["python_version"])
         manifest_lock = _build_manifest_and_lock(staging, toolchain, dependency_lock)
         release_info = _build_release(staging, release)
+        formal_release = _build_formal_release(release, shell / INSTALLER_CMD_NAME)
         os.replace(staging, root)
         return {
             "schema_version": "golden-key-workbuddy-final-assembly-v1",
             "package_root": str(root),
             "release": release_info,
+            "formal_release": formal_release,
             "package": {key: value for key, value in source.items() if key != "source_lock"},
             "toolchain": toolchain,
             "binding": binding,
@@ -873,9 +907,10 @@ def assemble_package(
             shutil.rmtree(staging, ignore_errors=True)
 
 
-def _extract_release(archive: Path, destination: Path) -> None:
+def _release_members(archive: Path) -> list[tuple[zipfile.ZipInfo, Path]]:
     prefix = "GoldenKeyOpenMontageForWorkBuddy/"
     seen: set[str] = set()
+    members: list[tuple[zipfile.ZipInfo, Path]] = []
     with zipfile.ZipFile(archive) as stream:
         for member in stream.infolist():
             name = member.filename
@@ -891,6 +926,17 @@ def _extract_release(archive: Path, destination: Path) -> None:
             mode = (member.external_attr >> 16) & 0xFFFF
             if mode and stat.S_ISLNK(mode):
                 raise InstallerError(f"release_symlink:{relative}")
+            if not member.is_dir():
+                with stream.open(member) as payload:
+                    for _chunk in iter(lambda: payload.read(1024 * 1024), b""):
+                        pass
+            members.append((member, relative))
+    return members
+
+
+def _extract_release(archive: Path, destination: Path) -> None:
+    with zipfile.ZipFile(archive) as stream:
+        for member, relative in _release_members(archive):
             target = destination.joinpath(*relative.parts)
             if member.is_dir():
                 _assert_no_reparse_chain(target, boundary=destination)
@@ -921,6 +967,7 @@ def _build_workbuddy_skill_archive(
     *,
     skill_source_root: Path | None = None,
     archive_name: os.PathLike[str] | str | None = None,
+    reuse_if_identical: bool = False,
 ) -> dict[str, Any]:
     data_root = Path(data_root).resolve(strict=True)
     package_root = Path(package_root).resolve(strict=True)
@@ -953,8 +1000,6 @@ def _build_workbuddy_skill_archive(
     _assert_no_reparse_chain(destination.parent, boundary=data_root)
     destination.parent.mkdir(parents=True, exist_ok=True)
     _assert_no_reparse_chain(destination.parent, boundary=data_root)
-    if candidate_archive and (destination.exists() or destination.is_symlink()):
-        raise InstallerError(f"workbuddy_skill_archive_already_exists:{destination.name}")
     temporary = destination.with_name(f".{destination.name}.{uuid.uuid4().hex}.tmp")
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
@@ -965,6 +1010,21 @@ def _build_workbuddy_skill_archive(
             archive.writestr(info, skill.encode("utf-8"), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
         digest = _sha256(temporary)
         size = temporary.stat().st_size
+        if candidate_archive and (destination.exists() or destination.is_symlink()):
+            if (
+                reuse_if_identical
+                and destination.is_file()
+                and not destination.is_symlink()
+                and destination.stat().st_size == size
+                and _sha256(destination) == digest
+            ):
+                return {
+                    "path": str(destination),
+                    "archive_name": destination.name,
+                    "sha256": digest,
+                    "size": size,
+                }
+            raise InstallerError(f"workbuddy_skill_archive_already_exists:{destination.name}")
         os.replace(temporary, destination)
         return {
             "path": str(destination),
@@ -981,18 +1041,15 @@ def install_release(
     data_root: os.PathLike[str] | str,
     release_archive: os.PathLike[str] | str,
     package_root: os.PathLike[str] | str,
-    activate: bool = True,
 ) -> dict[str, Any]:
-    """Install one stamped release, register it, and optionally activate it."""
+    """Install and register one stamped release without activating it."""
 
     from .package_registration import (
         _active_lock,
-        _atomic_replace_active,
         _build_registration,
         _ensure_register_lock,
         _load_registration,
         _parse_active,
-        _pointer_bytes,
         _publish_registration_object,
         _read_active_raw,
         _registry_paths,
@@ -1001,10 +1058,10 @@ def install_release(
     )
 
     data = Path(data_root).resolve(strict=True)
-    archive = Path(release_archive).resolve(strict=True)
+    archive = _validate_release_archive(Path(release_archive))
     sidecar = archive.with_name(archive.name + ".sha256")
     root = Path(package_root).resolve()
-    if root.exists() or not sidecar.is_file() or not archive.is_file():
+    if root.exists():
         raise InstallerError("install_destination_or_sidecar_invalid")
     _assert_no_reparse_chain(root.parent)
     paths = _registry_paths(data)
@@ -1018,6 +1075,7 @@ def install_release(
             registration_path: Path | None = None
             registration_raw: bytes | None = None
             registration_created = False
+            created_skill_paths: list[Path] = []
             previous_registration_sha: str | None = None
             previous_root: Path | None = None
             if previous_active_raw is not None:
@@ -1043,25 +1101,41 @@ def install_release(
                 registration_path = paths.objects / f"{registration_sha}.json"
                 registration_created = not registration_path.exists()
                 _publish_registration_object(registration_path, registration_raw)
-                active = None
-                if activate:
-                    current_active_raw = _read_active_raw(paths)
-                    if current_active_raw != previous_active_raw:
-                        raise InstallerError("active_pointer_changed_during_install")
-                    _load_registration(paths, registration_sha)
-                    _atomic_replace_active(paths.active, _pointer_bytes(registration_sha), current_active_raw)
-                    active = registration_sha
-                workbuddy_skill = _build_workbuddy_skill_archive(data, root)
+                new_skill_name = f"{RELEASE_IDENTITY}-install-{registration_sha[:12]}.zip"
+                new_skill_path = data / "Integrations" / "WorkBuddy" / _skill_archive_name(new_skill_name)
+                new_skill_existed = new_skill_path.exists()
+                workbuddy_skill = _build_workbuddy_skill_archive(
+                    data,
+                    root,
+                    archive_name=new_skill_name,
+                    reuse_if_identical=True,
+                )
+                if not new_skill_existed:
+                    created_skill_paths.append(Path(workbuddy_skill["path"]))
+                recovery_workbuddy_skill = None
+                if previous_root is not None and previous_registration_sha is not None:
+                    recovery_name = f"{RELEASE_IDENTITY}-recovery-{previous_registration_sha[:12]}.zip"
+                    recovery_path = data / "Integrations" / "WorkBuddy" / _skill_archive_name(recovery_name)
+                    recovery_existed = recovery_path.exists()
+                    recovery_workbuddy_skill = _build_workbuddy_skill_archive(
+                        data,
+                        previous_root,
+                        archive_name=recovery_name,
+                        reuse_if_identical=True,
+                    )
+                    if not recovery_existed:
+                        created_skill_paths.append(Path(recovery_workbuddy_skill["path"]))
                 return {
                     "package_root": str(root),
                     "registration_sha256": registration_sha,
-                    "active_pointer_sha256": active,
+                    "active_pointer_sha256": None,
                     "registered": True,
-                    "activated": bool(activate),
+                    "activated": False,
                     "previous_active_pointer_sha256": _sha256_bytes(previous_active_raw) if previous_active_raw else "MISSING",
                     "previous_registration_sha256": previous_registration_sha,
                     "previous_package_root": str(previous_root) if previous_root else None,
                     "workbuddy_skill": workbuddy_skill,
+                    "recovery_workbuddy_skill": recovery_workbuddy_skill,
                 }
             except Exception:
                 # Roll back every write made by this transaction while the
@@ -1080,6 +1154,12 @@ def install_release(
                         if registration_path.read_bytes() != registration_raw:
                             raise InstallerError("install_rollback_registration_drift")
                         registration_path.unlink()
+                    for skill_path in created_skill_paths:
+                        _assert_no_reparse_chain(skill_path.parent, boundary=data)
+                        if skill_path.exists() or skill_path.is_symlink():
+                            if not skill_path.is_file() or skill_path.is_symlink():
+                                raise InstallerError("install_rollback_skill_drift")
+                            skill_path.unlink()
                     if root_installed and root.exists():
                         _verify_tree_boundary(root)
                         shutil.rmtree(root)
@@ -1093,6 +1173,284 @@ def install_release(
     finally:
         if staging.exists():
             shutil.rmtree(staging, ignore_errors=True)
+
+
+def _active_installation(data_root: Path) -> dict[str, Any]:
+    from .package_registration import (
+        _active_lock,
+        _ensure_register_lock,
+        _load_registration,
+        _parse_active,
+        _read_active_raw,
+        _registry_paths,
+    )
+
+    paths = _registry_paths(data_root)
+    _ensure_register_lock(paths)
+    with _active_lock(paths):
+        raw = _read_active_raw(paths)
+        if raw is None:
+            return {
+                "pointer_sha256": "MISSING",
+                "registration_sha256": None,
+                "package_root": None,
+            }
+        pointer = _parse_active(raw)
+        registration_sha = pointer["registration_sha256"]
+        registration = _load_registration(paths, registration_sha)
+        return {
+            "pointer_sha256": _sha256_bytes(raw),
+            "registration_sha256": registration_sha,
+            "package_root": registration["package_root"],
+        }
+
+
+def _validate_release_archive(archive: Path) -> Path:
+    from .package_registration import _parse_sidecar
+
+    archive = Path(archive).resolve(strict=True)
+    sidecar = archive.with_name(archive.name + ".sha256")
+    if not archive.is_file() or archive.is_symlink() or not sidecar.is_file() or sidecar.is_symlink():
+        raise InstallerError("release_archive_or_sidecar_invalid")
+    try:
+        digest = _parse_sidecar(sidecar.read_bytes(), archive_name=archive.name)
+    except Exception as exc:
+        raise InstallerError("release_sidecar_invalid") from exc
+    if digest != _sha256(archive):
+        raise InstallerError("release_archive_sidecar_mismatch")
+    try:
+        _release_members(archive)
+    except (OSError, zipfile.BadZipFile) as exc:
+        raise InstallerError("release_archive_invalid") from exc
+    return archive
+
+
+def _standard_install_paths(release_archive: Path) -> tuple[Path, Path]:
+    archive = _validate_release_archive(release_archive)
+    program_files = os.environ.get("ProgramFiles")
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if os.name != "nt" or not program_files or not local_app_data:
+        raise InstallerError("windows_standard_location_unavailable")
+    program_root = Path(program_files).resolve(strict=True)
+    data_parent = Path(local_app_data).resolve(strict=True) / INSTALL_PRODUCT_DIRECTORY / "data"
+    _assert_no_reparse_chain(program_root)
+    _assert_no_reparse_chain(data_parent.parent)
+    data_parent.mkdir(parents=True, exist_ok=True)
+    data_root = data_parent / "production"
+    data_root.mkdir(exist_ok=True)
+    _assert_no_reparse_chain(data_root, boundary=data_parent.parent)
+    if not data_root.is_dir() or data_root.is_symlink():
+        raise InstallerError("data_root_invalid")
+    package_root = (
+        program_root
+        / INSTALL_PRODUCT_DIRECTORY
+        / "Packages"
+        / f"{RELEASE_IDENTITY}-{_sha256(archive)[:12]}"
+    )
+    _assert_no_reparse_chain(package_root.parent)
+    return data_root.resolve(strict=True), package_root.resolve()
+
+
+def prepare_ui_install(
+    *,
+    data_root: os.PathLike[str] | str,
+    release_archive: os.PathLike[str] | str,
+    package_root: os.PathLike[str] | str,
+) -> dict[str, Any]:
+    """Publish and register a release while leaving the active pointer unchanged."""
+
+    from .package_registration import register_package
+
+    data = Path(data_root).resolve(strict=True)
+    archive = _validate_release_archive(Path(release_archive))
+    root = Path(package_root).resolve()
+    if not root.exists():
+        return install_release(
+            data_root=data,
+            release_archive=archive,
+            package_root=root,
+        )
+    if not root.is_dir() or root.is_symlink():
+        raise InstallerError("install_destination_or_sidecar_invalid")
+    registration = register_package(
+        data,
+        archive,
+        archive.with_name(archive.name + ".sha256"),
+        root,
+        root / "bootstrap" / "python" / "python.exe",
+    )
+    registration_sha = registration["registration_sha256"]
+    previous = _active_installation(data)
+    new_skill = _build_workbuddy_skill_archive(
+        data,
+        root,
+        archive_name=f"{RELEASE_IDENTITY}-install-{registration_sha[:12]}.zip",
+        reuse_if_identical=True,
+    )
+    recovery_skill = None
+    previous_registration_sha = previous["registration_sha256"]
+    previous_root = previous["package_root"]
+    if previous_registration_sha is not None and previous_registration_sha != registration_sha:
+        recovery_skill = _build_workbuddy_skill_archive(
+            data,
+            Path(previous_root),
+            archive_name=f"{RELEASE_IDENTITY}-recovery-{previous_registration_sha[:12]}.zip",
+            reuse_if_identical=True,
+        )
+    return {
+        "package_root": str(root),
+        "registration_sha256": registration_sha,
+        "active_pointer_sha256": registration_sha if previous_registration_sha == registration_sha else None,
+        "registered": True,
+        "activated": previous_registration_sha == registration_sha,
+        "previous_active_pointer_sha256": previous["pointer_sha256"],
+        "previous_registration_sha256": previous_registration_sha,
+        "previous_package_root": previous_root,
+        "workbuddy_skill": new_skill,
+        "recovery_workbuddy_skill": recovery_skill,
+    }
+
+
+def _rollback_prepared_activation(
+    data_root: Path,
+    registration_sha256: str,
+    previous_registration_sha256: str | None,
+    previous_active_pointer_sha256_or_missing: str,
+) -> None:
+    from .package_registration import _deactivate_package, _pointer_bytes, activate_package
+
+    expected_new_pointer = _sha256_bytes(_pointer_bytes(registration_sha256))
+    if previous_registration_sha256 is None:
+        _deactivate_package(data_root, expected_new_pointer, registration_sha256)
+    else:
+        activate_package(data_root, expected_new_pointer, previous_registration_sha256)
+    restored = _active_installation(data_root)
+    if (
+        restored["pointer_sha256"] != previous_active_pointer_sha256_or_missing
+        or restored["registration_sha256"] != previous_registration_sha256
+    ):
+        raise InstallerError("activation_rollback_readback_failed")
+
+
+def activate_prepared_release(
+    *,
+    data_root: os.PathLike[str] | str,
+    package_root: os.PathLike[str] | str,
+    registration_sha256: str,
+    expected_active_pointer_sha256_or_missing: str,
+    previous_registration_sha256: str | None,
+) -> dict[str, Any]:
+    """Activate only after UI import, then restore the prior pointer on post-check failure."""
+
+    from .package_registration import _pointer_bytes, activate_package, locate_active_package
+
+    data = Path(data_root).resolve(strict=True)
+    root = Path(package_root).resolve(strict=True)
+    try:
+        activate_package(
+            data,
+            expected_active_pointer_sha256_or_missing,
+            registration_sha256,
+        )
+    except Exception as exc:
+        try:
+            active = _active_installation(data)
+            if active["registration_sha256"] == registration_sha256:
+                _rollback_prepared_activation(
+                    data,
+                    registration_sha256,
+                    previous_registration_sha256,
+                    expected_active_pointer_sha256_or_missing,
+                )
+                raise InstallerError(
+                    f"activation_failed:PACKAGE_ROLLBACK_COMPLETE:"
+                    f"WORKBUDDY_SKILL_RESTORE_REQUIRED:{exc}"
+                ) from exc
+            if active["pointer_sha256"] != expected_active_pointer_sha256_or_missing:
+                raise InstallerError(
+                    f"activation_state_changed:WORKBUDDY_SKILL_RESTORE_REQUIRED:{exc}"
+                ) from exc
+        except InstallerError:
+            raise
+        except Exception as state_exc:
+            raise InstallerError(
+                f"activation_state_unknown:WORKBUDDY_SKILL_RESTORE_REQUIRED:{state_exc}"
+            ) from state_exc
+        raise InstallerError(f"activation_failed:WORKBUDDY_SKILL_RESTORE_REQUIRED:{exc}") from exc
+    already_active = (
+        previous_registration_sha256 == registration_sha256
+        and expected_active_pointer_sha256_or_missing
+        == _sha256_bytes(_pointer_bytes(registration_sha256))
+    )
+    try:
+        located = locate_active_package(data)
+        if (
+            located["registration_sha256"] != registration_sha256
+            or Path(located["package_root"]) != root
+            or Path(located["guide"]["path"]) != root / "AGENT_GUIDE.md"
+        ):
+            raise InstallerError("locator_postcheck_identity_mismatch")
+        return {
+            "registration_sha256": registration_sha256,
+            "package_root": str(root),
+            "guide": located["guide"],
+            "manifest": located["manifest"],
+            "lock": located["lock"],
+            "required_toolchain": located["required_toolchain"],
+        }
+    except Exception as exc:
+        if already_active:
+            raise InstallerError(f"locator_postcheck_failed_existing_active:{exc}") from exc
+        try:
+            _rollback_prepared_activation(
+                data,
+                registration_sha256,
+                previous_registration_sha256,
+                expected_active_pointer_sha256_or_missing,
+            )
+        except Exception as rollback_exc:
+            raise InstallerError(
+                f"postcheck_rollback_failed:WORKBUDDY_SKILL_RESTORE_REQUIRED:{rollback_exc}"
+            ) from rollback_exc
+        raise InstallerError(
+            f"locator_postcheck_failed:PACKAGE_ROLLBACK_COMPLETE:"
+            f"WORKBUDDY_SKILL_RESTORE_REQUIRED:{exc}"
+        ) from exc
+
+
+def _show_skill_archive(path: Path) -> None:
+    if os.name != "nt":
+        raise InstallerError("workbuddy_ui_handoff_requires_windows")
+    subprocess.Popen(["explorer.exe", f"/select,{path}"])
+
+
+def _run_ui_install(release_archive: Path) -> int:
+    data_root, package_root = _standard_install_paths(release_archive)
+    prepared = prepare_ui_install(
+        data_root=data_root,
+        release_archive=release_archive,
+        package_root=package_root,
+    )
+    skill_path = Path(prepared["workbuddy_skill"]["path"])
+    _show_skill_archive(skill_path)
+    if prepared["recovery_workbuddy_skill"] is None:
+        print("请在 WorkBuddy 的“专家·技能·连接器”中上传已选中的金钥匙 Skill。")
+    else:
+        print("请先在 WorkBuddy 中卸载同名旧 Skill，再上传已选中的新版 Skill。")
+        print("旧版恢复包已保留；新版导入失败时请重新导入恢复包。")
+    print("导入完成前请不要开始 WorkBuddy 任务。")
+    if input("导入成功后输入 1 并回车；取消请输入 2：").strip() != "1":
+        print("安装已暂停，新 Package 未激活，原有 Package 和用户数据保持不变。")
+        return 2
+    activate_prepared_release(
+        data_root=data_root,
+        package_root=package_root,
+        registration_sha256=prepared["registration_sha256"],
+        expected_active_pointer_sha256_or_missing=prepared["previous_active_pointer_sha256"],
+        previous_registration_sha256=prepared["previous_registration_sha256"],
+    )
+    print("安装完成。重新打开 WorkBuddy 后即可使用“金钥匙智能体”。")
+    return 0
 
 
 def uninstall_release(
@@ -1180,7 +1538,21 @@ def uninstall_release(
 def _main() -> int:
     parser = argparse.ArgumentParser(prog="golden-key-shell-installer")
     parser.add_argument("--version", action="version", version="1")
-    parser.parse_args()
+    commands = parser.add_subparsers(dest="command")
+    ui_install = commands.add_parser("ui-install")
+    ui_install.add_argument("--release-archive", type=Path, required=True)
+    args = parser.parse_args()
+    if args.command == "ui-install":
+        try:
+            return _run_ui_install(args.release_archive)
+        except Exception as exc:
+            if "PACKAGE_ROLLBACK_COMPLETE" in str(exc):
+                print("安装未完成。Package 已恢复；请在 WorkBuddy 中恢复旧 Skill，或移除刚导入的新 Skill。")
+            elif "WORKBUDDY_SKILL_RESTORE_REQUIRED" in str(exc):
+                print("安装未完成，Package 状态未能确认。请勿继续使用，并在 WorkBuddy 中恢复旧 Skill。")
+            else:
+                print("安装未完成，现有 Package 和用户数据未被删除。")
+            return 1
     return 0
 
 

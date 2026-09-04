@@ -17,6 +17,7 @@ from golden_key_openmontage_workbuddy.installer import InstallerError
 def test_installer_binds_verified_m13_package_commit_and_tree() -> None:
     assert installer.OPENMONTAGE_COMMIT == "201675c0e550d417654b752f3945f229fb5ceeee"
     assert installer.OPENMONTAGE_TREE == "f5915fdda3448fed509ed8741563643493c1613f"
+    assert "golden_key_openmontage_workbuddy/installer.py" in installer.SHELL_FILES
 
 
 def _registry_with_pointer(data_root: Path, registration_sha256: str) -> bytes:
@@ -25,6 +26,14 @@ def _registry_with_pointer(data_root: Path, registration_sha256: str) -> bytes:
     raw = package_registration._pointer_bytes(registration_sha256)
     package_registration._atomic_replace_active(paths.active, raw, None)
     return raw
+
+
+def _write_release_archive(path: Path) -> None:
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("GoldenKeyOpenMontageForWorkBuddy/placeholder", b"release")
+    path.with_name(path.name + ".sha256").write_text(
+        f"{installer._sha256(path)} *{path.name}\n", encoding="utf-8"
+    )
 
 
 def test_archive_listing_and_member_names_fail_closed(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -80,8 +89,7 @@ def test_install_failure_restores_previous_pointer_and_removes_new_root(
     old_sha = "a" * 64
     previous_raw = _registry_with_pointer(data_root, old_sha)
     archive = tmp_path / "release.zip"
-    archive.write_bytes(b"release")
-    archive.with_name(archive.name + ".sha256").write_text("x\n", encoding="utf-8")
+    _write_release_archive(archive)
     package_root = tmp_path / "new-package"
 
     def fake_extract(_archive: Path, destination: Path) -> None:
@@ -802,3 +810,319 @@ def test_skill_archive_requires_guide_file(tmp_path: Path) -> None:
 
     with pytest.raises(InstallerError, match="workbuddy_guide_not_file"):
         installer._build_workbuddy_skill_archive(data_root, package_root)
+
+
+def test_formal_release_contains_only_cmd_inner_release_and_sidecar(tmp_path: Path) -> None:
+    inner = tmp_path / "golden-key-openmontage-for-workbuddy-0.3.25-test.zip"
+    inner.write_bytes(b"inner release")
+    sidecar = inner.with_name(inner.name + ".sha256")
+    sidecar.write_text(
+        f"{installer._sha256(inner)} *{inner.name}\n",
+        encoding="utf-8",
+        newline="",
+    )
+    command = tmp_path / installer.INSTALLER_CMD_NAME
+    command.write_bytes(b"@echo off\r\n")
+
+    result = installer._build_formal_release(inner, command)
+
+    formal = Path(result["path"])
+    assert result["sha256"] == installer._sha256(formal)
+    assert result["members"] == [installer.INSTALLER_CMD_NAME, inner.name, sidecar.name]
+    with zipfile.ZipFile(formal) as archive:
+        assert archive.namelist() == result["members"]
+        assert archive.read(installer.INSTALLER_CMD_NAME) == command.read_bytes()
+        assert archive.read(inner.name) == inner.read_bytes()
+        assert archive.read(sidecar.name) == sidecar.read_bytes()
+
+
+def test_release_validation_reads_every_member_for_crc(tmp_path: Path) -> None:
+    release = tmp_path / "release.zip"
+    _write_release_archive(release)
+    with zipfile.ZipFile(release) as archive:
+        member = archive.infolist()[0]
+    raw = bytearray(release.read_bytes())
+    name_size = int.from_bytes(raw[member.header_offset + 26 : member.header_offset + 28], "little")
+    extra_size = int.from_bytes(raw[member.header_offset + 28 : member.header_offset + 30], "little")
+    raw[member.header_offset + 30 + name_size + extra_size] ^= 1
+    release.write_bytes(raw)
+    release.with_name(release.name + ".sha256").write_text(
+        f"{installer._sha256(release)} *{release.name}\n", encoding="utf-8"
+    )
+
+    with pytest.raises(InstallerError, match="release_archive_invalid"):
+        installer._validate_release_archive(release)
+
+
+def test_install_prepares_new_and_recovery_skills_without_activation(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    old_root = tmp_path / "old-package"
+    new_root = tmp_path / "new-package"
+    old_registration_sha = "a" * 64
+    new_registration_sha = "b" * 64
+    previous_raw = _registry_with_pointer(data_root, old_registration_sha)
+    archive = tmp_path / "release.zip"
+    _write_release_archive(archive)
+
+    def make_package(root: Path) -> None:
+        skill = root / installer.WORKBUDDY_SKILL_ROOT_RELATIVE_PATH / "SKILL.md"
+        skill.parent.mkdir(parents=True)
+        (root / "AGENT_GUIDE.md").write_text("guide\n", encoding="utf-8")
+        skill.write_text(
+            f"{installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER}\n"
+            f"{installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER}\n"
+            f"{installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER}\n",
+            encoding="utf-8",
+        )
+
+    make_package(old_root)
+
+    def fake_extract(_archive: Path, destination: Path) -> None:
+        make_package(destination)
+
+    monkeypatch.setattr(installer, "_extract_release", fake_extract)
+    monkeypatch.setattr(
+        package_registration,
+        "_load_registration",
+        lambda _paths, _sha: {"package_root": str(old_root)},
+    )
+    monkeypatch.setattr(
+        package_registration,
+        "_build_registration",
+        lambda **_kwargs: ({}, b"registration\n", new_registration_sha),
+    )
+    monkeypatch.setattr(
+        package_registration,
+        "_atomic_replace_active",
+        lambda *_args, **_kwargs: pytest.fail("prepare must not activate"),
+    )
+
+    result = installer.install_release(
+        data_root=data_root,
+        release_archive=archive,
+        package_root=new_root,
+    )
+
+    active = data_root / "State" / "PackageRegistration" / "v1" / "active.json"
+    assert active.read_bytes() == previous_raw
+    assert result["activated"] is False
+    assert result["active_pointer_sha256"] is None
+    assert result["previous_registration_sha256"] == old_registration_sha
+    assert Path(result["workbuddy_skill"]["path"]).is_file()
+    assert Path(result["recovery_workbuddy_skill"]["path"]).is_file()
+    with zipfile.ZipFile(result["workbuddy_skill"]["path"]) as stream:
+        assert str(new_root.resolve()) in stream.read("SKILL.md").decode("utf-8")
+    with zipfile.ZipFile(result["recovery_workbuddy_skill"]["path"]) as stream:
+        assert str(old_root.resolve()) in stream.read("SKILL.md").decode("utf-8")
+
+
+def test_identical_skill_candidate_can_be_reused_for_resume(tmp_path: Path) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    package_root = tmp_path / "package"
+    skill = package_root / installer.WORKBUDDY_SKILL_ROOT_RELATIVE_PATH / "SKILL.md"
+    skill.parent.mkdir(parents=True)
+    (package_root / "AGENT_GUIDE.md").write_text("guide\n", encoding="utf-8")
+    skill.write_text(
+        f"{installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER}\n"
+        f"{installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER}\n"
+        f"{installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER}\n",
+        encoding="utf-8",
+    )
+
+    first = installer._build_workbuddy_skill_archive(
+        data_root,
+        package_root,
+        archive_name="resume.zip",
+    )
+    second = installer._build_workbuddy_skill_archive(
+        data_root,
+        package_root,
+        archive_name="resume.zip",
+        reuse_if_identical=True,
+    )
+
+    assert second == first
+
+
+def test_locator_postcheck_failure_restores_previous_pointer(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    package_root = tmp_path / "package"
+    package_root.mkdir()
+    new_registration_sha = "b" * 64
+    old_registration_sha = "a" * 64
+    calls: list[tuple[str, str]] = []
+
+    monkeypatch.setattr(
+        package_registration,
+        "activate_package",
+        lambda _data, expected, target: calls.append((expected, target)) or target,
+    )
+    monkeypatch.setattr(
+        package_registration,
+        "locate_active_package",
+        lambda _data: (_ for _ in ()).throw(InstallerError("forced-postcheck")),
+    )
+    expected_old = installer._sha256_bytes(
+        package_registration._pointer_bytes(old_registration_sha)
+    )
+    monkeypatch.setattr(
+        installer,
+        "_active_installation",
+        lambda _data: {
+            "pointer_sha256": expected_old,
+            "registration_sha256": old_registration_sha,
+            "package_root": str(package_root),
+        },
+    )
+
+    with pytest.raises(
+        InstallerError,
+        match="PACKAGE_ROLLBACK_COMPLETE:WORKBUDDY_SKILL_RESTORE_REQUIRED",
+    ):
+        installer.activate_prepared_release(
+            data_root=data_root,
+            package_root=package_root,
+            registration_sha256=new_registration_sha,
+            expected_active_pointer_sha256_or_missing=expected_old,
+            previous_registration_sha256=old_registration_sha,
+        )
+
+    expected_new = installer._sha256_bytes(
+        package_registration._pointer_bytes(new_registration_sha)
+    )
+    assert calls == [
+        (expected_old, new_registration_sha),
+        (expected_new, old_registration_sha),
+    ]
+
+
+def test_clean_install_postcheck_failure_deactivates_new_pointer(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    package_root = tmp_path / "package"
+    package_root.mkdir()
+    registration_sha = "b" * 64
+    calls: list[tuple[str, str]] = []
+
+    monkeypatch.setattr(package_registration, "activate_package", lambda *_args: registration_sha)
+    monkeypatch.setattr(
+        package_registration,
+        "locate_active_package",
+        lambda _data: (_ for _ in ()).throw(InstallerError("forced-postcheck")),
+    )
+    monkeypatch.setattr(
+        package_registration,
+        "_deactivate_package",
+        lambda _data, expected, target: calls.append((expected, target)) or "MISSING",
+    )
+
+    with pytest.raises(InstallerError, match="PACKAGE_ROLLBACK_COMPLETE"):
+        installer.activate_prepared_release(
+            data_root=data_root,
+            package_root=package_root,
+            registration_sha256=registration_sha,
+            expected_active_pointer_sha256_or_missing="MISSING",
+            previous_registration_sha256=None,
+        )
+
+    assert calls == [
+        (
+            installer._sha256_bytes(package_registration._pointer_bytes(registration_sha)),
+            registration_sha,
+        )
+    ]
+
+
+def test_activation_error_after_pointer_write_restores_previous_pointer(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    package_root = tmp_path / "package"
+    package_root.mkdir()
+    old_registration_sha = "a" * 64
+    new_registration_sha = "b" * 64
+    calls: list[tuple[str, str]] = []
+
+    def activate(_data: Path, expected: str, target: str) -> str:
+        calls.append((expected, target))
+        if target == new_registration_sha:
+            raise InstallerError("forced-readback-failure")
+        return target
+
+    monkeypatch.setattr(package_registration, "activate_package", activate)
+    def active(_data: Path) -> dict[str, str]:
+        registration = new_registration_sha if len(calls) == 1 else old_registration_sha
+        return {
+            "pointer_sha256": "c" * 64 if len(calls) == 1 else "d" * 64,
+            "registration_sha256": registration,
+            "package_root": str(package_root),
+        }
+
+    monkeypatch.setattr(installer, "_active_installation", active)
+
+    with pytest.raises(InstallerError, match="PACKAGE_ROLLBACK_COMPLETE"):
+        installer.activate_prepared_release(
+            data_root=data_root,
+            package_root=package_root,
+            registration_sha256=new_registration_sha,
+            expected_active_pointer_sha256_or_missing="d" * 64,
+            previous_registration_sha256=old_registration_sha,
+        )
+
+    assert calls == [
+        ("d" * 64, new_registration_sha),
+        (
+            installer._sha256_bytes(package_registration._pointer_bytes(new_registration_sha)),
+            old_registration_sha,
+        ),
+    ]
+
+
+def test_standard_windows_paths_are_release_bound_and_not_drive_fixed(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    program_files = tmp_path / "Program Files"
+    local_app_data = tmp_path / "Local App Data"
+    program_files.mkdir()
+    local_app_data.mkdir()
+    release = tmp_path / "release.zip"
+    _write_release_archive(release)
+    monkeypatch.setenv("ProgramFiles", str(program_files))
+    monkeypatch.setenv("LOCALAPPDATA", str(local_app_data))
+
+    data_root, package_root = installer._standard_install_paths(release)
+
+    assert data_root == (
+        local_app_data / installer.INSTALL_PRODUCT_DIRECTORY / "data" / "production"
+    ).resolve()
+    assert package_root.parent == (
+        program_files / installer.INSTALL_PRODUCT_DIRECTORY / "Packages"
+    ).resolve()
+    assert package_root.name.endswith(installer._sha256(release)[:12])
+
+
+def test_top_level_installer_cmd_uses_only_verified_ui_assisted_route() -> None:
+    command = (
+        Path(__file__).resolve().parents[2] / installer.INSTALLER_CMD_NAME
+    ).read_text(encoding="utf-8")
+
+    assert "Get-FileHash" in command
+    assert "Expand-Archive" in command
+    assert "ui-install --release-archive" in command
+    assert "golden_key_openmontage_workbuddy.installer" in command
+    assert '\\"' not in command
+    assert "if errorlevel 1 (" not in command
+    assert "exit /b %errorlevel%" in command
+    assert ".workbuddy\\skills" not in command
+    assert "Remotion" not in command
+    assert "ARK_API_KEY" not in command

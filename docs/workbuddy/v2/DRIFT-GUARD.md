@@ -34,6 +34,14 @@ internal technical work? If not, stop and report the exact missing user result.
   `golden_key_openmontage_workbuddy/installer.py`, and
   `tests/workbuddy/test_installer.py`. A fourth source/bootstrap file, a new
   dependency, a second installer, or private WorkBuddy mutation is a hard stop.
+- The three-file implementation is pushed at `35e8c11b...`; `35 passed, 1 skipped`
+  and final independent `APPROVE / P0=0 / P1=0 / P2=0` prove only the code and
+  formal candidate contract. The retained outer ZIP SHA256 is
+  `f8d72418bb809c9fbcc9db73afadbb04fa1e6861abc7653994edbeae61670ddd`.
+- A non-elevated terminal and absent native WorkBuddy/UAC Computer Use surface are
+  `BLOCKED_EXTERNAL_USER_INTERACTION`, not permission to switch silently to the
+  current-user route, write private Skill storage, claim install success, or start
+  M1.3. Only visible formal CMD/UAC/UI import/activation/Locator evidence closes it.
 - Remotion/HyperFrames installation, API keys, Providers, and media remain M1.3
   or later work. M1.4 cannot repair missing Installer or M1.3 evidence.
 

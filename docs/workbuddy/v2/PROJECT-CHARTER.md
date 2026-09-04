@@ -198,6 +198,13 @@ present a UI-assisted restore as automatic full rollback. This boundary is still
 ordinary-user installation: it exposes no internal path, hash, command, or
 developer-machine artifact.
 
+Implementation and product acceptance remain separate. A reviewed formal ZIP may
+be `FORMAL_CANDIDATE_VERIFIED` while installation is still unproved. System-wide
+installation cannot be replaced by a silent current-user fallback when UAC or UI
+control is unavailable, and official WorkBuddy Skill import cannot be replaced by
+private-directory mutation. In that case the honest state is
+`BLOCKED_EXTERNAL_USER_INTERACTION / UI_ASSISTED_INSTALL_NOT_PROVED`; M1.3 waits.
+
 M1.2 owns the first-use readiness projection, ordinary-language explanation, and
 next-intent handoff. It does not own a Provider catalogue or technical readiness
 report. M1.3 owns the selected local or API-key configuration, short recommended

@@ -38,18 +38,22 @@ additional approval pause. This does not authorize optional capability work
 inside Installer, broad S4 qualification, media production, a second installer,
 or a new implementation branch.
 
-Installer implementation is now complete and ordinarily pushed at
-`35e8c11b430c22419fe93ac0195e3e388a548a0f`. Focused checks passed `35 passed,
-1 skipped`; the final independent zero-write review is
-`APPROVE / P0=0 / P1=0 / P2=0`. The retained formal outer ZIP is 174,518,172
+Installer implementation was first pushed at `35e8c11b...`, but its formal outer
+ZIP is rejected: the top-level CMD retained LF-only source line endings and real
+`cmd.exe` truncated commands, exited 1, and changed no system state. The bounded
+root fix is pushed at `25a4c04c42f541e724e407a3dd6768e151d4f843`; it normalizes
+only the packaged CMD to CRLF and adds a real extracted-`cmd.exe` check. Focused
+checks pass `35 passed, 1 skipped`; independent zero-write review is
+`APPROVE / P0=0 / P1=0 / P2=0`. The corrected formal outer ZIP is 174,518,167
 bytes with SHA256
-`f8d72418bb809c9fbcc9db73afadbb04fa1e6861abc7653994edbeae61670ddd`;
-its inner release is 177,278,309 bytes with SHA256
+`e57d4828e15dfacfadac6b86f84238dad7aebb0bbccc6c3d4883dd101300ee3d`;
+its unchanged inner release is 177,278,309 bytes with SHA256
 `2d85bcc3802cf1f4663bdfc2755f96592828bb7634e67cecaa61f48144dffcfd`.
 No production Registration, active pointer, WorkBuddy Skill, or user data changed.
-The real UI-assisted result remains `NOT_PROVED`: the current Codex terminal is
-not elevated, Windows UAC requires user interaction, and the available Computer
-Use surface exposes no native WorkBuddy/UAC app control. Do not silently switch
+The corrected real CMD reached `consent.exe`, but that prompt closed without
+approval and no install directory appeared. The UI-assisted result remains
+`NOT_PROVED`: Windows UAC requires user interaction and the available
+Computer Use surface exposes no native WorkBuddy/UAC app control. Do not silently switch
 to a current-user install, touch private WorkBuddy storage, or start M1.3. Resume
 only through the formal CMD's system-wide route and official WorkBuddy UI.
 

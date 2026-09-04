@@ -204,6 +204,10 @@ installation cannot be replaced by a silent current-user fallback when UAC or UI
 control is unavailable, and official WorkBuddy Skill import cannot be replaced by
 private-directory mutation. In that case the honest state is
 `BLOCKED_EXTERNAL_USER_INTERACTION / UI_ASSISTED_INSTALL_NOT_PROVED`; M1.3 waits.
+The first LF-only packaged CMD is rejected despite earlier static review; the
+corrected CRLF candidate reached the real Windows UAC prompt, which closed
+unapproved, and remains
+unaccepted until UAC, official Skill import, activation, and Locator complete.
 
 M1.2 owns the first-use readiness projection, ordinary-language explanation, and
 next-intent handoff. It does not own a Provider catalogue or technical readiness

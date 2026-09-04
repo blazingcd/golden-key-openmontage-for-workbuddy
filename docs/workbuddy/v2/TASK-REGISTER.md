@@ -307,21 +307,22 @@ UI-assisted result and its independent review. The Owner's continuous-work
 authorization permits proceeding directly to M1.3 after accepted Installer
 evidence; no intermediate approval pause is required.
 
-**Latest implementation result.** The exact three-file implementation is pushed
-at `35e8c11b430c22419fe93ac0195e3e388a548a0f`; local, tracking, and advertised
-implementation refs matched and the worktree was clean. Focused checks passed
-`35 passed, 1 skipped`; final independent zero-write review is
-`APPROVE / P0=0 / P1=0 / P2=0`. The formal outer ZIP is retained at
-`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\installer-release-assembly-20260904\golden-key-openmontage-for-workbuddy-0.3.25-installer-release-20260904-installer.zip`,
-size 174,518,172 bytes, SHA256
-`f8d72418bb809c9fbcc9db73afadbb04fa1e6861abc7653994edbeae61670ddd`.
+**Latest implementation result.** The first formal outer ZIP from `35e8c11b...`
+is rejected: its packaged CMD was LF-only, real `cmd.exe` truncated commands and
+exited 1, and no system state changed. The bounded CRLF root fix is pushed at
+`25a4c04c42f541e724e407a3dd6768e151d4f843`; focused checks pass
+`35 passed, 1 skipped` and final independent zero-write review is
+`APPROVE / P0=0 / P1=0 / P2=0`. The corrected formal outer ZIP is retained at
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\installer-release-assembly-20260904-crlf-fix\golden-key-openmontage-for-workbuddy-0.3.25-installer-release-20260904-installer.zip`,
+size 174,518,167 bytes, SHA256
+`e57d4828e15dfacfadac6b86f84238dad7aebb0bbccc6c3d4883dd101300ee3d`.
 The inner release is 177,278,309 bytes, SHA256
 `2d85bcc3802cf1f4663bdfc2755f96592828bb7634e67cecaa61f48144dffcfd`.
 Outer and inner CRC, source identity, binding, and 46 locked dependencies passed.
 
-No real installation occurred. The current terminal is not elevated; the formal
-system-wide route requires Windows UAC, and the available Computer Use surface
-has no native WorkBuddy/UAC control. The production active Registration remains
+The corrected real CMD reached Windows `consent.exe`, then the prompt closed
+without approval and no install directory appeared. The available Computer Use
+surface has no native WorkBuddy/UAC control. The production active Registration remains
 `1de2935dee199a0a2b630e90baf9707758f86fb6a4e9dd637203aca6dc0188e8`.
 Do not silently use the current-user alternative, import through private storage,
 or start M1.3. Status is `FORMAL_CANDIDATE_VERIFIED /
@@ -1951,7 +1952,7 @@ m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRA
 m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 v8_base_connection: REAL_WORKBUDDY_LOCATOR_CALLED / EXACT_VERIFIED_AGENT_GUIDE_READ_COMPLETED / NOT_REMOTION_OR_M1_3_PROOF
 v8_closeout_gate: COMPLETE / INDEPENDENT_ZERO_WRITE_RESULT_REVIEW_APPROVE_P0_0_P1_0_P2_0 / TRUTHFUL_STATUS_SYNC / ORDINARY_PUSH / CLEAN_REFS
-installer_release_assembly: INDEPENDENT_MUST_PREREQUISITE / UI_ASSISTED_TRANSACTION_FROZEN / THREE_FILE_IMPLEMENTATION_COMPLETE_PUSHED_35E8C11B / FORMAL_CANDIDATE_SHA256_F8D72418BB809C9FBCC9DB73AFADBB04FA1E6861ABC7653994EDBEAE61670DDD / BLOCKED_EXTERNAL_USER_INTERACTION / UI_ASSISTED_INSTALL_NOT_PROVED
+installer_release_assembly: INDEPENDENT_MUST_PREREQUISITE / UI_ASSISTED_TRANSACTION_FROZEN / ORIGINAL_LF_CMD_CANDIDATE_REJECTED_ZERO_SYSTEM_WRITE / CRLF_ROOT_FIX_PUSHED_25A4C04C42F541E724E407A3DD6768E151D4F843 / CORRECTED_FORMAL_CANDIDATE_SHA256_E57D4828E15DFACFADAC6B86F84238DAD7AEBB0BBCCC6C3D4883DD101300EE3D / UAC_PROMPT_REACHED_THEN_CLOSED_UNAPPROVED / BLOCKED_EXTERNAL_USER_INTERACTION / UI_ASSISTED_INSTALL_NOT_PROVED
 installer_skill_boundary: OFFICIAL_WORKBUDDY_UI_IMPORT_AND_RESTORE / NO_PUBLIC_SKILL_API_OR_CLI_PROVED / NO_PRIVATE_STORAGE_MUTATION / NO_AUTOMATIC_FULL_ROLLBACK_CLAIM
 installer_release_order: INSTALLER_THEN_M1_3_REAL_CONFIGURATION_THEN_M1_4
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING

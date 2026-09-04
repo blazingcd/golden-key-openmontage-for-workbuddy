@@ -31,14 +31,18 @@ new machine-bound Skill and a verified recovery Skill, opens the user-visible ZI
 location, and activates only after the new Skill import succeeds. A failed import
 leaves the old Package active; a failed post-activation Locator check restores the
 old active pointer. Skill restoration remains a WorkBuddy UI action and must not
-be described as automatic full rollback. The reviewed implementation is pushed at
-`35e8c11b430c22419fe93ac0195e3e388a548a0f`; focused checks passed
+be described as automatic full rollback. Real `cmd.exe` rejected the first formal
+outer ZIP because its top-level CMD was LF-only; it exited 1 before system writes.
+The CRLF root fix is pushed at
+`25a4c04c42f541e724e407a3dd6768e151d4f843`; focused checks pass
 `35 passed, 1 skipped` and independent review is
-`APPROVE / P0=0 / P1=0 / P2=0`. The retained formal outer ZIP is 174,518,172
+`APPROVE / P0=0 / P1=0 / P2=0`. The corrected formal outer ZIP is 174,518,167
 bytes / SHA256
-`f8d72418bb809c9fbcc9db73afadbb04fa1e6861abc7653994edbeae61670ddd`.
-Current state is `IMPLEMENTATION_COMPLETE_PUSHED / FORMAL_CANDIDATE_VERIFIED /
-UI_ASSISTED_INSTALL_NOT_PROVED`. The production active Registration remains
+`e57d4828e15dfacfadac6b86f84238dad7aebb0bbccc6c3d4883dd101300ee3d`.
+Its real CMD reached Windows `consent.exe`, then closed unapproved with no install
+directory created. Current state is
+`CORRECTED_IMPLEMENTATION_PUSHED / CORRECTED_FORMAL_CANDIDATE_VERIFIED /
+UAC_PROMPT_REACHED_THEN_CLOSED_UNAPPROVED / UI_ASSISTED_INSTALL_NOT_PROVED`. The production active Registration remains
 `1de2935dee199a0a2b630e90baf9707758f86fb6a4e9dd637203aca6dc0188e8`.
 The remaining gate requires user-visible UAC approval for the system-wide install
 and official WorkBuddy UI Skill import; current Computer Use exposes no native

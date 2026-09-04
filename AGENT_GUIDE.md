@@ -2,16 +2,21 @@
 
 ## Mandatory routing
 
-The Owner's 2026-09-04 installation-location correction is the current bounded
-exception: update the existing Installer so each generated one-file Skill receives
-that user's validated PackageRoot, DataRoot, and exact Guide path, update its
-direct tests and Skill guidance, and build one uninstalled Skill candidate. The
-v7 test proved path binding and Locator validation but skipped the Guide read; v8
-makes a completed Guide read the hard gate before runtime checks or an installation
-conclusion. The exact scope and evidence boundary are in the Task Register's
-installation-location section. Preserve R3/M0/M1.1/M1.2. No
-WorkBuddy execution, optional install, Package mutation, or media is authorized
-by this correction.
+The Owner's 2026-09-04 planning direction records the latest v8 result and adds
+one independent Must prerequisite named `Installer / Release Assembly`. In one
+real WorkBuddy task, v8 called `locate_active_package` and completed reading the
+exact verified `AGENT_GUIDE.md`; this proves the base Package connection only. It
+does not prove Remotion, API-key configuration, M1.3, or a portable final release.
+The v8 implementation is closed on the reviewed and ordinarily pushed M1 branch;
+Installer work begins only from that clean state. Installer then owns the
+ordinary-user top-level `安装到WorkBuddy.cmd`, current-installer entry, Windows-
+resolved target paths, install/register/activate, one machine-bound Skill, and
+rollback. It does not install Remotion, handle API keys, call Providers, or make
+media. The order is `v8 closeout -> Installer / Release Assembly -> M1.3 real
+configuration -> M1.4`. This direction authorizes only synchronization of the six
+authority/state documents, one independent zero-write review, one commit, and one
+ordinary planning-branch push; it authorizes no Installer implementation or
+external action.
 
 Read this file completely before acting in this repository or responding about it.
 `docs/workbuddy/v2/TASK-REGISTER.md` is the current state and authorization authority.
@@ -245,7 +250,8 @@ entries to continue or configure. Its catalogue size and technical wording remai
 non-blocking UX findings, not proof that the user cannot proceed. M1.2 is therefore
 complete at the first-use guidance/configuration-entry boundary. It does not prove
 that WorkBuddy can finish a selected local installation or API-key configuration;
-that work belongs to M1.3, which is now `NOT_STARTED` rather than blocked by M1.2.
+that work belongs to M1.3, which is no longer blocked by M1.2 but now waits for
+v8 closeout and the independent Installer / Release Assembly result.
 This correction retains the same six-document, one-review, one-commit, ordinary-
 push limit and authorizes no implementation or product execution.
 
@@ -346,10 +352,11 @@ continued. M0 is planning only. The future product roadmap uses M1–M3 for Must
 S1–S5 for Should, and C1–C2 for Could. M1.1–M1.4 are execution steps owned by M1;
 they are not M0 subtasks or a separate task series.
 
-The executable dependency is M1.1 fact audit followed by M1.2 first-use readiness.
-M2 clarification may start after M1.2. M1.3 remains a required M1 product
-capability with one representative local-install path and one representative
-API-key path, but an individual user may defer
+The completed M1.1 fact audit was followed by M1.2 first-use readiness. The
+current executable order is `v8 closeout -> Installer / Release Assembly ->
+M1.3`; M2 clarification may start after M1.2 without waiting for that chain.
+M1.3 remains a required M1 product capability with one representative local-
+install path and one representative API-key path, but an individual user may defer
 configuration until M2 establishes relevance or continue on FFmpeg without using
 an enhancement. M3 starts only after both M1.4 and M2 are complete. S1 adds
 revision/version/rollback; S2 adds one additional
@@ -635,7 +642,8 @@ The Package still declares an empty `workbuddy_optional_capability_definitions`
 list, so Remotion/HyperFrames configuration stops before installation. WorkBuddy,
 real CredUI/WinCred, real Ark authentication semantics, optional installation,
 rediscovery, Package invocation, and user-visible recovery remain unproved.
-Current state is `IMPLEMENTATION_LOCAL_CONTRACT_COMMITTED / PRODUCT_INCOMPLETE`.
+Current state is `IMPLEMENTATION_LOCAL_CONTRACT_COMMITTED /
+BLOCKED_BY_INSTALLER_RELEASE_ASSEMBLY / PRODUCT_INCOMPLETE`.
 
 The Owner's 2026-09-01 correction is planning-only and supersedes the earlier
 local-install assumptions. No end-user drive letter is fixed: the later WorkBuddy
@@ -654,10 +662,10 @@ obtain consent, install, rediscover, and perform a real invocation. It must not
 reuse an old receipt or treat a search result, global command, or source
 integration as proof of readiness.
 
-The Owner's 2026-09-02 correction supersedes the Shell-owned optional-runtime
-route. The next candidate changes only the authority/current-entry documents,
+The historical Owner 2026-09-02 correction superseded the Shell-owned optional-
+runtime route. Its candidate changed only the authority/current-entry documents,
 the Golden Key Skill, its one-file ZIP builder, and directly affected focused
-tests. The candidate ZIP contains only `SKILL.md`; it has no machine-bound script,
-path, private action, receipt, or cached result. This authorization builds and
-reviews an uninstalled candidate only. It does not install a Skill or Remotion,
-run WorkBuddy, handle a credential, call a Provider, or produce media.
+tests. That work led to the v8 base-connection proof and is no longer current
+implementation authority. The 2026-09-04 route at the top of this guide governs
+next work; do not reuse this historical candidate gate to bypass v8 closeout or
+Installer / Release Assembly.

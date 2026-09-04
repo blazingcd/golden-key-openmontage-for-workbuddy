@@ -2,18 +2,22 @@
 
 Date: 2026-09-04
 
-Current correction: the existing Installer now writes each user's validated
-PackageRoot, DataRoot, and exact Guide path into the generated one-file Skill. The
-source Skill stays portable. The installed v7 proved path binding and Locator
-validation in WorkBuddy but skipped the Guide read, so it is not accepted. The v8
-candidate makes a completed Guide read the hard gate and is built but uninstalled;
-the installed v7 and existing Remotion are unchanged. Historical sections below
-retain their original evidence; the Task Register's 2026-09-04 section supersedes
-their next-action snapshots. Source changes remain uncommitted and unpushed; no
-new product installer was released and v8 has not run in WorkBuddy.
-
 The live authority is `docs/workbuddy/v2/TASK-REGISTER.md`. This file is a compact
 state snapshot, not a second task ledger.
+
+## Current route
+
+The latest v8 Skill completed the base connection gate in one real WorkBuddy task:
+WorkBuddy called `locate_active_package` and completed reading the exact verified
+Package `AGENT_GUIDE.md`. R3, M0, M1.1, and M1.2 remain unchanged. This result does
+not prove Remotion installation, API-key configuration, M1.3, or a portable final
+user release.
+
+The v8 implementation closeout is complete on the reviewed, ordinarily pushed,
+clean M1 branch. The minimum product mainline now starts with the independent Must prerequisite
+`Installer / Release Assembly`, followed by M1.3 real local/API-key configuration
+using that formal release, then M1.4 closeout. M2 may proceed independently because
+M1.2 is complete; M3 still waits for M1.4 and M2.
 
 ## Product
 
@@ -292,10 +296,12 @@ bounded guided sequence when secure input or reliable installation requires it.
 That sequence must not make the user operate internal commands or technical details.
 
 Planned dependency: M1.1 fact audit then M1.2 first-use readiness; M2 may start
-after M1.2. M1.3 is still a required product capability with representative local
-installation and API-key paths, but a particular user may defer configuration
-until M2 establishes relevance or continue on FFmpeg without using an enhancement.
-M3 starts only after M1.4 and M2 are complete. S1–S4 then cover revision/version/rollback,
+after M1.2. After the proved v8 base connection is closed out, the independent
+Installer / Release Assembly prerequisite must produce the formal user release
+before M1.3 real validation. M1.3 remains a required product capability with
+representative local installation and API-key paths, but a particular user may
+defer configuration until M2 establishes relevance or continue on FFmpeg without
+using an enhancement. M3 starts only after M1.4 and M2 are complete. S1–S4 then cover revision/version/rollback,
 one additional platform/aspect, export/share/reuse, and cross-machine lifecycle.
 S5 qualifies only an enhancement selected for a real user goal. C1 broad
 Provider/model coverage beyond the verified Package's formal declarations and C2
@@ -450,15 +456,12 @@ uses its own available system abilities for live inspection, explanation,
 installation, rediscovery, and a real invocation. Old receipts, a global command,
 or integrated source are not readiness evidence.
 
-The authorized candidate changes the current authority/entry documents,
-`SKILL.md`, the one-file ZIP builder, and directly affected focused tests. It
-keeps `run.ps1` only as historical Shell source and excludes it from the new Skill
-ZIP. The uninstalled candidate is
-`golden-key-openmontage-0.3.25-workbuddy-guidance-v1.zip`, size `1785` bytes,
-SHA-256 `c2d1062412e0a37d04cd30c377f96d1688e40eb2c524c9cbb6d6cb94c796aefd`.
-It contains exactly `SKILL.md`; six focused tests and Skill validation passed.
-No WorkBuddy or Remotion execution is authorized by this build gate. M1.3 remains
-`PRODUCT_INCOMPLETE` until a later real WorkBuddy result is reviewed.
+The historical 2026-09-02 candidate changed the authority/entry documents,
+`SKILL.md`, the one-file ZIP builder, and directly affected focused tests. That
+route produced the later v8 base-connection evidence and is no longer current
+implementation authority. The current sequence is the `Current route` above;
+M1.3 remains `PRODUCT_INCOMPLETE` and waits for v8 closeout and the accepted
+Installer / Release Assembly result.
 
 ## Non-goals
 

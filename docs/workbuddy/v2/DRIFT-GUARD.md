@@ -11,9 +11,9 @@ internal technical work? If not, stop and report the exact missing user result.
 - V8 proved only that real WorkBuddy called `locate_active_package` and completed
   reading the exact verified Package `AGENT_GUIDE.md`. Do not upgrade this into
   Remotion, API-key, M1.3, or portable-release proof.
-- Do not mix Installer work into the current dirty v8 implementation worktree.
-  V8 first requires independent zero-write result review, truthful state update,
-  commit, ordinary push, exact ref verification, and a clean worktree.
+- V8 is closed after independent zero-write result review, truthful state update,
+  ordinary commit and push, exact ref verification, and a clean worktree. Do not
+  reopen it or mix Installer work into that closed result.
 - Installer / Release Assembly is an independent Must prerequisite before M1.3
   real validation. It reuses the current Installer; it does not create another
   installer, Agent, runtime-preparation path, or control plane.
@@ -134,8 +134,8 @@ by themselves.
   it may start after M1.2 and must not become a fixed questionnaire or expose
   internal mechanics.
 - M1.3 is a required product-capability step, but a particular user may defer
-  configuration or stay on FFmpeg. Real M1.3 validation waits for v8 closeout and
-  the accepted Installer / Release Assembly result. M1 closes at M1.4 only after
+  configuration or stay on FFmpeg. Real M1.3 validation waits for the accepted
+  Installer / Release Assembly result. M1 closes at M1.4 only after
   M1.2, Installer, one representative local-install path, and one representative
   API-key path are proved.
 - M3 proves one default production path, basic media quality, repeatable delivery,
@@ -456,9 +456,9 @@ WorkBuddy.
   capability definitions remain empty; WorkBuddy, real WinCred, Ark network,
   optional installation, rediscovery, and Package invocation remain unproved.
 - The former Shell/npm implementation route is historical and must not be
-  executed. Package definitions alone remain insufficient, but the current route
-  is v8 closeout, independent Installer / Release Assembly, then WorkBuddy-owned
-  optional setup under a separate action-time gate.
+  executed. Package definitions alone remain insufficient. V8 closeout is
+  complete; the current route is independent Installer / Release Assembly, then
+  WorkBuddy-owned optional setup under a separate action-time gate.
 
 - The repository preference for development temporary files on `D:` is not an
   end-user installation rule. Never assume that `C:` or `D:` exists. System-wide

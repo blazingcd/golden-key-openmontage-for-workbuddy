@@ -20,14 +20,14 @@ WorkBuddy actually called `locate_active_package` and completed reading the exac
 verified Package `AGENT_GUIDE.md`. This preserves R3, M0, M1.1, and M1.2. It proves
 neither Remotion nor API-key configuration, M1.3, or a portable final release.
 
-The current v8 implementation worktree has uncommitted task changes. Do not mix a
-new task into it. First close the existing v8 task with one independent zero-write
-result review, update its truthful result record, commit and ordinarily push the
-existing M1 implementation branch, and verify exact local/tracking/advertised refs
-and a clean worktree. This amendment does not itself authorize that implementation
-closeout or any external action.
+The v8 implementation is closed. Its independent zero-write result review is
+`APPROVE / P0=0 / P1=0 / P2=0`; implementation commit
+`13ea01cee6d4bf6ccdb0ec2533b907762b9774fe` and merge commit
+`9459a13f46655a3c46db04385906c9b2775001ec` are ordinarily pushed. Local,
+tracking, and advertised implementation refs equal the merge commit and the M1
+worktree is clean. No Installer work was mixed into v8.
 
-After v8 closeout, the minimum mainline is:
+The minimum mainline is now:
 
 `Installer / Release Assembly -> M1.3 real configuration -> M1.4 closeout`
 
@@ -44,8 +44,7 @@ production, or absorb M1.3.
 This Owner direction authorizes only this six-document synchronization, one
 independent zero-write document review, one commit, and one ordinary push on the
 planning branch. Installer implementation, tests, package assembly, installation,
-WorkBuddy, credentials, Providers, media, v8 implementation closeout, and M1.3
-remain separately gated.
+WorkBuddy, credentials, Providers, media, and M1.3 remain separately gated.
 
 ## Product contract
 
@@ -162,8 +161,8 @@ tools, or ordering without failing the task.
 ### Master roadmap and dependency order
 
 The executable dependency begins `M1.1 -> M1.2`, after which M2 may start. The
-current minimum delivery chain is `v8 closeout -> Installer / Release Assembly ->
-M1.3 real configuration -> M1.4`. M1.3 is a required M1 product capability with
+current minimum delivery chain is `Installer / Release Assembly -> M1.3 real
+configuration -> M1.4`. M1.3 is a required M1 product capability with
 representative local-install and API-key paths, but a particular user may defer
 configuration until M2 establishes relevance or may continue on FFmpeg without
 using an enhancement. M1.4 closes M1 only after M1.2, the Installer result, and
@@ -173,7 +172,7 @@ and M2 are complete.
 | Task | Priority | User problem and target result | Boundary and non-goals | Acceptance, dependency, and priority reason |
 |---|---|---|---|---|
 | M1 — first-use guidance and capability readiness | Must | A first-time user understands the FFmpeg-ready basic path and can start, defer, configure, change, or retest relevant local-install and API-key capabilities from ordinary natural language. Provider display should normally lead with a short relevant set and offer more; the shortlist size is UX guidance, not a hard gate. | No automatic installation of every enhancement, unsupported Provider entries, broad disk scan, fixed command language, credential exposure, Shell Provider/model selection, false ready state, or second control plane. Catalogue overload is recorded as a UX finding unless it prevents safe continuation. Bounded fixed confirmation/security steps are allowed when real WorkBuddy requires them. | M1.1–M1.4 below. One representative local-install path and one representative API-key path are required. Depends on separately approved implementation, Package, and action-time gates. |
-| Installer / Release Assembly — formal user installer | Must prerequisite before M1.3 real validation | An ordinary Windows user can unpack the final release and start one top-level `安装到WorkBuddy.cmd` without knowing internal paths. Windows resolves the approved standard location; the current Installer installs, registers, activates, generates one correctly bound Skill, and retains rollback. | No old two-Skill flow, development-machine path, preinstalled machine-bound v8 ZIP, Remotion/HyperFrames install, API key, Provider call, media, updater platform, or duplicate installation engine. | Depends on v8 base-connection closeout and a separately frozen exact write set. Acceptance requires a portable final ZIP, real clean Windows install, exact registration/activation and single-Skill binding, one upgrade-or-failure rollback case with user data retained, focused checks, and one independent result review. M1.3 real validation must use this formal release. |
+| Installer / Release Assembly — formal user installer | Must prerequisite before M1.3 real validation | An ordinary Windows user can unpack the final release and start one top-level `安装到WorkBuddy.cmd` without knowing internal paths. Windows resolves the approved standard location; the current Installer installs, registers, activates, generates one correctly bound Skill, and retains rollback. | No old two-Skill flow, development-machine path, preinstalled machine-bound v8 ZIP, Remotion/HyperFrames install, API key, Provider call, media, updater platform, or duplicate installation engine. | V8 base-connection closeout is complete; implementation still requires a separately frozen exact write set. Acceptance requires a portable final ZIP, real clean Windows install, exact registration/activation and single-Skill binding, one upgrade-or-failure rollback case with user data retained, focused checks, and one independent result review. M1.3 real validation must use this formal release. |
 | M2 — progressive clarification and material readiness | Must | One incomplete business request becomes a user-confirmed direction covering only genuinely relevant audience, platform, duration, style, brand, materials, budget, and delivery decisions. Missing materials have understandable continue, default, or supply-later choices. | No fixed questionnaire, exhaustive interrogation, hidden paid choice, user-visible internal mechanics, or WorkBuddy making unconfirmed high-impact creative/cost decisions. | Contract coverage for no/partial/complete material states, followed by separately authorized real WorkBuddy acceptance. Depends on M1.2; a user-selected enhancement must finish M1.3 before it is used. It follows readiness because production cannot be judged before the intended result is confirmed. |
 | M3 — stable production, basic quality, and final delivery | Must | The user receives a real playable and findable result, checkable receipt/location, honest basic quality result, and a final answer that is not delayed by optional persistence. | One default production specification first; no second aspect ratio, all-platform matrix, multi-Provider routing, revision system, or direct publishing. | Three separately started ordinary-user cases covering no supplied, partial, and complete user materials must all deliver playable results; one independent review follows the complete result set. Depends on completed M1.4 and M2. It is the minimum proof that success is not a one-off. |
 | S1 — preview, revision, version, and rollback | Should | The user previews a result, requests natural-language changes, receives a new version, and can return to an older version. | No general video editor, unlimited revision promise, request replay, or second edit control plane. | One initial version, two bounded revisions, and one rollback; all versions remain findable and playable. Depends on M3. |
@@ -236,7 +235,7 @@ Activation, rollback, and directly corresponding tests. Current evidence suggest
 the minimum implementation centers on a new top-level `安装到WorkBuddy.cmd`, the
 existing `golden_key_openmontage_workbuddy/installer.py`, and its direct installer
 test; this is a route hint, not a write allowlist. Freeze the exact paths before
-editing. Reuse the retained M1 implementation branch after v8 closeout; do not
+editing. Reuse the retained clean M1 implementation branch; do not
 create another task branch merely for this prerequisite.
 
 **Non-goals and anti-inflation.** Do not copy the old PowerShell/two-Skill flow,
@@ -1827,18 +1826,20 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: V8_BASE_CONNECTION_PROVED / V8_IMPLEMENTATION_CLOSEOUT_REQUIRED / THEN_INSTALLER_RELEASE_ASSEMBLY
+current_task: V8_BASE_CONNECTION_PROVED / V8_CLOSEOUT_COMPLETE / INSTALLER_RELEASE_ASSEMBLY_NEXT
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: V8_REAL_WORKBUDDY_BASE_CONNECTION_PROBE / ZIP_SHA256_9BF04763C2E7F78D2878609C3ACEABCC458782C0B050856FEEC044D66D96B8A6 / SKILL_SHA256_6CB697C35A0B1BB4DBF3FFA0E5088B297BED555CB3040F8565D5D10D535DC3A8 / LOCATOR_AND_EXACT_GUIDE_READ_PROVED / NOT_FINAL_RELEASE / NOT_M1_3
-capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
+capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / V8_CLOSEOUT_COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
 implementation_branch_start: codex/workbuddy-m1-capability-onboarding / LOCAL_TRACKING_ADVERTISED_666C9D4CDBBC0A2AEB57C0B94598F4501E246C4F / CLEAN
 implementation_skill_commit: C8EEB91E221EC96A406543C183091EEA7EA6AC3C / AUTHORITY_MERGE_F9880C247ED61744B4BBA2F83FFA6411EB49C413
 implementation_consumer_correction_commit: 5229964AC681D7B34949480326E6F24A0C53913F / PUSHED
 corrected_candidate_skill: REVIEWED_UNINSTALLED / ZIP_SHA256_116737071D377B67DFF6EA93FE18534114C17E762D32116EFC5C4B973E000228 / SKILL_SHA256_7D285376B2F3531C1891B2EBF40D6D612B9B7531BE6776FDF5C8C72524041753 / RUN_PS1_SHA256_0C8C743404127DBC612BC87C207F307DDBFF2EF9A3A071B37C7FF2095383902B
 semantic_correction_skill: HISTORICAL_PROBE_ONLY / IMPLEMENTATION_COMMIT_A884124718EAB4BCDB0F98C59AE67ACC7008F2FD / ZIP_SHA256_C2B91D30AADE188A133626B578E976857A10ABD57F3F24EFD4100BAB2820F293
 implementation_branch_scope: SINGLE_TEMPORARY_BRANCH_FOR_M1_2_THROUGH_M1_4
-implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_ACTIVE_M1_2
-current_implementation_worktree: HEAD_0C62E0FEF7F70DAB268182AEEE06133CBA4BD3DC / DIRTY_V8_TASK_CHANGES / CLOSEOUT_REQUIRED_BEFORE_INSTALLER
+implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_OpenMontage_for_WorkBuddy-shell-v2 / RETAINED_ACTIVE_M1
+current_implementation_worktree: HEAD_9459A13F46655A3C46DB04385906C9B2775001EC / LOCAL_TRACKING_ADVERTISED_EQUAL / CLEAN
+v8_implementation_commit: 13EA01CEE6D4BF6CCDB0EC2533B907762B9774FE / PUSHED
+v8_closeout_merge_commit: 9459A13F46655A3C46DB04385906C9B2775001EC / PUSHED / EXACT_REFS / CLEAN
 task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE / C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28 EMPTY_EVIDENCE_DIRECTORY_PRESERVED / C:\Users\blazi\WorkBuddy\2026-08-29-20-41-51 EMPTY_AFTER_WORKBUDDY_TEMP_PARSE_CLEANUP
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
@@ -1876,9 +1877,9 @@ m1_3_result: V8_BASE_CONNECTION_ONLY / FORMAL_INSTALLER_RELEASE_ABSENT / REMOTIO
 m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRAMES_NOT_REQUIRED_FOR_COVERAGE
 m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 v8_base_connection: REAL_WORKBUDDY_LOCATOR_CALLED / EXACT_VERIFIED_AGENT_GUIDE_READ_COMPLETED / NOT_REMOTION_OR_M1_3_PROOF
-v8_closeout_gate: INDEPENDENT_ZERO_WRITE_RESULT_REVIEW / TRUTHFUL_STATUS_SYNC / COMMIT / ORDINARY_PUSH / CLEAN_REFS_REQUIRED_BEFORE_NEW_TASK
+v8_closeout_gate: COMPLETE / INDEPENDENT_ZERO_WRITE_RESULT_REVIEW_APPROVE_P0_0_P1_0_P2_0 / TRUTHFUL_STATUS_SYNC / ORDINARY_PUSH / CLEAN_REFS
 installer_release_assembly: INDEPENDENT_MUST_PREREQUISITE / PRODUCT_CONTRACT_FROZEN / IMPLEMENTATION_NOT_AUTHORIZED
-installer_release_order: V8_CLOSEOUT_THEN_INSTALLER_THEN_M1_3_REAL_CONFIGURATION_THEN_M1_4
+installer_release_order: INSTALLER_THEN_M1_3_REAL_CONFIGURATION_THEN_M1_4
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING
 remotion_distribution: ON_DEMAND_SYSTEM_SCOPE_DEFAULT / WINDOWS_RESOLVED_LOCATION / NPMMIRROR_LOCKED_CLOSURE_REQUIRED / BASE_PACKAGE_BUNDLE_FORBIDDEN_OVER_80_MIB
 m1_2_shell_factual_relay_audit: COMPLETE_ZERO_WRITE / PROPOSE_BOUNDED_SHELL_FACTUAL_RELAY

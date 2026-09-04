@@ -188,6 +188,16 @@ representative API-key path; only its use by a particular user is conditional.
 Real M1.3 validation now waits for the independent Installer / Release Assembly
 result. M3 requires completed M1.4 and M2.
 
+The Installer result is intentionally UI-assisted at the WorkBuddy Skill boundary.
+Golden Key owns release verification, Package publication, Registration,
+Activation, Locator checks, and Package-pointer rollback. WorkBuddy's official UI
+owns same-name Skill removal/import/restore because no public Skill management API
+or CLI is part of the proved product surface. The Installer may open and select
+the verified ZIP for the user, but it must not mutate private WorkBuddy storage or
+present a UI-assisted restore as automatic full rollback. This boundary is still
+ordinary-user installation: it exposes no internal path, hash, command, or
+developer-machine artifact.
+
 M1.2 owns the first-use readiness projection, ordinary-language explanation, and
 next-intent handoff. It does not own a Provider catalogue or technical readiness
 report. M1.3 owns the selected local or API-key configuration, short recommended

@@ -2,8 +2,8 @@
 
 ## Mandatory routing
 
-The Owner's 2026-09-04 planning direction records the latest v8 result and adds
-one independent Must prerequisite named `Installer / Release Assembly`. In one
+The Owner's 2026-09-04 direction records the latest v8 result and adds one
+independent Must prerequisite named `Installer / Release Assembly`. In one
 real WorkBuddy task, v8 called `locate_active_package` and completed reading the
 exact verified `AGENT_GUIDE.md`; this proves the base Package connection only. It
 does not prove Remotion, API-key configuration, M1.3, or a portable final release.
@@ -16,10 +16,27 @@ ordinary-user top-level `安装到WorkBuddy.cmd`, current-installer entry, Windo
 resolved target paths, install/register/activate, one machine-bound Skill, and
 rollback. It does not install Remotion, handle API keys, call Providers, or make
 media. The current order is `Installer / Release Assembly -> M1.3 real
-configuration -> M1.4`. This direction authorizes only synchronization of the six
-authority/state documents, one independent zero-write review, one commit, and one
-ordinary planning-branch push; it authorizes no Installer implementation or
-external action.
+configuration -> M1.4`.
+
+The Owner's current continuous-work authorization supersedes only the earlier
+Installer implementation pause. First synchronize the exact UI-assisted
+Installer transaction below across the six authority/state documents, obtain one
+independent zero-write review, commit once, and ordinarily push the planning
+branch. Then merge that exact head into the retained M1 implementation branch and
+change only top-level `安装到WorkBuddy.cmd`,
+`golden_key_openmontage_workbuddy/installer.py`, and
+`tests/workbuddy/test_installer.py`. Run only focused Installer checks, obtain one
+independent zero-write implementation review, build the formal release, commit,
+and ordinarily push. The release must prepare a verified recovery Skill before a
+same-name upgrade, hand the new Skill ZIP to the official WorkBuddy UI, activate
+the new Registration only after the UI import succeeds, and restore the old
+active pointer on post-check failure. WorkBuddy has no proved public Skill
+install/uninstall API, CLI, or deep link; do not touch private Skill storage or
+claim fully automatic Skill rollback. After Installer acceptance, continue the
+already-authorized M1.3 representative Remotion and API-key paths without an
+additional approval pause. This does not authorize optional capability work
+inside Installer, broad S4 qualification, media production, a second installer,
+or a new implementation branch.
 
 Read this file completely before acting in this repository or responding about it.
 `docs/workbuddy/v2/TASK-REGISTER.md` is the current state and authorization authority.

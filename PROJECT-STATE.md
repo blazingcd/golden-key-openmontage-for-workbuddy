@@ -23,6 +23,21 @@ Must prerequisite
 using that formal release, then M1.4 closeout. M2 may proceed independently because
 M1.2 is complete; M3 still waits for M1.4 and M2.
 
+Installer execution is now authorized under a three-file write limit: top-level
+`安装到WorkBuddy.cmd`, the existing Installer, and its direct test. WorkBuddy Skill
+installation is an official-UI-assisted handoff, not a hidden filesystem write:
+the release verifies and publishes the Package/Registration, prepares both the
+new machine-bound Skill and a verified recovery Skill, opens the user-visible ZIP
+location, and activates only after the new Skill import succeeds. A failed import
+leaves the old Package active; a failed post-activation Locator check restores the
+old active pointer. Skill restoration remains a WorkBuddy UI action and must not
+be described as automatic full rollback. Current state is
+`INSTALLER_EXECUTION_AUTHORIZED / IMPLEMENTATION_NOT_STARTED` until the reviewed
+implementation and real UI-assisted result exist.
+If the new Skill is imported but Registration activation fails, the old Package
+pointer remains active and the verified recovery Skill must be restored through
+WorkBuddy UI; this state is `WORKBUDDY_SKILL_RESTORE_REQUIRED`, not success.
+
 ## Product
 
 An ordinary user writes a natural-language request in WorkBuddy containing

@@ -7,8 +7,8 @@ WorkBuddy conversation. The user should only need to describe the business need
 and provide optional business materials. The internal execution method belongs to
 WorkBuddy and the verified Package, not to the user.
 
-The current delivery order is `v8 closeout -> Installer / Release Assembly ->
-M1.3 real configuration -> M1.4`. V8 has proved that real WorkBuddy can call the
+V8 closeout is complete. The current delivery order is `Installer / Release
+Assembly -> M1.3 real configuration -> M1.4`. V8 proved that real WorkBuddy can call the
 Locator and complete reading the exact verified Package Guide; it has not proved
 Remotion, API-key configuration, M1.3, or a portable final release. The independent
 Installer task supplies the ordinary-user top-level CMD, invokes the existing
@@ -185,8 +185,18 @@ C1–C2 deferred expansion must not be absorbed into M1.
 M2 may begin after M1.2 first-use readiness. M1.3 is nevertheless a required M1
 product capability with one representative local-install path and one
 representative API-key path; only its use by a particular user is conditional.
-Real M1.3 validation also waits for v8 closeout and the independent Installer /
-Release Assembly result. M3 requires completed M1.4 and M2.
+Real M1.3 validation now waits for the independent Installer / Release Assembly
+result. M3 requires completed M1.4 and M2.
+
+The Installer result is intentionally UI-assisted at the WorkBuddy Skill boundary.
+Golden Key owns release verification, Package publication, Registration,
+Activation, Locator checks, and Package-pointer rollback. WorkBuddy's official UI
+owns same-name Skill removal/import/restore because no public Skill management API
+or CLI is part of the proved product surface. The Installer may open and select
+the verified ZIP for the user, but it must not mutate private WorkBuddy storage or
+present a UI-assisted restore as automatic full rollback. This boundary is still
+ordinary-user installation: it exposes no internal path, hash, command, or
+developer-machine artifact.
 
 M1.2 owns the first-use readiness projection, ordinary-language explanation, and
 next-intent handoff. It does not own a Provider catalogue or technical readiness

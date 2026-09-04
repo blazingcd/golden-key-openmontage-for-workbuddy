@@ -2,21 +2,41 @@
 
 ## Mandatory routing
 
-The Owner's 2026-09-04 planning direction records the latest v8 result and adds
-one independent Must prerequisite named `Installer / Release Assembly`. In one
+The Owner's 2026-09-04 direction records the latest v8 result and adds one
+independent Must prerequisite named `Installer / Release Assembly`. In one
 real WorkBuddy task, v8 called `locate_active_package` and completed reading the
 exact verified `AGENT_GUIDE.md`; this proves the base Package connection only. It
 does not prove Remotion, API-key configuration, M1.3, or a portable final release.
-The v8 implementation is closed on the reviewed and ordinarily pushed M1 branch;
-Installer work begins only from that clean state. Installer then owns the
+V8 is closed at implementation commit
+`13ea01cee6d4bf6ccdb0ec2533b907762b9774fe` and merge commit
+`9459a13f46655a3c46db04385906c9b2775001ec`; its independent zero-write review is
+`APPROVE / P0=0 / P1=0 / P2=0`, all implementation refs match, and the worktree is
+clean. Installer now owns the
 ordinary-user top-level `安装到WorkBuddy.cmd`, current-installer entry, Windows-
 resolved target paths, install/register/activate, one machine-bound Skill, and
 rollback. It does not install Remotion, handle API keys, call Providers, or make
-media. The order is `v8 closeout -> Installer / Release Assembly -> M1.3 real
-configuration -> M1.4`. This direction authorizes only synchronization of the six
-authority/state documents, one independent zero-write review, one commit, and one
-ordinary planning-branch push; it authorizes no Installer implementation or
-external action.
+media. The current order is `Installer / Release Assembly -> M1.3 real
+configuration -> M1.4`.
+
+The Owner's current continuous-work authorization supersedes only the earlier
+Installer implementation pause. First synchronize the exact UI-assisted
+Installer transaction below across the six authority/state documents, obtain one
+independent zero-write review, commit once, and ordinarily push the planning
+branch. Then merge that exact head into the retained M1 implementation branch and
+change only top-level `安装到WorkBuddy.cmd`,
+`golden_key_openmontage_workbuddy/installer.py`, and
+`tests/workbuddy/test_installer.py`. Run only focused Installer checks, obtain one
+independent zero-write implementation review, build the formal release, commit,
+and ordinarily push. The release must prepare a verified recovery Skill before a
+same-name upgrade, hand the new Skill ZIP to the official WorkBuddy UI, activate
+the new Registration only after the UI import succeeds, and restore the old
+active pointer on post-check failure. WorkBuddy has no proved public Skill
+install/uninstall API, CLI, or deep link; do not touch private Skill storage or
+claim fully automatic Skill rollback. After Installer acceptance, continue the
+already-authorized M1.3 representative Remotion and API-key paths without an
+additional approval pause. This does not authorize optional capability work
+inside Installer, broad S4 qualification, media production, a second installer,
+or a new implementation branch.
 
 Read this file completely before acting in this repository or responding about it.
 `docs/workbuddy/v2/TASK-REGISTER.md` is the current state and authorization authority.
@@ -251,7 +271,7 @@ non-blocking UX findings, not proof that the user cannot proceed. M1.2 is theref
 complete at the first-use guidance/configuration-entry boundary. It does not prove
 that WorkBuddy can finish a selected local installation or API-key configuration;
 that work belongs to M1.3, which is no longer blocked by M1.2 but now waits for
-v8 closeout and the independent Installer / Release Assembly result.
+the independent Installer / Release Assembly result.
 This correction retains the same six-document, one-review, one-commit, ordinary-
 push limit and authorizes no implementation or product execution.
 
@@ -353,8 +373,8 @@ S1–S5 for Should, and C1–C2 for Could. M1.1–M1.4 are execution steps owned
 they are not M0 subtasks or a separate task series.
 
 The completed M1.1 fact audit was followed by M1.2 first-use readiness. The
-current executable order is `v8 closeout -> Installer / Release Assembly ->
-M1.3`; M2 clarification may start after M1.2 without waiting for that chain.
+current executable order is `Installer / Release Assembly -> M1.3 -> M1.4`;
+M2 clarification may start after M1.2 without waiting for that chain.
 M1.3 remains a required M1 product capability with one representative local-
 install path and one representative API-key path, but an individual user may defer
 configuration until M2 establishes relevance or continue on FFmpeg without using
@@ -667,5 +687,5 @@ runtime route. Its candidate changed only the authority/current-entry documents,
 the Golden Key Skill, its one-file ZIP builder, and directly affected focused
 tests. That work led to the v8 base-connection proof and is no longer current
 implementation authority. The 2026-09-04 route at the top of this guide governs
-next work; do not reuse this historical candidate gate to bypass v8 closeout or
+next work; do not reuse this historical candidate gate to reopen v8 or bypass
 Installer / Release Assembly.

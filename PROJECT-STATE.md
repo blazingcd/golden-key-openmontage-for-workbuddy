@@ -13,11 +13,30 @@ Package `AGENT_GUIDE.md`. R3, M0, M1.1, and M1.2 remain unchanged. This result d
 not prove Remotion installation, API-key configuration, M1.3, or a portable final
 user release.
 
-The v8 implementation closeout is complete on the reviewed, ordinarily pushed,
-clean M1 branch. The minimum product mainline now starts with the independent Must prerequisite
+The v8 implementation closeout is complete at implementation commit
+`13ea01cee6d4bf6ccdb0ec2533b907762b9774fe` and merge commit
+`9459a13f46655a3c46db04385906c9b2775001ec`. Its independent zero-write review is
+`APPROVE / P0=0 / P1=0 / P2=0`; local, tracking, and advertised refs match and the
+M1 worktree is clean. The minimum product mainline now starts with the independent
+Must prerequisite
 `Installer / Release Assembly`, followed by M1.3 real local/API-key configuration
 using that formal release, then M1.4 closeout. M2 may proceed independently because
 M1.2 is complete; M3 still waits for M1.4 and M2.
+
+Installer execution is now authorized under a three-file write limit: top-level
+`安装到WorkBuddy.cmd`, the existing Installer, and its direct test. WorkBuddy Skill
+installation is an official-UI-assisted handoff, not a hidden filesystem write:
+the release verifies and publishes the Package/Registration, prepares both the
+new machine-bound Skill and a verified recovery Skill, opens the user-visible ZIP
+location, and activates only after the new Skill import succeeds. A failed import
+leaves the old Package active; a failed post-activation Locator check restores the
+old active pointer. Skill restoration remains a WorkBuddy UI action and must not
+be described as automatic full rollback. Current state is
+`INSTALLER_EXECUTION_AUTHORIZED / IMPLEMENTATION_NOT_STARTED` until the reviewed
+implementation and real UI-assisted result exist.
+If the new Skill is imported but Registration activation fails, the old Package
+pointer remains active and the verified recovery Skill must be restored through
+WorkBuddy UI; this state is `WORKBUDDY_SKILL_RESTORE_REQUIRED`, not success.
 
 ## Product
 
@@ -460,8 +479,8 @@ The historical 2026-09-02 candidate changed the authority/entry documents,
 `SKILL.md`, the one-file ZIP builder, and directly affected focused tests. That
 route produced the later v8 base-connection evidence and is no longer current
 implementation authority. The current sequence is the `Current route` above;
-M1.3 remains `PRODUCT_INCOMPLETE` and waits for v8 closeout and the accepted
-Installer / Release Assembly result.
+M1.3 remains `PRODUCT_INCOMPLETE` and waits for the accepted Installer / Release
+Assembly result.
 
 ## Non-goals
 

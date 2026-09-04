@@ -18,11 +18,22 @@ internal technical work? If not, stop and report the exact missing user result.
   real validation. It reuses the current Installer; it does not create another
   installer, Agent, runtime-preparation path, or control plane.
 - The formal ZIP has one top-level `安装到WorkBuddy.cmd`, no development-machine
-  path, and no preinstalled machine-bound v8 Skill. Windows resolves actual paths;
-  the Installer verifies, installs, registers, activates, generates exactly one
-  bound Skill, and preserves the previous installation and user data on failure.
+  path, and no preinstalled machine-bound v8 Skill. It also carries the versioned
+  inner release ZIP and SHA256 sidecar. Windows resolves actual Package/Data paths.
+- WorkBuddy Skill management is UI-assisted: the Installer prepares and verifies
+  the new bound Skill and, before a same-name upgrade, a recovery Skill; it opens
+  the user-visible ZIP location, but never writes private WorkBuddy Skill storage.
+  The new Registration activates only after import succeeds.
+- Package-pointer rollback may be automatic. Skill restore remains an official
+  WorkBuddy UI action, including when the new Skill was imported but activation
+  failed and the old pointer never changed. Never claim one-click no-interaction install,
+  `AUTOMATIC_FULL_ROLLBACK`, a public Skill API/CLI/deep link, or S4 qualification.
 - This minimum task includes one clean-install result and one upgrade-or-failure
   rollback. Broad cross-machine upgrade, diagnosis, and maintenance remain S4.
+- The exact implementation write set is top-level `安装到WorkBuddy.cmd`,
+  `golden_key_openmontage_workbuddy/installer.py`, and
+  `tests/workbuddy/test_installer.py`. A fourth source/bootstrap file, a new
+  dependency, a second installer, or private WorkBuddy mutation is a hard stop.
 - Remotion/HyperFrames installation, API keys, Providers, and media remain M1.3
   or later work. M1.4 cannot repair missing Installer or M1.3 evidence.
 
@@ -134,8 +145,8 @@ by themselves.
   it may start after M1.2 and must not become a fixed questionnaire or expose
   internal mechanics.
 - M1.3 is a required product-capability step, but a particular user may defer
-  configuration or stay on FFmpeg. Real M1.3 validation waits for v8 closeout and
-  the accepted Installer / Release Assembly result. M1 closes at M1.4 only after
+  configuration or stay on FFmpeg. Real M1.3 validation waits for the accepted
+  Installer / Release Assembly result. M1 closes at M1.4 only after
   M1.2, Installer, one representative local-install path, and one representative
   API-key path are proved.
 - M3 proves one default production path, basic media quality, repeatable delivery,

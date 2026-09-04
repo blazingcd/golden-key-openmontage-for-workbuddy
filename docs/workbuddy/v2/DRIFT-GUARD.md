@@ -6,6 +6,26 @@ Can an ordinary user type a natural-language message containing
 `金钥匙智能体` in WorkBuddy and obtain the current product result without doing
 internal technical work? If not, stop and report the exact missing user result.
 
+## Current v8 and Installer / Release Assembly guard
+
+- V8 proved only that real WorkBuddy called `locate_active_package` and completed
+  reading the exact verified Package `AGENT_GUIDE.md`. Do not upgrade this into
+  Remotion, API-key, M1.3, or portable-release proof.
+- Do not mix Installer work into the current dirty v8 implementation worktree.
+  V8 first requires independent zero-write result review, truthful state update,
+  commit, ordinary push, exact ref verification, and a clean worktree.
+- Installer / Release Assembly is an independent Must prerequisite before M1.3
+  real validation. It reuses the current Installer; it does not create another
+  installer, Agent, runtime-preparation path, or control plane.
+- The formal ZIP has one top-level `安装到WorkBuddy.cmd`, no development-machine
+  path, and no preinstalled machine-bound v8 Skill. Windows resolves actual paths;
+  the Installer verifies, installs, registers, activates, generates exactly one
+  bound Skill, and preserves the previous installation and user data on failure.
+- This minimum task includes one clean-install result and one upgrade-or-failure
+  rollback. Broad cross-machine upgrade, diagnosis, and maintenance remain S4.
+- Remotion/HyperFrames installation, API keys, Providers, and media remain M1.3
+  or later work. M1.4 cannot repair missing Installer or M1.3 evidence.
+
 ## Ownership guard
 
 - WorkBuddy is the only Agent, dialogue owner, and production decision-maker.
@@ -114,9 +134,10 @@ by themselves.
   it may start after M1.2 and must not become a fixed questionnaire or expose
   internal mechanics.
 - M1.3 is a required product-capability step, but a particular user may defer
-  configuration or stay on FFmpeg. M1 closes at M1.4 only after M1.2, one
-  representative local-install path, and one representative API-key path are
-  proved.
+  configuration or stay on FFmpeg. Real M1.3 validation waits for v8 closeout and
+  the accepted Installer / Release Assembly result. M1 closes at M1.4 only after
+  M1.2, Installer, one representative local-install path, and one representative
+  API-key path are proved.
 - M3 proves one default production path, basic media quality, repeatable delivery,
   a checkable receipt/location, and a prompt final answer. It starts only after
   M1.4 and M2 and excludes S1–S5 and C1–C2 scope.
@@ -434,12 +455,10 @@ WorkBuddy.
   Treat it as local contract evidence, not product acceptance. Package local-
   capability definitions remain empty; WorkBuddy, real WinCred, Ark network,
   optional installation, rediscovery, and Package invocation remain unproved.
-- Do not proceed directly to WorkBuddy merely because the commits exist. Package
-  definitions alone are insufficient. First implement and independently verify
-  the corrected Windows-location, mirror-only locked npm installation, registered-
-  path handoff, Package recognition, and invocation contract with zero real
-  download. A separate action-time gate is required before installation,
-  credentials, Provider calls, or WorkBuddy execution.
+- The former Shell/npm implementation route is historical and must not be
+  executed. Package definitions alone remain insufficient, but the current route
+  is v8 closeout, independent Installer / Release Assembly, then WorkBuddy-owned
+  optional setup under a separate action-time gate.
 
 - The repository preference for development temporary files on `D:` is not an
   end-user installation rule. Never assume that `C:` or `D:` exists. System-wide
@@ -447,11 +466,9 @@ WorkBuddy.
   choice. Never silently switch between them. WorkBuddy must verify the location
   Windows resolves for the approved scope.
 
-- The Owner's 2026-09-02 correction authorizes one guidance-only Skill candidate.
-  Its ZIP contains only `SKILL.md` and no machine-bound script, path, private
-  action, receipt, or cached-result dependency. Build and focused review are
-  allowed; Skill/Remotion installation, WorkBuddy, credentials, Providers, and
-  media remain outside this gate.
+- The historical Owner 2026-09-02 guidance-only candidate gate produced the later
+  v8 base-connection evidence and is closed. It gives no current build, install,
+  WorkBuddy, credential, Provider, or media authority.
 
 ## Result guard
 

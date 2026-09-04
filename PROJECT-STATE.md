@@ -1,9 +1,25 @@
 # WorkBuddy Shell V2 — Current Project State
 
-Date: 2026-08-30
+Date: 2026-09-04
 
 The live authority is `docs/workbuddy/v2/TASK-REGISTER.md`. This file is a compact
 state snapshot, not a second task ledger.
+
+## Current route
+
+The latest v8 Skill completed the base connection gate in one real WorkBuddy task:
+WorkBuddy called `locate_active_package` and completed reading the exact verified
+Package `AGENT_GUIDE.md`. R3, M0, M1.1, and M1.2 remain unchanged. This result does
+not prove Remotion installation, API-key configuration, M1.3, or a portable final
+user release.
+
+The immediate action is to close the existing v8 task without mixing new work into
+its dirty implementation worktree: independent zero-write result review, honest
+state synchronization, commit, ordinary push, and exact clean/ref verification.
+After that, the minimum product mainline is the independent Must prerequisite
+`Installer / Release Assembly`, followed by M1.3 real local/API-key configuration
+using that formal release, then M1.4 closeout. M2 may proceed independently because
+M1.2 is complete; M3 still waits for M1.4 and M2.
 
 ## Product
 
@@ -282,10 +298,12 @@ bounded guided sequence when secure input or reliable installation requires it.
 That sequence must not make the user operate internal commands or technical details.
 
 Planned dependency: M1.1 fact audit then M1.2 first-use readiness; M2 may start
-after M1.2. M1.3 is still a required product capability with representative local
-installation and API-key paths, but a particular user may defer configuration
-until M2 establishes relevance or continue on FFmpeg without using an enhancement.
-M3 starts only after M1.4 and M2 are complete. S1–S4 then cover revision/version/rollback,
+after M1.2. After the proved v8 base connection is closed out, the independent
+Installer / Release Assembly prerequisite must produce the formal user release
+before M1.3 real validation. M1.3 remains a required product capability with
+representative local installation and API-key paths, but a particular user may
+defer configuration until M2 establishes relevance or continue on FFmpeg without
+using an enhancement. M3 starts only after M1.4 and M2 are complete. S1–S4 then cover revision/version/rollback,
 one additional platform/aspect, export/share/reuse, and cross-machine lifecycle.
 S5 qualifies only an enhancement selected for a real user goal. C1 broad
 Provider/model coverage beyond the verified Package's formal declarations and C2
@@ -440,12 +458,12 @@ uses its own available system abilities for live inspection, explanation,
 installation, rediscovery, and a real invocation. Old receipts, a global command,
 or integrated source are not readiness evidence.
 
-The authorized candidate changes the current authority/entry documents,
-`SKILL.md`, the one-file ZIP builder, and directly affected focused tests. It
-keeps `run.ps1` only as historical Shell source and excludes it from the new Skill
-ZIP. The candidate remains uninstalled; no WorkBuddy or Remotion execution is
-authorized by this build gate. M1.3 remains `PRODUCT_INCOMPLETE` until a later
-real WorkBuddy result is reviewed.
+The historical 2026-09-02 candidate changed the authority/entry documents,
+`SKILL.md`, the one-file ZIP builder, and directly affected focused tests. That
+route produced the later v8 base-connection evidence and is no longer current
+implementation authority. The current sequence is the `Current route` above;
+M1.3 remains `PRODUCT_INCOMPLETE` and waits for v8 closeout and the accepted
+Installer / Release Assembly result.
 
 ## Non-goals
 

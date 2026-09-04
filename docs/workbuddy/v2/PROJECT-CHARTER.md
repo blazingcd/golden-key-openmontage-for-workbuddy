@@ -7,6 +7,15 @@ WorkBuddy conversation. The user should only need to describe the business need
 and provide optional business materials. The internal execution method belongs to
 WorkBuddy and the verified Package, not to the user.
 
+The current delivery order is `v8 closeout -> Installer / Release Assembly ->
+M1.3 real configuration -> M1.4`. V8 has proved that real WorkBuddy can call the
+Locator and complete reading the exact verified Package Guide; it has not proved
+Remotion, API-key configuration, M1.3, or a portable final release. The independent
+Installer task supplies the ordinary-user top-level CMD, invokes the existing
+Installer, resolves paths on that Windows machine, registers and activates the
+Package, generates one bound Skill, and preserves rollback. It is not an optional-
+capability installer or a second control plane.
+
 ## Ownership
 
 - **WorkBuddy:** the only Agent, conversation owner, and production decision-maker.
@@ -176,7 +185,8 @@ C1–C2 deferred expansion must not be absorbed into M1.
 M2 may begin after M1.2 first-use readiness. M1.3 is nevertheless a required M1
 product capability with one representative local-install path and one
 representative API-key path; only its use by a particular user is conditional.
-M3 requires completed M1.4 and M2.
+Real M1.3 validation also waits for v8 closeout and the independent Installer /
+Release Assembly result. M3 requires completed M1.4 and M2.
 
 M1.2 owns the first-use readiness projection, ordinary-language explanation, and
 next-intent handoff. It does not own a Provider catalogue or technical readiness
@@ -320,10 +330,10 @@ and confirms scope and permission impact, installs through
 `registry.npmmirror.com`, rediscovers the result, and proves one real invocation.
 The Skill and Shell do not cache or announce readiness on WorkBuddy's behalf.
 
-The Owner's 2026-09-02 correction authorizes a guidance-only Skill candidate and
-its directly affected one-file ZIP builder/tests after the authority documents
-are synchronized. The candidate remains uninstalled and no WorkBuddy,
-installation, credential, Provider, or media action occurs in its build gate.
+The historical Owner 2026-09-02 correction authorized a guidance-only Skill
+candidate and its directly affected one-file ZIP builder/tests. That route produced
+the later v8 base-connection evidence and is no longer current implementation
+authority. The 2026-09-04 route above governs the next task.
 
 One temporary branch, `codex/workbuddy-m1-capability-onboarding`, carries all
 separately authorized M1.2–M1.4 commits. M1.4 closeout first fast-forwards the

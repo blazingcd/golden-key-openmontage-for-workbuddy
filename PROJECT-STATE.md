@@ -31,9 +31,18 @@ new machine-bound Skill and a verified recovery Skill, opens the user-visible ZI
 location, and activates only after the new Skill import succeeds. A failed import
 leaves the old Package active; a failed post-activation Locator check restores the
 old active pointer. Skill restoration remains a WorkBuddy UI action and must not
-be described as automatic full rollback. Current state is
-`INSTALLER_EXECUTION_AUTHORIZED / IMPLEMENTATION_NOT_STARTED` until the reviewed
-implementation and real UI-assisted result exist.
+be described as automatic full rollback. The reviewed implementation is pushed at
+`35e8c11b430c22419fe93ac0195e3e388a548a0f`; focused checks passed
+`35 passed, 1 skipped` and independent review is
+`APPROVE / P0=0 / P1=0 / P2=0`. The retained formal outer ZIP is 174,518,172
+bytes / SHA256
+`f8d72418bb809c9fbcc9db73afadbb04fa1e6861abc7653994edbeae61670ddd`.
+Current state is `IMPLEMENTATION_COMPLETE_PUSHED / FORMAL_CANDIDATE_VERIFIED /
+UI_ASSISTED_INSTALL_NOT_PROVED`. The production active Registration remains
+`1de2935dee199a0a2b630e90baf9707758f86fb6a4e9dd637203aca6dc0188e8`.
+The remaining gate requires user-visible UAC approval for the system-wide install
+and official WorkBuddy UI Skill import; current Computer Use exposes no native
+WorkBuddy/UAC surface. Do not silently choose the current-user alternative.
 If the new Skill is imported but Registration activation fails, the old Package
 pointer remains active and the verified recovery Skill must be restored through
 WorkBuddy UI; this state is `WORKBUDDY_SKILL_RESTORE_REQUIRED`, not success.

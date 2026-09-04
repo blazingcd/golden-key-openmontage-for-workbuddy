@@ -221,7 +221,7 @@ M2, M3, S1–S5, and C1–C2 may inform M1 interfaces but must not enter M1
 implementation. Capability inventory is M1 Must work; production qualification of
 an actually selected enhancement is separate conditional S5 work.
 
-### Installer / Release Assembly — EXECUTION AUTHORIZED / IMPLEMENTATION NOT STARTED
+### Installer / Release Assembly — IMPLEMENTATION COMPLETE / UI RESULT NOT PROVED
 
 **User problem.** The current large `0.3.25` ZIP has no top-level ordinary-user
 installation CMD. The historical CMD enters an old flow that copies two old Skills
@@ -306,6 +306,28 @@ formal release, commit, and ordinarily push. Then perform the bounded real
 UI-assisted result and its independent review. The Owner's continuous-work
 authorization permits proceeding directly to M1.3 after accepted Installer
 evidence; no intermediate approval pause is required.
+
+**Latest implementation result.** The exact three-file implementation is pushed
+at `35e8c11b430c22419fe93ac0195e3e388a548a0f`; local, tracking, and advertised
+implementation refs matched and the worktree was clean. Focused checks passed
+`35 passed, 1 skipped`; final independent zero-write review is
+`APPROVE / P0=0 / P1=0 / P2=0`. The formal outer ZIP is retained at
+`D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\installer-release-assembly-20260904\golden-key-openmontage-for-workbuddy-0.3.25-installer-release-20260904-installer.zip`,
+size 174,518,172 bytes, SHA256
+`f8d72418bb809c9fbcc9db73afadbb04fa1e6861abc7653994edbeae61670ddd`.
+The inner release is 177,278,309 bytes, SHA256
+`2d85bcc3802cf1f4663bdfc2755f96592828bb7634e67cecaa61f48144dffcfd`.
+Outer and inner CRC, source identity, binding, and 46 locked dependencies passed.
+
+No real installation occurred. The current terminal is not elevated; the formal
+system-wide route requires Windows UAC, and the available Computer Use surface
+has no native WorkBuddy/UAC control. The production active Registration remains
+`1de2935dee199a0a2b630e90baf9707758f86fb6a4e9dd637203aca6dc0188e8`.
+Do not silently use the current-user alternative, import through private storage,
+or start M1.3. Status is `FORMAL_CANDIDATE_VERIFIED /
+BLOCKED_EXTERNAL_USER_INTERACTION / UI_ASSISTED_INSTALL_NOT_PROVED` until the
+formal CMD, UAC, official WorkBuddy Skill import, activation, and Locator result
+are visibly completed.
 
 ### M1.1 read-only route boundary
 
@@ -1917,7 +1939,7 @@ package_size_checkpoint: COMPLETE / IMPLEMENTATION_COMMIT_D94D90C486F1D72452A6F6
 package_slim_candidate: ZIP_177241928_BYTES / PACKAGE_ROOT_463051387_BYTES / SHA256_0D71485772C6AFD59B925C1EF9012A3B320CCF1DCBE398B6EDB1ABFB0F02C7AB
 m1_2_semantic_readiness_result: HISTORICAL / WORKBUDDY_FACT_RELAY_REACHED_DIALOGUE / RECEIPT_SHA256_2DA272DAC5E5326C6D784FBDC867FFB1F5C413CC1E4AA1938F392DF5F6274E87 / HANDOFF_SHA256_CBF32AE738D42346381EC41F465D7CF52A360A149DBDAF7779CE29EB72CF26C5 / REJECT_P0_0_P1_3_P2_0
 m1_2_next_gate: SATISFIED_BY_M1_3_EXECUTION_CONTRACT / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
-m1_3: PREREQUISITE_ROUTE_REVIEWED / FIRST_LOCAL_CONTRACT_COMMITTED / V8_BASE_CONNECTION_PROVED / PRODUCT_INCOMPLETE / WAITING_FOR_INSTALLER_RELEASE_ASSEMBLY / CONTINUOUS_EXECUTION_AUTHORIZED
+m1_3: PREREQUISITE_ROUTE_REVIEWED / FIRST_LOCAL_CONTRACT_COMMITTED / V8_BASE_CONNECTION_PROVED / PRODUCT_INCOMPLETE / BLOCKED_BY_INSTALLER_UI_ASSISTED_ACCEPTANCE / CONTINUOUS_EXECUTION_AUTHORIZED
 m1_3_existing_local_primitive: GUIDANCE_ONLY_V8_BASE_CONNECTION_PROVED / REAL_REMOTION_INSTALL_REDISCOVERY_AND_INVOCATION_NOT_PROVED
 m1_3_existing_secret_transport: FAIL_CLOSED_ALLOWLIST_AND_REDACTION_REUSE_REQUIRED / PRODUCTION_ALLOWLIST_EMPTY
 m1_3_candidate_route: FORMAL_INSTALLER_RELEASE_THEN_WORKBUDDY_OWNED_LIVE_OPTIONAL_SETUP / WINDOWS_NATIVE_CREDENTIAL_UI_AND_CURRENT_USER_CREDENTIAL_MANAGER_TO_BE_PROVED / PACKAGE_OWNED_NON_MEDIA_CONNECTION_TEST_IMPLEMENTED_LOCALLY_NOT_PROVED_LIVE
@@ -1929,7 +1951,7 @@ m1_3_representative_local: REMOTION_PREFERRED_IF_EXECUTION_FACTS_HOLD / HYPERFRA
 m1_3_representative_api: SEEDANCE_PREFERRED_ONLY_IF_FORMALLY_DECLARED_AND_OWNER_CREDENTIAL_AVAILABLE / NO_SILENT_SUBSTITUTION
 v8_base_connection: REAL_WORKBUDDY_LOCATOR_CALLED / EXACT_VERIFIED_AGENT_GUIDE_READ_COMPLETED / NOT_REMOTION_OR_M1_3_PROOF
 v8_closeout_gate: COMPLETE / INDEPENDENT_ZERO_WRITE_RESULT_REVIEW_APPROVE_P0_0_P1_0_P2_0 / TRUTHFUL_STATUS_SYNC / ORDINARY_PUSH / CLEAN_REFS
-installer_release_assembly: INDEPENDENT_MUST_PREREQUISITE / UI_ASSISTED_TRANSACTION_FROZEN / THREE_FILE_WRITE_SET / EXECUTION_AUTHORIZED / IMPLEMENTATION_NOT_STARTED
+installer_release_assembly: INDEPENDENT_MUST_PREREQUISITE / UI_ASSISTED_TRANSACTION_FROZEN / THREE_FILE_IMPLEMENTATION_COMPLETE_PUSHED_35E8C11B / FORMAL_CANDIDATE_SHA256_F8D72418BB809C9FBCC9DB73AFADBB04FA1E6861ABC7653994EDBEAE61670DDD / BLOCKED_EXTERNAL_USER_INTERACTION / UI_ASSISTED_INSTALL_NOT_PROVED
 installer_skill_boundary: OFFICIAL_WORKBUDDY_UI_IMPORT_AND_RESTORE / NO_PUBLIC_SKILL_API_OR_CLI_PROVED / NO_PRIVATE_STORAGE_MUTATION / NO_AUTOMATIC_FULL_ROLLBACK_CLAIM
 installer_release_order: INSTALLER_THEN_M1_3_REAL_CONFIGURATION_THEN_M1_4
 frozen_distribution_task: 01A04312-2E47-73E3-BD16-747407CF54F8 / READ_ONLY_HISTORY / NO_PROJECT_REPORTING

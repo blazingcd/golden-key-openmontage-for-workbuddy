@@ -1,6 +1,16 @@
 # WorkBuddy Shell V2 — Current Project State
 
-Date: 2026-08-30
+Date: 2026-09-04
+
+Current correction: the existing Installer now writes each user's validated
+PackageRoot, DataRoot, and exact Guide path into the generated one-file Skill. The
+source Skill stays portable. The installed v7 proved path binding and Locator
+validation in WorkBuddy but skipped the Guide read, so it is not accepted. The v8
+candidate makes a completed Guide read the hard gate and is built but uninstalled;
+the installed v7 and existing Remotion are unchanged. Historical sections below
+retain their original evidence; the Task Register's 2026-09-04 section supersedes
+their next-action snapshots. Source changes remain uncommitted and unpushed; no
+new product installer was released and v8 has not run in WorkBuddy.
 
 The live authority is `docs/workbuddy/v2/TASK-REGISTER.md`. This file is a compact
 state snapshot, not a second task ledger.

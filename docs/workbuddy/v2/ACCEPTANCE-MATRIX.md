@@ -1,5 +1,16 @@
 # WorkBuddy Shell V2 — Acceptance Matrix
 
+The 2026-09-04 installation-location correction is accepted locally only when the
+existing Installer replaces exactly one portable PackageRoot token and one
+DataRoot token and exactly one Guide-path token with the validated paths of that
+installation, without a fixed drive or username. WorkBuddy must revalidate via
+Locator and then produce a completed read event for that exact Guide in the same
+request before runtime checks or an installation conclusion. A file name,
+existence check, Locator return, or summary is not Guide consumption. Stale paths
+cannot establish Package readiness. Local checks and a newly built Skill ZIP do
+not prove a WorkBuddy user result; that manual retest remains separate.
+R3/M0/M1.1/M1.2 are retained unchanged.
+
 Acceptance is product-result specific. A technical state is relevant only when it
 prevents the stated user-visible result. WorkBuddy's internal harness behavior is
 not a user failure.

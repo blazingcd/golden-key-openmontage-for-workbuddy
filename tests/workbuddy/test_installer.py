@@ -629,8 +629,13 @@ def test_installer_builds_guidance_only_workbuddy_skill_zip(tmp_path: Path) -> N
     package_root = tmp_path / "installed package"
     skill_root = package_root / "shell-adapter/workbuddy-skill/golden-key-openmontage"
     skill_root.mkdir(parents=True)
+    (package_root / "AGENT_GUIDE.md").write_text("guide\n", encoding="utf-8")
     (skill_root / "SKILL.md").write_text(
-        'description: exact phrase "金钥匙智能体"\nWorkBuddy performs the live check.\n',
+        'description: exact phrase "金钥匙智能体"\n'
+        f"data={installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER}\n"
+        f"guide={installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER}\n"
+        f"package={installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER}\n"
+        "WorkBuddy performs the live check.\n",
         encoding="utf-8",
     )
 
@@ -644,8 +649,12 @@ def test_installer_builds_guidance_only_workbuddy_skill_zip(tmp_path: Path) -> N
         skill = stream.read("SKILL.md").decode("utf-8")
     assert 'exact phrase "金钥匙智能体"' in skill
     assert "WorkBuddy performs the live check" in skill
-    assert str(package_root) not in skill
-    assert str(data_root) not in skill
+    assert f"package={package_root.resolve()}" in skill
+    assert f"data={data_root.resolve()}" in skill
+    assert f"guide={package_root.resolve() / 'AGENT_GUIDE.md'}" in skill
+    assert installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER not in skill
+    assert installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER not in skill
+    assert installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER not in skill
 
 
 def test_package_assembly_accepts_guidance_only_skill(
@@ -678,6 +687,7 @@ def test_installer_can_build_repository_guidance_skill(tmp_path: Path) -> None:
     data_root.mkdir()
     package_root = tmp_path / "installed package"
     package_root.mkdir()
+    (package_root / "AGENT_GUIDE.md").write_text("guide\n", encoding="utf-8")
     source_root = Path(__file__).resolve().parents[2] / "workbuddy-skill/golden-key-openmontage"
 
     result = installer._build_workbuddy_skill_archive(
@@ -689,10 +699,23 @@ def test_installer_can_build_repository_guidance_skill(tmp_path: Path) -> None:
     with zipfile.ZipFile(result["path"]) as stream:
         assert stream.namelist() == ["SKILL.md"]
         skill = stream.read("SKILL.md").decode("utf-8")
+    source = (source_root / "SKILL.md").read_text(encoding="utf-8")
+    expected = source.replace(
+        installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER, str(data_root.resolve())
+    ).replace(
+        installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER,
+        str(package_root.resolve() / "AGENT_GUIDE.md"),
+    ).replace(installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER, str(package_root.resolve()))
+    assert skill == expected
     assert "<installer:" not in skill
     assert "registry.npmmirror.com" in skill
-    assert str(data_root) not in skill
-    assert str(package_root) not in skill
+    assert str(data_root.resolve()) in skill
+    assert str(package_root.resolve()) in skill
+    assert installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER not in skill
+    assert installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER not in skill
+    assert installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER not in skill
+    assert "completed `AGENT_GUIDE.md` read event" in skill
+    assert "before any runtime check" in skill
     assert set(result) == {"path", "archive_name", "sha256", "size"}
 
 
@@ -702,7 +725,14 @@ def test_skill_candidate_archive_preserves_existing_baseline(tmp_path: Path) -> 
     package_root = tmp_path / "installed package"
     skill_root = package_root / "shell-adapter/workbuddy-skill/golden-key-openmontage"
     skill_root.mkdir(parents=True)
-    (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+    (package_root / "AGENT_GUIDE.md").write_text("guide\n", encoding="utf-8")
+    (skill_root / "SKILL.md").write_text(
+        "skill\n"
+        f"{installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER}\n"
+        f"{installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER}\n"
+        f"{installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER}\n",
+        encoding="utf-8",
+    )
 
     baseline = installer._build_workbuddy_skill_archive(data_root, package_root)
     baseline_path = Path(baseline["path"])
@@ -728,3 +758,47 @@ def test_skill_archive_name_is_a_single_zip_basename() -> None:
     for name in ("nested/candidate.zip", "candidate", "../candidate.zip", "C:/candidate.zip"):
         with pytest.raises(InstallerError, match="archive_name_invalid"):
             installer._skill_archive_name(name)
+
+
+@pytest.mark.parametrize(
+    "guide_binding",
+    ["", f"{installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER}\n" * 2],
+)
+def test_skill_archive_requires_one_installation_binding_each(
+    tmp_path: Path, guide_binding: str
+) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    package_root = tmp_path / "package"
+    skill_root = package_root / "shell-adapter/workbuddy-skill/golden-key-openmontage"
+    skill_root.mkdir(parents=True)
+    (package_root / "AGENT_GUIDE.md").write_text("guide\n", encoding="utf-8")
+    (skill_root / "SKILL.md").write_text(
+        "skill\n"
+        f"{installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER}\n"
+        f"{guide_binding}"
+        f"{installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER}\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(InstallerError, match="installation_placeholder_invalid"):
+        installer._build_workbuddy_skill_archive(data_root, package_root)
+
+
+def test_skill_archive_requires_guide_file(tmp_path: Path) -> None:
+    data_root = tmp_path / "data"
+    data_root.mkdir()
+    package_root = tmp_path / "package"
+    skill_root = package_root / "shell-adapter/workbuddy-skill/golden-key-openmontage"
+    skill_root.mkdir(parents=True)
+    (package_root / "AGENT_GUIDE.md").mkdir()
+    (skill_root / "SKILL.md").write_text(
+        "skill\n"
+        f"{installer.WORKBUDDY_DATA_ROOT_PLACEHOLDER}\n"
+        f"{installer.WORKBUDDY_GUIDE_PATH_PLACEHOLDER}\n"
+        f"{installer.WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER}\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(InstallerError, match="workbuddy_guide_not_file"):
+        installer._build_workbuddy_skill_archive(data_root, package_root)

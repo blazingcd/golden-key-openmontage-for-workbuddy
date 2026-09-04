@@ -2,6 +2,17 @@
 
 ## Mandatory routing
 
+The Owner's 2026-09-04 installation-location correction is the current bounded
+exception: update the existing Installer so each generated one-file Skill receives
+that user's validated PackageRoot, DataRoot, and exact Guide path, update its
+direct tests and Skill guidance, and build one uninstalled Skill candidate. The
+v7 test proved path binding and Locator validation but skipped the Guide read; v8
+makes a completed Guide read the hard gate before runtime checks or an installation
+conclusion. The exact scope and evidence boundary are in the Task Register's
+installation-location section. Preserve R3/M0/M1.1/M1.2. No
+WorkBuddy execution, optional install, Package mutation, or media is authorized
+by this correction.
+
 Read this file completely before acting in this repository or responding about it.
 `docs/workbuddy/v2/TASK-REGISTER.md` is the current state and authorization authority.
 `PROJECT-CHARTER.md` defines the product boundary, `ACCEPTANCE-MATRIX.md` defines

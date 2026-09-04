@@ -2,6 +2,14 @@
 
 ## One-line product test
 
+The 2026-09-04 installation-location exception is limited to the Task Register's
+Installer/test/Skill paths and authority synchronization, isolated checks, and
+one generated Skill containing the current installation's validated PackageRoot
+DataRoot, and exact Guide path. The portable source must contain no user or drive-
+specific path. Locator success and Guide consumption remain separate: v7 proved the first and
+failed the second. No v8 WorkBuddy run, optional installation/removal, Package
+rewrite, media, new dependency, or baseline replacement is included.
+
 Can an ordinary user type a natural-language message containing
 `金钥匙智能体` in WorkBuddy and obtain the current product result without doing
 internal technical work? If not, stop and report the exact missing user result.

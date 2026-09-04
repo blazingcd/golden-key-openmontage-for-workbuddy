@@ -2,6 +2,61 @@
 
 ## Authority
 
+### Current installation-location correction — 2026-09-04
+
+The Owner accepted v8 after the installed v7 proved direct PackageRoot/DataRoot
+binding and Locator validation but skipped the required `AGENT_GUIDE.md` read and
+went directly to runtime checks. V8 adds the exact Guide path and makes its
+completed read the installation-check hard gate. This supersedes the older next-
+action snapshots only for this bounded correction. Retain R3, M0, M1.1, M1.2,
+every existing baseline ZIP, and the current Remotion installation.
+
+- Source scope: `installer.py`, `tests/workbuddy/test_installer.py`, and
+  `workbuddy-skill/golden-key-openmontage/SKILL.md`, with this six-document
+  authority synchronization. No new module, dependency, CLI, or Skill script.
+- The existing Skill ZIP builder requires exactly one portable DataRoot token,
+  one PackageRoot token, and one Guide-path token, replaces them with the
+  installation's validated actual paths, and leaves the repository Skill free of
+  a fixed drive or username. It also verifies that the Guide is a regular file in
+  PackageRoot before building the ZIP.
+- A residual or stale location is not a valid Package. WorkBuddy must call the
+  existing read-only Locator, check the returned identity and Guide path, and in
+  the same request produce a completed read event for that exact Guide before any
+  runtime check or Package-specific conclusion. A file existence check, Locator
+  return, or summary does not count. No implicit old-copy fallback, guessed drive,
+  cached readiness, or production invocation.
+- Verify with focused isolated checks, one independent zero-write review, then
+  publish the location for the already registered active installation and build
+  one newly named uninstalled Skill ZIP. Do not overwrite the installed Skill,
+  rebuild/reinstall/reactivate a Package, install or remove optional capabilities,
+  handle credentials, run WorkBuddy, or produce media.
+- V7 WorkBuddy result: `PATH_BINDING_AND_LOCATOR_PROVED / GUIDE_READ_SKIPPED /
+  PARTIAL_NOT_ACCEPTED`. The installed Skill SHA256 matched v7 exactly. The client
+  trace showed reads of `SKILL.md` and `_user_meta.json`, then Locator and runtime
+  commands, with no `AGENT_GUIDE.md` read event. Remotion remained untested and
+  unchanged.
+- Status: V8_VERIFIED_LOCAL_GUIDE_GATE / CANDIDATE_UNINSTALLED /
+  V8_WORKBUDDY_NOT_RUN. No commit, push, or new product-installer release.
+- The earlier focused installer checks, Skill validation, and `git diff --check`
+  passed for the generated-Skill and Guide-gate behavior. Final closeout does not
+  rerun tests.
+- Candidate:
+  `D:\BlazingCD\Personal\GoldenKeyData\WorkBuddyShellV2\data\production\Integrations\WorkBuddy\golden-key-openmontage-0.3.25-r3-baseline-preserved-guide-gate-v8.zip`,
+  SHA256 `9bf04763c2e7f78d2878609c3aceabcc458782c0b050856feec044d66d96b8a6`,
+  5,129 bytes, containing only `SKILL.md`; its Skill SHA256 is
+  `6cb697c35a0b1bb4dbf3ffa0e5088b297bed555cb3040f8565d5d10d535dc3a8`.
+  Its content exactly equals the portable source with only the three installation
+  tokens replaced. The installed v7 Skill and existing Remotion remain unchanged.
+- Next user action: manually replace only the Skill with v8 and start one new
+  WorkBuddy installation-check task. Do not label this local correction as M1.3
+  completion or a WorkBuddy user-result pass.
+- Cleanup: the task-owned isolated test directory
+  `D:\DevCache\Temp\workbuddy-installation-location-20260903` and this check's
+  `D:\DevCache\Temp\pytest-of-blazi\pytest-196`, `pytest-197`, and `pytest-198`
+  remain. Exact-target PowerShell cleanup was blocked by execution policy; no
+  alternate deletion route was attempted. No user data or baseline archive was
+  removed.
+
 This is the live task, product-result, authorization, and Git-state authority.
 Read it together with `AGENT_GUIDE.md`, `PROJECT-CHARTER.md`,
 `ACCEPTANCE-MATRIX.md`, and `DRIFT-GUARD.md`. If any of the six documents conflict,
@@ -1846,7 +1901,7 @@ result_1: COMPLETE
 result_2: COMPLETE / REAL_WORKBUDDY_NATURAL_LANGUAGE_RESULT_AND_RECEIPT_OBSERVED
 result_3: COMPLETE / REAL_PLAYABLE_VIDEO / REVIEW_PASS
 result_4: COMPLETE
-current_task: M1_3_REMOTION_STABILITY_CORRECTION / PACKAGE_ACTIVATED_AND_OLD_RUNTIME_CLEANED / AWAITING_WORKBUDDY_SKILL_INSTALL_CONFIRMATION
+current_task: M1_3_INSTALLATION_LOCATION_CORRECTION / VERIFIED_LOCAL_INSTALLATION_DISCOVERY / CANDIDATE_UNINSTALLED / WORKBUDDY_NOT_RUN
 baseline_skill: USABLE / RETAINED / SHA256_E7ECFD69A22B2F601215860A83F849584C50F29328C011622A42FDD2E63D4BAB
 candidate_skill: COMPACT_READINESS_CURRENTLY_INSTALLED / USED_FOR_M1_2_PROOF / UX_OVERLOAD_RECORDED / ZIP_SHA256_4CAF57CFCF5D298F0DED1098D4FDA5BB482A699F57A72B02BC61F1CD3DBF2DD1 / DO_NOT_OVERWRITE_OR_AUTO_UNINSTALL / RECHECK_AT_EXECUTION
 capability_onboarding_implementation: FACTUAL_RELAY_PROVED_AT_33F49FB385B103489772D3F8CE2F7CB2486B08DC / WORKBUDDY_DIALOGUE_REACHED / M1_2_CORE_COMPLETE / M1_3_LOCAL_CONTRACT_COMMITTED_PRODUCT_INCOMPLETE
@@ -1860,7 +1915,7 @@ implementation_worktree_path: C:\Users\blazi\.codex\worktrees\3ab9\Golden_Key_Op
 task_owned_temporary_paths: D:\DevCache\Temp\workbuddy-m12-readiness-probe-3ab9 REMOVED / D:\DevCache\Temp\workbuddy-m12-final-factual-relay-33f49fb-3ab9 AUTHORIZED_NOT_CREATED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10\gk_menu_summary.json REMOVED / C:\Users\blazi\WorkBuddy\2026-08-29-16-27-10 EMPTY_DIRECTORY_CLEANUP_BLOCKED_IN_USE / C:\Users\blazi\WorkBuddy\2026-08-29-19-32-28 EMPTY_EVIDENCE_DIRECTORY_PRESERVED / C:\Users\blazi\WorkBuddy\2026-08-29-20-41-51 EMPTY_AFTER_WORKBUDDY_TEMP_PARSE_CLEANUP
 implementation_cleanup_gate: REQUIRED_BEFORE_M1_COMPLETE
 m1_branch_lifecycle_document_review: APPROVE / P0=0 / P1=0 / P2=0
-workbuddy_or_media_in_current_task: REMOTION_REPAIR_AUTHORIZED / ONE_INSTALL_AND_ONE_MINIMAL_PACKAGE_RENDER_AFTER_LOCAL_CHECKS / OTHER_MEDIA_FORBIDDEN
+workbuddy_or_media_in_current_task: NOT_AUTHORIZED_IN_INSTALLATION_LOCATION_CORRECTION
 next_phase_must_tasks: M1_M2_M3
 next_phase_should_tasks: S1_S2_S3_S4_S5
 next_phase_could_tasks: C1_C2

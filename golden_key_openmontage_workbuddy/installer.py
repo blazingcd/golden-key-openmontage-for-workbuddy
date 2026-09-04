@@ -42,6 +42,9 @@ USER_ENTRY_MODULE = "golden_key_openmontage_workbuddy.user_entry"
 USER_ENTRY_RELATIVE_PATH = "shell-adapter/golden_key_openmontage_workbuddy/user_entry.py"
 WORKBUDDY_SKILL_ARCHIVE_RELATIVE_PATH = f"Integrations/WorkBuddy/{RELEASE_IDENTITY}.zip"
 WORKBUDDY_SKILL_ROOT_RELATIVE_PATH = "shell-adapter/workbuddy-skill/golden-key-openmontage"
+WORKBUDDY_DATA_ROOT_PLACEHOLDER = "{{WORKBUDDY_DATA_ROOT}}"
+WORKBUDDY_GUIDE_PATH_PLACEHOLDER = "{{WORKBUDDY_GUIDE_PATH}}"
+WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER = "{{WORKBUDDY_PACKAGE_ROOT}}"
 SEVEN_ZIP_SHA256 = "83967f1b02b43c4efeda302795722c809e0e81b8307de73558d10484d5676a7d"
 FFMPEG_ARCHIVE_SHA256 = "49a73bdf0850092a252ac4641d922f3048d63ed113e196cc65ce1e4f7fb33e85"
 MANAGED_CORE_OWNER = "managed_core"
@@ -927,9 +930,23 @@ def _build_workbuddy_skill_archive(
     skill_path = skill_root / "SKILL.md"
     _assert_regular(skill_path)
     _assert_no_reparse_chain(skill_path, boundary=skill_root)
+    guide_path = package_root / "AGENT_GUIDE.md"
+    _assert_regular(guide_path)
+    _assert_no_reparse_chain(guide_path, boundary=package_root)
+    if not guide_path.is_file():
+        raise InstallerError("workbuddy_guide_not_file")
     skill = skill_path.read_text(encoding="utf-8")
     if "<installer:" in skill:
         raise InstallerError("workbuddy_skill_placeholder_remaining")
+    replacements = {
+        WORKBUDDY_DATA_ROOT_PLACEHOLDER: str(data_root),
+        WORKBUDDY_GUIDE_PATH_PLACEHOLDER: str(guide_path),
+        WORKBUDDY_PACKAGE_ROOT_PLACEHOLDER: str(package_root),
+    }
+    if any(skill.count(placeholder) != 1 for placeholder in replacements):
+        raise InstallerError("workbuddy_skill_installation_placeholder_invalid")
+    for placeholder, value in replacements.items():
+        skill = skill.replace(placeholder, value)
 
     candidate_archive = archive_name is not None
     destination = data_root / "Integrations" / "WorkBuddy" / _skill_archive_name(archive_name)

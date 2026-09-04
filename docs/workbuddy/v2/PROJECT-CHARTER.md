@@ -2,6 +2,14 @@
 
 ## Purpose
 
+The 2026-09-04 correction makes the existing Installer put the validated
+PackageRoot, DataRoot, and exact Guide path directly into the generated one-file
+Skill; it does not add an Agent, runtime installer, or machine path to the portable
+source. WorkBuddy still verifies the active Package and must complete a read of
+that exact Guide before runtime inspection or an installation conclusion; it then
+owns capability inspection and execution. See the current Task Register section
+for the bounded authority.
+
 Make Golden Key OpenMontage usable by an ordinary user through one natural-language
 WorkBuddy conversation. The user should only need to describe the business need
 and provide optional business materials. The internal execution method belongs to

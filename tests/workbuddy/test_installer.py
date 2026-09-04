@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import uuid
 import zipfile
@@ -822,7 +823,7 @@ def test_formal_release_contains_only_cmd_inner_release_and_sidecar(tmp_path: Pa
         newline="",
     )
     command = tmp_path / installer.INSTALLER_CMD_NAME
-    command.write_bytes(b"@echo off\r\n")
+    command.write_bytes(b"@echo off\nsetlocal\necho installer-cmd-ok\n")
 
     result = installer._build_formal_release(inner, command)
 
@@ -831,9 +832,21 @@ def test_formal_release_contains_only_cmd_inner_release_and_sidecar(tmp_path: Pa
     assert result["members"] == [installer.INSTALLER_CMD_NAME, inner.name, sidecar.name]
     with zipfile.ZipFile(formal) as archive:
         assert archive.namelist() == result["members"]
-        assert archive.read(installer.INSTALLER_CMD_NAME) == command.read_bytes()
+        command_payload = archive.read(installer.INSTALLER_CMD_NAME)
+        assert command_payload == b"@echo off\r\nsetlocal\r\necho installer-cmd-ok\r\n"
         assert archive.read(inner.name) == inner.read_bytes()
         assert archive.read(sidecar.name) == sidecar.read_bytes()
+    extracted_command = tmp_path / "extracted" / installer.INSTALLER_CMD_NAME
+    extracted_command.parent.mkdir()
+    extracted_command.write_bytes(command_payload)
+    completed = subprocess.run(
+        ["cmd.exe", "/d", "/c", extracted_command],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0
+    assert "installer-cmd-ok" in completed.stdout
 
 
 def test_release_validation_reads_every_member_for_crc(tmp_path: Path) -> None:

@@ -831,12 +831,16 @@ def _build_formal_release(inner_release: Path, installer_cmd: Path) -> dict[str,
         (inner_release.name, inner_release),
         (sidecar.name, sidecar),
     )
+    installer_payload = installer_cmd.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n").replace(b"\n", b"\r\n")
     with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, path in entries:
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
             info.create_system = 0
             info.external_attr = 0
             info.compress_type = zipfile.ZIP_DEFLATED
+            if name == INSTALLER_CMD_NAME:
+                archive.writestr(info, installer_payload, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+                continue
             with path.open("rb") as source, archive.open(info, "w", force_zip64=True) as target:
                 shutil.copyfileobj(source, target, length=1024 * 1024)
     return {

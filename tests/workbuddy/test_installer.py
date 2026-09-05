@@ -813,29 +813,35 @@ def test_skill_archive_requires_guide_file(tmp_path: Path) -> None:
         installer._build_workbuddy_skill_archive(data_root, package_root)
 
 
-def test_formal_release_contains_only_cmd_inner_release_and_sidecar(tmp_path: Path) -> None:
-    inner = tmp_path / "golden-key-openmontage-for-workbuddy-0.3.25-test.zip"
-    inner.write_bytes(b"inner release")
-    sidecar = inner.with_name(inner.name + ".sha256")
-    sidecar.write_text(
-        f"{installer._sha256(inner)} *{inner.name}\n",
-        encoding="utf-8",
-        newline="",
-    )
+def test_formal_release_contains_cmd_and_complete_package_root(tmp_path: Path) -> None:
+    package_root = tmp_path / "PackageRoot"
+    (package_root / "bootstrap" / "python").mkdir(parents=True)
+    (package_root / "bootstrap" / "python" / "python.exe").write_bytes(b"python")
+    (package_root / "AGENT_GUIDE.md").write_text("guide\n", encoding="utf-8")
     command = tmp_path / installer.INSTALLER_CMD_NAME
     command.write_bytes(b"@echo off\nsetlocal\necho installer-cmd-ok\n")
+    destination = tmp_path / "installer.zip"
 
-    result = installer._build_formal_release(inner, command)
+    result = installer._build_formal_release(package_root, command, destination)
 
     formal = Path(result["path"])
     assert result["sha256"] == installer._sha256(formal)
-    assert result["members"] == [installer.INSTALLER_CMD_NAME, inner.name, sidecar.name]
+    assert result["members"] == [
+        installer.INSTALLER_CMD_NAME,
+        "GoldenKeyOpenMontageForWorkBuddy/AGENT_GUIDE.md",
+        "GoldenKeyOpenMontageForWorkBuddy/bootstrap/python/python.exe",
+    ]
     with zipfile.ZipFile(formal) as archive:
         assert archive.namelist() == result["members"]
         command_payload = archive.read(installer.INSTALLER_CMD_NAME)
         assert command_payload == b"@echo off\r\nsetlocal\r\necho installer-cmd-ok\r\n"
-        assert archive.read(inner.name) == inner.read_bytes()
-        assert archive.read(sidecar.name) == sidecar.read_bytes()
+        assert archive.read("GoldenKeyOpenMontageForWorkBuddy/AGENT_GUIDE.md") == (
+            package_root / "AGENT_GUIDE.md"
+        ).read_bytes()
+        assert not any(
+            "/" not in name and name.lower().endswith((".zip", ".zip.sha256"))
+            for name in archive.namelist()
+        )
     extracted_command = tmp_path / "extracted" / installer.INSTALLER_CMD_NAME
     extracted_command.parent.mkdir()
     extracted_command.write_bytes(command_payload)
@@ -1101,27 +1107,22 @@ def test_activation_error_after_pointer_write_restores_previous_pointer(
     ]
 
 
-def test_standard_windows_paths_are_release_bound_and_not_drive_fixed(
+def test_standard_windows_paths_keep_user_selected_package_root(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    program_files = tmp_path / "Program Files"
     local_app_data = tmp_path / "Local App Data"
-    program_files.mkdir()
     local_app_data.mkdir()
-    release = tmp_path / "release.zip"
-    _write_release_archive(release)
-    monkeypatch.setenv("ProgramFiles", str(program_files))
+    package_root = tmp_path / "用户选择位置" / "GoldenKeyOpenMontageForWorkBuddy"
+    package_root.mkdir(parents=True)
     monkeypatch.setenv("LOCALAPPDATA", str(local_app_data))
+    monkeypatch.setattr(installer, "_verify_tree_boundary", lambda _root: None)
 
-    data_root, package_root = installer._standard_install_paths(release)
+    data_root, resolved_package_root = installer._standard_install_paths(package_root)
 
     assert data_root == (
         local_app_data / installer.INSTALL_PRODUCT_DIRECTORY / "data" / "production"
     ).resolve()
-    assert package_root.parent == (
-        program_files / installer.INSTALL_PRODUCT_DIRECTORY / "Packages"
-    ).resolve()
-    assert package_root.name.endswith(installer._sha256(release)[:12])
+    assert resolved_package_root == package_root.resolve()
 
 
 def test_top_level_installer_cmd_uses_only_verified_ui_assisted_route() -> None:
@@ -1129,10 +1130,13 @@ def test_top_level_installer_cmd_uses_only_verified_ui_assisted_route() -> None:
         Path(__file__).resolve().parents[2] / installer.INSTALLER_CMD_NAME
     ).read_text(encoding="utf-8")
 
-    assert "Get-FileHash" in command
-    assert "Expand-Archive" in command
-    assert "ui-install --release-archive" in command
+    assert "%~dp0GoldenKeyOpenMontageForWorkBuddy" in command
+    assert "ui-install --package-root" in command
     assert "golden_key_openmontage_workbuddy.installer" in command
+    assert "Expand-Archive" not in command
+    assert "GetTempPath" not in command
+    assert "ProgramFiles" not in command
+    assert "RunAs" not in command
     assert '\\"' not in command
     assert "if errorlevel 1 (" not in command
     assert "exit /b %errorlevel%" in command

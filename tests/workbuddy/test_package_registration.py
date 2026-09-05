@@ -23,6 +23,7 @@ from golden_key_openmontage_workbuddy.package_registration import (
     activate_package,
     locate_active_package,
     recover_active_package,
+    register_materialized_package,
     register_package,
 )
 
@@ -614,6 +615,26 @@ def test_register_package_builds_canonical_immutable_v1_object_without_activatio
     )
     assert not _active(candidate).exists()
     assert (_registry(candidate) / "active.lock").read_bytes() == registration.LOCK_BYTES
+
+
+def test_register_materialized_package_is_locatable_without_release_archive(tmp_path: Path) -> None:
+    candidate = _make_candidate(tmp_path / "candidate")
+
+    result = register_materialized_package(
+        candidate.data_root,
+        candidate.package_root,
+        candidate.package_python,
+    )
+
+    assert result["schema_version"] == registration.MATERIALIZED_REGISTRATION_SCHEMA
+    assert result["release"] == {
+        "kind": "materialized_package",
+        "bundle_sha256": result["lock"]["bundle_sha256"],
+    }
+    activate_package(candidate.data_root, "MISSING", result["registration_sha256"])
+    located = locate_active_package(candidate.data_root)
+    assert located["registration_sha256"] == result["registration_sha256"]
+    assert located["package_root"] == str(candidate.package_root.resolve())
 
 
 def test_registration_is_deterministic_and_same_object_is_idempotent(tmp_path: Path) -> None:

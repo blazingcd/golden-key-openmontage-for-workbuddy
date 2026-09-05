@@ -818,19 +818,20 @@ def _build_release(root: Path, destination: Path) -> dict[str, Any]:
     return {"path": str(destination), "sha256": digest, "size": destination.stat().st_size, "sidecar": str(sidecar)}
 
 
-def _build_formal_release(inner_release: Path, installer_cmd: Path) -> dict[str, Any]:
-    sidecar = inner_release.with_name(inner_release.name + ".sha256")
-    for path in (inner_release, sidecar, installer_cmd):
-        if not path.is_file() or path.is_symlink():
+def _build_formal_release(
+    package_root: Path, installer_cmd: Path, destination: Path
+) -> dict[str, Any]:
+    for path in (package_root, installer_cmd):
+        if path.is_symlink():
             raise InstallerError(f"formal_release_input_invalid:{path.name}")
-    destination = inner_release.with_name(f"{inner_release.stem}-installer.zip")
+    if not package_root.is_dir() or not installer_cmd.is_file():
+        raise InstallerError("formal_release_input_invalid")
     if destination.exists() or destination.is_symlink():
         raise InstallerError(f"formal_release_already_exists:{destination}")
-    entries = (
-        (INSTALLER_CMD_NAME, installer_cmd),
-        (inner_release.name, inner_release),
-        (sidecar.name, sidecar),
-    )
+    entries = [(INSTALLER_CMD_NAME, installer_cmd)] + [
+        (f"GoldenKeyOpenMontageForWorkBuddy/{_relative(package_root, path)}", path)
+        for path in _inventory(package_root)
+    ]
     installer_payload = installer_cmd.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n").replace(b"\n", b"\r\n")
     with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, path in entries:
@@ -893,7 +894,11 @@ def assemble_package(
         dependency_lock = _dependency_lock(staging, checkout, toolchain["python_version"])
         manifest_lock = _build_manifest_and_lock(staging, toolchain, dependency_lock)
         release_info = _build_release(staging, release)
-        formal_release = _build_formal_release(release, shell / INSTALLER_CMD_NAME)
+        formal_release = _build_formal_release(
+            staging,
+            shell / INSTALLER_CMD_NAME,
+            release.with_name(f"{release.stem}-installer.zip"),
+        )
         os.replace(staging, root)
         return {
             "schema_version": "golden-key-workbuddy-final-assembly-v1",
@@ -1229,15 +1234,15 @@ def _validate_release_archive(archive: Path) -> Path:
     return archive
 
 
-def _standard_install_paths(release_archive: Path) -> tuple[Path, Path]:
-    archive = _validate_release_archive(release_archive)
-    program_files = os.environ.get("ProgramFiles")
+def _standard_install_paths(package_root: Path) -> tuple[Path, Path]:
     local_app_data = os.environ.get("LOCALAPPDATA")
-    if os.name != "nt" or not program_files or not local_app_data:
+    if os.name != "nt" or not local_app_data:
         raise InstallerError("windows_standard_location_unavailable")
-    program_root = Path(program_files).resolve(strict=True)
+    root = Path(package_root).resolve(strict=True)
+    if not root.is_dir() or root.is_symlink():
+        raise InstallerError("package_root_invalid")
+    _verify_tree_boundary(root)
     data_parent = Path(local_app_data).resolve(strict=True) / INSTALL_PRODUCT_DIRECTORY / "data"
-    _assert_no_reparse_chain(program_root)
     _assert_no_reparse_chain(data_parent.parent)
     data_parent.mkdir(parents=True, exist_ok=True)
     data_root = data_parent / "production"
@@ -1245,41 +1250,25 @@ def _standard_install_paths(release_archive: Path) -> tuple[Path, Path]:
     _assert_no_reparse_chain(data_root, boundary=data_parent.parent)
     if not data_root.is_dir() or data_root.is_symlink():
         raise InstallerError("data_root_invalid")
-    package_root = (
-        program_root
-        / INSTALL_PRODUCT_DIRECTORY
-        / "Packages"
-        / f"{RELEASE_IDENTITY}-{_sha256(archive)[:12]}"
-    )
-    _assert_no_reparse_chain(package_root.parent)
-    return data_root.resolve(strict=True), package_root.resolve()
+    return data_root.resolve(strict=True), root
 
 
 def prepare_ui_install(
     *,
     data_root: os.PathLike[str] | str,
-    release_archive: os.PathLike[str] | str,
     package_root: os.PathLike[str] | str,
 ) -> dict[str, Any]:
-    """Publish and register a release while leaving the active pointer unchanged."""
+    """Register an extracted PackageRoot while leaving the active pointer unchanged."""
 
-    from .package_registration import register_package
+    from .package_registration import register_materialized_package
 
     data = Path(data_root).resolve(strict=True)
-    archive = _validate_release_archive(Path(release_archive))
-    root = Path(package_root).resolve()
-    if not root.exists():
-        return install_release(
-            data_root=data,
-            release_archive=archive,
-            package_root=root,
-        )
+    root = Path(package_root).resolve(strict=True)
     if not root.is_dir() or root.is_symlink():
-        raise InstallerError("install_destination_or_sidecar_invalid")
-    registration = register_package(
+        raise InstallerError("package_root_invalid")
+    _verify_tree_boundary(root)
+    registration = register_materialized_package(
         data,
-        archive,
-        archive.with_name(archive.name + ".sha256"),
         root,
         root / "bootstrap" / "python" / "python.exe",
     )
@@ -1428,11 +1417,10 @@ def _show_skill_archive(path: Path) -> None:
     subprocess.Popen(["explorer.exe", f"/select,{path}"])
 
 
-def _run_ui_install(release_archive: Path) -> int:
-    data_root, package_root = _standard_install_paths(release_archive)
+def _run_ui_install(package_root: Path) -> int:
+    data_root, package_root = _standard_install_paths(package_root)
     prepared = prepare_ui_install(
         data_root=data_root,
-        release_archive=release_archive,
         package_root=package_root,
     )
     skill_path = Path(prepared["workbuddy_skill"]["path"])
@@ -1544,11 +1532,11 @@ def _main() -> int:
     parser.add_argument("--version", action="version", version="1")
     commands = parser.add_subparsers(dest="command")
     ui_install = commands.add_parser("ui-install")
-    ui_install.add_argument("--release-archive", type=Path, required=True)
+    ui_install.add_argument("--package-root", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "ui-install":
         try:
-            return _run_ui_install(args.release_archive)
+            return _run_ui_install(args.package_root)
         except Exception as exc:
             if "PACKAGE_ROLLBACK_COMPLETE" in str(exc):
                 print("安装未完成。Package 已恢复；请在 WorkBuddy 中恢复旧 Skill，或移除刚导入的新 Skill。")

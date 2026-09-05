@@ -38,6 +38,7 @@ except ImportError:  # pragma: no cover - selected by platform
 
 
 REGISTRATION_SCHEMA = "golden-key-workbuddy-openmontage-package-registration-v2"
+MATERIALIZED_REGISTRATION_SCHEMA = "golden-key-workbuddy-openmontage-package-registration-v3"
 REGISTRATION_OWNER = "golden-key-workbuddy-shell-v2"
 ACTIVE_POINTER_SCHEMA = "golden-key-workbuddy-active-openmontage-package-v1"
 ACTIVE_LOCK_SCHEMA = "golden-key-workbuddy-active-package-lock-v1"
@@ -1105,6 +1106,39 @@ def _build_registration(
     return registration, raw, _sha256_bytes(raw)
 
 
+def _build_materialized_registration(
+    *, package_root: Path, package_python: Path
+) -> tuple[dict[str, Any], bytes, str]:
+    manifest_path = _fixed_child(package_root, MANIFEST_NAME, label="installed Manifest")
+    lock_path = _fixed_child(package_root, LOCK_NAME, label="installed Lock")
+    facts = _validate_manifest_and_lock(
+        package_root=package_root,
+        package_python=package_python,
+        manifest_bytes=_read_bytes(manifest_path, label="installed Manifest"),
+        lock_bytes=_read_bytes(lock_path, label="installed Lock"),
+    )
+    registration: dict[str, Any] = {
+        "schema_version": MATERIALIZED_REGISTRATION_SCHEMA,
+        "owner": REGISTRATION_OWNER,
+        "contract_id": facts["contract_id"],
+        "openmontage_release": facts["openmontage_release"],
+        "openmontage_commit": facts["openmontage_commit"],
+        "authority": facts["authority"],
+        "release": {
+            "kind": "materialized_package",
+            "bundle_sha256": facts["lock"]["bundle_sha256"],
+        },
+        "package_root": str(package_root),
+        "package_python": facts["package_python"],
+        "required_toolchain": facts["required_toolchain"],
+        "manifest": facts["manifest"],
+        "lock": facts["lock"],
+        "guide": facts["guide"],
+    }
+    raw = _canonical_json(registration)
+    return registration, raw, _sha256_bytes(raw)
+
+
 def _validate_stored_file_identity_shape(
     value: Any, *, expected_relative: str, label: str
 ) -> dict[str, Any]:
@@ -1141,7 +1175,8 @@ def _validate_registration_shape(value: dict[str, Any]) -> None:
         },
         label="Package Registration",
     )
-    if value["schema_version"] != REGISTRATION_SCHEMA or value["owner"] != REGISTRATION_OWNER:
+    schema = value["schema_version"]
+    if schema not in {REGISTRATION_SCHEMA, MATERIALIZED_REGISTRATION_SCHEMA} or value["owner"] != REGISTRATION_OWNER:
         _fail("TAMPERED", "Package Registration schema or owner mismatch")
     _require_nonempty_string(value["contract_id"], label="Package Registration contract_id")
     _require_nonempty_string(value["openmontage_release"], label="Package Registration openmontage_release")
@@ -1158,17 +1193,27 @@ def _validate_registration_shape(value: dict[str, Any]) -> None:
     if manifest_authority != MANIFEST_AUTHORITY or lock_authority != LOCK_AUTHORITY:
         _fail("TAMPERED", "Package Registration authority mismatch")
 
-    release = _require_exact_keys(
-        value["release"],
-        keys={"asset_name", "archive_sha256", "sha256_sidecar_name"},
-        label="Package Registration release",
-    )
-    asset_name = _require_nonempty_string(release["asset_name"], label="release asset_name")
-    if Path(asset_name).name != asset_name or not asset_name.lower().endswith(".zip"):
-        _fail("TAMPERED", "release asset_name is not a ZIP basename")
-    _require_sha256(release["archive_sha256"], label="release archive_sha256")
-    if release["sha256_sidecar_name"] != f"{asset_name}.sha256":
-        _fail("TAMPERED", "release sidecar name mismatch")
+    if schema == REGISTRATION_SCHEMA:
+        release = _require_exact_keys(
+            value["release"],
+            keys={"asset_name", "archive_sha256", "sha256_sidecar_name"},
+            label="Package Registration release",
+        )
+        asset_name = _require_nonempty_string(release["asset_name"], label="release asset_name")
+        if Path(asset_name).name != asset_name or not asset_name.lower().endswith(".zip"):
+            _fail("TAMPERED", "release asset_name is not a ZIP basename")
+        _require_sha256(release["archive_sha256"], label="release archive_sha256")
+        if release["sha256_sidecar_name"] != f"{asset_name}.sha256":
+            _fail("TAMPERED", "release sidecar name mismatch")
+    else:
+        release = _require_exact_keys(
+            value["release"],
+            keys={"kind", "bundle_sha256"},
+            label="Package Registration release",
+        )
+        if release["kind"] != "materialized_package":
+            _fail("TAMPERED", "materialized release kind mismatch")
+        _require_sha256(release["bundle_sha256"], label="release bundle_sha256")
 
     python_value = _require_exact_keys(
         value["package_python"],
@@ -1366,6 +1411,11 @@ def _revalidate_registration(value: dict[str, Any]) -> None:
         manifest_bytes=manifest_bytes,
         lock_bytes=lock_bytes,
     )
+    if (
+        value["schema_version"] == MATERIALIZED_REGISTRATION_SCHEMA
+        and value["release"]["bundle_sha256"] != facts["lock"]["bundle_sha256"]
+    ):
+        _fail("TAMPERED", "materialized release identity no longer matches package")
     comparisons = {
         "contract_id": facts["contract_id"],
         "openmontage_release": facts["openmontage_release"],
@@ -1741,6 +1791,27 @@ def register_package(
         package_python=python,
     )
 
+    _ensure_register_lock(paths)
+    with _active_lock(paths):
+        paths.objects.mkdir(parents=True, exist_ok=True)
+        _publish_registration_object(paths.objects / f"{digest}.json", raw)
+    return _freeze({"registration_sha256": digest, **registration})
+
+
+def register_materialized_package(
+    data_root: os.PathLike[str] | str,
+    package_root: os.PathLike[str] | str,
+    package_python: os.PathLike[str] | str,
+) -> Mapping[str, Any]:
+    """Validate and register one already-extracted PackageRoot without activation."""
+
+    paths = _registry_paths(data_root)
+    root = _absolute_existing_path(package_root, label="PackageRoot", directory=True)
+    python = _absolute_existing_path(package_python, label="Package Python")
+    registration, raw, digest = _build_materialized_registration(
+        package_root=root,
+        package_python=python,
+    )
     _ensure_register_lock(paths)
     with _active_lock(paths):
         paths.objects.mkdir(parents=True, exist_ok=True)

@@ -8,6 +8,23 @@ internal technical work? If not, stop and report the exact missing user result.
 
 ## Current v8 and Installer / Release Assembly guard
 
+- The Owner's 2026-09-05 correction rejects the nested-release route. One formal
+  ZIP must extract directly to top-level `安装到WorkBuddy.cmd` plus the complete
+  adjacent `GoldenKeyOpenMontageForWorkBuddy/` PackageRoot. CMD validates and
+  registers that root in place; a second extraction, `%TEMP%` bootstrap, copy to
+  `%ProgramFiles%`, or internal-path prompt is a hard stop.
+- The exact implementation write set is the CMD, existing Installer,
+  `package_registration.py`, and focused Installer/Registration tests. Existing
+  Registration objects must remain readable. Do not add a second installer,
+  dependency, updater platform, optional capability, Provider, or media path.
+- Package registration does not prove WorkBuddy Skill installation. Until a public
+  WorkBuddy Skill lifecycle interface is proved, keep that state
+  `BLOCKED_EXTERNAL` and do not claim an ordinary-user complete install.
+- The prior 2026-09-05 run created an unactivated C-drive candidate. Only its exact
+  task-owned residue may be removed; preserve `installation.json`, the active
+  D-drive Package/Data roots, WorkBuddy private storage, and retained release
+  evidence. Elevation failure is a cleanup blocker, not authority to change ACLs.
+
 - V8 proved only that real WorkBuddy called `locate_active_package` and completed
   reading the exact verified Package `AGENT_GUIDE.md`. Do not upgrade this into
   Remotion, API-key, M1.3, or portable-release proof.
@@ -17,9 +34,9 @@ internal technical work? If not, stop and report the exact missing user result.
 - Installer / Release Assembly is an independent Must prerequisite before M1.3
   real validation. It reuses the current Installer; it does not create another
   installer, Agent, runtime-preparation path, or control plane.
-- The formal ZIP has one top-level `安装到WorkBuddy.cmd`, no development-machine
-  path, and no preinstalled machine-bound v8 Skill. It also carries the versioned
-  inner release ZIP and SHA256 sidecar. Windows resolves actual Package/Data paths.
+- The formal ZIP has one top-level `安装到WorkBuddy.cmd`, the complete adjacent
+  PackageRoot, no development-machine path, and no preinstalled machine-bound v8
+  Skill. The user-selected extraction directory is the final Package location.
 - WorkBuddy Skill management is UI-assisted: the Installer prepares and verifies
   the new bound Skill and, before a same-name upgrade, a recovery Skill; it opens
   the user-visible ZIP location, but never writes private WorkBuddy Skill storage.
@@ -31,19 +48,19 @@ internal technical work? If not, stop and report the exact missing user result.
 - This minimum task includes one clean-install result and one upgrade-or-failure
   rollback. Broad cross-machine upgrade, diagnosis, and maintenance remain S4.
 - The exact implementation write set is top-level `安装到WorkBuddy.cmd`,
-  `golden_key_openmontage_workbuddy/installer.py`, and
-  `tests/workbuddy/test_installer.py`. A fourth source/bootstrap file, a new
-  dependency, a second installer, or private WorkBuddy mutation is a hard stop.
+  `golden_key_openmontage_workbuddy/installer.py`,
+  `golden_key_openmontage_workbuddy/package_registration.py`, and focused
+  Installer/Registration tests. Another source/bootstrap file, a new dependency,
+  a second installer, or private WorkBuddy mutation is a hard stop.
 - The first outer ZIP is rejected because its LF-only CMD failed in real
   `cmd.exe` before system writes. The CRLF root fix is pushed at `25a4c04c...`;
   `35 passed, 1 skipped` and independent `APPROVE / P0=0 / P1=0 / P2=0` cover
   the corrected code. The corrected outer ZIP SHA256 is
   `e57d4828e15dfacfadac6b86f84238dad7aebb0bbccc6c3d4883dd101300ee3d`.
-- The corrected CMD reached `consent.exe`, then closed unapproved without an install;
-  absent native WorkBuddy/UAC Computer Use is
-  `BLOCKED_EXTERNAL_USER_INTERACTION`, not permission to switch silently to the
-  current-user route, write private Skill storage, claim install success, or start
-  M1.3. Only visible formal CMD/UAC/UI import/activation/Locator evidence closes it.
+- The old corrected CMD reached `consent.exe`; that system-wide UAC route is now
+  rejected. Absent a supported WorkBuddy Skill lifecycle interface, Skill install
+  remains `BLOCKED_EXTERNAL_USER_INTERACTION`, not permission to write private
+  Skill storage or claim end-to-end install success.
 - Remotion/HyperFrames installation, API keys, Providers, and media remain M1.3
   or later work. M1.4 cannot repair missing Installer or M1.3 evidence.
 

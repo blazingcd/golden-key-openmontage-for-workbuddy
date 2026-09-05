@@ -2,6 +2,15 @@
 
 ## Purpose
 
+The Owner's 2026-09-05 installer correction defines the ordinary-user package
+boundary: one ZIP is extracted once to the user's chosen final location, exposing
+top-level `安装到WorkBuddy.cmd` and the complete adjacent
+`GoldenKeyOpenMontageForWorkBuddy/` PackageRoot. The CMD validates and registers
+that root in place. It does not unpack an inner release, copy to `%ProgramFiles%`,
+or make the user choose an internal technical path. Package registration and
+WorkBuddy Skill lifecycle are distinct acceptance facts; without a proved public
+Skill lifecycle interface, the latter remains an explicit UI-assisted block.
+
 Make Golden Key OpenMontage usable by an ordinary user through one natural-language
 WorkBuddy conversation. The user should only need to describe the business need
 and provide optional business materials. The internal execution method belongs to
@@ -199,15 +208,13 @@ ordinary-user installation: it exposes no internal path, hash, command, or
 developer-machine artifact.
 
 Implementation and product acceptance remain separate. A reviewed formal ZIP may
-be `FORMAL_CANDIDATE_VERIFIED` while installation is still unproved. System-wide
-installation cannot be replaced by a silent current-user fallback when UAC or UI
-control is unavailable, and official WorkBuddy Skill import cannot be replaced by
-private-directory mutation. In that case the honest state is
+be `FORMAL_CANDIDATE_VERIFIED` while installation is still unproved. The corrected
+flow uses the user-chosen extraction directory and does not depend on system-wide
+UAC, while official WorkBuddy Skill import still cannot be replaced by private-
+directory mutation. Without a supported Skill lifecycle, the honest state is
 `BLOCKED_EXTERNAL_USER_INTERACTION / UI_ASSISTED_INSTALL_NOT_PROVED`; M1.3 waits.
-The first LF-only packaged CMD is rejected despite earlier static review; the
-corrected CRLF candidate reached the real Windows UAC prompt, which closed
-unapproved, and remains
-unaccepted until UAC, official Skill import, activation, and Locator complete.
+The LF-only and later CRLF nested candidates are both historical rejected evidence,
+not an installation route to resume.
 
 M1.2 owns the first-use readiness projection, ordinary-language explanation, and
 next-intent handoff. It does not own a Provider catalogue or technical readiness

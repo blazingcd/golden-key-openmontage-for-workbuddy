@@ -2,6 +2,23 @@
 
 ## Mandatory routing
 
+The Owner's 2026-09-05 correction rejects the nested-release Installer flow.
+The formal distribution is one ZIP which, after the user extracts it once to the
+chosen final location, contains top-level `安装到WorkBuddy.cmd` beside the complete
+`GoldenKeyOpenMontageForWorkBuddy/` PackageRoot. The CMD validates and registers
+that existing PackageRoot in place; it must not extract another ZIP, copy the
+PackageRoot to `%ProgramFiles%`, require UAC solely for installation, or ask the
+user to identify an internal path. This current correction supersedes older
+inner-release/sidecar and Windows-resolved Package-location wording below.
+
+Implementation may change only top-level `安装到WorkBuddy.cmd`,
+`golden_key_openmontage_workbuddy/installer.py`,
+`golden_key_openmontage_workbuddy/package_registration.py`, and their focused
+Installer/Registration tests. Preserve backward reading of existing Registration
+objects. WorkBuddy Skill lifecycle remains official-UI-assisted because no public
+install/update API, CLI, or deep link is proved; do not claim the whole ordinary-
+user install complete until that separate product block is resolved.
+
 The Owner's 2026-09-04 direction records the latest v8 result and adds one
 independent Must prerequisite named `Installer / Release Assembly`. In one
 real WorkBuddy task, v8 called `locate_active_package` and completed reading the
@@ -12,8 +29,8 @@ V8 is closed at implementation commit
 `9459a13f46655a3c46db04385906c9b2775001ec`; its independent zero-write review is
 `APPROVE / P0=0 / P1=0 / P2=0`, all implementation refs match, and the worktree is
 clean. Installer now owns the
-ordinary-user top-level `安装到WorkBuddy.cmd`, current-installer entry, Windows-
-resolved target paths, install/register/activate, one machine-bound Skill, and
+ordinary-user top-level `安装到WorkBuddy.cmd`, current-installer entry, validation
+and registration of the adjacent user-extracted PackageRoot, one machine-bound Skill, and
 rollback. It does not install Remotion, handle API keys, call Providers, or make
 media. The current order is `Installer / Release Assembly -> M1.3 real
 configuration -> M1.4`.
@@ -24,8 +41,9 @@ Installer transaction below across the six authority/state documents, obtain one
 independent zero-write review, commit once, and ordinarily push the planning
 branch. Then merge that exact head into the retained M1 implementation branch and
 change only top-level `安装到WorkBuddy.cmd`,
-`golden_key_openmontage_workbuddy/installer.py`, and
-`tests/workbuddy/test_installer.py`. Run only focused Installer checks, obtain one
+`golden_key_openmontage_workbuddy/installer.py`,
+`golden_key_openmontage_workbuddy/package_registration.py`, and focused
+Installer/Registration tests. Run only focused checks, obtain one
 independent zero-write implementation review, build the formal release, commit,
 and ordinarily push. The release must prepare a verified recovery Skill before a
 same-name upgrade, hand the new Skill ZIP to the official WorkBuddy UI, activate
@@ -49,13 +67,11 @@ bytes with SHA256
 `e57d4828e15dfacfadac6b86f84238dad7aebb0bbccc6c3d4883dd101300ee3d`;
 its unchanged inner release is 177,278,309 bytes with SHA256
 `2d85bcc3802cf1f4663bdfc2755f96592828bb7634e67cecaa61f48144dffcfd`.
-No production Registration, active pointer, WorkBuddy Skill, or user data changed.
-The corrected real CMD reached `consent.exe`, but that prompt closed without
-approval and no install directory appeared. The UI-assisted result remains
-`NOT_PROVED`: Windows UAC requires user interaction and the available
-Computer Use surface exposes no native WorkBuddy/UAC app control. Do not silently switch
-to a current-user install, touch private WorkBuddy storage, or start M1.3. Resume
-only through the formal CMD's system-wide route and official WorkBuddy UI.
+That candidate's initial UAC-only result was `NOT_PROVED`; the Owner has now
+rejected its system-wide nested-release route entirely. Do not reuse it, touch
+private WorkBuddy storage, or start M1.3. Resume only through the corrected
+single-extraction flow and a supported or explicitly verified WorkBuddy Skill
+lifecycle.
 
 Read this file completely before acting in this repository or responding about it.
 `docs/workbuddy/v2/TASK-REGISTER.md` is the current state and authorization authority.

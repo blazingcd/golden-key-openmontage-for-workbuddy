@@ -1,11 +1,28 @@
 # WorkBuddy Shell V2 — Current Project State
 
-Date: 2026-09-04
+Date: 2026-09-05
 
 The live authority is `docs/workbuddy/v2/TASK-REGISTER.md`. This file is a compact
 state snapshot, not a second task ledger.
 
 ## Current route
+
+Owner correction on 2026-09-05 rejects the previously built nested installer.
+The replacement artifact is one ZIP containing top-level `安装到WorkBuddy.cmd`
+and a complete `GoldenKeyOpenMontageForWorkBuddy/` directory. The user extracts
+that ZIP once to the desired final location, then runs the CMD; the CMD validates
+and registers that directory in place and performs no second extraction or copy to
+`%ProgramFiles%`. The prior C-drive attempt created an unactivated candidate only;
+its task-owned LocalAppData residue was removed, while its `%ProgramFiles%`
+PackageRoot still requires elevation to remove. The existing active D-drive
+installation and `installation.json` remain authoritative and unchanged.
+
+This correction expands the implementation write set only to include
+`golden_key_openmontage_workbuddy/package_registration.py` and its focused tests so
+a materialized PackageRoot can be registered honestly while existing Registration
+objects remain readable. WorkBuddy Skill installation/update is still
+`BLOCKED_EXTERNAL`: no public lifecycle interface is proved, so Installer completion
+must not be claimed from Package registration alone.
 
 The latest v8 Skill completed the base connection gate in one real WorkBuddy task:
 WorkBuddy called `locate_active_package` and completed reading the exact verified
@@ -23,8 +40,8 @@ Must prerequisite
 using that formal release, then M1.4 closeout. M2 may proceed independently because
 M1.2 is complete; M3 still waits for M1.4 and M2.
 
-Installer execution is now authorized under a three-file write limit: top-level
-`安装到WorkBuddy.cmd`, the existing Installer, and its direct test. WorkBuddy Skill
+Installer execution is now authorized under the corrected write limit: top-level
+`安装到WorkBuddy.cmd`, the existing Installer, `package_registration.py`, and their focused tests. WorkBuddy Skill
 installation is an official-UI-assisted handoff, not a hidden filesystem write:
 the release verifies and publishes the Package/Registration, prepares both the
 new machine-bound Skill and a verified recovery Skill, opens the user-visible ZIP
@@ -44,9 +61,9 @@ directory created. Current state is
 `CORRECTED_IMPLEMENTATION_PUSHED / CORRECTED_FORMAL_CANDIDATE_VERIFIED /
 UAC_PROMPT_REACHED_THEN_CLOSED_UNAPPROVED / UI_ASSISTED_INSTALL_NOT_PROVED`. The production active Registration remains
 `1de2935dee199a0a2b630e90baf9707758f86fb6a4e9dd637203aca6dc0188e8`.
-The remaining gate requires user-visible UAC approval for the system-wide install
-and official WorkBuddy UI Skill import; current Computer Use exposes no native
-WorkBuddy/UAC surface. Do not silently choose the current-user alternative.
+The former system-wide UAC route is rejected. The remaining gate is official
+WorkBuddy UI Skill lifecycle; current Computer Use exposes no native WorkBuddy
+surface and no public Skill API/CLI/deep link is proved.
 If the new Skill is imported but Registration activation fails, the old Package
 pointer remains active and the verified recovery Skill must be restored through
 WorkBuddy UI; this state is `WORKBUDDY_SKILL_RESTORE_REQUIRED`, not success.

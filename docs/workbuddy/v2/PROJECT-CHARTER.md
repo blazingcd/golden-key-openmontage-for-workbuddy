@@ -11,6 +11,11 @@ or make the user choose an internal technical path. Package registration and
 WorkBuddy Skill lifecycle are distinct acceptance facts; without a proved public
 Skill lifecycle interface, the latter remains an explicit UI-assisted block.
 
+The bounded Package-flow implementation is pushed at `32ee9e03...`; its focused
+checks and independent review passed, and single-extraction artifact SHA256 is
+`3b628b61...`. This does not change the acceptance boundary: Package registration
+is candidate-verified, while WorkBuddy Skill lifecycle remains unproved.
+
 Make Golden Key OpenMontage usable by an ordinary user through one natural-language
 WorkBuddy conversation. The user should only need to describe the business need
 and provide optional business materials. The internal execution method belongs to

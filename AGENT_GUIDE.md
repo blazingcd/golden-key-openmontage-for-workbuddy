@@ -19,6 +19,16 @@ objects. WorkBuddy Skill lifecycle remains official-UI-assisted because no publi
 install/update API, CLI, or deep link is proved; do not claim the whole ordinary-
 user install complete until that separate product block is resolved.
 
+The corrected implementation is pushed at
+`32ee9e03bae2af063d30d25781d8ff37621e09b6`; focused Installer/Registration
+checks pass `170 passed, 1 skipped`, and independent zero-write review is
+`APPROVE / P0=0 / P1=0 / P2=0`. The verified single-extraction ZIP is retained
+on D: with SHA256
+`3b628b61af50a075af92cad8b74a9fbb36d11380de2aeaab99ed25c3f22aecbb`.
+No WorkBuddy Skill install or activation was run. The exact LocalAppData residue
+from the rejected attempt was removed; its `%ProgramFiles%` PackageRoot remains
+because the user cancelled the exact UAC cleanup prompt.
+
 The Owner's 2026-09-04 direction records the latest v8 result and adds one
 independent Must prerequisite named `Installer / Release Assembly`. In one
 real WorkBuddy task, v8 called `locate_active_package` and completed reading the

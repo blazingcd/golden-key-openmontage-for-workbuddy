@@ -24,6 +24,13 @@ objects remain readable. WorkBuddy Skill installation/update is still
 `BLOCKED_EXTERNAL`: no public lifecycle interface is proved, so Installer completion
 must not be claimed from Package registration alone.
 
+Implementation commit `32ee9e03bae2af063d30d25781d8ff37621e09b6` is pushed;
+focused checks pass `170 passed, 1 skipped`, independent review is
+`APPROVE / P0=0 / P1=0 / P2=0`, and the verified single-extraction ZIP SHA256 is
+`3b628b61af50a075af92cad8b74a9fbb36d11380de2aeaab99ed25c3f22aecbb`.
+The Package flow is implemented and candidate-verified; Skill lifecycle remains
+`BLOCKED_EXTERNAL`, so end-to-end installation is not yet proved.
+
 The latest v8 Skill completed the base connection gate in one real WorkBuddy task:
 WorkBuddy called `locate_active_package` and completed reading the exact verified
 Package `AGENT_GUIDE.md`. R3, M0, M1.1, and M1.2 remain unchanged. This result does

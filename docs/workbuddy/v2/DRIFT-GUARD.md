@@ -24,6 +24,10 @@ internal technical work? If not, stop and report the exact missing user result.
   task-owned residue may be removed; preserve `installation.json`, the active
   D-drive Package/Data roots, WorkBuddy private storage, and retained release
   evidence. Elevation failure is a cleanup blocker, not authority to change ACLs.
+- The corrected code is pushed at `32ee9e03...`; focused checks pass
+  `170 passed, 1 skipped`, review is `APPROVE / P0=0 / P1=0 / P2=0`, and the
+  single-extraction ZIP SHA256 is `3b628b61...`. This proves the Package flow and
+  artifact, not WorkBuddy Skill lifecycle or end-to-end installation.
 
 - V8 proved only that real WorkBuddy called `locate_active_package` and completed
   reading the exact verified Package `AGENT_GUIDE.md`. Do not upgrade this into
